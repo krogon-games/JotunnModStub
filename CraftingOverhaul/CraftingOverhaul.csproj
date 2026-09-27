@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <AssemblyName>CraftingOverhaul</AssemblyName>
+    <RootNamespace>CraftingOverhaul</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Version>0.1.0</Version>
+    <Product>CraftingOverhaul</Product>
+    <Description>Searchable, collapsible crafting menus and crafting from nearby containers for Valheim.</Description>
+    <Copyright>Copyright © 2026</Copyright>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Game, Unity and BepInEx assemblies are already present in the game install. -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- publish.ps1 converts the PDB to MDB with pdb2mdb, which needs a full (Windows) PDB. -->
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <DebugType>full</DebugType>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(VALHEIM_INSTALL)\valheim.exe</StartProgram>
+    <StartArguments>-console</StartArguments>
+    <StartWorkingDirectory>$(VALHEIM_INSTALL)</StartWorkingDirectory>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Reference>
+      <Private>False</Private>
+    </Reference>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <!-- Brings in Jotunn plus references to the (publicized) game, Unity and BepInEx assemblies. -->
+    <PackageReference Include="JotunnLib" Version="2.30.2" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Package\manifest.json" />
+    <None Include="Package\icon.png" />
+    <None Include="README.md" />
+  </ItemGroup>
+
+  <Target Name="JotunnPostBuildTaskWin" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+    <Exec Command="powershell.exe -ExecutionPolicy RemoteSigned -File &quot;$(SolutionDir)publish.ps1&quot; -Target &quot;$(ConfigurationName)&quot; -TargetPath &quot;$(TargetDir.TrimEnd('\'))&quot; -TargetAssembly &quot;$(TargetFileName)&quot; -ValheimPath &quot;$(VALHEIM_INSTALL.TrimEnd('\'))&quot; -DeployPath &quot;$(MOD_DEPLOYPATH.TrimEnd('\'))&quot; -ProjectPath &quot;$(ProjectDir.TrimEnd('\'))&quot; " />
+  </Target>
+</Project>

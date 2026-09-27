@@ -1,0 +1,9 @@
+{
+  "name": "CraftingOverhaul",
+  "description": "Searchable, collapsible crafting menus grouped by item type or biome, plus crafting and building from nearby chests.",
+  "version_number": "0.1.0",
+  "website_url": "https://github.com/krogon-games/JotunnModStub",
+  "dependencies": [
+    "ValheimModding-Jotunn-2.30.2"
+  ]
+}

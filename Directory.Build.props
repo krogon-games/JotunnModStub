@@ -1,0 +1,7 @@
+<Project>
+  <!-- Jötunn's build props look for Environment.props and DoPrebuild.props next to the solution.
+       Define SolutionDir when the project is built on its own (e.g. `dotnet build CraftingOverhaul`). -->
+  <PropertyGroup Condition="'$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*'">
+    <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
+  </PropertyGroup>
+</Project>
