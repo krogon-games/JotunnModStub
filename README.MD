@@ -15,7 +15,12 @@ See [`CraftingOverhaul/README.md`](CraftingOverhaul/README.md) for the full feat
 | `CraftingOverhaul/CraftingOverhaul.cs` | Plugin entry point; applies each Harmony patch class separately so one broken patch doesn't take down the rest |
 | `CraftingOverhaul/ModConfig.cs` | BepInEx config entries |
 | `CraftingOverhaul/RecipeList/` | Search bar, category headers and grouping (item type / biome) |
+| `CraftingOverhaul/Biomes/` | Data-driven biome detection: `Collectors/` read game data into sources, `BiomeSolver.cs` holds the rules |
 | `CraftingOverhaul/Containers/` | Finding usable nearby containers and counting/taking materials from them |
+| `CraftingOverhaul/Dump/` | `co_dump` and `co_biome` console commands |
+| `CraftingOverhaul.Tests/` | Unit tests for game-independent logic (`dotnet test`) |
+| `FEATURES.md` | Every feature, its status, config and Harmony patch targets |
+| `docs/` | Research notes, e.g. `coop-networking.md` |
 | `JotunnModUnity/` | Unity project for making asset bundles (unused so far) |
 
 ## Development environment setup

@@ -1,0 +1,256 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using BepInEx;
+using BepInEx.Bootstrap;
+using CraftingOverhaul.Biomes;
+using CraftingOverhaul.Biomes.Collectors;
+using CraftingOverhaul.RecipeList;
+using UnityEngine;
+
+namespace CraftingOverhaul.Dump
+{
+    /// <summary>
+    ///     Writes the loaded game data (vanilla plus any mods) to CSV files, for checking mod logic against real
+    ///     data: items, recipes, pieces, creatures, locations and the biome resolver's inputs and results.
+    /// </summary>
+    internal static class GameDataDump
+    {
+        public static string Write()
+        {
+            string dir = Path.Combine(Paths.BepInExRootPath, "CraftingOverhaul", "dump-" + DateTime.Now.ToString("yyyyMMdd-HHmmss"));
+            Directory.CreateDirectory(dir);
+
+            BiomeResolver.EnsureResolved();
+
+            WriteMeta(Path.Combine(dir, "meta.txt"));
+            WriteItems(Path.Combine(dir, "items.csv"));
+            WriteRecipes(Path.Combine(dir, "recipes.csv"));
+            WritePieces(Path.Combine(dir, "pieces.csv"));
+            WriteCreatures(Path.Combine(dir, "creatures.csv"));
+            WriteLocations(Path.Combine(dir, "locations.csv"));
+            WriteBiomeSources(Path.Combine(dir, "biome_sources.csv"));
+            WriteBiomeResolution(Path.Combine(dir, "biome_items.csv"));
+            WriteUnresolved(Path.Combine(dir, "biome_unresolved.csv"));
+            return dir;
+        }
+
+        private static string L(string token)
+        {
+            return string.IsNullOrEmpty(token) ? "" : Localization.instance.Localize(token);
+        }
+
+        private static void WriteMeta(string path)
+        {
+            var lines = new List<string>
+            {
+                "Game version: " + global::Version.GetVersionString(),
+                "CraftingOverhaul: " + CraftingOverhaul.PluginVersion,
+                "Written: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                "Language: " + Localization.instance.GetSelectedLanguage(),
+                "",
+                "Loaded plugins:"
+            };
+            lines.AddRange(Chainloader.PluginInfos.Values
+                .Select(p => $"  {p.Metadata.GUID} {p.Metadata.Version} ({p.Metadata.Name})")
+                .OrderBy(s => s));
+            File.WriteAllLines(path, lines);
+        }
+
+        private static void WriteItems(string path)
+        {
+            using (var csv = new CsvWriter(path, "prefab", "token", "name", "type", "skill", "max_stack", "weight",
+                       "max_quality", "value", "teleportable", "tool_tier", "durability", "armor", "armor_per_level",
+                       "block", "movement_mod", "damage", "blunt", "slash", "pierce", "chop", "pickaxe", "fire", "frost",
+                       "lightning", "poison", "spirit", "food_health", "food_stamina", "food_eitr", "food_duration",
+                       "biome", "biome_via"))
+            {
+                foreach (var prefab in ObjectDB.instance.m_items.Where(p => p).OrderBy(p => p.name))
+                {
+                    var drop = prefab.GetComponent<ItemDrop>();
+                    if (!drop)
+                    {
+                        continue;
+                    }
+                    var s = drop.m_itemData.m_shared;
+                    var d = s.m_damages;
+                    BiomeResolver.TryGet(prefab.name, out var biome);
+                    csv.Row(prefab.name, s.m_name, L(s.m_name), s.m_itemType, s.m_skillType, s.m_maxStackSize,
+                        s.m_weight, s.m_maxQuality, s.m_value, s.m_teleportable, s.m_toolTier, s.m_maxDurability,
+                        s.m_armor, s.m_armorPerLevel, s.m_blockPower, s.m_movementModifier, d.m_damage, d.m_blunt,
+                        d.m_slash, d.m_pierce, d.m_chop, d.m_pickaxe, d.m_fire, d.m_frost, d.m_lightning, d.m_poison,
+                        d.m_spirit, s.m_food, s.m_foodStamina, s.m_foodEitr, s.m_foodBurnTime,
+                        biome?.Biome.ToString(), Describe(biome));
+                }
+            }
+        }
+
+        private static void WriteRecipes(string path)
+        {
+            using (var csv = new CsvWriter(path, "recipe", "output", "output_name", "amount", "enabled", "station",
+                       "min_station_level", "ingredients", "type_category", "biome_category"))
+            {
+                foreach (var recipe in ObjectDB.instance.m_recipes.Where(r => r && r.m_item).OrderBy(r => r.name))
+                {
+                    csv.Row(recipe.name, recipe.m_item.gameObject.name, L(recipe.m_item.m_itemData.m_shared.m_name),
+                        recipe.m_amount, recipe.m_enabled,
+                        recipe.m_craftingStation ? recipe.m_craftingStation.m_name : "", recipe.m_minStationLevel,
+                        Requirements(recipe.m_resources),
+                        RecipeCategories.Get(recipe, GroupingMode.ItemType).Label,
+                        RecipeCategories.Get(recipe, GroupingMode.Biome).Label);
+                }
+            }
+        }
+
+        private static void WritePieces(string path)
+        {
+            using (var csv = new CsvWriter(path, "prefab", "token", "name", "category", "enabled", "station", "resources"))
+            {
+                foreach (var prefab in ZNetScene.instance.m_prefabs.Where(p => p).OrderBy(p => p.name))
+                {
+                    var piece = prefab.GetComponent<Piece>();
+                    if (!piece)
+                    {
+                        continue;
+                    }
+                    csv.Row(prefab.name, piece.m_name, L(piece.m_name), piece.m_category, piece.m_enabled,
+                        piece.m_craftingStation ? piece.m_craftingStation.m_name : "", Requirements(piece.m_resources));
+                }
+            }
+        }
+
+        private static void WriteCreatures(string path)
+        {
+            var spawnBiomes = new Dictionary<GameObject, Heightmap.Biome>();
+            foreach (var list in SpawnCollector.FindSpawnLists())
+            {
+                foreach (var spawn in list.m_spawners.Where(s => s.m_enabled && s.m_prefab))
+                {
+                    spawnBiomes.TryGetValue(spawn.m_prefab, out var flags);
+                    spawnBiomes[spawn.m_prefab] = flags | spawn.m_biome;
+                }
+            }
+
+            using (var csv = new CsvWriter(path, "prefab", "token", "name", "health", "faction", "boss",
+                       "defeat_key", "spawn_biomes", "drops"))
+            {
+                foreach (var prefab in ZNetScene.instance.m_prefabs.Where(p => p).OrderBy(p => p.name))
+                {
+                    var character = prefab.GetComponent<Character>();
+                    if (!character || character is Player)
+                    {
+                        continue;
+                    }
+                    var drop = prefab.GetComponent<CharacterDrop>();
+                    var drops = drop?.m_drops == null
+                        ? ""
+                        : CsvWriter.Join(drop.m_drops.Where(x => x.m_prefab).Select(x =>
+                            $"{x.m_prefab.name} {x.m_amountMin}-{x.m_amountMax} @{x.m_chance:0.##}"));
+                    spawnBiomes.TryGetValue(prefab, out var biomes);
+                    csv.Row(prefab.name, character.m_name, L(character.m_name), character.m_health,
+                        character.m_faction, character.m_boss, character.m_defeatSetGlobalKey,
+                        biomes == Heightmap.Biome.None ? "" : biomes.ToString(), drops);
+                }
+            }
+        }
+
+        private static void WriteLocations(string path)
+        {
+            using (var csv = new CsvWriter(path, "location", "prefab", "enabled", "biome", "quantity", "unique"))
+            {
+                foreach (var location in ZoneSystem.instance.m_locations.OrderBy(l => l.m_prefabName))
+                {
+                    csv.Row(location.m_name, location.m_prefabName, location.m_enable, location.m_biome,
+                        location.m_quantity, location.m_unique);
+                }
+            }
+        }
+
+        private static void WriteBiomeSources(string path)
+        {
+            using (var csv = new CsvWriter(path, "target", "name", "collector", "base_biome", "required_items",
+                       "tool", "required_key", "origin"))
+            {
+                foreach (var s in BiomeResolver.Sources.OrderBy(s => s.Name).ThenBy(s => s.Collector))
+                {
+                    csv.Row(s.Target, s.Name, s.Collector, s.Base?.ToString(), CsvWriter.Join(s.RequiredItems),
+                        s.Tool.ToString(), s.RequiredKey, s.Origin);
+                }
+            }
+        }
+
+        private static void WriteBiomeResolution(string path)
+        {
+            using (var csv = new CsvWriter(path, "item", "name", "biome", "override", "collector", "origin"))
+            {
+                foreach (var entry in BiomeResolver.AllItems().OrderBy(e => e.Value.Biome).ThenBy(e => e.Key))
+                {
+                    var prefab = ObjectDB.instance.GetItemPrefab(entry.Key);
+                    var name = ItemName(prefab);
+                    csv.Row(entry.Key, name, entry.Value.Biome, entry.Value.IsOverride,
+                        entry.Value.Source?.Collector, entry.Value.Source?.Origin);
+                }
+            }
+        }
+
+        /// <summary>Recipe ingredients the resolver could not place: candidates for BiomeMaterialOverrides.</summary>
+        private static void WriteUnresolved(string path)
+        {
+            var usedBy = new Dictionary<string, List<string>>();
+            foreach (var recipe in ObjectDB.instance.m_recipes.Where(r => r && r.m_enabled && r.m_item))
+            {
+                foreach (var req in recipe.m_resources.Where(r => r.m_resItem))
+                {
+                    string name = req.m_resItem.gameObject.name;
+                    if (BiomeResolver.TryGet(name, out _))
+                    {
+                        continue;
+                    }
+                    if (!usedBy.TryGetValue(name, out var list))
+                    {
+                        usedBy[name] = list = new List<string>();
+                    }
+                    list.Add(recipe.m_item.gameObject.name);
+                }
+            }
+
+            using (var csv = new CsvWriter(path, "item", "name", "sources_found", "used_in_recipes"))
+            {
+                foreach (var entry in usedBy.OrderBy(e => e.Key))
+                {
+                    var prefab = ObjectDB.instance.GetItemPrefab(entry.Key);
+                    var name = ItemName(prefab);
+                    int sources = BiomeResolver.Sources.Count(s => s.Target == SourceTarget.Item &&
+                                                                   string.Equals(s.Name, entry.Key, StringComparison.OrdinalIgnoreCase));
+                    csv.Row(entry.Key, name, sources, CsvWriter.Join(entry.Value.Distinct()));
+                }
+            }
+        }
+
+        private static string ItemName(GameObject prefab)
+        {
+            var drop = prefab ? prefab.GetComponent<ItemDrop>() : null;
+            return drop ? L(drop.m_itemData.m_shared.m_name) : "";
+        }
+
+        private static string Requirements(Piece.Requirement[] resources)
+        {
+            if (resources == null)
+            {
+                return "";
+            }
+            return CsvWriter.Join(resources.Where(r => r.m_resItem).Select(r =>
+                $"{r.m_resItem.gameObject.name} x{r.m_amount}" + (r.m_amountPerLevel > 0 ? $" (+{r.m_amountPerLevel}/lvl)" : "")));
+        }
+
+        private static string Describe(BiomeResolution resolution)
+        {
+            if (resolution == null)
+            {
+                return "";
+            }
+            return resolution.IsOverride ? "override" : $"{resolution.Source.Collector}: {resolution.Source.Origin}";
+        }
+    }
+}

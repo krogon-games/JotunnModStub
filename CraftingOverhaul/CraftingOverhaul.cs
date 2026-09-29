@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using BepInEx;
-using CraftingOverhaul.Containers;
-using CraftingOverhaul.RecipeList;
 using HarmonyLib;
+using CraftingOverhaul.Dump;
+using Jotunn.Managers;
 using Jotunn.Utils;
 
 namespace CraftingOverhaul
@@ -22,10 +22,12 @@ namespace CraftingOverhaul
         private void Awake()
         {
             ModConfig.Bind(Config);
-            RecipeCategories.Init();
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
+
+            CommandManager.Instance.AddConsoleCommand(new DumpCommand());
+            CommandManager.Instance.AddConsoleCommand(new BiomeCommand());
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
         }

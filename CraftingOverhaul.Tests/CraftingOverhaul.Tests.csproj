@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Tests for game-independent logic. Game-dependent files can't be loaded outside Valheim,
+       so only the pure source files are compiled in here. Run with `dotnet test`. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CraftingOverhaul\Biomes\Biome.cs" Link="Linked\Biome.cs" />
+    <Compile Include="..\CraftingOverhaul\Biomes\ItemSource.cs" Link="Linked\ItemSource.cs" />
+    <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+</Project>

@@ -214,6 +214,7 @@ namespace CraftingOverhaul.RecipeList
                 // Recipes and UI objects are recreated with each world load.
                 Headers.Clear();
                 RecipeCategories.ClearCache();
+                Biomes.BiomeResolver.Invalidate();
             }
         }
     }

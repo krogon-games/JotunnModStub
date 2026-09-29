@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
+using CraftingOverhaul.Biomes;
 using CraftingOverhaul.RecipeList;
 using Jotunn.Configs;
 
@@ -44,8 +45,9 @@ namespace CraftingOverhaul
             ClearSearchOnClose = config.Bind(RecipeListSection, "ClearSearchOnClose", true,
                 "Clear the search box whenever the inventory is closed.");
             BiomeMaterialOverrides = config.Bind(RecipeListSection, "BiomeMaterialOverrides", "",
-                "Extra material-to-biome assignments for biome grouping, as comma separated PrefabName:Biome pairs " +
-                "(e.g. 'MyModOre:Mountain, SomeNewHide:DeepNorth'). Biomes: " + string.Join(", ", Enum.GetNames(typeof(Biome))) + ".");
+                "Biome grouping works out each material's biome from the game's own world data. Use this only for items it " +
+                "gets wrong or can't place (run 'co_biome <item>' in the console to see why), as comma separated " +
+                "PrefabName:Biome pairs, e.g. 'SomeModdedOre:Mountain'. Biomes: " + string.Join(", ", Enum.GetNames(typeof(Biome))) + ".");
 
             ContainersEnabled = config.Bind(ContainerSection, "Enabled", true,
                 AdminOnly("Use materials stored in nearby containers when crafting."));
@@ -57,7 +59,12 @@ namespace CraftingOverhaul
             ExcludedContainers = config.Bind(ContainerSection, "ExcludedContainers", "",
                 AdminOnly("Comma separated container prefab names that are never used, e.g. 'piece_chest_private'."));
 
-            BiomeMaterialOverrides.SettingChanged += (_, __) => RecipeCategories.Init();
+            BiomeMaterialOverrides.SettingChanged += (_, __) =>
+            {
+                BiomeResolver.Invalidate();
+                RecipeCategories.ClearCache();
+                RecipeListOrganizer.Refresh();
+            };
             Grouping.SettingChanged += (_, __) => RecipeListOrganizer.Refresh();
         }
 

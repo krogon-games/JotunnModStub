@@ -1,22 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using CraftingOverhaul.Biomes;
 
 namespace CraftingOverhaul.RecipeList
 {
-    /// <summary>Biomes in progression order. The order decides how biome groups are listed.</summary>
-    internal enum Biome
-    {
-        Meadows,
-        BlackForest,
-        Swamp,
-        Mountain,
-        Plains,
-        Mistlands,
-        Ashlands,
-        DeepNorth
-    }
-
     internal sealed class RecipeCategory
     {
         public readonly string Key;
@@ -50,7 +37,6 @@ namespace CraftingOverhaul.RecipeList
         private static readonly RecipeCategory[] BiomeCategories;
         private static readonly RecipeCategory UnknownBiome;
 
-        private static readonly Dictionary<string, Biome> MaterialBiomes = new Dictionary<string, Biome>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<Recipe, RecipeCategory> BiomeCache = new Dictionary<Recipe, RecipeCategory>();
 
         static RecipeCategories()
@@ -59,41 +45,9 @@ namespace CraftingOverhaul.RecipeList
             BiomeCategories = new RecipeCategory[biomes.Length];
             foreach (var biome in biomes)
             {
-                BiomeCategories[(int)biome] = new RecipeCategory("biome." + biome, BiomeLabel(biome), (int)biome);
+                BiomeCategories[(int)biome] = new RecipeCategory("biome." + biome, BiomeMapping.Label(biome), (int)biome);
             }
             UnknownBiome = new RecipeCategory("biome.unknown", "Other", biomes.Length);
-        }
-
-        /// <summary>(Re)builds the material table. Called on startup and when the override setting changes.</summary>
-        public static void Init()
-        {
-            MaterialBiomes.Clear();
-            BiomeCache.Clear();
-
-            foreach (var entry in DefaultMaterials)
-            {
-                foreach (var prefab in entry.Value)
-                {
-                    MaterialBiomes[prefab] = entry.Key;
-                }
-            }
-
-            foreach (var pair in ModConfig.BiomeMaterialOverrides.Value.Split(','))
-            {
-                var parts = pair.Split(':');
-                if (parts.Length != 2)
-                {
-                    continue;
-                }
-                if (Enum.TryParse(parts[1].Trim(), true, out Biome biome))
-                {
-                    MaterialBiomes[parts[0].Trim()] = biome;
-                }
-                else
-                {
-                    Jotunn.Logger.LogWarning($"Unknown biome '{parts[1].Trim()}' in BiomeMaterialOverrides");
-                }
-            }
         }
 
         public static RecipeCategory Get(Recipe recipe, GroupingMode mode)
@@ -150,7 +104,10 @@ namespace CraftingOverhaul.RecipeList
             }
         }
 
-        /// <summary>A recipe belongs to the latest biome any of its ingredients comes from.</summary>
+        /// <summary>
+        ///     A recipe belongs to the latest biome of its ingredients, as worked out from game data by
+        ///     <see cref="BiomeResolver" />. Ingredients it can't place are ignored.
+        /// </summary>
         private static RecipeCategory GetBiomeCategory(Recipe recipe)
         {
             if (BiomeCache.TryGetValue(recipe, out var cached) && cached != null)
@@ -165,9 +122,9 @@ namespace CraftingOverhaul.RecipeList
                 {
                     continue;
                 }
-                if (MaterialBiomes.TryGetValue(req.m_resItem.gameObject.name, out var biome))
+                if (BiomeResolver.TryGet(req.m_resItem.gameObject.name, out var resolution))
                 {
-                    latest = Mathf.Max(latest, (int)biome);
+                    latest = Math.Max(latest, (int)resolution.Biome);
                 }
             }
 
@@ -180,76 +137,5 @@ namespace CraftingOverhaul.RecipeList
         {
             BiomeCache.Clear();
         }
-
-        private static string BiomeLabel(Biome biome)
-        {
-            switch (biome)
-            {
-                case Biome.BlackForest: return "Black Forest";
-                case Biome.DeepNorth: return "Deep North";
-                default: return biome.ToString();
-            }
-        }
-
-        /// <summary>
-        ///     Best-effort map of material prefab names to the biome they are first obtained in.
-        ///     Unknown materials are ignored; use the BiomeMaterialOverrides setting to add more.
-        /// </summary>
-        private static readonly Dictionary<Biome, string[]> DefaultMaterials = new Dictionary<Biome, string[]>
-        {
-            [Biome.Meadows] = new[]
-            {
-                "Wood", "Stone", "Flint", "Resin", "LeatherScraps", "DeerHide", "Feathers", "HardAntler",
-                "Raspberry", "Honey", "Mushroom", "NeckTail", "RawMeat", "DeerMeat", "Dandelion",
-                "TrophyDeer", "TrophyBoar", "TrophyNeck", "TrophyEikthyr"
-            },
-            [Biome.BlackForest] = new[]
-            {
-                "CopperOre", "Copper", "TinOre", "Tin", "Bronze", "BronzeNails", "TrollHide", "BoneFragments",
-                "FineWood", "RoundLog", "SurtlingCore", "GreydwarfEye", "AncientSeed", "Thistle", "Blueberries",
-                "CarrotSeeds", "Carrot", "Coal", "MushroomYellow", "TrophyGreydwarf", "TrophyGreydwarfBrute",
-                "TrophyGreydwarfShaman", "TrophyForestTroll", "TrophySkeleton", "TrophyTheElder"
-            },
-            [Biome.Swamp] = new[]
-            {
-                "IronScrap", "IronOre", "Iron", "IronNails", "Chain", "ElderBark", "Guck", "Bloodbag", "Ooze",
-                "Entrails", "Root", "Turnip", "TurnipSeeds", "WitheredBone", "SerpentScale", "SerpentMeat",
-                "Wishbone", "TrophyBonemass", "TrophyDraugr", "TrophyDraugrElite", "TrophyLeech", "TrophyBlob",
-                "TrophySerpent", "TrophyAbomination", "TrophyWraith"
-            },
-            [Biome.Mountain] = new[]
-            {
-                "SilverOre", "Silver", "WolfPelt", "WolfFang", "WolfClaw", "WolfMeat", "Obsidian", "FreezeGland",
-                "Crystal", "DragonEgg", "DragonTear", "Onion", "OnionSeeds", "JuteRed", "TrophyWolf",
-                "TrophyHatchling", "TrophyFenring", "TrophySGolem", "TrophyCultist", "TrophyUlv",
-                "TrophyDragonQueen"
-            },
-            [Biome.Plains] = new[]
-            {
-                "BlackMetalScrap", "BlackMetal", "Barley", "BarleyFlour", "Flax", "LinenThread", "Needle",
-                "LoxPelt", "LoxMeat", "Tar", "GoblinTotem", "Cloudberry", "YagluthDrop", "TrophyGoblin",
-                "TrophyGoblinBrute", "TrophyGoblinShaman", "TrophyLox", "TrophyDeathsquito", "TrophyGrowth",
-                "TrophyGoblinKing"
-            },
-            [Biome.Mistlands] = new[]
-            {
-                "Eitr", "Sap", "BlackCore", "BlackMarble", "Carapace", "Mandible", "YggdrasilWood", "ScaleHide",
-                "Wisp", "Softtissue", "JuteBlue", "RoyalJelly", "GiantBloodSack", "Bilebag", "QueenDrop",
-                "MushroomJotunPuffs", "MushroomMagecap", "DvergrNeedle", "DvergrKeyFragment", "BugMeat", "HareMeat",
-                "TrophySeeker", "TrophySeekerBrute", "TrophyTick", "TrophyGjall", "TrophyHare", "TrophyDvergr",
-                "TrophySeekerQueen"
-            },
-            [Biome.Ashlands] = new[]
-            {
-                "FlametalOreNew", "FlametalNew", "FlametalOre", "Flametal", "Grausten", "AskHide", "AskBladder",
-                "CharredBone", "MorgenSinew", "MorgenHeart", "CelestialFeather", "CharcoalResin", "SulfurStone",
-                "ProustitePowder", "MoltenCore", "BellFragment", "GemstoneBlue", "GemstoneGreen", "GemstoneRed",
-                "Blackwood", "Vineberry", "VineberrySeeds", "Fiddleheadfern", "MushroomSmokePuff", "VoltureEgg",
-                "AsksvinEgg", "AsksvinMeat", "VoltureMeat", "BonemawSerpentTooth", "BonemawSerpentMeat", "FaderDrop",
-                "TrophyFader", "TrophyCharredMelee", "TrophyCharredArcher", "TrophyCharredMage", "TrophyMorgen",
-                "TrophyAsksvin", "TrophyVolture", "TrophyFallenValkyrie", "TrophyBonemawSerpent"
-            },
-            [Biome.DeepNorth] = new string[0]
-        };
     }
 }
