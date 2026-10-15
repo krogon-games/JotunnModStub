@@ -13,8 +13,8 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Data-driven biome detection](#data-driven-biome-detection) | UI | Built, untested | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*`, `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-09-29 |
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Built, untested | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-09-29 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Built, untested | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-09-29 |
-| [Loot system](#loot-system) | Loot | Planned | — | — | 2026-09-28 |
-| [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-09-28 |
+| [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
+| [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
 File paths are relative to `CraftingOverhaul/` unless they start with `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`.
 
@@ -230,6 +230,13 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 
 Epic Loot already does a lot of this, so the design should be checked against it before starting.
 
+**Design:** now covered by the Corruption mod design in `docs/corruption-design.md`:
+- corruption shards, maps and rips;
+- corrupted bosses;
+- rarity tiers, currency orbs and uniques.
+
+The technical review is in `docs/corruption-design-review.md`. It suggests building the corruption mod as a separate plugin in this repository.
+
 ---
 
 ## Combat mechanics
@@ -241,9 +248,14 @@ Epic Loot already does a lot of this, so the design should be checked against it
 - Likely patch points: `Humanoid`, `Attack`, `Character.Damage`.
 - New animations would need asset-bundle work in the `JotunnModUnity` project.
 
+The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses), but adds no new attacks or animations in v1. These combat ideas remain a separate track.
+
 ---
 
 ## Changelog
+
+### 2026-10-15
+- Added the Corruption mod design (`docs/corruption-design.md`) and its technical review (`docs/corruption-design-review.md`), and linked them from the planned Loot system and Combat mechanics entries. No mod code changed.
 
 ### 2026-09-29
 - Biome grouping now works out material biomes from the game's own data (vegetation, spawns, locations and dungeon rooms, stations, crops, recipes), replacing the hand-written material list. Covers the Deep North and modded items. Added an Ocean group.
