@@ -24,7 +24,10 @@ The design fits Valheim well. Reusing pickup unlocks, boss gating, status effect
   - The activating player's game *spawns and simulates*, as vanilla raids already do.
   - This also keeps rips in line with whichever networking mod the group uses.
 
-### 3. "A boss trophy of any kind" can't be one bench ingredient (verified)
+### 3. "A boss trophy of any kind" can't be one bench ingredient (verified) — resolved
+
+**Resolved 2026-10-15:** the bench recipe now uses Eikthyr's trophy, plus Bronze nails, Leather scraps and Surtling cores (see the design doc).
+
 - Vanilla only has an all-or-nothing switch: `Piece.m_requireOnlyOneIngredient` makes *every* listed ingredient an alternative. With it on, fine wood alone would build the bench.
 - **Options:**
   - name one trophy (Eikthyr's is the natural one, since the shard loop starts after the first boss); or
