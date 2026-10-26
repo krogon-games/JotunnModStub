@@ -1,0 +1,480 @@
+recipe,output,output_name,amount,enabled,station,min_station_level,ingredients,type_category,biome_category
+Recipe_ArmorBerserkerChest,ArmorBerserkerChest,Patterns of the Bear,1,True,$piece_workbench,2,BjornHide x5 (+2/lvl); BjornPaw x2; Blueberries x4 (+1/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_ArmorBerserkerLegs,ArmorBerserkerLegs,Loincloth of the Bear,1,True,$piece_workbench,2,BjornHide x5 (+2/lvl); Blueberries x4 (+1/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_ArmorBerserkerUndeadChest,ArmorBerserkerUndeadChest,Vilebone Cage,1,True,$piece_forge,2,BjornHide x4 (+2/lvl); UndeadBjornRibcage x3 (+1/lvl); LinenThread x4 (+1/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_ArmorBerserkerUndeadLegs,ArmorBerserkerUndeadLegs,Vilebone Drapes,1,True,$piece_forge,2,BjornHide x10 (+5/lvl); UndeadBjornRibcage x1 (+1/lvl); LinenThread x4 (+1/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_ArmorBronzeChest,ArmorBronzeChest,Bronze Plate Tunic,1,True,$piece_forge,1,Bronze x5 (+3/lvl); DeerHide x2; Upgrader1Armor x1,Armor,Black Forest
+Recipe_ArmorBronzeLegs,ArmorBronzeLegs,Bronze Plate Leggings,1,True,$piece_forge,1,Bronze x5 (+3/lvl); DeerHide x2; Upgrader1Armor x1,Armor,Black Forest
+Recipe_ArmorCarapaceChest,ArmorCarapaceChest,Carapace Breastplate,1,True,$piece_blackforge,1,Carapace x20 (+10/lvl); ScaleHide x3 (+1/lvl); Iron x5; Eitr x4 (+2/lvl); Upgrader5Armor x1,Armor,Mistlands
+Recipe_ArmorCarapaceLegs,ArmorCarapaceLegs,Carapace Greaves,1,True,$piece_blackforge,1,Carapace x20 (+10/lvl); ScaleHide x3 (+1/lvl); Iron x5; Eitr x4 (+2/lvl); Upgrader5Armor x1,Armor,Mistlands
+Recipe_ArmorDress1,ArmorDress1,Plain Brown Dress,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress10,ArmorDress10,Simple Undyed Dress,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress2,ArmorDress2,Brown Dress with Shawl,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress3,ArmorDress3,Brown Dress with Beads,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress4,ArmorDress4,Plain Blue Dress,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress5,ArmorDress5,Blue Dress with Shawl,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress6,ArmorDress6,Blue Dress with Beads,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress7,ArmorDress7,Plain Yellow Dress,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress8,ArmorDress8,Yellow Dress with Shawl,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorDress9,ArmorDress9,Yellow Dress with Beads,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorFenrirChest,ArmorFenringChest,Fenris Coat,1,True,$piece_workbench,2,WolfHairBundle x20 (+5/lvl); WolfPelt x5 (+3/lvl); LeatherScraps x10 (+4/lvl); Upgrader3Armor x1,Armor,Mountain
+Recipe_ArmorFenrirLegs,ArmorFenringLegs,Fenris Leggings,1,True,$piece_workbench,2,WolfHairBundle x20 (+5/lvl); WolfPelt x5 (+3/lvl); LeatherScraps x10 (+4/lvl); Upgrader3Armor x1,Armor,Mountain
+Recipe_ArmorFlametalChest,ArmorFlametalChest,Flametal Breastplate,1,True,$piece_blackforge,3,FlametalNew x20 (+10/lvl); AskHide x3 (+1/lvl); CharredBone x5; MorgenHeart x1; Upgrader6Armor x1,Armor,Ashlands
+Recipe_ArmorFlametalLegs,ArmorFlametalLegs,Flametal Greaves,1,True,$piece_blackforge,3,FlametalNew x20 (+10/lvl); AskHide x3 (+1/lvl); CharredBone x5; Upgrader6Armor x1,Armor,Ashlands
+Recipe_ArmorGoldChest,ArmorDeepNorthHeavyChest,Breastplate of the Protector,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldArmorGoldChest x1; MooseHide x8 (+3/lvl); Leatherstraps x4 (+3/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_ArmorGoldChestUncooked,ArmorGoldHeavyChestUncooked,Cast: Breastplate of the Protector,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldArmorGoldChest x1; MooseHide x8 (+3/lvl); Leatherstraps x4 (+3/lvl),Materials,Deep North
+Recipe_ArmorGoldLegs,ArmorDeepNorthHeavylegs,Trousers of the Protector,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldArmorGoldLegs x1; MooseHide x8 (+3/lvl); Leatherstraps x4 (+3/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_ArmorGoldLegsUncooked,ArmorGoldHeavyLegsUncooked,Cast: Trousers of the Protector,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldArmorGoldLegs x1; MooseHide x8 (+3/lvl); Leatherstraps x4 (+3/lvl),Materials,Deep North
+Recipe_ArmorGoldMageChest,ArmorDeepNorthMageChest,Robes of the Caller,1,True,$piece_magetable,3,Gold x6 (+3/lvl); MoldArmorMageChest x1; MooseHide x6 (+3/lvl); NornThread x5 (+3/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_ArmorGoldMageChestUncooked,ArmorGoldMageChestUncooked,Cast: Robes of the Caller,1,True,$piece_magetable,3,Gold x6 (+15/lvl); MoldArmorMageChest x1; MooseHide x6 (+3/lvl); NornThread x5 (+3/lvl),Materials,Deep North
+Recipe_ArmorGoldMageLegs,ArmorDeepNorthMagelegs,Trousers of the Caller,1,True,$piece_magetable,3,Gold x6 (+3/lvl); MoldArmorMageLegs x1; MooseHide x6 (+3/lvl); NornThread x5 (+3/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_ArmorGoldMageLegsUncooked,ArmorGoldMageLegsUncooked,Cast: Trousers of the Caller,1,True,$piece_magetable,3,Gold x6 (+15/lvl); MoldArmorMageLegs x1; MooseHide x6 (+3/lvl); NornThread x5 (+3/lvl),Materials,Deep North
+Recipe_ArmorGoldMediumChest,ArmorDeepNorthMediumChest,Chestpiece of the Vanguard,1,True,$piece_blackforge,4,Gold x12 (+6/lvl); MoldArmormediumChest x1; ElakingHairBundle x8 (+4/lvl); Leatherstraps x4 (+2/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_ArmorGoldMediumChestUncooked,ArmorGoldMediumChestUncooked,Cast: Chestpiece of the Vanguard,1,True,$piece_blackforge,4,Gold x12 (+15/lvl); MoldArmormediumChest x1; ElakingHairBundle x8 (+3/lvl); Leatherstraps x4 (+3/lvl),Materials,Meadows
+Recipe_ArmorGoldMediumLegs,ArmorDeepNorthMediumlegs,Trousers of the Vanguard,1,True,$piece_blackforge,4,Gold x12 (+6/lvl); MoldArmorMediumLegs x1; ElakingHairBundle x8 (+4/lvl); SealHide x4 (+2/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_ArmorGoldMediumLegsUncooked,ArmorGoldMediumLegsUncooked,Cast: Trousers of the Vanguard,1,True,$piece_blackforge,4,Gold x12 (+15/lvl); MoldArmorMediumLegs x1; ElakingHairBundle x8 (+3/lvl); SealHide x4 (+3/lvl),Materials,Deep North
+Recipe_ArmorHarvester1,ArmorHarvester1,Harvest Tunic,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorHarvester2,ArmorHarvester2,Harvest Dress,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorIronChest,ArmorIronChest,Iron Scale Mail,1,True,$piece_forge,2,Iron x20 (+5/lvl); DeerHide x2; Upgrader2Armor x1,Armor,Swamp
+Recipe_ArmorIronLegs,ArmorIronLegs,Iron Greaves,1,True,$piece_forge,2,Iron x20 (+5/lvl); DeerHide x2; Upgrader2Armor x1,Armor,Swamp
+Recipe_ArmorLeatherChest,ArmorLeatherChest,Leather Tunic,1,True,$piece_workbench,2,DeerHide x6 (+6/lvl); BoneFragments x0 (+5/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorLeatherLegs,ArmorLeatherLegs,Leather Trousers,1,True,$piece_workbench,2,DeerHide x6 (+6/lvl); BoneFragments x0 (+5/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorLoxChest,ArmorLoxChest,Lox Fur Jacket,1,True,$piece_workbench,2,LoxPelt x5 (+6/lvl); BoneFragments x8 (+4/lvl); Root x2 (+1/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_ArmorLoxLegs,ArmorLoxLegs,Lox Fur Trousers,1,True,$piece_workbench,2,LoxPelt x5 (+3/lvl); BoneFragments x8 (+4/lvl); Root x2 (+1/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_ArmorMageChest,ArmorMageChest,Eitr-weave Robe,1,True,$piece_magetable,1,LinenThread x20 (+10/lvl); Eitr x20 (+5/lvl); Feathers x10; ScaleHide x5; Upgrader5Armor x1,Armor,Mistlands
+Recipe_ArmorMageChest_Ashlands,ArmorMageChest_Ashlands,Robes of Embla,1,True,$piece_magetable,2,LinenThread x20 (+10/lvl); Eitr x20 (+5/lvl); AskHide x10; FlametalNew x5 (+2/lvl); Upgrader6Armor x1,Armor,Ashlands
+Recipe_ArmorMageLegs,ArmorMageLegs,Eitr-weave Trousers,1,True,$piece_magetable,1,LinenThread x20 (+10/lvl); Eitr x20 (+5/lvl); ScaleHide x10; Upgrader5Armor x1,Armor,Mistlands
+Recipe_ArmorMageLegs_Ashlands,ArmorMageLegs_Ashlands,Trousers of Embla,1,True,$piece_magetable,2,LinenThread x20 (+10/lvl); Eitr x20 (+5/lvl); AskHide x10; Upgrader6Armor x1,Armor,Ashlands
+Recipe_ArmorMediumChest_Ashlands,ArmorAshlandsMediumChest,Breastplate of Ask,1,True,$piece_blackforge,3,LinenThread x15 (+10/lvl); LoxPelt x4 (+2/lvl); AskHide x10 (+5/lvl); Upgrader6Armor x1,Armor,Ashlands
+Recipe_ArmorMediumLegs_Ashlands,ArmorAshlandsMediumlegs,Trousers of Ask,1,True,$piece_blackforge,3,LinenThread x15 (+10/lvl); LoxPelt x4 (+2/lvl); AskHide x10 (+5/lvl); Upgrader6Armor x1,Armor,Ashlands
+Recipe_ArmorPaddedCuirass,ArmorPaddedCuirass,Padded Cuirass,1,True,$piece_forge,2,Iron x10 (+3/lvl); LinenThread x20 (+10/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_ArmorPaddedGreaves,ArmorPaddedGreaves,Padded Greaves,1,True,$piece_forge,2,Iron x10 (+3/lvl); LinenThread x20 (+10/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_ArmorRagsChest,ArmorRagsChest,Rag Tunic,1,True,$piece_workbench,1,LeatherScraps x5 (+5/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorRagsLegs,ArmorRagsLegs,Rag Trousers,1,True,$piece_workbench,1,LeatherScraps x5 (+5/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorRootChest,ArmorRootChest,Root Harnesk,1,True,$piece_workbench,2,Root x10 (+2/lvl); ElderBark x10 (+5/lvl); DeerHide x2; Upgrader2Armor x1,Armor,Swamp
+Recipe_ArmorRootLegs,ArmorRootLegs,Root Leggings,1,True,$piece_workbench,2,Root x10 (+2/lvl); ElderBark x10 (+5/lvl); DeerHide x2; Upgrader2Armor x1,Armor,Swamp
+Recipe_ArmorTrollLeatherChest,ArmorTrollLeatherChest,Troll Leather Tunic,1,True,$piece_workbench,2,TrollHide x5 (+2/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_ArmorTrollLeatherLegs,ArmorTrollLeatherLegs,Troll Leather Trousers,1,True,$piece_workbench,2,TrollHide x5 (+2/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_ArmorTunic1,ArmorTunic1,Plain Blue Tunic,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic10,ArmorTunic10,Simple Undyed Tunic,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic2,ArmorTunic2,Blue Tunic with Cape,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic3,ArmorTunic3,Blue Tunic with Beads,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic4,ArmorTunic4,Plain Red Tunic,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic5,ArmorTunic5,Red Tunic with Cape,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic6,ArmorTunic6,Red Tunic with Beads,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic7,ArmorTunic7,Plain Yellow Tunic,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic8,ArmorTunic8,Yellow Tunic with Cape,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorTunic9,ArmorTunic9,Yellow Tunic with Beads,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_ArmorWolfChest,ArmorWolfChest,Wolf Hide Chestpiece,1,True,$piece_forge,2,Silver x20 (+5/lvl); WolfPelt x5 (+2/lvl); Chain x1; Upgrader3Armor x1,Armor,Mountain
+Recipe_ArmorWolfLegs,ArmorWolfLegs,Wolf Hide Trousers,1,True,$piece_forge,2,Silver x20 (+5/lvl); WolfPelt x5 (+2/lvl); WolfFang x4 (+1/lvl); Upgrader3Armor x1,Armor,Mountain
+Recipe_ArrowBloodGold,ArrowBloodGold,Bloodgold Arrow,20,True,$piece_blackforge,1,Gold x1 (+1/lvl); Feathers x2 (+1/lvl); Frostwood x8 (+1/lvl),Ammo,Deep North
+Recipe_ArrowBronze,ArrowBronze,Bronzehead Arrow,20,True,$piece_forge,1,Wood x8 (+1/lvl); Bronze x1 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Black Forest
+Recipe_ArrowCarapace,ArrowCarapace,Carapace Arrow,20,True,$piece_blackforge,1,Carapace x4 (+1/lvl); Feathers x2 (+1/lvl); Wood x8 (+1/lvl),Ammo,Mistlands
+Recipe_ArrowCharred,ArrowCharred,Charred Arrow,20,True,$piece_blackforge,1,CharredBone x4 (+1/lvl); Feathers x2 (+1/lvl); Blackwood x8 (+1/lvl),Ammo,Ashlands
+Recipe_ArrowFire,ArrowFire,Fire Arrow,20,True,$piece_workbench,2,Wood x8 (+1/lvl); Resin x8 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Meadows
+Recipe_ArrowFlint,ArrowFlint,Flinthead Arrow,20,True,$piece_workbench,2,Wood x8 (+1/lvl); Flint x2 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Meadows
+Recipe_ArrowFrost,ArrowFrost,Frost Arrow,20,True,$piece_workbench,4,Wood x8 (+1/lvl); Obsidian x4 (+1/lvl); Feathers x2 (+1/lvl); FreezeGland x1 (+1/lvl),Ammo,Mountain
+Recipe_ArrowIron,ArrowIron,Ironhead Arrow,20,True,$piece_forge,2,Wood x8 (+1/lvl); Iron x1 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Swamp
+Recipe_ArrowNeedle,ArrowNeedle,Needle Arrow,20,True,$piece_workbench,4,Needle x4 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Plains
+Recipe_ArrowObsidian,ArrowObsidian,Obsidian Arrow,20,True,$piece_workbench,3,Wood x8 (+1/lvl); Obsidian x4 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Mountain
+Recipe_ArrowPoison,ArrowPoison,Poison Arrow,20,True,$piece_workbench,3,Wood x8 (+1/lvl); Obsidian x4 (+1/lvl); Feathers x2 (+1/lvl); Ooze x2 (+1/lvl),Ammo,Mountain
+Recipe_ArrowSilver,ArrowSilver,Silver Arrow,20,True,$piece_forge,3,Wood x8 (+1/lvl); Silver x1 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Mountain
+Recipe_ArrowWood,ArrowWood,Wood Arrow,20,True,$piece_workbench,1,Wood x8 (+2/lvl),Ammo,Meadows
+Recipe_AtgeirBlackmetal,AtgeirBlackmetal,Black Metal Atgeir,1,True,$piece_forge,4,FineWood x10; BlackMetal x30 (+15/lvl); LinenThread x5 (+5/lvl); Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_AtgeirBronze,AtgeirBronze,Bronze Atgeir,1,True,$piece_forge,1,Wood x10; Bronze x8 (+4/lvl); LeatherScraps x2; Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_AtgeirGold,AtgeirGold,Nord Atgeir,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldAtgeir x1; Frostwood x10 (+5/lvl); Upgrader1Weapon x1,Melee Weapons,Deep North
+Recipe_AtgeirGold_BloodLightning,AtgeirGold_BloodLightning,Thunderblood Atgeir,1,True,$piece_blackforge,4,AtgeirGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_AtgeirGold_FrostFire,AtgeirGold_FrostFire,Frostfire Atgeir,1,True,$piece_blackforge,4,AtgeirGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_AtgeirGoldUncooked,AtgeirGoldUncooked,Cast: Nord Atgeir,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldAtgeir x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_AtgeirHimminAfl,AtgeirHimminAfl,Himminafl,1,True,$piece_blackforge,1,YggdrasilWood x10; Eitr x15 (+15/lvl); Silver x5 (+5/lvl); Mandible x2 (+2/lvl); Upgrader5Weapon x1,Melee Weapons,Mistlands
+Recipe_AtgeirIron,AtgeirIron,Iron Atgeir,1,True,$piece_forge,2,Wood x10; Iron x30 (+15/lvl); LeatherScraps x2 (+1/lvl); Upgrader2Weapon x1,Melee Weapons,Swamp
+Recipe_AtgeirWood,AtgeirWood,Wooden Atgeir,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_AxeBerzerkr,AxeBerzerkr,Berserkir Axes,1,True,$piece_blackforge,3,CharredBone x15; FlametalNew x24 (+15/lvl); AskHide x3 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Ashlands
+Recipe_AxeBerzerkr_Blood,AxeBerzerkrBlood,Bleeding Berserkir Axes,1,True,$piece_blackforge,4,AxeBerzerkr x1; FlametalNew x5 (+5/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_AxeBerzerkr_Lightning,AxeBerzerkrLightning,Thundering Berserkir Axes,1,True,$piece_blackforge,4,AxeBerzerkr x1; FlametalNew x5 (+5/lvl); GemstoneBlue x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_AxeBerzerkr_Nature,AxeBerzerkrNature,Primal Berserkir Axes,1,True,$piece_blackforge,4,AxeBerzerkr x1; FlametalNew x5 (+5/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_AxeBlackMetal,AxeBlackMetal,Black Metal Axe,1,True,$piece_forge,4,FineWood x6; BlackMetal x20 (+10/lvl); LinenThread x5 (+5/lvl); Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_AxeBronze,AxeBronze,Bronze Axe,1,True,$piece_forge,1,Wood x4; Bronze x8 (+4/lvl); LeatherScraps x2 (+1/lvl); Upgrader2Weapon x1,Melee Weapons,Black Forest
+Recipe_AxeEarly,AxeEarly,Early Axes,1,True,$piece_workbench,1,Wood x4 (+2/lvl); LeatherScraps x0 (+2/lvl); AxeHead1 x1; AxeHead2 x1; Upgrader2Weapon x1,Melee Weapons,Black Forest
+Recipe_AxeFlint,AxeFlint,Flint Axe,1,True,$piece_workbench,1,Wood x4; Flint x6 (+3/lvl); LeatherScraps x0 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Meadows
+Recipe_AxeGold,AxeGold,Nord Axe,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldAxe x1; Frostwood x10 (+5/lvl); Upgrader4Weapon x1,Melee Weapons,Deep North
+Recipe_AxeGold_BloodLightning,AxeGold_BloodLightning,Thunderblood Axe,1,True,$piece_blackforge,4,AxeGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_AxeGold_FrostFire,AxeGold_FrostFire,Frostfire Axe,1,True,$piece_blackforge,4,AxeGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader4Weapon x1,Melee Weapons,Deep North
+Recipe_AxeGoldUncooked,AxeGoldUncooked,Cast: Nord Axe,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldAxe x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_AxeIron,AxeIron,Iron Axe,1,True,$piece_forge,2,Wood x4; Iron x20 (+10/lvl); LeatherScraps x2 (+1/lvl); Upgrader3Weapon x1,Melee Weapons,Swamp
+Recipe_AxeJotunBane,AxeJotunBane,Jotun Bane,1,True,$piece_blackforge,1,YggdrasilWood x5; Iron x15 (+10/lvl); Bilebag x3 (+1/lvl); Eitr x10 (+1/lvl); Upgrader4Weapon x1,Melee Weapons,Mistlands
+Recipe_AxeStone,AxeStone,Stone Axe,1,True,,1,Wood x5; Stone x4 (+2/lvl); Upgrader0Weapon x1,Melee Weapons,Meadows
+Recipe_AxeWood,AxeWood,Wooden Axe,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_BakedPoteitr,BakedPoteitrUncooked,Unbaked Poteitr,1,True,$piece_cauldron,7,SealBlubber x1 (+1/lvl); Kale x2 (+1/lvl); Poteitr x1 (+1/lvl); OatFlour x2 (+1/lvl),Materials,Deep North
+Recipe_BarleyWineBase,BarleyWineBase,Barley Wine Base: Fire Resistance,1,True,$piece_meadcauldron,1,Barley x10 (+1/lvl); Cloudberry x10 (+1/lvl),Materials,Plains
+Recipe_Battleaxe,Battleaxe,Battleaxe,1,True,$piece_forge,2,ElderBark x30 (+5/lvl); Iron x35 (+15/lvl); LeatherScraps x4; Upgrader2Weapon x1,Melee Weapons,Swamp
+Recipe_Battleaxe_Blackmetal,BattleaxeBlackmetal,Black Metal Battleaxe,1,True,$piece_forge,4,FineWood x10; BlackMetal x30 (+15/lvl); LinenThread x5 (+5/lvl); Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_Battleaxe_Crystal,BattleaxeCrystal,Crystal Battleaxe,1,True,$piece_forge,3,ElderBark x40 (+5/lvl); Silver x30 (+15/lvl); Crystal x10; Upgrader3Weapon x1,Melee Weapons,Mountain
+Recipe_Battleaxe_SkullSplittur,BattleaxeSkullSplittur,Skull Splittur,1,True,$piece_blackforge,1,Iron x30 (+15/lvl); YggdrasilWood x15 (+5/lvl); Eitr x10; Upgrader5Weapon x1,Melee Weapons,Mistlands
+Recipe_BattleaxeGold,BattleaxeGold,Nord Greataxe,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldAxe2H x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_BattleaxeGold_BloodLightning,BattleaxeGold_BloodLightning,Thunderblood Greataxe,1,True,$piece_blackforge,4,BattleaxeGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_BattleaxeGold_FrostFire,BattleaxeGold_FrostFire,Frostfire Greataxe,1,True,$piece_blackforge,4,BattleaxeGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_BattleaxeGoldUncooked,BattleaxeGoldUncooked,Cast: Nord Greataxe,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldAxe2H x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_BattleaxeWood,BattleaxeWood,Wooden Battleaxe,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_Bell,Bell,Bell,1,True,$piece_blackforge,1,BellFragment x3 (+1/lvl),Other,Ashlands
+Recipe_Blacksoup,BlackSoup,Black Soup,1,True,$piece_cauldron,2,Bloodbag x1 (+1/lvl); Honey x1 (+1/lvl); Turnip x1 (+1/lvl),Food & Potions,Swamp
+Recipe_BloodGoldKeyUncooked,KeysGoldUncooked,Cast: Intricate Key,1,True,$piece_blackforge,4,Gold x5 (+5/lvl); MoldKeys x1,Materials,Meadows
+Recipe_BloodPudding,BloodPudding,Blood Pudding,1,True,$piece_cauldron,4,Thistle x2 (+1/lvl); Bloodbag x2 (+1/lvl); BarleyFlour x4 (+1/lvl),Food & Potions,Plains
+Recipe_BoarJerky,BoarJerky,Boar Jerky,2,True,$piece_cauldron,1,RawMeat x1 (+1/lvl); Honey x1 (+1/lvl),Food & Potions,Meadows
+Recipe_BoltBlackmetal,BoltBlackmetal,Black Metal Bolt,20,True,$piece_blackforge,2,BlackMetal x2 (+1/lvl); Wood x8 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Plains
+Recipe_BoltBloodGold,BoltBloodGold,Bloodgold Bolt,20,True,$piece_blackforge,1,Gold x1 (+1/lvl); Frostwood x8 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Deep North
+Recipe_BoltBone,BoltBone,Bone Bolt,20,True,$piece_blackforge,1,BoneFragments x8 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Meadows
+Recipe_BoltCarapace,BoltCarapace,Carapace Bolt,20,True,$piece_blackforge,1,Carapace x2 (+1/lvl); Wood x8 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Mistlands
+Recipe_BoltCharred,BoltCharred,Charred Bolt,20,True,$piece_blackforge,1,CharredBone x2 (+1/lvl); Blackwood x8 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Ashlands
+Recipe_BoltIron,BoltIron,Iron Bolt,20,True,$piece_blackforge,1,Wood x8 (+1/lvl); Iron x1 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Swamp
+Recipe_BombBile,BombBile,Bile Bomb,3,True,$piece_workbench,1,Sap x1 (+1/lvl); Bilebag x1 (+2/lvl); Resin x3 (+2/lvl),Melee Weapons,Mistlands
+Recipe_BombBlob_Frost,BombBlob_Frost,Blob Bomb: Frost,1,True,$piece_workbench,1,BlobVial x1 (+1/lvl); TrophyHatchling x1 (+1/lvl); Resin x3 (+2/lvl),Melee Weapons,Mountain
+Recipe_BombBlob_Lava,BombBlob_Lava,Blob Bomb: Lava,1,True,$piece_workbench,1,BlobVial x1 (+1/lvl); SulfurStone x10 (+1/lvl); ProustitePowder x10 (+2/lvl),Melee Weapons,Ashlands
+Recipe_BombBlob_Morkhalla,BombBlob_Morkhalla,Blob Bomb: Pulp,1,True,$piece_workbench,1,BlobVial x1 (+1/lvl); TrophyBlob_Morkhalla x1 (+1/lvl); OozeMork x3 (+2/lvl),Melee Weapons,Deep North
+Recipe_BombBlob_Poison,BombBlob_Poison,Blob Bomb: Poison,1,True,$piece_workbench,1,BlobVial x1 (+1/lvl); TrophyBlob x1 (+1/lvl); Resin x3 (+2/lvl),Melee Weapons,Swamp
+Recipe_BombBlob_PoisonElite,BombBlob_PoisonElite,Blob Bomb: Elite Poison,1,True,$piece_workbench,1,BlobVial x1 (+1/lvl); TrophyBlob x3 (+1/lvl); Resin x3 (+2/lvl),Melee Weapons,Swamp
+Recipe_BombBlob_Tar,BombBlob_Tar,Blob Bomb: Tar,1,True,$piece_workbench,1,BlobVial x1 (+1/lvl); TrophyGrowth x1 (+1/lvl); Tar x3 (+2/lvl),Melee Weapons,Plains
+Recipe_BombDynamite,BombDynamite,Ember Charge,10,True,$piece_workbench,1,SealHide x2 (+1/lvl); FaderEmber x1 (+2/lvl),Melee Weapons,Deep North
+Recipe_BombLava,BombLava,Basalt Bomb,5,True,$piece_workbench,1,AskHide x1 (+1/lvl); AskBladder x1 (+2/lvl); ProustitePowder x3 (+2/lvl),Melee Weapons,Ashlands
+Recipe_BombOoze,BombOoze,Ooze Bomb,5,True,$piece_workbench,1,LeatherScraps x5 (+1/lvl); Ooze x5 (+2/lvl); Resin x3 (+2/lvl),Melee Weapons,Swamp
+Recipe_BombSiege,BombSiege,Explosive Payload,5,True,$piece_workbench,1,AskHide x2 (+1/lvl); SulfurStone x2 (+2/lvl); ProustitePowder x3 (+2/lvl),Materials,Ashlands
+Recipe_BombSmoke,BombSmoke,Smoke Bomb,10,True,$piece_workbench,1,MushroomSmokePuff x1 (+1/lvl); AskBladder x1 (+1/lvl),Melee Weapons,Ashlands
+Recipe_Bow,Bow,Crude Bow,1,True,$piece_workbench,1,Wood x10 (+5/lvl); LeatherScraps x8 (+4/lvl); DeerHide x0 (+1/lvl); Upgrader0Weapon x1,Bows & Crossbows,Meadows
+Recipe_BowAshlands,BowAshlands,Ash Fang,1,True,$piece_blackforge,3,Blackwood x10 (+5/lvl); CharredBone x16 (+10/lvl); FlametalNew x5 (+5/lvl); BonemawSerpentTooth x5 (+5/lvl); Upgrader6Weapon x1,Bows & Crossbows,Ashlands
+Recipe_BowAshlands_Blood,BowAshlandsBlood,Blood Fang,1,True,$piece_blackforge,4,BowAshlands x1; FlametalNew x5 (+5/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Bows & Crossbows,Deep North
+Recipe_BowAshlands_Lightning,BowAshlandsStorm,Storm Fang,1,True,$piece_blackforge,4,BowAshlands x1; FlametalNew x5 (+5/lvl); GemstoneBlue x1 (+1/lvl); Upgrader6Weapon x1,Bows & Crossbows,Deep North
+Recipe_BowAshlands_Nature,BowAshlandsRoot,Root Fang,1,True,$piece_blackforge,4,BowAshlands x1; FlametalNew x5 (+5/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Bows & Crossbows,Deep North
+Recipe_BowDraugrFang,BowDraugrFang,Draugr Fang,1,True,$piece_forge,2,ElderBark x10 (+5/lvl); Silver x20 (+10/lvl); DeerHide x2 (+2/lvl); Guck x10 (+2/lvl); Upgrader2Weapon x1,Bows & Crossbows,Mountain
+Recipe_BowFineWood,BowFineWood,Finewood Bow,1,True,$piece_workbench,1,FineWood x10 (+5/lvl); RoundLog x10 (+5/lvl); DeerHide x2 (+2/lvl); Upgrader1Weapon x1,Bows & Crossbows,Black Forest
+Recipe_BowGold,BowGold,Nord Bow,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldBow x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
+Recipe_BowGold_BloodLightning,BowGold_BloodLightning,Thunderblood Bow,1,True,$piece_blackforge,4,BowGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
+Recipe_BowGold_FrostFire,BowGold_FrostFire,Frostfire Bow,1,True,$piece_blackforge,4,BowGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
+Recipe_BowGoldUncooked,BowGoldUncooked,Cast: Nord Bow,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldBow x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_BowHuntsman,BowHuntsman,Huntsman Bow,1,True,$piece_forge,1,FineWood x10 (+5/lvl); Iron x20 (+10/lvl); Feathers x10 (+5/lvl); DeerHide x2 (+2/lvl); Upgrader2Weapon x1,Bows & Crossbows,Swamp
+Recipe_BowSpineSnap,BowSpineSnap,Spinesnap,1,True,$piece_blackforge,1,FineWood x10 (+5/lvl); BoneFragments x40 (+20/lvl); Eitr x10; Upgrader5Weapon x1,Bows & Crossbows,Mistlands
+Recipe_Bread,BreadDough,Bread Dough,2,True,$piece_preptable,1,BarleyFlour x10 (+1/lvl),Materials,Plains
+Recipe_Bronze,Bronze,Bronze,1,True,$piece_forge,1,Copper x2 (+1/lvl); Tin x1 (+1/lvl),Materials,Black Forest
+Recipe_Bronze5,Bronze,Bronze,5,True,$piece_forge,1,Copper x10 (+1/lvl); Tin x5 (+1/lvl),Materials,Black Forest
+Recipe_BronzeNails,BronzeNails,Bronze Nails,20,True,$piece_forge,1,Bronze x1 (+1/lvl),Materials,Black Forest
+Recipe_CapeAsh,CapeAsh,Ashen Cape,1,True,$piece_blackforge,3,AskHide x6 (+2/lvl); MorgenSinew x2; FlametalNew x5; Upgrader6Armor x1,Armor,Ashlands
+Recipe_CapeAsksvin,CapeAsksvin,Asksvin Cloak,1,True,$piece_magetable,2,AskHide x6 (+2/lvl); MorgenSinew x2; Upgrader6Armor x1,Armor,Ashlands
+Recipe_CapeDeepNorth,CapeDeepNorth,Moose Hide Cape,1,True,$piece_blackforge,4,MooseHide x6 (+3/lvl); MooseSinew x2 (+1/lvl); Gold x5 (+2/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_CapeDeepNorthMage,CapeDeepNorthMage,Cape of the Caller,1,True,$piece_magetable,4,SealHide x6 (+3/lvl); NornThread x2 (+1/lvl); Gold x5 (+2/lvl); Eitr x15 (+5/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_CapeDeerHide,CapeDeerHide,Deer Hide Cape,1,True,$piece_workbench,2,DeerHide x4 (+4/lvl); BoneFragments x5 (+5/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_CapeFeather,CapeFeather,Feather Cape,1,True,$piece_magetable,1,Feathers x10 (+2/lvl); ScaleHide x5 (+5/lvl); Eitr x20 (+3/lvl); Upgrader5Armor x1,Armor,Mistlands
+Recipe_CapeLinen,CapeLinen,Linen Cape,1,True,$piece_workbench,2,LinenThread x20 (+4/lvl); Silver x1; Upgrader4Armor x1,Armor,Plains
+Recipe_CapeLox,CapeLox,Lox Cape,1,True,$piece_workbench,2,LoxPelt x6 (+2/lvl); Silver x2; Upgrader4Armor x1,Armor,Plains
+Recipe_CapeOdin,CapeOdin,Cape of Oden,1,True,$piece_workbench,1,LeatherScraps x10 (+5/lvl); Coal x4 (+2/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_CapeTrollHide,CapeTrollHide,Troll Hide Cape,1,True,$piece_workbench,2,TrollHide x10 (+5/lvl); BoneFragments x10 (+5/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_CapeWolf,CapeWolf,Wolf Fur Cape,1,True,$piece_workbench,2,WolfPelt x6 (+4/lvl); Silver x4 (+2/lvl); TrophyWolf x1; Upgrader3Armor x1,Armor,Mountain
+Recipe_CarrotSoup,CarrotSoup,Carrot Soup,1,True,$piece_cauldron,1,Mushroom x1 (+1/lvl); Carrot x3 (+1/lvl),Food & Potions,Black Forest
+Recipe_Catapult_Ammo_BloodGold,Catapult_Ammo_BloodGold,Bloodgold Payload,5,True,$piece_blackforge,1,Ice x2 (+1/lvl); Gold x2 (+2/lvl); ProustitePowder x3 (+2/lvl),Materials,Deep North
+Recipe_CatapultPayload_Grausten,Catapult_ammo,Grausten Payload,5,True,$piece_workbench,1,Grausten x10 (+1/lvl),Materials,Ashlands
+Recipe_CeramicPlate,CeramicPlate,Ceramic Plate,5,True,$piece_artisanstation,2,BlackMarble x5 (+3/lvl),Materials,Mistlands
+Recipe_Club,Club,Club,1,True,,1,Wood x6; BoneFragments x0 (+5/lvl); Upgrader0Weapon x1,Melee Weapons,Meadows
+Recipe_CookedEgg,CookedEgg,Cooked Egg,1,True,$piece_cauldron,1,ChickenEgg x1 (+1/lvl),Food & Potions,Plains
+Recipe_CrossbowArbalest,CrossbowArbalest,Arbalest,1,True,$piece_blackforge,1,Wood x10 (+5/lvl); Iron x8 (+4/lvl); Root x4 (+1/lvl); Upgrader5Weapon x1,Bows & Crossbows,Plains
+Recipe_CrossbowGold,CrossbowGold,Nord Crossbow,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldCrossbow x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
+Recipe_CrossbowGold_BloodLightning,CrossbowGold_BloodLightning,Thunderblood Crossbow,1,True,$piece_blackforge,4,CrossbowGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
+Recipe_CrossbowGold_FrostFire,CrossbowGold_FrostFire,Frostfire Crossbow,1,True,$piece_blackforge,4,CrossbowGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
+Recipe_CrossbowGoldUncooked,CrossbowGoldUncooked,Cast: Nord Crossbow,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldCrossbow x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_CrossbowRipper,CrossbowRipper,Ripper,1,True,$piece_blackforge,3,Blackwood x10 (+5/lvl); FlametalNew x8 (+4/lvl); MorgenSinew x2 (+1/lvl); BonemawSerpentTooth x4 (+4/lvl); Upgrader6Weapon x1,Bows & Crossbows,Ashlands
+Recipe_CrossbowRipper_Blood,CrossbowRipperBlood,Wound Ripper,1,True,$piece_blackforge,4,CrossbowRipper x1; FlametalNew x8 (+8/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Bows & Crossbows,Deep North
+Recipe_CrossbowRipper_Lightning,CrossbowRipperLightning,Storm Ripper,1,True,$piece_blackforge,4,CrossbowRipper x1; FlametalNew x8 (+8/lvl); GemstoneBlue x1 (+1/lvl); Upgrader6Weapon x1,Bows & Crossbows,Deep North
+Recipe_CrossbowRipper_Nature,CrossbowRipperNature,Root Ripper,1,True,$piece_blackforge,4,CrossbowRipper x1; FlametalNew x8 (+8/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Bows & Crossbows,Deep North
+Recipe_Cultivator,Cultivator,Cultivator,1,True,$piece_forge,1,RoundLog x5 (+1/lvl); Bronze x5 (+1/lvl); Upgrader0Weapon x1,Tools,Black Forest
+Recipe_DeerStew,DeerStew,Deer Stew,1,True,$piece_cauldron,1,CookedDeerMeat x1 (+1/lvl); Blueberries x1 (+1/lvl); Carrot x1 (+1/lvl),Food & Potions,Black Forest
+Recipe_Demister,Demister,Wisplight,1,True,$piece_workbench,1,Silver x1 (+1/lvl); Wisp x1 (+1/lvl),Utility & Trinkets,Mountain
+Recipe_DvergrKey,DvergrKey,Sealbreaker,1,True,$piece_magetable,1,DvergrKeyFragment x9 (+1/lvl),Other,Mistlands
+Recipe_Eyescream,Eyescream,Eyescream,1,True,$piece_cauldron,3,GreydwarfEye x3 (+1/lvl); FreezeGland x1 (+1/lvl),Food & Potions,Mountain
+Recipe_FeastAshlands,FeastAshlands_Material,Ashlands Gourmet Bowl,1,True,$piece_preptable,1,CookedAsksvinMeat x3 (+1/lvl); Vineberry x5 (+1/lvl); ScorchingMedley x2 (+1/lvl); SpiceAshlands x1 (+1/lvl),Materials,Ashlands
+Recipe_FeastBlackforest,FeastBlackforest_Material,Black Forest Buffet Platter,1,True,$piece_preptable,1,DeerStew x3 (+1/lvl); Thistle x5 (+1/lvl); QueensJam x4 (+1/lvl); SpiceForests x1 (+1/lvl),Materials,Swamp
+Recipe_FeastDeepNorth,FeastDeepNorth_Material,Northern Morning Fare,1,True,$piece_preptable,1,CookedMooseMeat x3 (+1/lvl); Poteitr x5 (+1/lvl); OatFlour x2 (+1/lvl); SpiceDeepNorth x1 (+1/lvl),Materials,Deep North
+Recipe_Feaster,Feaster,Serving Tray,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Weapon x1,Tools,Meadows
+Recipe_FeastMeadows,FeastMeadows_Material,Whole Roasted Meadow Boar,1,True,$piece_preptable,1,CookedDeerMeat x2 (+1/lvl); CookedMeat x5 (+1/lvl); Dandelion x4 (+1/lvl); SpiceForests x1 (+1/lvl),Materials,Swamp
+Recipe_FeastMistlands,FeastMistlands_Material,Mushrooms Galore á la Mistlands,1,True,$piece_preptable,1,MisthareSupreme x1 (+1/lvl); CookedBugMeat x3 (+1/lvl); YggdrasilPorridge x1 (+1/lvl); SpiceMistlands x1 (+1/lvl),Materials,Mistlands
+Recipe_FeastMountains,FeastMountains_Material,Hearty Mountain Logger's Stew,1,True,$piece_preptable,1,WolfMeatSkewer x2 (+1/lvl); OnionSoup x3 (+1/lvl); Carrot x4 (+1/lvl); SpiceMountains x1 (+1/lvl),Materials,Mountain
+Recipe_FeastOceans,FeastOceans_Material,Sailor's Bounty,1,True,$piece_preptable,1,FishCooked x5 (+1/lvl); Thistle x4 (+1/lvl); SerpentMeatCooked x2 (+1/lvl); SpiceOceans x1 (+1/lvl),Materials,Deep North
+Recipe_FeastPlains,FeastPlains_Material,Plains Pie Picnic,1,True,$piece_preptable,1,Bread x3 (+1/lvl); LoxPie x2 (+1/lvl); Cloudberry x5 (+1/lvl); SpicePlains x1 (+1/lvl),Materials,Plains
+Recipe_FeastSwamps,FeastSwamps_Material,Swamp Dweller's Delight,1,True,$piece_preptable,1,Sausages x8 (+1/lvl); Bloodbag x4 (+1/lvl); TurnipStew x2 (+1/lvl); SpiceForests x1 (+1/lvl),Materials,Swamp
+Recipe_FierySvinstew,FierySvinstew,Fiery Svinstew,1,True,$piece_cauldron,5,AsksvinMeat x1 (+1/lvl); Vineberry x2 (+1/lvl); MushroomSmokePuff x1 (+1/lvl),Food & Potions,Ashlands
+Recipe_FireworksBlue,FireworksRocket_Blue,Blue Fireworks,1,True,$piece_workbench,1,FireworksRocket_White x1; Blueberries x1,Materials,Black Forest
+Recipe_FireworksCyan,FireworksRocket_Cyan,Cyan Fireworks,1,True,$piece_workbench,1,FireworksRocket_White x1; GreydwarfEye x1,Materials,Meadows
+Recipe_FireworksGreen,FireworksRocket_Green,Green Fireworks,1,True,$piece_workbench,1,FireworksRocket_White x1; Guck x1,Materials,Swamp
+Recipe_FireworksPurple,FireworksRocket_Purple,Purple Fireworks,1,True,$piece_workbench,1,FireworksRocket_White x1; Turnip x1,Materials,Swamp
+Recipe_FireworksRed,FireworksRocket_Red,Red Fireworks,1,True,$piece_workbench,1,FireworksRocket_White x1; Raspberry x1,Materials,Meadows
+Recipe_FireworksYellow,FireworksRocket_Yellow,Yellow Fireworks,1,True,$piece_workbench,1,FireworksRocket_White x1; Dandelion x1,Materials,Meadows
+Recipe_Fish1,FishRaw,Raw Fish,1,True,$piece_preptable,1,Fish1 x1 (+1/lvl); Fish2 x1 (+1/lvl); Fish3 x1 (+1/lvl); Fish4_cave x1 (+1/lvl); Fish5 x1 (+1/lvl); Fish6 x1 (+1/lvl); Fish7 x1 (+1/lvl); Fish8 x1 (+1/lvl); Fish9 x1 (+1/lvl); Fish10 x1 (+1/lvl); Fish11 x1 (+1/lvl); Fish12 x1 (+1/lvl),Materials,Deep North
+Recipe_FishAndBread,FishAndBreadUncooked,Uncooked Fish 'n' Bread,1,True,$piece_preptable,1,Fish9 x1 (+1/lvl); BreadDough x2 (+1/lvl),Materials,Mistlands
+Recipe_FishingBaitAshlands,FishingBaitAshlands,Hot Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophyCharredMelee x1 (+1/lvl),Ammo,Ashlands
+Recipe_FishingBaitCave,FishingBaitCave,Cold Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophyFenring x1 (+1/lvl),Ammo,Mountain
+Recipe_FishingBaitDeepNorth,FishingBaitDeepNorth,Frosty Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophyHatchling x1 (+1/lvl),Ammo,Mountain
+Recipe_FishingBaitForest,FishingBaitForest,Mossy Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophyFrostTroll x1 (+1/lvl),Ammo,Black Forest
+Recipe_FishingBaitMistlands,FishingBaitMistlands,Misty Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophyLox x1 (+1/lvl),Ammo,Plains
+Recipe_FishingBaitOcean,FishingBaitOcean,Heavy Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophySerpent x1 (+1/lvl),Ammo,Ocean
+Recipe_FishingBaitPlains,FishingBaitPlains,Stingy Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophyGoblin x1 (+1/lvl),Ammo,Plains
+Recipe_FishingBaitSwamp,FishingBaitSwamp,Sticky Fishing Bait,20,True,$piece_preptable,1,FishingBait x20 (+1/lvl); TrophyAbomination x1 (+1/lvl),Ammo,Swamp
+Recipe_FishSoup,FishSoup,Fish Soup,1,True,$piece_cauldron,7,FishRaw x3 (+1/lvl); Kale x2 (+1/lvl); Ice x2 (+1/lvl),Food & Potions,Deep North
+Recipe_FishWraps,FishWraps,Fish Wraps,1,True,$piece_cauldron,4,FishCooked x2 (+1/lvl); BarleyFlour x4 (+1/lvl),Food & Potions,Deep North
+Recipe_FistBjornClaw,FistBjornClaw,Paws of the Bear,1,True,$piece_workbench,2,BjornHide x2 (+2/lvl); BjornPaw x2; LeatherScraps x4 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_FistFenrirClaw,FistFenrirClaw,Flesh Rippers,1,True,$piece_forge,3,WolfHairBundle x10 (+1/lvl); WolfClaw x6 (+1/lvl); Silver x10 (+1/lvl); Upgrader3Weapon x1,Melee Weapons,Mountain
+Recipe_FistGold_BloodLightning,FistGold_BloodLightning,Thunderblood Knucklechains,1,True,$piece_blackforge,4,FistGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_FistGold_FrostFire,FistGold_FrostFire,Frostfire Knucklechains,1,True,$piece_blackforge,4,FistGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_FistUnbjornClaw,FistBjornUndeadClaw,Vilebone Maulclaws,1,True,$piece_forge,4,BjornHide x2 (+1/lvl); UndeadBjornRibcage x2 (+1/lvl); BlackMetal x2 (+1/lvl); LinenThread x4 (+2/lvl); Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_FistweaponGold,FistGold,Nord Knucklechains,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldFistweapon x1; Frostwood x10 (+5/lvl); Upgrader2Armor x1,Melee Weapons,Deep North
+Recipe_FistweaponGoldUncooked,FistGoldUncooked,Cast: Nord Knucklechains,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldFistweapon x1; MoleClaws x2 (+1/lvl),Materials,Deep North
+Recipe_GrapplingHook,GrapplingHook,Grappling Hook,1,True,$piece_blackforge,1,YggdrasilWood x10 (+5/lvl); Eitr x10 (+4/lvl); Mandible x4 (+1/lvl); Hook x1 (+1/lvl),Bows & Crossbows,Mistlands
+Recipe_Hammer,Hammer,Hammer,1,True,,1,Wood x3 (+1/lvl); Stone x2 (+1/lvl); Upgrader0Weapon x1,Tools,Meadows
+Recipe_HelmetBerserker,HelmetBerserkerHood,Headdress of the Bear,1,True,$piece_workbench,2,BjornHide x5 (+2/lvl); TrophyBjorn x1; Upgrader5Armor x1,Armor,Plains
+Recipe_HelmetBerserkerUndead,HelmetBerserkerUndead,Vilebone Visage,1,True,$piece_forge,2,BjornHide x5 (+2/lvl); TrophyBjornUndead x1; Upgrader4Armor x1,Armor,Plains
+Recipe_HelmetBronze,HelmetBronze,Bronze Helmet,1,True,$piece_forge,1,Bronze x5 (+3/lvl); DeerHide x2; Upgrader1Armor x1,Armor,Black Forest
+Recipe_HelmetCarapace,HelmetCarapace,Carapace Helmet,1,True,$piece_blackforge,1,Carapace x16 (+8/lvl); ScaleHide x3 (+1/lvl); Mandible x2; Eitr x4 (+2/lvl); Upgrader5Armor x1,Armor,Mistlands
+Recipe_HelmetCelebration,HelmetCelebration,Celebratory Cap,1,True,$piece_workbench,2,DeerHide x2 (+1/lvl); Bronze x1 (+1/lvl); BjornHide x1; AmberPearl x1; Upgrader0Armor x1,Armor,Black Forest
+Recipe_HelmetCrownOfValheim,HelmetCrownofValheim,Crown of Valheim,1,True,$piece_blackforge,4,Gold x5 (+3/lvl); CrownJewel x1,Armor,Other
+Recipe_HelmetDrake,HelmetDrake,Drake Helmet,1,True,$piece_forge,1,Silver x20 (+5/lvl); WolfPelt x2; TrophyHatchling x2; Upgrader3Armor x1,Armor,Mountain
+Recipe_HelmetFenrir,HelmetFenring,Fenris Hood,1,True,$piece_workbench,2,WolfHairBundle x20 (+5/lvl); WolfPelt x2 (+4/lvl); TrophyCultist x1; Upgrader3Armor x1,Armor,Mountain
+Recipe_HelmetFishingHat,HelmetFishingHat,Fishing Hat,1,True,$piece_workbench,1,Fish1 x1 (+1/lvl); Fish2 x1 (+1/lvl); Fish3 x1 (+1/lvl); Fish4_cave x1 (+1/lvl); Fish5 x1 (+1/lvl); Fish6 x1 (+1/lvl); Fish7 x1 (+1/lvl); Fish8 x1 (+1/lvl); Fish9 x1 (+1/lvl); Fish10 x1 (+1/lvl); Fish11 x1 (+1/lvl); Fish12 x1 (+1/lvl); Upgrader1Armor x1,Armor,Deep North
+Recipe_HelmetFlametal,HelmetFlametal,Flametal Helmet,1,True,$piece_blackforge,3,FlametalNew x16 (+8/lvl); AskHide x3 (+1/lvl); CharredBone x2; Eitr x4 (+2/lvl); Upgrader6Armor x1,Armor,Ashlands
+Recipe_HelmetGold,HelmetDNHeavy,Helmet of the Protector,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldArmorGoldHelmet x1; MooseHide x4 (+3/lvl),Armor,Deep North
+Recipe_HelmetGoldMage,HelmetDNMage,Headdress of the Caller,1,True,$piece_magetable,3,MooseSinew x2 (+1/lvl); MoldArmorMageHelmet x1; TrophyMoose x1 (+1/lvl); NornThread x3 (+2/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_HelmetGoldMageUncooked,ArmorGoldMageHelmetUncooked,Cast: Headdress of the Caller,1,True,$piece_magetable,3,MooseSinew x2 (+15/lvl); MoldArmorMageHelmet x1; TrophyMoose x1 (+1/lvl); NornThread x3 (+1/lvl),Materials,Deep North
+Recipe_HelmetGoldMedium,HelmetDNMediumHood,Hood of the Vanguard,1,True,$piece_blackforge,4,SealHide x5 (+3/lvl); MoldArmorMediumHelmet x1; MooseHide x5 (+3/lvl); MooseSinew x1 (+1/lvl); Upgrader7Armor x1,Armor,Deep North
+Recipe_HelmetGoldMediumUncooked,ArmorGoldMediumHelmetUncooked,Cast: Hood of the Vanguard,1,True,$piece_blackforge,4,SealHide x5 (+15/lvl); MoldArmorMediumHelmet x1; MooseHide x5 (+3/lvl); MooseSinew x1 (+1/lvl),Materials,Deep North
+Recipe_HelmetGoldUncooked,ArmorGoldHeavyHelmetUncooked,Cast: Helmet of the Protector,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldArmorGoldHelmet x1; MooseHide x4 (+3/lvl),Materials,Deep North
+Recipe_HelmetHat1,HelmetHat1,Blue Tied Headscarf,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat10,HelmetHat10,Simple Purple Cap,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat2,HelmetHat2,Green Twisted Headscarf,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat3,HelmetHat3,Brown Fur Cap,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat4,HelmetHat4,Extravagant Green Cap,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat5,HelmetHat5,Simple Red Cap,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat6,HelmetHat6,Yellow Tied Headscarf,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat7,HelmetHat7,Red Twisted Headscarf,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat8,HelmetHat8,Grey Fur Cap,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetHat9,HelmetHat9,Extravagant Orange Cap,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetIron,HelmetIron,Iron Helmet,1,True,$piece_forge,1,Iron x20 (+5/lvl); DeerHide x2; Upgrader2Armor x1,Armor,Swamp
+Recipe_HelmetLeather,HelmetLeather,Leather Helmet,1,True,$piece_workbench,2,DeerHide x6 (+6/lvl); BoneFragments x0 (+5/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetLox,HelmetLox,Lox Fur Hood,1,True,$piece_workbench,2,LoxPelt x4 (+2/lvl); BoneFragments x4 (+2/lvl); WrithanRoots x2 (+1/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_HelmetMage,HelmetMage,Eitr-weave Hood,1,True,$piece_magetable,1,LinenThread x16 (+8/lvl); Eitr x15 (+5/lvl); Iron x2; Upgrader5Armor x1,Armor,Mistlands
+Recipe_HelmetMage_Ashlands,HelmetMage_Ashlands,Hood of Embla,1,True,$piece_magetable,2,LinenThread x16 (+8/lvl); Eitr x15 (+5/lvl); AskHide x2; Upgrader6Armor x1,Armor,Ashlands
+Recipe_HelmetMedium_Ashlands,HelmetAshlandsMediumHood,Hood of Ask,1,True,$piece_blackforge,3,LinenThread x15 (+10/lvl); LoxPelt x4 (+2/lvl); AskHide x10 (+5/lvl); Upgrader6Armor x1,Armor,Ashlands
+Recipe_HelmetMidsummerCrown,HelmetMidsummerCrown,Midsummer Crown,1,False,$piece_workbench,1,Dandelion x10 (+6/lvl),Armor,Meadows
+Recipe_HelmetOdin,HelmetOdin,Hood of Oden,1,True,$piece_workbench,1,LeatherScraps x10 (+5/lvl); Coal x4 (+2/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_HelmetPadded,HelmetPadded,Padded Helmet,1,True,$piece_forge,1,Iron x10 (+5/lvl); LinenThread x15 (+10/lvl); Upgrader4Armor x1,Armor,Plains
+Recipe_HelmetPointyHat,HelmetPointyHat,Pointy Hat,1,False,$piece_workbench,1,DeerHide x3 (+5/lvl); Coal x5; Bronze x1; Upgrader0Armor x1,Armor,Black Forest
+Recipe_HelmetRoot,HelmetRoot,Root Mask,1,True,$piece_workbench,2,Root x10 (+2/lvl); ElderBark x10 (+5/lvl); LeatherScraps x4; Upgrader2Armor x1,Armor,Swamp
+Recipe_HelmetStrawhat,HelmetStrawHat,Straw Hat,1,False,,1,DeerHide x6 (+6/lvl); Upgrader0Armor x1,Armor,Meadows
+Recipe_HelmetTrollLeather,HelmetTrollLeather,Troll Leather Hood,1,True,$piece_workbench,2,TrollHide x5 (+2/lvl); BoneFragments x3 (+1/lvl); Upgrader1Armor x1,Armor,Black Forest
+Recipe_Hoe,Hoe,Hoe,1,True,$piece_workbench,1,Wood x5 (+1/lvl); Stone x2 (+1/lvl); Upgrader0Weapon x1,Tools,Meadows
+Recipe_HoneyGlazedChicken,HoneyGlazedChickenUncooked,Uncooked Honey Glazed Chicken,1,True,$piece_preptable,1,ChickenMeat x1 (+1/lvl); Honey x3 (+1/lvl); MushroomJotunPuffs x2 (+1/lvl),Materials,Mistlands
+Recipe_IronNails,IronNails,Iron Nails,10,True,$piece_forge,1,Iron x1 (+1/lvl),Materials,Swamp
+Recipe_KaleChips,KaleChipsUncooked,Raw Kale Chips,4,True,$piece_cauldron,6,Kale x12 (+1/lvl),Materials,Deep North
+Recipe_KnifeBlackmetal,KnifeBlackMetal,Black Metal Knife,1,True,$piece_forge,4,FineWood x4; BlackMetal x10 (+4/lvl); LinenThread x5 (+5/lvl); Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_KnifeButcher,KnifeButcher,Butcher Knife,1,True,$piece_forge,1,Wood x2; Tin x4,Melee Weapons,Black Forest
+Recipe_KnifeChitin,KnifeChitin,Abyssal Razor,1,True,$piece_workbench,2,FineWood x4; Chitin x20 (+10/lvl); LeatherScraps x2; Upgrader3Weapon x1,Melee Weapons,Ocean
+Recipe_KnifeCopper,KnifeCopper,Copper Knife,1,True,$piece_forge,1,Wood x2; Copper x8 (+4/lvl); GreydwarfEye x0 (+8/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_KnifeFlint,KnifeFlint,Flint Knife,1,True,$piece_workbench,1,Wood x2; Flint x4 (+2/lvl); LeatherScraps x2; Upgrader0Weapon x1,Melee Weapons,Meadows
+Recipe_KnifeGold,KnifeGold,Nord Dagger,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldKnife x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_KnifeGold_BloodLightning,KnifeGold_BloodLightning,Thunderblood Dagger,1,True,$piece_blackforge,4,KnifeGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_KnifeGold_FrostFire,KnifeGold_FrostFire,Frostfire Dagger,1,True,$piece_blackforge,4,KnifeGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_KnifeGoldUncooked,KnifeGoldUncooked,Cast: Nord Dagger,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldKnife x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_KnifeSilver,KnifeSilver,Silver Knife,1,True,$piece_forge,3,Wood x2 (+1/lvl); Silver x10 (+5/lvl); LeatherScraps x3 (+1/lvl); Iron x2 (+1/lvl); Upgrader3Weapon x1,Melee Weapons,Mountain
+Recipe_KnifeSkollAndHati,KnifeSkollAndHati,Skoll and Hati,1,True,$piece_blackforge,1,FineWood x4; Iron x10 (+4/lvl); BlackMetal x10 (+4/lvl); Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_KnifeVoid,KnifeVoid,Voidcaller,1,False,$piece_magetable,3,Voidplasm x1; Ectoplasm x8 (+10/lvl); Gold x2 (+10/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_KnifeWood,KnifeWood,Wooden Knife,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader0Weapon x1,Melee Weapons,Black Forest
+Recipe_Lantern,Lantern,Dvergr Lantern,1,True,$piece_blackforge,1,Bronze x2 (+1/lvl); SurtlingCore x1 (+1/lvl); Crystal x1 (+1/lvl),Tools,Mountain
+Recipe_LingonDricka,Lingondricka,Lingonberry Juice,1,True,$piece_cauldron,6,Lingonberry x5 (+1/lvl); Ice x5 (+1/lvl),Food & Potions,Deep North
+Recipe_LoxPie,LoxPieUncooked,Unbaked Lox Pie,1,True,$piece_preptable,1,Cloudberry x2 (+1/lvl); LoxMeat x2 (+1/lvl); BarleyFlour x4 (+1/lvl),Materials,Plains
+Recipe_MaceBronze,MaceBronze,Bronze Mace,1,True,$piece_forge,1,Wood x4; Bronze x8 (+4/lvl); LeatherScraps x3; Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_MaceEldner,MaceEldner,Flametal Mace,1,True,$piece_blackforge,3,CharredBone x10 (+5/lvl); FlametalNew x15 (+8/lvl); SulfurStone x5 (+3/lvl); AskHide x3 (+2/lvl); Upgrader6Weapon x1,Melee Weapons,Ashlands
+Recipe_MaceEldner_Blood,MaceEldnerBlood,Bloodgeon,1,True,$piece_blackforge,4,MaceEldner x1; FlametalNew x8 (+8/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_MaceEldner_Lightning,MaceEldnerLightning,Storm Star,1,True,$piece_blackforge,4,MaceEldner x1; FlametalNew x8 (+8/lvl); GemstoneBlue x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_MaceEldner_Nature,MaceEldnerNature,Klossen,1,True,$piece_blackforge,4,MaceEldner x1; FlametalNew x8 (+8/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_MaceGold,MaceGold,Nord Mace,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldMace x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_MaceGold_BloodLightning,MaceGold_BloodLightning,Thunderblood Mace,1,True,$piece_blackforge,4,MaceGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_MaceGold_FrostFire,MaceGold_FrostFire,Frostfire Mace,1,True,$piece_blackforge,4,MaceGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_MaceGoldUncooked,MaceGoldUncooked,Cast: Nord Mace,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldMace x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_MaceIron,MaceIron,Iron Mace,1,True,$piece_forge,2,Wood x4; Iron x20 (+10/lvl); LeatherScraps x3; Upgrader2Weapon x1,Melee Weapons,Swamp
+Recipe_MaceNeedle,MaceNeedle,Porcupine,1,True,$piece_forge,4,FineWood x5; Iron x20 (+2/lvl); Needle x5 (+2/lvl); LinenThread x10; Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_MaceSilver,MaceSilver,Frostner,1,True,$piece_forge,3,ElderBark x10; Silver x30 (+15/lvl); YmirRemains x5; FreezeGland x5; Upgrader3Weapon x1,Melee Weapons,Mountain
+Recipe_MaceWood,MaceWood,Wooden Mace,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_MagicallyStuffedShroom,MagicallyStuffedShroomUncooked,Uncooked Stuffed Mushroom,1,True,$piece_preptable,1,MushroomMagecap x3 (+1/lvl); GiantBloodSack x1 (+1/lvl); Turnip x2 (+1/lvl),Materials,Mistlands
+Recipe_MarinatedGreens,MarinatedGreens,Marinated Greens,1,True,$piece_cauldron,6,Sap x3 (+1/lvl); MushroomMagecap x2 (+1/lvl); Fiddleheadfern x2 (+1/lvl); MushroomSmokePuff x2 (+1/lvl),Food & Potions,Ashlands
+Recipe_MashedMeat,MashedMeat,Mashed Meat,1,True,$piece_cauldron,6,AsksvinMeat x1 (+1/lvl); VoltureMeat x1 (+1/lvl); Fiddleheadfern x1 (+1/lvl),Food & Potions,Ashlands
+Recipe_MeadBaseBugRepellent,MeadBaseBugRepellent,Mead Base: Anti-Sting,1,True,$piece_meadcauldron,1,Cloudberry x10 (+1/lvl); Fish7 x3 (+1/lvl); FragrantBundle x1 (+1/lvl),Materials,Plains
+Recipe_MeadBaseBzerker,MeadBaseBzerker,Mead base: Berserkir,1,True,$piece_meadcauldron,1,Mushroom x10 (+1/lvl); MushroomYellow x10 (+1/lvl); MushroomBzerker x1 (+1/lvl),Materials,Mountain
+Recipe_MeadBaseEitrLingering,MeadBaseEitrLingering,Mead Base: Lingering Eitr,1,True,$piece_meadcauldron,1,Sap x10 (+1/lvl); Vineberry x10 (+1/lvl); MushroomMagecap x10 (+1/lvl),Materials,Mistlands
+Recipe_MeadBaseEitrMinor,MeadBaseEitrMinor,Mead Base: Minor Eitr,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Sap x5 (+1/lvl); MushroomJotunPuffs x2 (+1/lvl); MushroomMagecap x5 (+1/lvl),Materials,Mistlands
+Recipe_MeadBaseFrostResist,MeadBaseFrostResist,Mead Base: Frost Resistance,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Thistle x5 (+1/lvl); Bloodbag x2 (+1/lvl); GreydwarfEye x1 (+1/lvl),Materials,Swamp
+Recipe_MeadBaseHasty,MeadBaseHasty,Mead base: Ratatosk,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Blueberries x10 (+1/lvl); CuredSquirrelHamstring x1 (+1/lvl),Materials,Swamp
+Recipe_MeadBaseHealthLingering,MeadBaseHealthLingering,Mead Base: Lingering Health,1,True,$piece_meadcauldron,1,Sap x10 (+1/lvl); Vineberry x10 (+1/lvl); MushroomSmokePuff x10 (+1/lvl),Materials,Ashlands
+Recipe_MeadBaseHealthMajor,MeadBaseHealthMajor,Mead Base: Major Healing,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); GiantBloodSack x4 (+1/lvl); RoyalJelly x5 (+1/lvl),Materials,Mistlands
+Recipe_MeadBaseHealthMedium,MeadBaseHealthMedium,Mead Base: Medium Healing,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Bloodbag x4 (+1/lvl); Raspberry x10 (+1/lvl); Dandelion x1 (+1/lvl),Materials,Swamp
+Recipe_MeadBaseHealthMinor,MeadBaseHealthMinor,Mead Base: Minor Healing,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Blueberries x5 (+1/lvl); Raspberry x10 (+1/lvl); Dandelion x1 (+1/lvl),Materials,Black Forest
+Recipe_MeadBaseLightFoot,MeadBaseLightFoot,Mead Base: Lightfoot,1,True,$piece_meadcauldron,1,ScaleHide x2 (+1/lvl); Feathers x5 (+1/lvl); MushroomMagecap x5 (+1/lvl),Materials,Mistlands
+Recipe_MeadBasePoisonResist,MeadBasePoisonResist,Mead Base: Poison Resistance,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Thistle x5 (+1/lvl); NeckTail x1 (+1/lvl); Coal x10 (+1/lvl),Materials,Black Forest
+Recipe_MeadBaseStaminaLingering,MeadBaseStaminaLingering,Mead Base: Lingering Stamina,1,True,$piece_meadcauldron,1,Sap x10 (+1/lvl); Cloudberry x10 (+1/lvl); MushroomJotunPuffs x10 (+1/lvl),Materials,Mistlands
+Recipe_MeadBaseStaminaMedium,MeadBaseStaminaMedium,Mead Base: Medium Stamina,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Cloudberry x10 (+1/lvl); MushroomYellow x10 (+1/lvl),Materials,Plains
+Recipe_MeadBaseStaminaMinor,MeadBaseStaminaMinor,Mead Base: Minor Stamina,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Raspberry x10 (+1/lvl); MushroomYellow x10 (+1/lvl),Materials,Black Forest
+Recipe_MeadBaseStrength,MeadBaseStrength,Mead Base: Troll Endurance,1,True,$piece_meadcauldron,1,Fish5 x2 (+1/lvl); Honey x10 (+1/lvl); PowderedDragonEgg x1 (+1/lvl),Materials,Swamp
+Recipe_MeadBaseSwimmer,MeadBaseSwimmer,Mead Base: Vananidir,1,True,$piece_meadcauldron,1,Dandelion x10 (+1/lvl); Fish1 x2 (+1/lvl); FreshSeaweed x1 (+1/lvl),Materials,Swamp
+Recipe_MeadBaseTamer,MeadBaseTamer,Mead Base: Animal Whispers,1,True,$piece_meadcauldron,1,Onion x5 (+1/lvl); Carrot x10 (+1/lvl); PungentPebbles x1 (+1/lvl),Materials,Mountain
+Recipe_MeadBaseTasty,MeadBaseTasty,Mead Base: Tasty,1,True,$piece_meadcauldron,1,Honey x10 (+1/lvl); Raspberry x10 (+1/lvl); Blueberries x5 (+1/lvl),Materials,Black Forest
+Recipe_MeatballsMashedPoteitr,MeatballsMashedPoteitr,Meatballs and Poteitr,1,True,$piece_cauldron,7,MooseMeat x1 (+1/lvl); Lingonberry x2 (+1/lvl); Poteitr x2 (+1/lvl),Food & Potions,Deep North
+Recipe_MeatPlatter,MeatPlatterUncooked,Uncooked Meat Platter,1,True,$piece_preptable,1,BugMeat x1 (+1/lvl); LoxMeat x1 (+1/lvl); HareMeat x1 (+1/lvl),Materials,Mistlands
+Recipe_MechanicalSpring,MechanicalSpring,Mechanical Spring,1,True,$piece_artisanstation,1,Eitr x1 (+1/lvl); Iron x3 (+1/lvl),Materials,Mistlands
+Recipe_MinceMeatSauce,MinceMeatSauce,Minced Meat Sauce,1,True,$piece_cauldron,1,RawMeat x1 (+1/lvl); NeckTail x1 (+1/lvl); Carrot x1 (+1/lvl),Food & Potions,Black Forest
+Recipe_MisthareSupreme,MisthareSupremeUncooked,Uncooked Misthare Supreme,1,True,$piece_preptable,1,HareMeat x1 (+1/lvl); MushroomJotunPuffs x3 (+1/lvl); Carrot x2 (+1/lvl),Materials,Mistlands
+Recipe_MooseKebab,MooseKebab,Meat In Bread,2,True,$piece_cauldron,7,MooseMeat x1 (+1/lvl); Kale x2 (+1/lvl); OatFlour x1 (+1/lvl); Lingonberry x2 (+1/lvl),Food & Potions,Deep North
+Recipe_MushroomOmelette,MushroomOmelette,Mushroom Omelette,1,True,$piece_cauldron,5,ChickenEgg x3 (+1/lvl); MushroomJotunPuffs x3 (+1/lvl),Food & Potions,Mistlands
+Recipe_OatmealLingonberryJam,OatmealLingonberryJam,Oatmeal,1,True,$piece_cauldron,6,Oat x2 (+1/lvl); Lingonberry x2 (+1/lvl); OatMilk x1 (+1/lvl),Food & Potions,Deep North
+Recipe_OatMilk,OatMilk,Oat Milk,1,True,$piece_meadcauldron,1,Oat x5 (+1/lvl); Ice x5 (+1/lvl),Food & Potions,Deep North
+Recipe_Onionsoup,OnionSoup,Onion Soup,1,True,$piece_cauldron,2,Onion x3 (+1/lvl),Food & Potions,Mountain
+Recipe_OvenPancake,OvenPancakeUncooked,Oven Pancake Batter,1,True,$piece_cauldron,6,MooseMeat x1 (+1/lvl); Poteitr x2 (+1/lvl); Lingonberry x2 (+1/lvl); OatFlour x2 (+1/lvl),Materials,Deep North
+Recipe_Pancakes,Pancakes,Pancakes,3,True,$piece_cauldron,6,OatMilk x1 (+1/lvl); OatFlour x2 (+1/lvl); ChickenEgg x2 (+1/lvl); Blueberries x2 (+1/lvl),Food & Potions,Deep North
+Recipe_PickaxeAntler,PickaxeAntler,Antler Pickaxe,1,True,$piece_workbench,1,Wood x10 (+4/lvl); HardAntler x1 (+1/lvl),Tools,Meadows
+Recipe_PickaxeBlackMetal,PickaxeBlackMetal,Black Metal Pickaxe,1,True,$piece_forge,2,YggdrasilWood x3 (+1/lvl); BlackMetal x25 (+15/lvl); Upgrader4Weapon x1,Tools,Mistlands
+Recipe_PickaxeBronze,PickaxeBronze,Bronze Pickaxe,1,True,$piece_forge,1,RoundLog x3 (+1/lvl); Bronze x10 (+5/lvl); Upgrader1Weapon x1,Tools,Black Forest
+Recipe_PickaxeIron,PickaxeIron,Iron Pickaxe,1,True,$piece_forge,2,RoundLog x3 (+1/lvl); Iron x20 (+10/lvl); Upgrader2Weapon x1,Tools,Swamp
+Recipe_PickaxeStone,PickaxeStone,Stone Pickaxe,1,False,$piece_workbench,1,Wood x3 (+1/lvl); Stone x10 (+5/lvl),Tools,Meadows
+Recipe_PiquantPie,PiquantPieUncooked,Uncooked Piquant Pie,1,True,$piece_preptable,1,Vineberry x2 (+1/lvl); AsksvinMeat x2 (+1/lvl); BarleyFlour x4 (+1/lvl),Materials,Ashlands
+Recipe_PotionHealthMinor,MeadHealthMinor,Minor Healing Mead,1,False,,1,Mushroom x1 (+1/lvl); Blueberries x1 (+1/lvl); Dandelion x1 (+1/lvl),Food & Potions,Black Forest
+Recipe_PotionStaminaMinor,MeadStaminaMinor,Minor Stamina Mead,1,False,,1,MushroomYellow x1 (+1/lvl); Raspberry x1 (+1/lvl); Honey x1 (+1/lvl),Food & Potions,Black Forest
+Recipe_PulledBear,PulledBear,Pulled Bear,1,True,$piece_cauldron,1,CookedBjornMeat x1 (+1/lvl); Carrot x2 (+1/lvl); Blueberries x1 (+1/lvl),Food & Potions,Black Forest
+Recipe_QueensJam,QueensJam,Queen's Jam,4,True,$piece_cauldron,1,Raspberry x8 (+1/lvl); Blueberries x6 (+1/lvl),Food & Potions,Black Forest
+Recipe_RoastedCrustPie,RoastedCrustPieUncooked,Uncooked Roasted Crust Pie,1,True,$piece_preptable,1,Vineberry x2 (+1/lvl); VoltureEgg x1 (+1/lvl); BarleyFlour x4 (+1/lvl),Materials,Ashlands
+Recipe_SaddleAsksvin,SaddleAsksvin,Asksvin Saddle,1,True,$piece_blackforge,2,FlametalNew x6 (+1/lvl); LinenThread x20 (+1/lvl); MorgenSinew x4 (+1/lvl),Other,Ashlands
+Recipe_SaddleMoose,SaddleMoose,Moose Saddle,1,True,$piece_blackforge,2,Gold x4 (+1/lvl); SealHide x5 (+1/lvl); Frostwood x5 (+1/lvl); LinenThread x15 (+1/lvl),Other,Deep North
+Recipe_SadleLox,SaddleLox,Lox Saddle,1,True,$piece_workbench,1,LeatherScraps x10 (+1/lvl); LinenThread x20 (+1/lvl); BlackMetal x15 (+1/lvl),Other,Plains
+Recipe_Salad,Salad,Salad,3,True,$piece_cauldron,5,MushroomJotunPuffs x3 (+1/lvl); Onion x3 (+1/lvl); Cloudberry x3 (+1/lvl),Food & Potions,Mistlands
+Recipe_Sausages,Sausages,Sausages,4,True,$piece_cauldron,2,Entrails x4 (+1/lvl); RawMeat x1 (+1/lvl); Thistle x1 (+1/lvl),Food & Potions,Black Forest
+Recipe_ScorchingMedley,ScorchingMedley,Scorching Medley,3,True,$piece_cauldron,6,MushroomJotunPuffs x3 (+1/lvl); Onion x3 (+1/lvl); Fiddleheadfern x3 (+1/lvl),Food & Potions,Ashlands
+Recipe_Scythe,Scythe,Scythe,1,True,$piece_forge,2,ScytheHandle x1; Silver x6 (+5/lvl); Upgrader0Weapon x1,Melee Weapons,Mountain
+Recipe_SealSoup,SealSoup,Seal Meat Soup,1,True,$piece_cauldron,7,SealBlubber x2 (+1/lvl); Kale x2 (+1/lvl); Ice x2 (+1/lvl),Food & Potions,Deep North
+Recipe_SeekerAspic,SeekerAspic,Seeker Aspic,2,True,$piece_cauldron,5,BugMeat x2 (+1/lvl); MushroomMagecap x2 (+1/lvl); RoyalJelly x2 (+1/lvl),Food & Potions,Mistlands
+Recipe_SerpentStew,SerpentStew,Serpent Stew,1,True,$piece_cauldron,2,Mushroom x1 (+1/lvl); SerpentMeatCooked x1 (+1/lvl); Honey x2 (+1/lvl),Food & Potions,Ocean
+Recipe_SharpeningStone,SharpeningStone,Sharpening Stone,1,True,$piece_stonecutter,1,Stone x5 (+1/lvl),Materials,Meadows
+Recipe_ShieldBanded,ShieldBanded,Banded Shield,1,True,$piece_forge,2,FineWood x10 (+10/lvl); Iron x8 (+4/lvl); Upgrader2Armor x1,Shields,Swamp
+Recipe_ShieldBlackmetal,ShieldBlackmetal,Black Metal Shield,1,True,$piece_forge,3,FineWood x10 (+10/lvl); BlackMetal x8 (+4/lvl); Chain x5 (+2/lvl); Upgrader4Armor x1,Shields,Plains
+Recipe_ShieldBlackmetalTower,ShieldBlackmetalTower,Black Metal Tower Shield,1,True,$piece_forge,3,FineWood x15 (+10/lvl); BlackMetal x10 (+4/lvl); Chain x7 (+2/lvl); Upgrader4Armor x1,Shields,Plains
+Recipe_ShieldBoneTower,ShieldBoneTower,Bone Tower Shield,1,True,$piece_workbench,3,Wood x10 (+5/lvl); BoneFragments x10 (+5/lvl); TrophySkeleton x3; Upgrader1Armor x1,Shields,Meadows
+Recipe_ShieldBronzeBuckler,ShieldBronzeBuckler,Bronze Buckler,1,True,$piece_forge,1,Bronze x10 (+5/lvl); Wood x4 (+1/lvl); Upgrader1Armor x1,Shields,Black Forest
+Recipe_ShieldBucklerGold,ShieldGoldBuckler,Nord Buckler,1,True,$piece_blackforge,4,Gold x10 (+5/lvl); MoldShieldBuckler x1; Frostwood x10 (+5/lvl); Upgrader7Armor x1,Shields,Deep North
+Recipe_ShieldBucklerGoldUncooked,ShieldBucklerGoldUncooked,Cast: Nord Buckler,1,True,$piece_blackforge,4,Gold x10 (+10/lvl); MoldShieldBuckler x1; Frostwood x10 (+10/lvl),Materials,Deep North
+Recipe_ShieldCarapace,ShieldCarapace,Carapace Shield,1,True,$piece_blackforge,1,Carapace x20 (+10/lvl); ScaleHide x3 (+3/lvl); Eitr x10 (+3/lvl); Upgrader5Armor x1,Shields,Mistlands
+Recipe_ShieldCarapaceBuckler,ShieldCarapaceBuckler,Carapace Buckler,1,True,$piece_blackforge,1,Carapace x16 (+8/lvl); ScaleHide x3 (+3/lvl); Eitr x10 (+3/lvl); Upgrader5Armor x1,Shields,Mistlands
+Recipe_ShieldCore,ShieldCore,Shield Core,1,True,$piece_artisanstation,2,BlackCore x1 (+1/lvl); SurtlingCore x1 (+1/lvl); CeramicPlate x5 (+1/lvl),Materials,Mistlands
+Recipe_ShieldFlametal,ShieldFlametal,Flametal Shield,1,True,$piece_blackforge,3,Blackwood x10 (+10/lvl); FlametalNew x8 (+4/lvl); AskHide x2 (+2/lvl); Upgrader6Armor x1,Shields,Ashlands
+Recipe_ShieldFlametalTower,ShieldFlametalTower,Flametal Tower Shield,1,True,$piece_blackforge,3,Blackwood x15 (+10/lvl); FlametalNew x10 (+4/lvl); AskHide x5 (+2/lvl); Upgrader6Armor x1,Shields,Ashlands
+Recipe_ShieldIronBuckler,ShieldIronBuckler,Iron Buckler,1,True,$piece_forge,2,Iron x10 (+5/lvl); ElderBark x4 (+1/lvl); Upgrader2Armor x1,Shields,Swamp
+Recipe_ShieldIronSquare,ShieldIronSquare,Iron Shield,1,False,$piece_forge,2,FineWood x10 (+10/lvl); Iron x6 (+3/lvl); Upgrader2Armor x1,Shields,Swamp
+Recipe_ShieldIronTower,ShieldIronTower,Iron Tower Shield,1,True,$piece_forge,2,FineWood x15 (+10/lvl); Iron x10 (+5/lvl); Upgrader2Armor x1,Shields,Swamp
+Recipe_ShieldRoots,ShieldRoots,Shield of Roots,1,True,$piece_workbench,2,FineWood x10 (+5/lvl); WrithanRoots x1 (+2/lvl); Upgrader2Armor x1,Shields,Swamp
+Recipe_ShieldRoundGold,ShieldGold,Nord Shield,1,True,$piece_blackforge,4,Gold x15 (+8/lvl); MoldShieldRound x1; Frostwood x10 (+5/lvl); Upgrader7Armor x1,Shields,Deep North
+Recipe_ShieldRoundGoldUncooked,ShieldRoundGoldUncooked,Cast: Nord Shield,1,True,$piece_blackforge,4,Gold x15 (+10/lvl); MoldShieldRound x1; Frostwood x10 (+10/lvl),Materials,Deep North
+Recipe_ShieldSerpentscale,ShieldSerpentscale,Serpent Scale Shield,1,True,$piece_forge,3,FineWood x10 (+10/lvl); Iron x4 (+2/lvl); SerpentScale x8 (+4/lvl); Upgrader3Armor x1,Shields,Ocean
+Recipe_ShieldSilver,ShieldSilver,Silver Shield,1,True,$piece_forge,3,FineWood x10 (+10/lvl); Silver x8 (+4/lvl); Upgrader3Armor x1,Shields,Mountain
+Recipe_ShieldTowerGold,ShieldGoldTower,Nord Greatshield,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldShieldTower x1; Frostwood x20 (+10/lvl); Upgrader7Armor x1,Shields,Deep North
+Recipe_ShieldTowerGoldUncooked,ShieldTowerGoldUncooked,Cast: Nord Greatshield,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldShieldTower x1; Frostwood x20 (+10/lvl),Materials,Deep North
+Recipe_ShieldWood,ShieldWood,Wood Shield,1,True,$piece_workbench,1,Wood x10 (+5/lvl); Resin x4 (+2/lvl); LeatherScraps x4 (+2/lvl); Upgrader0Armor x1,Shields,Meadows
+Recipe_ShieldWoodTower,ShieldWoodTower,Wood Tower Shield,1,True,$piece_workbench,1,Wood x10 (+5/lvl); LeatherScraps x6 (+3/lvl); Upgrader0Armor x1,Shields,Meadows
+Recipe_ShocklateSmoothie,ShocklateSmoothie,Muckshake,1,True,$piece_cauldron,2,Ooze x1 (+1/lvl); Raspberry x2 (+1/lvl); Blueberries x2 (+1/lvl),Food & Potions,Swamp
+Recipe_SizzlingBerryBroth,SizzlingBerryBroth,Sizzling Berry Broth,1,True,$piece_cauldron,5,Sap x3 (+1/lvl); Fiddleheadfern x2 (+1/lvl); Vineberry x2 (+1/lvl),Food & Potions,Ashlands
+Recipe_SledgeDemolisher,SledgeDemolisher,Demolisher,1,True,$piece_blackforge,1,YggdrasilWood x10 (+2/lvl); Iron x20 (+15/lvl); Eitr x10 (+2/lvl); Upgrader5Weapon x1,Melee Weapons,Mistlands
+Recipe_SledgeGold,SledgeGold,Nord Sledge,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldMace2H x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SledgeGold_BloodLightning,SledgeGold_BloodLightning,Thunderblood Sledge,1,True,$piece_blackforge,4,SledgeGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SledgeGold_FrostFire,SledgeGold_FrostFire,Frostfire Sledge,1,True,$piece_blackforge,4,SledgeGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SledgeGoldUncooked,SledgeGoldUncooked,Cast: Nord Sledge,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldMace2H x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_SledgeIron,SledgeIron,Iron Sledge,1,True,$piece_forge,2,ElderBark x10 (+2/lvl); Iron x30 (+15/lvl); YmirRemains x4 (+2/lvl); TrophyDraugrElite x1; Upgrader2Weapon x1,Melee Weapons,Swamp
+Recipe_SledgeStagbreaker,SledgeStagbreaker,Stagbreaker,1,True,$piece_workbench,2,RoundLog x20 (+5/lvl); TrophyDeer x5 (+2/lvl); LeatherScraps x2 (+1/lvl); BoneFragments x0 (+10/lvl); Upgrader0Weapon x1,Melee Weapons,Black Forest
+Recipe_SledgeWood,SledgeWood,Wooden Sledge,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_SmokedFish,SmokedFish,Smoked Fish,1,True,$piece_cauldron,7,FishRaw x1 (+1/lvl); Kale x1 (+1/lvl); Poteitr x1 (+1/lvl),Food & Potions,Deep North
+Recipe_SmokedMooseMeat,SmokedMooseMeat,Smoked Moose Meat,1,True,$piece_cauldron,7,MooseMeat x1 (+1/lvl); Kale x2 (+1/lvl),Food & Potions,Deep North
+Recipe_Snowball,Snowball,Snowball,10,True,,1,Ice x5 (+1/lvl),Melee Weapons,Deep North
+Recipe_SnowShovel,Shovel,Snow Shovel,1,True,$piece_blackforge,3,FineWood x5 (+1/lvl); FlametalNew x4 (+10/lvl); FaderEmber x2; Upgrader0Weapon x1,Melee Weapons,Ashlands
+Recipe_SparklingShroomshake,SparklingShroomshake,Sparkling Shroomshake,1,True,$piece_cauldron,6,Sap x4 (+1/lvl); Vineberry x2 (+1/lvl); MushroomSmokePuff x2 (+1/lvl); MushroomMagecap x2 (+1/lvl),Food & Potions,Ashlands
+Recipe_SpearBronze,SpearBronze,Bronze Spear,1,True,$piece_forge,1,Wood x5 (+3/lvl); Bronze x6 (+4/lvl); DeerHide x2 (+1/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_SpearCarapace,SpearCarapace,Carapace Spear,1,True,$piece_blackforge,1,YggdrasilWood x10 (+5/lvl); Carapace x4 (+4/lvl); Mandible x2 (+1/lvl); Upgrader5Weapon x1,Melee Weapons,Mistlands
+Recipe_SpearChitin,SpearChitin,Abyssal Harpoon,1,True,$piece_workbench,2,FineWood x8; Chitin x30; LeatherScraps x3,Melee Weapons,Ocean
+Recipe_SpearElderbark,SpearElderbark,Ancient Bark Spear,1,True,$piece_forge,3,TrollHide x4 (+1/lvl); Iron x10 (+5/lvl); ElderBark x10 (+5/lvl); Upgrader2Weapon x1,Melee Weapons,Swamp
+Recipe_SpearFlint,SpearFlint,Flint Spear,1,True,$piece_workbench,1,Wood x5 (+3/lvl); Flint x10 (+5/lvl); LeatherScraps x2 (+1/lvl); Upgrader0Weapon x1,Melee Weapons,Meadows
+Recipe_SpearGold,SpearGold,Nord Spear,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldSpear x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SpearGold_BloodLightning,SpearGold_BloodLightning,Thunderblood Spear,1,True,$piece_blackforge,4,SpearGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SpearGold_FrostFire,SpearGold_FrostFire,Frostfire Spear,1,True,$piece_blackforge,4,SpearGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SpearGoldUncooked,SpearGoldUncooked,Cast: Nord Spear,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldSpear x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_SpearSplitner,SpearSplitner,Splitnir,1,True,$piece_blackforge,3,Blackwood x10 (+5/lvl); FlametalNew x6 (+6/lvl); AskHide x2 (+1/lvl); BonemawSerpentTooth x3 (+3/lvl); Upgrader5Weapon x1,Melee Weapons,Ashlands
+Recipe_SpearSplitner_Blood,SpearSplitner_Blood,Splitnir the Bleeding,1,True,$piece_blackforge,4,SpearSplitner x1; FlametalNew x6 (+6/lvl); GemstoneRed x1 (+1/lvl); Upgrader5Weapon x1,Melee Weapons,Deep North
+Recipe_SpearSplitner_Lightning,SpearSplitner_Lightning,Splitnir the Storming,1,True,$piece_blackforge,4,SpearSplitner x1; FlametalNew x6 (+6/lvl); GemstoneBlue x1 (+1/lvl); Upgrader5Weapon x1,Melee Weapons,Deep North
+Recipe_SpearSplitner_Nature,SpearSplitner_Nature,Splitnir the Primal,1,True,$piece_blackforge,4,SpearSplitner x1; FlametalNew x6 (+6/lvl); GemstoneGreen x1 (+1/lvl); Upgrader5Weapon x1,Melee Weapons,Deep North
+Recipe_SpearWolfFang,SpearWolfFang,Fang Spear,1,True,$piece_forge,3,ElderBark x10 (+5/lvl); WolfFang x4 (+2/lvl); LeatherScraps x2 (+1/lvl); Silver x2 (+1/lvl); Upgrader3Weapon x1,Melee Weapons,Mountain
+Recipe_SpearWood,SpearWood,Wooden Spear,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_SpiceInducedMarmalade,SpicyMarmalade,Spicy Marmalade,1,True,$piece_cauldron,5,Vineberry x3 (+1/lvl); Honey x1 (+1/lvl); Fiddleheadfern x1 (+1/lvl),Food & Potions,Ashlands
+Recipe_StaffClusterbomb,StaffClusterbomb,Staff of Fracturing,1,True,$piece_magetable,2,CharredBone x15 (+5/lvl); Blackwood x5 (+3/lvl); ProustitePowder x8 (+1/lvl); Upgrader6Weapon x1,Magic,Ashlands
+Recipe_StaffFireball,StaffFireball,Staff of Embers,1,True,$piece_magetable,1,YggdrasilWood x20 (+10/lvl); SurtlingCore x4 (+2/lvl); Eitr x16 (+8/lvl); Upgrader5Weapon x1,Magic,Mistlands
+Recipe_StaffFrostOrbs,StaffFrostOrbsUncooked,Cast: Northern Vengeance,1,True,$piece_magetable,3,Ice x10 (+5/lvl); NornThread x5 (+2/lvl); TrophyJotunWitch x1; MoldStafffrostorbs x1,Materials,Deep North
+Recipe_StaffFrostOrbs_Upgrade,StaffFrostOrbs,Northern Vengeance,1,True,$piece_magetable,3,Ice x10 (+5/lvl); NornThread x5 (+2/lvl); TrophyJotunWitch x1; Upgrader7Weapon x1,Magic,Deep North
+Recipe_StaffGreenRoots,StaffGreenRoots,Staff of the Wild,1,True,$piece_magetable,2,Blackwood x15 (+5/lvl); Fiddleheadfern x10 (+2/lvl); CelestialFeather x3 (+3/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Magic,Deep North
+Recipe_StaffIceShards,StaffIceShards,Staff of Frost,1,True,$piece_magetable,1,YggdrasilWood x20 (+10/lvl); FreezeGland x4 (+2/lvl); Eitr x16 (+8/lvl); Upgrader5Weapon x1,Magic,Mistlands
+Recipe_StaffLightning,StaffLightning,Dundr,1,True,$piece_magetable,2,Blackwood x10 (+5/lvl); FlametalNew x4 (+2/lvl); CelestialFeather x3 (+3/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Magic,Deep North
+Recipe_StaffOrbOfAhri,StaffOrbofAhriUncooked,Cast: Echo Spike,1,True,$piece_magetable,3,Gold x10 (+5/lvl); NornThread x4 (+2/lvl); OrbFrostFire x1 (+1/lvl); MoldStaffOrbofAhri x1,Materials,Deep North
+Recipe_StaffOrbOfAhri_Upgrade,StaffOrbofAhri,Echo Spike,1,True,$piece_magetable,3,Gold x10 (+5/lvl); NornThread x4 (+2/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Magic,Deep North
+Recipe_StaffRedTroll,StaffRedTroll,Trollstav,1,True,$piece_magetable,2,CharredBone x15 (+5/lvl); TrophyFrostTroll x1 (+1/lvl); FlametalNew x3 (+3/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Magic,Deep North
+Recipe_StaffShield,StaffShield,Staff of Protection,1,True,$piece_magetable,1,YggdrasilWood x20 (+10/lvl); GiantBloodSack x4 (+2/lvl); Eitr x16 (+8/lvl); Upgrader5Weapon x1,Magic,Mistlands
+Recipe_StaffSkeleton,StaffSkeleton,Dead Raiser,1,True,$piece_magetable,1,BoneFragments x10 (+5/lvl); Eitr x16 (+8/lvl); TrophySkeleton x4 (+2/lvl); Upgrader5Weapon x1,Magic,Mistlands
+Recipe_StaffSpiritCaller,StaffSpiritCallerUncooked,Cast: Spirit Caller,1,True,$piece_magetable,3,BarkaBranch x8 (+4/lvl); NornThread x5 (+2/lvl); TrophyMoose x1; MoldStaffspiritcaller x1,Materials,Deep North
+Recipe_StaffSpiritCaller_Upgrade,StaffSpiritCaller,Spirit Caller,1,True,$piece_magetable,3,BarkaBranch x8 (+4/lvl); NornThread x5 (+2/lvl); TrophyMoose x1; Upgrader7Weapon x1,Magic,Deep North
+Recipe_StaffThunderBlood,StaffThunderbloodUncooked,Cast: Lightning Strike,1,True,$piece_magetable,3,Gold x10 (+5/lvl); NornThread x5 (+2/lvl); OrbThunderBlood x1 (+1/lvl); MoldStaffthunderblood x1,Materials,Deep North
+Recipe_StaffThunderBlood_Upgrade,StaffThunderBlood,Lightning Strike,1,True,$piece_magetable,3,Gold x10 (+5/lvl); NornThread x5 (+2/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Magic,Deep North
+Recipe_SwordBlackmetal,SwordBlackmetal,Black Metal Sword,1,True,$piece_forge,4,FineWood x2; BlackMetal x20 (+10/lvl); LinenThread x5 (+5/lvl); Upgrader4Weapon x1,Melee Weapons,Plains
+Recipe_SwordBronze,SwordBronze,Bronze Sword,1,True,$piece_forge,1,Wood x2 (+1/lvl); Bronze x8 (+4/lvl); LeatherScraps x2 (+1/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_SwordFire,SwordDyrnwyn,Dyrnwyn,1,True,$piece_blackforge,4,DyrnwynHiltFragment x1; DyrnwynBladeFragment x1; DyrnwynTipFragment x1; FlametalNew x20 (+10/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_SwordGold,SwordGold,Nord Sword,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldSword x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SwordGold_BloodLightning,SwordGold_BloodLightning,Thunderblood Sword,1,True,$piece_blackforge,4,SwordGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SwordGold_FrostFire,SwordGold_FrostFire,Frostfire Sword,1,True,$piece_blackforge,4,SwordGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_SwordGoldUncooked,SwordGoldUncooked,Cast: Nord Sword,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldSword x1; Frostwood x10 (+3/lvl),Materials,Deep North
+Recipe_SwordIron,SwordIron,Iron Sword,1,True,$piece_forge,2,Wood x2 (+1/lvl); Iron x20 (+10/lvl); LeatherScraps x3 (+2/lvl); Upgrader2Weapon x1,Melee Weapons,Swamp
+Recipe_SwordKrom,THSwordKrom,Krom,1,True,$piece_blackforge,1,Iron x30 (+15/lvl); Bronze x20 (+10/lvl); ScaleHide x5 (+5/lvl); Upgrader5Weapon x1,Melee Weapons,Mistlands
+Recipe_SwordMistwalker,SwordMistwalker,Mistwalker,1,True,$piece_blackforge,1,FineWood x3; Iron x15 (+10/lvl); Eitr x10 (+5/lvl); Wisp x3 (+1/lvl); Upgrader5Weapon x1,Melee Weapons,Mistlands
+Recipe_SwordNiedhogg,SwordNiedhogg,Nidhögg,1,True,$piece_blackforge,3,CharredBone x3; FlametalNew x12 (+10/lvl); AskHide x2 (+2/lvl); Upgrader6Weapon x1,Melee Weapons,Ashlands
+Recipe_SwordNiedhogg_Blood,SwordNiedhoggBlood,Nidhögg the Bleeding,1,True,$piece_blackforge,4,SwordNiedhogg x1; FlametalNew x6 (+6/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_SwordNiedhogg_Lightning,SwordNiedhoggLightning,Nidhögg the Thundering,1,True,$piece_blackforge,4,SwordNiedhogg x1; FlametalNew x6 (+6/lvl); GemstoneBlue x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_SwordNiedhogg_Nature,SwordNiedhoggNature,Nidhögg the Primal,1,True,$piece_blackforge,4,SwordNiedhogg x1; FlametalNew x6 (+6/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_SwordSilver,SwordSilver,Silver Sword,1,True,$piece_forge,3,Wood x2 (+1/lvl); Silver x40 (+20/lvl); LeatherScraps x3 (+1/lvl); Iron x5 (+3/lvl); Upgrader3Weapon x1,Melee Weapons,Mountain
+Recipe_SwordSlayer,THSwordSlayer,Slayer,1,True,$piece_blackforge,3,FlametalNew x30 (+15/lvl); AskHide x5 (+5/lvl); MorgenSinew x3 (+3/lvl); Upgrader6Weapon x1,Melee Weapons,Ashlands
+Recipe_SwordSlayer_Blood,THSwordSlayerBlood,Brutal Slayer,1,True,$piece_blackforge,4,THSwordSlayer x1; FlametalNew x15 (+15/lvl); GemstoneRed x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_SwordSlayer_Lightning,THSwordSlayerLightning,Scourging Slayer,1,True,$piece_blackforge,4,THSwordSlayer x1; FlametalNew x15 (+15/lvl); GemstoneBlue x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_SwordSlayer_Nature,THSwordSlayerNature,Primal Slayer,1,True,$piece_blackforge,4,THSwordSlayer x1; FlametalNew x15 (+15/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Melee Weapons,Deep North
+Recipe_SwordWood,SwordWood,Wooden Sword,1,True,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_Tankard,Tankard,Tankard,1,True,$piece_workbench,1,FineWood x5 (+1/lvl); Resin x2 (+1/lvl),Melee Weapons,Black Forest
+Recipe_TankardAnniversary,TankardAnniversary,Horn of Celebration,1,True,$piece_workbench,1,Bronze x2 (+1/lvl); TrollHide x2 (+1/lvl); Iron x2 (+1/lvl),Melee Weapons,Swamp
+Recipe_TankardOdin,TankardOdin,Mead Horn of Oden,1,True,$piece_workbench,1,FineWood x4 (+1/lvl); TrophyDeer x1 (+1/lvl); Resin x2 (+1/lvl),Melee Weapons,Black Forest
+Recipe_THSwordGold,THSwordGold,Nord Greatsword,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldSword2H x1; BarkaBranch x2 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_THSwordGold_BloodLightning,THSwordGold_BloodLightning,Thunderblood Greatsword,1,True,$piece_blackforge,4,THSwordGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_THSwordGold_FrostFire,THSwordGold_FrostFire,Frostfire Greatsword,1,True,$piece_blackforge,4,THSwordGold x1; Gold x20 (+10/lvl); OrbFrostFire x1 (+1/lvl); Upgrader7Weapon x1,Melee Weapons,Deep North
+Recipe_THSwordGoldUncooked,THSwordGoldUncooked,Cast: Nord Greatsword,1,True,$piece_blackforge,4,Gold x20 (+15/lvl); MoldSword2H x1; BarkaBranch x2 (+1/lvl),Materials,Deep North
+Recipe_THSwordWood,THSwordWood,Wooden Greatsword,1,False,$piece_workbench,1,Wood x5 (+1/lvl); FineWood x3 (+10/lvl); RoundLog x2 (+2/lvl); Upgrader1Weapon x1,Melee Weapons,Black Forest
+Recipe_Torch,Torch,Torch,1,True,,1,Wood x1 (+1/lvl); Resin x1 (+1/lvl),Tools,Meadows
+Recipe_TorchMist,TorchMist,[item_torchmist],1,False,$piece_magetable,1,Crystal x1 (+1/lvl); Resin x1 (+1/lvl),Tools,Mountain
+Recipe_TrinketBlackDamageHealth,TrinketBlackDamageHealth,Bracelets of the Brave,1,True,$piece_forge,1,BlackMetal x5; LoxPelt x5; TrophyLox x1,Utility & Trinkets,Plains
+Recipe_TrinketBlackStamina,TrinketBlackStamina,Evasion Mantle,1,True,$piece_forge,1,BlackMetal x5; TrophyGoblinBrute x1; LinenThread x10,Utility & Trinkets,Plains
+Recipe_TrinketBloodGoldHealth,TrinketBloodGoldHealth,Neckstabber,1,True,$piece_blackforge,1,Gold x5; MoleClaws x5; TrophyMoose x1,Utility & Trinkets,Deep North
+Recipe_TrinketBloodGoldStamina,TrinketBloodGoldStamina,Witch Crown,1,True,$piece_blackforge,1,Gold x5; NornThread x5; TrophyJotunWitch x1,Utility & Trinkets,Meadows
+Recipe_TrinketBronzeHealth,TrinketBronzeHealth,Heart of the Forest,1,True,$piece_forge,1,Bronze x5; AncientSeed x5; TrophyGreydwarfShaman x1,Utility & Trinkets,Black Forest
+Recipe_TrinketBronzeStamina,TrinketBronzeStamina,Bronze Pendant,1,True,$piece_forge,1,Bronze x5; TrophyBjorn x1; Ruby x3,Utility & Trinkets,Black Forest
+Recipe_TrinketCarapaceEitr,TrinketCarapaceEitr,Pulsating Earrings,1,True,$piece_blackforge,1,Carapace x5; Eitr x5; TrophyGjall x1,Utility & Trinkets,Mistlands
+Recipe_TrinketChitinSwim,TrinketChitinSwim,Fins of Destiny,1,True,$piece_forge,1,Chitin x5; SerpentScale x5; TrophySerpent x1,Utility & Trinkets,Ocean
+Recipe_TrinketFlametalEitr,TrinketFlametalEitr,Jörmundling,1,True,$piece_blackforge,1,FlametalNew x5; Eitr x5; GemstoneRed x1; TrophyFallenValkyrie x1,Utility & Trinkets,Deep North
+Recipe_TrinketFlametalStaminaHealth,TrinketFlametalStaminaHealth,Brimstone,1,True,$piece_blackforge,1,FlametalNew x5; SulfurStone x5; MoltenCore x1; TrophyMorgen x1,Utility & Trinkets,Ashlands
+Recipe_TrinketIronHealth,TrinketIronHealth,Iron Brooch,1,True,$piece_forge,1,Iron x5; ElderBark x5; TrophyLeech x1,Utility & Trinkets,Swamp
+Recipe_TrinketIronStamina,TrinketIronStamina,Nimble Anklet,1,True,$piece_forge,1,Iron x5; WitheredBone x5; TrophySurtling x1,Utility & Trinkets,Swamp
+Recipe_TrinketScaleStaminaDamage,TrinketScaleStaminaDamage,Resounding Shackle,1,True,$piece_blackforge,1,Eitr x5; ScaleHide x5; Mandible x1; TrophySeeker x1,Utility & Trinkets,Mistlands
+Recipe_TrinketSilverDamage,TrinketSilverDamage,Wolf Sight,1,True,$piece_forge,1,Silver x5; WolfFang x5; TrophyFenring x1,Utility & Trinkets,Mountain
+Recipe_TrinketSilverResist,TrinketSilverResist,Crystal Heart,1,True,$piece_forge,1,Silver x5; Crystal x5; TrophySGolem x1,Utility & Trinkets,Mountain
+Recipe_TurnipStew,TurnipStew,Turnip Stew,1,True,$piece_cauldron,2,RawMeat x1 (+1/lvl); Turnip x3 (+1/lvl),Food & Potions,Swamp
+Recipe_TurretBolt,TurretBolt,Black Metal Missile,20,True,$piece_artisanstation,1,Wood x10 (+1/lvl); BlackMetal x1 (+1/lvl),Ammo,Plains
+Recipe_TurretBoltBloodGold,TurretBoltBloodgold,Bloodgold Missile,20,True,$piece_artisanstation,1,Frostwood x10 (+1/lvl); Gold x1 (+1/lvl),Ammo,Deep North
+Recipe_TurretBoltFlametal,TurretBoltFlametal,Flametal Missile,20,True,$piece_artisanstation,1,Blackwood x10 (+1/lvl); FlametalNew x1 (+1/lvl),Ammo,Ashlands
+Recipe_TurretBoltWood,TurretBoltWood,Wooden Missile,20,True,$piece_artisanstation,1,RoundLog x5 (+1/lvl); Feathers x2 (+1/lvl),Ammo,Black Forest
+Recipe_VikingCupcake,VikingCupcakeUncooked,Unbaked Sweetbread,1,True,$piece_preptable,1,Cloudberry x2 (+1/lvl); ChickenEgg x1 (+1/lvl); BarleyFlour x1 (+1/lvl); Honey x1 (+1/lvl),Materials,Plains
+Recipe_WolfJerky,WolfJerky,Wolf Jerky,2,True,$piece_cauldron,3,WolfMeat x1 (+1/lvl); Honey x1 (+1/lvl),Food & Potions,Mountain
+Recipe_WolfSkewer,WolfMeatSkewer,Wolf Skewer,1,True,$piece_cauldron,3,WolfMeat x1 (+1/lvl); Mushroom x2 (+1/lvl); Onion x1 (+1/lvl),Food & Potions,Mountain
+Recipe_YggdrasilPorridge,YggdrasilPorridge,Yggdrasil Porridge,1,True,$piece_cauldron,5,Sap x4 (+1/lvl); Barley x3 (+1/lvl); RoyalJelly x2 (+1/lvl),Food & Potions,Mistlands

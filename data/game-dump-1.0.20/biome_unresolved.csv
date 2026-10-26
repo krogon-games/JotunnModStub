@@ -1,0 +1,20 @@
+item,name,sources_found,used_in_recipes
+AtgeirGold,Nord Atgeir,2,AtgeirGold_BloodLightning; AtgeirGold_FrostFire
+AxeGold,Nord Axe,2,AxeGold_BloodLightning; AxeGold_FrostFire
+BattleaxeGold,Nord Greataxe,2,BattleaxeGold_BloodLightning; BattleaxeGold_FrostFire
+BowGold,Nord Bow,2,BowGold_BloodLightning; BowGold_FrostFire
+ChickenMeat,Chicken Meat,0,HoneyGlazedChickenUncooked
+CrossbowGold,Nord Crossbow,2,CrossbowGold_BloodLightning; CrossbowGold_FrostFire
+CrownJewel,Crown Jewel,0,HelmetCrownofValheim
+FaderEmber,Embers,0,BombDynamite; Shovel
+FireworksRocket_White,Basic Fireworks,1,FireworksRocket_Blue; FireworksRocket_Cyan; FireworksRocket_Green; FireworksRocket_Purple; FireworksRocket_Red; FireworksRocket_Yellow
+FistGold,Nord Knucklechains,2,FistGold_BloodLightning; FistGold_FrostFire
+Gold,Bloodgold,1,ArmorDeepNorthHeavyChest; ArmorGoldHeavyChestUncooked; ArmorDeepNorthHeavylegs; ArmorGoldHeavyLegsUncooked; ArmorDeepNorthMageChest; ArmorGoldMageChestUncooked; ArmorDeepNorthMagelegs; ArmorGoldMageLegsUncooked; ArmorDeepNorthMediumChest; ArmorGoldMediumChestUncooked; ArmorDeepNorthMediumlegs; ArmorGoldMediumLegsUncooked; ArrowBloodGold; AtgeirGold; AtgeirGold_BloodLightning; AtgeirGold_FrostFire; AtgeirGoldUncooked; AxeGold; AxeGold_BloodLightning; AxeGold_FrostFire; AxeGoldUncooked; BattleaxeGold; BattleaxeGold_BloodLightning; BattleaxeGold_FrostFire; BattleaxeGoldUncooked; KeysGoldUncooked; BoltBloodGold; BowGold; BowGold_BloodLightning; BowGold_FrostFire; BowGoldUncooked; CapeDeepNorth; CapeDeepNorthMage; Catapult_Ammo_BloodGold; CrossbowGold; CrossbowGold_BloodLightning; CrossbowGold_FrostFire; CrossbowGoldUncooked; FistGold_BloodLightning; FistGold_FrostFire; FistGold; FistGoldUncooked; HelmetCrownofValheim; HelmetDNHeavy; ArmorGoldHeavyHelmetUncooked; KnifeGold; KnifeGold_BloodLightning; KnifeGold_FrostFire; KnifeGoldUncooked; MaceGold; MaceGold_BloodLightning; MaceGold_FrostFire; MaceGoldUncooked; SaddleMoose; ShieldGoldBuckler; ShieldBucklerGoldUncooked; ShieldGold; ShieldRoundGoldUncooked; ShieldGoldTower; ShieldTowerGoldUncooked; SledgeGold; SledgeGold_BloodLightning; SledgeGold_FrostFire; SledgeGoldUncooked; SpearGold; SpearGold_BloodLightning; SpearGold_FrostFire; SpearGoldUncooked; StaffOrbofAhriUncooked; StaffOrbofAhri; StaffThunderbloodUncooked; StaffThunderBlood; SwordGold; SwordGold_BloodLightning; SwordGold_FrostFire; SwordGoldUncooked; THSwordGold; THSwordGold_BloodLightning; THSwordGold_FrostFire; THSwordGoldUncooked; TrinketBloodGoldHealth; TrinketBloodGoldStamina; TurretBoltBloodgold
+KnifeGold,Nord Dagger,2,KnifeGold_BloodLightning; KnifeGold_FrostFire
+MaceGold,Nord Mace,2,MaceGold_BloodLightning; MaceGold_FrostFire
+SledgeGold,Nord Sledge,2,SledgeGold_BloodLightning; SledgeGold_FrostFire
+SpearGold,Nord Spear,2,SpearGold_BloodLightning; SpearGold_FrostFire
+SpiceDeepNorth,Seasoning of the Gourd,1,FeastDeepNorth_Material
+SwordGold,Nord Sword,2,SwordGold_BloodLightning; SwordGold_FrostFire
+THSwordGold,Nord Greatsword,2,THSwordGold_BloodLightning; THSwordGold_FrostFire
+Wisp,Wisp,0,Demister; SwordMistwalker

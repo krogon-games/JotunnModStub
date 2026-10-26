@@ -32,6 +32,11 @@ namespace CraftingOverhaul.Biomes
         /// <summary>The earliest biome in a set of game biome flags, or null when none is set.</summary>
         public static Biome? Earliest(Heightmap.Biome flags)
         {
+            // Entries that apply in every land biome (e.g. raid spawn lists) say nothing about where something is found.
+            if (IsEverywhere(flags))
+            {
+                return null;
+            }
             for (int i = 0; i < GameBiomes.Length; i++)
             {
                 if ((flags & GameBiomes[i]) != 0)
@@ -40,6 +45,16 @@ namespace CraftingOverhaul.Biomes
                 }
             }
             return null;
+        }
+
+        private const Heightmap.Biome AllLand = Heightmap.Biome.Meadows | Heightmap.Biome.BlackForest |
+                                                Heightmap.Biome.Swamp | Heightmap.Biome.Mountain |
+                                                Heightmap.Biome.Plains | Heightmap.Biome.Mistlands |
+                                                Heightmap.Biome.AshLands | Heightmap.Biome.DeepNorth;
+
+        public static bool IsEverywhere(Heightmap.Biome flags)
+        {
+            return (flags & AllLand) == AllLand;
         }
 
         public static string Label(Biome biome)

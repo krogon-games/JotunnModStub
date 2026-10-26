@@ -1,0 +1,8 @@
+Game version: 1.0.20
+CraftingOverhaul: 0.1.0
+Written: 2026-10-26 23:08:15
+Language: English
+
+Loaded plugins:
+  com.jotunn.jotunn 2.30.2 (Jotunn)
+  com.krogongames.craftingoverhaul 0.1.0 (CraftingOverhaul)
