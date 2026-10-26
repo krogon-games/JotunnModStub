@@ -22,7 +22,7 @@ Write down the result of each step (✅/❌ and what you saw).
 | 3 | Host | Do test 1 yourself. Friend then opens the chests. | Same as tests 1–2, the other way round. |
 | 4 | Both | Friend builds a wood piece with the hammer using wood only in a chest. | Builds. Wood leaves the chest, and the host sees the same. |
 | 5 | Host + friend | Host **opens and keeps open** the only chest with wood. Friend tries to craft something needing that wood. | The friend's recipe shows it can't be crafted (that chest is skipped while someone has it open). Host closes it → friend can craft. |
-| 6 | Host | Build a **private chest** (reinforced/private), put wood in it, and empty the other chests. Friend tries to craft. | Friend can't use the private chest's wood. Host can. |
+| 6 | Host | Build a **personal chest** (the private one, `piece_chest_private`), put wood in it, and empty the other chests. Friend tries to craft. | Friend can't use the private chest's wood. Host can. |
 | 7 | Host | Place a **ward** near the bench, activated, without adding the friend. Friend tries to craft from chests inside it. | Friend can't use those chests. Add the friend to the ward → they can. |
 | 8 | Both | Both craft from the **same chest at the same moment** (count down, click together), a few times. | Ideally no lost or duplicated items. A known race: if items go missing or double, note how often. |
 | 9 | Friend | Walk 30+ m away from the chests and try crafting at a second workbench there. | Far chests aren't used (range 20 m). |
