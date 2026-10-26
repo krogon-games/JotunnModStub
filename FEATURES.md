@@ -8,11 +8,11 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 
 | Feature | Area | Status | Config option | Files touched | Last updated |
 |---|---|---|---|---|---|
-| [Recipe search box](#recipe-search-box) | UI | Built, untested | `1 - Recipe List` → `ShowSearchBar`, `SearchIngredients`, `ClearSearchOnClose` | `RecipeList/SearchBar.cs`, `RecipeList/RecipeListOrganizer.cs`, `ModConfig.cs` | 2026-10-26 |
-| [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Built, untested | `1 - Recipe List` → `Grouping`, `StartCollapsed` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-10-26 |
+| [Recipe search box](#recipe-search-box) | UI | Broken | `1 - Recipe List` → `ShowSearchBar`, `SearchIngredients`, `ClearSearchOnClose` | `RecipeList/SearchBar.cs`, `RecipeList/RecipeListOrganizer.cs`, `ModConfig.cs` | 2026-10-26 |
+| [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Tested in-game | `1 - Recipe List` → `Grouping`, `StartCollapsed` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-10-26 |
 | [Data-driven biome detection](#data-driven-biome-detection) | UI | Built, untested | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*`, `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Built, untested | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-26 |
-| [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Built, untested | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
+| [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -35,6 +35,7 @@ File paths are relative to `CraftingOverhaul/` unless they start with `CraftingO
 | `ClearSearchOnClose` | `true` | Clear the search when the inventory closes. |
 
 **Known issues:**
+- **Play-test 2026-10-26: the search box didn't appear.** Likely cause: the scroll-view lookup skipped inactive objects, and the crafting panel can still be inactive when the inventory first opens. Fixed to include inactive objects, and the bar's placement is now logged (`Search bar added above ...`). Awaiting re-test.
 - The box goes in space taken from the top of the recipe list. Its position is worked out from the game's layout at runtime, so it may be misaligned at some resolutions or UI scales. This is the most likely thing to need fixing after the first play-test.
 - If the recipe list's scroll view can't be found (e.g. another mod rebuilt that UI), the box isn't created. A warning is logged, and grouping still works.
 
@@ -74,6 +75,7 @@ Biome overrides are covered under [data-driven biome detection](#data-driven-bio
 - Which categories are collapsed is remembered only until the game closes.
 - Collapsing the category that holds the selected recipe moves the selection to the first visible recipe.
 - Category labels are English only.
+- Play-test 2026-10-26: collapsing and expanding work. Long header labels such as "Bows & Crossbows (0/2)" wrapped onto two lines; they now stay on one line and are cut off with "…" if too long (awaiting re-test).
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 
@@ -255,6 +257,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- **Second play-test:** the inventory and crafting screens work, categories collapse and expand, and `co_dump` writes its files. The search box didn't appear (see its known issues). Fixed the likely cause and stopped header labels from wrapping. Chest crafting and biome grouping haven't been tested yet.
 - **First play-test (Valheim 1.0.20): the inventory and crafting screens were broken** (empty panels, placeholder text, no mouse cursor) and `co_dump` failed. Cause: the biome code used C# tuples, which need `System.ValueTuple.dll`, and Valheim doesn't ship it. The first recipe-list update crashed inside the game's own "open inventory" code. Fixed by removing the tuples. All features stay "Built, untested" until re-tested.
 - The build now fails if the mod references an assembly Valheim doesn't ship (`System.ValueTuple`, `System.Memory`, `System.Buffers`).
 - Mod code running inside game methods (recipe list, search bar, biome detection, chest counting and taking) now catches its own errors: it logs them once and falls back to vanilla behaviour instead of breaking the game's UI.

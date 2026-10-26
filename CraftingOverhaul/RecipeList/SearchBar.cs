@@ -29,7 +29,8 @@ namespace CraftingOverhaul.RecipeList
                 return;
             }
 
-            var scrollRect = gui.m_recipeListRoot.GetComponentInParent<ScrollRect>();
+            // Include inactive objects: the crafting panel can still be switched off when the inventory first opens.
+            var scrollRect = gui.m_recipeListRoot.GetComponentInParent<ScrollRect>(true);
             if (!scrollRect)
             {
                 Jotunn.Logger.LogWarning("Could not find the recipe list scroll view; search bar disabled.");
@@ -71,6 +72,8 @@ namespace CraftingOverhaul.RecipeList
             _instance._groupingLabel = buttonGo.GetComponentInChildren<Text>();
             buttonGo.GetComponent<Button>().onClick.AddListener(CycleGrouping);
             UpdateGroupingLabel();
+
+            Jotunn.Logger.LogInfo($"Search bar added above '{listRect.name}' at {topLeft} (width {width}) in '{parent.name}'");
         }
 
         private static void Place(RectTransform parent, RectTransform rt, Vector2 topLeftInParent, float width)

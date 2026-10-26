@@ -166,6 +166,9 @@ namespace CraftingOverhaul.RecipeList
                 name.text = $"{(collapsed ? "[+]" : "[-]")} {category.Label}  <size=80%>({craftable}/{total})</size>";
                 name.color = HeaderColor;
                 name.fontStyle = FontStyles.Bold;
+                // Keep long names like "Bows & Crossbows (0/2)" on one line.
+                name.textWrappingMode = TextWrappingModes.NoWrap;
+                name.overflowMode = TextOverflowModes.Ellipsis;
             }
 
             var button = header.GetComponent<Button>();
