@@ -13,7 +13,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Data-driven biome detection](#data-driven-biome-detection) | UI | Tested in-game | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*` (incl. `HatchCollector.cs`), `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-26 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
-| [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
+| [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
 | [Riftforge](#riftforge) | Crafting | Built, untested | — | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
@@ -246,7 +246,7 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 
 *Corruption plugin, design phase 1.*
 
-**What it does in-game:** Adds the **Corruption shard**, the corruption mod's currency (a purple-tinted crystal, stacks to 50, can go through portals). Phase 1 drop sources:
+**What it does in-game:** Adds the **Corruption shard**, the corruption mod's currency: a deep-red gem, styled after the Path of Exile/Diablo shards. It stacks to 50 and can go through portals. By default it uses the Bloodstone model with a red tint; the look is configurable. Phase 1 drop sources:
 - 1-star creatures: 2% chance of a shard.
 - 2-star creatures: 5% chance.
 - Bosses: 1–3 shards the first time each boss is defeated in a world. The check is the boss's own defeat key, so it also covers the Deep North boss's final phase.
@@ -263,11 +263,14 @@ Tamed creatures never drop shards, so a pen of starred wolves can't be farmed. R
 | `TwoStarChance` | `0.05` | Chance a 2-star (or higher) creature drops a shard |
 | `BossShardsMin` / `BossShardsMax` | `1` / `3` | Shards from a boss |
 | `BossShardsFirstKillOnly` | `true` | Only on a boss's first defeat per world; off = every kill |
+| `ShardBaseItem` (Look) | `GemstoneRed` | Vanilla item whose model the shard uses (e.g. `GemstoneRed` = Bloodstone, `Crystal`, `Ruby`). Per player, restart to apply |
+| `ShardColor` (Look) | `#B3170D` | Tint colour (HTML). Per player, restart to apply |
+| `ShardTintStrength` (Look) | `0.35` | 0 = base item's own colours, 1 = fully the tint colour. Per player, restart to apply |
 
 The drop rules are unit-tested (`ShardRulesTests`).
 
 **Known issues:**
-- Untested in-game.
+- Play-test 2026-10-26: the mod loads and `spawn CorruptionShard` works (name, description and weight correct). The first version, a crystal with a purple tint, came out pale blue: the tint only changed the main colour, not the crystal's glow colours. The tint now changes every colour property, and the shard uses the naturally red Bloodstone model. Awaiting re-test. Drops from creatures and bosses are untested.
 - The icon is rendered at startup from the tinted model. If that fails, the vanilla crystal icon is used and a warning is logged.
 - A boss killed before installing the mod counts as already defeated, so it won't drop shards unless `BossShardsFirstKillOnly` is turned off.
 
@@ -292,7 +295,7 @@ New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
 **Config settings:** none yet.
 
 **Known issues:**
-- Untested in-game.
+- Play-test 2026-10-26: not unlocked yet. That's expected: vanilla only shows a piece once a workbench has been seen and **every** ingredient has been picked up (fine wood, shard, Eikthyr trophy, bronze nails, leather scraps, surtling core).
 - Ingredient amounts are first guesses.
 - Interacting with it shows an empty recipe list until phase 4 adds maps.
 
@@ -336,6 +339,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- **Corruption play-test:** the mod loads and the shard spawns. The shard is now deep red (Bloodstone model with a red tint, configurable look). The tint now covers every colour property, which also fixes glow colours staying unchanged.
 - **Corruption plugin started (design phase 1):** new `Corruption` project with the corruption shard (drops from starred creatures and on first boss kills) and the Riftforge station. Shard drop rules are unit-tested; nothing has been tested in-game yet.
 - Building with materials from nearby chests confirmed working in-game. Added `docs/multiplayer-test.md` for the two-player test.
 - **Second dump analysed:** the biome fixes worked (913 items placed, 2 unplaced). Wisp fountains added to the producer rule. Reference data in `data/game-dump-1.0.20/` replaced with this corrected dump.

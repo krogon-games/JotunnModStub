@@ -6,7 +6,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 
 ## Features so far
 
-- **Corruption shards.** The mod's currency.
+- **Corruption shards.** The mod's currency: a deep-red gem.
   - 1-star creatures sometimes drop one, and 2-star creatures a bit more often.
   - Every boss drops 1–3 the first time it's defeated in a world.
 - **Riftforge.** A new crafting station, built with the hammer next to a workbench from fine wood, a corruption shard, Eikthyr's trophy, bronze nails, leather scraps and Surtling cores. It appears in the build menu once you've picked up all of those. It has no recipes yet; maps come in a later phase.
@@ -22,6 +22,14 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 | Corruption Shards / BossShardsMin | 1 | Fewest shards from a boss |
 | Corruption Shards / BossShardsMax | 3 | Most shards from a boss |
 | Corruption Shards / BossShardsFirstKillOnly | true | Bosses drop shards only on their first defeat per world |
+
+Look settings (per player, not synced, restart to apply):
+
+| Setting | Default | Description |
+|---|---|---|
+| Look / ShardBaseItem | GemstoneRed | Vanilla item whose model the shard uses |
+| Look / ShardColor | #B3170D | Tint colour |
+| Look / ShardTintStrength | 0.35 | 0 = base colours, 1 = fully the tint colour |
 
 ## Changelog
 - 0.1.0 (unreleased): corruption shards and the Riftforge.

@@ -1,14 +1,19 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Corruption.Content
 {
-    /// <summary>The "corrupted" look: a purple tint on a cloned prefab's own copies of its materials.</summary>
+    /// <summary>The "corrupted" look: a colour tint on a cloned prefab's own copies of its materials.</summary>
     internal static class Corrupted
     {
         public static readonly Color Purple = new Color(0.55f, 0.2f, 0.85f, 1f);
 
-        /// <param name="strength">0 = unchanged, 1 = fully purple.</param>
-        public static void Tint(GameObject prefab, float strength = 0.6f)
+        /// <summary>
+        ///     Recolours every colour property of every material (base colour, emission, glow...), keeping each
+        ///     property's brightness. Vanilla shaders use different property names, so all of them are changed.
+        /// </summary>
+        /// <param name="strength">0 = unchanged, 1 = fully the target colour.</param>
+        public static void Tint(GameObject prefab, Color target, float strength)
         {
             foreach (var renderer in prefab.GetComponentsInChildren<Renderer>(true))
             {
@@ -26,13 +31,38 @@ namespace Corruption.Content
                     }
                     // Copies, so the vanilla item using the same material keeps its colour.
                     copies[i] = new Material(shared[i]);
-                    if (copies[i].HasProperty("_Color"))
-                    {
-                        copies[i].color = Color.Lerp(copies[i].color, Purple, strength);
-                    }
+                    TintMaterial(copies[i], target, strength);
                 }
                 renderer.sharedMaterials = copies;
             }
+        }
+
+        private static void TintMaterial(Material material, Color target, float strength)
+        {
+            var shader = material.shader;
+            int count = shader.GetPropertyCount();
+            for (int p = 0; p < count; p++)
+            {
+                if (shader.GetPropertyType(p) != ShaderPropertyType.Color)
+                {
+                    continue;
+                }
+                string name = shader.GetPropertyName(p);
+                var original = material.GetColor(name);
+                material.SetColor(name, Recolor(original, target, strength));
+            }
+        }
+
+        /// <summary>Same brightness and alpha, hue moved towards the target.</summary>
+        private static Color Recolor(Color original, Color target, float strength)
+        {
+            float brightness = Mathf.Max(original.r, Mathf.Max(original.g, original.b));
+            float targetMax = Mathf.Max(target.r, Mathf.Max(target.g, target.b, 0.0001f));
+            var tinted = new Color(target.r / targetMax * brightness, target.g / targetMax * brightness,
+                target.b / targetMax * brightness, original.a);
+            var result = Color.Lerp(original, tinted, strength);
+            result.a = original.a;
+            return result;
         }
 
         /// <summary>Renders an icon from the tinted prefab; falls back to the cloned item's icon if rendering fails.</summary>

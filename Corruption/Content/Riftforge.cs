@@ -41,7 +41,7 @@ namespace Corruption.Content
                 station.m_name = Texts.RiftforgeName;
             }
 
-            Corrupted.Tint(piece.PiecePrefab);
+            Corrupted.Tint(piece.PiecePrefab, Corrupted.Purple, 0.6f);
             var icon = Corrupted.RenderIcon(piece.PiecePrefab);
             if (icon)
             {
