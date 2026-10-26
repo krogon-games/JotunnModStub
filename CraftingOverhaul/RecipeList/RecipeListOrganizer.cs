@@ -155,6 +155,7 @@ namespace CraftingOverhaul.RecipeList
             header.SetActive(true);
             PlaceRow(gui, header, row);
 
+            var icon = header.transform.Find("icon") as RectTransform;
             SetChildActive(header, "icon", false);
             SetChildActive(header, "Durability", false);
             SetChildActive(header, "QualityLevel", false);
@@ -169,6 +170,7 @@ namespace CraftingOverhaul.RecipeList
                 // Keep long names like "Bows & Crossbows (0/2)" on one line.
                 name.textWrappingMode = TextWrappingModes.NoWrap;
                 name.overflowMode = TextOverflowModes.Ellipsis;
+                StyleHeaderText(name, icon);
             }
 
             var button = header.GetComponent<Button>();
@@ -179,6 +181,38 @@ namespace CraftingOverhaul.RecipeList
             }
 
             Headers.Add(header);
+        }
+
+        private static bool _loggedFontSize;
+
+        /// <summary>
+        ///     Starts the header text where the item icon would be (headers have no icon), and gives it a fixed
+        ///     size: the row's text otherwise shrinks to fit, which made headers smaller than the item names.
+        /// </summary>
+        private static void StyleHeaderText(TMP_Text name, RectTransform icon)
+        {
+            var nameRect = name.rectTransform;
+            if (icon)
+            {
+                float iconLeft = icon.localPosition.x + icon.rect.xMin;
+                float nameLeft = nameRect.localPosition.x + nameRect.rect.xMin;
+                if (nameLeft > iconLeft)
+                {
+                    // Move only the left edge, so the text also gets the icon's width.
+                    nameRect.offsetMin -= new Vector2(nameLeft - iconLeft, 0f);
+                }
+            }
+
+            float itemSize = name.enableAutoSizing ? name.fontSizeMax : name.fontSize;
+            float size = ModConfig.HeaderFontSize.Value > 0f ? ModConfig.HeaderFontSize.Value : itemSize;
+            if (!_loggedFontSize)
+            {
+                _loggedFontSize = true;
+                Jotunn.Logger.LogInfo($"Recipe row font: size {name.fontSize}, auto-size {name.enableAutoSizing} " +
+                                      $"({name.fontSizeMin}-{name.fontSizeMax}); headers use {size}");
+            }
+            name.enableAutoSizing = false;
+            name.fontSize = size;
         }
 
         private static void Toggle(string key)

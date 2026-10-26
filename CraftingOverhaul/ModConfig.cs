@@ -22,6 +22,7 @@ namespace CraftingOverhaul
 
         public static ConfigEntry<GroupingMode> Grouping;
         public static ConfigEntry<bool> StartCollapsed;
+        public static ConfigEntry<float> HeaderFontSize;
         public static ConfigEntry<bool> ShowSearchBar;
         public static ConfigEntry<bool> SearchIngredients;
         public static ConfigEntry<bool> ClearSearchOnClose;
@@ -38,6 +39,9 @@ namespace CraftingOverhaul
                 "How recipes are grouped into collapsible categories. Can also be changed in game with the button next to the search bar.");
             StartCollapsed = config.Bind(RecipeListSection, "StartCollapsed", false,
                 "Start each session with every category collapsed.");
+            HeaderFontSize = config.Bind(RecipeListSection, "HeaderFontSize", 0f,
+                new ConfigDescription("Font size of the category headers. 0 uses the same size as the recipe names.",
+                    new AcceptableValueRange<float>(0f, 40f)));
             ShowSearchBar = config.Bind(RecipeListSection, "ShowSearchBar", true,
                 "Show a search box above the recipe list. Requires a restart.");
             SearchIngredients = config.Bind(RecipeListSection, "SearchIngredients", true,
@@ -66,6 +70,7 @@ namespace CraftingOverhaul
                 RecipeListOrganizer.Refresh();
             };
             Grouping.SettingChanged += (_, __) => RecipeListOrganizer.Refresh();
+            HeaderFontSize.SettingChanged += (_, __) => RecipeListOrganizer.Refresh();
         }
 
         public static HashSet<string> ExcludedContainerNames()

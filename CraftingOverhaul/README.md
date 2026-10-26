@@ -25,6 +25,7 @@ Settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, or in gam
 |---|---|---|
 | Recipe List / Grouping | ItemType | `None`, `ItemType` or `Biome` |
 | Recipe List / StartCollapsed | false | Start every session with all categories collapsed |
+| Recipe List / HeaderFontSize | 0 | Category header font size; 0 matches the recipe names |
 | Recipe List / ShowSearchBar | true | Show the search box |
 | Recipe List / SearchIngredients | true | Search also matches ingredient names |
 | Recipe List / ClearSearchOnClose | true | Clear the search when the inventory closes |
