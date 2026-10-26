@@ -42,6 +42,8 @@ namespace Corruption.Content
                 station.m_name = Texts.RiftforgeName;
             }
 
+            ReplaceRavenText(piece.PiecePrefab);
+
             if (ColorUtility.TryParseHtmlString(CorruptionConfig.RiftforgeColor.Value, out var color))
             {
                 Corrupted.Tint(piece.PiecePrefab, color, CorruptionConfig.RiftforgeTintStrength.Value);
@@ -57,6 +59,27 @@ namespace Corruption.Content
             }
 
             PieceManager.Instance.AddPiece(piece);
+        }
+
+        /// <summary>
+        ///     The Galdr table has a raven guide point that explains the Galdr table. Give the Riftforge's copy its
+        ///     own key and lore, so the raven talks about the Riftforge instead (once per player, like vanilla).
+        /// </summary>
+        private static void ReplaceRavenText(UnityEngine.GameObject prefab)
+        {
+            foreach (var guide in prefab.GetComponentsInChildren<GuidePoint>(true))
+            {
+                var old = guide.m_text;
+                guide.m_text = new Raven.RavenText
+                {
+                    m_key = "corruption_riftforge",
+                    m_topic = Texts.RavenTopic,
+                    m_label = Texts.RavenLabel,
+                    m_text = Texts.RavenText,
+                    m_priority = old?.m_priority ?? 0,
+                    m_isTutorial = old?.m_isTutorial ?? true
+                };
+            }
         }
     }
 }

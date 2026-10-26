@@ -13,6 +13,9 @@ namespace Corruption.Content
         public const string ShardDescription = "$item_corruptionshard_description";
         public const string RiftforgeName = "$piece_riftforge";
         public const string RiftforgeDescription = "$piece_riftforge_description";
+        public const string RavenTopic = "$raven_riftforge_topic";
+        public const string RavenLabel = "$raven_riftforge_label";
+        public const string RavenText = "$raven_riftforge_text";
 
         public static void Register()
         {
@@ -22,7 +25,10 @@ namespace Corruption.Content
                 { "item_corruptionshard", "Corruption shard" },
                 { "item_corruptionshard_description", "A splinter of Ginnungagap, the void before the world. It hums against your palm." },
                 { "piece_riftforge", "Riftforge" },
-                { "piece_riftforge_description", "A forge that works the void itself. Here maps into the unknown are made." }
+                { "piece_riftforge_description", "A forge that works the void itself. Here maps into the unknown are made." },
+                { "raven_riftforge_topic", "The Riftforge" },
+                { "raven_riftforge_label", "Riftforge" },
+                { "raven_riftforge_text", "You have built a forge for the void itself. The shards you carry are splinters of Ginnungagap, the yawning gap that was before the world. Bind them with a slain guardian's essence, and the Riftforge will tear open a path to lands you have never seen. Go prepared, warrior. The way back must be earned." }
             });
         }
     }
