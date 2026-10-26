@@ -1,7 +1,7 @@
 prefab,token,name,type,skill,max_stack,weight,max_quality,value,teleportable,tool_tier,durability,armor,armor_per_level,block,movement_mod,damage,blunt,slash,pierce,chop,pickaxe,fire,frost,lightning,poison,spirit,food_health,food_stamina,food_eitr,food_duration,biome,biome_via
-Abomination_attack1,Swing attack,Swing attack,OneHandedWeapon,Unarmed,1,1,1,0,True,2,100,10,1,10,0,0,60,0,0,100,60,0,0,0,0,0,0,0,0,0,,
-Abomination_attack2,Slam attack,Slam attack,OneHandedWeapon,Unarmed,1,1,1,0,True,2,100,10,1,10,0,0,80,0,0,100,60,0,0,0,0,0,0,0,0,0,,
-Abomination_attack3,Stub to the ground,Stub to the ground,OneHandedWeapon,Unarmed,1,1,1,0,True,2,100,10,1,10,0,0,80,0,0,100,60,0,0,0,0,0,0,0,0,0,,
+Abomination_attack1,Swing attack,Swing attack,OneHandedWeapon,Unarmed,1,1,1,0,True,2,100,10,1,10,0,0,60,0,0,100,60,0,0,0,0,0,0,0,0,0,Swamp,Spawns: Abomination > Creature attack Abomination
+Abomination_attack2,Slam attack,Slam attack,OneHandedWeapon,Unarmed,1,1,1,0,True,2,100,10,1,10,0,0,80,0,0,100,60,0,0,0,0,0,0,0,0,0,Swamp,Spawns: Abomination > Creature attack Abomination
+Abomination_attack3,Stub to the ground,Stub to the ground,OneHandedWeapon,Unarmed,1,1,1,0,True,2,100,10,1,10,0,0,80,0,0,100,60,0,0,0,0,0,0,0,0,0,Swamp,Spawns: Abomination > Creature attack Abomination
 Acorn,$item_oakseeds,Acorns,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Vegetation: Oak1 > Tree
 Amber,$item_amber,Amber,Material,Swords,20,0.1,1,5,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Dolmen01 > Dolmen01 > PickableItem
 AmberPearl,$item_amberpearl,Amber Pearl,Material,Swords,50,0.1,1,10,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Dolmen01 > Dolmen01 > PickableItem
@@ -21,37 +21,37 @@ ArmorBronzeChest,$item_chest_bronze,Bronze Plate Tunic,Chest,Swords,1,10,4,0,Tru
 ArmorBronzeLegs,$item_legs_bronze,Bronze Plate Leggings,Legs,Swords,1,10,4,0,True,1,1000,8,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_ArmorBronzeLegs @ forge
 ArmorCarapaceChest,$item_chest_carapace,Carapace Breastplate,Chest,Swords,1,10,4,0,True,5,1200,32,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_ArmorCarapaceChest @ blackforge
 ArmorCarapaceLegs,$item_legs_carapace,Carapace Greaves,Legs,Swords,1,10,4,0,True,5,1200,32,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_ArmorCarapaceLegs @ blackforge
-ArmorDeepNorthHeavyChest,$item_chest_heavy_deepnorth,Breastplate of the Protector,Chest,Swords,1,5,4,0,True,5,1000,44,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDeepNorthHeavylegs,$item_legs_heavy_deepnorth,Trousers of the Protector,Legs,Swords,1,5,4,0,True,5,1000,44,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDeepNorthMageChest,$item_chest_mage_deepnorth,Robes of the Caller,Chest,Swords,1,5,4,0,True,5,1000,22,2,10,-0.02,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDeepNorthMagelegs,$item_legs_mage_deepnorth,Trousers of the Caller,Legs,Swords,1,5,4,0,True,5,1000,22,2,10,-0.02,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDeepNorthMediumChest,$item_chest_medium_deepnorth,Chestpiece of the Vanguard,Chest,Swords,1,5,4,0,True,5,1000,34,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDeepNorthMediumlegs,$item_legs_medium_deepnorth,Trousers of the Vanguard,Legs,Swords,1,5,4,0,True,5,1000,34,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress1,$item_chest_dress1,Plain Brown Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ArmorDeepNorthHeavyChest,$item_chest_heavy_deepnorth,Breastplate of the Protector,Chest,Swords,1,5,4,0,True,5,1000,44,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldChest @ blackforge
+ArmorDeepNorthHeavylegs,$item_legs_heavy_deepnorth,Trousers of the Protector,Legs,Swords,1,5,4,0,True,5,1000,44,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldLegs @ blackforge
+ArmorDeepNorthMageChest,$item_chest_mage_deepnorth,Robes of the Caller,Chest,Swords,1,5,4,0,True,5,1000,22,2,10,-0.02,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMageChest @ piece_magetable
+ArmorDeepNorthMagelegs,$item_legs_mage_deepnorth,Trousers of the Caller,Legs,Swords,1,5,4,0,True,5,1000,22,2,10,-0.02,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMageLegs @ piece_magetable
+ArmorDeepNorthMediumChest,$item_chest_medium_deepnorth,Chestpiece of the Vanguard,Chest,Swords,1,5,4,0,True,5,1000,34,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMediumChest @ blackforge
+ArmorDeepNorthMediumlegs,$item_legs_medium_deepnorth,Trousers of the Vanguard,Legs,Swords,1,5,4,0,True,5,1000,34,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMediumLegs @ blackforge
+ArmorDress1,$item_chest_dress1,Plain Brown Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorDress10,$item_chest_dress10,Simple Undyed Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
-ArmorDress2,$item_chest_dress2,Brown Dress with Shawl,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress3,$item_chest_dress3,Brown Dress with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress4,$item_chest_dress4,Plain Blue Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress5,$item_chest_dress5,Blue Dress with Shawl,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress6,$item_chest_dress6,Blue Dress with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress7,$item_chest_dress7,Plain Yellow Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress8,$item_chest_dress8,Yellow Dress with Shawl,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorDress9,$item_chest_dress9,Yellow Dress with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ArmorDress2,$item_chest_dress2,Brown Dress with Shawl,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress3,$item_chest_dress3,Brown Dress with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress4,$item_chest_dress4,Plain Blue Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress5,$item_chest_dress5,Blue Dress with Shawl,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress6,$item_chest_dress6,Blue Dress with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress7,$item_chest_dress7,Plain Yellow Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress8,$item_chest_dress8,Yellow Dress with Shawl,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress9,$item_chest_dress9,Yellow Dress with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorFenringChest,$item_chest_fenris,Fenris Coat,Chest,Swords,1,10,4,0,True,3,1000,10,2,10,0.03,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_ArmorFenrirChest @ piece_workbench
 ArmorFenringLegs,$item_legs_fenris,Fenris Leggings,Legs,Swords,1,10,4,0,True,3,1000,10,2,10,0.03,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_ArmorFenrirLegs @ piece_workbench
 ArmorFlametalChest,$item_chest_flametal,Flametal Breastplate,Chest,Swords,1,10,4,0,True,4,1000,38,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_ArmorFlametalChest @ blackforge
 ArmorFlametalLegs,$item_legs_flametal,Flametal Greaves,Legs,Swords,1,10,4,0,True,4,1000,38,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_ArmorFlametalLegs @ blackforge
-ArmorGoldHeavyChestUncooked,$item_chest_heavy_gold_uncooked,Cast: Breastplate of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorGoldHeavyHelmetUncooked,$item_helmet_heavy_gold_uncooked,Cast: Helmet of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorGoldHeavyLegsUncooked,$item_legs_heavy_gold_uncooked,Cast: Trousers of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorGoldMageChestUncooked,$item_chest_mage_gold_uncooked,Cast: Robes of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ArmorGoldHeavyChestUncooked,$item_chest_heavy_gold_uncooked,Cast: Breastplate of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldChestUncooked @ blackforge
+ArmorGoldHeavyHelmetUncooked,$item_helmet_heavy_gold_uncooked,Cast: Helmet of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetGoldUncooked @ blackforge
+ArmorGoldHeavyLegsUncooked,$item_legs_heavy_gold_uncooked,Cast: Trousers of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldLegsUncooked @ blackforge
+ArmorGoldMageChestUncooked,$item_chest_mage_gold_uncooked,Cast: Robes of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMageChestUncooked @ piece_magetable
 ArmorGoldMageHelmetUncooked,$item_helmet_mage_gold_uncooked,Cast: Headdress of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetGoldMageUncooked @ piece_magetable
-ArmorGoldMageLegsUncooked,$item_legs_mage_gold_uncooked,Cast: Trousers of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorGoldMediumChestUncooked,$item_chest_medium_gold_uncooked,Cast: Chestpiece of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ArmorGoldMageLegsUncooked,$item_legs_mage_gold_uncooked,Cast: Trousers of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMageLegsUncooked @ piece_magetable
+ArmorGoldMediumChestUncooked,$item_chest_medium_gold_uncooked,Cast: Chestpiece of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMediumChestUncooked @ blackforge
 ArmorGoldMediumHelmetUncooked,$item_helmet_medium_gold_uncooked,Cast: Hood of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetGoldMediumUncooked @ blackforge
-ArmorGoldMediumLegsUncooked,$item_legs_medium_gold_uncooked,Cast: Trousers of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorHarvester1,$item_chest_harvester1,Harvest Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorHarvester2,$item_chest_harvester2,Harvest Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ArmorGoldMediumLegsUncooked,$item_legs_medium_gold_uncooked,Cast: Trousers of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArmorGoldMediumLegsUncooked @ blackforge
+ArmorHarvester1,$item_chest_harvester1,Harvest Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorHarvester2,$item_chest_harvester2,Harvest Dress,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorIronChest,$item_chest_iron,Iron Scale Mail,Chest,Swords,1,15,4,0,True,2,1000,14,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ArmorIronChest @ forge
 ArmorIronLegs,$item_legs_iron,Iron Greaves,Legs,Swords,1,15,4,0,True,2,1000,14,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ArmorIronLegs @ forge
 ArmorLeatherChest,$item_chest_leather,Leather Tunic,Chest,Swords,1,5,4,0,True,0,400,2,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ArmorLeatherChest @ piece_workbench
@@ -70,19 +70,19 @@ ArmorRootChest,$item_chest_root,Root Harnesk,Chest,Swords,1,10,4,0,True,2,800,8,
 ArmorRootLegs,$item_legs_root,Root Leggings,Legs,Swords,1,10,4,0,True,2,800,8,2,10,-0.02,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ArmorRootLegs @ piece_workbench
 ArmorTrollLeatherChest,$item_chest_trollleather,Troll Leather Tunic,Chest,Swords,1,5,4,0,True,1,500,6,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_ArmorTrollLeatherChest @ piece_workbench
 ArmorTrollLeatherLegs,$item_legs_trollleather,Troll Leather Trousers,Legs,Swords,1,5,4,0,True,1,500,6,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_ArmorTrollLeatherLegs @ piece_workbench
-ArmorTunic1,$item_chest_tunic1,Plain Blue Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ArmorTunic1,$item_chest_tunic1,Plain Blue Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorTunic10,$item_chest_tunic10,Simple Undyed Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
-ArmorTunic2,$item_chest_tunic2,Blue Tunic with Cape,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorTunic3,$item_chest_tunic3,Blue Tunic with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorTunic4,$item_chest_tunic4,Plain Red Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorTunic5,$item_chest_tunic5,Red Tunic with Cape,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorTunic6,$item_chest_tunic6,Red Tunic with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorTunic7,$item_chest_tunic7,Plain Yellow Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorTunic8,$item_chest_tunic8,Yellow Tunic with Cape,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ArmorTunic9,$item_chest_tunic9,Yellow Tunic with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ArmorTunic2,$item_chest_tunic2,Blue Tunic with Cape,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic3,$item_chest_tunic3,Blue Tunic with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic4,$item_chest_tunic4,Plain Red Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic5,$item_chest_tunic5,Red Tunic with Cape,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic6,$item_chest_tunic6,Red Tunic with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic7,$item_chest_tunic7,Plain Yellow Tunic,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic8,$item_chest_tunic8,Yellow Tunic with Cape,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic9,$item_chest_tunic9,Yellow Tunic with Beads,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorWolfChest,$item_chest_wolf,Wolf Hide Chestpiece,Chest,Swords,1,15,4,0,True,3,1000,20,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_ArmorWolfChest @ forge
 ArmorWolfLegs,$item_legs_wolf,Wolf Hide Trousers,Legs,Swords,1,15,4,0,True,3,1000,20,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_ArmorWolfLegs @ forge
-ArrowBloodGold,$item_arrow_bloodgold,Bloodgold Arrow,Ammo,Bows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,,
+ArrowBloodGold,$item_arrow_bloodgold,Bloodgold Arrow,Ammo,Bows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ArrowBloodGold @ blackforge
 ArrowBronze,$item_arrow_bronze,Bronzehead Arrow,Ammo,Bows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,32,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_ArrowBronze @ forge
 ArrowCarapace,$item_arrow_carapace,Carapace Arrow,Ammo,Bows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,72,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_ArrowCarapace @ blackforge
 ArrowCharred,$item_arrow_charred,Charred Arrow,Ammo,Bows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,82,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_ArrowCharred @ blackforge
@@ -98,14 +98,14 @@ ArrowWood,$item_arrow_wood,Wood Arrow,Ammo,Bows,100,0.1,1,0,True,0,100,10,1,10,0
 AskBladder,$item_askbladder,Asksvin Bladder,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Asksvin > CharacterDrop
 AskHide,$item_askhide,Asksvin Hide,Material,Swords,50,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Asksvin > CharacterDrop
 Asksvin_Bite,lox bite,lox bite,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,75,75,0,50,50,0,0,0,0,0,0,0,0,0,,
-Asksvin_Headbutt,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,4,100,10,1,10,0,0,120,0,0,100,100,0,0,0,0,0,0,0,0,0,,
+Asksvin_Headbutt,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,4,100,10,1,10,0,0,120,0,0,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Asksvin > Creature attack Asksvin
 Asksvin_Pounce,lox bite,lox bite,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,150,0,0,50,100,0,0,0,0,0,0,0,0,0,,
 Asksvin_Turnaround,lox bite,lox bite,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,130,130,0,0,0,0,0,0,0,0,0,0,0,,
 AsksvinCarrionNeck,$item_asksvincarrionneck,Asksvin Neck,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location VoltureNest > VoltureNest > DropOnDestroyed
 AsksvinCarrionPelvic,$item_asksvincarrionpelvic,Asksvin Pelvis,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location VoltureNest > VoltureNest > DropOnDestroyed
 AsksvinCarrionRibcage,$item_asksvincarrionribcage,Asksvin Ribcage,Material,Swords,50,5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location VoltureNest > VoltureNest > DropOnDestroyed
 AsksvinCarrionSkull,$item_asksvincarrionskull,Asksvin Skull,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location VoltureNest > VoltureNest > DropOnDestroyed
-AsksvinEgg,$item_asksvin_egg,Asksvin Egg,Misc,Swords,20,1,4,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,10,30,0,600,,
+AsksvinEgg,$item_asksvin_egg,Asksvin Egg,Misc,Swords,20,1,4,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,10,30,0,600,Ashlands,Spawns: Asksvin > Offspring
 AsksvinMeat,$item_asksvin_meat,Asksvin Tail,Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,70,24,0,1200,Ashlands,Spawns: Asksvin > CharacterDrop
 aspect_bonemass_attack_aoe,heal,heal,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,200,0,0,0,0,0,,
 aspect_bonemass_attack_punch,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,100,0,0,1000,1000,0,0,0,70,0,0,0,0,0,,
@@ -140,10 +140,10 @@ aspect_SeekerQueen_Slap,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1
 aspect_SeekerQueen_Spit,dragon breath,dragon breath,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,40,0,0,50,50,0,0,0,40,0,0,0,0,0,,
 AtgeirBlackmetal,$item_atgeir_blackmetal,Black Metal Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,4,175,15,1,52,-0.05,0,0,0,105,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_AtgeirBlackmetal @ forge
 AtgeirBronze,$item_atgeir_bronze,Bronze Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,125,15,1,16,-0.05,0,0,0,45,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_AtgeirBronze @ forge
-AtgeirGold,$item_atgeir_gold,Nord Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,400,15,1,88,-0.05,0,0,0,182,0,0,0,0,0,0,0,0,0,0,0,,
-AtgeirGold_BloodLightning,$item_atgeir_gold_bloodlightning,Thunderblood Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,400,15,1,88,-0.05,0,0,0,192,0,0,0,0,45,0,0,0,0,0,0,,
-AtgeirGold_FrostFire,$item_atgeir_gold_frostfire,Frostfire Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,400,15,1,88,-0.05,0,0,0,148,0,0,12,88,0,0,0,0,0,0,0,,
-AtgeirGoldUncooked,$item_atgeir_gold_uncooked,Cast: Nord Atgeir,Material,Polearms,1,2.5,1,0,True,1,125,15,1,16,0,0,0,0,45,0,0,0,0,0,0,0,0,0,0,0,,
+AtgeirGold,$item_atgeir_gold,Nord Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,400,15,1,88,-0.05,0,0,0,182,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AtgeirGold @ blackforge
+AtgeirGold_BloodLightning,$item_atgeir_gold_bloodlightning,Thunderblood Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,400,15,1,88,-0.05,0,0,0,192,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AtgeirGold_BloodLightning @ blackforge
+AtgeirGold_FrostFire,$item_atgeir_gold_frostfire,Frostfire Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,400,15,1,88,-0.05,0,0,0,148,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AtgeirGold_FrostFire @ blackforge
+AtgeirGoldUncooked,$item_atgeir_gold_uncooked,Cast: Nord Atgeir,Material,Polearms,1,2.5,1,0,True,1,125,15,1,16,0,0,0,0,45,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AtgeirGoldUncooked @ blackforge
 AtgeirHimminAfl,$item_atgeir_himminafl,Himminafl,TwoHandedWeapon,Polearms,1,2.5,4,0,True,5,250,15,1,64,-0.05,0,0,0,85,0,0,0,0,40,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_AtgeirHimminAfl @ blackforge
 AtgeirIron,$item_atgeir_iron,Iron Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,2,175,15,1,28,-0.05,0,0,0,65,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_AtgeirIron @ forge
 AtgeirWood,$item_atgeir_wood,Wooden Atgeir,TwoHandedWeapon,Polearms,1,2.5,4,0,True,1,175,15,1,12,-0.05,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location StoneHouse1_heath > StoneHouse1_heath > Container
@@ -158,10 +158,10 @@ AxeBlackMetal,$item_axe_blackmetal,Black Metal Axe,OneHandedWeapon,Axes,1,2,4,0,
 AxeBronze,$item_axe_bronze,Bronze Axe,OneHandedWeapon,Axes,1,2,4,0,True,2,125,20,1,12,-0.05,0,0,40,0,40,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_AxeBronze @ forge
 AxeEarly,$item_axe_early,Early Axes,TwoHandedWeapon,Axes,1,2,4,0,True,2,175,20,1,4,-0.05,0,0,30,0,35,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_AxeEarly @ piece_workbench
 AxeFlint,$item_axe_flint,Flint Axe,OneHandedWeapon,Axes,1,1.5,4,0,True,1,100,20,1,4,-0.05,0,0,20,0,30,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_AxeFlint @ piece_workbench
-AxeGold,$item_axe_gold,Nord Axe,OneHandedWeapon,Axes,1,2,4,0,True,6,400,20,1,66,-0.05,0,0,176,0,90,0,0,0,0,0,0,0,0,0,0,,
-AxeGold_BloodLightning,$item_axe_gold_bloodlightning,Thunderblood Axe,OneHandedWeapon,Axes,1,2,4,0,True,6,400,20,1,66,-0.05,0,0,186,0,90,0,0,0,45,0,0,0,0,0,0,,
-AxeGold_FrostFire,$item_axe_gold_frostfire,Frostfire Axe,OneHandedWeapon,Axes,1,2,4,0,True,6,400,20,1,66,-0.05,0,0,144,0,90,0,12,88,0,0,0,0,0,0,0,,
-AxeGoldUncooked,$item_axe_gold_uncooked,Cast: Nord Axe,Material,Axes,1,2,1,0,True,4,175,20,1,39,0,0,0,100,0,60,0,0,0,0,0,0,0,0,0,0,,
+AxeGold,$item_axe_gold,Nord Axe,OneHandedWeapon,Axes,1,2,4,0,True,6,400,20,1,66,-0.05,0,0,176,0,90,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AxeGold @ blackforge
+AxeGold_BloodLightning,$item_axe_gold_bloodlightning,Thunderblood Axe,OneHandedWeapon,Axes,1,2,4,0,True,6,400,20,1,66,-0.05,0,0,186,0,90,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AxeGold_BloodLightning @ blackforge
+AxeGold_FrostFire,$item_axe_gold_frostfire,Frostfire Axe,OneHandedWeapon,Axes,1,2,4,0,True,6,400,20,1,66,-0.05,0,0,144,0,90,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AxeGold_FrostFire @ blackforge
+AxeGoldUncooked,$item_axe_gold_uncooked,Cast: Nord Axe,Material,Axes,1,2,1,0,True,4,175,20,1,39,0,0,0,100,0,60,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_AxeGoldUncooked @ blackforge
 AxeHead1,$item_axehead1,Curious Axe Head,Material,Swords,10,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location WoodHouse6 > WoodHouse6 > Container
 AxeHead2,$item_axehead2,Mysterious Axe Head,Material,Swords,10,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location WoodHouse2 > WoodHouse2 > Container
 AxeIron,$item_axe_iron,Iron Axe,OneHandedWeapon,Axes,1,2,4,0,True,3,175,20,1,21,-0.05,0,0,60,0,50,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_AxeIron @ forge
@@ -172,11 +172,11 @@ babyseeker_attack,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1
 BakedPoteitr,$item_bakedpoteitr,Baked Poteitr,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,34,17,100,1500,DeepNorth,Conversions: piece_oven: BakedPoteitrUncooked > BakedPoteitr
 BakedPoteitrUncooked,$item_bakedpoteitr_uncooked,Unbaked Poteitr,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,37,19,110,1500,DeepNorth,Recipes: Recipe Recipe_BakedPoteitr @ piece_cauldron
 BarberKit,$item_barberkit,Barber Kit,Misc,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
-Barka_Backslam,Barka Backslam,Barka Backslam,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,190,0,0,40,0,0,80,0,0,0,0,0,0,0,,
-Barka_HeavySwing,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,160,0,0,60,30,0,100,0,0,0,0,0,0,0,,
-Barka_SlamDrive,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,180,0,0,50,25,0,100,0,0,0,0,0,0,0,,
-Barka_WhipFlurry,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,100,0,0,25,10,0,100,0,0,0,0,0,0,0,,
-Barka_WhipSlam,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,100,0,100,50,30,0,40,0,0,0,0,0,0,0,,
+Barka_Backslam,Barka Backslam,Barka Backslam,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,190,0,0,40,0,0,80,0,0,0,0,0,0,0,DeepNorth,Spawns: Barka > Creature attack Barka
+Barka_HeavySwing,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,160,0,0,60,30,0,100,0,0,0,0,0,0,0,DeepNorth,Spawns: Barka > Creature attack Barka
+Barka_SlamDrive,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,180,0,0,50,25,0,100,0,0,0,0,0,0,0,DeepNorth,Spawns: Barka > Creature attack Barka
+Barka_WhipFlurry,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,100,0,0,25,10,0,100,0,0,0,0,0,0,0,DeepNorth,Spawns: Barka > Creature attack Barka
+Barka_WhipSlam,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,100,0,100,50,30,0,40,0,0,0,0,0,0,0,DeepNorth,Spawns: Barka > Creature attack Barka
 BarkaBranch,$item_barkabranch,Frozen Branch,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Barka > CharacterDrop
 Barley,$item_barley,Barley,Material,Swords,100,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location GoblinCamp2 > Room > gobvill_barley > Pickable
 BarleyFlour,$item_barleyflour,Barley Flour,Misc,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Conversions: windmill: Barley > BarleyFlour
@@ -187,10 +187,10 @@ bat_melee,Bat melee,Bat melee,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,
 Battleaxe,$item_battleaxe,Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,28,-0.15,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_Battleaxe @ forge
 BattleaxeBlackmetal,$item_battleaxe_blackmetal,Black Metal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,200,15,1,52,-0.15,0,0,110,0,60,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_Battleaxe_Blackmetal @ forge
 BattleaxeCrystal,$item_battleaxe_crystal,Crystal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,40,-0.15,0,0,90,0,50,0,0,0,0,0,30,0,0,0,0,Mountain,Recipes: Recipe Recipe_Battleaxe_Crystal @ forge
-BattleaxeGold,$item_axe2h_gold,Nord Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,188,0,40,0,0,0,0,0,0,0,0,0,0,,
-BattleaxeGold_BloodLightning,$item_axe2h_gold_bloodlightning,Thunderblood Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,198,0,40,0,0,0,45,0,0,0,0,0,0,,
-BattleaxeGold_FrostFire,$item_axe2h_gold_frostfire,Frostfire Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,154,0,40,0,12,88,0,0,0,0,0,0,0,,
-BattleaxeGoldUncooked,$item_battleaxe_gold_uncooked,Cast: Nord Greataxe,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,,
+BattleaxeGold,$item_axe2h_gold,Nord Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,188,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold @ blackforge
+BattleaxeGold_BloodLightning,$item_axe2h_gold_bloodlightning,Thunderblood Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,198,0,40,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold_BloodLightning @ blackforge
+BattleaxeGold_FrostFire,$item_axe2h_gold_frostfire,Frostfire Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,154,0,40,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold_FrostFire @ blackforge
+BattleaxeGoldUncooked,$item_battleaxe_gold_uncooked,Cast: Nord Greataxe,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGoldUncooked @ blackforge
 BattleaxeSkullSplittur,$item_battleaxe_skullsplittur,Skull Splittur,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,200,15,1,64,-0.15,0,0,130,0,70,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_Battleaxe_SkullSplittur @ blackforge
 BattleaxeWood,$item_battleaxe_wood,Wooden Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,1,200,15,1,12,-0.15,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location StoneTowerRuins04 > StoneTowerRuins04 > Container
 Beard1,$customization_beard01,Majestic,Customization,Swords,1,1,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -249,14 +249,14 @@ blobmork_attack_aoe,fart,fart,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,
 blobtar_attack,fireballattack,fireballattack,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,45,0,0,0,0,0,0,0,50,0,0,0,0,0,,
 BlobVial,$item_blobvial,Corked Vial,Material,Swords,10,1,1,0,True,0,100,20,1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 Bloodbag,$item_bloodbag,Bloodbag,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Spawns: Leech > CharacterDrop
-BloodGoldKey,$item_bloodgoldkey,Intricate Key,Misc,Swords,1,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWitch > CharacterDrop
+BloodGoldKey,$item_bloodgoldkey,Intricate Key,Misc,Swords,1,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
 BloodPudding,$item_bloodpudding,Blood Pudding,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,25,75,0,1800,Plains,Recipes: Recipe Recipe_BloodPudding @ piece_cauldron
 Blueberries,$item_blueberries,Blueberries,Consumable,Swords,50,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,8,25,0,600,BlackForest,Vegetation: BlueberryBush > Pickable
 boar_base_attack,boar attack1,boar attack1,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 BoarJerky,$item_boarjerky,Boar Jerky,Consumable,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,23,23,0,1800,BlackForest,Recipes: Recipe Recipe_BoarJerky @ piece_cauldron
 BogWitchKvastur_attack,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,80,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 BoltBlackmetal,$item_bolt_blackmetal,Black Metal Bolt,Ammo,Crossbows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_BoltBlackmetal @ blackforge
-BoltBloodGold,$item_bolt_bloodgold,Bloodgold Bolt,Ammo,Crossbows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,92,0,0,0,0,0,0,0,0,0,0,0,,
+BoltBloodGold,$item_bolt_bloodgold,Bloodgold Bolt,Ammo,Crossbows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,92,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BoltBloodGold @ blackforge
 BoltBone,$item_bolt_bone,Bone Bolt,Ammo,Crossbows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,32,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_BoltBone @ blackforge
 BoltCarapace,$item_bolt_carapace,Carapace Bolt,Ammo,Crossbows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,72,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_BoltCarapace @ blackforge
 BoltCharred,$item_bolt_charred,Charred Bolt,Ammo,Crossbows,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,82,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_BoltCharred @ blackforge
@@ -293,10 +293,10 @@ BowAshlandsRoot,$item_bow_ashlandsroot,Root Fang,Bow,Bows,1,1.5,4,0,True,5,300,1
 BowAshlandsStorm,$item_bow_ashlandsstorm,Storm Fang,Bow,Bows,1,1.5,4,0,True,5,300,15,1,3,-0.05,0,0,0,82,0,0,0,0,10,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BowAshlands_Lightning @ blackforge
 BowDraugrFang,$item_bow_draugrfang,Draugr Fang,Bow,Bows,1,1.5,4,0,True,2,100,15,1,3,-0.05,0,0,0,47,0,0,0,0,0,5,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_BowDraugrFang @ forge
 BowFineWood,$item_bow_finewood,Finewood Bow,Bow,Bows,1,1.5,4,0,True,1,100,15,1,3,-0.05,0,0,0,32,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_BowFineWood @ piece_workbench
-BowGold,$item_bow_gold,Nord Bow,Bow,Bows,1,1.5,4,0,True,5,400,15,1,3,-0.05,0,0,0,100,0,0,0,0,0,0,10,0,0,0,0,,
-BowGold_BloodLightning,$item_bow_gold_bloodlightning,Thunderblood Bow,Bow,Bows,1,1.5,4,0,True,5,400,15,1,3,-0.05,0,0,0,110,0,0,0,0,45,0,10,0,0,0,0,,
-BowGold_FrostFire,$item_bow_gold_frostfire,Frostfire Bow,Bow,Bows,1,1.5,4,0,True,5,400,15,1,3,-0.05,0,0,0,68,0,0,12,88,0,0,10,0,0,0,0,,
-BowGoldUncooked,$item_bow_gold_uncooked,Cast: Nord Bow,Material,Bows,1,1.5,1,0,True,5,100,15,1,3,0,0,0,0,72,0,0,0,0,0,0,5,0,0,0,0,,
+BowGold,$item_bow_gold,Nord Bow,Bow,Bows,1,1.5,4,0,True,5,400,15,1,3,-0.05,0,0,0,100,0,0,0,0,0,0,10,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BowGold @ blackforge
+BowGold_BloodLightning,$item_bow_gold_bloodlightning,Thunderblood Bow,Bow,Bows,1,1.5,4,0,True,5,400,15,1,3,-0.05,0,0,0,110,0,0,0,0,45,0,10,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BowGold_BloodLightning @ blackforge
+BowGold_FrostFire,$item_bow_gold_frostfire,Frostfire Bow,Bow,Bows,1,1.5,4,0,True,5,400,15,1,3,-0.05,0,0,0,68,0,0,12,88,0,0,10,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BowGold_FrostFire @ blackforge
+BowGoldUncooked,$item_bow_gold_uncooked,Cast: Nord Bow,Material,Bows,1,1.5,1,0,True,5,100,15,1,3,0,0,0,0,72,0,0,0,0,0,0,5,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BowGoldUncooked @ blackforge
 BowHuntsman,$item_bow_huntsman,Huntsman Bow,Bow,Bows,1,1.5,4,0,True,3,100,15,1,3,-0.05,0,0,0,42,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_BowHuntsman @ forge
 BowSpineSnap,$item_bow_snipesnap,Spinesnap,Bow,Bows,1,1.5,4,0,True,5,250,15,1,3,-0.05,0,0,0,72,0,0,0,0,0,0,5,0,0,0,0,Mistlands,Recipes: Recipe Recipe_BowSpineSnap @ blackforge
 Bread,$item_bread,Bread,Consumable,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,23,70,0,1500,Plains,Conversions: piece_oven: BreadDough > Bread
@@ -308,8 +308,8 @@ BugMeat,$item_bug_meat,Seeker Meat,Material,Swords,20,1,1,0,True,0,100,10,1,10,0
 CandleWick,$item_candlewick,Candle Wick,Material,Swords,50,0.3,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 CapeAsh,$item_cape_ash,Ashen Cape,Shoulder,Swords,1,4,4,0,True,4,1200,12,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CapeAsh @ blackforge
 CapeAsksvin,$item_cape_asksvin,Asksvin Cloak,Shoulder,Swords,1,4,4,0,True,1,1500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CapeAsksvin @ piece_magetable
-CapeDeepNorth,$item_cape_deepnorth,Moose Hide Cape,Shoulder,Swords,1,4,4,0,True,4,1200,12,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CapeDeepNorthMage,$item_cape_deepnorth_mage,Cape of the Caller,Shoulder,Swords,1,4,4,0,True,4,1200,12,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CapeDeepNorth,$item_cape_deepnorth,Moose Hide Cape,Shoulder,Swords,1,4,4,0,True,4,1200,12,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CapeDeepNorth @ blackforge
+CapeDeepNorthMage,$item_cape_deepnorth_mage,Cape of the Caller,Shoulder,Swords,1,4,4,0,True,4,1200,12,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CapeDeepNorthMage @ piece_magetable
 CapeDeerHide,$item_cape_deerhide,Deer Hide Cape,Shoulder,Swords,1,4,4,0,True,0,400,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_CapeDeerHide @ piece_workbench
 CapeFeather,$item_cape_feather,Feather Cape,Shoulder,Swords,1,4,4,0,True,5,1200,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CapeFeather @ piece_magetable
 CapeLinen,$item_cape_linen,Linen Cape,Shoulder,Swords,1,4,4,0,True,4,1500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_CapeLinen @ piece_workbench
@@ -323,7 +323,7 @@ Carrot,$item_carrot,Carrot,Consumable,Swords,50,0.3,1,0,True,0,100,10,1,10,0,0,0
 CarrotSeeds,$item_carrotseeds,Carrot Seeds,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Vegetation: Pickable_SeedCarrot > Pickable
 CarrotSoup,$item_carrotsoup,Carrot Soup,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,15,45,0,1500,BlackForest,Recipes: Recipe Recipe_CarrotSoup @ piece_cauldron
 Catapult_ammo,$item_catapult_training_ammo,Grausten Payload,Material,None,50,0.3,1,0,True,4,100,15,1,2,0,0,20,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CatapultPayload_Grausten @ piece_workbench
-Catapult_Ammo_BloodGold,$item_catapult_bloodgold_ammo,Bloodgold Payload,Material,None,50,0.3,1,0,True,4,100,15,1,2,0,0,20,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+Catapult_Ammo_BloodGold,$item_catapult_bloodgold_ammo,Bloodgold Payload,Material,None,50,0.3,1,0,True,4,100,15,1,2,0,0,20,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_Catapult_Ammo_BloodGold @ blackforge
 CelestialFeather,$item_celestialfeather,Celestial Feather,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: FallenValkyrie > CharacterDrop
 CeramicPlate,$item_ceramicplate,Ceramic Plate,Material,Swords,30,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CeramicPlate @ piece_artisanstation
 Chain,$item_chain,Chain,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Spawns: Wraith > CharacterDrop
@@ -360,7 +360,7 @@ chest_hildir1,$item_chest_hildir1,Hildir's Brass Chest,Misc,Swords,1,200,1,0,Fal
 chest_hildir2,$item_chest_hildir2,Hildir's Silver Chest,Misc,Swords,1,200,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location MountainCave02 > Room > cave_shrine_endcap01 > CreatureSpawner > CharacterDrop
 chest_hildir3,$item_chest_hildir3,Hildir's Bronze Chest,Misc,Swords,1,200,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > CharacterDrop > CharacterDrop
 ChickenEgg,$item_chicken_egg,Egg,Misc,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,10,30,0,600,Plains,Locations: Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
-ChickenMeat,$item_chicken_meat,Chicken Meat,Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,12,0,1200,,
+ChickenMeat,$item_chicken_meat,Chicken Meat,Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,12,0,1200,Plains,Hatching: ChickenEgg hatches > Chicken > CharacterDrop
 Chitin,$item_chitin,Chitin,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ocean,Vegetation: Leviathan > MineRock
 Cloudberry,$item_cloudberries,Cloudberries,Consumable,Swords,50,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,13,40,0,900,Plains,Vegetation: CloudberryBush > Pickable
 Club,$item_club,Club,OneHandedWeapon,Clubs,1,2,4,0,True,0,100,20,1,3,-0.05,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_Club
@@ -370,7 +370,7 @@ CookedAsksvinMeat,$item_asksvin_meat_cooked,Cooked Asksvin Tail,Consumable,Sword
 CookedBjornMeat,$item_bjorn_meat_cooked,Cooked Bear Meat,Consumable,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,40,13,0,1200,BlackForest,Conversions: piece_cookingstation: BjornMeat > CookedBjornMeat
 CookedBoneMawSerpentMeat,$item_bonemawmeat_cooked,Cooked Bonemaw Meat,Consumable,Swords,50,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,90,30,0,1500,Ashlands,Conversions: piece_cookingstation_iron: BoneMawSerpentMeat > CookedBoneMawSerpentMeat
 CookedBugMeat,$item_bug_meat_cooked,Cooked Seeker Meat,Consumable,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,60,20,0,1200,Mistlands,Conversions: piece_cookingstation_iron: BugMeat > CookedBugMeat
-CookedChickenMeat,$item_chicken_meat_cooked,Cooked Chicken Meat,Consumable,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,60,20,0,1200,,
+CookedChickenMeat,$item_chicken_meat_cooked,Cooked Chicken Meat,Consumable,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,60,20,0,1200,Plains,Conversions: piece_cookingstation: ChickenMeat > CookedChickenMeat
 CookedDeerMeat,$item_deer_meat_cooked,Cooked Deer Meat,Consumable,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,12,0,1200,Meadows,Conversions: piece_cookingstation: DeerMeat > CookedDeerMeat
 CookedEgg,$item_egg_cooked,Cooked Egg,Consumable,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,12,0,1200,Plains,Recipes: Recipe Recipe_CookedEgg @ piece_cauldron
 CookedHareMeat,$item_hare_meat_cooked,Cooked Hare Meat,Consumable,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,60,20,0,1200,Mistlands,Conversions: piece_cookingstation: HareMeat > CookedHareMeat
@@ -384,15 +384,15 @@ Copper,$item_copper,Copper,Material,Swords,30,12,1,0,False,0,100,10,1,10,0,0,0,0
 CopperOre,$item_copperore,Copper Ore,Material,Swords,30,10,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Vegetation: rock4_copper > Destructible > MineRock
 CopperScrap,$item_copperscrap,Copper Scrap,Material,Swords,30,10,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Locations: Location Mistlands_GuardTower1_new > Mistlands_GuardTower1_new > DropOnDestroyed
 CrossbowArbalest,$item_crossbow_arbalest,Arbalest,Bow,Crossbows,1,1.5,4,0,True,5,150,15,1,3,-0.05,0,0,0,200,140,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CrossbowArbalest @ blackforge
-CrossbowGold,$item_crossbow_gold,Nord Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,264,180,0,0,0,0,0,0,0,0,0,0,,
-CrossbowGold_BloodLightning,$item_crossbow_bloodlightning_gold,Thunderblood Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,274,180,0,0,0,45,0,0,0,0,0,0,,
-CrossbowGold_FrostFire,$item_crossbow_frostfire_gold,Frostfire Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,232,180,0,12,88,0,0,0,0,0,0,0,,
-CrossbowGoldUncooked,$item_crossbow_gold_uncooked,Cast: Nord Crossbow,Material,Crossbows,1,1.5,1,0,True,5,50,15,1,3,0,0,0,0,220,0,0,0,0,0,0,0,0,0,0,0,,
+CrossbowGold,$item_crossbow_gold,Nord Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,264,180,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold @ blackforge
+CrossbowGold_BloodLightning,$item_crossbow_bloodlightning_gold,Thunderblood Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,274,180,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold_BloodLightning @ blackforge
+CrossbowGold_FrostFire,$item_crossbow_frostfire_gold,Frostfire Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,232,180,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold_FrostFire @ blackforge
+CrossbowGoldUncooked,$item_crossbow_gold_uncooked,Cast: Nord Crossbow,Material,Crossbows,1,1.5,1,0,True,5,50,15,1,3,0,0,0,0,220,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGoldUncooked @ blackforge
 CrossbowRipper,$item_crossbow_ripper,Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CrossbowRipper @ blackforge
 CrossbowRipperBlood,$item_crossbow_ripper_blood,Wound Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Blood @ blackforge
 CrossbowRipperLightning,$item_crossbow_ripper_lightning,Storm Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,10,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Lightning @ blackforge
 CrossbowRipperNature,$item_crossbow_ripper_nature,Root Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,0,10,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Nature @ blackforge
-CrownJewel,$item_crownjewel,Crown Jewel,Material,Swords,5,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CrownJewel,$item_crownjewel,Crown Jewel,Material,Swords,5,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location DN_Bossroom > DN_Bossroom > On death > On death > CharacterDrop
 CryptKey,$item_cryptkey,Swamp Key,Misc,Swords,1,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location GDKing > GDKing > OfferingBowl > CharacterDrop
 Crystal,$item_crystal,Crystal,Material,Swords,50,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Spawns: StoneGolem > CharacterDrop
 Cultivator,$item_cultivator,Cultivator,Tool,Farming,1,2,3,0,True,0,200,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_Cultivator @ forge
@@ -459,7 +459,7 @@ Eitr,$item_eitr,Refined Eitr,Material,Swords,30,5,1,0,True,0,100,10,1,10,0,0,0,0
 Elaking_AttackClaw,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,40,100,0,0,0,0,0,0,0,0,0,0,0,0,,
 Elaking_AttackJump,Charred Sword,Charred Sword,TwoHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,75,30,0,200,100,0,0,0,0,0,0,0,0,0,,
 Elaking_AttackLantern,Torch,Torch,OneHandedWeapon,Swords,1,1,1,0,True,0,100,15,1,5,0,0,65,65,0,0,0,35,0,0,0,0,0,0,0,0,,
-ElakingHairBundle,$item_elakinghairbundle,Elaking Hair Bundle,Material,Swords,50,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Elaking > CharacterDrop
+ElakingHairBundle,$item_elakinghairbundle,Elaking Hair Bundle,Material,Swords,50,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Elaking > CharacterDrop
 ElakingMole_AttackClaw,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,80,40,0,0,0,0,0,0,100,0,0,0,0,0,,
 ElakingMole_AttackClaw2,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,80,40,0,0,0,0,0,0,100,0,0,0,0,0,,
 ElakingMole_AttackSandcloud,StagAttack2,StagAttack2,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,60,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -497,7 +497,7 @@ FeastAshlands_Material,$item_feastashlands,Ashlands Gourmet Bowl,Material,Swords
 FeastBlackforest,$item_feastblackforest,Black Forest Buffet Platter,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,35,0,3000,,
 FeastBlackforest_Material,$item_feastblackforest,Black Forest Buffet Platter,Material,Swords,5,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_FeastBlackforest @ piece_preptable
 FeastDeepNorth,$item_feastdeepnorth,Northern Morning Fare,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,85,85,43,3000,,
-FeastDeepNorth_Material,$item_feastdeepnorth,Northern Morning Fare,Material,Swords,5,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+FeastDeepNorth_Material,$item_feastdeepnorth,Northern Morning Fare,Material,Swords,5,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_FeastDeepNorth @ piece_preptable
 Feaster,$item_feaster,Serving Tray,Tool,None,1,2,3,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 FeastMeadows,$item_feastmeadows,Whole Roasted Meadow Boar,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,35,0,3000,,
 FeastMeadows_Material,$item_feastmeadows,Whole Roasted Meadow Boar,Material,Swords,5,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_FeastMeadows @ piece_preptable
@@ -527,13 +527,13 @@ FierySvinstew,$item_fierysvinstew,Fiery Svinstew,Consumable,Swords,10,1,1,0,True
 FineWood,$item_finewood,Finewood,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location ShipWreck01 > ShipWreck01 > DropOnDestroyed
 FirCone,$item_fircone,Fir Cone,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Vegetation: FirTree > Tree
 FirConeFrost,$item_fircone_big,Timberwood Cone,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Vegetation: SnowFirTree > Tree > Log > Log
-FireworksRocket_Blue,$item_fireworkrocket_blue,Blue Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FireworksRocket_Cyan,$item_fireworkrocket_cyan,Cyan Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FireworksRocket_Green,$item_fireworkrocket_green,Green Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FireworksRocket_Purple,$item_fireworkrocket_purple,Purple Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FireworksRocket_Red,$item_fireworkrocket_red,Red Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FireworksRocket_White,$item_fireworkrocket_white,Basic Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FireworksRocket_Yellow,$item_fireworkrocket_yellow,Yellow Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+FireworksRocket_Blue,$item_fireworkrocket_blue,Blue Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_FireworksBlue @ piece_workbench
+FireworksRocket_Cyan,$item_fireworkrocket_cyan,Cyan Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_FireworksCyan @ piece_workbench
+FireworksRocket_Green,$item_fireworkrocket_green,Green Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_FireworksGreen @ piece_workbench
+FireworksRocket_Purple,$item_fireworkrocket_purple,Purple Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_FireworksPurple @ piece_workbench
+FireworksRocket_Red,$item_fireworkrocket_red,Red Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_FireworksRed @ piece_workbench
+FireworksRocket_White,$item_fireworkrocket_white,Basic Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+FireworksRocket_Yellow,$item_fireworkrocket_yellow,Yellow Fireworks,Material,Swords,10,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_FireworksYellow @ piece_workbench
 Fish1,$animal_fish1,Perch,Fish,Swords,10,2,5,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Fish1
 Fish10,$animal_fish10,Northern Salmon,Fish,Swords,10,2,5,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Fish10
 Fish11,$animal_fish11,Magmafish,Fish,Swords,10,2,5,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Fish11
@@ -566,14 +566,14 @@ FishWraps,$item_fishwraps,Fish Wraps,Consumable,Swords,10,1,1,0,True,0,100,10,1,
 FistBjornClaw,$item_fistweapon_bjorn,Paws of the Bear,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,300,20,1,5,0,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_FistBjornClaw @ piece_workbench
 FistBjornUndeadClaw,$item_fistweapon_bjorn_undead,Vilebone Maulclaws,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,300,20,1,5,0,0,0,20,60,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_FistUnbjornClaw @ forge
 FistFenrirClaw,$item_fistweapon_fenris,Flesh Rippers,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,300,20,1,5,0,0,0,60,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_FistFenrirClaw @ forge
-FistGold,$item_fistweapon_gold,Nord Knucklechains,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,400,20,1,5,0,0,114,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FistGold_BloodLightning,$item_fistweapon_gold_bloodlightning,Thunderblood Knucklechains,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,400,20,1,5,0,0,122,0,0,0,0,0,0,45,0,0,0,0,0,0,,
-FistGold_FrostFire,$item_fistweapon_frostfire_gold,Frostfire Knucklechains,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,400,20,1,5,0,0,80,0,0,0,0,12,88,0,0,0,0,0,0,0,,
-FistGoldUncooked,$item_fistweapon_gold_uncooked,Cast: Nord Knucklechains,Material,Unarmed,1,2,1,0,True,3,300,20,1,5,0,0,60,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+FistGold,$item_fistweapon_gold,Nord Knucklechains,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,400,20,1,5,0,0,114,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_FistweaponGold @ blackforge
+FistGold_BloodLightning,$item_fistweapon_gold_bloodlightning,Thunderblood Knucklechains,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,400,20,1,5,0,0,122,0,0,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_FistGold_BloodLightning @ blackforge
+FistGold_FrostFire,$item_fistweapon_frostfire_gold,Frostfire Knucklechains,TwoHandedWeapon,Unarmed,1,2,4,0,True,3,400,20,1,5,0,0,80,0,0,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_FistGold_FrostFire @ blackforge
+FistGoldUncooked,$item_fistweapon_gold_uncooked,Cast: Nord Knucklechains,Material,Unarmed,1,2,1,0,True,3,300,20,1,5,0,0,60,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_FistweaponGoldUncooked @ blackforge
 Flametal,$item_flametal_old,Ancient Metal,Material,Swords,30,12,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 FlametalNew,$item_flametal,Flametal,Material,Swords,30,12,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Conversions: blastfurnace: FlametalOreNew > FlametalNew
 FlametalOre,$item_flametalore_old,Glowing Metal Ore,Material,Swords,30,12,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FlametalOreNew,$item_flametalore,Flametal Ore,Material,Swords,30,10,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location CharredTowerRuins1_dvergr > CharredTowerRuins1_dvergr > DropOnDestroyed
+FlametalOreNew,$item_flametalore,Flametal Ore,Material,Swords,30,10,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location LeviathanLava > LeviathanLava > MineRock
 Flax,$item_flax,Flax,Material,Swords,100,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location GoblinCamp2 > Room > gobvill_flax > Pickable
 Flint,$item_flint,Flint,Material,Swords,30,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Vegetation: Pickable_Flint > Pickable
 FragrantBundle,$item_fragrantbundle,Fragrant Bundle,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
@@ -605,7 +605,7 @@ FrozenKing_P3_ChainWhirl,FrozenKing ChainWhirl,FrozenKing ChainWhirl,OneHandedWe
 FrozenKing_Punch_AOE,FrozenKing Punch AOE,FrozenKing Punch AOE,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,150,0,0,300,300,0,0,0,0,0,0,0,0,0,,
 FrozenKing_SpikeRain,spawn,spawn,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 FrozenKing_tendrilspawn,spawn,spawn,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FrozenKingDrop,$item_frozenking_drop,Sacrificial Blood,Material,Swords,30,1,1,0,True,1000,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+FrozenKingDrop,$item_frozenking_drop,Sacrificial Blood,Material,Swords,30,1,1,0,True,1000,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location DN_Bossroom > DN_Bossroom > On death > On death > CharacterDrop
 frysling_snowball_attack,fireballattack,fireballattack,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,50,0,0,0,0,0,100,0,0,0,0,0,0,0,,
 FW_ArmorBronzeChest,$item_chest_bronze,Bronze Plate Tunic,Chest,Swords,1,10,4,0,True,1,1000,8,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 FW_ArmorBronzeLegs,$item_legs_bronze,Bronze Plate Leggings,Legs,Swords,1,10,4,0,True,1,1000,8,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -619,8 +619,8 @@ FW_ArmorPaddedCuirass,$item_chest_pcuirass,Padded Cuirass,Chest,Swords,1,10,4,0,
 FW_ArmorPaddedGreaves,$item_legs_pgreaves,Padded Greaves,Legs,Swords,1,10,4,0,True,4,1000,26,2,10,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 FW_ArmorTrollLeatherChest,$item_chest_trollleather,Troll Leather Tunic,Chest,Swords,1,5,4,0,True,1,500,6,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 FW_ArmorTrollLeatherLegs,$item_legs_trollleather,Troll Leather Trousers,Legs,Swords,1,5,4,0,True,1,500,6,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-FW_AxeBronze,$item_axe_bronze,Bronze Axe,OneHandedWeapon,Axes,1,2,4,0,True,2,125,20,1,12,-0.05,0,0,75,45,40,0,0,0,0,0,0,0,0,0,0,,
-FW_BattleaxeCrystal,$item_battleaxe_crystal,Crystal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,40,-0.15,0,0,130,0,50,0,0,0,0,0,30,0,0,0,0,,
+FW_AxeBronze,$item_axe_bronze,Bronze Axe,OneHandedWeapon,Axes,1,2,4,0,True,2,125,20,1,12,-0.05,0,0,75,45,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location NorthMemorialPlace > NorthMemorialPlace > OfferingBowl > Creature attack FallenWarrior
+FW_BattleaxeCrystal,$item_battleaxe_crystal,Crystal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,40,-0.15,0,0,130,0,50,0,0,0,0,0,30,0,0,0,0,DeepNorth,Locations: Location NorthMemorialPlace > NorthMemorialPlace > OfferingBowl > Creature attack FallenWarrior
 FW_BowDraugrFang,$item_bow_draugrfang,Draugr Fang,Bow,Bows,1,1.5,4,0,True,2,100,15,1,3,-0.05,0,0,0,70,0,0,0,0,0,5,0,0,0,0,0,,
 FW_CapeLinen,$item_cape_linen,Linen Cape,Shoulder,Swords,1,4,4,0,True,4,1500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 FW_CapeTrollHide,$item_cape_trollhide,Troll Hide Cape,Shoulder,Swords,1,4,4,0,True,1,500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -650,16 +650,16 @@ gjall_attack_taunt,gjall taunt,gjall taunt,OneHandedWeapon,Swords,1,1,1,0,True,0
 GlowWorm,$item_glowworm,Luminous Larva,Consumable,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,30,30,0,600,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > Pickable
 GoblinArmband,Iron plate armor,Iron plate armor,Chest,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 GoblinBrute_ArmGuard,Iron plate armor,Iron plate armor,Chest,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-GoblinBrute_Attack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,130,0,0,100,40,0,0,0,0,0,0,0,0,0,,
+GoblinBrute_Attack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,130,0,0,100,40,0,0,0,0,0,0,0,0,0,Plains,Spawns: GoblinBrute > Creature attack GoblinBrute
 GoblinBrute_Backbones,Iron plate armor,Iron plate armor,Helmet,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 GoblinBrute_ExecutionerCap,Iron plate armor,Iron plate armor,Helmet,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 GoblinBrute_HipCloth,Iron plate armor,Iron plate armor,Legs,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 GoblinBrute_LegBones,Iron plate armor,Iron plate armor,Utility,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-GoblinBrute_RageAttack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,130,0,0,100,40,0,0,0,0,0,0,0,0,0,,
+GoblinBrute_RageAttack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,130,0,0,100,40,0,0,0,0,0,0,0,0,0,Plains,Spawns: GoblinBrute > Creature attack GoblinBrute
 GoblinBrute_ShoulderGuard,Iron plate armor,Iron plate armor,Shoulder,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 GoblinBrute_Taunt,Brute taunt,Brute taunt,OneHandedWeapon,Swords,1,1,7,0,True,0,100,20,1,25,0,0,0,80,0,10,0,0,0,0,0,0,0,0,0,0,,
-GoblinBruteBros_Attack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,150,0,0,100,40,0,0,0,0,0,0,0,0,0,,
-GoblinBruteBros_RageAttack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,130,0,0,100,40,0,0,0,0,0,0,0,0,0,,
+GoblinBruteBros_Attack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,150,0,0,100,40,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > Creature attack GoblinBruteBros
+GoblinBruteBros_RageAttack,Brute sword,Brute sword,OneHandedWeapon,Swords,1,1,7,0,True,2,100,20,1,25,0,0,130,0,0,100,40,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > Creature attack GoblinBruteBros
 GoblinClub,Club,Club,OneHandedWeapon,Swords,1,1,1,0,True,0,100,20,1,10,0,0,85,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 GoblinClubDeepNorth,Club,Club,OneHandedWeapon,Swords,1,1,1,0,True,0,100,20,1,10,0,0,160,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 GoblinHelmet,Iron plate armor,Iron plate armor,Chest,Swords,1,1,4,0,True,0,100,60,5,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -687,8 +687,8 @@ GoblinSwordDeepNorth,Bronze sword,Bronze sword,OneHandedWeapon,Swords,1,1,7,0,Tr
 GoblinTorch,Torch,Torch,OneHandedWeapon,Swords,1,1,1,0,True,0,100,15,1,5,0,0,45,0,0,0,0,45,0,0,0,0,0,0,0,0,,
 GoblinTorchDeepNorth,Torch,Torch,OneHandedWeapon,Swords,1,1,1,0,True,0,100,15,1,5,0,0,85,0,0,0,0,85,0,0,0,0,0,0,0,0,,
 GoblinTotem,$item_goblintotem,Fuling Totem,Misc,Swords,30,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Spawns: GoblinBrute > CharacterDrop
-Gold,$item_gold,Bloodgold,Material,Swords,30,14,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-GoldOre,$item_goldore,Petrified Tissue,Material,Swords,30,14,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+Gold,$item_gold,Bloodgold,Material,Swords,30,14,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Conversions: blastfurnace: GoldOre > Gold
+GoldOre,$item_goldore,Petrified Tissue,Material,Swords,30,14,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location DN_gammeltrollFrac01 > DN_gammeltrollFrac01 > MineRock
 GrapplingHook,$item_graplinghook,Grappling Hook,Bow,None,1,1.5,1,0,True,3,300,15,1,21,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_GrapplingHook @ blackforge
 Grausten,$item_grausten,Grausten,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Vegetation: cliff_ashlands2 > Destructible > MineRock
 Greydwarf_attack,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,14,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -803,8 +803,8 @@ HelmetBerserkerUndead,$item_helmet_berserker_undead,Vilebone Visage,Helmet,Sword
 HelmetBronze,$item_helmet_bronze,Bronze Helmet,Helmet,Swords,1,3,4,0,True,1,1000,8,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_HelmetBronze @ forge
 HelmetCarapace,$item_helmet_carapace,Carapace Helmet,Helmet,Swords,1,3,4,0,True,5,1200,32,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_HelmetCarapace @ blackforge
 HelmetCelebration,$item_helmet_celebration,Celebratory Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_HelmetCelebration @ piece_workbench
-HelmetCrownofValheim,$item_helmet_crown_of_valheim,Crown of Valheim,Helmet,Swords,1,1,1,0,True,5,1000,50,2,10,0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-HelmetDNHeavy,$item_helmet_heavy_deepnorth,Helmet of the Protector,Helmet,Swords,1,1,4,0,True,5,1000,44,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+HelmetCrownofValheim,$item_helmet_crown_of_valheim,Crown of Valheim,Helmet,Swords,1,1,1,0,True,5,1000,50,2,10,0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetCrownOfValheim @ blackforge
+HelmetDNHeavy,$item_helmet_heavy_deepnorth,Helmet of the Protector,Helmet,Swords,1,1,4,0,True,5,1000,44,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetGold @ blackforge
 HelmetDNMage,$item_helmet_mage_deepnorth,Headdress of the Caller,Helmet,Swords,1,1,4,0,True,5,1000,22,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetGoldMage @ piece_magetable
 HelmetDNMediumHood,$item_helmet_medium_deepnorth,Hood of the Vanguard,Helmet,Swords,1,1,4,0,True,5,1000,34,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetGoldMedium @ blackforge
 HelmetDrake,$item_helmet_drake,Drake Helmet,Helmet,Swords,1,3,4,0,True,3,1000,20,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_HelmetDrake @ forge
@@ -812,16 +812,16 @@ HelmetDverger,$item_helmet_dverger,Dverger Circlet,Helmet,Swords,1,1,1,0,True,1,
 HelmetFenring,$item_helmet_fenris,Fenris Hood,Helmet,Swords,1,1,4,0,True,3,1000,10,2,10,0.03,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_HelmetFenrir @ piece_workbench
 HelmetFishingHat,$item_helmet_fishinghat,Fishing Hat,Helmet,Swords,1,3,4,0,True,1,1000,8,4,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_HelmetFishingHat @ piece_workbench
 HelmetFlametal,$item_helmet_flametal,Flametal Helmet,Helmet,Swords,1,3,4,0,True,0,800,38,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_HelmetFlametal @ blackforge
-HelmetHat1,$item_helmet_hat1,Blue Tied Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+HelmetHat1,$item_helmet_hat1,Blue Tied Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetHat10,$item_helmet_hat10,Simple Purple Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
-HelmetHat2,$item_helmet_hat2,Green Twisted Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-HelmetHat3,$item_helmet_hat3,Brown Fur Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-HelmetHat4,$item_helmet_hat4,Extravagant Green Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+HelmetHat2,$item_helmet_hat2,Green Twisted Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat3,$item_helmet_hat3,Brown Fur Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat4,$item_helmet_hat4,Extravagant Green Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetHat5,$item_helmet_hat5,Simple Red Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
-HelmetHat6,$item_helmet_hat6,Yellow Tied Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-HelmetHat7,$item_helmet_hat7,Red Twisted Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-HelmetHat8,$item_helmet_hat8,Grey Fur Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-HelmetHat9,$item_helmet_hat9,Extravagant Orange Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+HelmetHat6,$item_helmet_hat6,Yellow Tied Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat7,$item_helmet_hat7,Red Twisted Headscarf,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat8,$item_helmet_hat8,Grey Fur Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat9,$item_helmet_hat9,Extravagant Orange Cap,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetIron,$item_helmet_iron,Iron Helmet,Helmet,Swords,1,3,4,0,True,2,1000,14,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_HelmetIron @ forge
 HelmetLeather,$item_helmet_leather,Leather Helmet,Helmet,Swords,1,1,4,0,True,0,400,2,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_HelmetLeather @ piece_workbench
 HelmetLox,$item_helmet_lox,Lox Fur Hood,Helmet,Swords,1,1,4,0,True,1,500,16,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_HelmetLox @ piece_workbench
@@ -833,7 +833,7 @@ HelmetPadded,$item_helmet_padded,Padded Helmet,Helmet,Swords,1,3,4,0,True,4,1000
 HelmetPointyHat,$item_helmet_witchhat,Pointy Hat,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 HelmetRoot,$item_helmet_root,Root Mask,Helmet,Swords,1,3,4,0,True,2,800,8,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_HelmetRoot @ piece_workbench
 HelmetRootCrown,$item_helmet_rootcrown,Crown of Roots,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
-HelmetStrawHat,$item_helmet_strawhat,Straw Hat,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+HelmetStrawHat,$item_helmet_strawhat,Straw Hat,Helmet,Swords,1,3,4,0,True,0,800,1,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetSweatBand,$item_helmet_sweatband,Headband,Helmet,Swords,1,1,4,0,True,5,1000,1,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetTrollLeather,$item_helmet_trollleather,Troll Leather Hood,Helmet,Swords,1,1,4,0,True,1,500,6,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_HelmetTrollLeather @ piece_workbench
 HelmetYule,$item_helmet_yule,Yule Hat,Helmet,Swords,1,1,1,0,True,0,1000,1,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
@@ -846,8 +846,8 @@ hive_attack_ranged,dragon breath,dragon breath,OneHandedWeapon,Swords,1,1,1,0,Tr
 hive_attack_throw,slime throw,slime throw,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 Hoe,$item_hoe,Hoe,Tool,None,1,2,3,0,True,0,200,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_Hoe @ piece_workbench
 Honey,$item_honey,Honey,Consumable,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,8,35,0,900,Meadows,Locations: Location WoodHouse1 > WoodHouse1 > DropOnDestroyed
-HoneyGlazedChicken,$item_honeyglazedchicken,Honey Glazed Chicken,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,80,26,0,1800,,
-HoneyGlazedChickenUncooked,$item_honeyglazedchickenuncooked,Uncooked Honey Glazed Chicken,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,80,26,0,1800,,
+HoneyGlazedChicken,$item_honeyglazedchicken,Honey Glazed Chicken,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,80,26,0,1800,Mistlands,Conversions: piece_oven: HoneyGlazedChickenUncooked > HoneyGlazedChicken
+HoneyGlazedChickenUncooked,$item_honeyglazedchickenuncooked,Uncooked Honey Glazed Chicken,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,80,26,0,1800,Mistlands,Recipes: Recipe Recipe_HoneyGlazedChicken @ piece_preptable
 Hook,$item_hook,Hook,Material,Swords,50,5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Locations: Location Mistlands_GuardTower1_ruined_new > Mistlands_GuardTower1_ruined_new > Container
 Ice,$item_ice,Ice,Material,Swords,50,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Vegetation: ice1 > DropOnDestroyed
 IceShoes,$item_iceshoes,[item_iceshoes],Utility,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -898,16 +898,16 @@ Kale,$item_kale,Kale,Consumable,Swords,50,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0
 KaleChips,$item_kalechips,Kale Chips,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,105,0,1500,DeepNorth,Conversions: piece_oven: KaleChipsUncooked > KaleChips
 KaleChipsUncooked,$item_kalechips_uncooked,Raw Kale Chips,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,39,115,0,1500,DeepNorth,Recipes: Recipe Recipe_KaleChips @ piece_cauldron
 KaleSeeds,$item_kaleseeds,Kale Seeds,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Vegetation: Pickable_SeedKale > Pickable
-KeysGoldUncooked,$item_keys_gold_uncooked,Cast: Intricate Key,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+KeysGoldUncooked,$item_keys_gold_uncooked,Cast: Intricate Key,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BloodGoldKeyUncooked @ blackforge
 KnifeBlackMetal,$item_knife_blackmetal,Black Metal Knife,OneHandedWeapon,Knives,1,0.3,4,0,True,4,200,20,1,2,0,0,0,34,34,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_KnifeBlackmetal @ forge
 KnifeButcher,$item_knife_butcher,Butcher Knife,OneHandedWeapon,Knives,1,0.3,1,0,True,1,200,20,1,2,0,1000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_KnifeButcher @ forge
 KnifeChitin,$item_knife_chitin,Abyssal Razor,OneHandedWeapon,Knives,1,0.3,4,0,True,3,200,20,1,2,0,0,0,20,20,0,0,0,0,0,0,0,0,0,0,0,Ocean,Recipes: Recipe Recipe_KnifeChitin @ piece_workbench
 KnifeCopper,$item_knife_copper,Copper Knife,OneHandedWeapon,Knives,1,0.3,4,0,True,1,200,20,1,2,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_KnifeCopper @ forge
 KnifeFlint,$item_knife_flint,Flint Knife,OneHandedWeapon,Knives,1,0.3,4,0,True,0,200,20,1,2,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_KnifeFlint @ piece_workbench
-KnifeGold,$item_knife_gold,Nord Dagger,OneHandedWeapon,Knives,1,0.3,4,0,True,4,400,20,1,2,0,0,0,75,75,0,0,0,0,0,0,0,0,0,0,0,,
-KnifeGold_BloodLightning,$item_knife_gold_bloodlightning,Thunderblood Dagger,OneHandedWeapon,Knives,1,0.3,4,0,True,4,400,20,1,2,0,0,0,80,80,0,0,0,0,45,0,0,0,0,0,0,,
-KnifeGold_FrostFire,$item_knife_gold_frostfire,Frostfire Dagger,OneHandedWeapon,Knives,1,0.3,4,0,True,4,400,20,1,2,0,0,0,62,62,0,0,10,88,0,0,0,0,0,0,0,,
-KnifeGoldUncooked,$item_knife_gold_uncooked,Cast: Nord Dagger,Material,Knives,1,0.3,1,0,True,4,200,20,1,2,0,0,0,34,34,0,0,0,0,0,0,0,0,0,0,0,,
+KnifeGold,$item_knife_gold,Nord Dagger,OneHandedWeapon,Knives,1,0.3,4,0,True,4,400,20,1,2,0,0,0,75,75,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_KnifeGold @ blackforge
+KnifeGold_BloodLightning,$item_knife_gold_bloodlightning,Thunderblood Dagger,OneHandedWeapon,Knives,1,0.3,4,0,True,4,400,20,1,2,0,0,0,80,80,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_KnifeGold_BloodLightning @ blackforge
+KnifeGold_FrostFire,$item_knife_gold_frostfire,Frostfire Dagger,OneHandedWeapon,Knives,1,0.3,4,0,True,4,400,20,1,2,0,0,0,62,62,0,0,10,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_KnifeGold_FrostFire @ blackforge
+KnifeGoldUncooked,$item_knife_gold_uncooked,Cast: Nord Dagger,Material,Knives,1,0.3,1,0,True,4,200,20,1,2,0,0,0,34,34,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_KnifeGoldUncooked @ blackforge
 KnifeSilver,$item_knife_silver,Silver Knife,OneHandedWeapon,Knives,1,0.3,4,0,True,3,200,20,1,2,0,0,0,25,25,0,0,0,0,0,0,12,0,0,0,0,Mountain,Recipes: Recipe Recipe_KnifeSilver @ forge
 KnifeSkollAndHati,$item_knife_skollandhati,Skoll and Hati,TwoHandedWeapon,Knives,1,0.3,4,0,True,4,250,20,1,24,0,0,0,45,45,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_KnifeSkollAndHati @ blackforge
 KnifeVoid,$item_knife_void,Voidcaller,OneHandedWeapon,Knives,1,0.3,4,0,True,1,200,20,1,2,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,,
@@ -918,7 +918,7 @@ Lantern_hooded,$piece_hoodedlantern,Hooded Lantern,Torch,Clubs,1,2,1,0,True,0,0,
 Larva,$item_larva,[item_larva],Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,12,0,1200,,
 LastBossGate_RuneTile,$item_runetile,[item_runetile],Material,Swords,3,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 LeatherScraps,$item_leatherscraps,Leather Scraps,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Boar > CharacterDrop
-Leatherstraps,$item_leatherstraps,Leather Straps,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
+Leatherstraps,$item_leatherstraps,Leather Straps,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
 Leech_BiteAttack,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,20,0,0,0,0,0,70,0,0,0,0,0,,
 LinenThread,$item_linenthread,Linen Thread,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Conversions: piece_spinningwheel: Flax > LinenThread
 Lingonberry,$item_lingonberries,Lingonberries,Consumable,Swords,50,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,35,0,900,DeepNorth,Vegetation: LingonberryBush > Pickable
@@ -934,10 +934,10 @@ MaceEldner,$item_mace_eldner,Flametal Mace,OneHandedWeapon,Clubs,1,2,4,0,True,6,
 MaceEldnerBlood,$item_mace_eldner_blood,Bloodgeon,OneHandedWeapon,Clubs,1,2,4,0,True,6,300,20,1,57,-0.05,0,135,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_MaceEldner_Blood @ blackforge
 MaceEldnerLightning,$item_mace_eldner_lightning,Storm Star,OneHandedWeapon,Clubs,1,2,4,0,True,6,300,20,1,57,-0.05,0,135,0,0,0,0,0,0,10,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_MaceEldner_Lightning @ blackforge
 MaceEldnerNature,$item_mace_eldner_nature,Klossen,OneHandedWeapon,Clubs,1,2,4,0,True,6,300,20,1,57,-0.05,0,135,0,0,0,0,0,0,0,10,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_MaceEldner_Nature @ blackforge
-MaceGold,$item_mace_gold,Nord Mace,OneHandedWeapon,Clubs,1,2,4,0,True,2,400,20,1,66,-0.05,0,170,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-MaceGold_BloodLightning,$item_mace_gold_bloodlightning,Thunderblood Mace,OneHandedWeapon,Clubs,1,2,4,0,True,2,400,20,1,66,-0.05,0,180,0,0,0,0,0,0,45,0,0,0,0,0,0,,
-MaceGold_FrostFire,$item_mace_gold_frostfire,Frostfire Mace,OneHandedWeapon,Clubs,1,2,4,0,True,2,400,20,1,66,-0.05,0,142,0,0,0,0,12,88,0,0,0,0,0,0,0,,
-MaceGoldUncooked,$item_mace_gold_uncooked,Cast: Nord Mace,Material,Clubs,1,2,1,0,True,2,200,20,1,21,0,0,55,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+MaceGold,$item_mace_gold,Nord Mace,OneHandedWeapon,Clubs,1,2,4,0,True,2,400,20,1,66,-0.05,0,170,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_MaceGold @ blackforge
+MaceGold_BloodLightning,$item_mace_gold_bloodlightning,Thunderblood Mace,OneHandedWeapon,Clubs,1,2,4,0,True,2,400,20,1,66,-0.05,0,180,0,0,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_MaceGold_BloodLightning @ blackforge
+MaceGold_FrostFire,$item_mace_gold_frostfire,Frostfire Mace,OneHandedWeapon,Clubs,1,2,4,0,True,2,400,20,1,66,-0.05,0,142,0,0,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_MaceGold_FrostFire @ blackforge
+MaceGoldUncooked,$item_mace_gold_uncooked,Cast: Nord Mace,Material,Clubs,1,2,1,0,True,2,200,20,1,21,0,0,55,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_MaceGoldUncooked @ blackforge
 MaceIron,$item_mace_iron,Iron Mace,OneHandedWeapon,Clubs,1,2,4,0,True,2,200,20,1,21,-0.05,0,55,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_MaceIron @ forge
 MaceNeedle,$item_mace_needle,Porcupine,OneHandedWeapon,Clubs,1,2,4,0,True,4,150,20,1,39,-0.05,0,50,0,45,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_MaceNeedle @ forge
 MaceSilver,$item_mace_silver,Frostner,OneHandedWeapon,Clubs,1,2,4,0,True,3,200,20,1,30,-0.05,0,35,0,0,0,0,0,40,0,0,20,0,0,0,0,Mountain,Recipes: Recipe Recipe_MaceSilver @ forge
@@ -990,27 +990,27 @@ MeatballsMashedPoteitr,$item_meatballsmashedpoteitr,Meatballs and Poteitr,Consum
 MeatPlatter,$item_meatplatter,Meat Platter,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,80,26,0,1800,Mistlands,Conversions: piece_oven: MeatPlatterUncooked > MeatPlatter
 MeatPlatterUncooked,$item_meatplatteruncooked,Uncooked Meat Platter,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,80,26,0,1800,Mistlands,Recipes: Recipe Recipe_MeatPlatter @ piece_preptable
 MechanicalSpring,$item_mechanicalspring,Mechanical Spring,Material,Swords,10,5,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_MechanicalSpring @ piece_artisanstation
-MemorialCoal,$item_memorialcoal,Memorial Coal,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
+MemorialCoal,$item_memorialcoal,Memorial Coal,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > DropOnDestroyed
 MinceMeatSauce,$item_mincemeatsauce,Minced Meat Sauce,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,40,13,0,1500,BlackForest,Recipes: Recipe Recipe_MinceMeatSauce @ piece_cauldron
 MisthareSupreme,$item_mistharesupreme,Misthare Supreme,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,85,28,0,1500,Mistlands,Conversions: piece_oven: MisthareSupremeUncooked > MisthareSupreme
 MisthareSupremeUncooked,$item_mistharesupremeuncooked,Uncooked Misthare Supreme,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,85,28,0,1800,Mistlands,Recipes: Recipe Recipe_MisthareSupreme @ piece_preptable
 Mistile_kamikaze,Mistile Kamikaze,Mistile Kamikaze,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,150,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-MoldArmorGoldChest,$item_mold_armor_gold_chest,Mould: Breastplate of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
-MoldArmorGoldHelmet,$item_mold_armor_gold_helmet,Mould: Helmet of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
-MoldArmorGoldLegs,$item_mold_armor_gold_legs,Mould: Trousers of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
-MoldArmorMageChest,$item_mold_armor_mage_chest,Mould: Robes of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWitch > CharacterDrop
-MoldArmorMageHelmet,$item_mold_armor_mage_helmet,Mould: Headdress of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWitch > CharacterDrop
-MoldArmorMageLegs,$item_mold_armor_mage_legs,Mould: Trousers of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWitch > CharacterDrop
-MoldArmormediumChest,$item_mold_armor_medium_chest,Mould: Chestpiece of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
-MoldArmorMediumHelmet,$item_mold_armor_medium_helmet,Mould: Hood of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
-MoldArmorMediumLegs,$item_mold_armor_medium_legs,Mould: Trousers of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
+MoldArmorGoldChest,$item_mold_armor_gold_chest,Mould: Breastplate of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorGoldHelmet,$item_mold_armor_gold_helmet,Mould: Helmet of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorGoldLegs,$item_mold_armor_gold_legs,Mould: Trousers of the Protector,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorMageChest,$item_mold_armor_mage_chest,Mould: Robes of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
+MoldArmorMageHelmet,$item_mold_armor_mage_helmet,Mould: Headdress of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
+MoldArmorMageLegs,$item_mold_armor_mage_legs,Mould: Trousers of the Caller,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
+MoldArmormediumChest,$item_mold_armor_medium_chest,Mould: Chestpiece of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorMediumHelmet,$item_mold_armor_medium_helmet,Mould: Hood of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorMediumLegs,$item_mold_armor_medium_legs,Mould: Trousers of the Vanguard,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
 MoldAtgeir,$item_mold_atgeir,Mould: Nord Atgeir,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldAxe,$item_mold_axe,Mould: Nord Axe,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldAxe2H,$item_mold_axe2h,Mould: Nord Greataxe,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldBow,$item_mold_bow,Mould: Nord Bow,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldCrossbow,$item_mold_crossbow,Mould: Nord Crossbow,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldFistweapon,$item_mold_fistweapon,Mould: Nord Knucklechains,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
-MoldKeys,$item_mold_keys,Mould: Intricate Key,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Elaking > CharacterDrop
+MoldKeys,$item_mold_keys,Mould: Intricate Key,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Elaking > CharacterDrop
 MoldKnife,$item_mold_knife,Mould: Nord Dagger,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldMace,$item_mold_mace,Mould: Nord Mace,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldMace2H,$item_mold_mace2h,Mould: Nord Sledge,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
@@ -1034,14 +1034,14 @@ MooseHide,$item_moosehide,Moose Hide,Material,Swords,50,1,1,0,True,0,100,10,1,10
 MooseKebab,$item_moosekebab,Meat In Bread,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,110,37,0,1800,DeepNorth,Recipes: Recipe Recipe_MooseKebab @ piece_cauldron
 MooseMeat,$item_moose_meat,Moose Meat,Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,12,0,1200,DeepNorth,Spawns: Moose > CharacterDrop
 MooseSinew,$item_moosesinew,Moose Sinew,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Moose > CharacterDrop
-Morgen_bite,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,,
+Morgen_bite,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > Creature attack Morgen_NonSleeping
 Morgen_bodyslam,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,160,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-Morgen_roll_left,Morgen Roll Left,Morgen Roll Left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,50,0,0,100,100,0,0,0,0,0,0,0,0,0,,
-Morgen_roll_right,Morgen Roll Right,Morgen Roll Right,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,50,0,0,100,100,0,0,0,0,0,0,0,0,0,,
-Morgen_swipe_1,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,,
-Morgen_swipe_2,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,,
-Morgen_swipe_3,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,,
-Morgen_swipe_4,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,,
+Morgen_roll_left,Morgen Roll Left,Morgen Roll Left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,50,0,0,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_roll_right,Morgen Roll Right,Morgen Roll Right,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,50,0,0,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_1,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_2,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_3,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_4,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > Creature attack Morgen_NonSleeping
 Morgen_swipe_5,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,,
 Morgen_swipe_6,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,160,100,100,0,0,0,0,0,0,0,0,0,,
 MorgenHeart,$item_morgenheart,Morgen Heart,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Morgen_NonSleeping > CharacterDrop
@@ -1058,7 +1058,7 @@ Neck_BiteAttack,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,
 NeckTail,$item_necktail,Neck Tail,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Neck > CharacterDrop
 NeckTailGrilled,$item_necktailgrilled,Grilled Neck Tail,Consumable,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,25,8,0,1200,Meadows,Conversions: piece_cookingstation: NeckTail > NeckTailGrilled
 Needle,$item_needle,Needle,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Spawns: Deathsquito > CharacterDrop
-NornThread,$item_nornthread,Nornathread,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWitch > CharacterDrop
+NornThread,$item_nornthread,Nornathread,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
 Oat,$item_oat,Oats,Consumable,Swords,50,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,33,33,0,1800,DeepNorth,Conversions: windmill: OatSeeds > Oat
 OatFlour,$item_oatflour,Oat Flour,Misc,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Conversions: windmill: Oat > OatFlour
 OatmealLingonberryJam,$item_oatmeallingonberryjam,Oatmeal,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,39,115,85,1800,DeepNorth,Recipes: Recipe Recipe_OatmealLingonberryJam @ piece_cauldron
@@ -1108,7 +1108,7 @@ RoyalJelly,$item_royaljelly,Royal Jelly,Consumable,Swords,50,0.1,1,0,True,0,100,
 Ruby,$item_ruby,Ruby,Material,Swords,20,0.1,1,20,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Crypt2 > Room > forestcrypt_Corridor3 > PickableItem
 SaddleAsksvin,$item_saddleasksvin,Asksvin Saddle,Misc,Swords,1,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_SaddleAsksvin @ blackforge
 SaddleLox,$item_saddlelox,Lox Saddle,Misc,Swords,1,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_SadleLox @ piece_workbench
-SaddleMoose,$item_saddlemoose,Moose Saddle,Misc,Swords,1,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+SaddleMoose,$item_saddlemoose,Moose Saddle,Misc,Swords,1,10,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SaddleMoose @ blackforge
 Salad,$item_salad,Salad,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,26,80,0,1500,Mistlands,Recipes: Recipe Recipe_Salad @ piece_cauldron
 Sap,$item_sap,Sap,Material,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,900,Mistlands,Producers: piece_sapcollector > SapCollector
 Sausages,$item_sausages,Sausages,Consumable,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,55,18,0,1500,BlackForest,Recipes: Recipe Recipe_Sausages @ piece_cauldron
@@ -1123,13 +1123,13 @@ seeker_claw_left,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,
 seeker_claw_right,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,120,0,0,0,0,0,0,0,0,0,0,0,,
 seeker_groundslam,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 seeker_groundslam_flying,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-seeker_land,land,land,OneHandedWeapon,None,1,1,1,0,True,3,100,10,1,10,0,0,0,0,30,200,200,0,200,0,0,0,0,0,0,0,,
+seeker_land,land,land,OneHandedWeapon,None,1,1,1,0,True,3,100,10,1,10,0,0,0,0,30,200,200,0,200,0,0,0,0,0,0,0,Mistlands,Spawns: Seeker > Creature attack Seeker
 seeker_pincers,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,90,0,0,0,0,0,0,0,0,0,0,0,,
-seeker_takeoff,takeoff,takeoff,OneHandedWeapon,None,1,1,1,0,True,3,100,10,1,10,0,0,0,0,30,200,200,0,200,0,0,0,0,0,0,0,,
+seeker_takeoff,takeoff,takeoff,OneHandedWeapon,None,1,1,1,0,True,3,100,10,1,10,0,0,0,0,30,200,200,0,200,0,0,0,0,0,0,0,Mistlands,Spawns: Seeker > Creature attack Seeker
 SeekerAspic,$item_seekeraspic,Seeker Aspic,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,28,14,85,1800,Mistlands,Recipes: Recipe Recipe_SeekerAspic @ piece_cauldron
 SeekerBrute_bite,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,100,0,0,0,0,0,0,0,0,0,0,0,0,,
-SeekerBrute_groundslam,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,4,100,10,1,10,0,0,120,0,0,100,100,0,0,0,0,0,0,0,0,0,,
-SeekerBrute_ram,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,4,100,10,1,10,0,0,100,0,0,100,100,0,0,0,0,0,0,0,0,0,,
+SeekerBrute_groundslam,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,4,100,10,1,10,0,0,120,0,0,100,100,0,0,0,0,0,0,0,0,0,Mistlands,Spawns: SeekerBrute > Creature attack SeekerBrute
+SeekerBrute_ram,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,4,100,10,1,10,0,0,100,0,0,100,100,0,0,0,0,0,0,0,0,0,Mistlands,Spawns: SeekerBrute > Creature attack SeekerBrute
 SeekerBrute_Taunt,Brute taunt,Brute taunt,OneHandedWeapon,Swords,1,1,7,0,True,0,100,20,1,25,0,0,0,80,0,10,0,0,0,0,0,0,0,0,0,0,,
 SeekerQueen_Bite,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,140,300,300,0,0,0,100,0,0,0,0,0,,
 SeekerQueen_Call,Brute taunt,Brute taunt,OneHandedWeapon,Swords,1,1,7,0,True,0,100,20,1,25,0,0,0,80,0,10,0,0,0,0,0,0,0,0,0,0,,
@@ -1150,24 +1150,24 @@ ShieldBlackmetal,$item_shield_blackmetal,Black Metal Shield,Shield,Blocking,1,5,
 ShieldBlackmetalTower,$item_shield_blackmetal_tower,Black Metal Tower Shield,Shield,Blocking,1,5,3,0,True,4,200,200,1,104,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_ShieldBlackmetalTower @ forge
 ShieldBoneTower,$item_shield_bonetower,Bone Tower Shield,Shield,Blocking,1,4,3,0,True,1,200,100,1,32,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ShieldBoneTower @ piece_workbench
 ShieldBronzeBuckler,$item_shield_bronzebuckler,Bronze Buckler,Shield,Blocking,1,3,3,0,True,1,200,100,1,16,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_ShieldBronzeBuckler @ forge
-ShieldBucklerGoldUncooked,$item_shield_buckler_gold_uncooked,Cast: Nord Buckler,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ShieldBucklerGoldUncooked,$item_shield_buckler_gold_uncooked,Cast: Nord Buckler,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldBucklerGoldUncooked @ blackforge
 ShieldCarapace,$item_shield_carapace,Carapace Shield,Shield,Blocking,1,5,3,0,True,5,250,200,1,96,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_ShieldCarapace @ blackforge
 ShieldCarapaceBuckler,$item_shield_carapacebuckler,Carapace Buckler,Shield,Blocking,1,5,3,0,True,5,250,200,1,78,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_ShieldCarapaceBuckler @ blackforge
 ShieldCore,$item_shieldcore,Shield Core,Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1200,Mistlands,Recipes: Recipe Recipe_ShieldCore @ piece_artisanstation
 ShieldFlametal,$item_shield_flametal,Flametal Shield,Shield,Blocking,1,5,3,0,True,4,300,200,1,114,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_ShieldFlametal @ blackforge
 ShieldFlametalTower,$item_shield_flametal_tower,Flametal Tower Shield,Shield,Blocking,1,5,3,0,True,4,300,200,1,140,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_ShieldFlametalTower @ blackforge
-ShieldGold,$item_shield_gold,Nord Shield,Shield,Blocking,1,5,3,0,True,4,400,200,1,132,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ShieldGoldBuckler,$item_shield_goldbuckler,Nord Buckler,Shield,Blocking,1,4,3,0,True,2,400,150,1,88,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-ShieldGoldTower,$item_shield_gold_tower,Nord Greatshield,Shield,Blocking,1,5,3,0,True,4,400,200,1,158,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ShieldGold,$item_shield_gold,Nord Shield,Shield,Blocking,1,5,3,0,True,4,400,200,1,132,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldRoundGold @ blackforge
+ShieldGoldBuckler,$item_shield_goldbuckler,Nord Buckler,Shield,Blocking,1,4,3,0,True,2,400,150,1,88,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldBucklerGold @ blackforge
+ShieldGoldTower,$item_shield_gold_tower,Nord Greatshield,Shield,Blocking,1,5,3,0,True,4,400,200,1,158,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldTowerGold @ blackforge
 ShieldIronBuckler,$item_shield_ironbuckler,Iron Buckler,Shield,Blocking,1,4,3,0,True,2,200,150,1,28,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ShieldIronBuckler @ forge
 ShieldIronSquare,$item_shield_iron_square,Iron Shield,Shield,Blocking,1,4,3,0,True,2,200,100,1,35,-0.2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 ShieldIronTower,$item_shield_iron_tower,Iron Tower Shield,Shield,Blocking,1,4,3,0,True,2,200,100,1,52,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ShieldIronTower @ forge
 ShieldKnight,$item_shield_knight,Knight shield UNUSED,Shield,Blocking,1,4,1,0,True,0,100,0,1,120,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 ShieldRoots,$item_shield_roots,Shield of Roots,Shield,Blocking,1,4,3,0,True,0,200,100,1,48,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ShieldRoots @ piece_workbench
-ShieldRoundGoldUncooked,$item_shield_round_gold_uncooked,Cast: Nord Shield,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ShieldRoundGoldUncooked,$item_shield_round_gold_uncooked,Cast: Nord Shield,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldRoundGoldUncooked @ blackforge
 ShieldSerpentscale,$item_shield_serpentscale,Serpent Scale Shield,Shield,Blocking,1,5,3,0,True,3,250,300,1,60,-0.1,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Ocean,Recipes: Recipe Recipe_ShieldSerpentscale @ forge
 ShieldSilver,$item_shield_silver,Silver Shield,Shield,Blocking,1,5,3,0,True,3,200,200,1,60,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_ShieldSilver @ forge
-ShieldTowerGoldUncooked,$item_shield_tower_gold_uncooked,Cast: Nord Greatshield,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+ShieldTowerGoldUncooked,$item_shield_tower_gold_uncooked,Cast: Nord Greatshield,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldTowerGoldUncooked @ blackforge
 ShieldWood,$item_shield_wood,Wood Shield,Shield,Blocking,1,4,3,0,True,0,200,100,1,6,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ShieldWood @ piece_workbench
 ShieldWoodTower,$item_shield_woodtower,Wood Tower Shield,Shield,Blocking,1,4,3,0,True,0,200,100,1,10,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ShieldWoodTower @ piece_workbench
 ShocklateSmoothie,$item_shocklatesmoothie,Muckshake,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,16,50,0,1200,Swamp,Recipes: Recipe Recipe_ShocklateSmoothie @ piece_cauldron
@@ -1192,10 +1192,10 @@ skeleton_sword_swamps,Dragur axe,Dragur axe,OneHandedWeapon,Swords,1,1,1,0,True,
 skeleton_sword2,Dragur axe,Dragur axe,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,50,0,0,0,0,0,0,0,0,0,0,0,0,,
 SledgeCheat,Cheat sledge,Cheat sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,10,100,20,1,15,-0.15,99999,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 SledgeDemolisher,$item_sledge_demolisher,Demolisher,TwoHandedWeapon,Clubs,1,4,4,0,True,5,250,20,1,52,-0.15,0,145,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_SledgeDemolisher @ blackforge
-SledgeGold,$item_sledge_gold,Nord Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,5,400,20,1,52,-0.2,0,225,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-SledgeGold_BloodLightning,$item_mace2h_gold_bloodlightning,Thunderblood Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,5,400,20,1,52,-0.2,0,235,0,0,0,0,0,0,45,0,0,0,0,0,0,,
-SledgeGold_FrostFire,$item_mace2h_gold_frostfire,Frostfire Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,5,400,20,1,52,-0.2,0,200,0,0,0,0,12,88,0,0,0,0,0,0,0,,
-SledgeGoldUncooked,$item_sledge_gold_uncooked,Cast: Nord Sledge,Material,Clubs,1,4,1,0,True,5,100,20,1,52,0,0,145,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+SledgeGold,$item_sledge_gold,Nord Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,5,400,20,1,52,-0.2,0,225,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SledgeGold @ blackforge
+SledgeGold_BloodLightning,$item_mace2h_gold_bloodlightning,Thunderblood Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,5,400,20,1,52,-0.2,0,235,0,0,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SledgeGold_BloodLightning @ blackforge
+SledgeGold_FrostFire,$item_mace2h_gold_frostfire,Frostfire Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,5,400,20,1,52,-0.2,0,200,0,0,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SledgeGold_FrostFire @ blackforge
+SledgeGoldUncooked,$item_sledge_gold_uncooked,Cast: Nord Sledge,Material,Clubs,1,4,1,0,True,5,100,20,1,52,0,0,145,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SledgeGoldUncooked @ blackforge
 SledgeIron,$item_sledge_iron,Iron Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,2,100,20,1,28,-0.15,0,55,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_SledgeIron @ forge
 SledgeStagbreaker,$item_stagbreaker,Stagbreaker,TwoHandedWeapon,Clubs,1,4,4,0,True,0,100,20,1,4,-0.15,0,20,0,5,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_SledgeStagbreaker @ piece_workbench
 SledgeWood,$item_sledge_wood,Wooden Sledge,TwoHandedWeapon,Clubs,1,4,4,0,True,1,100,20,1,12,-0.15,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location Grave1 > Grave1 > Container
@@ -1220,8 +1220,8 @@ SP_ArmorPaddedGreaves,$item_legs_pgreaves,Padded Greaves,Legs,Swords,1,10,4,0,Tr
 SP_ArmorTrollLeatherChest,$item_chest_trollleather,Troll Leather Tunic,Chest,Swords,1,5,4,0,True,1,500,6,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 SP_ArmorTrollLeatherLegs,$item_legs_trollleather,Troll Leather Trousers,Legs,Swords,1,5,4,0,True,1,500,6,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 SP_ArmorTunic5,$item_chest_tunic5,Red Tunic with Cape,Chest,Swords,1,10,4,0,True,0,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-SP_AxeBronze,$item_axe_bronze,Bronze Axe,OneHandedWeapon,Axes,1,2,4,0,True,2,125,20,1,12,-0.05,0,0,40,0,40,0,0,0,0,0,0,0,0,0,0,,
-SP_BattleaxeCrystal,$item_battleaxe_crystal,Crystal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,40,-0.15,0,0,90,0,50,0,0,0,0,0,30,0,0,0,0,,
+SP_AxeBronze,$item_axe_bronze,Bronze Axe,OneHandedWeapon,Axes,1,2,4,0,True,2,125,20,1,12,-0.05,0,0,40,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: ShadowPerson > Creature attack ShadowPerson
+SP_BattleaxeCrystal,$item_battleaxe_crystal,Crystal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,40,-0.15,0,0,90,0,50,0,0,0,0,0,30,0,0,0,0,DeepNorth,Spawns: ShadowPerson > Creature attack ShadowPerson
 SP_BowDraugrFang,$item_bow_draugrfang,Draugr Fang,Bow,Bows,1,1.5,4,0,True,2,100,15,1,3,-0.05,0,0,0,47,0,0,0,0,0,5,0,0,0,0,0,,
 SP_CapeLinen,$item_cape_linen,Linen Cape,Shoulder,Swords,1,4,4,0,True,4,1500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 SP_CapeTrollHide,$item_cape_trollhide,Troll Hide Cape,Shoulder,Swords,1,4,4,0,True,1,500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -1240,10 +1240,10 @@ SpearCarapace,$item_spear_carapace,Carapace Spear,OneHandedWeapon,Spears,1,1.5,4
 SpearChitin,$item_spear_chitin,Abyssal Harpoon,OneHandedWeapon,Spears,1,1.5,1,0,True,3,50,15,1,21,-0.05,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,Ocean,Recipes: Recipe Recipe_SpearChitin @ piece_workbench
 SpearElderbark,$item_spear_ancientbark,Ancient Bark Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,2,100,15,1,21,-0.05,0,0,0,55,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_SpearElderbark @ forge
 SpearFlint,$item_spear_flint,Flint Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,0,100,15,1,4,-0.05,0,0,0,20,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_SpearFlint @ piece_workbench
-SpearGold,$item_spear_gold,Nord Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,5,400,15,1,66,-0.05,0,0,0,170,0,0,0,0,0,0,0,0,0,0,0,,
-SpearGold_BloodLightning,$item_spear_gold_bloodlightning,Thunderblood Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,5,400,15,1,66,-0.05,0,0,0,180,0,0,0,0,45,0,0,0,0,0,0,,
-SpearGold_FrostFire,$item_spear_gold_frostfire,Frostfire Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,5,400,15,1,66,-0.05,0,0,0,148,0,0,12,88,0,0,0,0,0,0,0,,
-SpearGoldUncooked,$item_spear_gold_uncooked,Cast: Nord Spear,Material,Spears,1,1.5,1,0,True,5,100,15,1,48,0,0,0,0,115,0,0,0,0,0,0,0,0,0,0,0,,
+SpearGold,$item_spear_gold,Nord Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,5,400,15,1,66,-0.05,0,0,0,170,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SpearGold @ blackforge
+SpearGold_BloodLightning,$item_spear_gold_bloodlightning,Thunderblood Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,5,400,15,1,66,-0.05,0,0,0,180,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SpearGold_BloodLightning @ blackforge
+SpearGold_FrostFire,$item_spear_gold_frostfire,Frostfire Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,5,400,15,1,66,-0.05,0,0,0,148,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SpearGold_FrostFire @ blackforge
+SpearGoldUncooked,$item_spear_gold_uncooked,Cast: Nord Spear,Material,Spears,1,1.5,1,0,True,5,100,15,1,48,0,0,0,0,115,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SpearGoldUncooked @ blackforge
 SpearSplitner,$item_spear_splitner,Splitnir,OneHandedWeapon,Spears,1,1.5,4,0,True,5,300,15,1,57,-0.05,0,0,0,135,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_SpearSplitner @ blackforge
 SpearSplitner_Blood,$item_spear_splitner_blood,Splitnir the Bleeding,OneHandedWeapon,Spears,1,1.5,4,0,True,5,300,15,1,57,-0.05,0,0,0,135,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SpearSplitner_Blood @ blackforge
 SpearSplitner_Lightning,$item_spear_splitner_lightning,Splitnir the Storming,OneHandedWeapon,Spears,1,1.5,4,0,True,5,300,15,1,57,-0.05,0,0,0,135,0,0,0,0,10,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SpearSplitner_Lightning @ blackforge
@@ -1251,7 +1251,7 @@ SpearSplitner_Nature,$item_spear_splitner_nature,Splitnir the Primal,OneHandedWe
 SpearWolfFang,$item_spear_wolffang,Fang Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,3,100,15,1,30,-0.05,0,0,0,75,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_SpearWolfFang @ forge
 SpearWood,$item_spear_wood,Wooden Spear,OneHandedWeapon,Spears,1,1.5,4,0,True,1,100,15,1,12,-0.05,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Ruin1 > Ruin1 > Container
 SpiceAshlands,$item_spiceashlands,Fiery Spice Powder,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
-SpiceDeepNorth,$item_spicedeepnorth,Seasoning of the Gourd,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+SpiceDeepNorth,$item_spicedeepnorth,Seasoning of the Gourd,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 SpiceForests,$item_spiceforests,Woodland Herb Blend,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 SpiceMistlands,$item_spicemistlands,Herbs of the Hidden Hills,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 SpiceMountains,$item_spicemountains,Mountain Peak Pepper Powder,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
@@ -1279,15 +1279,15 @@ StaffFrostOrbsUncooked,$item_frostorbs_uncooked,Cast: Northern Vengeance,Materia
 StaffGreenRoots,$item_staffgreenroots,Staff of the Wild,TwoHandedWeapon,ElementalMagic,1,0.3,4,0,True,5,200,15,1,48,-0.05,0,20,0,0,0,0,0,0,0,20,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffGreenRoots @ piece_magetable
 StaffIceShards,$item_stafficeshards,Staff of Frost,TwoHandedWeapon,ElementalMagic,1,0.3,4,0,True,5,200,15,1,48,-0.05,0,0,0,0,0,0,0,30,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_StaffIceShards @ piece_magetable
 StaffLightning,$item_staff_lightning,Dundr,TwoHandedWeapon,ElementalMagic,1,1.5,4,0,True,5,300,15,1,48,-0.05,0,0,0,0,0,0,0,0,20,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffLightning @ piece_magetable
-StaffOrbofAhri,$item_staff_orbofahri,Echo Spike,TwoHandedWeapon,BloodMagic,1,0.3,4,0,True,5,400,15,1,48,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-StaffOrbofAhriUncooked,$item_staff_orbofahri_uncooked,Cast: Echo Spike,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,,
+StaffOrbofAhri,$item_staff_orbofahri,Echo Spike,TwoHandedWeapon,BloodMagic,1,0.3,4,0,True,5,400,15,1,48,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffOrbOfAhri_Upgrade @ piece_magetable
+StaffOrbofAhriUncooked,$item_staff_orbofahri_uncooked,Cast: Echo Spike,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffOrbOfAhri @ piece_magetable
 StaffRedTroll,$item_staffredtroll,Trollstav,TwoHandedWeapon,BloodMagic,1,0.3,4,0,True,5,300,15,1,48,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffRedTroll @ piece_magetable
 StaffShield,$item_staffshield,Staff of Protection,TwoHandedWeapon,BloodMagic,1,0.3,4,0,True,5,200,15,1,48,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_StaffShield @ piece_magetable
 StaffSkeleton,$item_staffskeleton,Dead Raiser,TwoHandedWeaponLeft,BloodMagic,1,0.3,4,0,True,5,200,15,1,48,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_StaffSkeleton @ piece_magetable
 StaffSpiritCaller,$item_staff_spiritcaller,Spirit Caller,TwoHandedWeaponLeft,BloodMagic,1,0.3,4,0,True,5,400,15,1,48,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffSpiritCaller_Upgrade @ piece_magetable
 StaffSpiritCallerUncooked,$item_staff_spiritcaller_uncooked,Cast: Spirit Caller,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffSpiritCaller @ piece_magetable
-StaffThunderBlood,$item_staff_thunderblood,Lightning Strike,TwoHandedWeapon,ElementalMagic,1,0.3,4,0,True,5,400,15,1,48,-0.05,0,0,0,0,0,0,0,0,300,0,0,0,0,0,0,,
-StaffThunderbloodUncooked,$item_staff_thunderblood_uncooked,Cast: Lightning Strike,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,,
+StaffThunderBlood,$item_staff_thunderblood,Lightning Strike,TwoHandedWeapon,ElementalMagic,1,0.3,4,0,True,5,400,15,1,48,-0.05,0,0,0,0,0,0,0,0,300,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffThunderBlood_Upgrade @ piece_magetable
+StaffThunderbloodUncooked,$item_staff_thunderblood_uncooked,Cast: Lightning Strike,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_StaffThunderBlood @ piece_magetable
 StaminaUpgrade_Greydwarf,Stamina Greydwarf,Stamina Greydwarf,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 StaminaUpgrade_Troll,Stamina Troll,Stamina Troll,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 StaminaUpgrade_Wraith,Stamina Wraith,Stamina Wraith,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -1308,10 +1308,10 @@ SwordBlackmetal,$item_sword_blackmetal,Black Metal Sword,OneHandedWeapon,Swords,
 SwordBronze,$item_sword_bronze,Bronze Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,1,200,20,1,12,-0.05,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_SwordBronze @ forge
 SwordCheat,Cheat sword,Cheat sword,OneHandedWeapon,Swords,1,2,1,0,True,10,100,20,1,10,-0.05,0,0,10000,0,10000,10000,0,0,0,0,0,0,0,0,0,,
 SwordDyrnwyn,$item_sword_dyrnwyn,Dyrnwyn,OneHandedWeapon,Swords,1,0.8,4,0,True,6,300,20,1,57,-0.05,0,0,145,0,0,0,10,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordFire @ blackforge
-SwordGold,$item_sword_gold,Nord Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,6,400,20,1,66,-0.05,0,0,170,0,0,0,0,0,0,0,0,0,0,0,0,,
-SwordGold_BloodLightning,$item_sword_gold_bloodlightning,Thunderblood Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,6,400,20,1,66,-0.05,0,0,180,0,0,0,0,0,45,0,0,0,0,0,0,,
-SwordGold_FrostFire,$item_sword_gold_frostfire,Frostfire Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,6,400,20,1,66,-0.05,0,0,138,0,0,0,12,88,0,0,0,0,0,0,0,,
-SwordGoldUncooked,$item_sword_gold_uncooked,Cast: Nord Sword,Material,Swords,1,0.8,1,0,True,6,200,20,1,57,0,0,0,135,0,0,0,0,0,0,0,0,0,0,0,0,,
+SwordGold,$item_sword_gold,Nord Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,6,400,20,1,66,-0.05,0,0,170,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordGold @ blackforge
+SwordGold_BloodLightning,$item_sword_gold_bloodlightning,Thunderblood Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,6,400,20,1,66,-0.05,0,0,180,0,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordGold_BloodLightning @ blackforge
+SwordGold_FrostFire,$item_sword_gold_frostfire,Frostfire Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,6,400,20,1,66,-0.05,0,0,138,0,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordGold_FrostFire @ blackforge
+SwordGoldUncooked,$item_sword_gold_uncooked,Cast: Nord Sword,Material,Swords,1,0.8,1,0,True,6,200,20,1,57,0,0,0,135,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordGoldUncooked @ blackforge
 SwordIron,$item_sword_iron,Iron Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,2,200,20,1,21,-0.05,0,0,55,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_SwordIron @ forge
 SwordIronFire,$item_sword_fire,Dyrnwyn,OneHandedWeapon,Swords,1,1,4,0,True,0,200,20,1,21,-0.05,0,0,55,0,0,0,30,0,0,0,0,0,0,0,0,,
 SwordMistwalker,$item_sword_mistwalker,Mistwalker,OneHandedWeapon,Swords,1,0.8,4,0,True,5,250,20,1,48,-0.05,0,0,75,0,0,0,0,40,0,0,0,0,0,0,0,,
@@ -1329,10 +1329,10 @@ Tar,$item_tar,Tar,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,
 tendril_attack,Dragur axe,Dragur axe,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,55,0,0,20,20,0,0,0,0,0,0,0,0,0,,
 tentaroot_attack,Dragur axe,Dragur axe,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,55,0,0,20,20,0,0,0,0,0,0,0,0,0,,
 Thistle,$item_thistle,Thistle,Material,Swords,50,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Vegetation: Pickable_Thistle > Pickable
-THSwordGold,$item_sword2h_gold,Nord Greatsword,TwoHandedWeapon,Swords,1,4,4,0,True,5,400,20,1,76,-0.05,0,0,210,0,0,0,0,0,0,0,0,0,0,0,0,,
-THSwordGold_BloodLightning,$item_sword2h_gold_bloodlightning,Thunderblood Greatsword,TwoHandedWeapon,Swords,1,4,4,0,True,5,400,20,1,76,-0.05,0,0,220,0,0,0,0,0,45,0,0,0,0,0,0,,
-THSwordGold_FrostFire,$item_sword2h_gold_frostfire,Frostfire Greatsword,TwoHandedWeapon,Swords,1,4,4,0,True,5,400,20,1,76,-0.05,0,0,186,0,0,0,12,88,0,0,0,0,0,0,0,,
-THSwordGoldUncooked,$item_sword2h_gold_uncooked,Cast: Nord Greatsword,Material,Swords,1,4,1,0,True,5,200,20,1,52,0,0,0,150,0,0,0,0,0,0,0,0,0,0,0,0,,
+THSwordGold,$item_sword2h_gold,Nord Greatsword,TwoHandedWeapon,Swords,1,4,4,0,True,5,400,20,1,76,-0.05,0,0,210,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_THSwordGold @ blackforge
+THSwordGold_BloodLightning,$item_sword2h_gold_bloodlightning,Thunderblood Greatsword,TwoHandedWeapon,Swords,1,4,4,0,True,5,400,20,1,76,-0.05,0,0,220,0,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_THSwordGold_BloodLightning @ blackforge
+THSwordGold_FrostFire,$item_sword2h_gold_frostfire,Frostfire Greatsword,TwoHandedWeapon,Swords,1,4,4,0,True,5,400,20,1,76,-0.05,0,0,186,0,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_THSwordGold_FrostFire @ blackforge
+THSwordGoldUncooked,$item_sword2h_gold_uncooked,Cast: Nord Greatsword,Material,Swords,1,4,1,0,True,5,200,20,1,52,0,0,0,150,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_THSwordGoldUncooked @ blackforge
 THSwordKrom,$item_sword_krom,Krom,TwoHandedWeapon,Swords,1,4,4,0,True,5,250,20,1,52,-0.05,0,0,150,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_SwordKrom @ blackforge
 THSwordSlayer,$item_sword_slayer,Slayer,TwoHandedWeapon,Swords,1,4,4,0,True,6,300,20,1,64,-0.05,0,0,170,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_SwordSlayer @ blackforge
 THSwordSlayerBlood,$item_sword_slayer_blood,Brutal Slayer,TwoHandedWeapon,Swords,1,4,4,0,True,6,300,20,1,64,-0.05,0,0,170,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordSlayer_Blood @ blackforge
@@ -1352,8 +1352,8 @@ TrainingDummy_attack3,dummy attack,dummy attack,OneHandedWeapon,Swords,1,1,1,0,T
 TrainingDummy_throw,dummy throw stone,dummy throw stone,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 TrinketBlackDamageHealth,$item_trinketblackdamagedealth,Bracelets of the Brave,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_TrinketBlackDamageHealth @ forge
 TrinketBlackStamina,$item_trinketblackdtamina,Evasion Mantle,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_TrinketBlackStamina @ forge
-TrinketBloodGoldHealth,$item_trinketbloodgoldhealth,Neckstabber,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-TrinketBloodGoldStamina,$item_trinketbloodgoldstamina,Witch Crown,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+TrinketBloodGoldHealth,$item_trinketbloodgoldhealth,Neckstabber,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_TrinketBloodGoldHealth @ blackforge
+TrinketBloodGoldStamina,$item_trinketbloodgoldstamina,Witch Crown,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_TrinketBloodGoldStamina @ blackforge
 TrinketBronzeHealth,$item_trinketbronzehealth,Heart of the Forest,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_TrinketBronzeHealth @ forge
 TrinketBronzeStamina,$item_trinketbronzestamina,Bronze Pendant,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_TrinketBronzeStamina @ forge
 TrinketCarapaceEitr,$item_trinketcarapaceeitr,Pulsating Earrings,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_TrinketCarapaceEitr @ blackforge
@@ -1365,10 +1365,10 @@ TrinketIronStamina,$item_trinketironstamina,Nimble Anklet,Trinket,Swords,1,2,1,0
 TrinketScaleStaminaDamage,$item_trinketscalestaminadamage,Resounding Shackle,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_TrinketScaleStaminaDamage @ blackforge
 TrinketSilverDamage,$item_trinketsilverdamage,Wolf Sight,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_TrinketSilverDamage @ forge
 TrinketSilverResist,$item_trinketsilverresist,Crystal Heart,Trinket,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_TrinketSilverResist @ forge
-troll_groundslam,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,70,0,0,100,40,0,0,0,0,0,0,0,0,0,,
-troll_log_swing_h,LOG,LOG,OneHandedWeapon,Swords,1,1,1,0,True,2,100,20,1,25,0,0,60,0,0,100,40,0,0,0,0,0,0,0,0,0,,
-troll_log_swing_v,LOG,LOG,OneHandedWeapon,Swords,1,1,1,0,True,2,100,20,1,25,0,0,70,0,0,100,40,0,0,0,0,0,0,0,0,0,,
-troll_punch,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,60,0,0,100,40,0,0,0,0,0,0,0,0,0,,
+troll_groundslam,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,70,0,0,100,40,0,0,0,0,0,0,0,0,0,BlackForest,Spawns: Troll > Creature attack Troll
+troll_log_swing_h,LOG,LOG,OneHandedWeapon,Swords,1,1,1,0,True,2,100,20,1,25,0,0,60,0,0,100,40,0,0,0,0,0,0,0,0,0,BlackForest,Spawns: Troll > Creature attack Troll
+troll_log_swing_v,LOG,LOG,OneHandedWeapon,Swords,1,1,1,0,True,2,100,20,1,25,0,0,70,0,0,100,40,0,0,0,0,0,0,0,0,0,BlackForest,Spawns: Troll > Creature attack Troll
+troll_punch,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,60,0,0,100,40,0,0,0,0,0,0,0,0,0,BlackForest,Spawns: Troll > Creature attack Troll
 troll_summoned_groundslam,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,70,0,0,100,40,0,0,0,0,0,0,0,0,0,,
 troll_summoned_log_swing_h,LOG,LOG,OneHandedWeapon,Swords,1,1,1,0,True,2,100,20,1,25,0,0,60,0,0,100,40,0,0,0,0,0,0,0,0,0,,
 troll_summoned_log_swing_v,LOG,LOG,OneHandedWeapon,Swords,1,1,1,0,True,2,100,20,1,25,0,0,70,0,0,100,40,0,0,0,0,0,0,0,0,0,,
@@ -1376,10 +1376,10 @@ troll_summoned_punch,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10
 troll_summoned_throw,fireballattack,fireballattack,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,80,0,0,60,40,20,0,0,0,0,0,0,0,0,,
 troll_throw,fireballattack,fireballattack,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,50,0,0,60,40,0,0,0,0,0,0,0,0,0,,
 TrollHide,$item_trollhide,Troll Hide,Material,Swords,20,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Spawns: Troll > CharacterDrop
-trollsnow_groundslam,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,200,0,0,100,40,0,0,0,0,0,0,0,0,0,,
-trollsnow_groundslam_r,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,200,0,0,100,40,0,0,0,0,0,0,0,0,0,,
-trollsnow_punch,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,6,100,10,1,10,0,0,220,0,0,100,40,0,0,0,0,0,0,0,0,0,,
-trollsnow_punch_r,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,6,100,10,1,10,0,0,220,0,0,100,40,0,0,0,0,0,0,0,0,0,,
+trollsnow_groundslam,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,200,0,0,100,40,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
+trollsnow_groundslam_r,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,2,100,10,1,10,0,0,200,0,0,100,40,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
+trollsnow_punch,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,6,100,10,1,10,0,0,220,0,0,100,40,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
+trollsnow_punch_r,slap,slap,OneHandedWeapon,Swords,1,1,1,0,True,6,100,10,1,10,0,0,220,0,0,100,40,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
 trollsnow_throw,fireballattack,fireballattack,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,150,0,0,100,80,0,0,0,0,0,0,0,0,0,,
 TrophyAbomination,$item_trophy_abomination,Abomination Trophy,Trophy,Swords,20,4,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Spawns: Abomination > CharacterDrop
 TrophyAsksvin,$item_trophy_asksvin,Asksvin Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: Asksvin > CharacterDrop
@@ -1407,7 +1407,7 @@ TrophyDraugrElite,$item_trophy_draugrelite,Draugr Elite Trophy,Trophy,Swords,20,
 TrophyDraugrFem,$item_trophy_draugr,Draugr Trophy,Trophy,Swords,20,1,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 TrophyDvergr,$item_trophy_dvergr,Dvergr Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Spawns: Dverger > CharacterDrop
 TrophyEikthyr,$item_trophy_eikthyr,Eikthyr Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Eikthyrnir > Eikthyrnir > OfferingBowl > CharacterDrop
-TrophyElaking,$item_trophy_elaking,Elaking Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Elaking > CharacterDrop
+TrophyElaking,$item_trophy_elaking,Elaking Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Spawns: Elaking > CharacterDrop
 TrophyFader,$item_trophy_fader,Fader Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location FaderLocation > FaderLocation > OfferingBowl > CharacterDrop
 TrophyFallenValkyrie,$item_trophy_fallenvalkyrie,Fallen Valkyrie Trophy,Trophy,Swords,20,0.5,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Spawns: FallenValkyrie > CharacterDrop
 TrophyFenring,$item_trophy_fenring,Fenring Trophy,Trophy,Swords,20,1.5,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Spawns: Fenring > CharacterDrop
@@ -1427,8 +1427,8 @@ TrophyGreydwarfShaman,$item_trophy_greydwarfshaman,Greydwarf Shaman Trophy,Troph
 TrophyGrowth,$item_trophy_growth,Growth Trophy,Trophy,Swords,20,1,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location TarPit1 > TarPit1 > CreatureSpawner > CharacterDrop
 TrophyHare,$item_trophy_hare,Hare Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Spawns: Hare > CharacterDrop
 TrophyHatchling,$item_trophy_hatchling,Drake Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Spawns: Hatchling > CharacterDrop
-TrophyJotunWarrior,$item_trophy_jotunwarrior,Krigen Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWarrior > CharacterDrop
-TrophyJotunWitch,$item_trophy_jotunwitch,Hexen Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: JotunWitch > CharacterDrop
+TrophyJotunWarrior,$item_trophy_jotunwarrior,Krigen Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+TrophyJotunWitch,$item_trophy_jotunwitch,Hexen Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
 TrophyKvastur,$enemy_kvastur,Kvastur,Trophy,Swords,20,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location BogWitch_Camp > BogWitch_Camp > CharacterDrop
 TrophyLeech,$item_trophy_leech,Leech Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Spawns: Leech > CharacterDrop
 TrophyLox,$item_trophy_lox,Lox Trophy,Trophy,Swords,20,2,1,0,True,0,100,5,1,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Spawns: Lox > CharacterDrop
@@ -1457,7 +1457,7 @@ Turnip,$item_turnip,Turnip,Material,Swords,50,0.3,1,0,True,0,100,10,1,10,0,0,0,0
 TurnipSeeds,$item_turnipseeds,Turnip Seeds,Material,Swords,100,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Vegetation: Pickable_SeedTurnip > Pickable
 TurnipStew,$item_turnipstew,Turnip Stew,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,18,55,0,1500,Swamp,Recipes: Recipe Recipe_TurnipStew @ piece_cauldron
 TurretBolt,$item_turretbolt,Black Metal Missile,AmmoNonEquipable,Crossbows,100,0.5,1,0,True,0,100,10,1,10,0,0,0,0,120,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_TurretBolt @ piece_artisanstation
-TurretBoltBloodgold,$item_turretbolt_bloodgold,Bloodgold Missile,AmmoNonEquipable,Crossbows,100,0.5,1,0,True,0,100,10,1,10,0,0,0,0,200,0,0,0,0,0,0,0,0,0,0,0,,
+TurretBoltBloodgold,$item_turretbolt_bloodgold,Bloodgold Missile,AmmoNonEquipable,Crossbows,100,0.5,1,0,True,0,100,10,1,10,0,0,0,0,200,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_TurretBoltBloodGold @ piece_artisanstation
 TurretBoltBone,$item_turretboltbone,[item_turretboltbone],AmmoNonEquipable,Crossbows,100,0.5,1,0,True,0,100,10,1,10,0,0,0,0,120,0,0,0,0,0,0,0,0,0,0,0,,
 TurretBoltFlametal,$item_turretbolt_flametal,Flametal Missile,AmmoNonEquipable,Crossbows,100,0.5,1,0,True,0,100,10,1,10,0,0,0,0,140,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_TurretBoltFlametal @ piece_artisanstation
 TurretBoltWood,$item_turretboltwood,Wooden Missile,AmmoNonEquipable,Crossbows,100,0.5,1,0,True,0,100,10,1,10,0,0,0,0,75,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_TurretBoltWood @ piece_artisanstation

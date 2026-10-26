@@ -1,6 +1,6 @@
 Game version: 1.0.20
 CraftingOverhaul: 0.1.0
-Written: 2026-10-26 23:08:15
+Written: 2026-10-26 23:27:18
 Language: English
 
 Loaded plugins:

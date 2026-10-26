@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace CraftingOverhaul.Biomes.Collectors
 {
     /// <summary>
-    ///     Buildable pieces that produce items: planted crops (via the grown pickable), beehives and sap collectors.
+    ///     Buildable pieces that produce items: planted crops (via the grown pickable), beehives, sap collectors and wisp fountains.
     ///     The produce needs whatever it takes to build the piece, e.g. carrot seeds for carrots.
     /// </summary>
     internal sealed class ProducerPieceCollector : ISourceCollector
@@ -44,6 +44,16 @@ namespace CraftingOverhaul.Biomes.Collectors
                 if (hive && hive.m_honeyItem)
                 {
                     Add(sources, new ItemSource { Name = hive.m_honeyItem.gameObject.name, Origin = "Beehive" }, piece, prefab.name);
+                }
+
+                // Wisp fountain: lures wisps that are then picked.
+                var wisps = prefab.GetComponent<WispSpawner>();
+                if (wisps && wisps.m_wispPrefab)
+                {
+                    foreach (var found in PrefabWalker.Walk(wisps.m_wispPrefab))
+                    {
+                        Add(sources, found, piece, prefab.name);
+                    }
                 }
 
                 var sap = prefab.GetComponent<SapCollector>();

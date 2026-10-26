@@ -17,7 +17,6 @@ AxeStone,Stone Axe,Meadows,False,Recipes,Recipe Recipe_AxeStone
 AxeWood,Wooden Axe,Meadows,False,Locations,Location ShipSetting01 > ShipSetting01 > Container
 BarberKit,Barber Kit,Meadows,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 BeechSeeds,Beech Seeds,Meadows,False,Vegetation,Beech1 > Tree
-BloodGoldKey,Intricate Key,Meadows,False,Spawns,JotunWitch > CharacterDrop
 BoneFragments,Bone Fragments,Meadows,False,Locations,Location Dolmen01 > Dolmen01 > Pickable
 Bow,Crude Bow,Meadows,False,Recipes,Recipe Recipe_Bow @ piece_workbench
 CapeDeerHide,Deer Hide Cape,Meadows,False,Recipes,Recipe Recipe_CapeDeerHide @ piece_workbench
@@ -28,7 +27,6 @@ CookedMeat,Cooked Boar Meat,Meadows,False,Conversions,piece_cookingstation: RawM
 Dandelion,Dandelion,Meadows,False,Vegetation,Pickable_Dandelion > Pickable
 DeerHide,Deer Hide,Meadows,False,Spawns,Deer > CharacterDrop
 DeerMeat,Deer Meat,Meadows,False,Spawns,Deer > CharacterDrop
-ElakingHairBundle,Elaking Hair Bundle,Meadows,False,Spawns,Elaking > CharacterDrop
 Entrails,Entrails,Meadows,False,Locations,Location WoodVillage1 > Room > meadowsvillage_greathall > CreatureSpawner > CharacterDrop
 Feathers,Feathers,Meadows,False,Vegetation,Beech1 > Tree
 Fish1,Perch,Meadows,False,Spawns,Fish1
@@ -48,23 +46,10 @@ KnifeFlint,Flint Knife,Meadows,False,Recipes,Recipe Recipe_KnifeFlint @ piece_wo
 KnifeWood,Wooden Knife,Meadows,False,Locations,Location ShipSetting01 > ShipSetting01 > Container
 Lantern_DN,Salvaged Lantern,Meadows,False,Vegetation,deepnorth_lantern_standing > DropOnDestroyed
 LeatherScraps,Leather Scraps,Meadows,False,Spawns,Boar > CharacterDrop
-Leatherstraps,Leather Straps,Meadows,False,Spawns,JotunWarrior > CharacterDrop
 MaceWood,Wooden Mace,Meadows,False,Locations,Location WoodVillage1 > Room > meadowsvillage_greathall > Container
-MemorialCoal,Memorial Coal,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-MoldArmorGoldChest,Mould: Breastplate of the Protector,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-MoldArmorGoldHelmet,Mould: Helmet of the Protector,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-MoldArmorGoldLegs,Mould: Trousers of the Protector,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-MoldArmorMageChest,Mould: Robes of the Caller,Meadows,False,Spawns,JotunWitch > CharacterDrop
-MoldArmorMageHelmet,Mould: Headdress of the Caller,Meadows,False,Spawns,JotunWitch > CharacterDrop
-MoldArmorMageLegs,Mould: Trousers of the Caller,Meadows,False,Spawns,JotunWitch > CharacterDrop
-MoldArmormediumChest,Mould: Chestpiece of the Vanguard,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-MoldArmorMediumHelmet,Mould: Hood of the Vanguard,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-MoldArmorMediumLegs,Mould: Trousers of the Vanguard,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-MoldKeys,Mould: Intricate Key,Meadows,False,Spawns,Elaking > CharacterDrop
 Mushroom,Mushroom,Meadows,False,Vegetation,Pickable_Mushroom > Pickable
 NeckTail,Neck Tail,Meadows,False,Spawns,Neck > CharacterDrop
 NeckTailGrilled,Grilled Neck Tail,Meadows,False,Conversions,piece_cookingstation: NeckTail > NeckTailGrilled
-NornThread,Nornathread,Meadows,False,Spawns,JotunWitch > CharacterDrop
 PickaxeAntler,Antler Pickaxe,Meadows,False,Recipes,Recipe Recipe_PickaxeAntler @ piece_workbench
 QueenBee,Queen Bee,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > DropOnDestroyed
 Raspberry,Raspberries,Meadows,False,Vegetation,RaspberryBush > Pickable
@@ -83,10 +68,7 @@ TrophyDeer,Deer Trophy,Meadows,False,Spawns,Deer > CharacterDrop
 TrophyDraugr,Draugr Trophy,Meadows,False,Locations,Location WoodVillage1 > Room > meadowsvillage_greathall > CreatureSpawner > CharacterDrop
 TrophyDraugrElite,Draugr Elite Trophy,Meadows,False,Locations,Location WoodVillage1 > Room > meadowsvillage_greathall > CreatureSpawner > CharacterDrop
 TrophyEikthyr,Eikthyr Trophy,Meadows,False,Locations,Location Eikthyrnir > Eikthyrnir > OfferingBowl > CharacterDrop
-TrophyElaking,Elaking Trophy,Meadows,False,Spawns,Elaking > CharacterDrop
 TrophyGreydwarf,Greydwarf Trophy,Meadows,False,Locations,Location WoodHouse6 > WoodHouse6 > CreatureSpawner > CharacterDrop
-TrophyJotunWarrior,Krigen Trophy,Meadows,False,Spawns,JotunWarrior > CharacterDrop
-TrophyJotunWitch,Hexen Trophy,Meadows,False,Spawns,JotunWitch > CharacterDrop
 TrophyNeck,Neck Trophy,Meadows,False,Spawns,Neck > CharacterDrop
 TrophySkeleton,Skeleton Trophy,Meadows,False,Locations,Location Dolmen01 > Dolmen01 > CreatureSpawner > CharacterDrop
 Upgrader0Armor,Wooden Protection Idol,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > Container
@@ -100,8 +82,16 @@ ArmorBerserkerChest,Patterns of the Bear,BlackForest,False,Recipes,Recipe Recipe
 ArmorBerserkerLegs,Loincloth of the Bear,BlackForest,False,Recipes,Recipe Recipe_ArmorBerserkerLegs @ piece_workbench
 ArmorBronzeChest,Bronze Plate Tunic,BlackForest,False,Recipes,Recipe Recipe_ArmorBronzeChest @ forge
 ArmorBronzeLegs,Bronze Plate Leggings,BlackForest,False,Recipes,Recipe Recipe_ArmorBronzeLegs @ forge
+ArmorDress1,Plain Brown Dress,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress4,Plain Blue Dress,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress7,Plain Yellow Dress,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorHarvester1,Harvest Tunic,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorHarvester2,Harvest Dress,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorTrollLeatherChest,Troll Leather Tunic,BlackForest,False,Recipes,Recipe Recipe_ArmorTrollLeatherChest @ piece_workbench
 ArmorTrollLeatherLegs,Troll Leather Trousers,BlackForest,False,Recipes,Recipe Recipe_ArmorTrollLeatherLegs @ piece_workbench
+ArmorTunic1,Plain Blue Tunic,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic4,Plain Red Tunic,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic7,Plain Yellow Tunic,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 ArrowBronze,Bronzehead Arrow,BlackForest,False,Recipes,Recipe Recipe_ArrowBronze @ forge
 AtgeirBronze,Bronze Atgeir,BlackForest,False,Recipes,Recipe Recipe_AtgeirBronze @ forge
 AxeBronze,Bronze Axe,BlackForest,False,Recipes,Recipe Recipe_AxeBronze @ forge
@@ -140,7 +130,10 @@ FistBjornClaw,Paws of the Bear,BlackForest,False,Recipes,Recipe Recipe_FistBjorn
 HelmetBronze,Bronze Helmet,BlackForest,False,Recipes,Recipe Recipe_HelmetBronze @ forge
 HelmetCelebration,Celebratory Cap,BlackForest,False,Recipes,Recipe Recipe_HelmetCelebration @ piece_workbench
 HelmetDverger,Dverger Circlet,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
+HelmetHat1,Blue Tied Headscarf,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat3,Brown Fur Cap,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetOdin,Hood of Oden,BlackForest,False,Recipes,Recipe Recipe_HelmetOdin @ piece_workbench
+HelmetStrawHat,Straw Hat,BlackForest,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetTrollLeather,Troll Leather Hood,BlackForest,False,Recipes,Recipe Recipe_HelmetTrollLeather @ piece_workbench
 HelmetYule,Yule Hat,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
 KnifeButcher,Butcher Knife,BlackForest,False,Recipes,Recipe Recipe_KnifeButcher @ forge
@@ -179,6 +172,10 @@ Tin,Tin,BlackForest,False,Conversions,smelter: TinOre > Tin
 TinOre,Tin Ore,BlackForest,False,Vegetation,MineRock_Tin > DropOnDestroyed
 TrinketBronzeHealth,Heart of the Forest,BlackForest,False,Recipes,Recipe Recipe_TrinketBronzeHealth @ forge
 TrinketBronzeStamina,Bronze Pendant,BlackForest,False,Recipes,Recipe Recipe_TrinketBronzeStamina @ forge
+troll_groundslam,slap,BlackForest,False,Spawns,Troll > Creature attack Troll
+troll_log_swing_h,LOG,BlackForest,False,Spawns,Troll > Creature attack Troll
+troll_log_swing_v,LOG,BlackForest,False,Spawns,Troll > Creature attack Troll
+troll_punch,slap,BlackForest,False,Spawns,Troll > Creature attack Troll
 TrollHide,Troll Hide,BlackForest,False,Spawns,Troll > CharacterDrop
 TrophyBjorn,Bear Trophy,BlackForest,False,Spawns,Bjorn > CharacterDrop
 TrophyFrostTroll,Troll Trophy,BlackForest,False,Spawns,Troll > CharacterDrop
@@ -191,6 +188,9 @@ TrophyTheElder,The Elder Trophy,BlackForest,False,Locations,Location GDKing > GD
 Upgrader2Armor,Iron Protection Idol,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_room1 > Container
 Upgrader2Weapon,Iron Battle Idol,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_room1 > Container
 YmirRemains,Ymir Flesh,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
+Abomination_attack1,Swing attack,Swamp,False,Spawns,Abomination > Creature attack Abomination
+Abomination_attack2,Slam attack,Swamp,False,Spawns,Abomination > Creature attack Abomination
+Abomination_attack3,Stub to the ground,Swamp,False,Spawns,Abomination > Creature attack Abomination
 ArmorIronChest,Iron Scale Mail,Swamp,False,Recipes,Recipe Recipe_ArmorIronChest @ forge
 ArmorIronLegs,Iron Greaves,Swamp,False,Recipes,Recipe Recipe_ArmorIronLegs @ forge
 ArmorRootChest,Root Harnesk,Swamp,False,Recipes,Recipe Recipe_ArmorRootChest @ piece_workbench
@@ -289,8 +289,14 @@ SpearChitin,Abyssal Harpoon,Ocean,False,Recipes,Recipe Recipe_SpearChitin @ piec
 SpiceOceans,Seafarer's Herbs,Ocean,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 TrinketChitinSwim,Fins of Destiny,Ocean,False,Recipes,Recipe Recipe_TrinketChitinSwim @ forge
 TrophySerpent,Serpent Trophy,Ocean,False,Spawns,Serpent > CharacterDrop
+ArmorDress2,Brown Dress with Shawl,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress5,Blue Dress with Shawl,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress8,Yellow Dress with Shawl,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorFenringChest,Fenris Coat,Mountain,False,Recipes,Recipe Recipe_ArmorFenrirChest @ piece_workbench
 ArmorFenringLegs,Fenris Leggings,Mountain,False,Recipes,Recipe Recipe_ArmorFenrirLegs @ piece_workbench
+ArmorTunic2,Blue Tunic with Cape,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic5,Red Tunic with Cape,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic8,Yellow Tunic with Cape,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorWolfChest,Wolf Hide Chestpiece,Mountain,False,Recipes,Recipe Recipe_ArmorWolfChest @ forge
 ArmorWolfLegs,Wolf Hide Trousers,Mountain,False,Recipes,Recipe Recipe_ArmorWolfLegs @ forge
 ArrowFrost,Frost Arrow,Mountain,False,Recipes,Recipe Recipe_ArrowFrost @ piece_workbench
@@ -317,6 +323,9 @@ FragrantBundle,Fragrant Bundle,Mountain,False,Locations,Location BogWitch_Camp >
 FreezeGland,Freeze Gland,Mountain,False,Spawns,Hatchling > CharacterDrop
 HelmetDrake,Drake Helmet,Mountain,False,Recipes,Recipe Recipe_HelmetDrake @ forge
 HelmetFenring,Fenris Hood,Mountain,False,Recipes,Recipe Recipe_HelmetFenrir @ piece_workbench
+HelmetHat2,Green Twisted Headscarf,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat4,Extravagant Green Cap,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat6,Yellow Tied Headscarf,Mountain,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 JuteRed,Red Jute,Mountain,False,Locations,Location MountainCave02 > Room > cave_shrine_lootencap05 > DropOnDestroyed
 KnifeSilver,Silver Knife,Mountain,False,Recipes,Recipe Recipe_KnifeSilver @ forge
 MaceSilver,Frostner,Mountain,False,Recipes,Recipe Recipe_MaceSilver @ forge
@@ -358,10 +367,16 @@ WolfMeatSkewer,Wolf Skewer,Mountain,False,Recipes,Recipe Recipe_WolfSkewer @ pie
 WolfPelt,Wolf Pelt,Mountain,False,Spawns,Wolf > CharacterDrop
 ArmorBerserkerUndeadChest,Vilebone Cage,Plains,False,Recipes,Recipe Recipe_ArmorBerserkerUndeadChest @ forge
 ArmorBerserkerUndeadLegs,Vilebone Drapes,Plains,False,Recipes,Recipe Recipe_ArmorBerserkerUndeadLegs @ forge
+ArmorDress3,Brown Dress with Beads,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress6,Blue Dress with Beads,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorDress9,Yellow Dress with Beads,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 ArmorLoxChest,Lox Fur Jacket,Plains,False,Recipes,Recipe Recipe_ArmorLoxChest @ piece_workbench
 ArmorLoxLegs,Lox Fur Trousers,Plains,False,Recipes,Recipe Recipe_ArmorLoxLegs @ piece_workbench
 ArmorPaddedCuirass,Padded Cuirass,Plains,False,Recipes,Recipe Recipe_ArmorPaddedCuirass @ forge
 ArmorPaddedGreaves,Padded Greaves,Plains,False,Recipes,Recipe Recipe_ArmorPaddedGreaves @ forge
+ArmorTunic3,Blue Tunic with Beads,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic6,Red Tunic with Beads,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+ArmorTunic9,Yellow Tunic with Beads,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 ArrowNeedle,Needle Arrow,Plains,False,Recipes,Recipe Recipe_ArrowNeedle @ piece_workbench
 AtgeirBlackmetal,Black Metal Atgeir,Plains,False,Recipes,Recipe Recipe_AtgeirBlackmetal @ forge
 AtgeirWood,Wooden Atgeir,Plains,False,Locations,Location StoneHouse1_heath > StoneHouse1_heath > Container
@@ -381,18 +396,34 @@ CapeLinen,Linen Cape,Plains,False,Recipes,Recipe Recipe_CapeLinen @ piece_workbe
 CapeLox,Lox Cape,Plains,False,Recipes,Recipe Recipe_CapeLox @ piece_workbench
 chest_hildir3,Hildir's Bronze Chest,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > CharacterDrop > CharacterDrop
 ChickenEgg,Egg,Plains,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
+ChickenMeat,Chicken Meat,Plains,False,Hatching,ChickenEgg hatches > Chicken > CharacterDrop
 Cloudberry,Cloudberries,Plains,False,Vegetation,CloudberryBush > Pickable
+CookedChickenMeat,Cooked Chicken Meat,Plains,False,Conversions,piece_cookingstation: ChickenMeat > CookedChickenMeat
 CookedEgg,Cooked Egg,Plains,False,Recipes,Recipe Recipe_CookedEgg @ piece_cauldron
 CookedLoxMeat,Cooked Lox Meat,Plains,False,Conversions,piece_cookingstation_iron: LoxMeat > CookedLoxMeat
 FeastPlains_Material,Plains Pie Picnic,Plains,False,Recipes,Recipe Recipe_FeastPlains @ piece_preptable
+FireworksRocket_Blue,Blue Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksBlue @ piece_workbench
+FireworksRocket_Cyan,Cyan Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksCyan @ piece_workbench
+FireworksRocket_Green,Green Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksGreen @ piece_workbench
+FireworksRocket_Purple,Purple Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksPurple @ piece_workbench
+FireworksRocket_Red,Red Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksRed @ piece_workbench
+FireworksRocket_White,Basic Fireworks,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+FireworksRocket_Yellow,Yellow Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksYellow @ piece_workbench
 Fish7,Grouper,Plains,False,Spawns,Fish7
 FishingBaitMistlands,Misty Fishing Bait,Plains,False,Recipes,Recipe Recipe_FishingBaitMistlands @ piece_preptable
 FishingBaitPlains,Stingy Fishing Bait,Plains,False,Recipes,Recipe Recipe_FishingBaitPlains @ piece_preptable
 FistBjornUndeadClaw,Vilebone Maulclaws,Plains,False,Recipes,Recipe Recipe_FistUnbjornClaw @ forge
 Flax,Flax,Plains,False,Locations,Location GoblinCamp2 > Room > gobvill_flax > Pickable
+GoblinBrute_Attack,Brute sword,Plains,False,Spawns,GoblinBrute > Creature attack GoblinBrute
+GoblinBrute_RageAttack,Brute sword,Plains,False,Spawns,GoblinBrute > Creature attack GoblinBrute
+GoblinBruteBros_Attack,Brute sword,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > Creature attack GoblinBruteBros
+GoblinBruteBros_RageAttack,Brute sword,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > Creature attack GoblinBruteBros
 GoblinTotem,Fuling Totem,Plains,False,Spawns,GoblinBrute > CharacterDrop
 HelmetBerserkerHood,Headdress of the Bear,Plains,False,Recipes,Recipe Recipe_HelmetBerserker @ piece_workbench
 HelmetBerserkerUndead,Vilebone Visage,Plains,False,Recipes,Recipe Recipe_HelmetBerserkerUndead @ forge
+HelmetHat7,Red Twisted Headscarf,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat8,Grey Fur Cap,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
+HelmetHat9,Extravagant Orange Cap,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetLox,Lox Fur Hood,Plains,False,Recipes,Recipe Recipe_HelmetLox @ piece_workbench
 HelmetPadded,Padded Helmet,Plains,False,Recipes,Recipe Recipe_HelmetPadded @ forge
 KnifeBlackMetal,Black Metal Knife,Plains,False,Recipes,Recipe Recipe_KnifeBlackmetal @ forge
@@ -473,6 +504,8 @@ GrapplingHook,Grappling Hook,Mistlands,False,Recipes,Recipe Recipe_GrapplingHook
 HareMeat,Hare Meat,Mistlands,False,Spawns,Hare > CharacterDrop
 HelmetCarapace,Carapace Helmet,Mistlands,False,Recipes,Recipe Recipe_HelmetCarapace @ blackforge
 HelmetMage,Eitr-weave Hood,Mistlands,False,Recipes,Recipe Recipe_HelmetMage @ piece_magetable
+HoneyGlazedChicken,Honey Glazed Chicken,Mistlands,False,Conversions,piece_oven: HoneyGlazedChickenUncooked > HoneyGlazedChicken
+HoneyGlazedChickenUncooked,Uncooked Honey Glazed Chicken,Mistlands,False,Recipes,Recipe Recipe_HoneyGlazedChicken @ piece_preptable
 Hook,Hook,Mistlands,False,Locations,Location Mistlands_GuardTower1_ruined_new > Mistlands_GuardTower1_ruined_new > Container
 JuteBlue,Blue Jute,Mistlands,False,Locations,Location Mistlands_GuardTower1_new > Mistlands_GuardTower1_new > DropOnDestroyed
 KnifeSkollAndHati,Skoll and Hati,Mistlands,False,Recipes,Recipe Recipe_KnifeSkollAndHati @ blackforge
@@ -504,7 +537,11 @@ RoyalJelly,Royal Jelly,Mistlands,False,Locations,Location Mistlands_DvergrTownEn
 Salad,Salad,Mistlands,False,Recipes,Recipe Recipe_Salad @ piece_cauldron
 Sap,Sap,Mistlands,False,Producers,piece_sapcollector > SapCollector
 ScaleHide,Scale Hide,Mistlands,False,Spawns,Hare > CharacterDrop
+seeker_land,land,Mistlands,False,Spawns,Seeker > Creature attack Seeker
+seeker_takeoff,takeoff,Mistlands,False,Spawns,Seeker > Creature attack Seeker
 SeekerAspic,Seeker Aspic,Mistlands,False,Recipes,Recipe Recipe_SeekerAspic @ piece_cauldron
+SeekerBrute_groundslam,slap,Mistlands,False,Spawns,SeekerBrute > Creature attack SeekerBrute
+SeekerBrute_ram,Dragon claw left,Mistlands,False,Spawns,SeekerBrute > Creature attack SeekerBrute
 ShieldCarapace,Carapace Shield,Mistlands,False,Recipes,Recipe Recipe_ShieldCarapace @ blackforge
 ShieldCarapaceBuckler,Carapace Buckler,Mistlands,False,Recipes,Recipe Recipe_ShieldCarapaceBuckler @ blackforge
 ShieldCore,Shield Core,Mistlands,False,Recipes,Recipe Recipe_ShieldCore @ piece_artisanstation
@@ -539,10 +576,12 @@ ArmorMageLegs_Ashlands,Trousers of Embla,Ashlands,False,Recipes,Recipe Recipe_Ar
 ArrowCharred,Charred Arrow,Ashlands,False,Recipes,Recipe Recipe_ArrowCharred @ blackforge
 AskBladder,Asksvin Bladder,Ashlands,False,Spawns,Asksvin > CharacterDrop
 AskHide,Asksvin Hide,Ashlands,False,Spawns,Asksvin > CharacterDrop
+Asksvin_Headbutt,Dragon claw left,Ashlands,False,Spawns,Asksvin > Creature attack Asksvin
 AsksvinCarrionNeck,Asksvin Neck,Ashlands,False,Locations,Location VoltureNest > VoltureNest > DropOnDestroyed
 AsksvinCarrionPelvic,Asksvin Pelvis,Ashlands,False,Locations,Location VoltureNest > VoltureNest > DropOnDestroyed
 AsksvinCarrionRibcage,Asksvin Ribcage,Ashlands,False,Locations,Location VoltureNest > VoltureNest > DropOnDestroyed
 AsksvinCarrionSkull,Asksvin Skull,Ashlands,False,Locations,Location VoltureNest > VoltureNest > DropOnDestroyed
+AsksvinEgg,Asksvin Egg,Ashlands,False,Spawns,Asksvin > Offspring
 AsksvinMeat,Asksvin Tail,Ashlands,False,Spawns,Asksvin > CharacterDrop
 AxeBerzerkr,Berserkir Axes,Ashlands,False,Recipes,Recipe Recipe_AxeBerzerkr @ blackforge
 Bell,Bell,Ashlands,False,Recipes,Recipe Recipe_Bell @ blackforge
@@ -579,7 +618,7 @@ FierySvinstew,Fiery Svinstew,Ashlands,False,Recipes,Recipe Recipe_FierySvinstew 
 Fish11,Magmafish,Ashlands,False,Spawns,Fish11
 FishingBaitAshlands,Hot Fishing Bait,Ashlands,False,Recipes,Recipe Recipe_FishingBaitAshlands @ piece_preptable
 FlametalNew,Flametal,Ashlands,False,Conversions,blastfurnace: FlametalOreNew > FlametalNew
-FlametalOreNew,Flametal Ore,Ashlands,False,Locations,Location CharredTowerRuins1_dvergr > CharredTowerRuins1_dvergr > DropOnDestroyed
+FlametalOreNew,Flametal Ore,Ashlands,False,Locations,Location LeviathanLava > LeviathanLava > MineRock
 Grausten,Grausten,Ashlands,False,Vegetation,cliff_ashlands2 > Destructible > MineRock
 HelmetAshlandsMediumHood,Hood of Ask,Ashlands,False,Recipes,Recipe Recipe_HelmetMedium_Ashlands @ blackforge
 HelmetFlametal,Flametal Helmet,Ashlands,False,Recipes,Recipe Recipe_HelmetFlametal @ blackforge
@@ -590,6 +629,13 @@ MashedMeat,Mashed Meat,Ashlands,False,Recipes,Recipe Recipe_MashedMeat @ piece_c
 MeadBaseHealthLingering,Mead Base: Lingering Health,Ashlands,False,Recipes,Recipe Recipe_MeadBaseHealthLingering @ piece_MeadCauldron
 MeadHealthLingering,Lingering Healing Mead,Ashlands,False,Conversions,fermenter: MeadBaseHealthLingering > MeadHealthLingering
 MoltenCore,Molten Core,Ashlands,False,Locations,Location PlaceofMystery1 > PlaceofMystery1 > Pickable
+Morgen_bite,Dragon claw left,Ashlands,False,Spawns,Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_roll_left,Morgen Roll Left,Ashlands,False,Spawns,Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_roll_right,Morgen Roll Right,Ashlands,False,Spawns,Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_1,Dragon claw left,Ashlands,False,Spawns,Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_2,Dragon claw left,Ashlands,False,Spawns,Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_3,Dragon claw left,Ashlands,False,Spawns,Morgen_NonSleeping > Creature attack Morgen_NonSleeping
+Morgen_swipe_4,Dragon claw left,Ashlands,False,Spawns,Morgen_NonSleeping > Creature attack Morgen_NonSleeping
 MorgenHeart,Morgen Heart,Ashlands,False,Spawns,Morgen_NonSleeping > CharacterDrop
 MorgenSinew,Morgen Sinew,Ashlands,False,Spawns,Morgen_NonSleeping > CharacterDrop
 MushroomSmokePuff,Smoke Puff,Ashlands,False,Vegetation,Pickable_SmokePuff > Pickable
@@ -634,23 +680,70 @@ AncientGemstoneBlack,Draumyx,DeepNorth,False,Locations,Location MorkBorg > MorkB
 AncientGemstoneGreen,Grimvarn,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pickable
 AncientGemstoneOrange,Solryth,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pickable
 AncientGemstonePurple,Veydris,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pickable
+ArmorDeepNorthHeavyChest,Breastplate of the Protector,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldChest @ blackforge
+ArmorDeepNorthHeavylegs,Trousers of the Protector,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldLegs @ blackforge
+ArmorDeepNorthMageChest,Robes of the Caller,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMageChest @ piece_magetable
+ArmorDeepNorthMagelegs,Trousers of the Caller,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMageLegs @ piece_magetable
+ArmorDeepNorthMediumChest,Chestpiece of the Vanguard,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMediumChest @ blackforge
+ArmorDeepNorthMediumlegs,Trousers of the Vanguard,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMediumLegs @ blackforge
+ArmorGoldHeavyChestUncooked,Cast: Breastplate of the Protector,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldChestUncooked @ blackforge
+ArmorGoldHeavyHelmetUncooked,Cast: Helmet of the Protector,DeepNorth,False,Recipes,Recipe Recipe_HelmetGoldUncooked @ blackforge
+ArmorGoldHeavyLegsUncooked,Cast: Trousers of the Protector,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldLegsUncooked @ blackforge
+ArmorGoldMageChestUncooked,Cast: Robes of the Caller,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMageChestUncooked @ piece_magetable
 ArmorGoldMageHelmetUncooked,Cast: Headdress of the Caller,DeepNorth,False,Recipes,Recipe Recipe_HelmetGoldMageUncooked @ piece_magetable
+ArmorGoldMageLegsUncooked,Cast: Trousers of the Caller,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMageLegsUncooked @ piece_magetable
+ArmorGoldMediumChestUncooked,Cast: Chestpiece of the Vanguard,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMediumChestUncooked @ blackforge
 ArmorGoldMediumHelmetUncooked,Cast: Hood of the Vanguard,DeepNorth,False,Recipes,Recipe Recipe_HelmetGoldMediumUncooked @ blackforge
+ArmorGoldMediumLegsUncooked,Cast: Trousers of the Vanguard,DeepNorth,False,Recipes,Recipe Recipe_ArmorGoldMediumLegsUncooked @ blackforge
+ArrowBloodGold,Bloodgold Arrow,DeepNorth,False,Recipes,Recipe Recipe_ArrowBloodGold @ blackforge
+AtgeirGold,Nord Atgeir,DeepNorth,False,Recipes,Recipe Recipe_AtgeirGold @ blackforge
+AtgeirGold_BloodLightning,Thunderblood Atgeir,DeepNorth,False,Recipes,Recipe Recipe_AtgeirGold_BloodLightning @ blackforge
+AtgeirGold_FrostFire,Frostfire Atgeir,DeepNorth,False,Recipes,Recipe Recipe_AtgeirGold_FrostFire @ blackforge
+AtgeirGoldUncooked,Cast: Nord Atgeir,DeepNorth,False,Recipes,Recipe Recipe_AtgeirGoldUncooked @ blackforge
 AxeBerzerkrBlood,Bleeding Berserkir Axes,DeepNorth,False,Recipes,Recipe Recipe_AxeBerzerkr_Blood @ blackforge
 AxeBerzerkrLightning,Thundering Berserkir Axes,DeepNorth,False,Recipes,Recipe Recipe_AxeBerzerkr_Lightning @ blackforge
 AxeBerzerkrNature,Primal Berserkir Axes,DeepNorth,False,Recipes,Recipe Recipe_AxeBerzerkr_Nature @ blackforge
+AxeGold,Nord Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGold @ blackforge
+AxeGold_BloodLightning,Thunderblood Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGold_BloodLightning @ blackforge
+AxeGold_FrostFire,Frostfire Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGold_FrostFire @ blackforge
+AxeGoldUncooked,Cast: Nord Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGoldUncooked @ blackforge
 BakedPoteitr,Baked Poteitr,DeepNorth,False,Conversions,piece_oven: BakedPoteitrUncooked > BakedPoteitr
 BakedPoteitrUncooked,Unbaked Poteitr,DeepNorth,False,Recipes,Recipe Recipe_BakedPoteitr @ piece_cauldron
+Barka_Backslam,Barka Backslam,DeepNorth,False,Spawns,Barka > Creature attack Barka
+Barka_HeavySwing,Dragon claw left,DeepNorth,False,Spawns,Barka > Creature attack Barka
+Barka_SlamDrive,Dragon claw left,DeepNorth,False,Spawns,Barka > Creature attack Barka
+Barka_WhipFlurry,Dragon claw left,DeepNorth,False,Spawns,Barka > Creature attack Barka
+Barka_WhipSlam,Dragon claw left,DeepNorth,False,Spawns,Barka > Creature attack Barka
 BarkaBranch,Frozen Branch,DeepNorth,False,Spawns,Barka > CharacterDrop
+BattleaxeGold,Nord Greataxe,DeepNorth,False,Recipes,Recipe Recipe_BattleaxeGold @ blackforge
+BattleaxeGold_BloodLightning,Thunderblood Greataxe,DeepNorth,False,Recipes,Recipe Recipe_BattleaxeGold_BloodLightning @ blackforge
+BattleaxeGold_FrostFire,Frostfire Greataxe,DeepNorth,False,Recipes,Recipe Recipe_BattleaxeGold_FrostFire @ blackforge
+BattleaxeGoldUncooked,Cast: Nord Greataxe,DeepNorth,False,Recipes,Recipe Recipe_BattleaxeGoldUncooked @ blackforge
+BloodGoldKey,Intricate Key,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
+BoltBloodGold,Bloodgold Bolt,DeepNorth,False,Recipes,Recipe Recipe_BoltBloodGold @ blackforge
 BombBlob_Morkhalla,Blob Bomb: Pulp,DeepNorth,False,Recipes,Recipe Recipe_BombBlob_Morkhalla @ piece_workbench
 BowAshlandsBlood,Blood Fang,DeepNorth,False,Recipes,Recipe Recipe_BowAshlands_Blood @ blackforge
 BowAshlandsRoot,Root Fang,DeepNorth,False,Recipes,Recipe Recipe_BowAshlands_Nature @ blackforge
 BowAshlandsStorm,Storm Fang,DeepNorth,False,Recipes,Recipe Recipe_BowAshlands_Lightning @ blackforge
+BowGold,Nord Bow,DeepNorth,False,Recipes,Recipe Recipe_BowGold @ blackforge
+BowGold_BloodLightning,Thunderblood Bow,DeepNorth,False,Recipes,Recipe Recipe_BowGold_BloodLightning @ blackforge
+BowGold_FrostFire,Frostfire Bow,DeepNorth,False,Recipes,Recipe Recipe_BowGold_FrostFire @ blackforge
+BowGoldUncooked,Cast: Nord Bow,DeepNorth,False,Recipes,Recipe Recipe_BowGoldUncooked @ blackforge
+CapeDeepNorth,Moose Hide Cape,DeepNorth,False,Recipes,Recipe Recipe_CapeDeepNorth @ blackforge
+CapeDeepNorthMage,Cape of the Caller,DeepNorth,False,Recipes,Recipe Recipe_CapeDeepNorthMage @ piece_magetable
+Catapult_Ammo_BloodGold,Bloodgold Payload,DeepNorth,False,Recipes,Recipe Recipe_Catapult_Ammo_BloodGold @ blackforge
 CookedMooseMeat,Cooked Moose Meat,DeepNorth,False,Conversions,piece_cookingstation_iron: MooseMeat > CookedMooseMeat
 CookedSealBlubber,Cooked Seal Blubber,DeepNorth,False,Conversions,piece_oven: SealBlubber > CookedSealBlubber
+CrossbowGold,Nord Crossbow,DeepNorth,False,Recipes,Recipe Recipe_CrossbowGold @ blackforge
+CrossbowGold_BloodLightning,Thunderblood Crossbow,DeepNorth,False,Recipes,Recipe Recipe_CrossbowGold_BloodLightning @ blackforge
+CrossbowGold_FrostFire,Frostfire Crossbow,DeepNorth,False,Recipes,Recipe Recipe_CrossbowGold_FrostFire @ blackforge
+CrossbowGoldUncooked,Cast: Nord Crossbow,DeepNorth,False,Recipes,Recipe Recipe_CrossbowGoldUncooked @ blackforge
 CrossbowRipperBlood,Wound Ripper,DeepNorth,False,Recipes,Recipe Recipe_CrossbowRipper_Blood @ blackforge
 CrossbowRipperLightning,Storm Ripper,DeepNorth,False,Recipes,Recipe Recipe_CrossbowRipper_Lightning @ blackforge
 CrossbowRipperNature,Root Ripper,DeepNorth,False,Recipes,Recipe Recipe_CrossbowRipper_Nature @ blackforge
+CrownJewel,Crown Jewel,DeepNorth,False,Locations,Location DN_Bossroom > DN_Bossroom > On death > On death > CharacterDrop
+ElakingHairBundle,Elaking Hair Bundle,DeepNorth,False,Spawns,Elaking > CharacterDrop
+FeastDeepNorth_Material,Northern Morning Fare,DeepNorth,False,Recipes,Recipe Recipe_FeastDeepNorth @ piece_preptable
 FeastOceans_Material,Sailor's Bounty,DeepNorth,False,Recipes,Recipe Recipe_FeastOceans @ piece_preptable
 FirConeFrost,Timberwood Cone,DeepNorth,False,Vegetation,SnowFirTree > Tree > Log > Log
 Fish10,Northern Salmon,DeepNorth,False,Spawns,Fish10
@@ -658,12 +751,23 @@ FishCooked,Cooked Fish,DeepNorth,False,Conversions,piece_cookingstation: FishRaw
 FishRaw,Raw Fish,DeepNorth,False,Recipes,Recipe Recipe_Fish1 @ piece_preptable
 FishSoup,Fish Soup,DeepNorth,False,Recipes,Recipe Recipe_FishSoup @ piece_cauldron
 FishWraps,Fish Wraps,DeepNorth,False,Recipes,Recipe Recipe_FishWraps @ piece_cauldron
+FistGold,Nord Knucklechains,DeepNorth,False,Recipes,Recipe Recipe_FistweaponGold @ blackforge
+FistGold_BloodLightning,Thunderblood Knucklechains,DeepNorth,False,Recipes,Recipe Recipe_FistGold_BloodLightning @ blackforge
+FistGold_FrostFire,Frostfire Knucklechains,DeepNorth,False,Recipes,Recipe Recipe_FistGold_FrostFire @ blackforge
+FistGoldUncooked,Cast: Nord Knucklechains,DeepNorth,False,Recipes,Recipe Recipe_FistweaponGoldUncooked @ blackforge
 FrostCore,Frostcore,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors02_alt4 > Pickable
 Frostwood,Timberwood,DeepNorth,False,Vegetation,SnowFirTree > Tree > Log > Log
+FrozenKingDrop,Sacrificial Blood,DeepNorth,False,Locations,Location DN_Bossroom > DN_Bossroom > On death > On death > CharacterDrop
+FW_AxeBronze,Bronze Axe,DeepNorth,False,Locations,Location NorthMemorialPlace > NorthMemorialPlace > OfferingBowl > Creature attack FallenWarrior
+FW_BattleaxeCrystal,Crystal Battleaxe,DeepNorth,False,Locations,Location NorthMemorialPlace > NorthMemorialPlace > OfferingBowl > Creature attack FallenWarrior
 GemstoneBlue,Iolite,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pickable
 GemstoneGreen,Jade,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pickable
 GemstoneRed,Bloodstone,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pickable
 GlowWorm,Luminous Larva,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > Pickable
+Gold,Bloodgold,DeepNorth,False,Conversions,blastfurnace: GoldOre > Gold
+GoldOre,Petrified Tissue,DeepNorth,False,Locations,Location DN_gammeltrollFrac01 > DN_gammeltrollFrac01 > MineRock
+HelmetCrownofValheim,Crown of Valheim,DeepNorth,False,Recipes,Recipe Recipe_HelmetCrownOfValheim @ blackforge
+HelmetDNHeavy,Helmet of the Protector,DeepNorth,False,Recipes,Recipe Recipe_HelmetGold @ blackforge
 HelmetDNMage,Headdress of the Caller,DeepNorth,False,Recipes,Recipe Recipe_HelmetGoldMage @ piece_magetable
 HelmetDNMediumHood,Hood of the Vanguard,DeepNorth,False,Recipes,Recipe Recipe_HelmetGoldMedium @ blackforge
 HelmetFishingHat,Fishing Hat,DeepNorth,False,Recipes,Recipe Recipe_HelmetFishingHat @ piece_workbench
@@ -672,18 +776,39 @@ Kale,Kale,DeepNorth,False,Producers,sapling_Kale > Pickable_Kale > Pickable
 KaleChips,Kale Chips,DeepNorth,False,Conversions,piece_oven: KaleChipsUncooked > KaleChips
 KaleChipsUncooked,Raw Kale Chips,DeepNorth,False,Recipes,Recipe Recipe_KaleChips @ piece_cauldron
 KaleSeeds,Kale Seeds,DeepNorth,False,Vegetation,Pickable_SeedKale > Pickable
+KeysGoldUncooked,Cast: Intricate Key,DeepNorth,False,Recipes,Recipe Recipe_BloodGoldKeyUncooked @ blackforge
+KnifeGold,Nord Dagger,DeepNorth,False,Recipes,Recipe Recipe_KnifeGold @ blackforge
+KnifeGold_BloodLightning,Thunderblood Dagger,DeepNorth,False,Recipes,Recipe Recipe_KnifeGold_BloodLightning @ blackforge
+KnifeGold_FrostFire,Frostfire Dagger,DeepNorth,False,Recipes,Recipe Recipe_KnifeGold_FrostFire @ blackforge
+KnifeGoldUncooked,Cast: Nord Dagger,DeepNorth,False,Recipes,Recipe Recipe_KnifeGoldUncooked @ blackforge
+Leatherstraps,Leather Straps,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
 Lingonberry,Lingonberries,DeepNorth,False,Vegetation,LingonberryBush > Pickable
 Lingondricka,Lingonberry Juice,DeepNorth,False,Recipes,Recipe Recipe_LingonDricka @ piece_cauldron
 MaceEldnerBlood,Bloodgeon,DeepNorth,False,Recipes,Recipe Recipe_MaceEldner_Blood @ blackforge
 MaceEldnerLightning,Storm Star,DeepNorth,False,Recipes,Recipe Recipe_MaceEldner_Lightning @ blackforge
 MaceEldnerNature,Klossen,DeepNorth,False,Recipes,Recipe Recipe_MaceEldner_Nature @ blackforge
+MaceGold,Nord Mace,DeepNorth,False,Recipes,Recipe Recipe_MaceGold @ blackforge
+MaceGold_BloodLightning,Thunderblood Mace,DeepNorth,False,Recipes,Recipe Recipe_MaceGold_BloodLightning @ blackforge
+MaceGold_FrostFire,Frostfire Mace,DeepNorth,False,Recipes,Recipe Recipe_MaceGold_FrostFire @ blackforge
+MaceGoldUncooked,Cast: Nord Mace,DeepNorth,False,Recipes,Recipe Recipe_MaceGoldUncooked @ blackforge
 MeatballsMashedPoteitr,Meatballs and Poteitr,DeepNorth,False,Recipes,Recipe Recipe_MeatballsMashedPoteitr @ piece_cauldron
+MemorialCoal,Memorial Coal,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > DropOnDestroyed
+MoldArmorGoldChest,Mould: Breastplate of the Protector,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorGoldHelmet,Mould: Helmet of the Protector,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorGoldLegs,Mould: Trousers of the Protector,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorMageChest,Mould: Robes of the Caller,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
+MoldArmorMageHelmet,Mould: Headdress of the Caller,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
+MoldArmorMageLegs,Mould: Trousers of the Caller,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
+MoldArmormediumChest,Mould: Chestpiece of the Vanguard,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorMediumHelmet,Mould: Hood of the Vanguard,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+MoldArmorMediumLegs,Mould: Trousers of the Vanguard,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
 MoldAtgeir,Mould: Nord Atgeir,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldAxe,Mould: Nord Axe,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldAxe2H,Mould: Nord Greataxe,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldBow,Mould: Nord Bow,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldCrossbow,Mould: Nord Crossbow,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldFistweapon,Mould: Nord Knucklechains,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
+MoldKeys,Mould: Intricate Key,DeepNorth,False,Spawns,Elaking > CharacterDrop
 MoldKnife,Mould: Nord Dagger,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldMace,Mould: Nord Mace,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
 MoldMace2H,Mould: Nord Sledge,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > DropOnDestroyed
@@ -702,6 +827,7 @@ MooseHide,Moose Hide,DeepNorth,False,Spawns,Moose > CharacterDrop
 MooseKebab,Meat In Bread,DeepNorth,False,Recipes,Recipe Recipe_MooseKebab @ piece_cauldron
 MooseMeat,Moose Meat,DeepNorth,False,Spawns,Moose > CharacterDrop
 MooseSinew,Moose Sinew,DeepNorth,False,Spawns,Moose > CharacterDrop
+NornThread,Nornathread,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
 Oat,Oats,DeepNorth,False,Conversions,windmill: OatSeeds > Oat
 OatFlour,Oat Flour,DeepNorth,False,Conversions,windmill: Oat > OatFlour
 OatmealLingonberryJam,Oatmeal,DeepNorth,False,Recipes,Recipe Recipe_OatmealLingonberryJam @ piece_cauldron
@@ -715,34 +841,74 @@ OvenPancakeUncooked,Oven Pancake Batter,DeepNorth,False,Recipes,Recipe Recipe_Ov
 Pancakes,Pancakes,DeepNorth,False,Recipes,Recipe Recipe_Pancakes @ piece_cauldron
 Poteitr,Poteitr,DeepNorth,False,Producers,sapling_poteitr > Pickable_Poteitr > Pickable
 PoteitrSeeds,Seed Poteitr,DeepNorth,False,Locations,Location NorthVillage > Room > northvillage_granary > Container
+SaddleMoose,Moose Saddle,DeepNorth,False,Recipes,Recipe Recipe_SaddleMoose @ blackforge
 SealBlubber,Seal Blubber,DeepNorth,False,Spawns,Seal > CharacterDrop
 SealHide,Seal Pelt,DeepNorth,False,Spawns,Seal > CharacterDrop
 SealSoup,Seal Meat Soup,DeepNorth,False,Recipes,Recipe Recipe_SealSoup @ piece_cauldron
+ShieldBucklerGoldUncooked,Cast: Nord Buckler,DeepNorth,False,Recipes,Recipe Recipe_ShieldBucklerGoldUncooked @ blackforge
+ShieldGold,Nord Shield,DeepNorth,False,Recipes,Recipe Recipe_ShieldRoundGold @ blackforge
+ShieldGoldBuckler,Nord Buckler,DeepNorth,False,Recipes,Recipe Recipe_ShieldBucklerGold @ blackforge
+ShieldGoldTower,Nord Greatshield,DeepNorth,False,Recipes,Recipe Recipe_ShieldTowerGold @ blackforge
+ShieldRoundGoldUncooked,Cast: Nord Shield,DeepNorth,False,Recipes,Recipe Recipe_ShieldRoundGoldUncooked @ blackforge
+ShieldTowerGoldUncooked,Cast: Nord Greatshield,DeepNorth,False,Recipes,Recipe Recipe_ShieldTowerGoldUncooked @ blackforge
+SledgeGold,Nord Sledge,DeepNorth,False,Recipes,Recipe Recipe_SledgeGold @ blackforge
+SledgeGold_BloodLightning,Thunderblood Sledge,DeepNorth,False,Recipes,Recipe Recipe_SledgeGold_BloodLightning @ blackforge
+SledgeGold_FrostFire,Frostfire Sledge,DeepNorth,False,Recipes,Recipe Recipe_SledgeGold_FrostFire @ blackforge
+SledgeGoldUncooked,Cast: Nord Sledge,DeepNorth,False,Recipes,Recipe Recipe_SledgeGoldUncooked @ blackforge
 SmokedFish,Smoked Fish,DeepNorth,False,Recipes,Recipe Recipe_SmokedFish @ piece_cauldron
 SmokedMooseMeat,Smoked Moose Meat,DeepNorth,False,Recipes,Recipe Recipe_SmokedMooseMeat @ piece_cauldron
 Snowball,Snowball,DeepNorth,False,Vegetation,Pickable_Snowball > Pickable
+SP_AxeBronze,Bronze Axe,DeepNorth,False,Spawns,ShadowPerson > Creature attack ShadowPerson
+SP_BattleaxeCrystal,Crystal Battleaxe,DeepNorth,False,Spawns,ShadowPerson > Creature attack ShadowPerson
+SpearGold,Nord Spear,DeepNorth,False,Recipes,Recipe Recipe_SpearGold @ blackforge
+SpearGold_BloodLightning,Thunderblood Spear,DeepNorth,False,Recipes,Recipe Recipe_SpearGold_BloodLightning @ blackforge
+SpearGold_FrostFire,Frostfire Spear,DeepNorth,False,Recipes,Recipe Recipe_SpearGold_FrostFire @ blackforge
+SpearGoldUncooked,Cast: Nord Spear,DeepNorth,False,Recipes,Recipe Recipe_SpearGoldUncooked @ blackforge
 SpearSplitner_Blood,Splitnir the Bleeding,DeepNorth,False,Recipes,Recipe Recipe_SpearSplitner_Blood @ blackforge
 SpearSplitner_Lightning,Splitnir the Storming,DeepNorth,False,Recipes,Recipe Recipe_SpearSplitner_Lightning @ blackforge
 SpearSplitner_Nature,Splitnir the Primal,DeepNorth,False,Recipes,Recipe Recipe_SpearSplitner_Nature @ blackforge
+SpiceDeepNorth,Seasoning of the Gourd,DeepNorth,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 StaffFrostOrbs,Northern Vengeance,DeepNorth,False,Recipes,Recipe Recipe_StaffFrostOrbs_Upgrade @ piece_magetable
 StaffFrostOrbsUncooked,Cast: Northern Vengeance,DeepNorth,False,Recipes,Recipe Recipe_StaffFrostOrbs @ piece_magetable
 StaffGreenRoots,Staff of the Wild,DeepNorth,False,Recipes,Recipe Recipe_StaffGreenRoots @ piece_magetable
 StaffLightning,Dundr,DeepNorth,False,Recipes,Recipe Recipe_StaffLightning @ piece_magetable
+StaffOrbofAhri,Echo Spike,DeepNorth,False,Recipes,Recipe Recipe_StaffOrbOfAhri_Upgrade @ piece_magetable
+StaffOrbofAhriUncooked,Cast: Echo Spike,DeepNorth,False,Recipes,Recipe Recipe_StaffOrbOfAhri @ piece_magetable
 StaffRedTroll,Trollstav,DeepNorth,False,Recipes,Recipe Recipe_StaffRedTroll @ piece_magetable
 StaffSpiritCaller,Spirit Caller,DeepNorth,False,Recipes,Recipe Recipe_StaffSpiritCaller_Upgrade @ piece_magetable
 StaffSpiritCallerUncooked,Cast: Spirit Caller,DeepNorth,False,Recipes,Recipe Recipe_StaffSpiritCaller @ piece_magetable
+StaffThunderBlood,Lightning Strike,DeepNorth,False,Recipes,Recipe Recipe_StaffThunderBlood_Upgrade @ piece_magetable
+StaffThunderbloodUncooked,Cast: Lightning Strike,DeepNorth,False,Recipes,Recipe Recipe_StaffThunderBlood @ piece_magetable
 SwordDyrnwyn,Dyrnwyn,DeepNorth,False,Recipes,Recipe Recipe_SwordFire @ blackforge
+SwordGold,Nord Sword,DeepNorth,False,Recipes,Recipe Recipe_SwordGold @ blackforge
+SwordGold_BloodLightning,Thunderblood Sword,DeepNorth,False,Recipes,Recipe Recipe_SwordGold_BloodLightning @ blackforge
+SwordGold_FrostFire,Frostfire Sword,DeepNorth,False,Recipes,Recipe Recipe_SwordGold_FrostFire @ blackforge
+SwordGoldUncooked,Cast: Nord Sword,DeepNorth,False,Recipes,Recipe Recipe_SwordGoldUncooked @ blackforge
 SwordNiedhoggBlood,Nidhögg the Bleeding,DeepNorth,False,Recipes,Recipe Recipe_SwordNiedhogg_Blood @ blackforge
 SwordNiedhoggLightning,Nidhögg the Thundering,DeepNorth,False,Recipes,Recipe Recipe_SwordNiedhogg_Lightning @ blackforge
 SwordNiedhoggNature,Nidhögg the Primal,DeepNorth,False,Recipes,Recipe Recipe_SwordNiedhogg_Nature @ blackforge
+THSwordGold,Nord Greatsword,DeepNorth,False,Recipes,Recipe Recipe_THSwordGold @ blackforge
+THSwordGold_BloodLightning,Thunderblood Greatsword,DeepNorth,False,Recipes,Recipe Recipe_THSwordGold_BloodLightning @ blackforge
+THSwordGold_FrostFire,Frostfire Greatsword,DeepNorth,False,Recipes,Recipe Recipe_THSwordGold_FrostFire @ blackforge
+THSwordGoldUncooked,Cast: Nord Greatsword,DeepNorth,False,Recipes,Recipe Recipe_THSwordGoldUncooked @ blackforge
 THSwordSlayerBlood,Brutal Slayer,DeepNorth,False,Recipes,Recipe Recipe_SwordSlayer_Blood @ blackforge
 THSwordSlayerLightning,Scourging Slayer,DeepNorth,False,Recipes,Recipe Recipe_SwordSlayer_Lightning @ blackforge
 THSwordSlayerNature,Primal Slayer,DeepNorth,False,Recipes,Recipe Recipe_SwordSlayer_Nature @ blackforge
+TrinketBloodGoldHealth,Neckstabber,DeepNorth,False,Recipes,Recipe Recipe_TrinketBloodGoldHealth @ blackforge
+TrinketBloodGoldStamina,Witch Crown,DeepNorth,False,Recipes,Recipe Recipe_TrinketBloodGoldStamina @ blackforge
 TrinketFlametalEitr,Jörmundling,DeepNorth,False,Recipes,Recipe Recipe_TrinketFlametalEitr @ blackforge
+trollsnow_groundslam,slap,DeepNorth,False,Spawns,Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
+trollsnow_groundslam_r,slap,DeepNorth,False,Spawns,Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
+trollsnow_punch,slap,DeepNorth,False,Spawns,Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
+trollsnow_punch_r,slap,DeepNorth,False,Spawns,Spawner_TrollFrost > CreatureSpawner > Creature attack TrollFrost
 TrophyBarka,Barka Trophy,DeepNorth,False,Spawns,Barka > CharacterDrop
 TrophyBlob_Morkhalla,Pulp Trophy,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > SpawnArea > CharacterDrop
+TrophyElaking,Elaking Trophy,DeepNorth,False,Spawns,Elaking > CharacterDrop
+TrophyJotunWarrior,Krigen Trophy,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
+TrophyJotunWitch,Hexen Trophy,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
 TrophyMole,Eyeless One Trophy,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors01 > CreatureSpawner > CharacterDrop
 TrophyMoose,Moose Trophy,DeepNorth,False,Spawns,Moose > CharacterDrop
 TrophySeal,Seal Trophy,DeepNorth,False,Spawns,Seal > CharacterDrop
+TurretBoltBloodgold,Bloodgold Missile,DeepNorth,False,Recipes,Recipe Recipe_TurretBoltBloodGold @ piece_artisanstation
 Upgrader7Armor,Bloodgold Protection Idol,DeepNorth,False,Locations,Location NorthVillage > Room > northvillage_tower > Container
 Upgrader7Weapon,Bloodgold Battle Idol,DeepNorth,False,Locations,Location NorthVillage > Room > northvillage_tower > Container

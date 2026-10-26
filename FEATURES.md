@@ -147,7 +147,7 @@ Networking mods that move object ownership around, such as NetworkPerformanceSys
 | Spawns | World spawn tables per biome, and each creature's drops | Deer → deer hide, Meadows |
 | Locations | Locations per biome (loaded on demand): boss altars, traders, camps, villages, and the rooms of their dungeons | Sunken crypt rooms → iron scrap, Swamp |
 | Conversions | Smelters, kilns, spinning wheel, windmill, eitr refinery, fermenter, cooking stations | Copper ore + coal at a smelter → copper |
-| Producers | Planted crops, beehives, sap collectors | Carrot seeds → carrots |
+| Producers | Planted crops, beehives, sap collectors, wisp fountains | Carrot seeds → carrots |
 | Hatching | Items that hatch into creatures | Chicken egg → chicken → chicken meat |
 | Recipes | Crafting recipes, including the crafting station's build cost | Copper + tin at a forge → bronze |
 
@@ -184,6 +184,14 @@ The rules are covered by unit tests (`CraftingOverhaul.Tests`, run with `dotnet 
   - Chicken meat and wisps were unplaced. Eggs hatching, creatures growing up and breeding, and wisp spawners are now followed.
   - Hildir's quest rewards weren't placed: items handed in to a trader to set a quest key are now followed.
   - Still expected to need overrides: Embers (`FaderEmber`, no source found in the data).
+- **Second dump (2026-10-26, 23:27): the fixes worked.** 913 items placed (up from 747) and unplaced recipe ingredients down from 19 to 2:
+  - Every Deep North drop moved out of Meadows.
+  - Bloodgold resolves through the Snow Troll's punch, which places about 100 Nord/Bloodgold items.
+  - The boss phases give the Crown Jewel.
+  - Chickens, Hildir's quest gear and fireworks are placed.
+  - Remaining:
+    - `Wisp`: the Wisp Fountain is a building piece, which the producer rule now covers. Its build cost (Yagluth's drop) may place wisps in Plains although the fountain only works in the Mistlands; add `Wisp:Mistlands` to the overrides if so.
+    - `FaderEmber` (Embers): no source in the game data; needs an override once its in-game source is known.
 - Data now considered: breeding, growing up, egg hatching, on-death spawns, creature attacks as tools, wisp spawners, trader hand-ins (in addition to the collectors listed above).
 - Ocean is treated as its own biome between Swamp and Mountain, so serpent-scale recipes group under Ocean.
 - Loading location prefabs through the game's soft-reference system outside its normal world generation hasn't been tried in-game yet. If it fails, it's logged and those locations are skipped.
@@ -268,6 +276,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- **Second dump analysed:** the biome fixes worked (913 items placed, 2 unplaced). Wisp fountains added to the producer rule. Reference data in `data/game-dump-1.0.20/` replaced with this corrected dump.
 - **Third play-test:** the search box, the grouping button and crafting from nearby chests all work in-game. Category headers now line up with the recipe icons and use the recipe names' font size, and there's a new `HeaderFontSize` setting.
 - **First in-game dump analysed** (Valheim 1.0.20). Biome detection works for the main materials. Fixed the gaps it showed: spawn entries that apply everywhere, boss phases, creature-only tool tiers (Bloodgold), eggs, wisps and trader quest keys. Details under data-driven biome detection. The dump's reference data is saved in `data/game-dump-1.0.20/`.
 - **Second play-test:** the inventory and crafting screens work, categories collapse and expand, and `co_dump` writes its files. The search box didn't appear (see its known issues). Fixed the likely cause and stopped header labels from wrapping. Chest crafting and biome grouping haven't been tested yet.
