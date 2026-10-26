@@ -14,7 +14,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-26 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
-| [Riftforge](#riftforge) | Crafting | Built, untested | — | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
+| [Riftforge](#riftforge) | Crafting | Built, untested | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -288,11 +288,16 @@ New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
 
 *Corruption plugin, design phase 1.*
 
-**What it does in-game:** A new crafting station: a purple-tinted Galdr table with its own station name, so later recipes (maps, corrupted offerings) can target it. It has **no recipes yet**.
+**What it does in-game:** A new crafting station: a red-tinted Galdr table (matching the shard) with its own station name, so later recipes (maps, corrupted offerings) can target it. It has **no recipes yet**.
 
 **How to use it:** Hammer → Crafting tab, built next to a workbench. Recipe: Fine wood ×10, Corruption shard ×1, Eikthyr trophy ×1, Bronze nails ×10, Leather scraps ×10, Surtling core ×2. As with any vanilla piece, it appears in the build menu once you've picked up every ingredient; the shard is normally the last one.
 
-**Config settings:** none yet.
+**Config settings** (per player, restart to apply):
+
+| Setting | Default | Description |
+|---|---|---|
+| `RiftforgeColor` (Look) | `#B3170D` | Tint colour (HTML) |
+| `RiftforgeTintStrength` (Look) | `0.6` | 0 = Galdr table colours, 1 = fully the tint colour |
 
 **Known issues:**
 - Play-test 2026-10-26: not unlocked yet. That's expected: vanilla only shows a piece once a workbench has been seen and **every** ingredient has been picked up (fine wood, shard, Eikthyr trophy, bronze nails, leather scraps, surtling core).
@@ -339,6 +344,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- The Riftforge is now red to match the shard (was purple); its colour and strength are configurable.
 - **Corruption play-test:** the mod loads and the shard spawns. The shard is now deep red (Bloodstone model with a red tint, configurable look). The tint now covers every colour property, which also fixes glow colours staying unchanged.
 - **Corruption plugin started (design phase 1):** new `Corruption` project with the corruption shard (drops from starred creatures and on first boss kills) and the Riftforge station. Shard drop rules are unit-tested; nothing has been tested in-game yet.
 - Building with materials from nearby chests confirmed working in-game. Added `docs/multiplayer-test.md` for the two-player test.

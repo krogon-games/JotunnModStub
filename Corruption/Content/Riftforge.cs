@@ -1,6 +1,7 @@
 using Jotunn.Configs;
 using Jotunn.Entities;
 using Jotunn.Managers;
+using UnityEngine;
 
 namespace Corruption.Content
 {
@@ -41,7 +42,14 @@ namespace Corruption.Content
                 station.m_name = Texts.RiftforgeName;
             }
 
-            Corrupted.Tint(piece.PiecePrefab, Corrupted.Purple, 0.6f);
+            if (ColorUtility.TryParseHtmlString(CorruptionConfig.RiftforgeColor.Value, out var color))
+            {
+                Corrupted.Tint(piece.PiecePrefab, color, CorruptionConfig.RiftforgeTintStrength.Value);
+            }
+            else
+            {
+                Jotunn.Logger.LogWarning($"Riftforge colour '{CorruptionConfig.RiftforgeColor.Value}' isn't a valid HTML colour; tint skipped.");
+            }
             var icon = Corrupted.RenderIcon(piece.PiecePrefab);
             if (icon)
             {

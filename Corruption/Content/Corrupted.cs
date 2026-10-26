@@ -6,8 +6,6 @@ namespace Corruption.Content
     /// <summary>The "corrupted" look: a colour tint on a cloned prefab's own copies of its materials.</summary>
     internal static class Corrupted
     {
-        public static readonly Color Purple = new Color(0.55f, 0.2f, 0.85f, 1f);
-
         /// <summary>
         ///     Recolours every colour property of every material (base colour, emission, glow...), keeping each
         ///     property's brightness. Vanilla shaders use different property names, so all of them are changed.

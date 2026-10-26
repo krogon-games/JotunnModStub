@@ -30,6 +30,8 @@ Look settings (per player, not synced, restart to apply):
 | Look / ShardBaseItem | GemstoneRed | Vanilla item whose model the shard uses |
 | Look / ShardColor | #B3170D | Tint colour |
 | Look / ShardTintStrength | 0.35 | 0 = base colours, 1 = fully the tint colour |
+| Look / RiftforgeColor | #B3170D | Riftforge tint colour |
+| Look / RiftforgeTintStrength | 0.6 | 0 = Galdr table colours, 1 = fully the tint colour |
 
 ## Changelog
 - 0.1.0 (unreleased): corruption shards and the Riftforge.

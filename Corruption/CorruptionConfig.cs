@@ -17,6 +17,8 @@ namespace Corruption
         public static ConfigEntry<string> ShardBasePrefab;
         public static ConfigEntry<string> ShardColor;
         public static ConfigEntry<float> ShardTintStrength;
+        public static ConfigEntry<string> RiftforgeColor;
+        public static ConfigEntry<float> RiftforgeTintStrength;
 
         public static void Bind(ConfigFile config)
         {
@@ -38,6 +40,11 @@ namespace Corruption
                 "Shard colour as an HTML colour, e.g. #B3170D (deep red). Restart to apply.");
             ShardTintStrength = config.Bind(LookSection, "ShardTintStrength", 0.35f,
                 new ConfigDescription("How strongly the colour is applied: 0 = base item's own colours, 1 = fully the shard colour. Restart to apply.",
+                    new AcceptableValueRange<float>(0f, 1f)));
+            RiftforgeColor = config.Bind(LookSection, "RiftforgeColor", "#B3170D",
+                "Riftforge colour as an HTML colour. Restart to apply.");
+            RiftforgeTintStrength = config.Bind(LookSection, "RiftforgeTintStrength", 0.6f,
+                new ConfigDescription("How strongly the Riftforge colour is applied (0-1). Restart to apply.",
                     new AcceptableValueRange<float>(0f, 1f)));
         }
 
