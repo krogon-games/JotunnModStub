@@ -86,7 +86,10 @@ namespace Corruption.Content
                     m_label = Texts.RavenLabel,
                     m_text = Texts.RavenText,
                     m_priority = old?.m_priority ?? 0,
-                    m_isTutorial = old?.m_isTutorial ?? true
+                    m_isTutorial = old?.m_isTutorial ?? true,
+                    m_munin = old?.m_munin ?? false,
+                    // RavenText defaults this to true, which makes the raven return even after it has been heard.
+                    m_alwaysSpawn = false
                 };
             }
         }

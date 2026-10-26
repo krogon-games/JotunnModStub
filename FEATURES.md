@@ -304,6 +304,7 @@ New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
   - Two issues found and fixed (awaiting re-test):
     - On first build the raven explained the Galdr table: the cloned guide point now has its own key and Riftforge lore.
     - The glow stayed pink-magenta, because particles and lights weren't tinted. They are now.
+- Play-test 2026-10-26: the red glow now works. The raven kept coming back after being heard, because the replacement raven text kept the game's default "always show" setting. It now copies the vanilla guide point's settings and switches "always show" off (awaiting re-test). If the raven already marked this message as seen, it won't return; `resetknownitems` doesn't reset raven messages.
 - Play-test 2026-10-26: the console filled with `IndexOutOfRangeException` in `Hud.SetupPieceInfo` while the build menu showed the Riftforge. The game's build menu shows a piece's cost in a fixed set of slots and always uses the slot after the last ingredient, so pieces can have at most 5 ingredients; the recipe had 6. Leather scraps removed. Registration now refuses a piece with more than 5 and logs an error.
 - Ingredient amounts are first guesses.
 - Interacting with it shows an empty recipe list until phase 4 adds maps.
@@ -348,6 +349,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- Fixed the raven repeatedly returning to the Riftforge: its replacement text kept the game's "always show" default.
 - Fixed constant `IndexOutOfRangeException` errors from the build menu: the Riftforge recipe had 6 ingredients, and building pieces support at most 5. Leather scraps removed.
 - **Riftforge tested in-game.** The raven now gives Riftforge/Ginnungagap lore instead of the Galdr table's, and particle effects and lights are tinted too, so the glow turns red rather than pink.
 - The Riftforge is now red to match the shard (was purple); its colour and strength are configurable.
