@@ -8,11 +8,11 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 
 | Feature | Area | Status | Config option | Files touched | Last updated |
 |---|---|---|---|---|---|
-| [Recipe search box](#recipe-search-box) | UI | Built, untested | `1 - Recipe List` → `ShowSearchBar`, `SearchIngredients`, `ClearSearchOnClose` | `RecipeList/SearchBar.cs`, `RecipeList/RecipeListOrganizer.cs`, `ModConfig.cs` | 2026-09-27 |
-| [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Built, untested | `1 - Recipe List` → `Grouping`, `StartCollapsed` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-09-29 |
-| [Data-driven biome detection](#data-driven-biome-detection) | UI | Built, untested | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*`, `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-09-29 |
-| [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Built, untested | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-09-29 |
-| [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Built, untested | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-09-29 |
+| [Recipe search box](#recipe-search-box) | UI | Built, untested | `1 - Recipe List` → `ShowSearchBar`, `SearchIngredients`, `ClearSearchOnClose` | `RecipeList/SearchBar.cs`, `RecipeList/RecipeListOrganizer.cs`, `ModConfig.cs` | 2026-10-26 |
+| [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Built, untested | `1 - Recipe List` → `Grouping`, `StartCollapsed` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-10-26 |
+| [Data-driven biome detection](#data-driven-biome-detection) | UI | Built, untested | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*`, `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
+| [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Built, untested | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-26 |
+| [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Built, untested | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -253,6 +253,11 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ---
 
 ## Changelog
+
+### 2026-10-26
+- **First play-test (Valheim 1.0.20): the inventory and crafting screens were broken** (empty panels, placeholder text, no mouse cursor) and `co_dump` failed. Cause: the biome code used C# tuples, which need `System.ValueTuple.dll`, and Valheim doesn't ship it. The first recipe-list update crashed inside the game's own "open inventory" code. Fixed by removing the tuples. All features stay "Built, untested" until re-tested.
+- The build now fails if the mod references an assembly Valheim doesn't ship (`System.ValueTuple`, `System.Memory`, `System.Buffers`).
+- Mod code running inside game methods (recipe list, search bar, biome detection, chest counting and taking) now catches its own errors: it logs them once and falls back to vanilla behaviour instead of breaking the game's UI.
 
 ### 2026-10-15
 - Added the Corruption mod design (`docs/corruption-design.md`) and its technical review (`docs/corruption-design-review.md`), and linked them from the planned Loot system and Combat mechanics entries. No mod code changed.

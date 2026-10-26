@@ -32,44 +32,55 @@ namespace CraftingOverhaul.RecipeList
             }
         }
 
+        private sealed class Row
+        {
+            public InventoryGui.RecipeDataPair Entry;
+            public RecipeCategory Category;
+            public bool Matches;
+        }
+
         private static void Reorganize(InventoryGui gui)
         {
-            ClearHeaders();
-
             var recipes = gui.m_availableRecipes;
             string query = (SearchText ?? "").Trim();
             bool searching = query.Length > 0;
             var mode = ModConfig.Grouping.Value;
 
-            var visible = new List<InventoryGui.RecipeDataPair>(recipes.Count);
+            // Work everything out before touching the list, so a failure here leaves the vanilla list intact.
+            var rows = new List<Row>(recipes.Count);
             foreach (var entry in recipes)
             {
-                if (!searching || Matches(entry.Recipe, query, mode))
+                rows.Add(new Row
                 {
-                    visible.Add(entry);
-                }
-                else
-                {
-                    Object.Destroy(entry.InterfaceElement);
-                }
+                    Entry = entry,
+                    Category = mode == GroupingMode.None ? null : RecipeCategories.Get(entry.Recipe, mode),
+                    Matches = !searching || Matches(entry.Recipe, query, mode)
+                });
             }
 
+            ClearHeaders();
             recipes.Clear();
             int row = 0;
 
+            foreach (var hidden in rows.Where(r => !r.Matches))
+            {
+                Object.Destroy(hidden.Entry.InterfaceElement);
+            }
+            var visible = rows.Where(r => r.Matches).ToList();
+
             if (mode == GroupingMode.None)
             {
-                foreach (var entry in visible)
+                foreach (var r in visible)
                 {
-                    PlaceRow(gui, entry.InterfaceElement, row++);
-                    recipes.Add(entry);
+                    PlaceRow(gui, r.Entry.InterfaceElement, row++);
+                    recipes.Add(r.Entry);
                 }
             }
             else
             {
                 // GroupBy keeps the game's sort order inside each group.
                 var groups = visible
-                    .GroupBy(e => RecipeCategories.Get(e.Recipe, mode))
+                    .GroupBy(r => r.Category)
                     .OrderBy(g => g.Key.Order);
 
                 foreach (var group in groups)
@@ -82,18 +93,18 @@ namespace CraftingOverhaul.RecipeList
 
                     // While searching, show every match regardless of collapsed state.
                     bool collapsed = !searching && Collapsed.Contains(category.Key);
-                    int craftable = group.Count(e => e.CanCraft);
+                    int craftable = group.Count(r => r.Entry.CanCraft);
                     CreateHeader(gui, category, collapsed, craftable, group.Count(), row++);
 
-                    foreach (var entry in group)
+                    foreach (var r in group)
                     {
                         if (collapsed)
                         {
-                            Object.Destroy(entry.InterfaceElement);
+                            Object.Destroy(r.Entry.InterfaceElement);
                             continue;
                         }
-                        PlaceRow(gui, entry.InterfaceElement, row++);
-                        recipes.Add(entry);
+                        PlaceRow(gui, r.Entry.InterfaceElement, row++);
+                        recipes.Add(r.Entry);
                     }
                 }
             }
@@ -202,7 +213,7 @@ namespace CraftingOverhaul.RecipeList
         {
             private static void Postfix(InventoryGui __instance)
             {
-                Reorganize(__instance);
+                Safe.Run("organise the recipe list", () => Reorganize(__instance));
             }
         }
 

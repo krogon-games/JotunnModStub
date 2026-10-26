@@ -15,7 +15,7 @@ namespace CraftingOverhaul.Biomes
             {
                 if (__instance == Player.m_localPlayer && ModConfig.Grouping.Value == GroupingMode.Biome)
                 {
-                    BiomeResolver.EnsureResolved();
+                    Safe.Run("work out item biomes", BiomeResolver.EnsureResolved);
                 }
             }
         }

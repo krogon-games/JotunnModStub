@@ -2,27 +2,41 @@ namespace CraftingOverhaul.Biomes
 {
     internal static class BiomeMapping
     {
-        private static readonly (Heightmap.Biome Game, Biome Tier)[] Map =
+        // Plain parallel arrays: tuples would need System.ValueTuple.dll, which Valheim doesn't ship.
+        private static readonly Heightmap.Biome[] GameBiomes =
         {
-            (Heightmap.Biome.Meadows, Biome.Meadows),
-            (Heightmap.Biome.BlackForest, Biome.BlackForest),
-            (Heightmap.Biome.Swamp, Biome.Swamp),
-            (Heightmap.Biome.Ocean, Biome.Ocean),
-            (Heightmap.Biome.Mountain, Biome.Mountain),
-            (Heightmap.Biome.Plains, Biome.Plains),
-            (Heightmap.Biome.Mistlands, Biome.Mistlands),
-            (Heightmap.Biome.AshLands, Biome.Ashlands),
-            (Heightmap.Biome.DeepNorth, Biome.DeepNorth)
+            Heightmap.Biome.Meadows,
+            Heightmap.Biome.BlackForest,
+            Heightmap.Biome.Swamp,
+            Heightmap.Biome.Ocean,
+            Heightmap.Biome.Mountain,
+            Heightmap.Biome.Plains,
+            Heightmap.Biome.Mistlands,
+            Heightmap.Biome.AshLands,
+            Heightmap.Biome.DeepNorth
+        };
+
+        private static readonly Biome[] Tiers =
+        {
+            Biome.Meadows,
+            Biome.BlackForest,
+            Biome.Swamp,
+            Biome.Ocean,
+            Biome.Mountain,
+            Biome.Plains,
+            Biome.Mistlands,
+            Biome.Ashlands,
+            Biome.DeepNorth
         };
 
         /// <summary>The earliest biome in a set of game biome flags, or null when none is set.</summary>
         public static Biome? Earliest(Heightmap.Biome flags)
         {
-            foreach (var entry in Map)
+            for (int i = 0; i < GameBiomes.Length; i++)
             {
-                if ((flags & entry.Game) != 0)
+                if ((flags & GameBiomes[i]) != 0)
                 {
-                    return entry.Tier;
+                    return Tiers[i];
                 }
             }
             return null;

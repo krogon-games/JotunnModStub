@@ -94,7 +94,14 @@ namespace CraftingOverhaul.Containers
             {
                 if (__0 != null && IsActiveFor(__instance))
                 {
-                    __result += NearbyContainers.Count(__0, __1, __2);
+                    try
+                    {
+                        __result += NearbyContainers.Count(__0, __1, __2);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Safe.Report("count items in nearby containers", ex);
+                    }
                 }
             }
         }
@@ -124,7 +131,14 @@ namespace CraftingOverhaul.Containers
                 int missing = __1 - carried;
                 if (missing > 0)
                 {
-                    __1 -= NearbyContainers.Remove(__0, missing, __2, __3);
+                    try
+                    {
+                        __1 -= NearbyContainers.Remove(__0, missing, __2, __3);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Safe.Report("take items from nearby containers", ex);
+                    }
                 }
             }
         }

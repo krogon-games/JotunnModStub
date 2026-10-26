@@ -146,7 +146,7 @@ namespace CraftingOverhaul.RecipeList
         {
             private static void Postfix(InventoryGui __instance)
             {
-                EnsureCreated(__instance);
+                Safe.Run("create the search bar", () => EnsureCreated(__instance));
             }
         }
 
@@ -157,7 +157,7 @@ namespace CraftingOverhaul.RecipeList
             {
                 if (ModConfig.ClearSearchOnClose.Value)
                 {
-                    ClearSearch();
+                    Safe.Run("clear the search", ClearSearch);
                 }
             }
         }
