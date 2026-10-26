@@ -290,7 +290,7 @@ New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
 
 **What it does in-game:** A new crafting station: a red-tinted Galdr table (matching the shard) with its own station name, so later recipes (maps, corrupted offerings) can target it. It has **no recipes yet**.
 
-**How to use it:** Hammer → Crafting tab, built next to a workbench. Recipe: Fine wood ×10, Corruption shard ×1, Eikthyr trophy ×1, Bronze nails ×10, Leather scraps ×10, Surtling core ×2. As with any vanilla piece, it appears in the build menu once you've picked up every ingredient; the shard is normally the last one.
+**How to use it:** Hammer → Crafting tab, built next to a workbench. Recipe: Fine wood ×10, Corruption shard ×1, Eikthyr trophy ×1, Bronze nails ×10, Surtling core ×2. That is 5 ingredients, the most a building piece supports. As with any vanilla piece, it appears in the build menu once you've picked up every ingredient; the shard is normally the last one.
 
 **Config settings** (per player, restart to apply):
 
@@ -304,6 +304,7 @@ New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
   - Two issues found and fixed (awaiting re-test):
     - On first build the raven explained the Galdr table: the cloned guide point now has its own key and Riftforge lore.
     - The glow stayed pink-magenta, because particles and lights weren't tinted. They are now.
+- Play-test 2026-10-26: the console filled with `IndexOutOfRangeException` in `Hud.SetupPieceInfo` while the build menu showed the Riftforge. The game's build menu shows a piece's cost in a fixed set of slots and always uses the slot after the last ingredient, so pieces can have at most 5 ingredients; the recipe had 6. Leather scraps removed. Registration now refuses a piece with more than 5 and logs an error.
 - Ingredient amounts are first guesses.
 - Interacting with it shows an empty recipe list until phase 4 adds maps.
 
@@ -347,6 +348,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- Fixed constant `IndexOutOfRangeException` errors from the build menu: the Riftforge recipe had 6 ingredients, and building pieces support at most 5. Leather scraps removed.
 - **Riftforge tested in-game.** The raven now gives Riftforge/Ginnungagap lore instead of the Galdr table's, and particle effects and lights are tinted too, so the glow turns red rather than pink.
 - The Riftforge is now red to match the shard (was purple); its colour and strength are configurable.
 - **Corruption play-test:** the mod loads and the shard spawns. The shard is now deep red (Bloodstone model with a red tint, configurable look). The tint now covers every colour property, which also fixes glow colours staying unchanged.

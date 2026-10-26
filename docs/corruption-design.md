@@ -86,9 +86,9 @@ Each boss drops a new item, its essence, which is the key ingredient for maps in
 
 The map bench is a new crafting station, unlocked by picking up the first corruption shard. It crafts maps, rolls affixes onto them, and crafts corrupted boss offerings. Working name: **Riftforge** (named for the rips its maps open).
 
-**Bench recipe:** Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Leather scraps, Surtling cores. Needs a workbench nearby, same as other vanilla stations. Amounts to be set during tuning.
+**Bench recipe:** Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Surtling cores. Needs a workbench nearby, same as other vanilla stations. Amounts to be set during tuning.
 
-*Changed 2026-10-15: was "a boss trophy of any kind", which a single vanilla recipe can't express. Now Eikthyr's trophy, plus nails, leather scraps and cores. Bronze nails and Surtling cores keep the bench at the Black Forest stage, the same point where fine wood (bronze axe) already puts it.*
+*Changed 2026-10-15: was "a boss trophy of any kind", which a single vanilla recipe can't express. Now Eikthyr's trophy, plus nails, leather scraps and cores. Bronze nails and Surtling cores keep the bench at the Black Forest stage, the same point where fine wood (bronze axe) already puts it.* *Changed 2026-10-26: Leather scraps dropped, because Valheim building pieces support at most 5 ingredients.*
 
 **Map recipe pattern** (every map follows it):
 
