@@ -13,6 +13,8 @@
     <Compile Include="..\CraftingOverhaul\Biomes\ItemSource.cs" Link="Linked\ItemSource.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
     <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />
+    <Compile Include="..\Corruption\Rules\TalismanFamilies.cs" Link="Linked\TalismanFamilies.cs" />
+    <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
   </ItemGroup>
 
   <ItemGroup>

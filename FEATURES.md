@@ -15,6 +15,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
+| [Talismans](#talismans) | Combat | Built, untested | Corruption: `3 - Talismans` → `Enabled`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs` | 2026-10-26 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -313,6 +314,52 @@ New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
 
 ---
 
+## Talismans
+
+*Corruption plugin, design phase 2.*
+
+**What it does in-game:** Trophy talismans ("<creature> charm", lore: Ægishjálmur, the Helm of Awe).
+- **Effect:** while worn, a talisman stops one creature family from targeting, chasing or hitting you. You can still hit them. Hitting one **provokes** it: that creature fights back for 30 s after your last hit; the rest of the family keeps ignoring you.
+- **Scope:** only the wearer is protected; other players are unaffected. Bosses are never repelled.
+- **Families** come from game data, not a hand-written list:
+  - a base creature plus every creature whose prefab name extends it (Greydwarf → Greydwarf_Elite, _Shaman, _Frozen; Goblin → GoblinArcher, GoblinBrute, GoblinShaman; Skeleton → every skeleton variant);
+  - only creatures with monster AI (no deer or hares);
+  - quest and named minibosses excluded (configurable).
+  - About 40 families in vanilla 1.0; the full list is logged at startup (`Registered N talismans: ...`).
+- **Recipe** (per family): 3 of the family's trophy, 1 Chain, 10 Leather scraps, at the workbench. Like any vanilla recipe it appears once you've picked up all three. Chain comes from the Swamp, so talismans arrive mid-game.
+- **Item:** a trinket with no other bonuses (cloned from a vanilla trinket, bonuses removed), so it uses the vanilla trinket slot: one talisman at a time, and it replaces a vanilla trinket while worn. The icon is the family's trophy.
+- **Multiplayer:** the repel check runs on the machine that simulates the creature and reads other players' trinkets from their synced equipment.
+- Talismans not working inside rips (design) comes with phase 4.
+
+**How to use it:** Craft the charm for a creature family at the workbench and equip it like any trinket.
+
+**Config settings** (admin-only, synced from the server):
+
+| Setting | Default | Description |
+|---|---|---|
+| `Enabled` | `true` | Off: charms can be crafted but do nothing |
+| `ProvokeSeconds` | `30` | How long a creature you hit fights back after your last hit |
+| `ExcludedCreatures` | `*Hildir*, GoblinBruteBros*, Charred_Melee_Dyrnwyn` | Creature prefab names never repelled (`*` wildcard). Restart to apply |
+
+The family rules are unit-tested against the real 1.0 creature list (`TalismanFamiliesTests`).
+
+**Known issues:**
+- Untested in-game.
+- Families are by name, so some group widely: one Blob charm covers every ooze (tar, frost, lava...), and the Troll charm also covers Deep North frost trolls. Exclusions can split off individual creatures.
+- A creature that already targets you when you put the charm on may keep following you, but can't hit you.
+- Charm names use the creature's name in the game language at startup, with English text around it ("Greydwarf charm").
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `BaseAI.IsEnemy(Character, Character)` | Postfix | Returns false when a repelled creature asks about a wearer (and it isn't provoked). Never changes the answer when the player is the one asking, so player attacks are unaffected |
+| `BaseAI.OnDamaged` | Prefix | Marks a creature as provoked when the wearer hits it (runs before monsters pick their target) |
+
+**Conflicts:** other mods that patch `BaseAI.IsEnemy` (taming, faction or "friendly creature" mods) may interact. The postfix only ever turns `true` into `false` for this one case.
+
+---
+
 ## Loot system
 
 **Status:** Planned. Not started.
@@ -349,6 +396,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- **Talismans (design phase 2):** one charm per creature family, worked out from game data. It repels that family from the wearer unless provoked. The family rules and exclusions are unit-tested against the real 1.0 creature list (53 tests in total). Not yet tested in-game.
 - Fixed the raven repeatedly returning to the Riftforge: its replacement text kept the game's "always show" default.
 - Fixed constant `IndexOutOfRangeException` errors from the build menu: the Riftforge recipe had 6 ingredients, and building pieces support at most 5. Leather scraps removed.
 - **Riftforge tested in-game.** The raven now gives Riftforge/Ginnungagap lore instead of the Galdr table's, and particle effects and lights are tinted too, so the glow turns red rather than pink.

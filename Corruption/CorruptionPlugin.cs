@@ -43,6 +43,7 @@ namespace Corruption
             PrefabManager.OnVanillaPrefabsAvailable -= RegisterContent;
             Safe.Run("register the corruption shard", ShardItem.Register);
             Safe.Run("register the Riftforge", Riftforge.Register);
+            Safe.Run("register talismans", Talismans.Register);
         }
 
         /// <summary>Applies each patch class on its own, so one broken by a game update only disables that feature.</summary>
