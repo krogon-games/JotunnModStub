@@ -1,6 +1,8 @@
 # CraftingOverhaul
 
-Valheim 1.0 mod (BepInEx + Jötunn + Harmony). Source is in `CraftingOverhaul/`; see `README.MD` for build setup.
+Valheim 1.0 mods (BepInEx + Jötunn + Harmony), two plugins in one solution: `CraftingOverhaul/` (quality of life) and `Corruption/` (endgame, design in `docs/corruption-design.md`). See `README.MD` for build setup. Game reference data is in `data/game-dump-1.0.20/`.
+
+The build fails if a plugin references an assembly Valheim doesn't ship (e.g. no C# tuples: they need System.ValueTuple).
 
 ## FEATURES.md is mandatory
 

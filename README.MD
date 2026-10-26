@@ -18,7 +18,8 @@ See [`CraftingOverhaul/README.md`](CraftingOverhaul/README.md) for the full feat
 | `CraftingOverhaul/Biomes/` | Data-driven biome detection: `Collectors/` read game data into sources, `BiomeSolver.cs` holds the rules |
 | `CraftingOverhaul/Containers/` | Finding usable nearby containers and counting/taking materials from them |
 | `CraftingOverhaul/Dump/` | `co_dump` and `co_biome` console commands |
-| `CraftingOverhaul.Tests/` | Unit tests for game-independent logic (`dotnet test`) |
+| `Corruption/` | Second plugin: the corruption endgame mod (`docs/corruption-design.md`). `Content/` holds items, pieces and patches, `Rules/` the game-independent rules |
+| `CraftingOverhaul.Tests/` | Unit tests for game-independent logic of both plugins (`dotnet test`) |
 | `FEATURES.md` | Every feature, its status, config and Harmony patch targets |
 | `docs/` | Research notes, the ideas backlog (`ideas.md`) and the Corruption mod design (`corruption-design.md`, with `corruption-design-review.md`) |
 | `JotunnModUnity/` | Unity project for making asset bundles (unused so far) |

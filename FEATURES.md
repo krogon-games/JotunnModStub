@@ -13,10 +13,12 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Data-driven biome detection](#data-driven-biome-detection) | UI | Tested in-game | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*` (incl. `HatchCollector.cs`), `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-26 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
+| [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
+| [Riftforge](#riftforge) | Crafting | Built, untested | — | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
-File paths are relative to `CraftingOverhaul/` unless they start with `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`.
+There are two plugins: **CraftingOverhaul** (quality of life; works when only some players have it) and **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg` and `com.krogongames.corruption.cfg`.
 
 ---
 
@@ -240,6 +242,64 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 
 ---
 
+## Corruption shards
+
+*Corruption plugin, design phase 1.*
+
+**What it does in-game:** Adds the **Corruption shard**, the corruption mod's currency (a purple-tinted crystal, stacks to 50, can go through portals). Phase 1 drop sources:
+- 1-star creatures: 2% chance of a shard.
+- 2-star creatures: 5% chance.
+- Bosses: 1–3 shards the first time each boss is defeated in a world. The check is the boss's own defeat key, so it also covers the Deep North boss's final phase.
+
+Tamed creatures never drop shards, so a pen of starred wolves can't be farmed. Rip waves, rip chests and vanilla dungeon chests (design doc) come in later phases.
+
+**How to use it:** Kill starred creatures and bosses. Shards are an ingredient of the [Riftforge](#riftforge) for now, and later of maps and corrupted offerings.
+
+**Config settings** (admin-only, synced from the server):
+
+| Setting | Default | Description |
+|---|---|---|
+| `OneStarChance` | `0.02` | Chance a 1-star creature drops a shard |
+| `TwoStarChance` | `0.05` | Chance a 2-star (or higher) creature drops a shard |
+| `BossShardsMin` / `BossShardsMax` | `1` / `3` | Shards from a boss |
+| `BossShardsFirstKillOnly` | `true` | Only on a boss's first defeat per world; off = every kill |
+
+The drop rules are unit-tested (`ShardRulesTests`).
+
+**Known issues:**
+- Untested in-game.
+- The icon is rendered at startup from the tinted model. If that fails, the vanilla crystal icon is used and a warning is logged.
+- A boss killed before installing the mod counts as already defeated, so it won't drop shards unless `BossShardsFirstKillOnly` is turned off.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `CharacterDrop.GenerateDropList` | Postfix | Adds shards to the drop list of starred creatures and bosses |
+
+New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
+
+---
+
+## Riftforge
+
+*Corruption plugin, design phase 1.*
+
+**What it does in-game:** A new crafting station: a purple-tinted Galdr table with its own station name, so later recipes (maps, corrupted offerings) can target it. It has **no recipes yet**.
+
+**How to use it:** Hammer → Crafting tab, built next to a workbench. Recipe: Fine wood ×10, Corruption shard ×1, Eikthyr trophy ×1, Bronze nails ×10, Leather scraps ×10, Surtling core ×2. As with any vanilla piece, it appears in the build menu once you've picked up every ingredient; the shard is normally the last one.
+
+**Config settings:** none yet.
+
+**Known issues:**
+- Untested in-game.
+- Ingredient amounts are first guesses.
+- Interacting with it shows an empty recipe list until phase 4 adds maps.
+
+**Vanilla behaviour overridden:** none. New piece registered through Jötunn: `piece_riftforge` (cloned from `piece_magetable`).
+
+---
+
 ## Loot system
 
 **Status:** Planned. Not started.
@@ -276,6 +336,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-26
+- **Corruption plugin started (design phase 1):** new `Corruption` project with the corruption shard (drops from starred creatures and on first boss kills) and the Riftforge station. Shard drop rules are unit-tested; nothing has been tested in-game yet.
 - Building with materials from nearby chests confirmed working in-game. Added `docs/multiplayer-test.md` for the two-player test.
 - **Second dump analysed:** the biome fixes worked (913 items placed, 2 unplaced). Wisp fountains added to the producer rule. Reference data in `data/game-dump-1.0.20/` replaced with this corrected dump.
 - **Third play-test:** the search box, the grouping button and crafting from nearby chests all work in-game. Category headers now line up with the recipe icons and use the recipe names' font size, and there's a new `HeaderFontSize` setting.

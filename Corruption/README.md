@@ -1,0 +1,27 @@
+# Corruption
+
+A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corruption-design.md` in the repository.
+
+**Status: phase 1 of 10.** Every player and the server need the mod.
+
+## Features so far
+
+- **Corruption shards.** The mod's currency.
+  - 1-star creatures sometimes drop one, and 2-star creatures a bit more often.
+  - Every boss drops 1–3 the first time it's defeated in a world.
+- **Riftforge.** A new crafting station, built with the hammer next to a workbench from fine wood, a corruption shard, Eikthyr's trophy, bronze nails, leather scraps and Surtling cores. It appears in the build menu once you've picked up all of those. It has no recipes yet; maps come in a later phase.
+
+## Configuration
+
+`BepInEx/config/com.krogongames.corruption.cfg`. These settings are server-synced: the server's values apply to everyone.
+
+| Setting | Default | Description |
+|---|---|---|
+| Corruption Shards / OneStarChance | 0.02 | Chance a 1-star creature drops a shard |
+| Corruption Shards / TwoStarChance | 0.05 | Chance a 2-star creature drops a shard |
+| Corruption Shards / BossShardsMin | 1 | Fewest shards from a boss |
+| Corruption Shards / BossShardsMax | 3 | Most shards from a boss |
+| Corruption Shards / BossShardsFirstKillOnly | true | Bosses drop shards only on their first defeat per world |
+
+## Changelog
+- 0.1.0 (unreleased): corruption shards and the Riftforge.

@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Tests for game-independent logic. Game-dependent files can't be loaded outside Valheim,
+  <!-- Tests for game-independent logic of both plugins (CraftingOverhaul and Corruption). Game-dependent files can't be loaded outside Valheim,
        so only the pure source files are compiled in here. Run with `dotnet test`. -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,6 +12,7 @@
     <Compile Include="..\CraftingOverhaul\Biomes\Biome.cs" Link="Linked\Biome.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\ItemSource.cs" Link="Linked\ItemSource.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
+    <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />
   </ItemGroup>
 
   <ItemGroup>
