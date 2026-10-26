@@ -304,7 +304,7 @@ New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
   - Two issues found and fixed (awaiting re-test):
     - On first build the raven explained the Galdr table: the cloned guide point now has its own key and Riftforge lore.
     - The glow stayed pink-magenta, because particles and lights weren't tinted. They are now.
-- Play-test 2026-10-26: the red glow now works. The raven kept coming back after being heard, because the replacement raven text kept the game's default "always show" setting. It now copies the vanilla guide point's settings and switches "always show" off (awaiting re-test). If the raven already marked this message as seen, it won't return; `resetknownitems` doesn't reset raven messages.
+- Play-test 2026-10-26: the red glow now works. The raven kept coming back after being heard, because the replacement raven text kept the game's default "always show" setting. It now copies the vanilla guide point's settings and switches "always show" off (awaiting re-test). To hear the message again, run `tutorialreset` in the console; it resets every raven message.
 - Play-test 2026-10-26: the console filled with `IndexOutOfRangeException` in `Hud.SetupPieceInfo` while the build menu showed the Riftforge. The game's build menu shows a piece's cost in a fixed set of slots and always uses the slot after the last ingredient, so pieces can have at most 5 ingredients; the recipe had 6. Leather scraps removed. Registration now refuses a piece with more than 5 and logs an error.
 - Ingredient amounts are first guesses.
 - Interacting with it shows an empty recipe list until phase 4 adds maps.
