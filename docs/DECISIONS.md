@@ -22,7 +22,10 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 
 | Date | Decision | Why | Rejected | Status |
 |---|---|---|---|---|
-| 2026-10-27 | First affix slice: gathering tools only (pickaxes and one-handed woodcutting axes), in three pools (universal, mining, woodcutting) | User's choice; small, self-contained, exercises item data, tooltips and harvest hooks | Starting with the full gear pool; two-handed combat axes as tools | Decided by user |
+| 2026-10-27 | Gathering tools (pickaxes and one-handed woodcutting axes) get their own affix pools: universal, mining, woodcutting. Part of the loot system, not a separate build | User's spec | Two-handed combat axes as gathering tools | Decided by user |
+| 2026-10-27 | Gathering affix ranges are the same for every tool; the base tool's stats and tool tier carry the progression | User: every affix rolls its full range on any tool, yet a flint axe never matches a Nord axe | Ranges scaled by the tool's biome; ranges identical with nothing else separating tools | Decided by user |
+| 2026-10-27 | Both Bountifuls (and Artisan) stack | User's choice | Merging or renaming them | Decided by user |
+| 2026-10-27 | Crafting makes Normal (vanilla) items only; orbs upgrade; monsters drop randomly rolled items; Magic = 1 prefix + 1 suffix, Rare = 2 + 2 | User's loot model | Affixes rolled on craft | Decided by user |
 | 2026-10-27 | Gathering affixes that change the hit run on the striker's machine; on-harvest affixes use an owner-to-striker message | Drops are spawned by the object's owner, who can't see the striker's tool data | Owner-side rolls (no access to the affixes) | Proposed |
 | 2026-10-27 | Build our own loot system rather than depend on Epic Loot | Design (PoE tiers, orbs, corruption lock, biome-gated uniques, affix draft) differs from Epic Loot's rarity ladder and enchanting (review, 2026-10-15) | Depending on Epic Loot 0.14.13 | Decided by user |
 | 2026-10-27 | Gear affixes on items via `ItemData.m_customData`; affix table in a data file; pure roll function | Saved with the item; tunable without rebuild; testable | — | Proposed (in `AFFIX_RULES.md`) |

@@ -30,8 +30,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 4: maps and rips | Corruption | Proposed | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
 | Phase 6: corrupted bosses | Corruption | Proposed | design doc + review 4 |
-| Gathering tool affixes (pickaxes, one-handed woodcutting axes) | Corruption | Specified by the user, open questions; first affix slice | `AFFIX_RULES.md` |
-| Phase 7: loot, rarity, gear affixes, orbs, uniques | Corruption | Proposed (general affix draft written) | design doc, `AFFIX_RULES.md` |
+| Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed | design doc |
 | Phase 10: skill rework (optional module) | — | Proposed | design doc |
@@ -49,6 +48,8 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Uniques: unlimited copies; not craftable; ~1 per 20 hours of play (base 1 in 2,500, small source multipliers).
 - Personal loot (60 s owner lock) and loot beams.
 - Loot system (rarity, affixes, orbs, uniques) is our own, not Epic Loot (decided 2026-10-27).
+- Workbench and forge craft Normal (vanilla) items only; orb crafting at the Riftforge upgrades them; monsters drop items with random rolls. Magic = up to 1 prefix + 1 suffix, Rare = up to 2 + 2 (2026-10-27).
+- Gathering tools (pickaxes, one-handed woodcutting axes) get their own affix pools; ranges are the same for every tool, and the base tool carries the progression (2026-10-27).
 - Only the shard can brick gear (25%); orbs never brick; corrupted items are locked.
 
 ## Balance rules

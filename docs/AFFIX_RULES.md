@@ -1,6 +1,6 @@
 # Affix rules
 
-**Current focus: [gathering tool affixes](#gathering-tool-affixes)** (pickaxes and woodcutting axes), specified by the user on 2026-10-27, not built yet. They are the first affix slice to implement.
+**[Gathering tool affixes](#gathering-tool-affixes)** (pickaxes and one-handed woodcutting axes) were specified by the user on 2026-10-27. They are part of the loot system (design phase 7), not a separate build.
 
 The [general gear pool](#general-gear-pool-draft) further down is still a **draft proposal, not built** (drafted 2026-10-27). Every name, number and pool membership there is a starting point to edit. Full loot is design phase 7 (see [`GAME_DESIGN.md`](GAME_DESIGN.md)).
 
@@ -13,7 +13,20 @@ Brief from the user for the general pool: "Diablo 2-style prefixes and suffixes.
 
 ## Gathering tool affixes
 
-*Specified by the user, 2026-10-27. Status: designed, not built.* Names, effects and ranges in the three pool tables are the user's; everything marked **proposed** is an interpretation awaiting confirmation.
+*Specified by the user, 2026-10-27. Status: designed, not built; built with the loot system (phase 7).* Names, effects and ranges in the three pool tables are the user's; everything marked **proposed** is an interpretation awaiting confirmation.
+
+### Rules agreed (user, 2026-10-27)
+
+- **Where affixed tools come from** (applies to all loot, not just tools):
+  - Crafting at the normal workbench or forge makes **Normal** items only: the vanilla version, no affixes.
+  - **PoE-style orb crafting** at the Riftforge is the path to better items after that.
+  - **Monsters drop items with random rolls.** Drop rates to be set.
+- **Affix count:** **Magic** = up to 1 prefix and 1 suffix; **Rare** = up to 2 prefixes and 2 suffixes. Same as the general gear pool.
+- **Ranges are the same for every tool.** Every affix can roll anywhere in its range on any eligible tool. A perfectly rolled flint axe still never matches a Nord axe, because:
+  - percentage affixes scale the tool's own stats (+15% of a flint axe's 30 chop is 4.5; of a Nord axe's 90 it's 13.5);
+  - the tool tier still decides what the tool can harvest at all.
+  - This differs from the general gear pool's biome tiers (I–IV); see the open questions.
+- **Both Bountifuls stack.** The universal Bountiful (bonus resources) and the woodcutting Bountiful (additional wood) are different affixes and can both roll on one axe. Artisan (one extra ore) stacks with the universal Bountiful on a pickaxe in the same way.
 
 ### Eligible tools
 
@@ -84,7 +97,24 @@ Verified in the 1.0 code: hitting a tree, log, stump, rock or deposit only sends
 - **Striker-only effects** (Swift, Efficient, Fit, Durable, Scholar's) never involve the owner.
 - **On-harvest effects** (both Bountifuls, Artisan, Gemseeker's, Determined) need a small "harvested" message from the owner's game back to the striker's, which then rolls and spawns the extra items next to the object. Every machine needs the mod for this, which fits the Corruption plugin (`EveryoneMustHaveMod`).
 
+### Proposed prefix/suffix split (to confirm)
+
+Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **prefixes make the swing stronger, suffixes bring fortune and endurance.** The split gives each tool enough of both for a Rare (2 + 2).
+
+| Pool | Prefixes | Suffixes |
+|---|---|---|
+| Universal | Swift, Durable | Odin's Grace, Efficient, Bountiful, Scholar's, Determined |
+| Mining | Prospector's, Excavator's, Veinbreaker's, Seismic | Artisan, Fit, Gemseeker's |
+| Woodcutting | Lumberjack's, Splintering, Timberfall, Rootbreaker | Bountiful (wood) |
+| **Pickaxe total** | 6 | 8 |
+| **Axe total** | 6 | 6 |
+
+- **Names on the item** follow the general pool: prefix before, suffix after with "of" (*Swift Iron Pickaxe of the Artisan*). Proposed suffix forms: of Odin's Grace, of Efficiency, of Bounty, of the Scholar, of Determination, of the Artisan, of Fitness, of the Gemseeker, of Plenty (woodcutting Bountiful). Rares get a random two-word name instead.
+- **Tooltip lines** use the affix names above; the two Bountifuls need distinct line text ("bonus resources" vs "additional wood").
+
 ### Proposed interpretations (to confirm)
+
+- **Universal Bountiful** drops the harvested object's resources once more; **woodcutting Bountiful** adds 1 wood of the type that dropped; **Artisan** adds 1 of the ore that dropped.
 
 - **Harvest event:** every object or deposit part that drops resources when it breaks counts once (a tree, each log, a stump, a rock, each chunk of a copper deposit). On-harvest chances roll per event.
 - **Odin's Grace** destroys the struck object or deposit chunk, not a whole multi-part deposit (that could give 30+ ore). On a tree it fells the tree; the logs still need chopping.
@@ -98,11 +128,11 @@ Verified in the 1.0 code: hitting a tree, log, stump, rock or deposit only sends
 
 ### Open questions (gathering tools)
 
-1. **How do tools get affixes?** There's no loot system yet. Options: roll when the tool is crafted, Riftforge orbs, or drops.
-2. **How many affixes per tool**, and does the Magic/Rare prefix/suffix structure apply? Several names here are nouns (Odin's Grace, Rootbreaker), not prefixes or suffixes.
-3. **Tiers:** one range for every tool, as given, or scaled by the tool's biome like the general pool (tiers I–IV)?
-4. **Two Bountifuls** overlap on axes (bonus resources vs additional wood), and **Artisan** overlaps the universal Bountiful on pickaxes. Rename, merge, or define the difference (e.g. Bountiful repeats the whole drop, Artisan adds one ore)?
-5. Are Jotun Bane and the Thunderblood and Frostfire axes woodcutting axes?
+1. Confirm the prefix/suffix split and suffix names above.
+2. Are Jotun Bane and the Thunderblood and Frostfire axes woodcutting axes?
+3. Should the general gear pool also use one range for every item (the base item carrying progression) instead of biome tiers I–IV? Today the two pools follow different rules.
+4. Drop rates for Magic and Rare items from monsters (gathering tools and gear alike).
+5. The proposed interpretations above.
 
 ## General gear pool (draft)
 
