@@ -81,7 +81,7 @@ CraftingOverhaul already works out each item's earliest biome from game data. It
 
 | Question | Existing mods (Thunderstore, 2026-09-29) | Suggestion |
 |---|---|---|
-| Corrupted gear: build or depend on Epic Loot? | RandyKnapp-EpicLoot 0.14.13, updated 2026-09-24, ~2.26M downloads | Build our own. The doc's rules (PoE tiers, orbs, corruption lock, brick chance, biome-gated uniques) differ from Epic Loot's own rarity ladder and enchanting, so depending on it means adopting its design. No need to decide yet: phases 1–6 don't depend on it. |
+| Corrupted gear: build or depend on Epic Loot? | RandyKnapp-EpicLoot 0.14.13, updated 2026-09-24, ~2.26M downloads | Build our own. The doc's rules (PoE tiers, orbs, corruption lock, brick chance, biome-gated uniques) differ from Epic Loot's own rarity ladder and enchanting, so depending on it means adopting its design. **Decided 2026-10-27: build our own.** |
 | Inventory slots and tabs: build or depend? | RandyKnapp-EquipmentAndQuickSlots 3.1.3 (~1.52M), shudnal-ExtraSlots 1.2.14 (~1.13M), Vapok-AdventureBackpacks 2.2.2 (~0.99M); all updated September 2026 | Neither for v1: use the vanilla Utility/Trinket slots (point 7). When the Maps and Currency tabs are built, test against ExtraSlots and EquipmentAndQuickSlots, since many players will already run one. |
 | Skill rework vs EpicMMOSystem | WackyMole-WackyEpicMMOSystem 1.9.67 (~591k), updated 2026-09-13 (the maintained EpicMMOSystem) | Compare against this one when the time comes, as the doc says. |
 

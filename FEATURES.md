@@ -16,7 +16,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Talismans](#talismans) | Combat | Built, untested | Corruption: `3 - Talismans` → `Enabled`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs` | 2026-10-26 |
-| [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-15 |
+| [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
 There are two plugins: **CraftingOverhaul** (quality of life; works when only some players have it) and **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg` and `com.krogongames.corruption.cfg`.
@@ -281,7 +281,7 @@ The drop rules are unit-tested (`ShardRulesTests`).
 |---|---|---|
 | `CharacterDrop.GenerateDropList` | Postfix | Adds shards to the drop list of starred creatures and bosses |
 
-New item registered through Jötunn: `CorruptionShard` (cloned from `Crystal`).
+New item registered through Jötunn: `CorruptionShard` (cloned from the `ShardBaseItem` setting, default `GemstoneRed`).
 
 ---
 
@@ -369,12 +369,13 @@ The family rules are unit-tested against the real 1.0 creature list (`TalismanFa
 - Stats stored on the item (`ItemDrop.ItemData.m_customData`), shown in tooltips and synced in multiplayer.
 - Likely patch points: `CharacterDrop` / `DropTable` for drops, and item tooltips.
 
-Epic Loot already does a lot of this, so the design should be checked against it before starting.
+Decided 2026-10-27: we build our own loot system rather than depend on Epic Loot.
 
 **Design:** now covered by the Corruption mod design in `docs/corruption-design.md`:
 - corruption shards, maps and rips;
 - corrupted bosses;
-- rarity tiers, currency orbs and uniques.
+- rarity tiers, currency orbs and uniques;
+- gear prefixes and suffixes (draft): `docs/AFFIX_RULES.md`.
 
 The technical review is in `docs/corruption-design-review.md`. It suggests building the corruption mod as a separate plugin in this repository.
 
@@ -394,6 +395,13 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ---
 
 ## Changelog
+
+### 2026-10-27
+- Added handover docs: `docs/CURRENT_STATE.md`, `DECISIONS.md`, `ARCHITECTURE.md`, `GAME_DESIGN.md`, and a rewritten `CLAUDE.md` with an update routine.
+- Decided: our own loot system, not Epic Loot.
+- Drafted the gear affix pool (prefixes, suffixes, biome tiers, twin resonance, range display), now in `docs/AFFIX_RULES.md`.
+- Saved the storage and quest systems brief (`docs/storage-quests-design.md`) for later.
+- No mod code changed.
 
 ### 2026-10-26
 - **Talismans (design phase 2):** one charm per creature family, worked out from game data. It repels that family from the wearer unless provoked. The family rules and exclusions are unit-tested against the real 1.0 creature list (53 tests in total). Not yet tested in-game.

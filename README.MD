@@ -21,7 +21,7 @@ See [`CraftingOverhaul/README.md`](CraftingOverhaul/README.md) for the full feat
 | `Corruption/` | Second plugin: the corruption endgame mod (`docs/corruption-design.md`). `Content/` holds items, pieces and patches, `Rules/` the game-independent rules |
 | `CraftingOverhaul.Tests/` | Unit tests for game-independent logic of both plugins (`dotnet test`) |
 | `FEATURES.md` | Every feature, its status, config and Harmony patch targets |
-| `docs/` | Research notes, the ideas backlog (`ideas.md`) the Corruption mod design (`corruption-design.md`, with `corruption-design-review.md`) and the storage/quest brief (`storage-quests-design.md`) |
+| `docs/` | Start with `CURRENT_STATE.md` (status and next tasks); also `ARCHITECTURE.md`, `DECISIONS.md`, `GAME_DESIGN.md` (links the Corruption design, its review, `AFFIX_RULES.md` and the storage/quest brief), research notes and the ideas backlog |
 | `JotunnModUnity/` | Unity project for making asset bundles (unused so far) |
 
 ## Development environment setup
