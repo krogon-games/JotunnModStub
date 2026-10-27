@@ -33,7 +33,8 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 - `CorruptionPlugin.cs`: registers content in `PrefabManager.OnVanillaPrefabsAvailable`, each step inside `Safe.Run`.
 - `CorruptionConfig.cs`: gameplay sections admin-only; `2 - Look` per player. `CorruptionDefaults.cs` holds defaults shared with tests.
-- `Rules/` (pure, tested): `ShardRules`, `TalismanFamilies`.
+- `Rules/` (pure, tested): `ShardRules`, `TalismanFamilies`, `AffixTable` (reads and validates the affix table).
+- `Data/`: tunable data tables kept as CSV, one row per entry, so they open in any spreadsheet and diff cleanly in git: `affixes.csv`. Each table has a pure reader with validation, and a test that checks the real file.
 - `Content/`: `ShardItem`, `Riftforge`, `ShardDrops`, `Talismans`, `TalismanRepel`, `Corrupted` (tint + icon rendering), `Texts` (localisation tokens, raven lore).
 
 ## Code patterns (follow these)
@@ -53,6 +54,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - Command line (any OS, needs Valheim's managed assemblies at `VALHEIM_INSTALL`):
   `dotnet build Corruption/Corruption.csproj -p:VALHEIM_INSTALL=<path> -p:ExecutePrebuild=false`
 - Tests (no game needed): `dotnet test CraftingOverhaul.Tests`.
+- Without a Valheim install (e.g. a cloud session), a stand-in install can be built from NuGet: game, Unity, Harmony and BepInEx DLLs from `Pfhoenix.Valheim.ModProjectReferences` 1.0.26 (`lib/net46/`) into `valheim_Data/Managed/`, publicized game DLLs from `Digitalroot.Valheim.Common.References` 1.0.21 renamed to `publicized_assemblies/<name>_publicized.dll`, and `0Harmony.dll` plus `bepinex.dll` (also as `BepInEx.dll`) in `BepInEx/core/`. Both plugins compiled this way on 2026-10-27.
 - **Build check `CheckNoUnshippedReferences`**: each plugin's build fails if the DLL references `System.ValueTuple`, `System.Memory` or `System.Buffers`. Valheim's Mono doesn't ship them; C# tuples crashed the game's inventory UI (2026-10-26).
 - In-game checks: `co_dump` (CSV of items, recipes, pieces, creatures, locations, biome data) and `co_biome <item>`.
 

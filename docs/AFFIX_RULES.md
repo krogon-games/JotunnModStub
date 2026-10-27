@@ -4,6 +4,35 @@
 
 The [general gear pool](#general-gear-pool-draft) further down is still a **draft proposal, not built** (drafted 2026-10-27). Every name, number and pool membership there is a starting point to edit. Full loot is design phase 7 (see [`GAME_DESIGN.md`](GAME_DESIGN.md)).
 
+**All affix numbers live in one table: [`Corruption/Data/affixes.csv`](../Corruption/Data/affixes.csv).** This document holds the rules and the reasoning; the table holds names, sides, ranges, weights and which items each affix rolls on. Don't copy numbers back into this document.
+
+## The affix table
+
+One row per affix, for every item type. There are no separate lists: an affix's **item class columns** say what it can roll on, and an item can belong to several classes. A one-handed axe is both `weapon` and `axe_1h`, so it rolls weapon affixes *and* universal and woodcutting gathering affixes; a pickaxe is only `pickaxe`; a battleaxe only `weapon`. The `pool` column is just a label for sorting and filtering.
+
+**How to edit:** open the file in Excel, Google Sheets or LibreOffice (or GitHub's web editor), change cells, and save it as **CSV UTF-8**. Then run `dotnet test CraftingOverhaul.Tests`: a test reads the real file and lists every mistake with its line number. GitHub shows the file as a searchable table.
+
+| Column | Meaning |
+|---|---|
+| `id` | Permanent key, stored on items. Lowercase, digits, `_`. **Never rename one that has shipped**, or existing items lose the affix |
+| `status` | `approved` (user agreed), `proposed` (awaiting review), `draft` (starting numbers, untested) |
+| `pool` | `gathering-universal`, `gathering-mining`, `gathering-woodcutting` or `gear`. The test checks it matches the item classes |
+| `side` | `prefix` or `suffix` |
+| `family` | Affixes with the same family can't both roll on one side of an item. A prefix and suffix sharing a family are **twins** and resonate |
+| `name` | Label for the tooltip line |
+| `item_name` | Word added to the item's name. Several separated by `/` = roll-quality names, lowest quarter first |
+| `text` | Tooltip text; `{0}` is replaced by the rolled value |
+| `min`, `max` | The roll range, the same on every item. Use a dot for decimals |
+| `unit` | `%`, `flat`, `m` or `levels` |
+| `weight` | How often it rolls compared with the others: 100 = common filler, 50 = normal, 25 = twin half, 10 = rare and special |
+| `effect` | Which piece of code applies it. Several affixes can share one effect with different numbers; a **new** effect needs code |
+| `weapon` … `axe_1h` | `x` = can roll on that item class |
+| `notes` | Free text |
+
+What needs a developer: a new `effect`, or a new item class column. Everything else (numbers, names, weights, adding an affix that reuses an existing effect, removing one) is a table edit.
+
+## Background
+
 Brief from the user for the general pool: "Diablo 2-style prefixes and suffixes. Some share the same mod. A rare combination that includes both can roll an item with ranges above normal value. Show in brackets at the end of each mod in the UI what the range is."
 
 **Related rules elsewhere** (not repeated here):
@@ -63,37 +92,37 @@ Vanilla has no pickaxe after the Mistlands and no one-handed axe from the Ashlan
 
 ### 1. Universal pool (pickaxes and axes)
 
-| Affix | Effect | Range | How it works (checked in the 1.0 game code) |
-|---|---|---|---|
-| Odin's Grace | The Allfather favours your strike: chance to harvest the resource in a single strike. Deposit: the chunk hit plus every chunk touching it. Tree: the whole tree (standing tree, log or stump) | 1–5% | Deposit: killing hits on the touching chunks (`MineRock5` hit areas). Tree: the drops of the tree, every log and log piece, and the stump are all known from the prefabs (`TreeBase.m_logPrefab`, `TreeLog.m_subLogPrefab`, `m_stubPrefab`), so they can be spawned at once and the tree removed. Done by the object's owner, or by the striker after claiming ownership. The tool tier check still applies |
-| Swift | Attack speed | +1–15% | Speeds up the player's animation while swinging the tool. Local only: other players see the normal swing speed (cosmetic) |
-| Efficient | Reduced gathering stamina | 5–20% | Lowers the tool's attack stamina (`Attack.GetAttackStamina`) |
-| Bountiful | Chance of bonus resources, on the hit that breaks the tree or ore | 1–15% | Needs the harvest message (see [Multiplayer](#multiplayer-drops-happen-on-the-owners-machine)) |
-| Durable | Tool durability | +20–75% | `ItemData.GetMaxDurability` |
-| Scholar's | Gathering skill XP | +10–25% | `Player.RaiseSkill` for Woodcutting and Pickaxes |
-| Determined | Small stamina recovery when a resource is harvested | Amount not set | Needs the harvest message |
+| Affix | Effect | How it works (checked in the 1.0 game code) |
+|---|---|---|
+| Odin's Grace | The Allfather favours your strike: chance to harvest the resource in a single strike. Deposit: the chunk hit plus every chunk touching it. Tree: the whole tree (standing tree, log or stump) | Deposit: killing hits on the touching chunks (`MineRock5` hit areas). Tree: the drops of the tree, every log and log piece, and the stump are all known from the prefabs (`TreeBase.m_logPrefab`, `TreeLog.m_subLogPrefab`, `m_stubPrefab`), so they can be spawned at once and the tree removed. Done by the object's owner, or by the striker after claiming ownership. The tool tier check still applies |
+| Swift | Attack speed | Speeds up the player's animation while swinging the tool. Local only: other players see the normal swing speed (cosmetic) |
+| Efficient | Reduced gathering stamina | Lowers the tool's attack stamina (`Attack.GetAttackStamina`) |
+| Bountiful | Chance of bonus resources, on the hit that breaks the tree or ore | Needs the harvest message (see [Multiplayer](#multiplayer-drops-happen-on-the-owners-machine)) |
+| Durable | Tool durability | `ItemData.GetMaxDurability` |
+| Scholar's | Gathering skill XP | `Player.RaiseSkill` for Woodcutting and Pickaxes |
+| Determined | Small stamina recovery when a resource is harvested | Needs the harvest message |
 
 ### 2. Mining pool (pickaxes only)
 
-| Affix | Effect | Range | How it works |
-|---|---|---|---|
-| Prospector's | Pickaxe damage against mineral deposits | +5–20% | Scale the pickaxe damage of hits on rocks and ore (`MineRock`, `MineRock5`, `Destructible`) |
-| Artisan | Chance to generate one additional ore | 5–15% | Needs the harvest message |
-| Excavator's | Pickaxe damage against terrain | +10–30% | Digging isn't damage: each hit applies a fixed terrain operation. **Proposed:** a deeper and wider dig per hit (a scaled copy of the pickaxe's dig) |
-| Veinbreaker's | Every 5th mining hit deals extra damage | +50–100% | Per-player hit counter on the striker's machine |
-| Fit | Chance to conserve stamina on a swing | 1–15% | Roll once per swing; that swing costs no stamina |
-| Gemseeker's | Small chance to find a gemstone or rare mineral from deposits | 1–15% | Needs the harvest message. Gem pool to define |
-| Seismic | Chance for a mining strike to damage nearby parts of the same deposit | 1–15% | Multi-part deposits (`MineRock5`) already accept area hits (`HitData.m_radius`); give that hit a radius |
+| Affix | Effect | How it works |
+|---|---|---|
+| Prospector's | Pickaxe damage against mineral deposits | Scale the pickaxe damage of hits on rocks and ore (`MineRock`, `MineRock5`, `Destructible`) |
+| Artisan | Chance to generate one additional ore | Needs the harvest message |
+| Excavator's | Pickaxe damage against terrain | Digging isn't damage: each hit applies a fixed terrain operation. **Proposed:** a deeper and wider dig per hit (a scaled copy of the pickaxe's dig) |
+| Veinbreaker's | Every 5th mining hit deals extra damage | Per-player hit counter on the striker's machine |
+| Fit | Chance to conserve stamina on a swing | Roll once per swing; that swing costs no stamina |
+| Gemseeker's | Small chance to find a gemstone or rare mineral from deposits | Needs the harvest message. Gem pool to define |
+| Seismic | Chance for a mining strike to damage nearby parts of the same deposit | Multi-part deposits (`MineRock5`) already accept area hits (`HitData.m_radius`); give that hit a radius |
 
 ### 3. Woodcutting pool (axes only)
 
-| Affix | Effect | Range | How it works |
-|---|---|---|---|
-| Lumberjack's | Chop damage against trees | +10–30% | Scale chop damage on standing trees (`TreeBase`) |
-| Bountiful | Chance of additional wood | 1–15% | Needs the harvest message. **Same name as the universal Bountiful** (see questions) |
-| Splintering | Chance for a successful chop to damage another nearby tree or log | 1–15% | Find the nearest other tree or log within a few metres and send it a copy of the hit |
-| Timberfall | Damage against fallen logs | +20–50% | Scale damage on logs (`TreeLog`) |
-| Rootbreaker | Chop damage against stumps | +25–300% | Stumps are the prefab a felled tree leaves (`TreeBase.m_stubPrefab`). From game knowledge they are `Destructible` objects; confirm with a dump |
+| Affix | Effect | How it works |
+|---|---|---|
+| Lumberjack's | Chop damage against trees | Scale chop damage on standing trees (`TreeBase`) |
+| Bountiful | Chance of additional wood | Needs the harvest message. **Same name as the universal Bountiful** (see questions) |
+| Splintering | Chance for a successful chop to damage another nearby tree or log | Find the nearest other tree or log within a few metres and send it a copy of the hit |
+| Timberfall | Damage against fallen logs | Scale damage on logs (`TreeLog`) |
+| Rootbreaker | Chop damage against stumps | Stumps are the prefab a felled tree leaves (`TreeBase.m_stubPrefab`). From game knowledge they are `Destructible` objects; confirm with a dump |
 
 ### Multiplayer: drops happen on the owner's machine
 
@@ -106,36 +135,27 @@ Verified in the 1.0 code: hitting a tree, log, stump, rock or deposit only sends
 
 ### Proposed prefix/suffix split (to confirm)
 
-Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **prefixes make the swing stronger, suffixes bring fortune and endurance.** The split doesn't need to be equal (user). The table covers the user's affixes; the [low-impact affixes](#low-impact-affixes) below add more of both.
+Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **prefixes make the swing stronger, suffixes bring fortune and endurance.** The split doesn't need to be equal (user). Each affix's side is the `side` column of the table.
 
-| Pool | Prefixes | Suffixes |
-|---|---|---|
-| Universal | Swift, Durable | Odin's Grace, Efficient, Bountiful, Scholar's, Determined |
-| Mining | Prospector's, Excavator's, Veinbreaker's, Seismic | Artisan, Fit, Gemseeker's |
-| Woodcutting | Lumberjack's, Splintering, Timberfall, Rootbreaker | Bountiful (wood) |
-| **Pickaxe total** | 6 | 8 |
-| **Axe total** | 6 | 6 |
 
-- **Names on the item** follow the general pool: prefix before, suffix after with "of" (*Swift Iron Pickaxe of the Artisan*). Proposed suffix forms: of Odin's Grace, of Efficiency, of Bounty, of the Scholar, of Determination, of the Artisan, of Fitness, of the Gemseeker, of Plenty (woodcutting Bountiful). Rares get a random two-word name instead.
+- **Names on the item** follow the general pool: prefix before, suffix after with "of" (*Swift Iron Pickaxe of the Artisan*), from the `item_name` column. Rares get a random two-word name instead.
 - **Tooltip lines** use the affix names above; the two Bountifuls need distinct line text ("bonus resources" vs "additional wood").
 
 ### Low-impact affixes
 
-*Proposed by Claude and approved by the user, 2026-10-27, for variety. Ranges and weights are starting values for tuning.* Every hook below exists in the 1.0 game code.
+*Proposed by Claude and approved by the user, 2026-10-27, for variety.* Every hook below exists in the 1.0 game code.
 
-**Roll weight classes (proposed):** **Common** = low-impact filler, rolls most often; **Uncommon** = most of the user's affixes; **Rare** = Odin's Grace and other standout effects. A tool full of Common affixes is a normal find; a Rare-weight affix is a treat.
+**Roll weights (proposed):** low-impact filler rolls most often (weight 100), most of the user's affixes are normal (50), Odin's Grace is rare (10). A tool full of filler is a normal find; a rare-weight affix is a treat.
 
-| Affix | Pool | Side | Effect | Range | Weight | Hook |
-|---|---|---|---|---|---|---|
-| Light | Universal | Prefix | Lighter tool | −10–50% weight | Common | `ItemData.GetWeight` |
-| Careful | Universal | Suffix | Chance a hit costs no durability | 10–30% | Common | Durability drain per hit in `Attack` |
-| Hushed | Universal | Suffix | Quieter strikes (less noise drawing creatures) | −10–40% noise | Common | Attack hit noise |
-| Keen-eyed | Universal | Suffix | Larger item pickup radius while the tool is held | +0.5–2 m | Common | `Player.m_autoPickupRange` |
-| Stonecutter's | Mining | Prefix | Chance of 1 extra stone from rocks and deposits | 5–25% | Common | Harvest message |
-| Resinous | Woodcutting | Suffix | Chance of 1 extra resin from trees | 5–25% | Common | Harvest message |
-| Forester's | Woodcutting | Suffix | Chance a harvested tree also drops its seed (pine cone, beech seed, birch seed, fir cone, acorn) | 5–20% | Common | Harvest message; seed per tree from game knowledge, to confirm in the data |
-
-With these, pickaxes have 8 prefixes and 11 suffixes to roll from, and one-handed axes 7 prefixes and 11 suffixes from the gathering pools (Stonecutter's on pickaxes; Resinous and Forester's on axes), plus the weapon families.
+| Affix | Pool | Effect | Hook |
+|---|---|---|---|
+| Light | Universal | Lighter tool | `ItemData.GetWeight` |
+| Careful | Universal | Chance a hit costs no durability | Durability drain per hit in `Attack` |
+| Hushed | Universal | Quieter strikes (less noise drawing creatures) | Attack hit noise |
+| Keen-eyed | Universal | Larger item pickup radius while the tool is held | `Player.m_autoPickupRange` |
+| Stonecutter's | Mining | Chance of 1 extra stone from rocks and deposits | Harvest message |
+| Resinous | Woodcutting | Chance of 1 extra resin from trees | Harvest message |
+| Forester's | Woodcutting | Chance a harvested tree also drops its seed (pine cone, beech seed, birch seed, fir cone, acorn) | Harvest message; seed per tree from game knowledge, to confirm in the data |
 
 ### Proposed interpretations (to confirm)
 
@@ -145,7 +165,7 @@ With these, pickaxes have 8 prefixes and 11 suffixes to roll from, and one-hande
 - **Prospector's** covers everything a pickaxe mines (stone rocks and ore); **Excavator's** covers digging the ground.
 - **Lumberjack's** covers standing trees only; logs are Timberfall's and stumps Rootbreaker's.
 - **Gemseeker's** pool: gems and rare minerals whose biome (from the biome detection) is no later than the deposit's biome, e.g. Amber, Ruby, Crystal, Obsidian; Bloodstone, Iolite and Jade from the Deep North; the ancient gemstones only there. Exact list to agree.
-- **Determined:** proposed 5–15 stamina per harvest event.
+- **Determined:** the user gave no amount; the table's range is a proposal (status `proposed`).
 - **Seismic:** radius about 2 m; **Splintering:** the copy deals half the hit's damage, within about 4 m. Both proposed.
 - **Veinbreaker's** counts hits on rocks and deposits only; the count resets when the tool is unequipped.
 - **Efficient and Fit stack** on a pickaxe.
@@ -161,38 +181,14 @@ With these, pickaxes have 8 prefixes and 11 suffixes to roll from, and one-hande
 
 Pickaxes roll only from the [gathering tool pools](#gathering-tool-affixes); one-handed axes roll from those and the weapon (**W**) families. The general pool's Woodcutting / mining row and tool (**T**) slot entries are replaced by the gathering pools.
 
-**Range rule (user, 2026-10-27): one range per affix for every item; the base item carries the progression.** It replaces the biome tiers I–IV in the prefix and suffix tables below; their names, slots and twins still apply, their per-tier ranges are kept only as a record of the draft. To play-test.
+**Range rule (user, 2026-10-27): one range per affix for every item; the base item carries the progression.** It replaces the draft's biome tiers I–IV (in git history before 2026-10-27's table). To play-test.
 
 **Flat values (approved 2026-10-27):**
 - Where the item has a matching stat, the affix is a **percentage of that stat**, so it grows with the base item (elemental damage as a % of the weapon's physical damage; knockback, parry and block as a % of the item's own value).
 - Stats the item doesn't have (max health, stamina, eitr, carry weight, skill levels, movement, resistances) stay **flat, with a smaller span** than the draft's tier I–IV spread.
 - **Tier names become roll-quality names:** the four names of a family mark which quarter of the range the roll landed in (*Sharp* = bottom quarter of Enhanced damage, *Merciless* = top quarter).
 
-**Ranges under the one-range rule** (proposed starting numbers, for tuning):
-
-| Family | Side | Range | Kind |
-|---|---|---|---|
-| Enhanced damage | P | +5–40% weapon damage | % of item |
-| Fire, frost, lightning, spirit damage | P and S (twins) | +5–20% of physical damage as that element | % of item |
-| Poison damage | P and S (twins) | +5–25% of physical damage as poison over time | % of item |
-| Weapon skill | P and S (twins) | +1–4 skill levels | Flat, smaller span |
-| Backstab | P | +10–60% backstab multiplier | % of item |
-| Enhanced armour | P | +5–40% armour | % of item |
-| Max health | P and S (twins) | +5–20 | Flat, smaller span |
-| Max stamina | P and S (twins) | +5–20 | Flat, smaller span |
-| Max eitr | P and S (twins) | +5–20 | Flat, smaller span |
-| Health regen | P and S (twins) | +5–25% | % of regen |
-| Durability | P and S (twins) | +20–100% | % of item |
-| Fire / frost / lightning / poison resistance | P | 3–15% less damage | Flat, smaller span |
-| Block | P and S (twins) | +10–50% block power | % of item |
-| Life steal | S | 1–5% of damage dealt | % of damage |
-| Attack stamina | S | 5–25% less stamina per attack | % of cost |
-| Stamina regen | S | +5–25% | % of regen |
-| Movement speed | S | +2–6% | Flat, smaller span |
-| Carry weight | S | +10–30 | Flat, smaller span |
-| Knockback | S | +10–50% | % of item |
-| Parry | S | +10–50% parry bonus | % of item |
-| All resistances | S | 2–8% less fire, frost, lightning and poison damage | Flat, smaller span |
+**Ranges** are in the table (`pool` = `gear`, status `draft`).
 
 Caps and resonance (+25% on a twin's combined top) are unchanged.
 
@@ -200,8 +196,7 @@ Caps and resonance (+25% on a twin's combined top) are unchanged.
 
 - **Twin interpretation (unconfirmed).** The brief said "both same suffix and same suffix". The draft reads it as *one prefix and one suffix that share a stat* (a twin). Needs the user's confirmation.
 - Can a **Magic** item (one prefix + one suffix) resonate, or only Rares? The draft doesn't restrict it.
-- **Name collisions to fix:** "of Warding" is both Block tier II and All resistances tier I; "of the Lox" is both Max stamina III and Carry weight III; "of Sleipnir" (stamina IV) vs "of Sleipnir's Stride" (movement IV); prefixes "Hardened" (durability II) and "Smouldering" (fire I) reuse map-affix names.
-- Roll weights per family and per tier aren't set (only "twin halves have half weight").
+- **Name collisions to fix:** "of Warding" is both a Block and an All resistances name; "of the Lox" both a Max stamina and a Carry weight name; "of Sleipnir" (stamina) vs "of Sleipnir's Stride" (movement); prefixes "Hardened" (durability) and "Smouldering" (fire) reuse map-affix names.
 
 ### How an item rolls
 
@@ -211,7 +206,7 @@ Caps and resonance (+25% on a twin's combined top) are unchanged.
 - **One affix per family.** An item can't roll the same family twice on the same side (no two "enhanced damage" prefixes).
 - ~~**Tiers follow the item's biome.**~~ *Superseded 2026-10-27 by the one-range rule above.* The draft gave each family four biome tiers (I = Meadows/Black Forest … IV = Ashlands/Deep North) with the item rolling its biome's tier.
   - Map tier and rarity floors (from the loot section) still decide *how many* affixes.
-- **Slots.** Each family lists which item classes it can roll on: **W** weapon, **S** shield, **A** armour (helmet, chest, legs, cape), **J** jewellery (rings, trinkets, talismans), **T** tool (axe, pickaxe, and so on).
+- **Item classes.** The table's columns: weapon, shield, helmet, chest, legs, cape, jewellery (rings, trinkets, talismans), pickaxe, axe_1h (one-handed axes, which are also weapons).
 
 ### Twin mods and resonance
 
@@ -244,59 +239,9 @@ Bronze Sword
 - **Twin lines:** shown merged, as Diablo 2 does. Hovering with a modifier key (e.g. Shift) could show the two halves separately.
 - **Uniques:** they show their own fixed ranges the same way.
 
-### Prefixes
+### Twins
 
-Per-tier ranges I / II / III / IV are the superseded draft; current ranges are in the one-range table above. Names and slots still apply.
-
-| Family | Names (tier I → IV) | Effect | I | II | III | IV | Slots | Twin |
-|---|---|---|---|---|---|---|---|---|
-| Enhanced damage | Sharp → Fine → Cruel → Merciless | +% weapon damage | 5–10% | 10–20% | 20–30% | 30–40% | W | — |
-| Fire damage | Smouldering → Burning → Blazing → Infernal | +flat fire damage | 2–5 | 5–10 | 10–18 | 18–28 | W | of Embers |
-| Frost damage | Chilling → Freezing → Glacial → Rimeborn | +flat frost damage | 2–5 | 5–10 | 10–18 | 18–28 | W | of Rime |
-| Lightning damage | Crackling → Sparking → Storming → Thunderous | +flat lightning damage | 2–5 | 5–10 | 10–18 | 18–28 | W | of Thunder |
-| Poison damage | Venomous → Toxic → Pestilent → Plaguebound | +flat poison damage over time | 3–6 | 6–12 | 12–22 | 22–34 | W | of the Serpent |
-| Spirit damage | Hallowed → Blessed → Sanctified → Einherjar's | +flat spirit damage | 2–5 | 5–10 | 10–18 | 18–28 | W | of the Valkyrie |
-| Weapon skill | Skilled → Adept → Expert → Master's | +levels to the weapon's skill | 1–2 | 2–4 | 3–5 | 4–7 | W | of Mastery |
-| Backstab | Sly → Cunning → Treacherous → Assassin's | +backstab multiplier | +0.25–0.5x | +0.5–1x | +1–1.5x | +1.5–2x | W | — |
-| Enhanced armour | Sturdy → Strong → Glorious → Godly | +% armour | 5–10% | 10–20% | 20–30% | 30–40% | S A | — |
-| Max health | Hale → Robust → Stalwart → Giant's | +max health | 5–10 | 10–15 | 15–25 | 25–35 | A J S | of the Bear |
-| Max stamina | Vigorous → Tireless → Indomitable → Jötunn's | +max stamina | 5–10 | 10–15 | 15–25 | 25–35 | A J | of the Wolf |
-| Max eitr | Mystic → Seer's → Völva's → Norn's | +max eitr | 5–10 | 10–15 | 15–25 | 25–35 | A J | of the Raven |
-| Health regen | Mending → Restoring → Renewing → Undying | +% health regen | 5–10% | 10–15% | 15–20% | 20–25% | A J | of Regrowth |
-| Durability | Solid → Hardened → Unyielding → Dwarven | +% max durability | 20–40% | 40–60% | 60–80% | 80–100% | W S A T | of Ages |
-| Fire resistance | Red → Crimson → Garnet → Ruby | % less fire damage | 5–10% | 10–15% | 15–20% | 20–25% | S A J | — |
-| Frost resistance | Azure → Lapis → Cobalt → Sapphire | % less frost damage | 5–10% | 10–15% | 15–20% | 20–25% | S A J | — |
-| Lightning resistance | Ochre → Amber → Coral → Topaz | % less lightning damage | 5–10% | 10–15% | 15–20% | 20–25% | S A J | — |
-| Poison resistance | Beryl → Jade → Viridian → Emerald | % less poison damage | 5–10% | 10–15% | 15–20% | 20–25% | S A J | — |
-| Block | Bulwark → Rampart → Bastion → Citadel | +% block power | 10–20% | 20–30% | 30–40% | 40–50% | S | of Deflection |
-| ~~Woodcutting / mining~~ (replaced by the gathering pools) | Woodsman's → Miner's style by tool | +% chop / pickaxe damage | 10–20% | 20–30% | 30–40% | 40–50% | T | — |
-
-### Suffixes
-
-| Family | Names (tier I → IV) | Effect | I | II | III | IV | Slots | Twin |
-|---|---|---|---|---|---|---|---|---|
-| Fire damage | of Embers → of Flame → of Fire → of Muspelheim | +flat fire damage | 2–5 | 5–10 | 10–18 | 18–28 | W | Smouldering… |
-| Frost damage | of Frost → of Ice → of Rime → of Niflheim | +flat frost damage | 2–5 | 5–10 | 10–18 | 18–28 | W | Chilling… |
-| Lightning damage | of Sparks → of Lightning → of Thunder → of Thor | +flat lightning damage | 2–5 | 5–10 | 10–18 | 18–28 | W | Crackling… |
-| Poison damage | of Venom → of the Adder → of the Serpent → of Jörmungandr | +flat poison damage | 3–6 | 6–12 | 12–22 | 22–34 | W | Venomous… |
-| Spirit damage | of Light → of the Valkyrie → of Asgard → of Odin | +flat spirit damage | 2–5 | 5–10 | 10–18 | 18–28 | W | Hallowed… |
-| Weapon skill | of Practice → of Skill → of Mastery → of Legends | +levels to the weapon's skill | 1–2 | 2–4 | 3–5 | 4–7 | W | Skilled… |
-| Max health | of the Boar → of the Bear → of the Troll → of the Jötunn | +max health | 5–10 | 10–15 | 15–25 | 25–35 | A J S | Hale… |
-| Max stamina | of the Deer → of the Wolf → of the Lox → of Sleipnir | +max stamina | 5–10 | 10–15 | 15–25 | 25–35 | A J | Vigorous… |
-| Max eitr | of Runes → of the Raven → of Galdr → of Mímir | +max eitr | 5–10 | 10–15 | 15–25 | 25–35 | A J | Mystic… |
-| Health regen | of Regrowth → of Renewal → of Idunn → of Yggdrasil | +% health regen | 5–10% | 10–15% | 15–20% | 20–25% | A J | Mending… |
-| Durability | of Ages → of Eras → of Aeons → of Eternity | +% max durability | 20–40% | 40–60% | 60–80% | 80–100% | W S A T | Solid… |
-| Block | of Deflection → of Warding → of the Wall → of the Shieldmaiden | +% block power | 10–20% | 20–30% | 30–40% | 40–50% | S | Bulwark… |
-| Life steal | of the Leech → of the Bat → of the Draugr → of the Vampire | % of damage dealt returned as health | 1–2% | 2–3% | 3–4% | 4–5% | W | — |
-| Attack stamina | of Ease → of Endurance → of Grace → of the Berserker | % less stamina per attack | 5–10% | 10–15% | 15–20% | 20–25% | W | — |
-| Stamina regen | of Breath → of the Lungs → of the Wind → of the Storm | +% stamina regen | 5–10% | 10–15% | 15–20% | 20–25% | A J | — |
-| Movement speed | of Haste → of Speed → of the Hare → of Sleipnir's Stride | +% movement speed | 2–4% | 4–6% | 6–8% | 8–10% | A (legs, cape) J | — |
-| Carry weight | of the Mule → of the Ox → of the Lox → of the Mountain | +carry weight | 10–20 | 20–30 | 30–40 | 40–50 | A J | — |
-| Knockback | of Force → of the Ram → of the Hammer → of Mjölnir | +% knockback | 10–20% | 20–30% | 30–40% | 40–50% | W S | — |
-| Parry | of Parrying → of Riposte → of the Duelist → of Tyr | +parry bonus | +0.25x | +0.5x | +0.75x | +1x | S W | — |
-| All resistances | of Warding → of the Elements → of the Aesir → of the Gods | % less fire, frost, lightning and poison damage | 3–5% | 5–8% | 8–11% | 11–14% | S A J | — |
-
-**Twins** (resonate when both halves roll): fire, frost, lightning, poison and spirit damage; weapon skill; max health; max stamina; max eitr; health regen; durability; block. Twelve twins in all, so resonance is possible on every item class.
+Twin families (resonate when both halves roll): fire, frost, lightning, poison and spirit damage; weapon skill; max health; max stamina; max eitr; health regen; durability; block. In the table, a twin is a prefix and a suffix with the same `family`.
 
 ### Caps and guards
 
@@ -322,5 +267,5 @@ Two random words, like Diablo 2's "Grim Fang", from Norse-flavoured lists:
 - **Storage:** affixes live on the item in `ItemDrop.ItemData.m_customData`. It exists in 1.0 and is saved and synced with the item. Each affix is stored as family and rolled value, so tooltips can show the bracket range and Divine Orbs can reroll in place.
 - **Effects:** applied by patches on the stat getters the game already uses: `ItemData.GetDamage`, `GetArmor`, `GetMaxDurability`, the player's max health/stamina/eitr, regen and movement modifiers, and damage taken for resistances.
 - **Tooltips:** a postfix on `ItemDrop.ItemData.GetTooltip` adds the affix lines with their bracket ranges. Rarity colours the item name.
-- **Data:** the affix table lives in a config/data file, not code, so new families, ranges and twins can be added without a rebuild, as planned for the world-unique pool.
+- **Data:** [`Corruption/Data/affixes.csv`](../Corruption/Data/affixes.csv), read and checked by `Corruption/Rules/AffixTable.cs` (unit-tested against the real file). Not loaded by the game yet: when loot is built, the server's copy becomes the one everyone uses, so the group can tune it without a rebuild.
 - **Roll logic:** a pure, unit-tested function, as with shard drops and talisman families. Its inputs are rarity, item class (including which pools the item uses) and a random source, and it outputs the affix list including resonance.

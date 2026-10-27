@@ -6,8 +6,8 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 ## Build health (checked 2026-10-27)
 
-- Both plugins compile against Valheim reference assemblies (cloud session, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **53 passed, 0 failed** (biome solver, shard rules, talisman families).
+- Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
+- `dotnet test CraftingOverhaul.Tests`: **60 passed, 0 failed** (biome solver, shard rules, talisman families, affix table).
 - Last play-test: 2026-10-26, single player, by the user.
 
 ## Implemented
@@ -71,9 +71,10 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 1. Play-test talismans, shard drops and the shard look; record results in `FEATURES.md` and here.
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
-3. **Phase 3: boss essences.** One new drop per boss (1 on a normal kill), cloned item + red tint, `CharacterDrop` hook like `ShardDrops`, boss list from game data (creatures with a defeat key), pure rule + tests.
-4. Run the multiplayer checklist when a second player is available.
-5. Settle the open decisions above before phase 4 (maps and rips).
+3. **Drop chance table:** a `Corruption/Data/` table like `affixes.csv` for Magic/Rare/unique chances and their multipliers, so balancing is a table edit.
+4. **Phase 3: boss essences.** One new drop per boss (1 on a normal kill), cloned item + red tint, `CharacterDrop` hook like `ShardDrops`, boss list from game data (creatures with a defeat key), pure rule + tests.
+5. Run the multiplayer checklist when a second player is available.
+6. Settle the open decisions above before phase 4 (maps and rips).
 
 ## Update routine
 

@@ -13,7 +13,8 @@ Valheim 1.0 mods (BepInEx + Jötunn + Harmony) for a group of four friends on a 
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Code layout, patterns to follow, game limits the code relies on |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Why things are as they are; rejected approaches; corrected facts |
 | [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) | Design overview and status, linking the full design docs |
-| [`docs/AFFIX_RULES.md`](docs/AFFIX_RULES.md) | Gear affix rules (draft) |
+| [`docs/AFFIX_RULES.md`](docs/AFFIX_RULES.md) | Affix rules and reasoning |
+| [`Corruption/Data/affixes.csv`](Corruption/Data/affixes.csv) | **Every affix's numbers** (names, sides, ranges, weights, item classes). Edit numbers here, never in the docs; `dotnet test` validates it |
 
 Game reference data: `data/game-dump-1.0.20/` (from `co_dump`; development only, never ship it).
 
@@ -51,7 +52,7 @@ Game reference data: `data/game-dump-1.0.20/` (from `co_dump`; development only,
 
 When a significant feature is completed, changed, deferred or play-tested, follow the update routine at the end of `docs/CURRENT_STATE.md` in the same commit (CURRENT_STATE, DECISIONS, and GAME_DESIGN / AFFIX_RULES / ARCHITECTURE where affected). Separate verified results from assumptions; don't record guesses as facts.
 
-Don't duplicate: design detail lives in `docs/corruption-design.md`, `docs/AFFIX_RULES.md` and `docs/storage-quests-design.md`; feature detail in `FEATURES.md`. Other docs link to them.
+Don't duplicate: design detail lives in `docs/corruption-design.md`, `docs/AFFIX_RULES.md` and `docs/storage-quests-design.md`; tunable numbers in data tables under `Corruption/Data/`; feature detail in `FEATURES.md`. Other docs link to them.
 
 ## Working style
 
