@@ -36,6 +36,6 @@ Every table has a `status` column: `approved` (the user agreed), `proposed` (awa
 | `status`, `notes` | As above |
 
 **How a drop chance is worked out:** base chance × the multiplier of every source that applies, capped at 100%.
-Example: a 2-star creature (`star_2`, unique ×1.5) inside a scar (`scar`, unique blank) has a unique chance of 1/2500 × 1.5 = 1 in about 1,667.
+Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`scar`, magic and rare ×1.5, unique blank) has a Magic chance of 1/50 × 1.5 × 1.5 = 1 in about 22, and a unique chance of 1/2500 × 1.5 = 1 in about 1,667.
 
-**Proposed, not decided:** each player near a kill rolls each rarity separately (personal loot); if both Magic and Rare succeed, only the Rare drops. Uniques roll on their own, on top.
+**Roll rules (decided 2026-10-27):** each player near a kill rolls separately (personal loot). Magic and Rare roll separately, but if both succeed only the Rare drops. Uniques roll on their own, on top. Code: `DropTable.Roll` in `Corruption/Rules/DropTable.cs`.

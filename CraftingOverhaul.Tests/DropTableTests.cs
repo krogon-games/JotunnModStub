@@ -68,6 +68,35 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(1f, table.Chance("magic", new[] { "huge" }));
         }
 
+        private static Func<double> Sequence(params double[] values)
+        {
+            int i = 0;
+            return () => values[i++];
+        }
+
+        [Fact]
+        public void RareWinsWhenMagicAndRareBothSucceed()
+        {
+            var errors = new List<string>();
+            var table = DropTable.Parse(Chances, "source,status,magic,rare,unique", errors);
+            Assert.Empty(errors);
+            // Rolls in order: unique, rare, magic.
+            Assert.Equal(new[] { "rare" }, table.Roll(null, Sequence(0.99, 0.0, 0.0)));
+            Assert.Equal(new[] { "magic" }, table.Roll(null, Sequence(0.99, 0.99, 0.0)));
+            Assert.Empty(table.Roll(null, Sequence(0.99, 0.99, 0.99)));
+            Assert.Equal(new[] { "unique", "rare" }, table.Roll(null, Sequence(0.0, 0.0, 0.0)));
+        }
+
+        [Fact]
+        public void StarsRaiseEveryRarity()
+        {
+            var table = ParseReal();
+            foreach (var rarity in DropTable.Rarities)
+            {
+                Assert.True(table.Chance(rarity, new[] { "star_2" }) > table.Chance(rarity, null), rarity);
+            }
+        }
+
         [Fact]
         public void ReportsTypicalEditingMistakes()
         {

@@ -128,6 +128,33 @@ namespace Corruption.Rules
             return (float)Math.Min(1.0, chance);
         }
 
+        /// <summary>
+        ///     One player's loot roll for one kill or chest (personal loot: each nearby player rolls separately).
+        ///     Magic and Rare roll separately, but at most one of them drops: if both succeed, only the Rare drops.
+        ///     A Unique rolls on its own, on top. Returns the rarities that drop, rarest first.
+        /// </summary>
+        /// <param name="random">Returns a value in [0, 1).</param>
+        public List<string> Roll(IEnumerable<string> sources, Func<double> random)
+        {
+            var list = sources == null ? new List<string>() : sources.ToList();
+            var drops = new List<string>();
+            if (random() < Chance("unique", list))
+            {
+                drops.Add("unique");
+            }
+            bool rare = random() < Chance("rare", list);
+            bool magic = random() < Chance("magic", list);
+            if (rare)
+            {
+                drops.Add("rare");
+            }
+            else if (magic)
+            {
+                drops.Add("magic");
+            }
+            return drops;
+        }
+
         private static List<string> Header(List<List<string>> rows, string file, string[] required, List<string> errors)
         {
             if (rows.Count == 0)

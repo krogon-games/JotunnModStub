@@ -1,12 +1,12 @@
 ﻿source,status,magic,rare,unique,notes
-star_1,approved,,,1.25,1-star creature. Magic/rare multipliers not set yet (blank = x1).
-star_2,approved,,,1.5,2-star creature. Magic/rare multipliers not set yet.
-star_3,approved,,,2,3-star creature (rips only). Magic/rare multipliers not set yet.
+star_1,approved,1.25,1.25,1.25,1-star creature. Magic and rare use the same multiplier as unique.
+star_2,approved,1.5,1.5,1.5,2-star creature. Magic and rare use the same multiplier as unique.
+star_3,approved,2,2,2,3-star creature (rips only). Magic and rare use the same multiplier as unique.
 dungeon_chest,approved,,,1.5,Vanilla dungeon chest.
-rip_tier_1,approved,,,1.25,Rip creature or rip chest. Magic/rare multipliers not set yet.
-rip_tier_2,proposed,1.25,1.25,1.5,Tier 2 and 3 unique values interpolated between the design's 1.25 (tier 1) and 2 (tier 4); magic/rare proposed.
-rip_tier_3,proposed,1.5,1.5,1.75,Interpolated; magic/rare proposed.
-rip_tier_4,proposed,2,2,2,Unique from the design; magic/rare proposed to match.
-scar,proposed,1.5,1.5,,Lingering corruption zone after a rip. Values proposed; the user wants corruption zones to raise item drops.
-terror_zone,proposed,1.5,1.5,1.5,Counts as a tier 2 rip for uniques (design); magic/rare proposed.
+rip_tier_1,approved,1.25,1.25,1.25,Rip creature or rip chest. Magic and rare use the same multiplier as unique.
+rip_tier_2,approved,1.25,1.25,1.5,Between the design's tier 1 (1.25) and tier 4 (2).
+rip_tier_3,approved,1.5,1.5,1.75,Between tier 2 and tier 4.
+rip_tier_4,approved,2,2,2,Unique from the design; magic and rare match it.
+scar,approved,1.5,1.5,,Lingering corruption zone after a rip. Corruption zones raise item drops.
+terror_zone,approved,1.5,1.5,1.5,Counts as a tier 2 rip for uniques (design).
 corrupted_boss,approved,,,3,On top of its boss unique roll.
