@@ -399,7 +399,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ### 2026-10-27
 - Added handover docs: `docs/CURRENT_STATE.md`, `DECISIONS.md`, `ARCHITECTURE.md`, `GAME_DESIGN.md`, and a rewritten `CLAUDE.md` with an update routine.
 - Decided: our own loot system, not Epic Loot.
-- Gathering tool affixes specified (universal, mining and woodcutting pools for pickaxes and one-handed woodcutting axes) in `docs/AFFIX_RULES.md`, with eligible tools from the game data and how each affix maps onto the game code. Loot rules agreed: crafting makes vanilla items, orbs upgrade them, monsters drop rolled items; Magic 1+1, Rare 2+2 affixes; tool affix ranges are the same for every tool. Not built (loot system, phase 7).
+- Gathering tool affixes specified (universal, mining and woodcutting pools for pickaxes and one-handed woodcutting axes) in `docs/AFFIX_RULES.md`, with eligible tools from the game data and how each affix maps onto the game code. Loot rules agreed: crafting makes vanilla items, orbs upgrade them, monsters drop rolled items; Magic 1+1, Rare 2+2 affixes; tool affix ranges are the same for every tool. Then: Magic 1 in 50 and Rare 1 in 100 monster drops (tunable); the same-range rule extended to all gear; Odin's Grace made a whole-tree / touching-chunks harvest; Jotun Bane, Thunderblood and Frostfire axes eligible; seven low-impact affixes proposed for variety. Not built (loot system, phase 7).
 - Drafted the gear affix pool (prefixes, suffixes, biome tiers, twin resonance, range display), now in `docs/AFFIX_RULES.md`.
 - Saved the storage and quest systems brief (`docs/storage-quests-design.md`) for later.
 - No mod code changed.

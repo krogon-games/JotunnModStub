@@ -345,6 +345,7 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 ### Drops
 
 - **Personal loot.** Every player near a kill gets their own roll for rare and unique items, so nobody fights over drops. Drops are tagged to their owner: only that player can pick them up for the first 60 seconds, then anyone can. Players can still drop or trade items to each other freely.
+- **Magic and rare drops** *(decided 2026-10-27)*: monsters drop randomly rolled items at low rates, starting at **Magic 1 in 50** and **Rare 1 in 100** per kill. Uniques and later rarities have their own separate chances. All chances live in an easily tuned data/config table, and other systems multiply them (corruption zones, scars, terror zones, map tiers). Workbench and forge crafting only makes Normal (vanilla) items; orbs are the path to better ones.
 - **Loot beams.** Rare items get a yellow light pillar and uniques an orange-gold one, visible from about 50 m with a distinct sound. At 1 unique per 20 hours, nobody should ever lose one in the grass.
 
 ## Currency orbs

@@ -49,7 +49,10 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Personal loot (60 s owner lock) and loot beams.
 - Loot system (rarity, affixes, orbs, uniques) is our own, not Epic Loot (decided 2026-10-27).
 - Workbench and forge craft Normal (vanilla) items only; orb crafting at the Riftforge upgrades them; monsters drop items with random rolls. Magic = up to 1 prefix + 1 suffix, Rare = up to 2 + 2 (2026-10-27).
-- Gathering tools (pickaxes, one-handed woodcutting axes) get their own affix pools; ranges are the same for every tool, and the base tool carries the progression (2026-10-27).
+- Gathering tools (pickaxes, one-handed woodcutting axes incl. Jotun Bane, Thunderblood and Frostfire) get their own affix pools (2026-10-27).
+- Affix ranges are the same for every item, tools and gear alike; the base item carries the progression. To play-test (2026-10-27).
+- Monster drops start at Magic 1 in 50 and Rare 1 in 100 per kill; uniques have separate chances; all chances in a tunable table, multiplied by corruption zones and similar systems (2026-10-27).
+- Odin's Grace is the powerful rare gathering affix: whole tree, or the hit deposit chunk plus every chunk touching it (2026-10-27).
 - Only the shard can brick gear (25%); orbs never brick; corrupted items are locked.
 
 ## Balance rules

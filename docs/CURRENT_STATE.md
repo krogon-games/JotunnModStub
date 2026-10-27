@@ -59,8 +59,8 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 ## Waiting on the user
 
-- **Gathering tool affixes:** confirm the prefix/suffix split, Jotun Bane and the elemental Nord axes, and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
-- Loot: monster drop rates for Magic and Rare items; whether general gear also uses one range for every item instead of biome tiers.
+- **Gathering tool affixes:** confirm the prefix/suffix split; review the proposed extra low-impact affixes and roll weights; confirm the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
+- **General gear affixes:** how flat-value affixes fit the "one range for every item" rule ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
 - Before phase 4: accept "server decides, owner spawns" and an own wave spawner instead of the raid system.
 - Corrupted bosses/gear: red like the shard, or the design doc's purple.
