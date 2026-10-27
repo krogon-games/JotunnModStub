@@ -35,3 +35,11 @@ Ideas saved for later exploration. Nothing here is planned or built yet. When an
   - Allow two talismans equipped at once?
   - Should magic rings work the same way, or be a separate item type?
   - Theme talismans and rings on Viking lore?
+
+## Storage and quests (added 2026-10-27)
+
+Full brief: [`storage-quests-design.md`](storage-quests-design.md). Build in this order:
+
+- **Chest tiers add slots:** bigger chests per tier (e.g. 4×4, 6×6, 8×8), no change to stack sizes.
+- **Super chest** (unlocked by a quest): deposits sort themselves into nearby chests that already hold that item.
+- **Mistlands bank and vault** (a Dvergr banker recruited by quest): one shared virtual store whose capacity is the base's total chest slots.
