@@ -34,7 +34,10 @@ Brief from the user for the general pool: "Diablo 2-style prefixes and suffixes.
 ### Eligible tools
 
 - **Pickaxes:** every player-craftable item that uses the Pickaxes skill.
-- **Axes:** only **one-handed woodcutting axes**: player-craftable, one-handed, Axes skill. Two-handed combat axes (battleaxes, Berserkir axes, Early Axes) never roll gathering affixes.
+- **Axes:** every **one-handed axe**: player-craftable, one-handed, Axes skill. Two-handed axes (battleaxes, Berserkir axes, Early Axes) never roll gathering affixes.
+- **One-handed axes are both tools and weapons** (user, 2026-10-27): they roll from the universal and woodcutting pools **and** the general pool's weapon (**W**) families. Pickaxes roll from the gathering pools only; two-handed axes from the weapon families only.
+  - **Proposed:** one combined pool per item, so a Magic one-handed axe could be *Lumberjack's Iron Axe of Embers*. Roll weights decide how often each kind appears.
+  - **Proposed:** the gathering pool's Durable and the weapon families' Durability raise the same stat, so they count as one family on an axe and can't both roll.
 - The rule is data-driven, so modded tools qualify automatically; a config list excludes exceptions.
 
 From the 1.0.20 dump (`data/game-dump-1.0.20/items.csv`):
@@ -103,7 +106,7 @@ Verified in the 1.0 code: hitting a tree, log, stump, rock or deposit only sends
 
 ### Proposed prefix/suffix split (to confirm)
 
-Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **prefixes make the swing stronger, suffixes bring fortune and endurance.** The split doesn't need to be equal (user). The table covers the user's affixes; the [proposed additions](#proposed-additional-affixes-to-review) below add more of both.
+Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **prefixes make the swing stronger, suffixes bring fortune and endurance.** The split doesn't need to be equal (user). The table covers the user's affixes; the [low-impact affixes](#low-impact-affixes) below add more of both.
 
 | Pool | Prefixes | Suffixes |
 |---|---|---|
@@ -116,9 +119,9 @@ Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **pre
 - **Names on the item** follow the general pool: prefix before, suffix after with "of" (*Swift Iron Pickaxe of the Artisan*). Proposed suffix forms: of Odin's Grace, of Efficiency, of Bounty, of the Scholar, of Determination, of the Artisan, of Fitness, of the Gemseeker, of Plenty (woodcutting Bountiful). Rares get a random two-word name instead.
 - **Tooltip lines** use the affix names above; the two Bountifuls need distinct line text ("bonus resources" vs "additional wood").
 
-### Proposed additional affixes (to review)
+### Low-impact affixes
 
-*Proposed by Claude, 2026-10-27, after the user asked for more variety and some low-impact options. Names, ranges and weights are starting points.* Every hook below exists in the 1.0 game code.
+*Proposed by Claude and approved by the user, 2026-10-27, for variety. Ranges and weights are starting values for tuning.* Every hook below exists in the 1.0 game code.
 
 **Roll weight classes (proposed):** **Common** = low-impact filler, rolls most often; **Uncommon** = most of the user's affixes; **Rare** = Odin's Grace and other standout effects. A tool full of Common affixes is a normal find; a Rare-weight affix is a treat.
 
@@ -132,7 +135,7 @@ Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **pre
 | Resinous | Woodcutting | Suffix | Chance of 1 extra resin from trees | 5–25% | Common | Harvest message |
 | Forester's | Woodcutting | Suffix | Chance a harvested tree also drops its seed (pine cone, beech seed, birch seed, fir cone, acorn) | 5–20% | Common | Harvest message; seed per tree from game knowledge, to confirm in the data |
 
-With these, pickaxes have 8 prefixes and 11 suffixes to roll from, and axes 7 prefixes and 11 suffixes (Stonecutter's on pickaxes; Resinous and Forester's on axes).
+With these, pickaxes have 8 prefixes and 11 suffixes to roll from, and one-handed axes 7 prefixes and 11 suffixes from the gathering pools (Stonecutter's on pickaxes; Resinous and Forester's on axes), plus the weapon families.
 
 ### Proposed interpretations (to confirm)
 
@@ -150,16 +153,48 @@ With these, pickaxes have 8 prefixes and 11 suffixes to roll from, and axes 7 pr
 ### Open questions (gathering tools)
 
 1. Confirm the prefix/suffix split and suffix names.
-2. Review the proposed additional affixes and weight classes.
-3. The proposed interpretations above, including how Odin's Grace treats logs and stumps.
+2. Confirm the roll weight classes (Common / Uncommon / Rare).
+3. Confirm one combined pool for one-handed axes (gathering + weapon families).
+4. The proposed interpretations above, including how Odin's Grace treats logs and stumps.
 
 ## General gear pool (draft)
 
-Tools (**T**) roll only from the [gathering tool pools](#gathering-tool-affixes); the general pool's Woodcutting / mining and tool-slot entries are replaced by them.
+Pickaxes roll only from the [gathering tool pools](#gathering-tool-affixes); one-handed axes roll from those and the weapon (**W**) families. The general pool's Woodcutting / mining row and tool (**T**) slot entries are replaced by the gathering pools.
 
-**Range rule (user, 2026-10-27): one range per affix for every item; the base item carries the progression.** This replaces the biome tiers I–IV below, which stay only as a record of the draft. To play-test.
-- **Proposed:** each family's range becomes its full span, from the tier I minimum to the tier IV maximum (e.g. Enhanced damage 5–40%). Tier names collapse to one name per family.
-- **Problem to settle:** flat-value affixes (+fire damage, +max health, +carry weight) don't scale with the base item, so a top roll on a Meadows item would be strong early. **Proposed:** where the item has a matching stat, make the affix a percentage of it (elemental damage as a % of the weapon's damage); for stats the item doesn't have (max health, stamina, eitr, carry weight), keep flat values but with a smaller span. To decide.
+**Range rule (user, 2026-10-27): one range per affix for every item; the base item carries the progression.** It replaces the biome tiers I–IV in the prefix and suffix tables below; their names, slots and twins still apply, their per-tier ranges are kept only as a record of the draft. To play-test.
+
+**Flat values (approved 2026-10-27):**
+- Where the item has a matching stat, the affix is a **percentage of that stat**, so it grows with the base item (elemental damage as a % of the weapon's physical damage; knockback, parry and block as a % of the item's own value).
+- Stats the item doesn't have (max health, stamina, eitr, carry weight, skill levels, movement, resistances) stay **flat, with a smaller span** than the draft's tier I–IV spread.
+- **Tier names become roll-quality names:** the four names of a family mark which quarter of the range the roll landed in (*Sharp* = bottom quarter of Enhanced damage, *Merciless* = top quarter).
+
+**Ranges under the one-range rule** (proposed starting numbers, for tuning):
+
+| Family | Side | Range | Kind |
+|---|---|---|---|
+| Enhanced damage | P | +5–40% weapon damage | % of item |
+| Fire, frost, lightning, spirit damage | P and S (twins) | +5–20% of physical damage as that element | % of item |
+| Poison damage | P and S (twins) | +5–25% of physical damage as poison over time | % of item |
+| Weapon skill | P and S (twins) | +1–4 skill levels | Flat, smaller span |
+| Backstab | P | +10–60% backstab multiplier | % of item |
+| Enhanced armour | P | +5–40% armour | % of item |
+| Max health | P and S (twins) | +5–20 | Flat, smaller span |
+| Max stamina | P and S (twins) | +5–20 | Flat, smaller span |
+| Max eitr | P and S (twins) | +5–20 | Flat, smaller span |
+| Health regen | P and S (twins) | +5–25% | % of regen |
+| Durability | P and S (twins) | +20–100% | % of item |
+| Fire / frost / lightning / poison resistance | P | 3–15% less damage | Flat, smaller span |
+| Block | P and S (twins) | +10–50% block power | % of item |
+| Life steal | S | 1–5% of damage dealt | % of damage |
+| Attack stamina | S | 5–25% less stamina per attack | % of cost |
+| Stamina regen | S | +5–25% | % of regen |
+| Movement speed | S | +2–6% | Flat, smaller span |
+| Carry weight | S | +10–30 | Flat, smaller span |
+| Knockback | S | +10–50% | % of item |
+| Parry | S | +10–50% parry bonus | % of item |
+| All resistances | S | 2–8% less fire, frost, lightning and poison damage | Flat, smaller span |
+
+Caps and resonance (+25% on a twin's combined top) are unchanged.
 
 ### Open questions
 
@@ -174,10 +209,8 @@ Tools (**T**) roll only from the [gathering tool pools](#gathering-tool-affixes)
   - **Magic:** one prefix, one suffix, or both (1–2 affixes, as in the rarity table).
   - **Rare:** up to 2 prefixes and 2 suffixes, 3–4 affixes in total. It gets a random two-word name instead (see [Rare names](#rare-names)).
 - **One affix per family.** An item can't roll the same family twice on the same side (no two "enhanced damage" prefixes).
-- **Tiers follow the item's biome.** Each family has four tiers: I = Meadows/Black Forest, II = Swamp/Mountain (and Ocean), III = Plains/Mistlands, IV = Ashlands/Deep North.
-  - An item rolls the tier of its biome, like Diablo 2's item level. A bronze sword (Black Forest) rolls tier I; a Flametal sword rolls tier IV.
-  - The biome comes from CraftingOverhaul's data-driven biome detection, so modded gear gets the right tier too.
-  - Map tier and rarity floors (from the loot section) decide *how many* affixes; the item's biome decides *how strong*.
+- ~~**Tiers follow the item's biome.**~~ *Superseded 2026-10-27 by the one-range rule above.* The draft gave each family four biome tiers (I = Meadows/Black Forest … IV = Ashlands/Deep North) with the item rolling its biome's tier.
+  - Map tier and rarity floors (from the loot section) still decide *how many* affixes.
 - **Slots.** Each family lists which item classes it can roll on: **W** weapon, **S** shield, **A** armour (helmet, chest, legs, cape), **J** jewellery (rings, trinkets, talismans), **T** tool (axe, pickaxe, and so on).
 
 ### Twin mods and resonance
@@ -186,9 +219,9 @@ Some stats exist as both a prefix and a suffix: **twin mods**. When an item roll
 
 - **Normal combined range:** prefix min + suffix min to prefix max + suffix max.
 - **Resonant range:** the same minimum, with the maximum raised by 25%.
-- **Example:** tier II *Robust* (+10–15 max health) and tier II *of the Bear* (+10–15 max health):
-  - normal combined range +20–30;
-  - **resonant range +20–37**.
+- **Example:** *Hale/Robust/…* (+5–20 max health) and *of the Bear* (+5–20 max health):
+  - normal combined range +10–40;
+  - **resonant range +10–50**.
 - **Rarity:** twin halves have half the normal roll weight, so a resonant item is a find rather than a given. On a rare item with 2 prefixes and 2 suffixes, two resonant lines are possible but very unlikely.
 - **Orbs:**
   - A Divine Orb rerolls the value within the resonant range.
@@ -196,24 +229,24 @@ Some stats exist as both a prefix and a suffix: **twin mods**. When an item roll
 
 ### Showing ranges
 
-Every affix line ends with its possible range, for the item's tier, in brackets. Twin lines show the resonant range and a marker.
+Every affix line ends with its possible range in brackets. Twin lines show the resonant range and a marker.
 
 ```
 Grim Fang                                  (rare, yellow)
 Bronze Sword
-+24% damage [20–30]
-+7 fire damage [5–10]
-+27 max health [20–37] ◆ resonant
--12% attack stamina [10–15]
++24% damage [5–40]
++12% damage as fire [5–20]
++27 max health [10–50] ◆ resonant
+-12% attack stamina [5–25]
 ```
 
-- **Bracket:** the tier's range, not every tier's, so it answers "how good is this roll?".
+- **Bracket:** the affix's range, the same on every item, so it answers "how good is this roll?". Percentage lines can also show the resulting value (e.g. "+24% damage (+14)") so the base item's role is visible.
 - **Twin lines:** shown merged, as Diablo 2 does. Hovering with a modifier key (e.g. Shift) could show the two halves separately.
 - **Uniques:** they show their own fixed ranges the same way.
 
 ### Prefixes
 
-Ranges are per tier: I / II / III / IV.
+Per-tier ranges I / II / III / IV are the superseded draft; current ranges are in the one-range table above. Names and slots still apply.
 
 | Family | Names (tier I → IV) | Effect | I | II | III | IV | Slots | Twin |
 |---|---|---|---|---|---|---|---|---|
@@ -236,7 +269,7 @@ Ranges are per tier: I / II / III / IV.
 | Lightning resistance | Ochre → Amber → Coral → Topaz | % less lightning damage | 5–10% | 10–15% | 15–20% | 20–25% | S A J | — |
 | Poison resistance | Beryl → Jade → Viridian → Emerald | % less poison damage | 5–10% | 10–15% | 15–20% | 20–25% | S A J | — |
 | Block | Bulwark → Rampart → Bastion → Citadel | +% block power | 10–20% | 20–30% | 30–40% | 40–50% | S | of Deflection |
-| Woodcutting / mining | Woodsman's → Miner's style by tool | +% chop / pickaxe damage | 10–20% | 20–30% | 30–40% | 40–50% | T | — |
+| ~~Woodcutting / mining~~ (replaced by the gathering pools) | Woodsman's → Miner's style by tool | +% chop / pickaxe damage | 10–20% | 20–30% | 30–40% | 40–50% | T | — |
 
 ### Suffixes
 
@@ -286,8 +319,8 @@ Two random words, like Diablo 2's "Grim Fang", from Norse-flavoured lists:
 
 ### Technical notes
 
-- **Storage:** affixes live on the item in `ItemDrop.ItemData.m_customData`. It exists in 1.0 and is saved and synced with the item. Each affix is stored as family, tier and rolled value, so tooltips can show the bracket range and Divine Orbs can reroll in place.
+- **Storage:** affixes live on the item in `ItemDrop.ItemData.m_customData`. It exists in 1.0 and is saved and synced with the item. Each affix is stored as family and rolled value, so tooltips can show the bracket range and Divine Orbs can reroll in place.
 - **Effects:** applied by patches on the stat getters the game already uses: `ItemData.GetDamage`, `GetArmor`, `GetMaxDurability`, the player's max health/stamina/eitr, regen and movement modifiers, and damage taken for resistances.
 - **Tooltips:** a postfix on `ItemDrop.ItemData.GetTooltip` adds the affix lines with their bracket ranges. Rarity colours the item name.
-- **Data:** the affix table lives in a config/data file, not code, so new families, tiers and twins can be added without a rebuild, as planned for the world-unique pool.
-- **Roll logic:** a pure, unit-tested function, as with shard drops and talisman families. Its inputs are rarity, item class, tier and a random source, and it outputs the affix list including resonance.
+- **Data:** the affix table lives in a config/data file, not code, so new families, ranges and twins can be added without a rebuild, as planned for the world-unique pool.
+- **Roll logic:** a pure, unit-tested function, as with shard drops and talisman families. Its inputs are rarity, item class (including which pools the item uses) and a random source, and it outputs the affix list including resonance.
