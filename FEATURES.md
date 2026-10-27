@@ -375,7 +375,7 @@ Decided 2026-10-27: we build our own loot system rather than depend on Epic Loot
 - corruption shards, maps and rips;
 - corrupted bosses;
 - rarity tiers, currency orbs and uniques;
-- gear prefixes and suffixes (draft): `docs/AFFIX_RULES.md`.
+- gear prefixes and suffixes (draft), and the gathering tool affixes that come first: `docs/AFFIX_RULES.md`.
 
 The technical review is in `docs/corruption-design-review.md`. It suggests building the corruption mod as a separate plugin in this repository.
 
@@ -399,6 +399,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ### 2026-10-27
 - Added handover docs: `docs/CURRENT_STATE.md`, `DECISIONS.md`, `ARCHITECTURE.md`, `GAME_DESIGN.md`, and a rewritten `CLAUDE.md` with an update routine.
 - Decided: our own loot system, not Epic Loot.
+- Gathering tool affixes specified (universal, mining and woodcutting pools for pickaxes and one-handed woodcutting axes) in `docs/AFFIX_RULES.md`, with eligible tools from the game data and how each affix maps onto the game code. Not built.
 - Drafted the gear affix pool (prefixes, suffixes, biome tiers, twin resonance, range display), now in `docs/AFFIX_RULES.md`.
 - Saved the storage and quest systems brief (`docs/storage-quests-design.md`) for later.
 - No mod code changed.

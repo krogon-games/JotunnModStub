@@ -1,23 +1,121 @@
 # Affix rules
 
-**Status: draft proposal, not built** (drafted 2026-10-27, awaiting the user's review). Every name, number and pool membership is a starting point to edit. Implementation is design phase 7 (see [`GAME_DESIGN.md`](GAME_DESIGN.md)).
+**Current focus: [gathering tool affixes](#gathering-tool-affixes)** (pickaxes and woodcutting axes), specified by the user on 2026-10-27, not built yet. They are the first affix slice to implement.
 
-Brief from the user: "Diablo 2-style prefixes and suffixes. Some share the same mod. A rare combination that includes both can roll an item with ranges above normal value. Show in brackets at the end of each mod in the UI what the range is."
+The [general gear pool](#general-gear-pool-draft) further down is still a **draft proposal, not built** (drafted 2026-10-27). Every name, number and pool membership there is a starting point to edit. Full loot is design phase 7 (see [`GAME_DESIGN.md`](GAME_DESIGN.md)).
+
+Brief from the user for the general pool: "Diablo 2-style prefixes and suffixes. Some share the same mod. A rare combination that includes both can roll an item with ranges above normal value. Show in brackets at the end of each mod in the UI what the range is."
 
 **Related rules elsewhere** (not repeated here):
 - Rarity tiers (Normal / Magic 1–2 affixes / Rare 3–4 / Unique fixed), currency orbs, corruption lock and the shard's 25% brick chance: [`corruption-design.md` → Currency orbs](corruption-design.md#currency-orbs) and [Loot and uniques](corruption-design.md#loot-and-uniques).
 - Map affixes (Frostbitten, Swarming, ...) are a separate system that modifies rips, not gear: [Map affixes and tiers](corruption-design.md#map-affixes-and-tiers).
 - Balance rules that bind affixes: loot never carries downsides; boosts, not bypasses ([Balance rules](corruption-design.md#balance-rules-and-open-questions)).
 
-## Open questions
+## Gathering tool affixes
+
+*Specified by the user, 2026-10-27. Status: designed, not built.* Names, effects and ranges in the three pool tables are the user's; everything marked **proposed** is an interpretation awaiting confirmation.
+
+### Eligible tools
+
+- **Pickaxes:** every player-craftable item that uses the Pickaxes skill.
+- **Axes:** only **one-handed woodcutting axes**: player-craftable, one-handed, Axes skill. Two-handed combat axes (battleaxes, Berserkir axes, Early Axes) never roll gathering affixes.
+- The rule is data-driven, so modded tools qualify automatically; a config list excludes exceptions.
+
+From the 1.0.20 dump (`data/game-dump-1.0.20/items.csv`):
+
+| Tool | Prefab | Biome | Tool tier | Eligible |
+|---|---|---|---|---|
+| Antler pickaxe | `PickaxeAntler` | Meadows | 0 | Yes |
+| Bronze pickaxe | `PickaxeBronze` | Black Forest | 1 | Yes |
+| Iron pickaxe | `PickaxeIron` | Swamp | 2 | Yes |
+| Black metal pickaxe | `PickaxeBlackMetal` | Mistlands | 3 | Yes |
+| Stone pickaxe | `PickaxeStone` | — | 0 | Recipe disabled in 1.0 |
+| Stone axe | `AxeStone` | Meadows | 0 | Yes |
+| Flint axe | `AxeFlint` | Meadows | 1 | Yes |
+| Bronze axe | `AxeBronze` | Black Forest | 2 | Yes |
+| Iron axe | `AxeIron` | Swamp | 3 | Yes |
+| Black metal axe | `AxeBlackMetal` | Plains | 4 | Yes |
+| Jotun Bane | `AxeJotunBane` | Mistlands | 4 | **To confirm**: the only Mistlands one-handed axe, but has 40 poison damage |
+| Nord axe | `AxeGold` | Deep North | 6 | Yes |
+| Thunderblood axe, Frostfire axe | `AxeGold_BloodLightning`, `AxeGold_FrostFire` | Deep North | 6 | **To confirm**: elemental combat variants of the Nord axe |
+| Wooden axe | `AxeWood` | — | 1 | No: found in chests only, 1 damage |
+
+Vanilla has no pickaxe after the Mistlands and no one-handed axe from the Ashlands.
+
+### 1. Universal pool (pickaxes and axes)
+
+| Affix | Effect | Range | How it works (checked in the 1.0 game code) |
+|---|---|---|---|
+| Odin's Grace | The Allfather favours your strike: chance to harvest the struck resource in a single strike | 1–5% | Raise the hit's chop/pickaxe damage enough to destroy the object. The tool tier check still applies |
+| Swift | Attack speed | +1–15% | Speeds up the player's animation while swinging the tool. Local only: other players see the normal swing speed (cosmetic) |
+| Efficient | Reduced gathering stamina | 5–20% | Lowers the tool's attack stamina (`Attack.GetAttackStamina`) |
+| Bountiful | Chance of bonus resources, on the hit that breaks the tree or ore | 1–15% | Needs the harvest message (see [Multiplayer](#multiplayer-drops-happen-on-the-owners-machine)) |
+| Durable | Tool durability | +20–75% | `ItemData.GetMaxDurability` |
+| Scholar's | Gathering skill XP | +10–25% | `Player.RaiseSkill` for Woodcutting and Pickaxes |
+| Determined | Small stamina recovery when a resource is harvested | Amount not set | Needs the harvest message |
+
+### 2. Mining pool (pickaxes only)
+
+| Affix | Effect | Range | How it works |
+|---|---|---|---|
+| Prospector's | Pickaxe damage against mineral deposits | +5–20% | Scale the pickaxe damage of hits on rocks and ore (`MineRock`, `MineRock5`, `Destructible`) |
+| Artisan | Chance to generate one additional ore | 5–15% | Needs the harvest message |
+| Excavator's | Pickaxe damage against terrain | +10–30% | Digging isn't damage: each hit applies a fixed terrain operation. **Proposed:** a deeper and wider dig per hit (a scaled copy of the pickaxe's dig) |
+| Veinbreaker's | Every 5th mining hit deals extra damage | +50–100% | Per-player hit counter on the striker's machine |
+| Fit | Chance to conserve stamina on a swing | 1–15% | Roll once per swing; that swing costs no stamina |
+| Gemseeker's | Small chance to find a gemstone or rare mineral from deposits | 1–15% | Needs the harvest message. Gem pool to define |
+| Seismic | Chance for a mining strike to damage nearby parts of the same deposit | 1–15% | Multi-part deposits (`MineRock5`) already accept area hits (`HitData.m_radius`); give that hit a radius |
+
+### 3. Woodcutting pool (axes only)
+
+| Affix | Effect | Range | How it works |
+|---|---|---|---|
+| Lumberjack's | Chop damage against trees | +10–30% | Scale chop damage on standing trees (`TreeBase`) |
+| Bountiful | Chance of additional wood | 1–15% | Needs the harvest message. **Same name as the universal Bountiful** (see questions) |
+| Splintering | Chance for a successful chop to damage another nearby tree or log | 1–15% | Find the nearest other tree or log within a few metres and send it a copy of the hit |
+| Timberfall | Damage against fallen logs | +20–50% | Scale damage on logs (`TreeLog`) |
+| Rootbreaker | Chop damage against stumps | +25–300% | Stumps are the prefab a felled tree leaves (`TreeBase.m_stubPrefab`). From game knowledge they are `Destructible` objects; confirm with a dump |
+
+### Multiplayer: drops happen on the owner's machine
+
+Verified in the 1.0 code: hitting a tree, log, stump, rock or deposit only sends the hit to whoever owns that object. The owner's game applies the damage, decides whether it breaks and spawns the drops. The owner can't see the striker's tool affixes, because an item's custom data isn't part of the synced equipment.
+
+- **Changes to the hit** (Odin's Grace, Prospector's, Excavator's, Veinbreaker's, Seismic, Lumberjack's, Splintering, Timberfall, Rootbreaker) happen on the striker's machine before the hit is sent, so they work in multiplayer as they are.
+- **Striker-only effects** (Swift, Efficient, Fit, Durable, Scholar's) never involve the owner.
+- **On-harvest effects** (both Bountifuls, Artisan, Gemseeker's, Determined) need a small "harvested" message from the owner's game back to the striker's, which then rolls and spawns the extra items next to the object. Every machine needs the mod for this, which fits the Corruption plugin (`EveryoneMustHaveMod`).
+
+### Proposed interpretations (to confirm)
+
+- **Harvest event:** every object or deposit part that drops resources when it breaks counts once (a tree, each log, a stump, a rock, each chunk of a copper deposit). On-harvest chances roll per event.
+- **Odin's Grace** destroys the struck object or deposit chunk, not a whole multi-part deposit (that could give 30+ ore). On a tree it fells the tree; the logs still need chopping.
+- **Prospector's** covers everything a pickaxe mines (stone rocks and ore); **Excavator's** covers digging the ground.
+- **Lumberjack's** covers standing trees only; logs are Timberfall's and stumps Rootbreaker's.
+- **Gemseeker's** pool: gems and rare minerals whose biome (from the biome detection) is no later than the deposit's biome, e.g. Amber, Ruby, Crystal, Obsidian; Bloodstone, Iolite and Jade from the Deep North; the ancient gemstones only there. Exact list to agree.
+- **Determined:** proposed 5–15 stamina per harvest event.
+- **Seismic:** radius about 2 m; **Splintering:** the copy deals half the hit's damage, within about 4 m. Both proposed.
+- **Veinbreaker's** counts hits on rocks and deposits only; the count resets when the tool is unequipped.
+- **Efficient and Fit stack** on a pickaxe.
+
+### Open questions (gathering tools)
+
+1. **How do tools get affixes?** There's no loot system yet. Options: roll when the tool is crafted, Riftforge orbs, or drops.
+2. **How many affixes per tool**, and does the Magic/Rare prefix/suffix structure apply? Several names here are nouns (Odin's Grace, Rootbreaker), not prefixes or suffixes.
+3. **Tiers:** one range for every tool, as given, or scaled by the tool's biome like the general pool (tiers I–IV)?
+4. **Two Bountifuls** overlap on axes (bonus resources vs additional wood), and **Artisan** overlaps the universal Bountiful on pickaxes. Rename, merge, or define the difference (e.g. Bountiful repeats the whole drop, Artisan adds one ore)?
+5. Are Jotun Bane and the Thunderblood and Frostfire axes woodcutting axes?
+
+## General gear pool (draft)
+
+Tools (**T**) roll only from the [gathering tool pools](#gathering-tool-affixes); the general pool's Woodcutting / mining and tool-slot entries are replaced by them.
+
+### Open questions
 
 - **Twin interpretation (unconfirmed).** The brief said "both same suffix and same suffix". The draft reads it as *one prefix and one suffix that share a stat* (a twin). Needs the user's confirmation.
 - Can a **Magic** item (one prefix + one suffix) resonate, or only Rares? The draft doesn't restrict it.
 - **Name collisions to fix:** "of Warding" is both Block tier II and All resistances tier I; "of the Lox" is both Max stamina III and Carry weight III; "of Sleipnir" (stamina IV) vs "of Sleipnir's Stride" (movement IV); prefixes "Hardened" (durability II) and "Smouldering" (fire I) reuse map-affix names.
-- Woodcutting / mining has no per-tier names yet.
 - Roll weights per family and per tier aren't set (only "twin halves have half weight").
 
-## How an item rolls
+### How an item rolls
 
 - **Prefixes and suffixes.** Like Diablo 2, every affix is either a prefix (named before the item) or a suffix (named after it): *Hale Bronze Sword of the Bear*.
   - **Magic:** one prefix, one suffix, or both (1–2 affixes, as in the rarity table).
@@ -29,7 +127,7 @@ Brief from the user: "Diablo 2-style prefixes and suffixes. Some share the same 
   - Map tier and rarity floors (from the loot section) decide *how many* affixes; the item's biome decides *how strong*.
 - **Slots.** Each family lists which item classes it can roll on: **W** weapon, **S** shield, **A** armour (helmet, chest, legs, cape), **J** jewellery (rings, trinkets, talismans), **T** tool (axe, pickaxe, and so on).
 
-## Twin mods and resonance
+### Twin mods and resonance
 
 Some stats exist as both a prefix and a suffix: **twin mods**. When an item rolls **both halves of a twin**, the two merge into one line, and that line is **resonant**: it rolls from a wider range whose top is 25% above what the two could normally reach together.
 
@@ -43,7 +141,7 @@ Some stats exist as both a prefix and a suffix: **twin mods**. When an item roll
   - A Divine Orb rerolls the value within the resonant range.
   - Annulment can remove one half, which ends the resonance; the remaining half re-rolls within its own range.
 
-## Showing ranges
+### Showing ranges
 
 Every affix line ends with its possible range, for the item's tier, in brackets. Twin lines show the resonant range and a marker.
 
@@ -60,7 +158,7 @@ Bronze Sword
 - **Twin lines:** shown merged, as Diablo 2 does. Hovering with a modifier key (e.g. Shift) could show the two halves separately.
 - **Uniques:** they show their own fixed ranges the same way.
 
-## Prefixes
+### Prefixes
 
 Ranges are per tier: I / II / III / IV.
 
@@ -87,7 +185,7 @@ Ranges are per tier: I / II / III / IV.
 | Block | Bulwark → Rampart → Bastion → Citadel | +% block power | 10–20% | 20–30% | 30–40% | 40–50% | S | of Deflection |
 | Woodcutting / mining | Woodsman's → Miner's style by tool | +% chop / pickaxe damage | 10–20% | 20–30% | 30–40% | 40–50% | T | — |
 
-## Suffixes
+### Suffixes
 
 | Family | Names (tier I → IV) | Effect | I | II | III | IV | Slots | Twin |
 |---|---|---|---|---|---|---|---|---|
@@ -114,7 +212,7 @@ Ranges are per tier: I / II / III / IV.
 
 **Twins** (resonate when both halves roll): fire, frost, lightning, poison and spirit damage; weapon skill; max health; max stamina; max eitr; health regen; durability; block. Twelve twins in all, so resonance is possible on every item class.
 
-## Caps and guards
+### Caps and guards
 
 - **Resistances:** the total from all gear is capped at 75%.
 - **Movement speed:** gear adds at most +20%.
@@ -122,7 +220,7 @@ Ranges are per tier: I / II / III / IV.
 - **No item downsides**, in line with "loot never carries downsides".
 - **Carry weight** stays a boost, not a bypass: there's no "unlimited" affix, so the "boosts, not bypasses" balance rule holds.
 
-## Rare names
+### Rare names
 
 Two random words, like Diablo 2's "Grim Fang", from Norse-flavoured lists:
 
@@ -133,7 +231,7 @@ Two random words, like Diablo 2's "Grim Fang", from Norse-flavoured lists:
   - shields: Wall, Guard, Aegis;
   - jewellery: Eye, Heart, Coil, Knot.
 
-## Technical notes
+### Technical notes
 
 - **Storage:** affixes live on the item in `ItemDrop.ItemData.m_customData`. It exists in 1.0 and is saved and synced with the item. Each affix is stored as family, tier and rolled value, so tooltips can show the bracket range and Divine Orbs can reroll in place.
 - **Effects:** applied by patches on the stat getters the game already uses: `ItemData.GetDamage`, `GetArmor`, `GetMaxDurability`, the player's max health/stamina/eitr, regen and movement modifiers, and damage taken for resistances.

@@ -38,7 +38,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 ## Not built (proposed)
 
-Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). The gear affix pool is a draft in [`AFFIX_RULES.md`](AFFIX_RULES.md).
+Gathering tool affixes (specified, not built; see [`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)). Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). The gear affix pool is a draft in [`AFFIX_RULES.md`](AFFIX_RULES.md).
 
 ## Outstanding bugs and open issues
 
@@ -59,7 +59,8 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 ## Waiting on the user
 
-- Approve the affix draft; confirm the twin interpretation (prefix + suffix sharing a stat).
+- **Gathering tool affixes** (current focus): how tools get affixes, how many per tool, flat or biome-tiered ranges, the two Bountifuls/Artisan overlap, Jotun Bane and the elemental Nord axes; confirm the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
+- General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
 - Before phase 4: accept "server decides, owner spawns" and an own wave spawner instead of the raid system.
 - Corrupted bosses/gear: red like the shard, or the design doc's purple.
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
@@ -69,9 +70,10 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 1. Play-test talismans, shard drops and the shard look; record results in `FEATURES.md` and here.
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
-3. **Phase 3: boss essences.** One new drop per boss (1 on a normal kill), cloned item + red tint, `CharacterDrop` hook like `ShardDrops`, boss list from game data (creatures with a defeat key), pure rule + tests.
-4. Run the multiplayer checklist when a second player is available.
-5. Settle the open decisions above before phase 4 (maps and rips).
+3. **Gathering tool affixes** (user's chosen focus, 2026-10-27), once the open questions are answered: affix data file, pure roll function with tests, storage in `m_customData`, tooltip lines with bracket ranges, striker-side hit patches, then the owner-to-striker harvest message for on-harvest affixes.
+4. **Phase 3: boss essences.** One new drop per boss (1 on a normal kill), cloned item + red tint, `CharacterDrop` hook like `ShardDrops`, boss list from game data (creatures with a defeat key), pure rule + tests.
+5. Run the multiplayer checklist when a second player is available.
+6. Settle the open decisions above before phase 4 (maps and rips).
 
 ## Update routine
 

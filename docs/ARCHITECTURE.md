@@ -58,8 +58,11 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 ## Game facts the code relies on (verified against 1.0 code unless noted)
 
+Full 1.0.14 game code (method bodies, not just signatures) comes from the NuGet package `Pfhoenix.Valheim.ModProjectReferences` 1.0.26 (`lib/net46/assembly_valheim.dll`), decompiled with `ilspycmd`. Reference-only packages (`ValheimGameLibs`, `Digitalroot.Valheim.Common.References`) have signatures only.
+
 **Multiplayer**
 - The player whose game owns an area simulates its creatures, AI and physics; the dedicated server only relays and stores. "Server-authoritative spawning" is not how vanilla works. Details: [`coop-networking.md`](coop-networking.md).
+- Harvesting (trees, logs, stumps, rocks, deposits): `Damage()` on the striker's machine only sends the hit by RPC; the object's owner applies it, decides the break and spawns the drops. Changes to the hit must be made striker-side; extra drops need a message back to the striker.
 - Taking from a chest requires owning it: `NearbyContainers` claims ownership right before removing items.
 - Other players' trinkets are readable on any client via `VisEquipment.m_currentTrinketItemHash` (synced through the ZDO), which is how talismans work for remote players.
 
