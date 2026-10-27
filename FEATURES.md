@@ -397,6 +397,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-27
+- Added the drop chance tables (`Corruption/Data/drop_chances.csv`, `drop_modifiers.csv`) with a reader and chance calculation (`Corruption/Rules/DropTable.cs`) and tests (65 tests), plus a guide to the data folder. Not used in game yet; no gameplay change.
 - Added `Corruption/Data/affixes.csv`, the single table of every affix (gathering and gear), with a validator (`Corruption/Rules/AffixTable.cs`) and tests that check the real file (60 tests). Not used in game yet; no gameplay change.
 - Added handover docs: `docs/CURRENT_STATE.md`, `DECISIONS.md`, `ARCHITECTURE.md`, `GAME_DESIGN.md`, and a rewritten `CLAUDE.md` with an update routine.
 - Decided: our own loot system, not Epic Loot.

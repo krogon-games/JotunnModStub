@@ -328,6 +328,8 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 | 3-star creature (rips only) | 2x base |
 | Corrupted boss | 3x base, on top of its boss unique roll |
 
+*Live values (2026-10-27):* [`Corruption/Data/drop_chances.csv`](../Corruption/Data/drop_chances.csv) and [`drop_modifiers.csv`](../Corruption/Data/drop_modifiers.csv). Tune there; if they differ from this table, the data files win.
+
 **Target pace:** about 1 unique per 20 hours of play. The base rate assumes roughly 100 kills or chests an hour, so 1 in 2,500 with these small multipliers lands near 1 per 20 hours. Log every unique roll during playtesting and adjust the base rate until the real pace matches; the multipliers should stay small so source only nudges the odds.
 
 #### How the pool works
@@ -345,7 +347,7 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 ### Drops
 
 - **Personal loot.** Every player near a kill gets their own roll for rare and unique items, so nobody fights over drops. Drops are tagged to their owner: only that player can pick them up for the first 60 seconds, then anyone can. Players can still drop or trade items to each other freely.
-- **Magic and rare drops** *(decided 2026-10-27)*: monsters drop randomly rolled items at low rates, starting at **Magic 1 in 50** and **Rare 1 in 100** per kill. Uniques and later rarities have their own separate chances. All chances live in an easily tuned data/config table, and other systems multiply them (corruption zones, scars, terror zones, map tiers). Workbench and forge crafting only makes Normal (vanilla) items; orbs are the path to better ones.
+- **Magic and rare drops** *(decided 2026-10-27)*: monsters drop randomly rolled items at low rates, starting at **Magic 1 in 50** and **Rare 1 in 100** per kill. Uniques and later rarities have their own separate chances. All chances live in easily tuned data tables ([`Corruption/Data/`](../Corruption/Data/README.md)), and other systems multiply them (corruption zones, scars, terror zones, map tiers). Workbench and forge crafting only makes Normal (vanilla) items; orbs are the path to better ones.
 - **Loot beams.** Rare items get a yellow light pillar and uniques an orange-gold one, visible from about 50 m with a distinct sound. At 1 unique per 20 hours, nobody should ever lose one in the grass.
 
 ## Currency orbs
