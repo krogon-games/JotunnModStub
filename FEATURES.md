@@ -19,6 +19,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
 | [Boss essences](#boss-essences) | Loot | Tested in-game (single player) | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
 | [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs` | 2026-10-28 |
+| [Rip waves and loot (step B)](#rip-waves-and-loot-step-b) | Corruption | Built, untested | Corruption: `5 - Rips` → `MaxStars`, `ChestShardsMin`, `ChestShardsMax`, `KillShardMultiplier`; table `Corruption/Data/rip_loot.csv` | `Corruption/Content/RipWaves.cs`, `Corruption/Content/Maddened.cs`, `Corruption/Content/RipLoot.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Rules/RipLootTable.cs`, `Corruption/Data/rip_loot.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-28 |
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
@@ -517,6 +518,48 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 
 ---
 
+## Rip waves and loot (step B)
+
+*Corruption plugin, design phase 4, step B. Every number comes from the game data or the user (sources below).*
+
+**What it does in-game:**
+- **Waves.** When a player comes within 96 m of a rip heart (the raids' own range), the rip "tears open": the raid's start message shows, and every creature already nearby turns **maddened** and hunts you. Then waves keep coming **while the heart stands**.
+- **Which creatures and how many:** the biome boss's own **army raid**, exactly as the game defines it: Meadows = Eikthyr's army (boars, necks), Black Forest = the Elder's (greydwarfs, greylings, shamans, brutes), Swamp = Bonemass's (draugr, skeletons), Mountains = Moder's (drakes), Plains = Yagluth's (fulings, brutes, shamans), Mistlands = the Queen's (gjall, ticks, seekers), Ashlands = Fader's (charred and their spawner stones), Deep North = Kall's (elakingar, Jotuns). Each raid entry's own limit on how many are alive, spawn interval, chance and group size apply; groups appear 40–80 m from a player, as in vanilla raids.
+- **Stars:** up to 2 stars (design: tier 1 maps), rolled with the game's own level-up chance.
+- **Maddened:** red, damage ×1.2 (the game's own Dvergr power buff), speed +15% (the Tonic of Ratatosk), never flee, and treat every creature and player as an enemy, so they fight each other too. **Charms don't repel them** (user).
+- **End loot:** destroying the heart leaves a chest next to the exit rip: one of that biome's own vanilla chests with its normal loot (weighted by how often each appears in the biome) plus **1–3 corruption shards**.
+- **Shards from rip creatures:** twice the normal starred chances (1-star 4%, 2-star 10%).
+
+**How to test:** `spawn CorruptionMap_Meadows`, use it, go through: "The ground is shaking" (Eikthyr's army message), red boars and necks attack in waves; destroy the heart: exit rip plus a Meadows chest with shards.
+
+**Data table:** [`Corruption/Data/rip_loot.csv`](Corruption/Data/rip_loot.csv): chests per biome and their weights, worked out from the 1.0.20 dump (each location's chest matched to its chest prefab by drop list). Compiled into the DLL. `dotnet test` checks every chest is a real container and every biome has one, and that every essence boss has an army raid.
+
+**Config settings** (admin-only, `5 - Rips`):
+
+| Setting | Default | Description |
+|---|---|---|
+| `MaxStars` | `2` | Most stars a rip creature can roll (design tier 1) |
+| `ChestShardsMin` / `ChestShardsMax` | `1` / `3` | Shards in the rip chest (user) |
+| `KillShardMultiplier` | `2` | Multiplies the starred shard chances for rip creatures (user) |
+
+**Known issues:**
+- Untested in-game (103 tests pass).
+- Maddened creatures stay after the heart is destroyed (the waves stop; the ones alive keep fighting). Vanilla raid creatures despawn when the raid ends; rips have no such end yet.
+- Maddened creatures fight each other as the design says; a wave may thin itself out. To watch in play-tests.
+- Map tiers (more waves, more stars) come with phase 5.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Character.Awake` | Postfix | Restores maddened behaviour on creatures loaded with the flag |
+| `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them |
+| `CharacterDrop.GenerateDropList` | Postfix (the existing shard one) | Double starred shard chances for rip creatures |
+
+New status effect `SE_CorruptionMaddened` (built from `SE_Dvergr_buff` and `Potion_hasty` at startup). The rip heart gets a wave spawner; the chest is the vanilla chest prefab itself.
+
+---
+
 ## Corrupted bosses (core)
 
 *Corruption plugin, design phase 6, the parts the design fully specifies. Corrupted offerings at the altars (and the corrupted Sealbreaker for the Queen) follow once `altars.csv` from the next `co_dump` shows each altar's real offering; the summons follow phase 4 step B's maddened creatures.*
@@ -592,6 +635,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Rip waves and loot (phase 4 step B):** each rip spawns its biome boss's army raid while the heart stands; maddened creatures (Dvergr power damage, Ratatosk speed, no fleeing, enemies of all, unaffected by charms); up to 2 stars; the heart leaves a vanilla biome chest plus 1–3 shards; rip creatures drop shards at double chances. Table `rip_loot.csv`. Untested in-game (103 tests).
 - **Rip fixes confirmed in-game;** maps and rips step A now tested in single player. Rips last a full in-game day; sleeping skips only the night.
 - **Affix Splinters and shattering designed** (from Last Epoch; no gameplay change yet): free shattering of Magic and Rare items at the Riftforge (not uniques or corrupted), 50% per affix line to get a splinter that keeps its exact value (a resonant line keeps the combined value); splinters go on Normal and Magic items with fewer than 2 affixes; they need the Currency tab. Chance in `Corruption/Data/shattering.csv`, rules in `Corruption/Rules/ShatterRules.cs`, with tests (100 tests).
 - **Play-test results (single player):** boss essences, corrupted bosses, the rest of talismans, config reload and craft-from-chests with AdventureBackpacks pass; maps and rips work apart from two bugs. **Fixed:** rip hover texts showed `{0}` (now `$1`, the game's placeholder); a console error from the rip heart's leftover light-flicker script (custom looks now remove flicker scripts with the lights, also on the shard and essences). UI work noted for later.

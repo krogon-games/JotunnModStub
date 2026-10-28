@@ -33,9 +33,16 @@ namespace Corruption.Content
                                        ZoneSystem.instance.GetGlobalKey(key);
 
                 // A corrupted boss drops its guaranteed range on every kill (design: 3-5).
+                var settings = CurrentSettings();
+                if (Maddened.IsMaddened(character))
+                {
+                    // Rip creatures: the starred chances times the rip multiplier (user: double, 2026-10-28).
+                    settings.OneStarChance = Mathf.Min(1f, settings.OneStarChance * CorruptionConfig.RipKillShardMultiplier.Value);
+                    settings.TwoStarChance = Mathf.Min(1f, settings.TwoStarChance * CorruptionConfig.RipKillShardMultiplier.Value);
+                }
                 int shards = isBoss && CorruptedBosses.IsCorrupted(character)
                     ? Random.Range(CorruptionConfig.CorruptedShardsMin.Value, Mathf.Max(CorruptionConfig.CorruptedShardsMin.Value, CorruptionConfig.CorruptedShardsMax.Value) + 1)
-                    : ShardRules.ShardsFor(isBoss, character.GetLevel(), alreadyDefeated, CurrentSettings(),
+                    : ShardRules.ShardsFor(isBoss, character.GetLevel(), alreadyDefeated, settings,
                         () => Random.value * 0.99999f);
                 if (shards <= 0)
                 {

@@ -70,6 +70,38 @@ namespace Corruption.Rules
             return null;
         }
 
+        /// <summary>One random event (raid) as the game defines it, reduced to what choosing a rip's army needs.</summary>
+        public struct RaidInfo
+        {
+            public string Name;
+            public bool Enabled;
+            /// <summary>Global keys that stop the raid (it can't happen once any of them is set).</summary>
+            public IList<string> NotRequiredKeys;
+            public int SpawnEntries;
+        }
+
+        /// <summary>
+        ///     A rip's waves are its biome boss's army: the game's raids that stop once that boss is defeated (the raid
+        ///     lists the boss's defeat key among its "not required" keys), e.g. army_eikthyr for Eikthyr. Disabled raids
+        ///     and raids without spawns are skipped. Returns the raids' names in the game's order.
+        /// </summary>
+        public static List<string> ArmyRaids(IEnumerable<RaidInfo> raids, string bossDefeatKey)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(bossDefeatKey))
+            {
+                return result;
+            }
+            foreach (var raid in raids)
+            {
+                if (raid.Enabled && raid.SpawnEntries > 0 && raid.NotRequiredKeys != null && raid.NotRequiredKeys.Contains(bossDefeatKey))
+                {
+                    result.Add(raid.Name);
+                }
+            }
+            return result;
+        }
+
         /// <summary>Time left until a rip closes, as "1 h 05 min" / "12 min" / "less than a minute".</summary>
         public static string TimeLeft(double secondsLeft)
         {

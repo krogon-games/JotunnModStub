@@ -60,6 +60,8 @@ namespace Corruption
             // After essences: map recipes and colours use them.
             Safe.Run("register maps", MapItems.Register);
             Safe.Run("register rips", RipPrefabs.Register);
+            Safe.Run("register the maddened effect", Maddened.RegisterEffect);
+            Safe.Run("read the rip loot table", RipLoot.Load);
         }
 
         /// <summary>Applies each patch class on its own, so one broken by a game update only disables that feature.</summary>

@@ -12,8 +12,9 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
 | [`essences.csv`](essences.csv) | Boss essences: which boss drops which essence, how many per kill, its name, description and colours |
 | [`maps.csv`](maps.csv) | Maps: one per biome, its Riftforge recipe (shards, essence, material) and text |
+| [`rip_loot.csv`](rip_loot.csv) | Which vanilla chest a rip leaves, per biome, weighted by how often each appears in that biome |
 
-`essences.csv` and `maps.csv` are compiled into the mod: **rebuild after editing them**. The others aren't loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
+`essences.csv`, `maps.csv` and `rip_loot.csv` are compiled into the mod: **rebuild after editing them**. The others aren't loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
 
 ## How to edit
 
@@ -101,3 +102,12 @@ Rules: [`docs/corruption-design.md` → Affix Splinters and shattering](../../do
 
 How the current values were chosen (from the 1.0.20 game data, not guessed): shards and essence 1 each from the design doc; the material the design doc names, or where it gives two the earlier drop, or where it names none the guaranteed non-food drop of the weakest creature found only in that biome; the amount is the median amount of that material in vanilla recipes and pieces, rounded up. Each row's `notes` says which applied.
 | `status`, `notes` | As above |
+
+## rip_loot.csv
+
+| Column | Meaning |
+|---|---|
+| `biome` | The game's biome name, as in `maps.csv` |
+| `chest` | A vanilla chest prefab, e.g. `TreasureChest_swamp`. The tests check it's a real container |
+| `weight` | How likely this chest is, relative to the biome's other rows. Worked out from the 1.0.20 dump: how many places in the biome's locations and dungeon rooms hold that chest |
+| `notes` | Where the row came from |

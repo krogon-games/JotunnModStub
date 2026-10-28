@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **100 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence and map tables, rip rules, gem model parser).
+- `dotnet test CraftingOverhaul.Tests`: **103 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence and map tables, rip rules, gem model parser).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -41,12 +41,13 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
+| Rip waves and loot, step B (2026-10-28) | Waves of the biome army while the heart stands, maddened (red, no fleeing, ignore charms), the end chest with shards. Steps: `PLAYTEST.md` |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
 
-Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -77,7 +78,7 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 
 ## Next actionable tasks
 
-1. **Phase 4 step B** with the 2026-10-28 dump: own wave spawner driven by the heart, maddened status effect, end-of-rip loot, checking the landing area once loaded. Numbers from `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`.
+1. Play-test **phase 4 step B** (built 2026-10-28). Still open from the design: checking the landing area once loaded (locations, water).
 2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).

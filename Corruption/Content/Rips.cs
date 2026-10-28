@@ -250,6 +250,7 @@ namespace Corruption.Content
             exit.Set(KeyClose, heart.GetLong(KeyClose, 0L));
             exit.Set(KeyBiome, heart.GetString(KeyBiome, ""));
             exit.Set(KeyExit, true);
+            Safe.Run("leave the rip chest", () => RipLoot.SpawnChest(heart.GetString(KeyBiome, ""), position));
             Player.m_localPlayer?.Message(MessageHud.MessageType.Center, "$corruption_rip_home_opened");
         }
 

@@ -36,6 +36,8 @@ namespace Corruption.Content
                 { "corruption_map_subtitle", "Map: use it to open a rip" },
                 { "corruption_rip", "Rip" },
                 { "corruption_rip_heart", "Rip heart" },
+                { "corruption_maddened", "Maddened" },
+                { "corruption_maddened_tooltip", "Driven mad by the rip: hits harder, moves faster, never flees." },
                 { "corruption_rip_enter", "Enter" },
                 { "corruption_rip_to", "Leads into the corrupted $1" },
                 { "corruption_rip_home", "Leads home" },
