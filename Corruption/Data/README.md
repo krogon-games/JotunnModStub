@@ -5,6 +5,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | File | What it holds |
 |---|---|
 | [`affixes.csv`](affixes.csv) | Every affix: names, prefix/suffix, ranges, roll weights, which items it rolls on. Column guide: [`docs/AFFIX_RULES.md` → The affix table](../../docs/AFFIX_RULES.md#the-affix-table) |
+| [`affix_caps.csv`](affix_caps.csv) | The most a stat can gain from all affixes together (movement speed, attack speed, pickup radius, resistances, life steal) |
 | [`drop_chances.csv`](drop_chances.csv) | Base chance of each rarity dropping |
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
 
@@ -18,6 +19,16 @@ None of them is loaded by the game yet; they are used when the loot system is bu
 4. Run `dotnet test CraftingOverhaul.Tests` (or ask Claude to). The tests read the real files and list every mistake with its file and line.
 
 Every table has a `status` column: `approved` (the user agreed), `proposed` (awaiting review) or `draft` (starting numbers, untested).
+
+## affix_caps.csv
+
+| Column | Meaning |
+|---|---|
+| `cap` | Name of the cap |
+| `max` | The highest total all affixes together can give |
+| `unit` | Must match the unit of the affixes it limits (the test checks) |
+| `families` | Affix families (from `affixes.csv`) that add up towards this cap, separated by `;`. A family can be in only one cap |
+| `status`, `notes` | As above |
 
 ## drop_chances.csv
 

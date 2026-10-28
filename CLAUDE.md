@@ -14,7 +14,7 @@ Valheim 1.0 mods (BepInEx + Jötunn + Harmony) for a group of four friends on a 
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Why things are as they are; rejected approaches; corrected facts |
 | [`docs/GAME_DESIGN.md`](docs/GAME_DESIGN.md) | Design overview and status, linking the full design docs |
 | [`docs/AFFIX_RULES.md`](docs/AFFIX_RULES.md) | Affix rules and reasoning |
-| [`Corruption/Data/`](Corruption/Data/README.md) | **Tunable numbers**: `affixes.csv` (every affix), `drop_chances.csv` and `drop_modifiers.csv` (loot drop rates). Edit numbers here, never in the docs; `dotnet test` validates them |
+| [`Corruption/Data/`](Corruption/Data/README.md) | **Tunable numbers**: `affixes.csv` (every affix), `affix_caps.csv` (stat caps), `drop_chances.csv` and `drop_modifiers.csv` (loot drop rates). Edit numbers here, never in the docs; `dotnet test` validates them |
 
 Game reference data: `data/game-dump-1.0.20/` (from `co_dump`; development only, never ship it).
 

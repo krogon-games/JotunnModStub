@@ -1,0 +1,6 @@
+﻿cap,status,max,unit,families,notes
+movement_speed,approved,35,%,movement_speed;held_movement;foraging,Total movement speed from affixes. Raised from 20 to 35 by the user (2026-10-28); tune down if too fast.
+attack_speed,approved,30,%,attack_speed;parry_attack_speed;fenrir,"Swift, Skald's and Fenrir together."
+pickup_radius,approved,8,m,magnetic;pickup_range,Magnetic plus Keen-eyed. Vanilla radius is 2 m.
+resistance,approved,75,%,fire_resistance;frost_resistance;lightning_resistance;poison_resistance;all_resistances,Applies to each element separately: e.g. fire resistance plus all resistances at most 75%.
+life_steal,approved,10,%,life_steal,Share of damage dealt returned as health.

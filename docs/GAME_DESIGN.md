@@ -63,7 +63,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Boosts, not bypasses: nothing removes portal, carry-weight or boat constraints outright.
 - Loot never carries downsides; danger lives in maps and fights.
 - Essences have no use except maps and can't be sold.
-- Gear affix caps (draft): resistances 75% total, movement +20%, life steal 10%.
+- Affix caps (movement, attack speed, pickup radius, resistances, life steal): [`Corruption/Data/affix_caps.csv`](../Corruption/Data/affix_caps.csv).
 - Every number in the design is a starting point; all rates and multipliers go in config so tuning needs no rebuild.
 
 ## Where design and implementation or review disagree (to reconcile)

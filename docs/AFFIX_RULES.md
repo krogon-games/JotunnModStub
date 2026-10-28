@@ -163,7 +163,7 @@ Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **pre
 
 | Affix | Pool | Effect | Hook |
 |---|---|---|---|
-| Magnetic | Universal | Draws drops to you from further away: sets the pickup radius. The stronger, rarer relative of Keen-eyed, which still adds on top (radius capped at 8 m) | `Player.m_autoPickupRange` |
+| Magnetic | Universal | Draws drops to you from further away: sets the pickup radius. The stronger, rarer relative of Keen-eyed, which still adds on top (radius capped, see caps) | `Player.m_autoPickupRange` |
 | Charring | Woodcutting | Chance that harvested wood turns into coal. **Replaces** the wood (user's choice, 2026-10-28). The user's "Ember", renamed because it clashed with "of Embers" | Harvest message |
 
 ### Proposed interpretations (to confirm)
@@ -277,11 +277,8 @@ Twin families (resonate when both halves roll): fire, frost, lightning, poison a
 
 ### Caps and guards
 
-- **Resistances:** the total from all gear is capped at 75%.
-- **Movement speed:** gear adds at most +20% (including Fleet and Foraging).
-- **Attack speed:** affixes add at most +30% in total (Swift, Skald's, Fenrir). Proposed.
-- **Pickup radius:** at most 8 m (Magnetic plus Keen-eyed). Proposed.
-- **Life steal:** gear adds at most 10%.
+The most a stat can gain from all affixes together. **Numbers are in [`Corruption/Data/affix_caps.csv`](../Corruption/Data/affix_caps.csv)**; each cap lists the affix families it limits. Capped today: movement speed (raised by the user on 2026-10-28, to tune down later if needed), attack speed, pickup radius, each resistance, life steal.
+
 - **No item downsides**, in line with "loot never carries downsides".
 - **Carry weight** stays a boost, not a bypass: there's no "unlimited" affix, so the "boosts, not bypasses" balance rule holds.
 
