@@ -15,7 +15,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
-| [Talismans](#talismans) | Combat | Built, untested | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
+| [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -357,7 +357,7 @@ The family rules are unit-tested against the real 1.0 creature list (`TalismanFa
   - the charm's tooltip said "Trinket": that was the subtitle line copied from the vanilla trinket; it now says "Talisman: place in a Talisman slot";
   - the charm kept the trinket's **Adrenaline 50**: its bonuses were stripped using a list the game only fills once a player spawns, after charms are made, so nothing was stripped. Now stripped by field name.
   - Also fixed before it showed: charms picked up from the ground (or spawned with cheats) weren't recognised by the slots until relogging, because such items carry their own copy of the item data. Talismans are now recognised by the prefab they came from.
-  - Repelling creatures is still untested.
+- Play-test 2026-10-28, after the fixes: **working as intended** (user). A Greydwarf charm in a Talisman slot shows the new subtitle and no Adrenaline, and the user confirmed the behaviour. Not yet covered: two charms at once plus a vanilla trinket, provoking, and multiplayer.
 - In game, talismans are called "<creature> charm" (lore: Ægishjálmur charms); "talisman" is the slot and system name.
 - Untested in-game.
 - Families are by name, so some group widely: one Blob charm covers every ooze (tar, frost, lava...), and the Troll charm also covers Deep North frost trolls. Exclusions can split off individual creatures.
@@ -415,6 +415,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Talismans tested in-game (single player):** working as intended with all mods loaded after the fixes.
 - **Talisman fixes after the first play-test with all mods:** charms no longer keep the base trinket's Adrenaline 50 or its "Trinket" subtitle, and charms picked up from the ground are recognised by the talisman slots. The slots themselves showed up correctly.
 - **Talismans: 2 talisman slots plus the vanilla trinket.** Talismans are no longer trinkets; they work from their own slots (default 2, admin setting `Slots`), added to EquipmentAndQuickSlots' equipment panel through its API, and are published to other players through the player object. Without EquipmentAndQuickSlots they do nothing. Untested in-game (74 tests).
 - **Mod compatibility** (`docs/mod-compatibility.md`): checked EquipmentAndQuickSlots 3.1.3, PlantEasily 2.3.1 and AdventureBackpacks 2.4.6 against our patches. Fixed in craft-from-chests: with AdventureBackpacks' craft-from-backpack, a cost the backpack covered was charged to nearby chests too; and the backpack's hidden container could be counted as a chest. Untested in-game.
