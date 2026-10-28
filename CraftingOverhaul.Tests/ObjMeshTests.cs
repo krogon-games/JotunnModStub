@@ -23,14 +23,14 @@ namespace CraftingOverhaul.Tests
         public void TheShardModelLoads()
         {
             var mesh = ObjMesh.Parse(ShardObj());
-            Assert.Equal(64 * 3, mesh.Triangles.Count);
+            Assert.Equal(144 * 3, mesh.Triangles.Count);
             Assert.All(mesh.Triangles, i => Assert.InRange(i, 0, mesh.VertexCount - 1));
             Assert.Equal(mesh.VertexCount * 2, mesh.Uvs.Count);
             Assert.Equal(mesh.VertexCount * 3, mesh.Normals.Count);
 
-            // About 34 cm tall, standing on the ground (y from about 0), so it fits a dropped item.
+            // About 20 cm tall, gem-sized, standing on the ground (y from about 0), so it fits a dropped item.
             var ys = Enumerable.Range(0, mesh.VertexCount).Select(i => mesh.Positions[i * 3 + 1]).ToList();
-            Assert.InRange(ys.Max() - ys.Min(), 0.3f, 0.45f);
+            Assert.InRange(ys.Max() - ys.Min(), 0.15f, 0.3f);
             Assert.InRange(ys.Min(), -0.1f, 0.05f);
 
             for (int i = 0; i < mesh.VertexCount; i++)

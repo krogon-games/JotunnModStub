@@ -1,5 +1,5 @@
 """
-Generates the corruption shard's model and textures, and preview renders of them.
+Generates the corruption shard's model (a rough-cut ruby-like gem, after the user's reference picture) and textures, and preview renders of them.
 
     python tools/make_shard.py            (needs numpy and Pillow)
 
@@ -25,65 +25,56 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS = os.path.join(ROOT, "Corruption", "Assets")
 SEED = 7
 
-# Colours: the mod's corruption red (#B3170D) and its darker and hotter neighbours.
-BLACK_RED = np.array([22, 3, 4])
-DEEP_RED = np.array([92, 8, 8])
-CORRUPT_RED = np.array([179, 23, 13])
-HOT_RED = np.array([255, 74, 38])
-
 
 # ---------------------------------------------------------------- model
 
-def crystal(rng, sides, height, radius, base_y, lean, twist, jag):
-    """One crystal: an irregular prism with a sharp tip and a broken, jagged base. Returns triangles (v0, v1, v2)."""
-    ring_low, ring_high = [], []
-    for i in range(sides):
-        a = 2 * math.pi * i / sides + rng.uniform(-0.25, 0.25)
-        r = radius * rng.uniform(0.75, 1.15)
-        low_y = base_y + rng.uniform(0, jag)                 # broken base: uneven
-        high_y = base_y + height * rng.uniform(0.58, 0.72)  # where the point starts
-        ring_low.append((r * math.cos(a), low_y, r * math.sin(a)))
-        a2 = a + twist
-        r2 = r * rng.uniform(0.82, 0.95)
-        ring_high.append((r2 * math.cos(a2) + lean[0] * 0.5, high_y, r2 * math.sin(a2) + lean[1] * 0.5))
-    tip = (lean[0] + rng.uniform(-0.01, 0.01), base_y + height, lean[1] + rng.uniform(-0.01, 0.01))
-    bottom = (0.0, base_y - jag * 0.6, 0.0)
-    tris = []
-    for i in range(sides):
-        j = (i + 1) % sides
-        tris += [(ring_low[i], ring_low[j], ring_high[j]), (ring_low[i], ring_high[j], ring_high[i])]  # sides
-        tris.append((ring_high[i], ring_high[j], tip))                                                  # point
-        tris.append((ring_low[j], ring_low[i], bottom))                                                 # base
-    return tris
+# A rough-cut gem like the user's reference: egg-shaped, wider low down, many flat facets, a small flat top.
+HEIGHT = 0.2      # metres
+WIDTH = 0.13
+DEPTH = 0.11
+RINGS = 7         # facet bands from bottom to top
+SEGMENTS = 9      # facets around
 
 
 def build_model():
     rng = random.Random(SEED)
-    tris = crystal(rng, sides=6, height=0.34, radius=0.055, base_y=0.0, lean=(0.03, 0.01), twist=0.12, jag=0.03)
+    # Ring heights from just above the bottom point to just below the flat top, a little uneven.
+    heights = [0.09 + 0.8 * (i / (RINGS - 1)) + rng.uniform(-0.012, 0.012) for i in range(RINGS)]
+    rings = []
+    for r, h in enumerate(heights):
+        # Egg profile: round at the bottom, widest at 40% height, tapering to a smaller flat top.
+        t = h
+        bulge = math.sin(math.pi * t ** 0.756) ** 0.75
+        offset = math.pi / SEGMENTS * (r % 2)   # stagger alternate bands by half a facet: diamond facets
+        ring = []
+        for i in range(SEGMENTS):
+            a = offset + 2 * math.pi * i / SEGMENTS + rng.uniform(-0.1, 0.1)
+            k = bulge * rng.uniform(0.93, 1.05)
+            ring.append((WIDTH / 2 * k * math.cos(a), HEIGHT * t, DEPTH / 2 * k * math.sin(a)))
+        rings.append(ring)
+    bottom = (rng.uniform(-0.005, 0.005), 0.0, rng.uniform(-0.005, 0.005))
+    top_centre = (0.012, HEIGHT * 0.95, -0.006)   # slightly off-centre, like a rough cut
 
-    # Two small splinters breaking off the base, tilted outwards.
-    for angle, size in ((2.0, 0.62), (4.3, 0.48)):
-        small = crystal(rng, sides=5, height=0.34 * size, radius=0.055 * size, base_y=0.0,
-                        lean=(0.0, 0.0), twist=0.1, jag=0.015)
-        c, s = math.cos(angle), math.sin(angle)
-        tilt = 0.7
-        offset = np.array([0.06 * c, 0.0, 0.06 * s])
-        out = []
-        for tri in small:
-            moved = []
-            for (x, y, z) in tri:
-                # tilt away from the main crystal around the horizontal axis perpendicular to (c, s)
-                axis = np.array([-s, 0.0, c])
-                p = np.array([x, y, z])
-                p = p * math.cos(tilt) + np.cross(axis, p) * math.sin(tilt) + axis * axis.dot(p) * (1 - math.cos(tilt))
-                moved.append(tuple(p + offset))
-            out.append(tuple(moved))
-        tris += out
+    tris = []
+    for i in range(SEGMENTS):
+        j = (i + 1) % SEGMENTS
+        tris.append((rings[0][j], rings[0][i], bottom))
+    for r in range(RINGS - 1):
+        low, high = rings[r], rings[r + 1]
+        for i in range(SEGMENTS):
+            j = (i + 1) % SEGMENTS
+            tris += [(low[i], low[j], high[j]), (low[i], high[j], high[i])]
+    # The flat top: the last ring's points pulled to one height, fanned around the centre.
+    top = [(x * 0.93 + top_centre[0] * 0.3, top_centre[1] - 0.006, z * 0.93 + top_centre[2] * 0.3) for (x, _, z) in rings[-1]]
+    for i in range(SEGMENTS):
+        j = (i + 1) % SEGMENTS
+        tris += [(rings[-1][i], rings[-1][j], top[j]), (rings[-1][i], top[j], top[i])]
+        tris.append((top[i], top[j], top_centre))
     return tris
 
 
 def facet_uv(tri):
-    """Planar UVs per facet: the texture runs along the crystal's length, so streaks follow the grain."""
+    """Planar UVs per facet, wrapping around the gem; each facet gets its own patch of the texture."""
     pts = np.array(tri)
     centre = pts.mean(axis=0)
     angle = (math.atan2(centre[2], centre[0]) / (2 * math.pi)) % 1.0
@@ -92,7 +83,7 @@ def facet_uv(tri):
         a = (math.atan2(p[2], p[0]) / (2 * math.pi)) % 1.0
         if abs(a - angle) > 0.5:
             a += 1.0 if a < angle else -1.0
-        uvs.append((a * 2.0, p[1] / 0.36))
+        uvs.append((a, p[1] / HEIGHT))
     return uvs
 
 
@@ -119,52 +110,44 @@ def write_obj(tris, path):
 # ---------------------------------------------------------------- textures
 
 def make_textures(size=256):
+    """Vivid ruby red with lighter inner reflections and soft dark depths; the glow mask lights the inside."""
     rng = np.random.default_rng(SEED)
     y = np.linspace(0, 1, size)[:, None]
-    x = np.linspace(0, 1, size)[None, :]
 
-    # Streaks running along the crystal (vertical in UV space), plus soft cloudiness.
-    streak = np.zeros((size, size))
-    for _ in range(40):
-        cx = rng.uniform(0, 1)
-        width = rng.uniform(0.004, 0.03)
-        strength = rng.uniform(0.2, 1.0)
-        wobble = rng.uniform(0.0, 0.02) * np.sin(y * rng.uniform(6, 20) + rng.uniform(0, 6))
-        streak += strength * np.exp(-((x - cx + wobble) ** 2) / (2 * width ** 2))
-    streak = streak / streak.max()
-    cloud = np.zeros((size, size))
-    for octave in (4, 8, 16, 32):
-        noise = rng.uniform(0, 1, (octave, octave))
-        cloud += np.array(Image.fromarray((noise * 255).astype(np.uint8)).resize((size, size), Image.BICUBIC)) / 255.0 / octave
-    cloud = (cloud - cloud.min()) / (cloud.max() - cloud.min())
+    def smooth_noise(octaves):
+        total = np.zeros((size, size))
+        for octave in octaves:
+            noise = rng.uniform(0, 1, (octave, octave))
+            total += np.array(Image.fromarray((noise * 255).astype(np.uint8)).resize((size, size), Image.BICUBIC)) / 255.0 / octave
+        return (total - total.min()) / (total.max() - total.min())
 
-    # Darker towards the broken base, hotter towards the tip.
-    depth = 0.35 + 0.65 * y[::-1]
-    t = np.clip(0.55 * streak + 0.45 * cloud, 0, 1) * depth
-    albedo = (BLACK_RED[None, None, :] * (1 - t[..., None]) ** 2 + DEEP_RED * (1 - t[..., None]) * t[..., None] * 1.6
-              + CORRUPT_RED * (t[..., None] ** 1.5) * 1.05)
+    depth = smooth_noise((3, 6, 12))      # big soft light and dark areas, like looking into the stone
+    sparkle = smooth_noise((16, 32))      # finer internal reflections
 
-    # Fine black cracks, drawn as branching jagged lines.
-    cracks = Image.new("L", (size, size), 0)
-    draw = ImageDraw.Draw(cracks)
+    # Lighter higher up and where the stone "catches" light; darker towards the bottom.
+    light = np.clip(0.55 * depth + 0.25 * sparkle + 0.3 * y[::-1] - 0.22, 0, 1)
+    dark = np.array([84, 0, 8])
+    ruby = np.array([200, 10, 26])
+    pale = np.array([255, 92, 104])
+    albedo = (dark * (1 - light[..., None]) ** 2
+              + ruby * 2 * light[..., None] * (1 - light[..., None])
+              + pale * light[..., None] ** 2)
+
+    # Bright internal reflections: a few soft streaks across the facets.
+    reflections = Image.new("L", (size, size), 0)
+    draw = ImageDraw.Draw(reflections)
     prng = random.Random(SEED)
-    for _ in range(5):
-        px, py = prng.uniform(0, size), prng.uniform(0, size)
-        for _ in range(prng.randint(3, 6)):
-            nx = px + prng.uniform(-size * 0.08, size * 0.08)
-            ny = py + prng.uniform(size * 0.03, size * 0.12) * prng.choice((-1, 1))
-            draw.line((px, py, nx, ny), fill=255, width=1)
-            px, py = nx, ny
-    crack = np.array(cracks.filter(ImageFilter.GaussianBlur(0.6))) / 255.0
-    albedo = albedo * (1 - 0.8 * crack[..., None])
+    for _ in range(7):
+        x0, y0 = prng.uniform(0, size), prng.uniform(0, size)
+        draw.line((x0, y0, x0 + prng.uniform(-60, 60), y0 + prng.uniform(-30, 30)), fill=255, width=prng.randint(3, 8))
+    streaks = np.array(reflections.filter(ImageFilter.GaussianBlur(4))) / 255.0
+    albedo = albedo + (np.array([255, 150, 158]) - albedo) * (streaks[..., None] * 0.45)
 
-    # Glowing veins: the brightest streaks, hotter towards the tip.
-    glow = np.clip((streak - 0.45) * 2.0, 0, 1) * (0.35 + 0.65 * y[::-1])
-    glow = np.clip(glow, 0, 1)
-    albedo = albedo + (HOT_RED - CORRUPT_RED * 0.3) * (glow[..., None] * 0.45)
+    # Glow from inside: strongest in the lighter, upper parts, so it reads as a lit stone, not a lamp.
+    glow = np.clip(0.25 + 0.6 * light + 0.4 * streaks, 0, 1) * (0.5 + 0.5 * y[::-1])
 
     albedo_img = Image.fromarray(np.clip(albedo, 0, 255).astype(np.uint8), "RGB")
-    emission_img = Image.fromarray((glow * 255).astype(np.uint8), "L")
+    emission_img = Image.fromarray((np.clip(glow, 0, 1) * 255).astype(np.uint8), "L")
     return albedo_img, emission_img
 
 
@@ -185,10 +168,10 @@ def render(tris, albedo, emission, yaw, size=360, background=(34, 36, 40)):
     def view(p):
         x, y, z = p
         x, z = x * cy - z * sy, x * sy + z * cy                # turn around the vertical axis
-        y, z = (y - 0.16) * ct - z * st, (y - 0.16) * st + z * ct  # look slightly down
+        y, z = (y - HEIGHT / 2) * ct - z * st, (y - HEIGHT / 2) * st + z * ct  # look slightly down
         return np.array([x, y, z])
 
-    scale = size * 2.45
+    scale = size * 3.6
     for tri in tris:
         v = [view(p) for p in tri]
         n = np.cross(v[1] - v[0], v[2] - v[0])
@@ -199,7 +182,7 @@ def render(tris, albedo, emission, yaw, size=360, background=(34, 36, 40)):
             continue
         shade = 0.3 + 0.7 * max(0.0, float(np.dot(n, light)))
         uvs = facet_uv(tri)
-        pts = np.array([[size / 2 + p[0] * scale, size * 0.56 - p[1] * scale] for p in v])
+        pts = np.array([[size / 2 + p[0] * scale, size * 0.5 - p[1] * scale] for p in v])
         x0, y0 = np.floor(pts.min(axis=0)).astype(int)
         x1, y1 = np.ceil(pts.max(axis=0)).astype(int)
         x0, y0, x1, y1 = max(x0, 0), max(y0, 0), min(x1, size - 1), min(y1, size - 1)
@@ -221,9 +204,11 @@ def render(tris, albedo, emission, yaw, size=360, background=(34, 36, 40)):
         vv = np.clip(w0 * uvs[0][1] + w1 * uvs[1][1] + w2 * uvs[2][1], 0, 0.999)
         tx = (u * (alb.shape[1] - 1)).astype(int)
         ty = ((1 - vv) * (alb.shape[0] - 1)).astype(int)
-        colour = alb[ty, tx] * shade + emi[ty, tx][..., None] * np.array([1.0, 0.22, 0.12]) * 0.7
-        # A bright rim on facets turned edge-on, like light catching a crystal.
-        colour += np.array([1.0, 0.45, 0.35]) * (1 - abs(n[2])) ** 3 * 0.35
+        colour = alb[ty, tx] * shade + emi[ty, tx][..., None] * np.array([0.55, 0.05, 0.05]) * 0.5
+        # Specular glint on facets facing the light, like a cut gem.
+        half = light + np.array([0.0, 0.0, -1.0])
+        half /= np.linalg.norm(half)
+        colour += np.array([1.0, 0.9, 0.9]) * max(0.0, float(np.dot(n, half))) ** 40 * 0.9
         region = (slice(y0, y1 + 1), slice(x0, x1 + 1))
         closer = inside & (depth < zbuf[region])
         zbuf[region][closer] = depth[closer]

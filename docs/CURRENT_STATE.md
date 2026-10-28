@@ -32,7 +32,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Item | What to check |
 |---|---|
 | Talismans: the rest | Two charms at once plus a vanilla trinket; hitting a repelled creature provokes it for 30 s; bosses unaffected; on a friend's game too |
-| Shard's own model and texture, plus ground glow (2026-10-28) | `spawn CorruptionShard`, drop it: crystal model with red texture and glowing veins (not the Bloodstone); lies on the ground properly; icon shows the new model; glow easy to spot by night and day. If it looks wrong, send a screenshot; `ShardCustomModel = false` reverts |
+| Shard's own model and texture, plus ground glow (2026-10-28) | `spawn CorruptionShard`, drop it: faceted, egg-shaped ruby like the user's reference picture (not the Bloodstone); lies on the ground properly; icon shows the new model; glow easy to spot by night and day. If it looks wrong, send a screenshot; `ShardCustomModel = false` reverts |
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
