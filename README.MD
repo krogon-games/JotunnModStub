@@ -19,6 +19,7 @@ See [`CraftingOverhaul/README.md`](CraftingOverhaul/README.md) for the full feat
 | `CraftingOverhaul/Containers/` | Finding usable nearby containers and counting/taking materials from them |
 | `CraftingOverhaul/Dump/` | `co_dump` and `co_biome` console commands |
 | `Corruption/` | Second plugin: the corruption endgame mod (`docs/corruption-design.md`). `Content/` holds items, pieces and patches, `Rules/` the game-independent rules, `Data/` tunable data tables (e.g. `affixes.csv`) |
+| `Shared/` | Code compiled into both plugins (linked files): `ConfigWatcher.cs` reloads a plugin's config when the file is saved (development aid) |
 | `CraftingOverhaul.Tests/` | Unit tests for game-independent logic of both plugins (`dotnet test`) |
 | `FEATURES.md` | Every feature, its status, config and Harmony patch targets |
 | `docs/PLAYER_SETUP.md` | Install guide for the players and the server admin |

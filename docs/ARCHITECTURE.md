@@ -37,6 +37,10 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - `Data/`: tunable data tables kept as CSV, one row per entry, so they open in any spreadsheet and diff cleanly in git: `affixes.csv`, `affix_caps.csv`, `drop_chances.csv`, `drop_modifiers.csv` (guide: `Corruption/Data/README.md`). Each table has a pure reader with validation, and a test that checks the real file.
 - `Content/`: `ShardItem`, `Riftforge`, `ShardDrops`, `Talismans`, `TalismanRepel`, `Corrupted` (tint + icon rendering), `Texts` (localisation tokens, raven lore).
 
+### Shared
+
+- `Shared/ConfigWatcher.cs`: linked into both plugin projects (`<Compile Include="..\Shared\..." Link=...>`). Reloads the plugin's `.cfg` on save; development aid, see `CURRENT_STATE.md` → Before release.
+
 ## Code patterns (follow these)
 
 1. **Isolated patches.** `PatchAllSafely()` applies each `[HarmonyPatch]` class separately inside try/catch, so one broken target doesn't disable the rest.

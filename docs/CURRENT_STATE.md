@@ -78,6 +78,12 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 4. Run the multiplayer checklist when a second player is available.
 5. Settle the open decisions above before phase 4 (maps and rips).
 
+## Before release
+
+Development aids to switch off or remove before sharing a public release:
+- **Config reload on save** (`Shared/ConfigWatcher.cs`, added 2026-10-28): set `ReloadConfigOnFileChange` to default `false`, or remove the watcher from both plugins. Cost is negligible on Windows; on a Linux dedicated server Mono's file watcher may fall back to polling the config folder.
+- The `co_dump` / `co_biome` console commands stay (useful for admins), but `data/game-dump-*` must never ship.
+
 ## Update routine
 
 Do this in the same commit whenever a significant feature is completed, changed, deferred or play-tested:

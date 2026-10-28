@@ -21,10 +21,12 @@ namespace Corruption
         public const string PluginVersion = "0.1.0";
 
         private Harmony _harmony;
+        private KrogonGames.Shared.ConfigWatcher _configWatcher;
 
         private void Awake()
         {
             CorruptionConfig.Bind(Config);
+            _configWatcher = new KrogonGames.Shared.ConfigWatcher(Config, Jotunn.Logger.LogInfo);
             Texts.Register();
             PrefabManager.OnVanillaPrefabsAvailable += RegisterContent;
 
@@ -35,8 +37,14 @@ namespace Corruption
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
         }
 
+        private void Update()
+        {
+            _configWatcher?.Tick();
+        }
+
         private void OnDestroy()
         {
+            _configWatcher?.Dispose();
             _harmony?.UnpatchSelf();
         }
 

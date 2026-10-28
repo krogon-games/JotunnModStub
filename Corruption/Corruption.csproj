@@ -36,6 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Shared between both plugins: reloads the .cfg file when saved (development aid). -->
+    <Compile Include="..\Shared\ConfigWatcher.cs" Link="Shared\ConfigWatcher.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Package\manifest.json" />
     <None Include="Package\icon.png" />
     <None Include="README.md" />
