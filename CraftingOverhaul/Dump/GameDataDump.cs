@@ -28,6 +28,7 @@ namespace CraftingOverhaul.Dump
 
             WriteMeta(Path.Combine(dir, "meta.txt"));
             WriteItems(Path.Combine(dir, "items.csv"));
+            WriteItemDetails(Path.Combine(dir, "item_details.csv"));
             WriteRecipes(Path.Combine(dir, "recipes.csv"));
             WritePieces(Path.Combine(dir, "pieces.csv"));
             WriteCreatures(Path.Combine(dir, "creatures.csv"));
@@ -90,6 +91,35 @@ namespace CraftingOverhaul.Dump
                         d.m_slash, d.m_pierce, d.m_chop, d.m_pickaxe, d.m_fire, d.m_frost, d.m_lightning, d.m_poison,
                         d.m_spirit, s.m_food, s.m_foodStamina, s.m_foodEitr, s.m_foodBurnTime,
                         biome?.Biome.ToString(), Describe(biome));
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Every item's shared data, field by field (upgrade amounts, knockback, backstab, parry, set bonuses, equip
+        ///     effects, regen and stamina modifiers...), plus attack stamina and per-level damage. Wide, for analysis.
+        /// </summary>
+        private static void WriteItemDetails(string path)
+        {
+            var fields = SimpleFields(typeof(ItemDrop.ItemData.SharedData));
+            var header = new[] { "prefab" }.Concat(fields.Select(f => f.Name))
+                .Concat(new[] { "attack_stamina", "secondary_attack_stamina", "damage_per_level" }).ToArray();
+            using (var csv = new CsvWriter(path, header))
+            {
+                foreach (var prefab in ObjectDB.instance.m_items.Where(p => p).OrderBy(p => p.name))
+                {
+                    var drop = prefab.GetComponent<ItemDrop>();
+                    if (!drop)
+                    {
+                        continue;
+                    }
+                    var s = drop.m_itemData.m_shared;
+                    var perLevel = s.m_damagesPerLevel;
+                    float perLevelTotal = perLevel.m_damage + perLevel.m_blunt + perLevel.m_slash + perLevel.m_pierce +
+                                          perLevel.m_fire + perLevel.m_frost + perLevel.m_lightning + perLevel.m_poison + perLevel.m_spirit;
+                    csv.Row(new object[] { prefab.name }.Concat(fields.Select(f => Value(f, s)))
+                        .Concat(new object[] { s.m_attack?.m_attackStamina, s.m_secondaryAttack?.m_attackStamina, perLevelTotal })
+                        .ToArray());
                 }
             }
         }

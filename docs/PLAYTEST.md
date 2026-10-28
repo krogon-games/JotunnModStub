@@ -10,7 +10,7 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 ### 1. Game data dump (2 minutes; unblocks rip step B and corrupted bosses)
 1. Type `co_dump`.
-2. Send the folder it names (`BepInEx/CraftingOverhaul/dump-<date>-<time>/`). New in it: `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`.
+2. Send the folder it names (`BepInEx/CraftingOverhaul/dump-<date>-<time>/`). New in it: `item_details.csv`, `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`.
 
 ### 2. Boss essences
 1. `spawn CorruptionEssence_eikthyr`, and the same with `elder`, `bonemass`, `moder`, `yagluth`, `queen`, `fader` and `kall` in place of `eikthyr`.

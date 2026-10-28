@@ -250,6 +250,7 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 |---|---|
 | `meta.txt` | Game and mod version, language, every loaded plugin |
 | `items.csv` | Every item: type, skill, weight, stack, tool tier, durability, armor, block, all damage types, food values, resolved biome |
+| `item_details.csv` | Every item's full shared data, field by field (upgrade amounts, knockback, backstab, parry, set bonuses, equip effects, modifiers), plus attack stamina and per-level damage |
 | `recipes.csv` | Every recipe: output, station and level, ingredients (with per-level amounts), type and biome category |
 | `pieces.csv` | Every buildable piece: category, station, build cost |
 | `creatures.csv` | Every creature: health, faction, boss flag, defeat key, spawn biomes, drops with amounts and chances |
@@ -588,6 +589,8 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 - **Gathering affix behaviour decided** (no code yet): both Bountifuls are a 5–15% chance to double the harvest (or its wood); Determined, Gemseeker's pool, Prospector's scope; Seismic, Splintering and Forester's derived from the game data.
 - **Affix decisions** (no code yet; loot system): gathering affix sides, roll weights, the combined one-handed axe pool, the twin reading (Magic items resonate too) and five gathering twin pairs, recorded in `affixes.csv` and `docs/AFFIX_RULES.md`.
 - **Corrupted bosses (core):** corrupted bosses deal 1.5× and take 0.7× damage, drop 2–3 essences and 3–5 shards, and turn red (design starting values). `co_corrupt` corrupts the nearest boss for testing. Offerings and summons follow. Decided: corrupted offerings use the full normal offering + 1 shard; the Queen uses a corrupted Sealbreaker. Untested in-game.
+- **`co_dump` writes `item_details.csv`** (every item field, for the gear affix ranges).
+- **Gear affix range rule** (user): top = strongest vanilla source, bottom = a fifth of the top; elemental damage now 10–50%, movement speed 1–5%.
 - **`co_dump` writes six more files:** world spawn tables, raids and their spawns, status effects, container loot, destructibles and boss altars, so rip waves, maddened creatures and rip loot (phase 4 step B) can be based on the game's own numbers. Untested in-game.
 - **Meadows and Deep North map materials approved** by the user (Leather scraps, Ice).
 - **Maps and rips, step A:** eight maps crafted at the Riftforge; using one opens a rip to unexplored land of its biome (server keeps rips away from bases); destroying the rip's heart opens the way home; rips close after an in-game day. Table `maps.csv`, settings `5 - Rips`. Untested in-game (89 tests).

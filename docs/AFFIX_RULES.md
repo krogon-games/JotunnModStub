@@ -233,7 +233,16 @@ Pickaxes roll only from the [gathering tool pools](#gathering-tool-affixes); one
 - Stats the item doesn't have (max health, stamina, eitr, carry weight, skill levels, movement, resistances) stay **flat, with a smaller span** than the draft's tier I–IV spread.
 - **Tier names become roll-quality names:** the four names of a family mark which quarter of the range the roll landed in (*Sharp* = bottom quarter of Enhanced damage, *Merciless* = top quarter).
 
-**Ranges** are in the table (`pool` = `gear`, status `draft`).
+**How big a range is (user, 2026-10-28):** the **top** of an affix's range is the **strongest vanilla source** of that stat in the game data (an item, a set bonus, a mead, Megingjord…); the **bottom** is **a fifth of the top**. Twins and Rares stacking several affixes can go beyond vanilla; the caps still limit totals. Applied so far:
+
+| Affix | Range | Source (1.0.20 data) |
+|---|---|---|
+| Fire, frost, lightning, poison, spirit damage (each half) | 10–50% of physical | One top for all elements (user): the median of each element's strongest vanilla player weapon: fire 18% (Frostfire bow), lightning 47% (Himminafl), poison 50% (Jotun Bane), spirit 57% (Silver mace), frost 129% (Frostfire bow) |
+| Movement speed | 1–5% | Crown of Valheim +5% (Fenring pieces +3%) |
+
+The rest wait for the next `co_dump`: max health, stamina and eitr, regen, carry weight, skills and resistances come from set bonuses, meads, Megingjord and trinkets (`status_effects.csv`); armour, durability, block, knockback, parry, backstab and attack stamina from item details (`item_details.csv`). Affixes the user already approved with their numbers (Fleet, Foraging, the proc affixes) keep them.
+
+**Ranges** are in the table (`pool` = `gear`; rows still marked `draft` haven't been through the rule yet).
 
 Caps and resonance (+25% on a twin's combined top) are unchanged.
 
