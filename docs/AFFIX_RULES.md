@@ -67,8 +67,8 @@ Brief from the user for the general pool: "Diablo 2-style prefixes and suffixes.
 - **Pickaxes:** every player-craftable item that uses the Pickaxes skill.
 - **Axes:** every **one-handed axe**: player-craftable, one-handed, Axes skill. Two-handed axes (battleaxes, Berserkir axes, Early Axes) never roll gathering affixes.
 - **One-handed axes are both tools and weapons** (user, 2026-10-27): they roll from the universal and woodcutting pools **and** the general pool's weapon (**W**) families. Pickaxes roll from the gathering pools only; two-handed axes from the weapon families only.
-  - **Proposed:** one combined pool per item, so a Magic one-handed axe could be *Lumberjack's Iron Axe of Embers*. Roll weights decide how often each kind appears.
-  - **Proposed:** the gathering pool's Durable and the weapon families' Durability raise the same stat, so they count as one family on an axe and can't both roll.
+  - **One combined pool per item** (user, 2026-10-28), so a Magic one-handed axe could be *Lumberjack's Iron Axe of Embers*. Roll weights decide how often each kind appears.
+  - The gathering pool's Durable and the weapon families' Durability raise the same stat, so they count as one family on an axe and can't both roll.
 - The rule is data-driven, so modded tools qualify automatically; a config list excludes exceptions.
 
 From the 1.0.20 dump (`data/game-dump-1.0.20/items.csv`):
@@ -135,9 +135,21 @@ Verified in the 1.0 code: hitting a tree, log, stump, rock or deposit only sends
 - **Striker-only effects** (Swift, Efficient, Fit, Durable, Scholar's) never involve the owner.
 - **On-harvest effects** (both Bountifuls, Artisan, Gemseeker's, Determined) need a small "harvested" message from the owner's game back to the striker's, which then rolls and spawns the extra items next to the object. Every machine needs the mod for this, which fits the Corruption plugin (`EveryoneMustHaveMod`).
 
-### Proposed prefix/suffix split (to confirm)
+### Prefix/suffix split (user, 2026-10-28)
 
-Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **prefixes make the swing stronger, suffixes bring fortune and endurance.** The split doesn't need to be equal (user). Each affix's side is the `side` column of the table.
+Magic and Rare items need each affix to be a prefix or a suffix: **prefixes make the swing stronger, suffixes bring fortune and endurance.** The split doesn't need to be equal (user). Each affix's side is the `side` column of the table.
+
+**Gathering twins (user, 2026-10-28).** As on gear, some stats exist as both a prefix and a suffix, so a tool can roll the stat twice and resonate (see [Twin mods and resonance](#twin-mods-and-resonance)). Following the gear rule, only plain stat boosts are twins; chance procs (Bountiful, Artisan, Odin's Grace…) and capped stats (Swift) stay single:
+
+| Stat | Prefix | Suffix |
+|---|---|---|
+| Damage to rocks and ore | Prospector's | of the Prospector |
+| Chop damage to trees | Lumberjack's | of the Lumberjack |
+| Durability | Durable | of the Anvil |
+| Gathering skill XP | Studious | of the Scholar |
+| Stamina per swing | Unwearied | of Efficiency |
+
+Each half keeps the original affix's range; both halves have half the normal roll weight (25), as for gear twins. The new halves' names are Claude's; rename freely in the table.
 
 
 - **Names on the item** follow the general pool: prefix before, suffix after with "of" (*Swift Iron Pickaxe of the Artisan*), from the `item_name` column. Rares get a random two-word name instead.
@@ -147,7 +159,7 @@ Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **pre
 
 *Proposed by Claude and approved by the user, 2026-10-27, for variety.* Every hook below exists in the 1.0 game code.
 
-**Roll weights (proposed):** low-impact filler rolls most often (weight 100), most of the user's affixes are normal (50), Odin's Grace is rare (10). A tool full of filler is a normal find; a rare-weight affix is a treat.
+**Roll weights (approved by the user, 2026-10-28):** low-impact filler rolls most often (weight 100), most of the user's affixes are normal (50), Odin's Grace is rare (10), Deathless rarest (5); twin halves 25. A tool full of filler is a normal find; a rare-weight affix is a treat.
 
 | Affix | Pool | Effect | Hook |
 |---|---|---|---|
@@ -181,10 +193,8 @@ Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **pre
 
 ### Open questions (gathering tools)
 
-1. Confirm the prefix/suffix split and suffix names.
-2. Confirm the roll weight classes (Common / Uncommon / Rare).
-3. Confirm one combined pool for one-handed axes (gathering + weapon families).
-4. The proposed interpretations above, including how Odin's Grace treats logs and stumps.
+1. ~~Prefix/suffix split~~, ~~roll weight classes~~, ~~one combined pool for one-handed axes~~: decided 2026-10-28.
+2. The proposed interpretations above, including how Odin's Grace treats logs and stumps.
 
 ## Proc and utility affixes (user, 2026-10-28)
 
@@ -226,8 +236,7 @@ Caps and resonance (+25% on a twin's combined top) are unchanged.
 
 ### Open questions
 
-- **Twin interpretation (unconfirmed).** The brief said "both same suffix and same suffix". The draft reads it as *one prefix and one suffix that share a stat* (a twin). Needs the user's confirmation.
-- Can a **Magic** item (one prefix + one suffix) resonate, or only Rares? The draft doesn't restrict it.
+- ~~Twin interpretation~~ **confirmed 2026-10-28:** a twin is one prefix and one suffix that share a stat, and **Magic items resonate too**, not only Rares.
 - ~~Name collisions~~ fixed 2026-10-28 by renaming the old placeholder roll-quality names: of Warding → of Protection (all resistances) and of Bracing (block), of the Lox → of the Elk and of Sleipnir → of Vidar (stamina), Hardened → Tempered (durability), Smouldering → Kindled (fire), of Light → of Radiance (spirit), Undying → Everlasting (health regen). The test now rejects any repeated item name.
 
 ### How an item rolls

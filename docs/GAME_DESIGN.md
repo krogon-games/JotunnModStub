@@ -51,6 +51,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Loot system (rarity, affixes, orbs, uniques) is our own, not Epic Loot (decided 2026-10-27).
 - Workbench and forge craft Normal (vanilla) items only; orb crafting at the Riftforge upgrades them; monsters drop items with random rolls. Magic = up to 1 prefix + 1 suffix, Rare = up to 2 + 2 (2026-10-27).
 - Gathering tools get their own affix pools (universal, mining, woodcutting) plus 7 low-impact affixes. Every one-handed axe (Jotun Bane, Thunderblood and Frostfire included) is both a tool and a weapon: it rolls gathering and weapon affixes. Pickaxes roll gathering affixes only (2026-10-27).
+- Affix sides, weights and twins (2026-10-28): gathering prefixes = stronger swing, suffixes = fortune and endurance; weights filler 100 / normal 50 / rare 10 / Deathless 5 / twin halves 25; one combined pool on one-handed axes; twins (a prefix and a suffix on the same stat) resonate on Magic and Rare items; gathering twins for resource damage, durability, skill XP and stamina per swing.
 - Flat-value affixes: a % of the item's matching stat where one exists, otherwise flat with a smaller span (2026-10-27).
 - Affix ranges are the same for every item, tools and gear alike; the base item carries the progression. To play-test (2026-10-27).
 - Monster drops start at Magic 1 in 50 and Rare 1 in 100 per kill; uniques have separate chances; all chances in a tunable table, multiplied by corruption zones and similar systems (2026-10-27).

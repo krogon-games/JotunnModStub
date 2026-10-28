@@ -68,9 +68,8 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 
 - **Run `co_dump` once in a world (2026-10-28) and send the new files** (`spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them, and phase 6 its altar offerings, instead of guessing.
 
-- **Gathering tool affixes:** confirm the prefix/suffix split, roll weight classes, one combined pool for one-handed axes (gathering + weapon families), and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
-- **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation still open.
-- General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
+- **Gathering tool affixes:** the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#proposed-interpretations-to-confirm)). Sides, weights, the axe pool and gathering twins were decided 2026-10-28.
+- **General gear affixes:** review the draft one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)). The twin reading was confirmed 2026-10-28.
 - Kall Fimbulbringer's essence look (made without a concept render; status `proposed` in `essences.csv`).
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
 - Play-test results for everything under "Built, not verified".
