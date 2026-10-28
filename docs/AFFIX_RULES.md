@@ -181,7 +181,7 @@ Each half keeps the original affix's range; both halves have half the normal rol
 ### Interpretations (decided 2026-10-28)
 
 **Decided by the user:**
-- **Universal Bountiful:** +5–15% of everything the harvest dropped. **Woodcutting Bountiful:** +5–15% of the wood it dropped. Fractions round up by chance (+10% of 5 stone = 1 extra stone half the time). **Artisan:** 1 extra ore of the kind that dropped (the user's spec).
+- **Universal Bountiful:** a 5–15% chance that a harvest's drops all drop once more. **Woodcutting Bountiful:** a 5–15% chance that its wood drops once more. Both can trigger on one harvest (triple wood). Chosen over a small percentage added to every harvest: the same amount on average, but visible moments. **Artisan:** 1 extra ore of the kind that dropped (the user's spec).
 - **Determined:** each harvest restores 5–15% of max stamina.
 - **Gemseeker's** pool: the trader valuables Amber, Amber pearl and Ruby (1.0.20 data: the only sellable gems), limited to items whose biome (biome detection) is no later than the deposit's: Meadows deposits give Amber or Amber pearl, Black Forest and later also Ruby.
 - **Prospector's** (and its twin) covers everything a pickaxe breaks: stone rocks and ore deposits. **Excavator's** covers digging the ground.
