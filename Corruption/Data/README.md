@@ -9,6 +9,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`drop_chances.csv`](drop_chances.csv) | Base chance of each rarity dropping |
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
 | [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
+| [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
 | [`essences.csv`](essences.csv) | Boss essences: which boss drops which essence, how many per kill, its name, description and colours |
 | [`maps.csv`](maps.csv) | Maps: one per biome, its Riftforge recipe (shards, essence, material) and text |
 
@@ -63,6 +64,16 @@ Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`sc
 | `status`, `notes` | As above |
 
 Rules: [`docs/corruption-design.md` → Corrupted gear](../../docs/corruption-design.md#corrupted-gear). Code: `CorruptionOutcomes.Roll` in `Corruption/Rules/CorruptionOutcomes.cs`.
+
+## shattering.csv
+
+| Column | Meaning |
+|---|---|
+| `setting` | `splinter_chance`: the chance, in percent (0–100), that each affix line of a shattered item becomes an Affix Splinter. A new setting needs code |
+| `value` | The number |
+| `status`, `notes` | As above |
+
+Rules: [`docs/corruption-design.md` → Affix Splinters and shattering](../../docs/corruption-design.md#affix-splinters-and-shattering). Code: `ShatterRules` in `Corruption/Rules/ShatterRules.cs`.
 
 ## essences.csv
 

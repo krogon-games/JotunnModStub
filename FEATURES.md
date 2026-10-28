@@ -586,7 +586,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
-- **Affix shards and shattering designed** (design only, from Last Epoch): free shattering at the Riftforge, a chance per affix to get a shard that keeps its exact value, shards add up to 2 affixes to Normal and Magic items only.
+- **Affix Splinters and shattering designed** (from Last Epoch; no gameplay change yet): free shattering of Magic and Rare items at the Riftforge (not uniques or corrupted), 50% per affix line to get a splinter that keeps its exact value (a resonant line keeps the combined value); splinters go on Normal and Magic items with fewer than 2 affixes; they need the Currency tab. Chance in `Corruption/Data/shattering.csv`, rules in `Corruption/Rules/ShatterRules.cs`, with tests (100 tests).
 - **Shard corruption rules completed** (design only): the corrupted affix may repeat a family, resonates when it completes a twin and ignores the affix caps; corrupted gear only comes from a shard (the first draft's corrupted drops are removed).
 - **Shard corruption outcomes decided** (no gameplay change yet; loot system): 25% bricked, 25% unchanged but locked, 50% one corrupted affix on top of the normal prefix/suffix limit; Normal, Magic and Rare items can be corrupted; the affix rolls from the normal pool. Chances in `Corruption/Data/corruption_outcomes.csv` with a reader and roll (`Corruption/Rules/CorruptionOutcomes.cs`) and tests (94 tests).
 - **Gathering affix behaviour decided** (no code yet): both Bountifuls are a 5–15% chance to double the harvest (or its wood); Determined, Gemseeker's pool, Prospector's scope; Seismic, Splintering and Forester's derived from the game data.

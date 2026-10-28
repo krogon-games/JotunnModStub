@@ -39,7 +39,7 @@ Brief from the user for the general pool: "Diablo 2-style prefixes and suffixes.
 
 **Related rules elsewhere** (not repeated here):
 - Rarity tiers (Normal / Magic 1–2 affixes / Rare 3–4 / Unique fixed), currency orbs, corruption lock and the shard's outcomes (brick / unchanged / one corrupted affix on top of the limit): [`corruption-design.md` → Currency orbs](corruption-design.md#currency-orbs) and [Loot and uniques](corruption-design.md#loot-and-uniques).
-- Affix shards and shattering (move an affix and its exact value from a shattered item to a Normal or Magic item): [`corruption-design.md` → Affix shards and shattering](corruption-design.md#affix-shards-and-shattering).
+- Affix Splinters and shattering (move an affix and its exact value, resonant lines included, from a shattered item to a Normal or Magic item with fewer than 2 affixes): [`corruption-design.md` → Affix Splinters and shattering](corruption-design.md#affix-splinters-and-shattering).
 - Map affixes (Frostbitten, Swarming, ...) are a separate system that modifies rips, not gear: [Map affixes and tiers](corruption-design.md#map-affixes-and-tiers).
 - Balance rules that bind affixes: loot never carries downsides; boosts, not bypasses ([Balance rules](corruption-design.md#balance-rules-and-open-questions)).
 

@@ -57,7 +57,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Monster drops start at Magic 1 in 50 and Rare 1 in 100 per kill; uniques have separate chances; all chances in a tunable table, multiplied by corruption zones and similar systems (2026-10-27).
 - Odin's Grace is the powerful rare gathering affix: whole tree, or the hit deposit chunk plus every chunk touching it (2026-10-27).
 - Only the shard can brick gear; orbs never brick; corrupted items are locked. Corrupting Normal, Magic or Rare gear: 25% bricked, 25% unchanged but locked, 50% one corrupted affix on top of the normal limit, rolled from the normal pool; it may repeat a family, resonates with a twin and ignores the caps. Corrupted gear never drops; it only comes from a shard (2026-10-28).
-- Affix shards (2026-10-28): shattering a Magic or Rare item at the Riftforge is free; each affix has a chance to become a shard that keeps its exact value; shards add affixes to Normal and Magic items only, up to 2 (1 prefix + 1 suffix).
+- Affix Splinters (2026-10-28): shattering a Magic or Rare item at the Riftforge is free (not uniques or corrupted items); each affix line has a 50% chance to become a splinter that keeps its exact value, a resonant line's splinter keeps the combined value; splinters go on Normal and Magic items with fewer than 2 affixes; they don't stack, so they need the Currency tab.
 
 ## Balance rules
 
