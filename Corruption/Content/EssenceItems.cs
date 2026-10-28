@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Corruption.Rules;
 using Jotunn.Configs;
 using Jotunn.Entities;
@@ -15,15 +13,16 @@ namespace Corruption.Content
     /// </summary>
     internal static class EssenceItems
     {
-        private const string TableResource = "Corruption.Data.essences.csv";
-
         /// <summary>Essences that were registered, by boss prefab name. Read by <see cref="EssenceDrops" />.</summary>
         public static readonly Dictionary<string, EssenceTable.Essence> ByBoss = new Dictionary<string, EssenceTable.Essence>();
+
+        /// <summary>Every essence in the table, by look id (registered or not). Read by <see cref="MapItems" />.</summary>
+        public static readonly Dictionary<string, EssenceTable.Essence> ByLook = new Dictionary<string, EssenceTable.Essence>();
 
         public static void Register()
         {
             var errors = new List<string>();
-            var essences = EssenceTable.Parse(ReadTable(), errors);
+            var essences = EssenceTable.Parse(DataFiles.Read("essences.csv"), errors);
             foreach (var error in errors)
             {
                 Jotunn.Logger.LogWarning(error);
@@ -32,6 +31,7 @@ namespace Corruption.Content
             var localization = LocalizationManager.Instance.GetLocalization();
             foreach (var essence in essences)
             {
+                ByLook[essence.Look] = essence;
                 Safe.Run($"register {essence.Item}", () => RegisterOne(essence, localization));
             }
         }
@@ -107,22 +107,6 @@ namespace Corruption.Content
 
             ItemManager.Instance.AddItem(item);
             ByBoss[essence.Boss] = essence;
-        }
-
-        private static string ReadTable()
-        {
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(TableResource))
-            {
-                if (stream == null)
-                {
-                    Jotunn.Logger.LogError($"Embedded {TableResource} not found; no boss essences.");
-                    return "";
-                }
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
         }
     }
 }

@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **81 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop and essence tables, gem model parser).
+- `dotnet test CraftingOverhaul.Tests`: **89 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, essence and map tables, rip rules, gem model parser).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -37,11 +37,12 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
 | Boss essences (phase 3, 2026-10-28) | `spawn CorruptionEssence_eikthyr` (and the other seven, including `_kall`): look, icon, glow, add-on parts on the Elder, Yagluth and Kall essences; each boss drops 1 per kill (Kall: from the final phase) |
+| Maps and rips, step A (2026-10-28) | `spawn CorruptionMap_Meadows`, right-click it: rip opens, travel, land on the ground beside the heart, destroy the heart, exit rip leads home, both close after a day. Crafting a map at the Riftforge. Then with a friend: following through the rip, rip near someone's base refused. Steps: `FEATURES.md` → Maps and rips |
 | Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
 
 ## Not built (proposed)
 
-Corruption phases 4–10 (maps and rips, map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Corruption phase 4 step B (waves, maddened, rip loot), phases 5–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -75,7 +76,7 @@ Corruption phases 4–10 (maps and rips, map affixes, corrupted bosses, loot/aff
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
 3. Play-test boss essences (above).
 4. Run the multiplayer checklist when a second player is available.
-5. **Phase 4 step A** (decided 2026-10-28): map items and recipes, opening a rip, landing spot, heart, way home. Then step B: waves, maddened creatures, end loot.
+5. Play-test phase 4 step A, then build **step B**: our own wave spawner driven by the heart, maddened status effect, the end-of-rip loot, and checking the landing area once loaded (locations, water).
 
 ## Before release
 

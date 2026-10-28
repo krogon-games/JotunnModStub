@@ -13,6 +13,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 
 - **Talismans** ("<creature> charm"). Craft at the workbench from 3 of a creature's trophies, 1 chain and 10 leather scraps. Placed in a Talisman slot, a charm stops that creature family (e.g. greydwarfs, brutes and shamans) from attacking you, unless you hit them first. Bosses are never repelled. You get 2 talisman slots on top of the vanilla trinket slot. The slots appear in the equipment panel of [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/), which talismans need.
 - **Boss essences.** Every boss drops 1 essence per kill, each a glowing gem in its boss's colours. They will be used at the Riftforge to craft maps into a corrupted version of that boss's biome (Eikthyr: corrupted Meadows, up to Kall Fimbulbringer: corrupted Deep North).
+- **Maps and rips** (early version). Craft a map at the Riftforge from a shard, a boss essence and a biome material, then use it: a rip opens to unexplored land of that biome, away from everyone's bases. Destroy the rip's heart to open the way home. Rips close after an in-game day. Fights inside rips come next.
 
 ## Configuration
 
@@ -30,6 +31,10 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 | Talismans / ProvokeSeconds | 30 | How long a creature you hit fights back |
 | Talismans / ExcludedCreatures | \*Hildir\*, GoblinBruteBros\*, Charred_Melee_Dyrnwyn | Creatures never repelled |
 | Essences / Enabled | true | Bosses drop their essence |
+| Rips / Enabled | true | Maps open rips |
+| Rips / OpenDays | 1 | How long a rip stays open (in-game days) |
+| Rips / BaseDistance | 100 | Rips never open this close (m) to a bed, ward or portal |
+| Rips / HeartHealth | 400 | Health of a rip's heart |
 
 Look settings (per player, not synced, restart to apply):
 
@@ -45,4 +50,4 @@ Look settings (per player, not synced, restart to apply):
 | Look / RiftforgeTintStrength | 0.6 | 0 = Galdr table colours, 1 = fully the tint colour |
 
 ## Changelog
-- 0.1.0 (unreleased): corruption shards, the Riftforge, talismans and boss essences.
+- 0.1.0 (unreleased): corruption shards, the Riftforge, talismans, boss essences, maps and rips (travel only).

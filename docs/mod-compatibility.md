@@ -38,6 +38,8 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Talismans (`BaseAI.IsEnemy`, `BaseAI.OnDamaged`) | None of the three patch these | — |
 | Shard drops (`CharacterDrop.GenerateDropList`) | No overlap | — |
 | Riftforge | No overlap | — |
+| Maps (`Humanoid.UseItem` prefix) | AB's quick transfer also prefixes `UseItem` (higher priority): with the backpack open, right-clicking moves the item. Our prefix steps aside when another skipped the original, so a map gets moved, not used. EAQS quick slots call `UseItem` normally, so maps work from quick slots | Verified in code; to test |
+| Rips (`Player.UpdateTeleport` postfix, `Game.Start` postfix) | None of the three patch these. AB patches `Inventory.IsTeleportable` (backpack contents count), which our rip check uses, so ores in a backpack block rips like portals | Verified in code |
 
 ## Corruption (planned): keep in mind when building
 

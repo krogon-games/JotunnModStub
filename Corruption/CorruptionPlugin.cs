@@ -56,6 +56,9 @@ namespace Corruption
             Safe.Run("register the Riftforge", Riftforge.Register);
             Safe.Run("register talismans", Talismans.Register);
             Safe.Run("register boss essences", EssenceItems.Register);
+            // After essences: map recipes and colours use them.
+            Safe.Run("register maps", MapItems.Register);
+            Safe.Run("register rips", RipPrefabs.Register);
         }
 
         /// <summary>Applies each patch class on its own, so one broken by a game update only disables that feature.</summary>

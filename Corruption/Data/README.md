@@ -9,8 +9,9 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`drop_chances.csv`](drop_chances.csv) | Base chance of each rarity dropping |
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
 | [`essences.csv`](essences.csv) | Boss essences: which boss drops which essence, how many per kill, its name, description and colours |
+| [`maps.csv`](maps.csv) | Maps: one per biome, its Riftforge recipe (shards, essence, material) and text |
 
-`essences.csv` is compiled into the mod: **rebuild after editing it**. The others aren't loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
+`essences.csv` and `maps.csv` are compiled into the mod: **rebuild after editing them**. The others aren't loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
 
 ## How to edit
 
@@ -63,4 +64,16 @@ Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`sc
 | `addon`, `addon_color` | Optional extra part (`essence_root`, `essence_ring`, `essence_crown`) and its colour; leave both blank for none |
 | `per_kill` | Essences dropped per boss kill (every kill), 1 or more |
 | `maps_into` | Biome the essence will craft maps into (used from phase 4) |
+| `status`, `notes` | As above |
+
+## maps.csv
+
+| Column | Meaning |
+|---|---|
+| `biome` | The game's biome name: `Meadows`, `BlackForest`, `Swamp`, `Mountain`, `Plains`, `Mistlands`, `AshLands`, `DeepNorth`. One row each. Names the item (`CorruptionMap_<biome>`) |
+| `label` | The biome's name for players, e.g. `Black Forest` |
+| `name`, `description` | In-game text |
+| `essence` | The essence in the recipe, by its `look` in `essences.csv` (e.g. `elder`) |
+| `material`, `material_amount` | The biome material in the recipe, by item prefab name (e.g. `GreydwarfEye`), and how many. The tests check it's a real item |
+| `shards` | Corruption shards in the recipe |
 | `status`, `notes` | As above |

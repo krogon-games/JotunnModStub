@@ -9,6 +9,7 @@ namespace Corruption
         private const string LookSection = "2 - Look";
         private const string TalismanSection = "3 - Talismans";
         private const string EssenceSection = "4 - Essences";
+        private const string RipSection = "5 - Rips";
 
         public static ConfigEntry<float> OneStarShardChance;
         public static ConfigEntry<float> TwoStarShardChance;
@@ -18,6 +19,10 @@ namespace Corruption
 
         public static ConfigEntry<bool> TalismansEnabled;
         public static ConfigEntry<bool> EssencesEnabled;
+        public static ConfigEntry<bool> RipsEnabled;
+        public static ConfigEntry<float> RipOpenDays;
+        public static ConfigEntry<float> RipBaseDistance;
+        public static ConfigEntry<float> RipHeartHealth;
         public static ConfigEntry<int> TalismanSlots;
         public static ConfigEntry<float> ProvokeSeconds;
         public static ConfigEntry<string> TalismanExcludedCreatures;
@@ -58,6 +63,17 @@ namespace Corruption
             EssencesEnabled = config.Bind(EssenceSection, "Enabled", true,
                 AdminOnly("Bosses drop their essence on every kill (how many per kill: Corruption/Data/essences.csv). " +
                           "Off: no essence drops; essences already found stay."));
+
+            RipsEnabled = config.Bind(RipSection, "Enabled", true,
+                AdminOnly("Maps open rips. Off: using a map does nothing (the map is kept)."));
+            RipOpenDays = config.Bind(RipSection, "OpenDays", 1f,
+                AdminOnly("How long a rip stays open, in in-game days (sleeping skips time). Both its portals close then.",
+                    new AcceptableValueRange<float>(0.1f, 10f)));
+            RipBaseDistance = config.Bind(RipSection, "BaseDistance", 100f,
+                AdminOnly("Rips never open within this many metres of a bed, ward or portal (any player's).",
+                    new AcceptableValueRange<float>(0f, 1000f)));
+            RipHeartHealth = config.Bind(RipSection, "HeartHealth", 400f,
+                AdminOnly("Health of a rip's heart. Destroying it opens the way home.", new AcceptableValueRange<float>(1f, 100000f)));
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",

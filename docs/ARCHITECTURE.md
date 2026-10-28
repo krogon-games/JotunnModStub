@@ -48,6 +48,13 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - `Corruption.csproj` embeds every `Assets/*.obj` and `Assets/*.rgba` (wildcard) plus `Data/essences.csv`. `Rules/ObjMesh.cs` (tested) reads the models; `Content/GemModel.cs` builds the Unity mesh and material on the base item's shader, adds optional plain-colour add-on parts and the ground glow, and removes the base item's visuals (colliders stay). A failed look always falls back to a tint, so the item still registers.
 - Textures are raw pixels because `Texture2D.LoadImage` (ImageConversion module) references netstandard 2.1, which the net462 build can't compile against. They make up most of the DLL's size (about 4 MB).
 
+### Server messages (rips)
+
+- Requests that need the whole world go to the server with `ZRoutedRpc` (registered in a `Game.Start` postfix): the player's game sends `Corruption_RipRequest` to `GetServerPeerID()`, the server answers the sender with `Corruption_RipReply`. In single player and on a host the "server" is the same game; routed RPCs to yourself are handled locally.
+- Only the server holds every object in the world (`ZDOMan.GetAllZDOsWithPrefabIterative` covers them all there), so checks like "near anyone's base" belong on the server.
+- Objects for far-away places (the rip heart) are instantiated there directly: their persistent ZDO stays when the instance is removed as out of range, and they appear when someone arrives. Settle them on the ground once the area is loaded.
+- Rip state lives on the objects' ZDOs (`corruption_rip_*` keys in `Rips.cs`), so it survives restarts and works for every player.
+
 ## Code patterns (follow these)
 
 1. **Isolated patches.** `PatchAllSafely()` applies each `[HarmonyPatch]` class separately inside try/catch, so one broken target doesn't disable the rest.

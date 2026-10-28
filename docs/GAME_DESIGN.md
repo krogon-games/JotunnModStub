@@ -28,7 +28,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 1: Riftforge station | Corruption | Verified (no recipes yet) | `FEATURES.md` |
 | Phase 2: talismans | Corruption | Built, untested | `FEATURES.md` |
 | Phase 3: boss essences | Corruption | Built, untested (8 bosses; Hive left out) | `FEATURES.md`, `Corruption/Data/essences.csv` |
-| Phase 4: maps and rips | Corruption | Next: step A (maps, rip travel, heart, way home), then step B (waves, maddened, loot) | design doc + review 1, 2, 6 |
+| Phase 4: maps and rips | Corruption | Step A built, untested (maps, rip travel, heart, way home); step B next (waves, maddened, loot) | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
 | Phase 6: corrupted bosses | Corruption | Proposed | design doc + review 4 |
 | Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |

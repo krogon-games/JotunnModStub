@@ -18,6 +18,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
 | [Boss essences](#boss-essences) | Loot | Built, untested | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
+| [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Built, untested | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -455,6 +456,50 @@ New items registered through Jötunn: `CorruptionEssence_<look>` for each table 
 
 ---
 
+## Maps and rips (step A)
+
+*Corruption plugin, design phase 4, step A: travel only. Waves, maddened creatures and the end loot come in step B.*
+
+**What it does in-game:**
+- **Maps.** Eight maps, one per biome (Corrupted Meadows map … Corrupted Deep North map), crafted at the **Riftforge** from 1 corruption shard, 1 of that biome's boss essence and 5 of a biome material. Like vanilla recipes, a map shows up once you've picked up all three. Maps don't stack, go through portals and can't be sold. Placeholder look: a bundle of leather tinted in the essence's colour.
+- **Opening a rip.** Use the map (right-click it in your inventory, or from the hotbar). Your game looks for flat, dry land of that biome **you haven't explored** (your map, including what you've added from a cartography table); the server then picks the first spot that's at least `BaseDistance` (100 m) from **anyone's** bed, ward or portal. The map is used up and a red stone portal, the **rip**, opens 4 m in front of you. If nothing suitable is found you're told why and keep the map.
+- **Through the rip.** Walk in (or press E) to travel to the landing spot. Vanilla portal rules apply: no ores or metals. Anyone can follow while it's open. You land beside the **rip heart**, a giant glowing corruption shard.
+- **Getting home.** Destroy the heart (`HeartHealth`, 400) to open a second rip beside it that leads back to the first. Both rips and the heart close after `OpenDays` (1 in-game day, 30 minutes unless you sleep). No other way back: bring a portal kit or walk.
+
+**How to test:**
+- `spawn CorruptionMap_Meadows` (or `_BlackForest`, `_Swamp`, `_Mountain`, `_Plains`, `_Mistlands`, `_AshLands`, `_DeepNorth`), then right-click it.
+- Crafting: a Riftforge, a shard, an essence and the material.
+
+**Data table:** [`Corruption/Data/maps.csv`](Corruption/Data/maps.csv): recipe per biome. Compiled into the DLL, so **rebuild after editing**. `dotnet test` checks it, that every essence exists and every material is a game item.
+
+**Config settings** (admin-only, synced from the server):
+
+| Setting | Default | Description |
+|---|---|---|
+| `Enabled` | `true` | Maps open rips; off = using a map does nothing (the map is kept) |
+| `OpenDays` | `1` | How long a rip stays open, in in-game days |
+| `BaseDistance` | `100` | Rips never open within this many metres of a bed, ward or portal |
+| `HeartHealth` | `400` | Health of the rip heart |
+
+**Known issues:**
+- Untested in-game (89 tests pass). Riskiest parts: the far-away heart appearing at the landing spot, landing on the ground (not inside a rock or on a tree), the stone portal's look and swirl without its vanilla logic, the heart's model on the greydwarf-nest base.
+- The landing spot comes from world generation. Locations (villages, altars) aren't avoided yet; step B adds checks once the area has loaded.
+- The map look is a placeholder until map art is asked for.
+- With AdventureBackpacks' backpack open, right-clicking a map moves it (AB's quick transfer) instead of using it. Close the backpack first.
+- A rip opened by a player who then leaves: its objects close when someone is next near them after the time is up.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Humanoid.UseItem` | Prefix | Using a map from the player's own inventory opens a rip instead of vanilla "use on what?". Steps aside when another mod already handled the use |
+| `Player.UpdateTeleport` | Postfix | After a rip teleport finishes, puts the player on the ground at the destination |
+| `Game.Start` | Postfix | Registers the rip messages between players' games and the server (`Corruption_RipRequest`, `Corruption_RipReply`) |
+
+New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `corruption_rip` (cloned from `portal_stone`, falling back to `portal_wood`; vanilla portal logic, building and damage removed) and `corruption_rip_heart` (cloned from `Spawner_GreydwarfNest`; spawning and drops removed, the shard model at 6× size).
+
+---
+
 ## Loot system
 
 **Status:** Planned. Not started.
@@ -494,6 +539,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Maps and rips, step A:** eight maps crafted at the Riftforge; using one opens a rip to unexplored land of its biome (server keeps rips away from bases); destroying the rip's heart opens the way home; rips close after an in-game day. Table `maps.csv`, settings `5 - Rips`. Untested in-game (89 tests).
 - **Currency orb art** (no feature yet): nine orb models and textures generated from the user's concept render, kept out of the DLL until the orbs are built (phase 7).
 - **Maps redesigned:** each essence now crafts maps into the corrupted version of its own boss's biome (Eikthyr → Meadows … Fader → Ashlands). **Kall Fimbulbringer essence** added (Deep North, dropped by the final phase; frost-crown look, not from the render). The Hive is left out. Untested in-game.
 - **Boss essences (phase 3):** every boss drops 1 essence per kill. Seven essences with their own looks after the user's concept render, defined in `Corruption/Data/essences.csv` (validated by tests). Setting `4 - Essences` → `Enabled`. The shard's model code is now shared (`GemModel.cs`). Untested in-game (81 tests).

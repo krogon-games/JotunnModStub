@@ -26,6 +26,9 @@ namespace Corruption.Content
             /// <summary>Optional extra part in a plain colour (the Elder's root, Yagluth's ring).</summary>
             public string AddonMesh;
             public Color AddonColor;
+
+            /// <summary>Size multiplier of the model (the rip heart is a giant shard).</summary>
+            public float Scale = 1f;
         }
 
         public static readonly Look Shard = new Look
@@ -77,10 +80,10 @@ namespace Corruption.Content
             }
 
             RemoveVisuals(prefab);
-            AddPart(prefab, look.Name + "Model", mesh, material);
+            AddPart(prefab, look.Name + "Model", mesh, material, look.Scale);
             if (addonMesh)
             {
-                AddPart(prefab, look.Name + "Addon", addonMesh, addonMaterial);
+                AddPart(prefab, look.Name + "Addon", addonMesh, addonMaterial, look.Scale);
             }
             return true;
         }
@@ -91,26 +94,31 @@ namespace Corruption.Content
         /// </summary>
         public static void AddGlow(GameObject prefab, Color color)
         {
-            float intensity = CorruptionConfig.ShardGlowIntensity.Value;
+            AddGlow(prefab, color, CorruptionConfig.ShardGlowIntensity.Value, CorruptionConfig.ShardGlowRange.Value, 0.25f);
+        }
+
+        public static void AddGlow(GameObject prefab, Color color, float intensity, float range, float height)
+        {
             if (intensity <= 0f)
             {
                 return;
             }
             var glow = new GameObject("CorruptionGlow");
             glow.transform.SetParent(prefab.transform, false);
-            glow.transform.localPosition = new Vector3(0f, 0.25f, 0f);
+            glow.transform.localPosition = new Vector3(0f, height, 0f);
             var light = glow.AddComponent<Light>();
             light.type = LightType.Point;
             light.color = color;
             light.intensity = intensity;
-            light.range = CorruptionConfig.ShardGlowRange.Value;
+            light.range = range;
             light.shadows = LightShadows.None;
         }
 
-        private static void AddPart(GameObject prefab, string name, Mesh mesh, Material material)
+        private static void AddPart(GameObject prefab, string name, Mesh mesh, Material material, float scale)
         {
             var part = new GameObject(name);
             part.transform.SetParent(prefab.transform, false);
+            part.transform.localScale = Vector3.one * scale;
             part.AddComponent<MeshFilter>().sharedMesh = mesh;
             var renderer = part.AddComponent<MeshRenderer>();
             renderer.sharedMaterial = material;

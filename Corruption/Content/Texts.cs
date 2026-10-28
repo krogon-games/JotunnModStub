@@ -8,6 +8,8 @@ namespace Corruption.Content
     {
         public const string ShardPrefab = "CorruptionShard";
         public const string RiftforgePrefab = "piece_riftforge";
+        public const string RipPrefab = "corruption_rip";
+        public const string RipHeartPrefab = "corruption_rip_heart";
 
         public const string ShardName = "$item_corruptionshard";
         public const string ShardDescription = "$item_corruptionshard_description";
@@ -17,6 +19,7 @@ namespace Corruption.Content
         public const string RavenTopic = "$raven_riftforge_topic";
         public const string RavenLabel = "$raven_riftforge_label";
         public const string RavenText = "$raven_riftforge_text";
+        public const string MapSubtitle = "$corruption_map_subtitle";
 
         public static void Register()
         {
@@ -29,6 +32,24 @@ namespace Corruption.Content
                 { "corruption_slot_talisman", "Talisman" },
                 { "corruption_talisman_subtitle", "Talisman: place in a Talisman slot" },
                 { "piece_riftforge_description", "A forge that works the void itself. Here maps into the unknown are made." },
+                { "corruption_map_subtitle", "Map: use it to open a rip" },
+                { "corruption_rip", "Rip" },
+                { "corruption_rip_heart", "Rip heart" },
+                { "corruption_rip_enter", "Enter" },
+                { "corruption_rip_to", "Leads into the corrupted {0}" },
+                { "corruption_rip_home", "Leads home" },
+                { "corruption_rip_closes", "Closes in {0}" },
+                { "corruption_rip_heart_hint", "Destroy it to open the way home" },
+                { "corruption_rip_closed", "The rip has closed." },
+                { "corruption_rip_searching", "The map stirs, searching for unexplored land..." },
+                { "corruption_rip_busy", "The map is still searching." },
+                { "corruption_rip_disabled", "Rips are turned off on this server." },
+                { "corruption_rip_not_here", "The map won't open a rip here." },
+                { "corruption_rip_no_land", "There is no unexplored {0} left for this map to reach." },
+                { "corruption_rip_only_bases", "Every unexplored {0} the map found is too close to someone's base. Try again." },
+                { "corruption_rip_no_answer", "The map falls silent. Try again." },
+                { "corruption_rip_opened", "A rip tears open into the corrupted {0}." },
+                { "corruption_rip_home_opened", "The heart shatters. A way home opens." },
                 { "raven_riftforge_topic", "The Riftforge" },
                 { "raven_riftforge_label", "Riftforge" },
                 { "raven_riftforge_text", "You have built a forge for the void itself. The shards you carry are splinters of Ginnungagap, the yawning gap that was before the world. Bind them with a slain guardian's essence, and the Riftforge will tear open a path to lands you have never seen. Go prepared, warrior. The way back must be earned." }
