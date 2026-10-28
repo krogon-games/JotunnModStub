@@ -63,6 +63,8 @@ Corruption phase 4 step B (waves, maddened, rip loot), phases 5–10 ( map affix
 
 ## Waiting on the user
 
+- **Run `co_dump` once in a world (2026-10-28) and send the new files** (`spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them instead of guessing.
+
 - **Gathering tool affixes:** confirm the prefix/suffix split, roll weight classes, one combined pool for one-handed axes (gathering + weapon families), and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
 - **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation still open.
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
