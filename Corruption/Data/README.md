@@ -8,6 +8,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`affix_caps.csv`](affix_caps.csv) | The most a stat can gain from all affixes together (movement speed, attack speed, pickup radius, resistances, life steal) |
 | [`drop_chances.csv`](drop_chances.csv) | Base chance of each rarity dropping |
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
+| [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
 | [`essences.csv`](essences.csv) | Boss essences: which boss drops which essence, how many per kill, its name, description and colours |
 | [`maps.csv`](maps.csv) | Maps: one per biome, its Riftforge recipe (shards, essence, material) and text |
 
@@ -52,6 +53,16 @@ Every table has a `status` column: `approved` (the user agreed), `proposed` (awa
 Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`scar`, magic and rare ×1.5, unique blank) has a Magic chance of 1/50 × 1.5 × 1.5 = 1 in about 22, and a unique chance of 1/2500 × 1.5 = 1 in about 1,667.
 
 **Roll rules (decided 2026-10-27):** each player near a kill rolls separately (personal loot). Magic and Rare roll separately, but if both succeed only the Rare drops. Uniques roll on their own, on top. Code: `DropTable.Roll` in `Corruption/Rules/DropTable.cs`.
+
+## corruption_outcomes.csv
+
+| Column | Meaning |
+|---|---|
+| `outcome` | `bricked` (item destroyed), `unchanged` (nothing added, item corrupted and locked) or `affix` (one corrupted affix on top of the normal limit, item locked). One row each; a new outcome needs code |
+| `chance` | Percentage. The three must add up to 100 (the test checks) |
+| `status`, `notes` | As above |
+
+Rules: [`docs/corruption-design.md` → Corrupted gear](../../docs/corruption-design.md#corrupted-gear). Code: `CorruptionOutcomes.Roll` in `Corruption/Rules/CorruptionOutcomes.cs`.
 
 ## essences.csv
 

@@ -301,9 +301,22 @@ Corrupted loot is what keeps people running maps and farming bosses. Two layers:
 
 ### Corrupted gear
 
-- Vanilla weapons and armour with a corrupted tint and 1–2 bonus affixes (extra damage type, resistance, stamina, carry weight).
+- Vanilla weapons and armour with a corrupted tint and 1–2 bonus affixes (extra damage type, resistance, stamina, carry weight). *Open question (2026-10-28): this line is from the first draft (2026-10-15), before the rarity model; it may conflict with "monsters drop Normal/Magic/Rare/Unique items". Waiting on the user.*
 - Drop from rip chests and corrupted bosses. Map tier sets the affix count and the rarity floor.
-- Can also be made corrupted at the bench: a shard plus the item rolls one affix. Any gear a shard is used on has a 25% chance to be bricked (ruined). A successful use corrupts the item, which locks it: no currency orbs can change it afterwards.
+- **Corrupting at the Riftforge** *(decided by the user 2026-10-28)*: put a Normal, Magic or Rare item and 1 Corruption shard in the bench. One of three things happens:
+
+  | Outcome | Chance | Result |
+  |---|---|---|
+  | Bricked | 25% | The item is destroyed |
+  | Unchanged | 25% | Nothing added, but the item is now corrupted and locked |
+  | Corrupted affix | 50% | The item gains **one corrupted affix on top of the normal limit**, and is locked. A Rare with 2 prefixes + 2 suffixes ends with 5 affixes; a Magic 1 + 1 ends with 3; a Normal item ends with 1 and keeps its rarity |
+
+  Live chances: [`Corruption/Data/corruption_outcomes.csv`](../Corruption/Data/corruption_outcomes.csv) (tune there; code `CorruptionOutcomes.Roll`).
+  - The corrupted affix rolls from the same pool as the item's normal affixes (`affixes.csv`, same item-class columns and weights), prefix or suffix. A separate corrupted-only pool may come later.
+  - It is shown as its own line, marked corrupted, so it is clear which affix is the extra one.
+  - The affix caps (`affix_caps.csv`) still apply: they limit the total from all affixes on the gear, the corrupted one included.
+  - A corrupted item is locked either way: no currency orb can change it afterwards, and it can't be corrupted again. Corruption is the final step, as in Path of Exile (Vaal Orb).
+  - *Open (2026-10-28):* whether the corrupted affix can repeat a family already on the item (the normal rule allows one per family per side), and whether it resonates when it completes a twin.
 - ~~Decide early whether to build this or depend on Epic Loot.~~ **Decided 2026-10-27: build our own**, for full control.
 
 ### Boss uniques
