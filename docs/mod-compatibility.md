@@ -8,6 +8,8 @@ Mods the group plays with alongside ours, what they change, and where they meet 
 
 ## The mods
 
+Install steps for players and the server: [`PLAYER_SETUP.md`](PLAYER_SETUP.md).
+
 | Mod | Version checked | What it does | Needed on |
 |---|---|---|---|
 | [RandyKnapp-EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) (EAQS) | 3.1.3 | Dedicated slots for equipped items (head, chest, legs, shoulder, utility, trinket), up to 6 quick slots, optional extra utility slots, keep-on-death options. Has an API for other mods to add custom slots | Clients; server optional (syncs its balance settings) |
