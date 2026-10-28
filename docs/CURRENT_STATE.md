@@ -29,7 +29,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Talismans: recipes, charm in an EquipmentAndQuickSlots Talisman slot, tooltip without trinket bonuses, repel | Corruption | 2026-10-28 with all mods loaded ("working as intended now") |
 | Talismans: two charms plus a vanilla trinket, same charm refused twice, provoking for ~30 s, bosses unaffected | Corruption | 2026-10-28 play-test log |
 | Boss essences: all eight looks, icons, glow and add-ons; 1 per kill on every kill; Kall's from the last phase | Corruption | 2026-10-28 play-test log |
-| Maps and rips step A: opening, landing beside the heart, heart → exit rip home, Plains map, map recipe at the Riftforge | Corruption | 2026-10-28 play-test log (two bugs found and fixed, below) |
+| Maps and rips step A: opening, landing beside the heart, heart → exit rip home, Plains map, map recipe at the Riftforge | Corruption | 2026-10-28 play-test log (two bugs found, fixed and confirmed) |
 | Corrupted bosses core: red tint, harder hits, slower kill, 2–3 essences and 3–5 shards | Corruption | 2026-10-28 play-test log |
 | Craft from chests with AdventureBackpacks: backpack alone, backpack + chest, no double charge | CraftingOverhaul | 2026-10-28 play-test log |
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
@@ -41,8 +41,6 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
-| Maps and rips: the two fixes (2026-10-28) | Portal hover shows the biome and time left (not `{0}`); no red console error when the heart loads |
-| Rips closing after an in-game day | Sleep or wait a day: both portals and the heart disappear |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
@@ -82,7 +80,7 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 1. **Phase 4 step B** with the 2026-10-28 dump: own wave spawner driven by the heart, maddened status effect, end-of-rip loot, checking the landing area once loaded. Numbers from `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`.
 2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
-4. Re-test the two rip fixes; play-test the rest of `PLAYTEST.md` (rip closing, PlantEasily, Session 2 with a friend).
+4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
 
 ## Later (user's to-do, 2026-10-28)

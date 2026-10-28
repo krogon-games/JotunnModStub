@@ -4,18 +4,13 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 **Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes.
 
-**Results so far:** the first session (2026-10-28) passed boss essences, corrupted bosses, talismans, craft from chests with AdventureBackpacks, category headers, `co_biome` and config reload; maps and rips worked apart from two bugs, now fixed. Details: `FEATURES.md`.
+**Results so far:** the first session (2026-10-28) passed boss essences, corrupted bosses, talismans, craft from chests with AdventureBackpacks, category headers, `co_biome` and config reload; maps and rips worked apart from two bugs, fixed and confirmed in a re-test. Details: `FEATURES.md`.
 
 **Before you start:** rebuild both mods (`CraftingOverhaul.sln`), start the game with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily installed (the group's setup), load a test world, open the console (F5) and type `devcommands`. `god` and `fly` help.
 
-## Session 1b: solo (about 10 minutes)
+## Session 1c: solo (2 minutes)
 
-### 1. Rip fixes
-1. `spawn CorruptionMap_Meadows`, right-click it, hover over the portal: it says "Leads into the corrupted Meadows" and "Closes in …" (no `{0}`).
-2. Go through and destroy the heart: no red errors in the console (F5) at any point.
-3. Optional: sleep or wait an in-game day: both portals and the heart disappear.
-
-### 2. Bulk planting from chests
+### 1. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
 ## Session 2: with a friend
