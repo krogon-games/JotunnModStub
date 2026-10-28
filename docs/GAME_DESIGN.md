@@ -56,7 +56,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Affix ranges are the same for every item, tools and gear alike; the base item carries the progression. To play-test (2026-10-27).
 - Monster drops start at Magic 1 in 50 and Rare 1 in 100 per kill; uniques have separate chances; all chances in a tunable table, multiplied by corruption zones and similar systems (2026-10-27).
 - Odin's Grace is the powerful rare gathering affix: whole tree, or the hit deposit chunk plus every chunk touching it (2026-10-27).
-- Only the shard can brick gear; orbs never brick; corrupted items are locked. Corrupting Normal, Magic or Rare gear: 25% bricked, 25% unchanged but locked, 50% one corrupted affix on top of the normal limit, rolled from the normal pool (2026-10-28).
+- Only the shard can brick gear; orbs never brick; corrupted items are locked. Corrupting Normal, Magic or Rare gear: 25% bricked, 25% unchanged but locked, 50% one corrupted affix on top of the normal limit, rolled from the normal pool; it may repeat a family, resonates with a twin and ignores the caps. Corrupted gear never drops; it only comes from a shard (2026-10-28).
 
 ## Balance rules
 

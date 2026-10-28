@@ -256,7 +256,7 @@ Caps and resonance (+25% on a twin's combined top) are unchanged.
 - **Prefixes and suffixes.** Like Diablo 2, every affix is either a prefix (named before the item) or a suffix (named after it): *Hale Bronze Sword of the Bear*.
   - **Magic:** one prefix, one suffix, or both (1–2 affixes, as in the rarity table).
   - **Rare:** up to 2 prefixes and 2 suffixes, 3–4 affixes in total. It gets a random two-word name instead (see [Rare names](#rare-names)).
-- **One affix per family.** An item can't roll the same family twice on the same side (no two "enhanced damage" prefixes).
+- **One affix per family.** An item can't roll the same family twice on the same side (no two "enhanced damage" prefixes). A shard's corrupted affix is the exception: it may repeat a family, and it resonates if it completes a twin (user, 2026-10-28).
 - ~~**Tiers follow the item's biome.**~~ *Superseded 2026-10-27 by the one-range rule above.* The draft gave each family four biome tiers (I = Meadows/Black Forest … IV = Ashlands/Deep North) with the item rolling its biome's tier.
   - Map tier and rarity floors (from the loot section) still decide *how many* affixes.
 - **Item classes.** The table's columns: weapon, shield, helmet, chest, legs, cape, jewellery (rings, trinkets, talismans), pickaxe, axe_1h (one-handed axes, which are also weapons). **AdventureBackpacks backpacks count as capes** (they're shoulder items) and follow the same rules as every item (user, 2026-10-28).
@@ -298,7 +298,7 @@ Twin families (resonate when both halves roll): fire, frost, lightning, poison a
 
 ### Caps and guards
 
-The most a stat can gain from all affixes together. **Numbers are in [`Corruption/Data/affix_caps.csv`](../Corruption/Data/affix_caps.csv)**; each cap lists the affix families it limits. Capped today: movement speed (raised by the user on 2026-10-28, to tune down later if needed), attack speed, pickup radius, each resistance, life steal.
+The most a stat can gain from all affixes together. **Numbers are in [`Corruption/Data/affix_caps.csv`](../Corruption/Data/affix_caps.csv)**; each cap lists the affix families it limits. Capped today: movement speed (raised by the user on 2026-10-28, to tune down later if needed), attack speed, pickup radius, each resistance, life steal. A shard's corrupted affix is not capped: it adds on top of the capped total (user, 2026-10-28; [Corrupted gear](corruption-design.md#corrupted-gear)).
 
 - **No item downsides**, in line with "loot never carries downsides".
 - **Carry weight** stays a boost, not a bypass: there's no "unlimited" affix, so the "boosts, not bypasses" balance rule holds.

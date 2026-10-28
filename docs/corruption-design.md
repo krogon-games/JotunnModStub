@@ -6,7 +6,7 @@ Oct 15, 2026 · @Krogon
 
 ## Overview
 
-A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft maps, open rips into unexplored parts of your own world, and loot corrupted gear. Built on BepInEx, reusing vanilla systems wherever possible.
+A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft maps, open rips into unexplored parts of your own world, and loot rolled gear to corrupt. Built on BepInEx, reusing vanilla systems wherever possible.
 
 ### Design pillars
 
@@ -34,7 +34,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft map
 3. **Take the essence**: guaranteed boss drop.
 4. **Craft a map**: shard, essence, material.
 5. **Open the rip**: unexplored land, waves.
-6. **Loot and escape**: shards, corrupted gear. Shards and trophies go back into step 1.
+6. **Loot and escape**: shards, rolled gear (Magic, Rare, Unique). Shards and trophies go back into step 1.
 
 The loop runs once per biome. The essence from a biome's boss crafts maps into the corrupted version of that same biome, so beating a boss opens its biome's endgame, and moving on to the next biome's corrupted maps needs the next boss. *Changed 2026-10-28 (user): was "maps for the next biome up", which left no corrupted Meadows and gave the last boss's essence nowhere to go.* Shards and trophies from the rip feed the talisman bench and corrupted boss summons, so every piece connects.
 
@@ -301,8 +301,8 @@ Corrupted loot is what keeps people running maps and farming bosses. Two layers:
 
 ### Corrupted gear
 
-- Vanilla weapons and armour with a corrupted tint and 1–2 bonus affixes (extra damage type, resistance, stamina, carry weight). *Open question (2026-10-28): this line is from the first draft (2026-10-15), before the rarity model; it may conflict with "monsters drop Normal/Magic/Rare/Unique items". Waiting on the user.*
-- Drop from rip chests and corrupted bosses. Map tier sets the affix count and the rarity floor.
+- **Corrupted gear only comes from using a shard** *(user, 2026-10-28)*: nothing drops already corrupted. The first draft's "vanilla gear dropping with a corrupted tint and 1–2 bonus affixes" is dropped; it predates the rarity model.
+- Rip chests and corrupted bosses drop ordinary rolled loot (Normal, Magic, Rare, Unique); map tier sets the affix count and the rarity floor.
 - **Corrupting at the Riftforge** *(decided by the user 2026-10-28)*: put a Normal, Magic or Rare item and 1 Corruption shard in the bench. One of three things happens:
 
   | Outcome | Chance | Result |
@@ -313,10 +313,11 @@ Corrupted loot is what keeps people running maps and farming bosses. Two layers:
 
   Live chances: [`Corruption/Data/corruption_outcomes.csv`](../Corruption/Data/corruption_outcomes.csv) (tune there; code `CorruptionOutcomes.Roll`).
   - The corrupted affix rolls from the same pool as the item's normal affixes (`affixes.csv`, same item-class columns and weights), prefix or suffix. A separate corrupted-only pool may come later.
-  - It is shown as its own line, marked corrupted, so it is clear which affix is the extra one.
-  - The affix caps (`affix_caps.csv`) still apply: they limit the total from all affixes on the gear, the corrupted one included.
+  - It may repeat a family the item already has, even on the same side (e.g. a second Enhanced damage prefix): the normal one-per-family rule doesn't bind it *(user, 2026-10-28)*.
+  - If it completes a twin (the item has the prefix half and the corrupted affix is the suffix half, or the reverse), the two resonate like a normal twin *(user, 2026-10-28)*.
+  - It is shown as its own line, marked corrupted, so it is clear which affix is the extra one. A resonant line it completes is marked corrupted too.
+  - The affix caps (`affix_caps.csv`) do **not** apply to the corrupted affix *(user, 2026-10-28)*: the normal affixes are capped as usual, and the corrupted affix adds on top, so a corrupted item can go past a cap.
   - A corrupted item is locked either way: no currency orb can change it afterwards, and it can't be corrupted again. Corruption is the final step, as in Path of Exile (Vaal Orb).
-  - *Open (2026-10-28):* whether the corrupted affix can repeat a family already on the item (the normal rule allows one per family per side), and whether it resonates when it completes a twin.
 - ~~Decide early whether to build this or depend on Epic Loot.~~ **Decided 2026-10-27: build our own**, for full control.
 
 ### Boss uniques
@@ -400,7 +401,7 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 
 - Orbs are applied at the Riftforge: put in the item and the orb, press craft. A bench UI is far simpler to build than PoE's right-click-onto-item.
 - Orbs never brick an item. Only the Corruption shard can.
-- Corrupted items (shard used successfully) are locked; no orb works on them. Corruption is the final step, as in PoE.
+- Corrupted items (any shard use that doesn't brick the item) are locked; no orb works on them. Corruption is the final step, as in PoE.
 - Uniques can only be touched by Divine Orbs and Jeweller's Orbs.
 - Orbs stack, live in their own Currency tab, and can go through portals. They're meant to be traded between players.
 

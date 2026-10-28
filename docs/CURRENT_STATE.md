@@ -71,7 +71,6 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
 - Kall Fimbulbringer's essence look (made without a concept render; status `proposed` in `essences.csv`).
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
-- Shard corruption (2026-10-28): can the corrupted affix repeat a family already on the item, and does it resonate when it completes a twin? Is the first draft's "corrupted gear drops with 1–2 bonus affixes" still wanted, given the rarity model?
 - Play-test results for everything under "Built, not verified".
 - **Pull request:** nothing since PR #1 (merged 2026-09-29); `master` lacks everything Corruption. The user wants to revisit this after the first play-test session (2026-10-28): open a PR from the branch into `master` then.
 

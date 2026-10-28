@@ -586,6 +586,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Shard corruption rules completed** (design only): the corrupted affix may repeat a family, resonates when it completes a twin and ignores the affix caps; corrupted gear only comes from a shard (the first draft's corrupted drops are removed).
 - **Shard corruption outcomes decided** (no gameplay change yet; loot system): 25% bricked, 25% unchanged but locked, 50% one corrupted affix on top of the normal prefix/suffix limit; Normal, Magic and Rare items can be corrupted; the affix rolls from the normal pool. Chances in `Corruption/Data/corruption_outcomes.csv` with a reader and roll (`Corruption/Rules/CorruptionOutcomes.cs`) and tests (94 tests).
 - **Gathering affix behaviour decided** (no code yet): both Bountifuls are a 5–15% chance to double the harvest (or its wood); Determined, Gemseeker's pool, Prospector's scope; Seismic, Splintering and Forester's derived from the game data.
 - **Affix decisions** (no code yet; loot system): gathering affix sides, roll weights, the combined one-handed axe pool, the twin reading (Magic items resonate too) and five gathering twin pairs, recorded in `affixes.csv` and `docs/AFFIX_RULES.md`.
