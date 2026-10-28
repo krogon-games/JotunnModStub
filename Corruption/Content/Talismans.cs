@@ -11,17 +11,22 @@ namespace Corruption.Content
 {
     /// <summary>
     ///     Trophy talismans (Ægishjálmur charms): one per creature family, worked out from game data. Worn in the
-    ///     vanilla trinket slot; the matching creatures won't target or attack the wearer (see <see cref="TalismanRepel" />).
+    ///     talisman slots (<see cref="TalismanSlots" />), not the vanilla trinket slot, so a vanilla trinket can be worn
+    ///     alongside; the matching creatures won't target or attack the wearer (see <see cref="TalismanRepel" />).
     /// </summary>
     internal static class Talismans
     {
         public const string PrefabPrefix = "CorruptionTalisman_";
 
-        // A vanilla trinket, so equipping, the slot and the worn model all work as in vanilla. Its bonuses are removed.
+        // Cloned from a vanilla trinket for its model; turned into a non-equippable item and its bonuses removed.
         private const string BasePrefab = "TrinketBronzeHealth";
 
         /// <summary>Talisman prefab hash → prefab hashes of the creatures it repels.</summary>
         public static readonly Dictionary<int, HashSet<int>> RepelledBy = new Dictionary<int, HashSet<int>>();
+
+        /// <summary>A talisman's shared item data (the same object on every copy) → its prefab hash.</summary>
+        public static readonly Dictionary<ItemDrop.ItemData.SharedData, int> HashByShared =
+            new Dictionary<ItemDrop.ItemData.SharedData, int>();
 
         public static void Register()
         {
@@ -100,6 +105,8 @@ namespace Corruption.Content
             });
 
             StripBonuses(item.ItemDrop.m_itemData.m_shared);
+            // Not equippable: it works from a talisman slot, and the trinket slot stays free for vanilla trinkets.
+            item.ItemDrop.m_itemData.m_shared.m_itemType = ItemDrop.ItemData.ItemType.Misc;
 
             // The trophy's icon shows at a glance which creatures the charm repels.
             var trophy = PrefabManager.Instance.GetPrefab(family.Trophy).GetComponent<ItemDrop>();
@@ -116,6 +123,7 @@ namespace Corruption.Content
 
             RepelledBy[prefabName.GetStableHashCode()] =
                 new HashSet<int>(family.Members.Select(m => m.GetStableHashCode()));
+            HashByShared[item.ItemDrop.m_itemData.m_shared] = prefabName.GetStableHashCode();
         }
 
         /// <summary>The base trinket's own effects (health, adrenaline power, resistances) don't belong on a charm.</summary>

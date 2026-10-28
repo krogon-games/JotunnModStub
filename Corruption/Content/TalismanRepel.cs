@@ -11,8 +11,8 @@ namespace Corruption.Content
     ///     hit. Only the creature's side is changed (creature asking about the wearer), so the wearer can still hit
     ///     those creatures. Hitting one provokes it: it fights back for <c>ProvokeSeconds</c> after the last hit.
     ///
-    ///     All of this runs on the machine that simulates the creature. Other players' trinkets are read from their
-    ///     synced equipment, so it works in multiplayer.
+    ///     All of this runs on the machine that simulates the creature. Each player's game publishes the talismans
+    ///     in its talisman slots on its player object (<see cref="TalismanSlots" />), so it works in multiplayer.
     /// </summary>
     internal static class TalismanRepel
     {
@@ -31,6 +31,32 @@ namespace Corruption.Content
         /// <summary>Creature + wearer → time until which the creature fights back.</summary>
         private static readonly Dictionary<Pair, float> ProvokedUntil = new Dictionary<Pair, float>(new PairComparer());
 
+        /// <summary>Whether the player wears a talisman (in any talisman slot) that repels this creature.</summary>
+        private static bool Wears(Player player, Character creature)
+        {
+            var zdo = creature.m_nview ? creature.m_nview.GetZDO() : null;
+            if (zdo == null)
+            {
+                return false;
+            }
+            var playerZdo = player.m_nview ? player.m_nview.GetZDO() : null;
+            if (playerZdo == null)
+            {
+                return false;
+            }
+            int prefab = zdo.GetPrefab();
+            // A plain loop: this runs whenever a creature looks for targets, so it mustn't allocate.
+            for (int i = 0; i < TalismanSlots.WornKeys.Length; i++)
+            {
+                int worn = TalismanSlots.WornAt(playerZdo, i);
+                if (worn != 0 && Talismans.RepelledBy.TryGetValue(worn, out var family) && family.Contains(prefab))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool IsRepelled(Character creature, Character target)
         {
             if (!(target is Player player) || creature is Player || Talismans.RepelledBy.Count == 0 ||
@@ -39,20 +65,7 @@ namespace Corruption.Content
                 return false;
             }
 
-            var vis = player.m_visEquipment;
-            if (!vis || vis.m_currentTrinketItemHash == 0 ||
-                !Talismans.RepelledBy.TryGetValue(vis.m_currentTrinketItemHash, out var family))
-            {
-                return false;
-            }
-
-            var zdo = creature.m_nview ? creature.m_nview.GetZDO() : null;
-            if (zdo == null || !family.Contains(zdo.GetPrefab()))
-            {
-                return false;
-            }
-
-            return !IsProvoked(creature, player);
+            return Wears(player, creature) && !IsProvoked(creature, player);
         }
 
         private static bool IsProvoked(Character creature, Character player)
@@ -127,13 +140,7 @@ namespace Corruption.Content
 
             private static bool IsRepelledIgnoringProvocation(Character creature, Character player)
             {
-                var vis = ((Player)player).m_visEquipment;
-                if (!vis || !Talismans.RepelledBy.TryGetValue(vis.m_currentTrinketItemHash, out var family))
-                {
-                    return false;
-                }
-                var zdo = creature.m_nview ? creature.m_nview.GetZDO() : null;
-                return zdo != null && family.Contains(zdo.GetPrefab());
+                return Wears((Player)player, creature);
             }
         }
     }

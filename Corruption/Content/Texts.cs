@@ -25,6 +25,7 @@ namespace Corruption.Content
                 { "item_corruptionshard", "Corruption shard" },
                 { "item_corruptionshard_description", "A splinter of Ginnungagap, the void before the world. It hums against your palm." },
                 { "piece_riftforge", "Riftforge" },
+                { "corruption_slot_talisman", "Talisman" },
                 { "piece_riftforge_description", "A forge that works the void itself. Here maps into the unknown are made." },
                 { "raven_riftforge_topic", "The Riftforge" },
                 { "raven_riftforge_label", "Riftforge" },

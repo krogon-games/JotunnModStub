@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-27)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **71 passed, 0 failed** (biome solver, shard rules, talisman families, affix, cap and drop tables).
+- `dotnet test CraftingOverhaul.Tests`: **74 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap and drop tables).
 - Last play-test: 2026-10-26, single player, by the user.
 
 ## Implemented
@@ -35,7 +35,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
-| Talismans with EquipmentAndQuickSlots | Wear a talisman in the EAQS trinket slot |
+| Talisman slots (2026-10-28) | Two talismans in the EquipmentAndQuickSlots Talisman slots plus a vanilla trinket; both families ignore you, also on a friend's game. Steps: `docs/mod-compatibility.md` → How to test |
 | Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
 
 ## Not built (proposed)
@@ -61,7 +61,6 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 ## Waiting on the user
 
-- **Backpacks and affixes:** AdventureBackpacks backpacks are cape-slot items. Should they roll cape affixes?
 - **Gathering tool affixes:** confirm the prefix/suffix split, roll weight classes, one combined pool for one-handed axes (gathering + weapon families), and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
 - **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation still open.
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).

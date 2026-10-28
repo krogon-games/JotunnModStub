@@ -18,6 +18,7 @@
     <Compile Include="..\Corruption\Rules\Csv.cs" Link="Linked\Csv.cs" />
     <Compile Include="..\Corruption\Rules\DropTable.cs" Link="Linked\DropTable.cs" />
     <Compile Include="..\Corruption\Rules\AffixCaps.cs" Link="Linked\AffixCaps.cs" />
+    <Compile Include="..\Corruption\Rules\TalismanSlotRules.cs" Link="Linked\TalismanSlotRules.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
   </ItemGroup>
 

@@ -32,7 +32,7 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 
 | Our feature | Overlap | Status |
 |---|---|---|
-| Talismans (trinket slot) | EAQS has a Trinket slot and equips through the vanilla methods (`Humanoid.EquipItem`), so the game's trinket field and the synced trinket shown to other players stay as vanilla. Our repel check reads exactly those | Verified in code; to test with EAQS |
+| Talismans (talisman slots) | **Talismans need EAQS** (2026-10-28): Corruption adds its talisman slots (`CorruptionTalisman1`–`3`) through EAQS's custom-slot API (`AddSlot`, `TryGetSlotItem`; EAQS offers 10 custom slots). Custom slots only hold items and aren't visible to other games, so we publish worn talismans on the player object ourselves. The vanilla trinket slot (EAQS's Trinket slot) stays free for vanilla trinkets. Without EAQS, talismans do nothing | Built against EAQS 3.1.3's API; to test |
 | Talismans (`BaseAI.IsEnemy`, `BaseAI.OnDamaged`) | None of the three patch these | — |
 | Shard drops (`CharacterDrop.GenerateDropList`) | No overlap | — |
 | Riftforge | No overlap | — |
@@ -47,10 +47,14 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Deathless (cheat death) | EAQS patches `Character.CheckDeath` and `Player.OnDeath` | Hook the damage before death, test with EAQS keep-on-death |
 | Parry buffs on allies (`SEMan.AddStatusEffect`) | AB patches `SEMan.AddStatusEffect` | Test that our buffs still apply with AB |
 | Foraging affix (picking plants) | PlantEasily bulk-harvests with `Player.Interact` / `Pickable.SetPicked` | Treat a bulk harvest as one pick (the boost refreshes, doesn't stack) |
-| Affixes on capes | AB backpacks are shoulder items (the cape slot) | Decide whether backpacks can roll cape affixes |
+| Affixes on capes | AB backpacks are shoulder items (the cape slot) | **Decided:** backpacks roll affixes as capes, under the same rules as every item |
 | Movement-speed cap (35%) | AB backpacks have their own movement modifiers | Our cap only limits affixes; backpack modifiers come on top |
 | Equipment slots for rings, inventory tabs (design phase 9) | EAQS already has equipment slots and an API for custom slots | Use the EAQS API for a ring slot instead of building our own |
 | WoW-style backpack (design phase 9) | AB provides it | **Use AdventureBackpacks instead of building our own** (user, 2026-10-28) |
+
+## Cape or backpack
+
+With AdventureBackpacks and EquipmentAndQuickSlots together you wear a cape **or** a backpack, not both: backpacks are shoulder items, and EAQS has one shoulder slot. That's AdventureBackpacks' intended design (several backpacks carry cape perks: the Swamp pack is waterproof, the Mountain pack resists frost, the Plains pack is crafted from a Lox cape). AdventureBackpacks supports both at once only with extra-slot mods (AzuExtendedPlayerInventory, ExtraSlots), which EAQS refuses to load with. **Kept as is for now** (user, 2026-10-28). If it's ever wanted, a dedicated backpack slot through EAQS's custom-slot API is the route to try.
 
 ## How to test (when playing)
 
@@ -58,4 +62,4 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 2. Then split the cost: some in the backpack, the rest in a chest. Check the totals after crafting.
 3. Build with the hammer from backpack + chest, and bulk-plant a PlantEasily grid with seeds only in a chest.
 4. Open a crafting station with the backpack panel open: the search bar and categories should still line up.
-5. With EAQS: wear a talisman in the EAQS trinket slot and check creatures of its family ignore you (and that a friend sees the same).
+5. With EAQS: put two talismans in the Talisman slots and a vanilla trinket in the Trinket slot; creatures of both families ignore you, the trinket works, and a friend's game agrees (their creatures ignore you too). Try putting the same talisman in both slots: it should refuse.

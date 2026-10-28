@@ -238,7 +238,7 @@ Caps and resonance (+25% on a twin's combined top) are unchanged.
 - **One affix per family.** An item can't roll the same family twice on the same side (no two "enhanced damage" prefixes).
 - ~~**Tiers follow the item's biome.**~~ *Superseded 2026-10-27 by the one-range rule above.* The draft gave each family four biome tiers (I = Meadows/Black Forest … IV = Ashlands/Deep North) with the item rolling its biome's tier.
   - Map tier and rarity floors (from the loot section) still decide *how many* affixes.
-- **Item classes.** The table's columns: weapon, shield, helmet, chest, legs, cape, jewellery (rings, trinkets, talismans), pickaxe, axe_1h (one-handed axes, which are also weapons).
+- **Item classes.** The table's columns: weapon, shield, helmet, chest, legs, cape, jewellery (rings, trinkets, talismans), pickaxe, axe_1h (one-handed axes, which are also weapons). **AdventureBackpacks backpacks count as capes** (they're shoulder items) and follow the same rules as every item (user, 2026-10-28).
 
 ### Twin mods and resonance
 

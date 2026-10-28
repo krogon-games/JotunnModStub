@@ -44,7 +44,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Core loop per biome: farm → summon boss → essence → craft map → open rip → loot and escape. Each boss's essence crafts maps for the next biome; no skipping biomes.
 - Riftforge recipe: Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Surtling cores (5 ingredients; leather scraps dropped for the 5-ingredient limit).
 - Rip return: heart-gated; both portals close after 1 in-game day; no safety fallback.
-- Talismans: full repel of one creature family; provoked creatures fight back; bosses never; one talisman at a time; rings get their own slot later and raise skills.
+- Talismans: full repel of one creature family; provoked creatures fight back; bosses never; two talisman slots plus the vanilla trinket slot (changed 2026-10-28); rings get their own slot later and raise skills.
 - Uniques: unlimited copies; not craftable; ~1 per 20 hours of play (base 1 in 2,500, small source multipliers).
 - Personal loot (60 s owner lock) and loot beams.
 - Loot system (rarity, affixes, orbs, uniques) is our own, not Epic Loot (decided 2026-10-27).

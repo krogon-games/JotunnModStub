@@ -10,6 +10,8 @@ namespace Corruption
 {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid)]
+    // Talisman slots live in EquipmentAndQuickSlots' equipment panel; load after it when it's installed.
+    [BepInDependency(TalismanSlots.EaqsGuid, BepInDependency.DependencyFlags.SoftDependency)]
     // Adds items and pieces, so the server and every player must run the same version.
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     internal class CorruptionPlugin : BaseUnityPlugin
@@ -28,6 +30,7 @@ namespace Corruption
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
+            Safe.Run("add talisman slots", TalismanSlots.Register);
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
         }

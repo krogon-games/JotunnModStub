@@ -252,7 +252,7 @@ The matching creature type ignores the wearer completely. Other creatures, and o
 
 Bosses have no talisman.
 
-**Slots:** one trophy talisman equipped at a time. Other talisman types with different effects will come later and are separate from this one (details TBD).
+**Slots:** ~~one trophy talisman equipped at a time.~~ *Changed 2026-10-28:* **two talismans and one vanilla trinket** can be worn together; talismans have their own slots (added to EquipmentAndQuickSlots' equipment panel). Other talisman types with different effects will come later and are separate from this one (details TBD).
 
 **Lore name:** Ægishjálmur charms (the Helm of Awe, a stave said to strike fear into enemies). Each charm could carry the stave as its icon with a creature-specific tint.
 

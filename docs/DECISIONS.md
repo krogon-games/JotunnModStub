@@ -26,6 +26,8 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 | 2026-10-27 | Magic and Rare drops from monsters start at 1 in 50 and 1 in 100 per kill; uniques and later rarities have separate chances; all chances in a data/config table, multiplied by corruption zones, scars, terror zones and map tiers | Low rates keep finds special; must stay easy to rebalance | Hard-coded rates | Decided by user |
 | 2026-10-27 | Odin's Grace is a powerful rare affix: the whole tree (from standing tree, log or stump), or the hit chunk plus every touching chunk | User wants it to be the fun rare roll | Single object or chunk only (earlier proposal) | Decided by user |
 | 2026-10-27 | Gathering affix pools favour variety, with low-impact options; prefix/suffix counts needn't be equal | Not every item should be awesome | Equal prefix/suffix split | Decided by user |
+| 2026-10-28 | Talismans get their own slots: 2 by default (admin setting 1–3) plus the vanilla trinket slot. Added through EquipmentAndQuickSlots' custom-slot API; talismans become non-equippable items that work while in a talisman slot; each player's game publishes worn talismans on its player ZDO for creature owners to read | User: wear 1 vanilla trinket and 2 talismans. The group runs EAQS, whose API adds slots to its equipment panel without UI work of our own; custom slots aren't visible to other games, hence the ZDO | More trinket slots (vanilla has one trinket field, so other trinkets would need equip-logic patches); our own slot UI (clashes with EAQS's panel); talismans as trinkets (blocks vanilla trinkets) | Decided by user; implemented, untested in-game. Talismans need EAQS |
+| 2026-10-28 | Backpacks (AdventureBackpacks) roll affixes like any item, under the same rules (crafted Normal, upgraded with orbs, drop with rolls); they count as capes. Cape **or** backpack, not both, for now | User | A separate backpack slot via the EAQS API (possible later) | Decided by user |
 | 2026-10-28 | Use AdventureBackpacks for backpacks instead of building our own; stay compatible with EquipmentAndQuickSlots and PlantEasily. Proposed: use the EAQS slot API for a future ring slot | The group runs these mods; AdventureBackpacks already has models and textures | Our own WoW-style backpack (design phase 9) | Decided by user (ring slot via EAQS: proposed) |
 | 2026-10-28 | Craft-from-chests pays after other mods (low priority) and skips paying when another mod already skipped the original (`__runOriginal`); containers carried by a player are never chests | HarmonyX runs every prefix even after one skips the original, so with AdventureBackpacks a cost was paid twice | — | Implemented, untested in-game |
 | 2026-10-28 | Affix caps in their own table (`affix_caps.csv`): movement speed 35% (user raised it from the proposed 20%; tune down later if needed), attack speed 30%, pickup radius 8 m, 75% per resistance, life steal 10% | Caps are tunable numbers, so they belong in a data table | Caps written only in the docs | Decided by user |
@@ -59,7 +61,7 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 
 | Date | Decision | Why | Rejected | Status |
 |---|---|---|---|---|
-| 2026-10-26 | Talismans use the vanilla Trinket slot | No slot code needed (review 7) | A new slot in phase 2 (design doc) | Implemented; trade-off: replaces a vanilla trinket |
+| 2026-10-26 | Talismans use the vanilla Trinket slot | No slot code needed (review 7) | A new slot in phase 2 (design doc) | Superseded 2026-10-28 by talisman slots |
 | 2026-10-26 | Talisman families from game data: base creature + prefab names extending it, monster AI only, no bosses, wildcard exclusions; trophy = base's own or the members' most common | User prefers data-driven; covers modded creatures | Hand-written family table (review 9) | Implemented |
 | 2026-10-26 | Repel via `BaseAI.IsEnemy` postfix that only flips true→false for creature-asks-about-wearer; `BaseAI.OnDamaged` provokes for `ProvokeSeconds` | `IsEnemy` also gates player attacks, so the player's side must stay untouched | Faction changes; patching targeting only | Implemented |
 | 2026-10-26 | Riftforge recipe has 5 ingredients; registration refuses more than 5 | `Hud.SetupPieceInfo` crashes on 6 | Leather scraps (dropped) | Implemented |
@@ -76,7 +78,7 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 - Unlimited copies of uniques; uniques never craftable.
 - Map affixes never brick a map; only the shard bricks gear (25%).
 - No downsides on loot.
-- One talisman at a time; rings get their own slot.
+- ~~One talisman at a time~~ → two talismans plus one vanilla trinket (2026-10-28); rings get their own slot.
 
 ## Corrections (things we got wrong before)
 

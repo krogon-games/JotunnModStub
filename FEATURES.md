@@ -15,7 +15,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Corruption shards](#corruption-shards) | Loot | Built, untested | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
-| [Talismans](#talismans) | Combat | Built, untested | Corruption: `3 - Talismans` → `Enabled`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs` | 2026-10-26 |
+| [Talismans](#talismans) | Combat | Built, untested | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -332,17 +332,21 @@ New item registered through Jötunn: `CorruptionShard` (cloned from the `ShardBa
   - quest and named minibosses excluded (configurable).
   - About 40 families in vanilla 1.0; the full list is logged at startup (`Registered N talismans: ...`).
 - **Recipe** (per family): 3 of the family's trophy, 1 Chain, 10 Leather scraps, at the workbench. Like any vanilla recipe it appears once you've picked up all three. Chain comes from the Swamp, so talismans arrive mid-game.
-- **Item:** a trinket with no other bonuses (cloned from a vanilla trinket, bonuses removed), so it uses the vanilla trinket slot: one talisman at a time, and it replaces a vanilla trinket while worn. The icon is the family's trophy.
-- **Multiplayer:** the repel check runs on the machine that simulates the creature and reads other players' trinkets from their synced equipment.
+- **Slots (changed 2026-10-28):** talismans have their own slots, **2 by default** (admin setting, 1–3), so you can wear **2 talismans and 1 vanilla trinket** at the same time. A talisman works while it sits in a talisman slot.
+  - The slots are added to **EquipmentAndQuickSlots**' equipment panel through its slot API. Without that mod, talismans have no slot and do nothing (a warning is logged at startup).
+  - The same talisman can't go into two slots (a copy adds nothing); different families stack.
+- **Item:** not equippable (cloned from a vanilla trinket for its model, then made a plain item with no bonuses), so it never takes the vanilla trinket slot. The icon is the family's trophy.
+- **Multiplayer:** the repel check runs on the machine that simulates the creature. Other games can't see what's in your talisman slots, so your game writes the talismans you wear onto your player (synced to everyone) twice a second, and the check reads them from there.
 - Talismans not working inside rips (design) comes with phase 4.
 
-**How to use it:** Craft the charm for a creature family at the workbench and equip it like any trinket.
+**How to use it:** Craft the charm for a creature family at the workbench and drag it into a Talisman slot in the EquipmentAndQuickSlots equipment panel.
 
 **Config settings** (admin-only, synced from the server):
 
 | Setting | Default | Description |
 |---|---|---|
 | `Enabled` | `true` | Off: charms can be crafted but do nothing |
+| `Slots` | `2` | How many talisman slots work (1–3). Needs EquipmentAndQuickSlots |
 | `ProvokeSeconds` | `30` | How long a creature you hit fights back after your last hit |
 | `ExcludedCreatures` | `*Hildir*, GoblinBruteBros*, Charred_Melee_Dyrnwyn` | Creature prefab names never repelled (`*` wildcard). Restart to apply |
 
@@ -360,6 +364,9 @@ The family rules are unit-tested against the real 1.0 creature list (`TalismanFa
 |---|---|---|
 | `BaseAI.IsEnemy(Character, Character)` | Postfix | Returns false when a repelled creature asks about a wearer (and it isn't provoked). Never changes the answer when the player is the one asking, so player attacks are unaffected |
 | `BaseAI.OnDamaged` | Prefix | Marks a creature as provoked when the wearer hits it (runs before monsters pick their target) |
+| `Player.Update` | Postfix | Local player only, twice a second: writes the talismans in its talisman slots to its player object, for other games to read |
+
+Also calls EquipmentAndQuickSlots' public API (`AddSlot`, `TryGetSlotItem`) to add and read the talisman slots; no patches on that mod.
 
 **Conflicts:** other mods that patch `BaseAI.IsEnemy` (taming, faction or "friendly creature" mods) may interact. The postfix only ever turns `true` into `false` for this one case.
 
@@ -402,6 +409,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Talismans: 2 talisman slots plus the vanilla trinket.** Talismans are no longer trinkets; they work from their own slots (default 2, admin setting `Slots`), added to EquipmentAndQuickSlots' equipment panel through its API, and are published to other players through the player object. Without EquipmentAndQuickSlots they do nothing. Untested in-game (74 tests).
 - **Mod compatibility** (`docs/mod-compatibility.md`): checked EquipmentAndQuickSlots 3.1.3, PlantEasily 2.3.1 and AdventureBackpacks 2.4.6 against our patches. Fixed in craft-from-chests: with AdventureBackpacks' craft-from-backpack, a cost the backpack covered was charged to nearby chests too; and the backpack's hidden container could be counted as a chest. Untested in-game.
 - Affix numbers for the new affixes approved. Caps moved into `Corruption/Data/affix_caps.csv` with a validator (`Corruption/Rules/AffixCaps.cs`); movement-speed cap raised to 35% (71 tests). No gameplay change yet.
 - Affix table: added Magnetic, Charring, Fleet, Foraging, Bloodforged, Deathless, Shieldwall, Rallying, Skald's, Steadfast, Reprisal, Wrath, Skadi and Fenrir (79 affixes); new `requires` and `lower_is_better` columns and an `any` pool; name clashes fixed and now rejected by the validator (68 tests). Not used in game yet; no gameplay change.

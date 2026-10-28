@@ -16,6 +16,7 @@ namespace Corruption
         public static ConfigEntry<bool> BossShardsFirstKillOnly;
 
         public static ConfigEntry<bool> TalismansEnabled;
+        public static ConfigEntry<int> TalismanSlots;
         public static ConfigEntry<float> ProvokeSeconds;
         public static ConfigEntry<string> TalismanExcludedCreatures;
 
@@ -40,6 +41,9 @@ namespace Corruption
 
             TalismansEnabled = config.Bind(TalismanSection, "Enabled", true,
                 AdminOnly("Trophy talismans repel their creature family. Off: talismans can still be crafted but do nothing."));
+            TalismanSlots = config.Bind(TalismanSection, "Slots", 2,
+                AdminOnly("How many talisman slots work (needs EquipmentAndQuickSlots, which shows them in its equipment panel). " +
+                          "The vanilla trinket slot stays free for a vanilla trinket.", new AcceptableValueRange<int>(1, Content.TalismanSlots.MaxSlots)));
             ProvokeSeconds = config.Bind(TalismanSection, "ProvokeSeconds", 30f,
                 AdminOnly("After the wearer hits a repelled creature, that creature fights back for this many seconds after the last hit.",
                     new AcceptableValueRange<float>(0f, 600f)));

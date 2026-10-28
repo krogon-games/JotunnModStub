@@ -31,7 +31,7 @@ Ideas saved for later exploration. Nothing here is planned or built yet. When an
 - **Anti-aggro talismans** → [Talismans](corruption-design.md#talismans):
   - Crafted at a workbench from a specific monster's trophies.
   - While equipped, that monster is repelled.
-- **Open questions** (answered in the design: one talisman at a time; rings get their own slot and raise skills; Norse names throughout):
+- **Open questions** (answered in the design: two talismans plus a vanilla trinket (changed 2026-10-28); rings get their own slot and raise skills; Norse names throughout):
   - Allow two talismans equipped at once?
   - Should magic rings work the same way, or be a separate item type?
   - Theme talismans and rings on Viking lore?

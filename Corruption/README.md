@@ -11,7 +11,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
   - Every boss drops 1–3 the first time it's defeated in a world.
 - **Riftforge.** A new crafting station, built with the hammer next to a workbench from fine wood, a corruption shard, Eikthyr's trophy, bronze nails and Surtling cores. It appears in the build menu once you've picked up all of those. It has no recipes yet; maps come in a later phase.
 
-- **Talismans** ("<creature> charm"). Craft at the workbench from 3 of a creature's trophies, 1 chain and 10 leather scraps. Worn in the trinket slot, a charm stops that creature family (e.g. greydwarfs, brutes and shamans) from attacking you, unless you hit them first. Bosses are never repelled.
+- **Talismans** ("<creature> charm"). Craft at the workbench from 3 of a creature's trophies, 1 chain and 10 leather scraps. Placed in a Talisman slot, a charm stops that creature family (e.g. greydwarfs, brutes and shamans) from attacking you, unless you hit them first. Bosses are never repelled. You get 2 talisman slots on top of the vanilla trinket slot. The slots appear in the equipment panel of [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/), which talismans need.
 
 ## Configuration
 
@@ -25,6 +25,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 | Corruption Shards / BossShardsMax | 3 | Most shards from a boss |
 | Corruption Shards / BossShardsFirstKillOnly | true | Bosses drop shards only on their first defeat per world |
 | Talismans / Enabled | true | Charms repel their creature family |
+| Talismans / Slots | 2 | How many talisman slots work (1–3) |
 | Talismans / ProvokeSeconds | 30 | How long a creature you hit fights back |
 | Talismans / ExcludedCreatures | \*Hildir\*, GoblinBruteBros\*, Charred_Melee_Dyrnwyn | Creatures never repelled |
 
