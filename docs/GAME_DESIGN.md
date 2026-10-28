@@ -12,6 +12,7 @@ Entry point to the design. It summarises what has been agreed and where each sys
 | [`corruption-design-review.md`](corruption-design-review.md) | Where the design and Valheim's code disagree, simplifications, build-vs-depend options | Technical review, 2026-10-15 |
 | [`AFFIX_RULES.md`](AFFIX_RULES.md) | Gear prefixes/suffixes, tiers, twin resonance, range display | Draft, awaiting review |
 | [`storage-quests-design.md`](storage-quests-design.md) | Chest tiers, quest-unlocked super chest, Mistlands bank/vault | User brief + notes |
+| [`art-prompts.md`](art-prompts.md) | Image-model prompts for concept renders (boss essences) | Draft |
 | [`ideas.md`](ideas.md) | Original idea backlog, each linked to its design section | — |
 | [`coop-networking.md`](coop-networking.md) | Co-op lag research (not a mod feature) | Research, 2026-09-29 |
 
