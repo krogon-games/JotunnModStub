@@ -413,14 +413,14 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 - Put in a Magic or Rare item and shatter it. The item is destroyed. Costs nothing: no rune, no Corruption shard.
 - Each affix line has a **50%** chance to become an Affix Splinter. Live value: [`Corruption/Data/shattering.csv`](../Corruption/Data/shattering.csv).
 - **Uniques and corrupted items can't be shattered.**
-- **A resonant twin line gives one splinter holding the combined resonant value** (user: "one of the most powerful crafting mechanics"). The line is one affix line, so it gets one 50% roll.
+- **A resonant twin line gives one splinter holding the combined resonant value** (user: "one of the most powerful crafting mechanics"). The line is one affix line, so it gets one 50% roll (confirmed by the user 2026-10-28).
 
 **Affix Splinters:**
 - One splinter holds **one affix line and the exact value it had** on the shattered item (e.g. "Swift +12% attack speed"). Affix ranges are the same on every item (the one-range rule in [`AFFIX_RULES.md`](AFFIX_RULES.md)), so the value means the same on any item it moves to.
 - Each splinter carries its own value, so splinters **don't stack**. That is why the Currency and Maps tabs (see [Inventory and equipment slots](#inventory-and-equipment-slots)) are needed: splinters depend on that UI work.
 - Applied at the Riftforge: put in the item and the splinter, press craft. The affix lands with the splinter's value; the splinter is used up.
 - **Only on Normal and Magic items with fewer than 2 affixes.** Once an item has 2 affixes in total (from orbs, drops or splinters), splinters can't be used on it. A splinter on a Normal item makes it Magic. Rares, uniques and corrupted items never take splinters; to go further, use the Regal Orb (Magic → Rare) and the Exalted Orb, so orbs stay the way to finish an item.
-- A **resonant splinter** is a prefix and a suffix together, so it counts as 2 affixes: it only fits an item with no affixes yet (a Normal item), which it turns into a Magic item with the resonant line. *Follows from the 2-affix limit and the twin rule.*
+- A **resonant splinter** is a prefix and a suffix together, so it counts as 2 affixes: it only fits an item with no affixes yet (a Normal item), which it turns into a Magic item with the resonant line. *Derived from the 2-affix limit and the twin rule; confirmed by the user 2026-10-28.*
 - The normal affix rules apply: the affix must be one the item's class can roll (the item-class columns in `affixes.csv`), one affix per family per side, and a prefix splinter needs a free prefix slot (suffix likewise). A splinter that completes a twin resonates as usual.
 - Splinters can go through portals and be traded, like orbs.
 
