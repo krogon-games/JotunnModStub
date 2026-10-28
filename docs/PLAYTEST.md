@@ -2,6 +2,8 @@
 
 Everything built but not yet tested in-game, in one place, in the order that makes a session quick. Tick items off by telling Claude the result (a screenshot or one line is enough); Claude then updates `FEATURES.md` and `CURRENT_STATE.md`. Remove a section here once it's tested.
 
+**Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes.
+
 **Before you start:** rebuild both mods (`CraftingOverhaul.sln`), start the game with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily installed (the group's setup), load a test world, open the console (F5) and type `devcommands`. `god` and `fly` help.
 
 ## Session 1: solo (about 45 minutes)
