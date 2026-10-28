@@ -41,6 +41,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The shard's own model and textures (made by tools/make_shard.py), embedded in the DLL. -->
+    <EmbeddedResource Include="Assets\shard.obj" LogicalName="Corruption.Assets.shard.obj" />
+    <EmbeddedResource Include="Assets\shard_albedo.rgba" LogicalName="Corruption.Assets.shard_albedo.rgba" />
+    <EmbeddedResource Include="Assets\shard_emission.rgba" LogicalName="Corruption.Assets.shard_emission.rgba" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Package\manifest.json" />
     <None Include="Package\icon.png" />
     <None Include="README.md" />

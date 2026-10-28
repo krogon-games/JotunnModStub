@@ -41,13 +41,19 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 - `Shared/ConfigWatcher.cs`: linked into both plugin projects (`<Compile Include="..\Shared\..." Link=...>`). Reloads the plugin's `.cfg` on save; development aid, see `CURRENT_STATE.md` → Before release.
 
+### Custom assets
+
+- `tools/make_shard.py` (Python, numpy + Pillow) generates the corruption shard's model (`Corruption/Assets/shard.obj`), textures (PNG for viewing, raw `.rgba` for the game) and `docs/images/shard_preview.png`, from a fixed seed. Rerun it after changing it; commit the outputs.
+- The mod embeds the `.obj` and `.rgba` files (`EmbeddedResource` in `Corruption.csproj`). `Rules/ObjMesh.cs` (tested) reads the model; `Content/ShardModel.cs` builds the Unity mesh and material on the base item's shader and removes the base item's visuals (colliders stay).
+- Textures are raw pixels because `Texture2D.LoadImage` (ImageConversion module) references netstandard 2.1, which the net462 build can't compile against.
+
 ## Code patterns (follow these)
 
 1. **Isolated patches.** `PatchAllSafely()` applies each `[HarmonyPatch]` class separately inside try/catch, so one broken target doesn't disable the rest.
 2. **Never break vanilla.** Code that runs inside game methods goes through `Safe.Run` / `Safe.Report`: log once per action, fall back to vanilla behaviour.
 3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.20/*.csv` for real game data.
 4. **Data-driven first.** Derive lists from game data (biomes, talisman families); config overrides only for real exceptions (`BiomeMaterialOverrides`, `ExcludedCreatures`).
-5. **Clone, don't import.** New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models or animations in v1.
+5. **Clone, don't import** (exception: the shard's own model, below). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models or animations in v1.
 6. **Config scope.** Gameplay numbers admin-only (server-synced); visual settings per player.
 7. **Robust patch arguments.** Use `__0`/`__1` positional arguments where parameter names may change.
 8. **No hard-coded positional limits without a guard** (e.g. `Riftforge` refuses more than 5 ingredients and logs an error).

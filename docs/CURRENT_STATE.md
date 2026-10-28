@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-27)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **74 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap and drop tables).
+- `dotnet test CraftingOverhaul.Tests`: **77 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap and drop tables, shard model).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -32,7 +32,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Item | What to check |
 |---|---|
 | Talismans: the rest | Two charms at once plus a vanilla trinket; hitting a repelled creature provokes it for 30 s; bosses unaffected; on a friend's game too |
-| Shard glow on the ground (2026-10-28) | Drop a shard (`spawn CorruptionShard`) at night and by day: easy to spot, not too bright? Tune `ShardGlowIntensity` / `ShardGlowRange` (restart to apply) |
+| Shard's own model and texture, plus ground glow (2026-10-28) | `spawn CorruptionShard`, drop it: crystal model with red texture and glowing veins (not the Bloodstone); lies on the ground properly; icon shows the new model; glow easy to spot by night and day. If it looks wrong, send a screenshot; `ShardCustomModel = false` reverts |
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |

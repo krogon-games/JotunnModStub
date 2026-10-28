@@ -26,13 +26,18 @@ namespace Corruption.Content
                 Weight = 0.2f
             });
 
-            if (ColorUtility.TryParseHtmlString(CorruptionConfig.ShardColor.Value, out var color))
+            if (!ColorUtility.TryParseHtmlString(CorruptionConfig.ShardColor.Value, out var color))
+            {
+                Jotunn.Logger.LogWarning($"Shard colour '{CorruptionConfig.ShardColor.Value}' isn't a valid HTML colour; using the default red.");
+                color = new Color(0.7f, 0.09f, 0.05f);
+            }
+
+            // Our own crystal model and texture; the base item only provides the item, physics and networking parts.
+            // Falls back to the tinted base item if the custom look is off or its assets fail to load.
+            bool custom = CorruptionConfig.ShardCustomModel.Value && ShardModel.Apply(item.ItemPrefab, color);
+            if (!custom)
             {
                 Corrupted.Tint(item.ItemPrefab, color, CorruptionConfig.ShardTintStrength.Value);
-            }
-            else
-            {
-                Jotunn.Logger.LogWarning($"Shard colour '{CorruptionConfig.ShardColor.Value}' isn't a valid HTML colour; tint skipped.");
             }
 
             var shared = item.ItemDrop.m_itemData.m_shared;
@@ -59,10 +64,6 @@ namespace Corruption.Content
             if (intensity <= 0f)
             {
                 return;
-            }
-            if (color == default)
-            {
-                color = new Color(0.7f, 0.09f, 0.05f);
             }
             var glow = new GameObject("CorruptionGlow");
             glow.transform.SetParent(prefab.transform, false);
