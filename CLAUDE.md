@@ -56,6 +56,15 @@ When a significant feature is completed, changed, deferred or play-tested, follo
 
 Don't duplicate: design detail lives in `docs/corruption-design.md`, `docs/AFFIX_RULES.md` and `docs/storage-quests-design.md`; tunable numbers in data tables under `Corruption/Data/`; feature detail in `FEATURES.md`. Other docs link to them.
 
+## Branches and pull requests (user, 2026-10-28)
+
+The user runs several Claude sessions at once, each on a different part of the mods. `master` is the shared, play-tested base.
+
+- **One branch per session**, started from the latest `master`: `claude/<area>` (e.g. `claude/rips-bosses`, `claude/affixes-loot`). Never push to another session's branch.
+- **Before starting a task**, bring in the latest `master` (`git fetch origin master && git merge origin/master`) so you build on the other sessions' merged work.
+- **When a feature is finished** (built, tests pass, docs updated, ideally play-tested), open a pull request into `master` with a plain summary and the play-test status. The user merges it on GitHub.
+- The shared docs (`FEATURES.md` changelog, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md`) collide most often. Add to them, never rewrite another session's entries, and resolve merge conflicts by keeping both sides.
+
 ## Working style
 
 - Plain, concise English; short answers when asked.
