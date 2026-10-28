@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Tests for game-independent logic. Game-dependent files can't be loaded outside Valheim,
+  <!-- Tests for game-independent logic of both plugins (CraftingOverhaul and Corruption). Game-dependent files can't be loaded outside Valheim,
        so only the pure source files are compiled in here. Run with `dotnet test`. -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,6 +12,20 @@
     <Compile Include="..\CraftingOverhaul\Biomes\Biome.cs" Link="Linked\Biome.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\ItemSource.cs" Link="Linked\ItemSource.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
+    <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />
+    <Compile Include="..\Corruption\Rules\TalismanFamilies.cs" Link="Linked\TalismanFamilies.cs" />
+    <Compile Include="..\Corruption\Rules\AffixTable.cs" Link="Linked\AffixTable.cs" />
+    <Compile Include="..\Corruption\Rules\Csv.cs" Link="Linked\Csv.cs" />
+    <Compile Include="..\Corruption\Rules\DropTable.cs" Link="Linked\DropTable.cs" />
+    <Compile Include="..\Corruption\Rules\AffixCaps.cs" Link="Linked\AffixCaps.cs" />
+    <Compile Include="..\Corruption\Rules\TalismanSlotRules.cs" Link="Linked\TalismanSlotRules.cs" />
+    <Compile Include="..\Corruption\Rules\ObjMesh.cs" Link="Linked\ObjMesh.cs" />
+    <Compile Include="..\Corruption\Rules\EssenceTable.cs" Link="Linked\EssenceTable.cs" />
+    <Compile Include="..\Corruption\Rules\MapList.cs" Link="Linked\MapList.cs" />
+    <Compile Include="..\Corruption\Rules\RipRules.cs" Link="Linked\RipRules.cs" />
+    <Compile Include="..\Corruption\Rules\CorruptionOutcomes.cs" Link="Linked\CorruptionOutcomes.cs" />
+    <Compile Include="..\Corruption\Rules\ShatterRules.cs" Link="Linked\ShatterRules.cs" />
+    <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
   </ItemGroup>
 
   <ItemGroup>

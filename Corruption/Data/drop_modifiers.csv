@@ -1,0 +1,12 @@
+﻿source,status,magic,rare,unique,notes
+star_1,approved,1.25,1.25,1.25,1-star creature. Magic and rare use the same multiplier as unique.
+star_2,approved,1.5,1.5,1.5,2-star creature. Magic and rare use the same multiplier as unique.
+star_3,approved,2,2,2,3-star creature (rips only). Magic and rare use the same multiplier as unique.
+dungeon_chest,approved,,,1.5,Vanilla dungeon chest.
+rip_tier_1,approved,1.25,1.25,1.25,Rip creature or rip chest. Magic and rare use the same multiplier as unique.
+rip_tier_2,approved,1.25,1.25,1.5,Between the design's tier 1 (1.25) and tier 4 (2).
+rip_tier_3,approved,1.5,1.5,1.75,Between tier 2 and tier 4.
+rip_tier_4,approved,2,2,2,Unique from the design; magic and rare match it.
+scar,approved,1.5,1.5,,Lingering corruption zone after a rip. Corruption zones raise item drops.
+terror_zone,approved,1.5,1.5,1.5,Counts as a tier 2 rip for uniques (design).
+corrupted_boss,approved,,,3,On top of its boss unique roll.

@@ -1,0 +1,162 @@
+prefab,token,name,health,faction,boss,defeat_key,spawn_biomes,drops
+Abomination,$enemy_abomination,Abomination,800,Undead,False,,Swamp,TrophyAbomination 1-1 @0.5; Root 5-5 @1; Guck 3-5 @1
+Asksvin,$enemy_asksvin,Asksvin,800,Demon,False,,AshLands,TrophyAsksvin 1-1 @0.1; AskBladder 1-1 @1; AskHide 2-3 @1; AsksvinMeat 2-3 @1
+Asksvin_hatchling,$enemy_asksvin_hatchling,Asksvin Hatchling,400,Undead,False,,,AskBladder 1-1 @0.2; AskHide 1-1 @0.2; AsksvinMeat 1-1 @0.2
+Aspect_Bonemass,$enemy_aspect_bonemass,Aspect of the Writhing Dead,1600,Boss,False,,,
+Aspect_Eikthyr,$enemy_aspect_eikthyr,Aspect of the Lightning Stag,3000,Boss,False,,,
+Aspect_Elder,$enemy_aspect_gdking,Aspect of the Living Forest,1600,Boss,False,,,
+Aspect_Fader,$enemy_aspect_fader,Aspect of the Emerald Flame,1700,Boss,False,,,
+Aspect_Moder,$enemy_aspect_dragon,Aspect of the Dragon Mother,1500,Boss,False,,,
+Aspect_SeekerQueen,$enemy_aspect_seekerqueen,Aspect of the Crawling Matriarch,1700,Boss,False,,,
+Aspect_TentaRoot,$enemy_root,Root,20,Boss,False,,,
+Aspect_Yagluth,$enemy_aspect_goblinking,Aspect of the Twisted Soul,1700,Boss,False,,,
+Barka,$enemy_barka,Barka,2200,DeepNorth,False,,DeepNorth,TrophyBarka 1-1 @0.1; BarkaBranch 1-1 @1
+Bat,$enemy_bat,Bat,10,MountainMonsters,False,KilledBat,,LeatherScraps 1-1 @0.5
+Bat_Swamp,$enemy_bat,Bat,10,Undead,False,KilledBat,,LeatherScraps 1-1 @0.5
+Bjorn,$enemy_bjorn,Bear,500,ForestMonsters,False,,BlackForest,BjornPaw 1-1 @1; BjornMeat 2-3 @1; BjornHide 4-5 @1; TrophyBjorn 1-1 @0.1
+Bjorn_sleeping,$enemy_bjorn,Bear,500,ForestMonsters,False,,,BjornPaw 1-1 @1; BjornMeat 2-3 @1; BjornHide 4-5 @1; TrophyBjorn 1-1 @0.1
+Bjorn_spiritcaller,$spiritcaller_bjorn,,1500,Players,False,,,
+Blob,$enemy_blob,Blob,50,Undead,False,,Swamp,TrophyBlob 1-1 @0.1; Ooze 1-2 @1
+BlobAspect,$enemy_blob,Blob,50,Undead,False,,,TrophyBlob 1-1 @0.1; Ooze 1-2 @1
+BlobElite,$enemy_blobelite,Oozer,150,Undead,False,,Swamp,Ooze 2-3 @1; IronScrap 1-1 @0.33; TrophyBlob 1-1 @0.1; Blob 2-2 @1
+BlobFrost,$enemy_blobfrost,Frost Blob,50,MountainMonsters,False,,,Crystal 1-2 @1; TrophyBlob_Frost 1-1 @0.1
+BlobLava,$enemy_bloblava,Lava Blob,300,Demon,False,,AshLands,ProustitePowder 1-2 @1; SulfurStone 1-2 @1; TrophyBlob_Lava 1-1 @0.1
+BlobMork,$enemy_blobmork,Shapeless Pulp,150,DeepNorth,False,,,TrophyBlob_Morkhalla 1-1 @0.1; BlobMorkMini 1-2 @1; OozeMork 1-1 @0.5
+BlobMorkMini,$enemy_blobmorkmini,Tiny Pulp,50,DeepNorth,False,,,OozeMork 1-1 @0.25
+BlobTar,$enemy_blobtar,Growth,100,Undead,False,,,TrophyGrowth 1-1 @0.1; Tar 1-1 @1
+Boar,$enemy_boar,Boar,10,ForestMonsters,False,,Meadows,RawMeat 1-1 @1; LeatherScraps 1-1 @1; TrophyBoar 1-1 @0.15
+Boar_piggy,$enemy_boarpiggy,Piggy,10,ForestMonsters,False,,,
+Boar_spiritcaller,$spiritcaller_boar,,1000,Players,False,,,
+BogWitchKvastur,$enemy_kvastur,Kvastur,700,Dverger,False,,,Wood 1-1 @1; Resin 1-1 @1; TrophyKvastur 1-1 @1
+Bonemass,$enemy_bonemass,Bonemass,5000,Boss,True,defeated_bonemass,,TrophyBonemass 1-1 @1; Wishbone 1-1 @1
+BonemawSerpent,$enemy_bonemawserpent,Bonemaw,1100,Demon,False,,AshLands,TrophyBonemawSerpent 1-1 @0.33; BoneMawSerpentMeat 6-8 @1; BonemawSerpentTooth 8-10 @1
+Charred_Archer,$enemy_charred_archer,Charred Marksman,200,Demon,False,,"Meadows, Swamp, Mountain, BlackForest, Plains, AshLands",CharredBone 1-3 @1; TrophyCharredArcher 1-1 @0.05
+Charred_Archer_Fader,$enemy_charred_melee_Fader,Summoned Charred Warrior,50,Demon,False,,,
+Charred_Mage,$enemy_charred_mage,Charred Warlock,600,Demon,False,,,CharredBone 1-3 @1; TrophyCharredMage 1-1 @0.05
+Charred_Melee,$enemy_charred_melee,Charred Warrior,600,Demon,False,,"Meadows, Swamp, Mountain, BlackForest, Plains, AshLands",CharredBone 1-3 @1; TrophyCharredMelee 1-1 @0.05
+Charred_Melee_Dyrnwyn,$enemy_charred_melee_Dyrnwyn,<color=orange>Lord Reto</color>,2500,Demon,False,,,DyrnwynHiltFragment 1-1 @1
+Charred_Melee_Fader,$enemy_charred_melee_Fader,Summoned Charred Warrior,50,Demon,False,,,
+Charred_Twitcher,$enemy_charred_twitcher,Charred Twitcher,220,Demon,False,,AshLands,CharredBone 1-2 @1
+Charred_Twitcher_Summoned,$enemy_charred_twitcher_summoned,Summoned Twitcher,50,Demon,False,,,CharredBone 1-2 @1
+Chicken,$enemy_chicken,Chicken,10,ForestMonsters,False,,,ChickenMeat 1-1 @0.25; Feathers 1-2 @0.5
+Deathsquito,$enemy_deathsquito,Deathsquito,10,PlainsMonsters,False,,Plains,Needle 1-1 @1; TrophyDeathsquito 1-1 @0.05
+Deer,$enemy_deer,Deer,10,ForestMonsters,False,,"Meadows, BlackForest",DeerMeat 2-2 @1; DeerHide 1-3 @1; TrophyDeer 1-1 @0.5
+Deer_White,$enemy_deerwhite,[enemy_deerwhite],30,ForestMonsters,False,,,DeerMeat 2-2 @1; TrophyDeerWhite 1-1 @1
+Dragon,$enemy_dragon,Moder,7500,Boss,True,defeated_dragon,,TrophyDragonQueen 1-1 @1; DragonTear 10-10 @1
+Draugr,$enemy_draugr,Draugr,100,Undead,False,,"Meadows, Swamp, Mountain, BlackForest, Plains",Entrails 1-1 @1; TrophyDraugr 1-1 @0.1
+Draugr_Elite,$enemy_draugrelite,Draugr Elite,200,Undead,False,,Swamp,Entrails 2-3 @1; TrophyDraugrElite 1-1 @0.1
+Draugr_Elite_sleeping,$enemy_draugrelite,Draugr Elite,200,Undead,False,,,Entrails 2-3 @1; TrophyDraugrElite 1-1 @0.1
+Draugr_Ranged,$enemy_draugr,Draugr,100,Undead,False,,,Entrails 1-1 @1; TrophyDraugr 1-1 @0.1
+Draugr_Ranged_sleeping,$enemy_draugr,Draugr,100,Undead,False,,,Entrails 1-1 @1; TrophyDraugr 1-1 @0.1
+Draugr_sleeping,$enemy_draugr,Draugr,100,Undead,False,,,Entrails 1-1 @1; TrophyDraugr 1-1 @0.1
+Dverger,$enemy_dvergr,Dvergr Rogue,350,Dverger,False,,Mistlands,Softtissue 1-2 @0.25; BlackMarble 1-2 @0.5; Coins 2-15 @1; TrophyDvergr 1-1 @0.05
+DvergerAshlands,$enemy_dvergr,Dvergr Rogue,1000,Dverger,False,,AshLands,Softtissue 1-2 @0.25; BlackMarble 1-2 @0.5; Coins 2-15 @1; TrophyDvergr 1-1 @0.05
+DvergerDeepNorth,$enemy_dvergr_deepnorth,Imprisoned Dvergr,1500,Dverger,False,,,Coins 10-20 @1; TrophyDvergr 1-1 @0.05; AncientGemstoneBlack 1-1 @0.1; AncientGemstoneGreen 1-1 @0.1; AncientGemstoneOrange 1-1 @0.1; AncientGemstonePurple 1-1 @0.1
+DvergerMage,$enemy_dvergr_mage,Dvergr Mage,350,Dverger,False,,,Softtissue 1-2 @0.25; BlackMarble 1-2 @0.5; Coins 2-15 @1; TrophyDvergr 1-1 @0.05
+DvergerMageFire,$enemy_dvergr_mage,Dvergr Mage,350,Dverger,False,,,Softtissue 1-2 @0.25; BlackMarble 1-2 @0.5; Coins 2-15 @1; TrophyDvergr 1-1 @0.05
+DvergerMageIce,$enemy_dvergr_mage,Dvergr Mage,350,Dverger,False,,,Softtissue 1-2 @0.25; BlackMarble 1-2 @0.5; Coins 2-15 @1; TrophyDvergr 1-1 @0.05
+DvergerMageSupport,$enemy_dvergr_mage,Dvergr Mage,350,Dverger,False,,,Softtissue 1-2 @0.25; BlackMarble 1-2 @0.5; Coins 2-15 @1; TrophyDvergr 1-1 @0.05
+DvergerTest,$enemy_dverger,[enemy_dverger],100,Dverger,False,,,Coins 20-40 @0.25; BlackMetalScrap 1-2 @1; Pukeberries 1-2 @1; TrophyGoblinShaman 1-1 @0.1
+Eikthyr,$enemy_eikthyr,Eikthyr,500,Boss,True,defeated_eikthyr,,TrophyEikthyr 1-1 @1; HardAntler 3-3 @1
+Elaking,$enemy_elaking,Elaking,350,DeepNorth,False,,-1,ElakingHairBundle 1-2 @1; TrophyElaking 1-1 @0.1; MoldKeys 1-1 @0.2
+ElakingLantern,$enemy_elaking,Elaking,350,DeepNorth,False,,DeepNorth,ElakingHairBundle 1-2 @1; TrophyElaking 1-1 @0.1
+ElakingMole,$enemy_elakingmole,Eyeless One,1400,DeepNorth,False,elakingmole_defeated,,TrophyMole 1-1 @0.1; MoleClaws 1-2 @1; MoldKeys 1-1 @0.5
+Fader,$enemy_fader,Fader,25000,Boss,True,defeated_fader,,TrophyFader 1-1 @1; FaderDrop 5-5 @1
+FallenValkyrie,$enemy_fallenvalkyrie,Fallen Valkyrie,1500,Demon,False,,AshLands,CelestialFeather 2-4 @1; TrophyFallenValkyrie 1-1 @0.05
+FallenWarrior,$enemy_fallenwarrior,Fallen Warrior,750,Undead,False,,,OrbFrostFire 1-1 @0.5; OrbThunderBlood 1-1 @0.5
+Fenring,$enemy_fenring,Fenring,300,MountainMonsters,False,,Mountain,WolfFang 1-2 @1; TrophyFenring 1-1 @0.1
+Fenring_Cultist,$enemy_fenringcultist,Cultist,200,MountainMonsters,False,,,JuteRed 1-3 @1; TrophyCultist 1-1 @0.1
+Fenring_Cultist_Hildir,$enemy_fenringcultist_hildir,<color=orange>Geirrhafa</color>,3700,MountainMonsters,False,BossHildir2,,chest_hildir2 1-1 @1; TrophyCultist_Hildir 1-1 @1
+Fenring_Cultist_Hildir_nochest,$enemy_fenringcultist_hildir,<color=orange>Geirrhafa</color>,1850,MountainMonsters,False,BossHildir2,,TrophyCultist_Hildir 1-1 @1
+FrostWisp,$enemy_frostwisp,[enemy_frostwisp],100,TrainingDummy,False,,,LeatherScraps 1-1 @0.5
+FrozenKing,$enemy_frozenking,Kall Fimbulbringer,10000,Boss,True,defeated_frozenking,,
+FrozenKing_p2,$enemy_frozenking,Kall Fimbulbringer,7000,Boss,True,,,
+FrozenKing_p3,$enemy_frozenking_p3,Kall Fimbulbringer,30000,Boss,True,defeated_frozenking_p3,,FrozenKingDrop 1-1 @1; CrownJewel 1-1 @1
+Frysling,$enemy_frysling,Frysling,100,TrainingDummy,False,killed_frysling,,FrostCore 1-1 @1
+gd_king,$enemy_gdking,The Elder,2500,Boss,True,defeated_gdking,,TrophyTheElder 1-1 @1; CryptKey 1-1 @1
+Ghost,$enemy_ghost,Ghost,60,Undead,False,,,Ectoplasm 1-5 @1; TrophyGhost 1-1 @0.1
+Ghost_old,$enemy_ghost_void,The Void,60,Undead,False,,,Ectoplasm 1-2 @0.5
+Ghost_sleeping,$enemy_ghost,Ghost,60,Undead,False,,,Ectoplasm 1-5 @1; TrophyGhost 1-1 @0.1
+Ghost_Void,$enemy_ghost_void,The Void,600,Undead,False,,,KnifeVoid 1-1 @1
+Gjall,$enemy_gjall,Gjall,1500,MistlandsMonsters,False,,Mistlands,Bilebag 1-1 @1; TrophyGjall 1-1 @0.3
+Goblin,$enemy_goblin,Fuling,175,PlainsMonsters,False,,"Meadows, Mountain, BlackForest, Plains",Coins 5-10 @0.25; BlackMetalScrap 1-2 @1; TrophyGoblin 1-1 @0.1
+Goblin_Gem,$enemy_gemgoblin,Riktig Fuling,1000,ForestMonsters,False,,,GemstoneBlue 2-4 @1; GemstoneGreen 2-4 @1; GemstoneRed 2-4 @1
+GoblinArcher,$enemy_goblin,Fuling,175,PlainsMonsters,False,,,Coins 5-10 @0.25; BlackMetalScrap 1-2 @1; TrophyGoblin 1-1 @0.1
+GoblinBrute,$enemy_goblinbrute,Fuling Berserker,800,PlainsMonsters,False,,Plains,Coins 5-20 @1; BlackMetalScrap 3-5 @1; GoblinTotem 1-1 @0.1; TrophyGoblinBrute 1-1 @0.05
+GoblinBrute_Hildir,$enemy_goblinbrute_hildir,<color=orange>Thungr</color>,800,PlainsMonsters,False,,,chest_hildir3 1-1 @1
+GoblinBruteBros,$enemy_goblinbrute_hildircombined,<color=orange>Zil & Thungr</color>,4200,PlainsMonsters,False,BossHildir3,,GoblinShaman_Hildir 1-1 @1; TrophyGoblinBruteBrosBrute 1-1 @1
+GoblinBruteBros_nochest,$enemy_goblinbrute_hildircombined,<color=orange>Zil & Thungr</color>,2100,PlainsMonsters,False,BossHildir3,,GoblinShaman_Hildir_nochest 1-1 @1; TrophyGoblinBruteBrosBrute 1-1 @1
+GoblinDeepNorth,$enemy_goblin_deepnorth,Captive Fuling,250,PlainsMonsters,False,,,Coins 20-40 @0.25; AncientCoin 1-2 @1; Lingonberry 1-10 @0.2
+GoblinKing,$enemy_goblinking,Yagluth,10000,Boss,True,defeated_goblinking,,TrophyGoblinKing 1-1 @1; YagluthDrop 3-3 @1
+GoblinShaman,$enemy_goblinshaman,Fuling Shaman,100,PlainsMonsters,False,,,Coins 20-40 @0.25; BlackMetalScrap 1-2 @1; Pukeberries 1-2 @1; TrophyGoblinShaman 1-1 @0.1
+GoblinShaman_Hildir,$enemy_goblin_hildir,<color=orange>Zil</color>,2400,PlainsMonsters,False,,,chest_hildir3 1-1 @1; TrophyGoblinBruteBrosShaman 1-1 @1
+GoblinShaman_Hildir_nochest,$enemy_goblin_hildir,<color=orange>Zil</color>,1200,PlainsMonsters,False,,,TrophyGoblinBruteBrosShaman 1-1 @1
+Greydwarf,$enemy_greydwarf,Greydwarf,40,ForestMonsters,False,,"Meadows, BlackForest",GreydwarfEye 1-1 @0.5; Stone 1-1 @1; Wood 1-1 @1; Resin 1-1 @1; TrophyGreydwarf 1-1 @0.05
+Greydwarf_Elite,$enemy_greydwarfbrute,Greydwarf Brute,150,ForestMonsters,False,,"Meadows, BlackForest",GreydwarfEye 2-2 @0.5; Stone 2-2 @1; Wood 3-5 @1; Dandelion 1-1 @1; AncientSeed 1-1 @0.33; TrophyGreydwarfBrute 1-1 @0.1
+Greydwarf_Frozen,$enemy_greydwarf,Greydwarf,100,DeepNorth,False,,DeepNorth,GreydwarfEye 1-1 @0.5; Wood 1-1 @1; Resin 1-1 @1; TrophyGreydwarf 1-1 @0.05; Snowball 1-1 @1; Ice 1-2 @1
+Greydwarf_Shaman,$enemy_greydwarfshaman,Greydwarf Shaman,60,ForestMonsters,False,,"Meadows, BlackForest",GreydwarfEye 1-1 @0.5; Wood 1-1 @1; Resin 1-2 @1; TrophyGreydwarfShaman 1-1 @0.1; Pukeberries 1-2 @1
+Greydwarf_Shaman_Frozen,$enemy_greydwarfshaman,Greydwarf Shaman,120,DeepNorth,False,,DeepNorth,GreydwarfEye 1-1 @0.5; Wood 1-1 @1; Resin 1-2 @1; TrophyGreydwarfShaman 1-1 @0.1; Pukeberries 1-2 @1; Ice 1-2 @1
+Greyling,$enemy_greyling,Greyling,20,ForestMonsters,False,,Meadows,Resin 1-1 @1
+Hare,$enemy_hare,Hare,10,AnimalsVeg,False,,Mistlands,HareMeat 1-1 @1; ScaleHide 1-3 @1; TrophyHare 1-1 @0.05
+Hatchling,$enemy_drake,Drake,100,MountainMonsters,False,,Mountain,TrophyHatchling 1-1 @0.1; FreezeGland 1-2 @1
+Hen,$enemy_hen,Hen,10,ForestMonsters,False,,,ChickenMeat 1-1 @1; Feathers 1-3 @1
+Hive,$enemy_hive,[enemy_hive],10000,Boss,True,defeated_hive,,TrophySeekerQueen 1-1 @1; QueenDrop 1-1 @1
+JotunWarrior,$enemy_jotun_warrior,Krigen,1300,DeepNorth,False,jotun_killed,-1,MoldArmormediumChest 1-1 @0.03; MoldArmorMediumHelmet 1-1 @0.03; MoldArmorMediumLegs 1-1 @0.03; MemorialCoal 1-1 @0.2; TrophyJotunWarrior 1-1 @0.1; Leatherstraps 1-3 @1; MoldArmorGoldLegs 1-1 @0.03; MoldArmorGoldChest 1-1 @0.03; MoldArmorGoldHelmet 1-1 @0.03
+JotunWarriorDualWield,$enemy_jotun_warrior,Krigen,1300,DeepNorth,False,jotun_killed,,MoldArmormediumChest 1-1 @0.03; MoldArmorMediumHelmet 1-1 @0.03; MoldArmorMediumLegs 1-1 @0.03; MemorialCoal 1-1 @0.2; TrophyJotunWarrior 1-1 @0.1; Leatherstraps 1-3 @1; MoldArmorGoldLegs 1-1 @0.03; MoldArmorGoldChest 1-1 @0.03; MoldArmorGoldHelmet 1-1 @0.03
+JotunWitch,$enemy_jotun_witch,Hexen,800,DeepNorth,False,jotun_killed,-1,NornThread 1-3 @1; TrophyJotunWitch 1-1 @0.1; BloodGoldKey 1-1 @0.1; MoldArmorMageChest 1-1 @0.05; MoldArmorMageHelmet 1-1 @0.05; MoldArmorMageLegs 1-1 @0.05
+Leech,$enemy_leech,Leech,60,Undead,False,,Swamp,TrophyLeech 1-1 @0.1; Bloodbag 1-1 @1
+Leech_cave,$enemy_leech,Leech,60,Undead,False,,,TrophyLeech 1-1 @0.1; Bloodbag 1-1 @1
+Lox,$enemy_lox,Lox,1000,PlainsMonsters,False,,Plains,LoxMeat 4-6 @1; TrophyLox 1-1 @0.1; LoxPelt 2-3 @1
+Lox_Calf,$enemy_loxcalf,Lox Calf,100,PlainsMonsters,False,,,LoxMeat 1-1 @1
+Mistile,$enemy_mistile,Mistile,1,Dverger,False,,,
+Moose,$enemy_moose,Moose,1000,DeepNorth,False,,DeepNorth,MooseMeat 4-6 @1; TrophyMoose 1-1 @0.1; MooseHide 2-3 @1; MooseSinew 2-3 @1
+Moose_calf,$enemy_moosecalf,Moose Calf,1000,DeepNorth,False,,,
+Moose_spiritcaller,$spiritcaller_moose,,1100,Players,False,,,
+Morgen,$enemy_morgen,Morgen,1600,Demon,False,,,MorgenSinew 1-2 @1; MorgenHeart 1-1 @0.8; TrophyMorgen 1-1 @0.05
+Morgen_NonSleeping,$enemy_morgen,Morgen,1600,Demon,False,,AshLands,MorgenSinew 1-2 @1; MorgenHeart 1-1 @0.8; TrophyMorgen 1-1 @0.05
+Neck,$enemy_neck,Neck,5,ForestMonsters,False,,Meadows,NeckTail 1-1 @0.7; TrophyNeck 1-1 @0.05
+piece_TrainingDummy,$piece_trainingdummy,T.W.I.G.,2500,TrainingDummy,False,,,
+Seal,$enemy_seal,Seal,400,DeepNorth,False,,DeepNorth,SealHide 2-3 @1; TrophySeal 1-1 @0.1; SealBlubber 2-3 @1
+Seal_Pup,$enemy_seal_baby,Baby Seal,200,DeepNorth,False,,DeepNorth,SealBlubber 1-1 @0.1
+Seeker,$enemy_seeker,Seeker,200,MistlandsMonsters,False,,"Meadows, Swamp, Mountain, BlackForest, Plains, Mistlands",BugMeat 1-2 @1; Carapace 1-2 @1; TrophySeeker 1-1 @0.05
+SeekerBrood,$enemy_babyseeker,Seeker Brood,20,MistlandsMonsters,False,,Mistlands,RoyalJelly 1-1 @0.5
+SeekerBrute,$enemy_seekerbrute,Seeker Soldier,1500,MistlandsMonsters,False,,Mistlands,BugMeat 1-2 @1; Carapace 2-4 @1; TrophySeekerBrute 1-1 @0.05; Mandible 1-2 @1
+SeekerQueen,$enemy_seekerqueen,The Queen,12500,Boss,True,defeated_queen,,TrophySeekerQueen 1-1 @1; QueenDrop 5-5 @1
+Serpent,$enemy_serpent,Serpent,400,SeaMonsters,False,defeated_serpent,Ocean,TrophySerpent 1-1 @0.33; SerpentMeat 6-8 @1; SerpentScale 8-10 @1
+ShadowPerson,$enemy_shadowperson,Shadow,750,DeepNorth,False,,DeepNorth,
+Skeleton,$enemy_skeleton,Skeleton,40,Undead,False,,"Meadows, Swamp, Mountain, BlackForest, Plains",TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_aspect,$enemy_skeleton,Skeleton,40,Undead,False,,,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_DeepNorth,$enemy_skeleton,Skeleton,100,DeepNorth,False,,DeepNorth,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1; Ice 1-1 @1
+Skeleton_Friendly,$enemy_skeleton_summoned,Skelett,400,Players,False,,,
+Skeleton_Hildir,$enemy_skeletonfire,<color=orange>Brenna</color>,1200,Undead,False,BossHildir1,,chest_hildir1 1-1 @1; TrophySkeletonHildir 1-1 @1
+Skeleton_Hildir_nochest,$enemy_skeletonfire,<color=orange>Brenna</color>,600,Undead,False,BossHildir1,,TrophySkeletonHildir 1-1 @1
+Skeleton_Meadows,$enemy_skeleton,Skeleton,30,Undead,False,,,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_Meadows_noarcher,$enemy_skeleton,Skeleton,30,Undead,False,,,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_Mountains,$enemy_skeleton,Skeleton,75,Undead,False,,,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_Mountains_noarcher,$enemy_skeleton,Skeleton,75,Undead,False,,,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_NoArcher,$enemy_skeleton,Skeleton,40,Undead,False,,,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_Poison,$enemy_skeletonpoison,Rancid Remains,100,Undead,False,,,TrophySkeletonPoison 1-1 @0.1; BoneFragments 3-3 @1
+Skeleton_Swamps,$enemy_skeleton,Skeleton,60,Undead,False,,Swamp,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+Skeleton_Swamps_noarcher,$enemy_skeleton,Skeleton,60,Undead,False,,,TrophySkeleton 1-1 @0.1; BoneFragments 1-1 @1
+staff_greenroots_tentaroot,$enemy_summonedroot,Summoned Root,250,Players,False,,,
+StoneGolem,$enemy_stonegolem,Stone Golem,800,ForestMonsters,False,,Mountain,TrophySGolem 1-1 @0.05; Stone 5-10 @1; Crystal 8-12 @1
+Surtling,$enemy_surtling,Surtling,20,Demon,False,killed_surtling,,Coal 4-5 @1; SurtlingCore 1-1 @0.5; TrophySurtling 1-1 @0.05
+Tendril,Tendril,Tendril,80,Boss,False,,,
+Tendril_back,Root,Root,1000,Boss,False,,,
+TentaRoot,$enemy_root,Root,20,Boss,False,,,
+TentaRoot_wild,$enemy_root,Root,30,ForestMonsters,False,,,
+TheHive,$enemy_thehive,[enemy_thehive],5000,MistlandsMonsters,True,,,TrophyHatchling 1-1 @0.1; FreezeGland 1-2 @1
+Tick,$enemy_tick,Tick,50,MistlandsMonsters,False,,Mistlands,GiantBloodSack 1-1 @1; TrophyTick 1-1 @0.05
+TrainingDummy,TrainingDummy,TrainingDummy,40000,Undead,False,,,Entrails 1-1 @0.5; TrophyDraugr 1-1 @0.1
+Troll,$enemy_troll,Troll,600,ForestMonsters,False,KilledTroll,BlackForest,Coins 20-30 @1; TrophyFrostTroll 1-1 @0.5; TrollHide 5-5 @1
+Troll_sleeping,$enemy_troll,Troll,600,ForestMonsters,False,KilledTroll,,Coins 20-30 @1; TrophyFrostTroll 1-1 @0.5; TrollHide 5-5 @1
+Troll_Summoned,$enemy_summonedtroll,Summoned Troll,2000,PlayerSpawned,False,KilledTroll,,
+TrollFrost,$enemy_trollfrost,Gammeltroll,3000,DeepNorth,False,,,
+Ulv,$enemy_ulv,Ulv,50,MountainMonsters,False,,,WolfFang 1-2 @0.5; TrophyUlv 1-1 @0.1
+Unbjorn,$enemy_unbjorn,Vile,1200,PlainsMonsters,False,,Plains,TrophyBjornUndead 1-1 @0.1; BjornMeat 2-3 @1; RottenMeat 1-2 @0.8; UndeadBjornRibcage 1-3 @1; BjornHide 1-2 @1
+Volture,$enemy_volture,Volture,200,Demon,False,,AshLands,TrophyVolture 1-1 @0.1; VoltureMeat 1-1 @1; Feathers 2-3 @0.5; VoltureEgg 1-2 @0.5
+Wolf,$enemy_wolf,Wolf,80,MountainMonsters,False,,Mountain,TrophyWolf 1-1 @0.1; WolfMeat 1-1 @1; WolfPelt 1-2 @1; WolfFang 1-1 @0.4
+Wolf_cub,$enemy_wolfcub,Wolf Cub,10,MountainMonsters,False,,,
+Wolf_spiritcaller,$spiritcaller_wolf,,800,Players,False,,,
+Wraith,$enemy_wraith,Wraith,100,Undead,False,,Swamp,TrophyWraith 1-1 @0.05; Chain 1-1 @1
+Writhan,$enemy_writhan,Writhan,400,Undead,False,defeated_writhan,Swamp,TrophyWrithan 1-1 @0.1; WrithanRoots 1-2 @1

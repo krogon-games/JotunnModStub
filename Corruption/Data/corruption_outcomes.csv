@@ -1,0 +1,4 @@
+﻿outcome,status,chance,notes
+bricked,approved,25,"The item is destroyed (user, 2026-10-28)."
+unchanged,approved,25,"Nothing is added, but the item is now corrupted and locked (user, 2026-10-28)."
+affix,approved,50,"Gains one corrupted affix on top of the normal prefix/suffix limit; the item is locked (user, 2026-10-28)."

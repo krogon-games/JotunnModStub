@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using BepInEx;
 using BepInEx.Bootstrap;
 using CraftingOverhaul.Biomes;
@@ -13,7 +14,8 @@ namespace CraftingOverhaul.Dump
 {
     /// <summary>
     ///     Writes the loaded game data (vanilla plus any mods) to CSV files, for checking mod logic against real
-    ///     data: items, recipes, pieces, creatures, locations and the biome resolver's inputs and results.
+    ///     data: items, recipes, pieces, creatures, locations, spawn tables, raids, status effects, chest and
+    ///     destructible loot, boss altars, and the biome resolver's inputs and results.
     /// </summary>
     internal static class GameDataDump
     {
@@ -26,10 +28,17 @@ namespace CraftingOverhaul.Dump
 
             WriteMeta(Path.Combine(dir, "meta.txt"));
             WriteItems(Path.Combine(dir, "items.csv"));
+            WriteItemDetails(Path.Combine(dir, "item_details.csv"));
             WriteRecipes(Path.Combine(dir, "recipes.csv"));
             WritePieces(Path.Combine(dir, "pieces.csv"));
             WriteCreatures(Path.Combine(dir, "creatures.csv"));
             WriteLocations(Path.Combine(dir, "locations.csv"));
+            WriteSpawns(Path.Combine(dir, "spawns.csv"));
+            WriteEvents(Path.Combine(dir, "events.csv"), Path.Combine(dir, "event_spawns.csv"));
+            WriteStatusEffects(Path.Combine(dir, "status_effects.csv"));
+            WriteContainers(Path.Combine(dir, "containers.csv"));
+            WriteDestructibles(Path.Combine(dir, "destructibles.csv"));
+            WriteAltars(Path.Combine(dir, "altars.csv"));
             WriteBiomeSources(Path.Combine(dir, "biome_sources.csv"));
             WriteBiomeResolution(Path.Combine(dir, "biome_items.csv"));
             WriteUnresolved(Path.Combine(dir, "biome_unresolved.csv"));
@@ -82,6 +91,35 @@ namespace CraftingOverhaul.Dump
                         d.m_slash, d.m_pierce, d.m_chop, d.m_pickaxe, d.m_fire, d.m_frost, d.m_lightning, d.m_poison,
                         d.m_spirit, s.m_food, s.m_foodStamina, s.m_foodEitr, s.m_foodBurnTime,
                         biome?.Biome.ToString(), Describe(biome));
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Every item's shared data, field by field (upgrade amounts, knockback, backstab, parry, set bonuses, equip
+        ///     effects, regen and stamina modifiers...), plus attack stamina and per-level damage. Wide, for analysis.
+        /// </summary>
+        private static void WriteItemDetails(string path)
+        {
+            var fields = SimpleFields(typeof(ItemDrop.ItemData.SharedData));
+            var header = new[] { "prefab" }.Concat(fields.Select(f => f.Name))
+                .Concat(new[] { "attack_stamina", "secondary_attack_stamina", "damage_per_level" }).ToArray();
+            using (var csv = new CsvWriter(path, header))
+            {
+                foreach (var prefab in ObjectDB.instance.m_items.Where(p => p).OrderBy(p => p.name))
+                {
+                    var drop = prefab.GetComponent<ItemDrop>();
+                    if (!drop)
+                    {
+                        continue;
+                    }
+                    var s = drop.m_itemData.m_shared;
+                    var perLevel = s.m_damagesPerLevel;
+                    float perLevelTotal = perLevel.m_damage + perLevel.m_blunt + perLevel.m_slash + perLevel.m_pierce +
+                                          perLevel.m_fire + perLevel.m_frost + perLevel.m_lightning + perLevel.m_poison + perLevel.m_spirit;
+                    csv.Row(new object[] { prefab.name }.Concat(fields.Select(f => Value(f, s)))
+                        .Concat(new object[] { s.m_attack?.m_attackStamina, s.m_secondaryAttack?.m_attackStamina, perLevelTotal })
+                        .ToArray());
                 }
             }
         }
@@ -165,6 +203,195 @@ namespace CraftingOverhaul.Dump
                         location.m_quantity, location.m_unique);
                 }
             }
+        }
+
+        // ------------------------------------------------------------------ raw game tables, by reflection
+        // Written field by field (every public simple field), so the files keep working when a game update adds
+        // or renames fields.
+
+        /// <summary>World spawn tables: what spawns in each biome, how many, how often, at which levels.</summary>
+        private static void WriteSpawns(string path)
+        {
+            var fields = SimpleFields(typeof(SpawnSystem.SpawnData));
+            using (var csv = new CsvWriter(path, new[] { "list" }.Concat(fields.Select(f => f.Name)).ToArray()))
+            {
+                foreach (var list in SpawnCollector.FindSpawnLists())
+                {
+                    foreach (var spawn in list.m_spawners)
+                    {
+                        csv.Row(new object[] { list.name }.Concat(fields.Select(f => Value(f, spawn))).ToArray());
+                    }
+                }
+            }
+        }
+
+        /// <summary>Random events (raids) and each one's spawn list.</summary>
+        private static void WriteEvents(string eventsPath, string spawnsPath)
+        {
+            var events = RandEventSystem.instance ? RandEventSystem.instance.m_events : new List<RandomEvent>();
+            var eventFields = SimpleFields(typeof(RandomEvent));
+            using (var csv = new CsvWriter(eventsPath, eventFields.Select(f => f.Name).Concat(new[] { "spawn_entries" }).ToArray()))
+            {
+                foreach (var e in events.Where(e => e != null))
+                {
+                    csv.Row(eventFields.Select(f => Value(f, e)).Concat(new object[] { e.m_spawn?.Count ?? 0 }).ToArray());
+                }
+            }
+            var spawnFields = SimpleFields(typeof(SpawnSystem.SpawnData));
+            using (var csv = new CsvWriter(spawnsPath, new[] { "event" }.Concat(spawnFields.Select(f => f.Name)).ToArray()))
+            {
+                foreach (var e in events.Where(e => e?.m_spawn != null))
+                {
+                    foreach (var spawn in e.m_spawn)
+                    {
+                        csv.Row(new object[] { e.m_name }.Concat(spawnFields.Select(f => Value(f, spawn))).ToArray());
+                    }
+                }
+            }
+        }
+
+        /// <summary>Every status effect with its class and the numbers it sets (fields left at zero/empty are skipped).</summary>
+        private static void WriteStatusEffects(string path)
+        {
+            using (var csv = new CsvWriter(path, "name", "token", "display_name", "class", "fields"))
+            {
+                foreach (var se in ObjectDB.instance.m_StatusEffects.Where(x => x).OrderBy(x => x.name))
+                {
+                    var values = SimpleFields(se.GetType())
+                        .Select(f => new KeyValuePair<string, object>(f.Name, Value(f, se)))
+                        .Where(kv => !IsEmpty(kv.Value))
+                        .Select(kv => $"{kv.Key}={Format(kv.Value)}");
+                    csv.Row(se.name, se.m_name, L(se.m_name), se.GetType().Name, CsvWriter.Join(values));
+                }
+            }
+        }
+
+        /// <summary>Chests and other containers that come with loot (dungeon and location chests).</summary>
+        private static void WriteContainers(string path)
+        {
+            using (var csv = new CsvWriter(path, "prefab", "name", "drop_min", "drop_max", "drop_chance", "one_of_each", "drops"))
+            {
+                foreach (var prefab in ZNetScene.instance.m_prefabs.Where(p => p).OrderBy(p => p.name))
+                {
+                    var container = prefab.GetComponent<Container>();
+                    var table = container ? container.m_defaultItems : null;
+                    if (table?.m_drops == null || table.m_drops.Count == 0)
+                    {
+                        continue;
+                    }
+                    csv.Row(prefab.name, L(container.m_name), table.m_dropMin, table.m_dropMax, table.m_dropChance,
+                        table.m_oneOfEach, DropList(table));
+                }
+            }
+        }
+
+        /// <summary>Destructible objects (nests, rocks, crates): health, tool tier and what they drop.</summary>
+        private static void WriteDestructibles(string path)
+        {
+            using (var csv = new CsvWriter(path, "prefab", "health", "min_tool_tier", "type", "drop_min", "drop_max", "drop_chance", "drops"))
+            {
+                foreach (var prefab in ZNetScene.instance.m_prefabs.Where(p => p).OrderBy(p => p.name))
+                {
+                    var destructible = prefab.GetComponent<Destructible>();
+                    if (!destructible)
+                    {
+                        continue;
+                    }
+                    var table = prefab.GetComponent<DropOnDestroyed>()?.m_dropWhenDestroyed;
+                    csv.Row(prefab.name, destructible.m_health, destructible.m_minToolTier, destructible.m_destructibleType,
+                        table?.m_dropMin, table?.m_dropMax, table?.m_dropChance, table == null ? "" : DropList(table));
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Boss altars (offering bowls) in every location: the offering item and count, the boss they summon, and
+        ///     for item-stand altars the stands and the items they take.
+        /// </summary>
+        private static void WriteAltars(string path)
+        {
+            using (var csv = new CsvWriter(path, "location", "biome", "altar", "offering", "offering_count", "boss",
+                       "use_item_stands", "item_stand_prefix", "item_stands", "set_global_key", "spawn_delay"))
+            {
+                foreach (var location in ZoneSystem.instance.m_locations.Where(l => l.m_enable && l.m_prefab.IsValid))
+                {
+                    var prefab = LocationCollector.Load(location.m_prefab);
+                    if (!prefab)
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        foreach (var bowl in prefab.GetComponentsInChildren<OfferingBowl>(true))
+                        {
+                            var stands = bowl.m_useItemStands
+                                ? prefab.GetComponentsInChildren<ItemStand>(true)
+                                    .Where(st => string.IsNullOrEmpty(bowl.m_itemStandPrefix) || st.gameObject.name.StartsWith(bowl.m_itemStandPrefix))
+                                    .Select(st => st.gameObject.name + " [" + string.Join("|", (st.m_supportedItems ?? new List<ItemDrop>())
+                                        .Where(it => it).Select(it => it.gameObject.name)) + "]")
+                                : Enumerable.Empty<string>();
+                            csv.Row(location.m_prefabName, location.m_biome, bowl.gameObject.name,
+                                bowl.m_bossItem ? bowl.m_bossItem.gameObject.name : "", bowl.m_bossItems,
+                                bowl.m_bossPrefab ? bowl.m_bossPrefab.name : "", bowl.m_useItemStands, bowl.m_itemStandPrefix,
+                                CsvWriter.Join(stands), bowl.m_setGlobalKey, bowl.m_spawnBossDelay);
+                        }
+                    }
+                    finally
+                    {
+                        location.m_prefab.Release();
+                    }
+                }
+            }
+        }
+
+        private static string DropList(DropTable table)
+        {
+            return CsvWriter.Join(table.m_drops.Where(d => d.m_item).Select(d =>
+                $"{d.m_item.name} {d.m_stackMin}-{d.m_stackMax} w{d.m_weight:0.##}"));
+        }
+
+        private static FieldInfo[] SimpleFields(Type type)
+        {
+            return type.GetFields(BindingFlags.Public | BindingFlags.Instance).Where(f => IsSimple(f.FieldType)).ToArray();
+        }
+
+        private static bool IsSimple(Type t)
+        {
+            return t.IsPrimitive || t.IsEnum || t == typeof(string) || t == typeof(Vector3) || t == typeof(Color) ||
+                   typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(List<string>);
+        }
+
+        private static object Value(FieldInfo field, object owner)
+        {
+            object value = field.GetValue(owner);
+            switch (value)
+            {
+                case UnityEngine.Object unityObject:
+                    return unityObject ? unityObject.name : "";
+                case List<string> list:
+                    return string.Join("|", list);
+                default:
+                    return value;
+            }
+        }
+
+        private static bool IsEmpty(object value)
+        {
+            switch (value)
+            {
+                case null: return true;
+                case string s: return s.Length == 0;
+                case bool b: return !b;
+                case float f: return f == 0f;
+                case int i: return i == 0;
+                case long l: return l == 0;
+                default: return false;
+            }
+        }
+
+        private static string Format(object value)
+        {
+            return value is float f ? f.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) : value.ToString();
         }
 
         private static void WriteBiomeSources(string path)

@@ -36,10 +36,26 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Shared between both plugins: reloads the .cfg file when saved (development aid). -->
+    <Compile Include="..\Shared\ConfigWatcher.cs" Link="Shared\ConfigWatcher.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Package\manifest.json" />
     <None Include="Package\icon.png" />
     <None Include="README.md" />
   </ItemGroup>
+
+  <!-- Valheim's Mono runtime doesn't ship these assemblies. Using a feature that needs one (e.g. C# tuples need
+       System.ValueTuple) compiles fine but crashes in game, so fail the build instead. -->
+  <Target Name="CheckNoUnshippedReferences" AfterTargets="Build">
+    <PropertyGroup>
+      <_BuiltAssemblyText>$([System.IO.File]::ReadAllText('$(TargetPath)'))</_BuiltAssemblyText>
+    </PropertyGroup>
+    <Error Condition="$(_BuiltAssemblyText.Contains('System.ValueTuple'))" Text="$(TargetFileName) references System.ValueTuple, which Valheim doesn't ship. Replace tuples with a small class or struct." />
+    <Error Condition="$(_BuiltAssemblyText.Contains('System.Memory'))" Text="$(TargetFileName) references System.Memory (Span/Memory), which Valheim doesn't ship." />
+    <Error Condition="$(_BuiltAssemblyText.Contains('System.Buffers'))" Text="$(TargetFileName) references System.Buffers, which Valheim doesn't ship." />
+  </Target>
 
   <Target Name="JotunnPostBuildTaskWin" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="powershell.exe -ExecutionPolicy RemoteSigned -File &quot;$(SolutionDir)publish.ps1&quot; -Target &quot;$(ConfigurationName)&quot; -TargetPath &quot;$(TargetDir.TrimEnd('\'))&quot; -TargetAssembly &quot;$(TargetFileName)&quot; -ValheimPath &quot;$(VALHEIM_INSTALL.TrimEnd('\'))&quot; -DeployPath &quot;$(MOD_DEPLOYPATH.TrimEnd('\'))&quot; -ProjectPath &quot;$(ProjectDir.TrimEnd('\'))&quot; " />

@@ -94,7 +94,7 @@ namespace CraftingOverhaul.Biomes.Collectors
             }
         }
 
-        private static GameObject Load(SoftReference<GameObject> reference)
+        internal static GameObject Load(SoftReference<GameObject> reference)
         {
             try
             {

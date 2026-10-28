@@ -94,7 +94,14 @@ namespace CraftingOverhaul.Containers
             {
                 if (__0 != null && IsActiveFor(__instance))
                 {
-                    __result += NearbyContainers.Count(__0, __1, __2);
+                    try
+                    {
+                        __result += NearbyContainers.Count(__0, __1, __2);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Safe.Report("count items in nearby containers", ex);
+                    }
                 }
             }
         }
@@ -102,10 +109,16 @@ namespace CraftingOverhaul.Containers
         [HarmonyPatch(typeof(Inventory), nameof(Inventory.RemoveItem), typeof(string), typeof(int), typeof(int), typeof(bool))]
         private static class RemoveItem_Patch
         {
-            /// <summary>Take from the player's own inventory first, and the shortfall from nearby containers.</summary>
-            private static void Prefix(Inventory __instance, string __0, ref int __1, int __2, bool __3)
+            /// <summary>
+            ///     Take from the player's own inventory first, and the shortfall from nearby containers.
+            ///     Runs after other mods' prefixes (low priority). If one of them already paid the whole cost and
+            ///     skipped the original (e.g. AdventureBackpacks' craft-from-backpack), take nothing, or the player
+            ///     would pay twice.
+            /// </summary>
+            [HarmonyPriority(Priority.Low)]
+            private static void Prefix(Inventory __instance, string __0, ref int __1, int __2, bool __3, bool __runOriginal)
             {
-                if (!IsActiveFor(__instance))
+                if (!__runOriginal || !IsActiveFor(__instance))
                 {
                     return;
                 }
@@ -124,7 +137,14 @@ namespace CraftingOverhaul.Containers
                 int missing = __1 - carried;
                 if (missing > 0)
                 {
-                    __1 -= NearbyContainers.Remove(__0, missing, __2, __3);
+                    try
+                    {
+                        __1 -= NearbyContainers.Remove(__0, missing, __2, __3);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Safe.Report("take items from nearby containers", ex);
+                    }
                 }
             }
         }

@@ -1,0 +1,364 @@
+prefab,health,min_tool_tier,type,drop_min,drop_max,drop_chance,drops
+ancient_skull,1,0,Default,,,,
+AshCrow,1,0,Default,1,1,1,Feathers 3-3 w1
+Ashlands_ArchRoof,1000,0,Default,,,,
+Ashlands_floor_large,1,0,Default,,,,
+Ashlands_Fortress_Wall_Pillar,1,5,Default,,,,
+Ashlands_Fortress_Wall_Pillar_base,1,5,Default,,,,
+Ashlands_Fortress_Wall_PillarTop,1,5,Default,,,,
+Ashlands_Fortress_Wall_PillarTopStone,1,5,Default,,,,
+Ashlands_rock1,1,0,Default,,,,
+Ashlands_rock2,1,0,Default,,,,
+Ashlands_Ruins_Wall_4x6,1000,0,Default,,,,
+Ashlands_Ruins_Wall_Windows_Broken_4x6,200,0,Default,,,,
+Ashlands_WallBlock,1000,0,Default,,,,
+AshlandsBranch1,80,0,Tree,3,4,1,Blackwood 1-1 w1
+AshlandsBranch2,80,0,Tree,1,2,1,Blackwood 1-1 w1
+AshlandsBranch3,80,0,Tree,3,4,1,Blackwood 1-1 w1
+AshlandsBush1,80,0,Tree,1,2,1,Blackwood 1-1 w1
+AshlandsBush2,80,0,None,0,2,1,CharredBone 1-1 w1
+AshlandsTreeStump1,80,0,Tree,2,2,1,Blackwood 1-1 w1
+AshlandsTreeStump2,80,0,Tree,2,2,1,Blackwood 1-1 w1
+AshlandsTreeStump3,80,0,Tree,2,2,1,Blackwood 1-1 w1
+barrell,10,0,Default,2,3,1,Blueberries 2-4 w1; DeerHide 2-3 w1; Flint 2-3 w1; Coal 5-8 w1; GreydwarfEye 2-4 w1; Resin 3-6 w1; LeatherScraps 2-3 w1; TinOre 2-3 w1
+Beech_Sapling,1,0,Tree,,,,
+Beech_small1,20,0,Tree,2,3,1,Wood 1-1 w1; Resin 1-2 w0.2
+Beech_small2,20,0,Tree,2,3,1,Wood 1-1 w1; Resin 1-2 w0.2
+Beech_Stub,80,0,Tree,2,2,1,Wood 1-1 w1
+BigBranch,100,0,Tree,2,2,1,Wood 1-1 w1
+BigRock,1,0,Default,,,,
+Birch_Sapling,1,0,Tree,,,,
+BirchStub,80,2,Tree,2,2,1,Wood 1-1 w1
+BlackIce_Core,1000,0,Default,,,,
+BlackIce_Core_outer,500,0,Default,,,,
+BlackIce_Start,1000,0,Default,,,,
+BlackIceShard_01,50,0,Default,1,2,1,Ice 1-1 w1
+BlackIceShard_02,50,0,Default,1,2,1,Ice 1-3 w1
+blackmarble_altar_crystal,10,0,Default,,,,
+blackmarble_altar_crystal_broken,1,0,Default,1,1,1,
+blackmarble_post01,2000,0,Default,3,4,1,BlackMarble 1-1 w1
+BlobMorkBig,600,0,Default,2,3,1,IronScrap 1-1 w0.5; Frostwood 1-1 w0.5; Lingonberry 1-1 w1; OozeMork 1-1 w1
+BlueberryBush,30,0,Default,1,2,1,Wood 1-1 w0
+BonePileSpawner,50,0,Default,,,,
+BonePileSpawner_swamp,50,0,Default,,,,
+bucket,10,0,Default,,,,
+Bush01,30,0,Default,1,2,1,Wood 1-1 w0
+Bush01_deepnorth,30,0,Default,1,2,1,Wood 1-1 w0
+Bush01_heath,30,0,Default,1,2,1,Wood 1-1 w0
+Bush02_en,100,0,Tree,2,3,1,Wood 1-1 w0
+CargoCrate,50,0,Default,,,,
+CastleKit_braided_box01,10,0,Default,,,,
+CastleKit_brazier,50,0,Default,1,2,1,Bronze 1-1 w0.5; Coal 1-2 w1; Coal 1-1 w1
+CastleKit_metal_groundtorch_unlit,20,0,Default,,,,
+caverock_ice_pillar_wall,50,0,Default,,,,
+caverock_ice_stalagmite,10,0,Default,,,,
+caverock_ice_stalagmite_broken,10,0,Default,,,,
+caverock_ice_stalagtite,1,0,Default,,,,
+Charred_altar_bellfragment,10,0,Default,2,4,1,BellFragment 1-1 w1
+cliff_ashlands1,1,0,Default,,,,
+cliff_ashlands2,1,0,Default,,,,
+cliff_ashlands3_Arch_1,1,0,Default,,,,
+cliff_ashlands4,1,0,Default,,,,
+cliff_ashlands5,1,0,Default,,,,
+cliff_ashlands6,1,0,Default,,,,
+cliff_ashlands7_HalfArch,1,0,Default,,,,
+cliff_ashlands8,1,0,Default,,,,
+cliff_mistlands1,1,0,Default,,,,
+cliff_mistlands1_creep,1,0,Default,,,,
+cliff_mistlands2,1,0,Default,,,,
+cloth_hanging_door,10,0,Default,1,1,0.2,JuteRed 1-1 w1
+cloth_hanging_door_double,10,0,Default,1,2,0.2,JuteRed 1-1 w1
+cloth_hanging_long,10,0,Default,1,2,0.5,JuteRed 1-1 w0
+CloudberryBush,30,0,Default,,,,
+corruption_rip_heart,100,0,Default,,,,
+CreepProp_egg_hanging01,1,0,Default,1,1,0.5,SeekerBrood 1-1 w1
+CreepProp_hanging01,1,0,Default,,,,
+Crow,1,0,Default,1,1,1,Feathers 3-3 w1
+crypt_skeleton_chest,50,0,Default,1,1,1,Skeleton 1-1 w1
+dvergrprops_barrel,800,0,Default,3,6,1,FineWood 1-1 w0.5; CopperScrap 1-1 w0.5; MeadTasty 1-1 w0.5
+dvergrprops_pickaxe,1,0,Default,1,1,0.5,IronScrap 1-1 w1
+dvergrtown_arch,200,0,Default,,,,
+dvergrtown_creep_door,10,0,Default,,,,
+dvergrtown_wood_beam,300,0,Default,1,1,1,Wood 1-1 w1
+dvergrtown_wood_pole,800,0,Default,1,2,1,Wood 1-1 w1; CopperScrap 1-1 w0.5
+dvergrtown_wood_support,500,0,Default,1,2,1,Wood 1-1 w1
+dvergrtown_wood_wall01,200,0,Default,1,3,1,Wood 1-1 w1; CopperScrap 1-1 w0.5
+dvergrtown_wood_wall02,200,0,Default,1,2,1,Wood 1-1 w1
+dvergrtown_wood_wall03,100,0,Default,1,2,1,Wood 1-1 w1
+elaking_trashpile,1,0,Default,1,3,1,Frostwood 1-3 w1; IronScrap 1-1 w0.2; SilverNecklace 1-1 w0.2; MoldAtgeir 1-1 w0.1; MoldAxe 1-1 w0.1; MoldAxe2H 1-1 w0.1; MoldBow 1-1 w0.1; MoldCrossbow 1-1 w0.1; MoldFistweapon 1-1 w0.1; MoldKnife 1-1 w0.1; MoldMace 1-1 w0.1; MoldMace2H 1-1 w0.1; MoldShieldBuckler 1-1 w0.1; MoldShieldRound 1-1 w0.1; MoldShieldTower 1-1 w0.1; MoldSpear 1-1 w0.1; MoldSword 1-1 w0.1; MoldSword2H 1-1 w0.1; MoldKeys 1-1 w0.2; MoldStafffrostorbs 1-1 w0.1; MoldStaffOrbofAhri 1-1 w0.1; MoldStaffspiritcaller 1-1 w0.1; MoldStaffthunderblood 1-1 w0.1
+EvilHeart_Forest,100,0,Default,1,1,1,AncientSeed 1-1 w1
+EvilHeart_Swamp,100,0,Default,1,1,1,AncientSeed 1-1 w0
+fenrirhide_hanging,10,0,Default,1,1,1,WolfHairBundle 1-2 w1
+fenrirhide_hanging_door,20,0,Default,,,,
+FernAshlands,30,0,Default,,,,
+FernFiddleHeadAshlands,30,0,Default,1,2,1,Wood 1-1 w0
+FimbulvinterOrb,150,0,Default,,,,
+FimbulvinterOrb_start,150,0,Default,,,,
+FirTree_Big_plantable_Stub,100,0,Tree,2,2,1,Wood 1-1 w1
+FirTree_big_Sapling,1,0,Tree,,,,
+FirTree_oldLog,40,0,Tree,5,7,1,Wood 1-1 w1
+FirTree_oldLog_deepnorth,150,0,Tree,4,6,1,Frostwood 1-1 w1
+FirTree_Sapling,1,0,Tree,,,,
+FirTree_small,40,0,Tree,4,5,1,Wood 1-1 w1; FirCone 1-1 w0.1; Resin 1-1 w0.1
+FirTree_small_dead,40,0,Tree,4,5,1,Wood 1-1 w1
+FirTree_Snow_Stub,100,0,Tree,2,2,1,Wood 1-1 w1
+FirTree_Stub,100,0,Tree,2,2,1,Wood 1-1 w1
+Fish1,1,0,Default,,,,
+Fish10,1,0,Default,,,,
+Fish11,1,0,Default,,,,
+Fish12,1,0,Default,,,,
+Fish2,1,0,Default,,,,
+Fish3,1,0,Default,,,,
+Fish4_cave,1,0,Default,,,,
+Fish5,1,0,Default,,,,
+Fish6,1,0,Default,,,,
+Fish7,1,0,Default,,,,
+Fish8,1,0,Default,,,,
+Fish9,1,0,Default,,,,
+FlametalRockstand,1,0,Default,,,,
+flying_core,100,0,Default,,,,
+FrozenGD,30,0,Default,1,3,1,Ice 1-1 w1; Ice 1-2 w1; Resin 1-1 w1
+frozenship,900,0,Default,,,,
+frozenship02,900,0,Default,,,,
+frozenship03,900,0,Default,,,,
+FrozenSkeleton_Pose1,30,0,Default,1,3,1,Ice 1-1 w1; Ice 1-2 w1; Resin 1-1 w1
+FrozenSkeleton_Pose2,30,0,Default,1,3,1,Ice 1-1 w1; Ice 1-2 w1; Resin 1-1 w1
+giant_arm,1,3,Default,,,,
+giant_brain,1,3,Default,,,,
+giant_helmet1,1,3,Default,,,,
+giant_helmet2,1,3,Default,,,,
+giant_ribs,1,3,Default,,,,
+giant_skull,1,3,Default,,,,
+giant_sword1,1,3,Default,,,,
+giant_sword2,1,3,Default,,,,
+goblin_strawpile,1,0,Default,,,,
+goblin_trashpile,1,0,Default,2,3,1,Wood 1-1 w1; Wood 1-1 w1; Upgrader4Armor 1-1 w0.03; Upgrader4Weapon 1-1 w0.01; Upgrader5Armor 1-1 w0.01; Upgrader5Weapon 1-1 w0.01
+goldvein,1,5,Default,,,,
+GraveStone_Broken_CharredTwitcherNest,20,0,Default,1,1,1,Grausten 1-1 w1
+GraveStone_Broken_World,20,0,Default,1,1,1,Grausten 1-1 w1
+GraveStone_CharredFaderLocation,20,0,Default,,,,
+GraveStone_CharredTwitcherNest,20,0,Default,1,1,1,Grausten 1-1 w1
+GraveStone_Elite_Broken_CharredTwitcherNest,20,0,Default,1,1,1,Grausten 1-1 w1
+GraveStone_Elite_CharredTwitcherNest,20,0,Default,1,1,1,Grausten 1-1 w1
+Greydwarf_Root,100,0,Default,2,4,1,Wood 1-1 w1; Resin 1-1 w1
+Greydwarf_Surprise,10,0,Default,1,3,1,BoneFragments 1-1 w0
+GuckSack,30,0,Default,4,7,1,Guck 1-1 w1
+GuckSack_small,30,0,Default,1,2,1,Guck 1-1 w1
+hanging_hairstrands,10,0,Default,1,1,1,WolfHairBundle 1-1 w1
+HeathRockPillar,1,0,Default,,,,
+highstone,1,0,Default,,,,
+highstone_2,1,0,Default,,,,
+HoleRock_root1,5,0,Default,1,1,0.5,Frostwood 1-1 w1
+HoleRock_rootBush1,20,0,Default,1,1,0.5,Frostwood 1-1 w1
+HoleRock_rootFloor1,100,0,Default,1,1,0.5,Frostwood 1-1 w1
+HoleRock_rootWall1,150,0,Default,1,1,0.5,Frostwood 1-1 w1
+HugeRoot1,100,0,Default,2,2,1,Wood 1-1 w1
+ice_rock1,1,0,Default,,,,
+ice1,20,0,Default,3,5,1,Ice 1-1 w0
+IceBlocker,10,0,Default,,,,
+IcePond_rock,1,0,Default,,,,
+IceShard_01,30,0,Default,1,2,1,Ice 3-5 w1
+IceShard_02,30,0,Default,1,2,1,Ice 3-5 w1
+IceShard_03,30,0,Default,1,2,1,Ice 3-5 w1
+IceShard_04,10,0,Default,1,2,1,Ice 1-1 w1
+IceShard_05,20,0,Default,1,2,1,Ice 1-3 w1
+IceShard_06,20,0,Default,1,2,1,Ice 1-3 w1
+IceShore_1,1,2,Default,,,,
+IceShoreShard,20,0,Default,,,,
+LargeBone,10,0,Default,1,3,1,BoneFragments 1-1 w0
+LargeBone_half01,10,0,Default,1,3,1,BoneFragments 1-1 w0
+LargeBone_half02,10,0,Default,1,3,1,BoneFragments 1-1 w0
+lavabomb_rock1,1000,0,Default,,,,
+lavarock_ashlands1,1,0,Default,,,,
+LingonberryBush,30,0,Default,1,2,1,Wood 1-1 w0
+marker01,30,0,Default,3,6,1,Stone 1-1 w1
+marker02,30,0,Default,3,6,1,Stone 1-1 w1
+MemorialStone_Large,20,0,Default,1,1,1,Stone 1-1 w1
+MemorialStone_Medium,200,0,Default,1,1,1,Stone 1-1 w1
+MemorialStone_Small,200,0,Default,1,1,1,Stone 1-1 w1
+MineRock_Obsidian,30,2,Default,5,8,1,Obsidian 1-1 w1
+MineRock_Tin,30,0,Default,3,4,1,TinOre 1-1 w1
+morgenhole_pile,100,0,Default,3,4,1,RottenMeat 1-0 w1; BoneFragments 5-15 w1; Softtissue 1-2 w1; Upgrader5Armor 1-1 w0.05; Upgrader5Weapon 1-1 w0.03
+Morkhalla_Bedroll1,200,0,Default,1,3,1,LoxPelt 1-1 w1; WolfPelt 1-1 w1; MooseHide 1-1 w1; AskHide 1-1 w1
+Morkhalla_Bedroll2,200,0,Default,1,3,1,LoxPelt 1-1 w1; WolfPelt 1-1 w1; MooseHide 1-1 w1; AskHide 1-1 w1
+Morkhalla_firepit,200,0,Default,2,4,1,MemorialCoal 1-1 w1; Coal 1-1 w1
+Morkhalla_GateDoor,225,0,Default,,,,
+Morkhalla_GateDoor02,150,0,Default,,,,
+Morkhalla_GateDoor03,300,0,Default,,,,
+Morkhalla_rubble_trashpile,100,0,Default,2,3,1,Wood 1-1 w1
+Morkhalla_Rubble1,100,0,Default,1,5,1,Grausten 1-1 w1; AncientCoin 1-1 w1
+Morkhalla_Rubble1_fall,50,0,Default,,,,
+Morkhalla_Rubble2,50,0,Default,1,5,1,Grausten 1-1 w1; AncientCoin 1-1 w1
+Morkhalla_Rubble2_fall,50,0,Default,,,,
+Morkhalla_Rubble3,150,0,Default,1,5,1,Grausten 1-1 w1; AncientCoin 1-1 w1
+Morkhalla_Rubble4,150,0,Default,1,5,1,Grausten 1-1 w1; AncientCoin 1-1 w1
+Morkhalla_Rug_corner,200,0,Default,1,2,1,JuteRed 1-1 w1
+Morkhalla_Rug_end1,200,0,Default,1,2,1,JuteRed 1-1 w1
+Morkhalla_Rug_end2,200,0,Default,1,2,1,JuteRed 1-1 w1
+Morkhalla_Rug_middle,200,0,Default,1,2,1,JuteRed 1-1 w1
+Morkhalla_Rug_stair,200,0,Default,1,2,1,JuteRed 1-1 w1
+Morkhalla_StatuePieceArmL,200,0,Default,,,,
+Morkhalla_StatuePieceArmR,200,0,Default,,,,
+Morkhalla_StatuePieceFace,200,0,Default,,,,
+Morkhalla_StatuePieceFeet,200,0,Default,,,,
+Morkhalla_StatuePieceHorn,200,0,Default,,,,
+Morkhalla_StatuePieceHorn2,200,0,Default,,,,
+Morkhalla_StatuePieceLegs,200,0,Default,,,,
+Morkhalla_StatuePieceSword,200,0,Default,,,,
+Morkhalla_StatuePieceTorso,200,0,Default,,,,
+Morkhalla_WeaponStand,200,0,Default,2,3,1,Frostwood 1-3 w1; IronScrap 1-1 w0.2; MoldAtgeir 1-1 w0.1; MoldAxe 1-1 w0.1; MoldAxe2H 1-1 w0.1; MoldBow 1-1 w0.1; MoldCrossbow 1-1 w0.1; MoldFistweapon 1-1 w0.1; MoldKnife 1-1 w0.1; MoldMace 1-1 w0.1; MoldMace2H 1-1 w0.1; MoldShieldBuckler 1-1 w0.1; MoldShieldRound 1-1 w0.1; MoldShieldTower 1-1 w0.1; MoldSpear 1-1 w0.1; MoldSword 1-1 w0.1; MoldSword2H 1-1 w0.1; MoldStafffrostorbs 1-1 w0.1; MoldStaffOrbofAhri 1-1 w0.1; MoldStaffspiritcaller 1-1 w0.1; MoldStaffthunderblood 1-1 w0.1
+morkhalla_web_corner,1,0,Default,,,,
+morkhalla_web_horisontal,1,0,Default,,,,
+morkhalla_web_tunnel,1,0,Default,,,,
+Morkhalla_WoodBoards,100,0,Default,,,,
+MountainGraveStone01,30,0,Default,3,6,1,Stone 1-1 w1
+MountainKit_brazier,50,0,Default,1,2,1,Bronze 1-1 w0.5; Coal 1-2 w1; Coal 1-1 w1
+MountainKit_brazier_blue,50,0,Default,1,2,1,Bronze 1-1 w0.5; Coal 1-2 w1; Coal 1-1 w1
+mountainkit_chair,10,0,Default,1,1,1,FineWood 1-1 w1
+mountainkit_table,10,0,Default,1,1,1,FineWood 1-3 w1
+MountainKit_wood_gate,100,0,Default,1,2,1,Wood 1-1 w1; Wood 1-1 w0.5; Iron 1-1 w0.5
+mudpile,1,0,Default,,,,
+mudpile_beacon,1,0,Default,,,,
+mudpile2,1,0,Default,,,,
+Oak_Sapling,1,0,Tree,,,,
+OakStub,160,2,Tree,2,2,1,Wood 1-1 w1
+Pickable_Barley,1,0,Default,1,1,1,Barley 2-2 w1
+Pickable_Barley_Wild,1,0,Default,1,1,1,Barley 2-2 w1
+Pickable_Carrot,1,0,Default,,,,
+Pickable_Flax,1,0,Default,1,1,1,Flax 2-2 w1
+Pickable_Flax_Wild,1,0,Default,1,1,1,Flax 2-2 w1
+Pickable_Kale,1,0,Default,,,,
+Pickable_MountainCaveCrystal,10,0,Default,1,1,1,Crystal 2-5 w1
+Pickable_MountainCaveObsidian,10,0,Default,1,1,1,Obsidian 2-3 w1
+Pickable_Oat,1,0,Default,,,,
+Pickable_Onion,1,0,Default,,,,
+Pickable_Poteitr,1,0,Default,,,,
+Pickable_SeedCarrot,1,0,Default,,,,
+Pickable_SeedKale,1,0,Default,,,,
+Pickable_SeedOnion,1,0,Default,,,,
+Pickable_SeedTurnip,1,0,Default,,,,
+Pickable_SulfurRock,50,0,Default,1,2,1,SulfurStone 1-1 w0
+Pickable_Turnip,1,0,Default,,,,
+Pinetree_01_Stub,120,0,Tree,2,2,1,Wood 1-1 w1
+PineTree_Sapling,1,0,Tree,,,,
+Pinetree_Snow_Stub,120,0,Tree,2,2,1,Frostwood 1-1 w1
+prop_ashwood_bed,50,0,Default,1,1,1,Blackwood 1-5 w0
+prop_bed02,50,0,Default,1,1,1,FineWood 1-5 w0
+prop_bonfire,30,0,Default,1,1,1,Coal 1-5 w0
+prop_cauldron_ext1_spice,10,0,Default,1,1,1,FineWood 1-1 w0
+prop_cauldron_ext3_butchertable,30,0,Default,1,2,1,FineWood 1-5 w0; RoundLog 1-5 w0
+prop_cauldron_ext5_mortarandpestle,30,0,Default,1,1,1,BlackMarble 1-2 w0
+prop_cauldron_ext6_rollingpins,30,0,Default,1,1,1,Blackwood 1-2 w0
+prop_chest_warderobe,30,0,Default,1,1,1,Frostwood 1-5 w0
+prop_FeastAshlands,30,0,Default,1,2,1,Wood 1-2 w0; Blackwood 1-2 w0
+prop_FeastMeadows,30,0,Default,1,1,1,Wood 1-2 w0
+prop_forge_ext2,30,0,Default,1,1,1,Wood 1-5 w0
+prop_forge_ext5,30,0,Default,1,1,1,FineWood 1-5 w0
+prop_hearth,50,0,Default,1,1,1,Stone 1-5 w0
+prop_itemstand,10,0,Default,1,1,1,FineWood 1-1 w0
+prop_itemstand_TrophyDraugrElite,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyDraugrElite 1-1 w0.05
+prop_itemstand_TrophyGoblinBrute,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGoblinBrute 1-1 w0.01
+prop_itemstand_TrophyGoblinShaman,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGoblinShaman 1-1 w0.05
+prop_itemstand_TrophyGreydwarf,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGreydwarf 1-1 w0.1
+prop_itemstand_TrophyGreydwarfBrute,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGreydwarfBrute 1-1 w0.05
+prop_itemstand_TrophySeekerBrute,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophySeekerBrute 1-1 w0.05
+prop_piece_bench_runed,30,0,Default,1,1,1,Frostwood 1-5 w0
+prop_piece_brazierfloor01,30,0,Default,1,1,1,BronzeScrap 1-5 w0
+prop_piece_cauldron,30,0,Default,1,1,1,TinOre 1-5 w0
+prop_piece_chair03,30,0,Default,1,1,1,FineWood 1-2 w0
+prop_piece_cookingstation,30,0,Default,1,1,1,Wood 1-2 w0
+prop_piece_MeadCauldron,30,0,Default,1,1,1,BronzeScrap 1-5 w0
+prop_piece_workbench_ext1,30,0,Default,1,1,1,Wood 1-5 w0
+prop_piece_workbench_ext2,30,0,Default,1,1,1,Wood 1-5 w0
+prop_piece_workbench_ext3,30,0,Default,1,1,1,FineWood 1-5 w0
+prop_piece_workbench_ext4,30,0,Default,1,1,1,FineWood 1-5 w0
+prop_preptable,30,0,Default,1,1,1,FineWood 1-10 w0
+prop_Tankard,10,0,Default,1,1,1,FineWood 1-1 w0
+prop_wood_stack,30,0,Default,1,1,1,Wood 3-10 w0
+PropFeastDeepNorth,30,0,Default,1,1,1,Frostwood 1-2 w0
+RaspberryBush,30,0,Default,1,2,1,Wood 1-1 w0
+Rock_3,1,0,Default,,,,
+Rock_3_deepnorth,1,0,Default,,,,
+Rock_4,30,0,Default,3,6,1,Stone 1-1 w1
+Rock_4_deepnorth,30,0,Default,3,6,1,Stone 1-1 w1
+Rock_4_plains,30,0,Default,3,6,1,Stone 1-1 w1
+Rock_7,30,0,Default,3,6,1,Stone 1-1 w1
+Rock_7_deepnorth,200,0,Default,3,6,1,Stone 1-1 w1
+Rock_7_meadows,200,0,Default,3,6,1,Stone 1-1 w1
+Rock_destructible,10,0,Default,,,,
+rock_mistlands1,1,0,Default,,,,
+rock_mistlands2,1,0,Default,,,,
+rock1_mistlands,1,0,Default,,,,
+rock1_mountain,1,0,Default,,,,
+rock2_heath,1,0,Default,,,,
+rock2_mountain,1,0,Default,,,,
+rock3_ice,1,0,Default,,,,
+rock3_mountain,1,0,Default,,,,
+rock3_mountain_1,1,0,Default,,,,
+rock3_silver,1,2,Default,,,,
+rock4_coast,1,0,Default,,,,
+rock4_copper,1,0,Default,,,,
+rock4_forest,1,0,Default,,,,
+rock4_heath,1,0,Default,,,,
+RockDolmen_1,30,0,Default,2,4,1,Stone 1-1 w1
+RockDolmen_2,30,0,Default,2,4,1,Stone 1-1 w1
+RockDolmen_3,30,0,Default,2,4,1,Stone 1-1 w1
+RockFinger,1,0,Default,,,,
+RockFingerBroken,1,0,Default,,,,
+RockThumb,1,0,Default,,,,
+root07,100,0,Default,1,1,1,Wood 1-2 w1
+root08,100,0,Default,1,1,1,Wood 1-2 w1
+root11,100,0,Default,1,1,1,Wood 1-2 w1
+root12,100,0,Default,1,1,1,Wood 1-2 w1
+sapling_barley,1,0,Default,,,,
+sapling_carrot,1,0,Default,,,,
+sapling_flax,1,0,Default,,,,
+sapling_jotunpuffs,1,0,Default,,,,
+sapling_Kale,1,0,Default,,,,
+sapling_magecap,1,0,Default,,,,
+sapling_oat,1,0,Default,,,,
+sapling_onion,1,0,Default,,,,
+sapling_poteitr,1,0,Default,,,,
+sapling_seedcarrot,1,0,Default,,,,
+sapling_seedkale,1,0,Default,,,,
+sapling_seedonion,1,0,Default,,,,
+sapling_seedturnip,1,0,Default,,,,
+sapling_turnip,1,0,Default,,,,
+Seagal,1,0,Default,1,1,1,Feathers 3-3 w1
+SeekerEgg,1,0,Default,1,1,0.5,SeekerBrood 1-1 w1
+SeekerEgg_alwayshatch,1,0,Default,1,1,1,SeekerBrood 1-1 w1
+ShimmeringSand_rock,1,0,Default,,,,
+ShootStump,80,0,Tree,2,2,1,Wood 1-1 w1
+shrub_2,30,0,Default,1,2,1,Wood 1-1 w0
+shrub_2_heath,30,0,Default,1,2,1,Wood 1-1 w0
+silvervein,1,2,Default,,,,
+SnowFirTree_small,80,0,Tree,1,3,1,Frostwood 1-1 w1
+SnowRoller,150,0,Default,,,,
+Spawner_CharredCross,500,0,Default,,,,
+Spawner_CharredStone,400,0,Default,2,5,1,Grausten 1-1 w1; Charredskull 1-1 w0.5
+Spawner_CharredStone_Elite,400,0,Default,2,5,1,Grausten 1-1 w1; Charredskull 1-1 w0.5
+Spawner_CharredStone_event,400,0,Default,2,5,1,Grausten 1-1 w1; Charredskull 1-1 w0.5
+Spawner_DraugrPile,100,0,Default,1,1,1,
+Spawner_GreydwarfNest,100,0,Default,1,1,1,AncientSeed 1-1 w0
+Spawner_Hole,300,0,Default,1,3,1,Frostwood 1-3 w1; IronScrap 1-1 w0.2; SilverNecklace 1-1 w0.2; MoldAtgeir 1-1 w0.1; MoldAxe 1-1 w0.1; MoldAxe2H 1-1 w0.1; MoldBow 1-1 w0.1; MoldCrossbow 1-1 w0.1; MoldFistweapon 1-1 w0.1; MoldKnife 1-1 w0.1; MoldMace 1-1 w0.1; MoldMace2H 1-1 w0.1; MoldShieldBuckler 1-1 w0.1; MoldShieldRound 1-1 w0.1; MoldShieldTower 1-1 w0.1; MoldSpear 1-1 w0.1; MoldSword 1-1 w0.1; MoldSword2H 1-1 w0.1; MoldKeys 1-1 w0.2
+Spawner_Hole_double,300,0,Default,1,3,1,Frostwood 1-3 w1; IronScrap 1-1 w0.2; SilverNecklace 1-1 w0.2; MoldAtgeir 1-1 w0.1; MoldAxe 1-1 w0.1; MoldAxe2H 1-1 w0.1; MoldBow 1-1 w0.1; MoldCrossbow 1-1 w0.1; MoldFistweapon 1-1 w0.1; MoldKnife 1-1 w0.1; MoldMace 1-1 w0.1; MoldMace2H 1-1 w0.1; MoldShieldBuckler 1-1 w0.1; MoldShieldRound 1-1 w0.1; MoldShieldTower 1-1 w0.1; MoldSpear 1-1 w0.1; MoldSword 1-1 w0.1; MoldSword2H 1-1 w0.1; MoldKeys 1-1 w0.2
+stonewall_2,30,0,Default,2,4,1,Stone 1-1 w1
+stonewall_3,30,0,Default,2,4,1,Stone 1-1 w1
+stubbe,40,0,Tree,3,4,1,Wood 1-1 w1
+stubbe_deepnorth,100,0,Tree,3,4,1,Frostwood 1-1 w1
+stubbe_spawner,40,0,Default,3,4,1,Wood 1-1 w1
+StumpHole,200,0,Tree,4,6,1,Frostwood 1-1 w1
+StumpHut,1,0,Tree,,,,
+StumpLog,200,0,Tree,4,6,1,Frostwood 1-1 w1
+SwampTree1_Stub,100,0,Tree,2,2,1,Wood 1-1 w1
+tarlump1,1,0,Default,,,,
+trader_wagon_destructable,400,0,Default,3,5,1,FineWood 1-1 w0
+TrollFrost_Dead,1,6,Default,,,,
+UnstableLavaRock,50,0,Default,4,7,1,ProustitePowder 1-1 w1
+veg_skull_Ashlands,80,0,None,0,2,1,CharredBone 1-1 w1
+VineAsh_sapling,1,0,Default,,,,
+VineGreen_sapling,1,0,Default,,,,
+volture_strawpile,50,0,Default,,,,
+widestone,1,0,Default,,,,
+widestone_2,1,0,Default,,,,
+YggaShoot_small1,20,4,Tree,2,3,1,Wood 1-1 w1; YggdrasilWood 1-1 w0.2

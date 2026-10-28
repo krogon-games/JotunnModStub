@@ -65,11 +65,14 @@ namespace CraftingOverhaul.Biomes
             foreach (var c in go.GetComponentsInChildren<Destructible>(true)) VisitDestructible(c, ctx, depth);
             foreach (var c in go.GetComponentsInChildren<Container>(true)) VisitContainer(c, ctx, depth);
             foreach (var c in go.GetComponentsInChildren<CharacterDrop>(true)) VisitCharacterDrop(c, ctx, depth);
-            foreach (var c in go.GetComponentsInChildren<Character>(true)) VisitCharacter(c, ctx);
+            foreach (var c in go.GetComponentsInChildren<Character>(true)) VisitCharacter(c, ctx, depth);
             foreach (var c in go.GetComponentsInChildren<CreatureSpawner>(true)) Visit(c.m_creaturePrefab, ctx.With("CreatureSpawner"), depth + 1);
             foreach (var c in go.GetComponentsInChildren<SpawnArea>(true)) VisitSpawnArea(c, ctx, depth);
             foreach (var c in go.GetComponentsInChildren<OfferingBowl>(true)) VisitOfferingBowl(c, ctx, depth);
             foreach (var c in go.GetComponentsInChildren<Trader>(true)) VisitTrader(c, ctx);
+            foreach (var c in go.GetComponentsInChildren<Procreation>(true)) Visit(c.m_offspring, ctx.With("Offspring"), depth + 1);
+            foreach (var c in go.GetComponentsInChildren<Growup>(true)) VisitGrowup(c, ctx, depth);
+            foreach (var c in go.GetComponentsInChildren<WispSpawner>(true)) Visit(c.m_wispPrefab, ctx.With("WispSpawner"), depth + 1);
         }
 
         private void VisitPickable(Pickable pickable, Context ctx)
@@ -154,8 +157,25 @@ namespace CraftingOverhaul.Biomes
         }
 
         /// <summary>Killing a boss sets its global key; record which biome and summoning items that takes.</summary>
-        private void VisitCharacter(Character character, Context ctx)
+        private void VisitCharacter(Character character, Context ctx, int depth)
         {
+            // Things spawned on death, e.g. a boss's next phase.
+            if (character.m_deathEffects?.m_effectPrefabs != null)
+            {
+                foreach (var effect in character.m_deathEffects.m_effectPrefabs)
+                {
+                    if (effect != null && effect.m_enabled && effect.m_prefab)
+                    {
+                        Visit(effect.m_prefab, ctx.With("On death"), depth + 1);
+                    }
+                }
+            }
+
+            if (!character.m_boss && character is Humanoid humanoid)
+            {
+                VisitCreatureAttacks(humanoid, ctx);
+            }
+
             if (string.IsNullOrEmpty(character.m_defeatSetGlobalKey))
             {
                 return;
@@ -164,6 +184,55 @@ namespace CraftingOverhaul.Biomes
             source.Target = SourceTarget.GlobalKey;
             source.Name = character.m_defeatSetGlobalKey;
             Found.Add(source);
+        }
+
+        /// <summary>
+        ///     A creature's attacks are items with a tool tier. Some resources can only be broken by them
+        ///     (no player pickaxe reaches the tier), so they count as tools available where the creature lives.
+        ///     Bosses are skipped: their attacks are not a practical way to harvest anything.
+        /// </summary>
+        private void VisitCreatureAttacks(Humanoid humanoid, Context ctx)
+        {
+            var next = ctx.With("Creature attack " + humanoid.name);
+            YieldAttacks(humanoid.m_defaultItems, next);
+            YieldAttacks(humanoid.m_randomWeapon, next);
+            if (humanoid.m_randomSets != null)
+            {
+                foreach (var set in humanoid.m_randomSets)
+                {
+                    YieldAttacks(set?.m_items, next);
+                }
+            }
+        }
+
+        private void YieldAttacks(GameObject[] items, Context ctx)
+        {
+            if (items == null)
+            {
+                return;
+            }
+            foreach (var item in items)
+            {
+                var drop = item ? item.GetComponent<ItemDrop>() : null;
+                var damages = drop ? drop.m_itemData.m_shared.m_damages : default(HitData.DamageTypes);
+                if (drop && drop.m_itemData.m_shared.m_toolTier > 0 && (damages.m_pickaxe > 0f || damages.m_chop > 0f))
+                {
+                    Yield(item, ctx);
+                }
+            }
+        }
+
+        private void VisitGrowup(Growup growup, Context ctx, int depth)
+        {
+            var next = ctx.With("Grows up");
+            Visit(growup.m_grownPrefab, next, depth + 1);
+            if (growup.m_altGrownPrefabs != null)
+            {
+                foreach (var alt in growup.m_altGrownPrefabs)
+                {
+                    Visit(alt?.m_prefab, next, depth + 1);
+                }
+            }
         }
 
         private void VisitSpawnArea(SpawnArea area, Context ctx, int depth)
@@ -197,6 +266,23 @@ namespace CraftingOverhaul.Biomes
         /// <summary>Trader stock is available where the trader is, once its required global key is set.</summary>
         private void VisitTrader(Trader trader, Context ctx)
         {
+            // Quest hand-ins: giving the trader an item sets a global key (e.g. Hildir's chests).
+            if (trader.m_useItems != null)
+            {
+                foreach (var use in trader.m_useItems)
+                {
+                    if (use == null || !use.m_prefab || string.IsNullOrEmpty(use.m_setsGlobalKey))
+                    {
+                        continue;
+                    }
+                    var source = MakeSource(ctx.With("Hand in to " + trader.name));
+                    source.Target = SourceTarget.GlobalKey;
+                    source.Name = use.m_setsGlobalKey;
+                    source.RequiredItems.Add(use.m_prefab.gameObject.name);
+                    Found.Add(source);
+                }
+            }
+
             if (trader.m_items == null)
             {
                 return;

@@ -27,6 +27,7 @@ namespace CraftingOverhaul.Biomes
             new LocationCollector(),
             new ConversionCollector(),
             new ProducerPieceCollector(),
+            new HatchCollector(),
             new RecipeCollector()
         };
 

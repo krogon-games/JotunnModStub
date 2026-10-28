@@ -1,0 +1,9 @@
+{
+  "name": "Corruption",
+  "description": "Diablo/Path of Exile-style endgame for Valheim: corruption shards, maps and rips into unexplored land, corrupted bosses and loot.",
+  "version_number": "0.1.0",
+  "website_url": "https://github.com/krogon-games/JotunnModStub",
+  "dependencies": [
+    "ValheimModding-Jotunn-2.30.2"
+  ]
+}

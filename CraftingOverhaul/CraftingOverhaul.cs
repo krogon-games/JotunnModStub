@@ -18,10 +18,12 @@ namespace CraftingOverhaul
         public const string PluginVersion = "0.1.0";
 
         private Harmony _harmony;
+        private KrogonGames.Shared.ConfigWatcher _configWatcher;
 
         private void Awake()
         {
             ModConfig.Bind(Config);
+            _configWatcher = new KrogonGames.Shared.ConfigWatcher(Config, Jotunn.Logger.LogInfo);
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
@@ -32,8 +34,14 @@ namespace CraftingOverhaul
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
         }
 
+        private void Update()
+        {
+            _configWatcher?.Tick();
+        }
+
         private void OnDestroy()
         {
+            _configWatcher?.Dispose();
             _harmony?.UnpatchSelf();
         }
 
