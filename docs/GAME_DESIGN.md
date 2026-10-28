@@ -28,7 +28,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 1: Riftforge station | Corruption | Verified (no recipes yet) | `FEATURES.md` |
 | Phase 2: talismans | Corruption | Built, untested | `FEATURES.md` |
 | Phase 3: boss essences | Corruption | Built, untested (8 bosses; Hive left out) | `FEATURES.md`, `Corruption/Data/essences.csv` |
-| Phase 4: maps and rips | Corruption | Proposed | design doc + review 1, 2, 6 |
+| Phase 4: maps and rips | Corruption | Next: step A (maps, rip travel, heart, way home), then step B (waves, maddened, loot) | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
 | Phase 6: corrupted bosses | Corruption | Proposed | design doc + review 4 |
 | Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
@@ -71,10 +71,10 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 
 | Design doc says | Reality / review | Status |
 |---|---|---|
-| Spawning, teleporting and status changes are server-authoritative | The owning player's game simulates creatures; the server only relays (review 2). Proposal: server decides, owner spawns | Needs the user's decision before phase 4 |
-| Rip waves through the vanilla raid system | One raid at a time world-wide (review 1). Proposal: own wave spawner | Needs decision before phase 4 |
+| Spawning, teleporting and status changes are server-authoritative | The owning player's game simulates creatures; the server only relays (review 2) | Decided 2026-10-28: server decides, owner spawns |
+| Rip waves through the vanilla raid system | One raid at a time world-wide (review 1) | Decided 2026-10-28: own wave spawner |
 | Validate the landing spot after teleporting | Biome, height and explored state can be checked before (review 6) | Proposal |
-| Corrupted look is a purple tint | Shard and Riftforge use red `#B3170D` at the user's request | Decide whether corrupted bosses/gear follow red |
+| Corrupted look is a purple tint | Shard and Riftforge use red `#B3170D` at the user's request | Decided 2026-10-28: everything corrupted is red |
 | Talismans in "one new slot"; stave icon with creature tint | Built on the vanilla Trinket slot (review 7) with the trophy as icon | Implemented; dedicated slot can come with phase 9 |
 | Corrupted Queen via offering | The Queen has no altar (game knowledge, unverified) | Needs a different trigger |
 

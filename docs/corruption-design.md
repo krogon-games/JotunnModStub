@@ -104,7 +104,7 @@ All three must have been picked up before the recipe appears, which is vanilla b
 ### Map item
 
 - Stackable? No. Each map is a single item so affixes can live on it.
-- Consumed on use. Stored in the Maps tab, not the main bag.
+- Consumed on use. Kept in the normal inventory for now (1 per slot); the Maps tab comes with the inventory work in phase 9 (2026-10-28).
 - Tooltip shows target biome, tier, and any rolled affixes.
 - Teleportable through portals (it's the key to the content, not a resource).
 
@@ -130,7 +130,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 
 ### The encounter
 
-- Waves spawn through the vanilla raid system, reskinned: a custom raid event with the map's biome creatures and an on-screen message.
+- Waves come from the mod's own wave spawner, driven by the rip's heart, with the map's biome creatures and a raid-style on-screen message. *Changed 2026-10-28: was the vanilla raid system, which runs one raid at a time for the whole world.*
 - Spawns are **maddened**: a status effect that boosts damage and speed, disables fleeing, and ignores faction rules so creatures fight each other too.
 - Star level is pushed by map tier (see [Map affixes](#map-affixes-and-tiers)).
 - A rip chest or drop at the end holds the guaranteed loot.
@@ -191,7 +191,7 @@ A corrupted boss is the vanilla boss with its numbers turned up and its summons 
 | Hits harder | Damage multiplier on all attacks | 1.5x |
 | Takes less damage | Armour or damage-taken multiplier | 0.7x damage taken |
 | Summons | Periodic spawn of the boss's own biome creatures, maddened | Every 30 s, 2–3 creatures |
-| Look | Purple tint via material colour, plus Bonemass poison cloud or Ashlands ember particles | — |
+| Look | Red tint via material colour (the shard's red; was purple, changed 2026-10-28), plus Bonemass poison cloud or Ashlands ember particles | — |
 | Health | Unchanged in v1; damage reduction already lengthens the fight | 1.0x |
 
 ### Summons by boss (all already in the game)
@@ -440,7 +440,7 @@ Build in the order below. Each phase is playable on its own and teaches a system
 
 - Framework: BepInEx. Strongly consider Jötunn for items, recipes, pieces, status effects and prefab cloning; it removes most boilerplate. Harmony for behaviour patches.
 - Register custom items and pieces inside the vanilla-prefabs-available hook, or they won't exist when recipes resolve.
-- Clone vanilla prefabs (an existing trophy, a portal, a boss) and change stats and materials rather than importing new assets. A purple material tint plus a reused particle system is the "corrupted" look.
+- Clone vanilla prefabs (an existing trophy, a portal, a boss) and change stats and materials rather than importing new assets. A red material tint (the shard's colour; decided 2026-10-28) plus a reused particle system is the "corrupted" look.
 - Explored-area data lives in the player's minimap state. Reading it is per client, so for a group, send the activator's chosen landing position to the server and let the server spawn the rip.
 - Landing-spot validation has to wait for the zone to load. Teleport, then check ground height and biome, then re-roll if invalid.
 - Rip waves: define a custom raid event with the biome's creature list; reuse its on-screen message. The maddened effect is a status effect applied on spawn that patches damage, speed, flee and faction checks.

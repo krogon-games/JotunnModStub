@@ -65,8 +65,6 @@ Corruption phases 4–10 (maps and rips, map affixes, corrupted bosses, loot/aff
 - **Gathering tool affixes:** confirm the prefix/suffix split, roll weight classes, one combined pool for one-handed axes (gathering + weapon families), and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
 - **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation still open.
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
-- Before phase 4: accept "server decides, owner spawns" and an own wave spawner instead of the raid system.
-- Corrupted bosses/gear: red like the shard, or the design doc's purple.
 - Kall Fimbulbringer's essence look (made without a concept render; status `proposed` in `essences.csv`).
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
 - Play-test results for everything under "Built, not verified".
@@ -77,7 +75,7 @@ Corruption phases 4–10 (maps and rips, map affixes, corrupted bosses, loot/aff
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
 3. Play-test boss essences (above).
 4. Run the multiplayer checklist when a second player is available.
-5. Settle the open decisions above before phase 4 (maps and rips).
+5. **Phase 4 step A** (decided 2026-10-28): map items and recipes, opening a rip, landing spot, heart, way home. Then step B: waves, maddened creatures, end loot.
 
 ## Before release
 
