@@ -41,10 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- The shard's own model and textures (made by tools/make_shard.py), embedded in the DLL. -->
-    <EmbeddedResource Include="Assets\shard.obj" LogicalName="Corruption.Assets.shard.obj" />
-    <EmbeddedResource Include="Assets\shard_albedo.rgba" LogicalName="Corruption.Assets.shard_albedo.rgba" />
-    <EmbeddedResource Include="Assets\shard_emission.rgba" LogicalName="Corruption.Assets.shard_emission.rgba" />
+    <!-- Our own gem models and textures (made by tools/make_shard.py and tools/make_essences.py), embedded in the DLL. -->
+    <EmbeddedResource Include="Assets\*.obj;Assets\*.rgba" LogicalName="Corruption.Assets.%(Filename)%(Extension)" />
+    <!-- The boss essence table. Compiled in, so rebuild after editing it. -->
+    <EmbeddedResource Include="Data\essences.csv" LogicalName="Corruption.Data.essences.csv" />
   </ItemGroup>
 
   <ItemGroup>

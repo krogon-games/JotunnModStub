@@ -7,29 +7,48 @@ using UnityEngine;
 namespace Corruption.Content
 {
     /// <summary>
-    ///     The shard's own look: a crystal model and textures made by tools/make_shard.py and embedded in the DLL.
-    ///     Replaces every visual of the item the shard was cloned from (which only provides the item, physics and
-    ///     networking parts); the base item's colliders stay so it still lies on the ground the same way.
+    ///     Our own gem looks (corruption shard, boss essences): models and textures made by the scripts in tools/ and
+    ///     embedded in the DLL. Replaces every visual of the item the gem was cloned from (which only provides the
+    ///     item, physics and networking parts); the base item's colliders stay so it still lies on the ground the same way.
     /// </summary>
-    internal static class ShardModel
+    internal static class GemModel
     {
         private const string ResourcePrefix = "Corruption.Assets.";
 
-        /// <summary>Swaps the prefab's visuals for the custom shard. Returns false (and changes nothing) if anything is missing.</summary>
-        public static bool Apply(GameObject prefab, Color glowColor)
+        /// <summary>Embedded asset names for one gem.</summary>
+        public sealed class Look
+        {
+            public string Name;
+            public string Mesh;
+            public string Albedo;
+            public string Emission;
+
+            /// <summary>Optional extra part in a plain colour (the Elder's root, Yagluth's ring).</summary>
+            public string AddonMesh;
+            public Color AddonColor;
+        }
+
+        public static readonly Look Shard = new Look
+        {
+            Name = "CorruptionShard", Mesh = "shard.obj", Albedo = "shard_albedo.rgba", Emission = "shard_emission.rgba"
+        };
+
+        /// <summary>Swaps the prefab's visuals for the gem. Returns false (and changes nothing) if anything is missing.</summary>
+        public static bool Apply(GameObject prefab, Look look, Color glowColor)
         {
             var template = FindTemplateMaterial(prefab);
-            var mesh = LoadMesh();
-            var albedo = LoadTexture("shard_albedo.rgba");
-            var emission = LoadTexture("shard_emission.rgba");
-            if (!template || !mesh || !albedo || !emission)
+            var mesh = LoadMesh(look.Mesh);
+            var albedo = LoadTexture(look.Albedo);
+            var emission = LoadTexture(look.Emission);
+            Mesh addonMesh = string.IsNullOrEmpty(look.AddonMesh) ? null : LoadMesh(look.AddonMesh);
+            if (!template || !mesh || !albedo || !emission || (!string.IsNullOrEmpty(look.AddonMesh) && !addonMesh))
             {
-                Jotunn.Logger.LogWarning("Custom shard model unavailable (missing asset or material); keeping the base item's look.");
+                Jotunn.Logger.LogWarning($"Custom model for {look.Name} unavailable (missing asset or material); keeping the base item's look.");
                 return false;
             }
 
             // The game's own shader (from the base item's material), with our textures, so it lights like other items.
-            var material = new Material(template) { name = "CorruptionShard" };
+            var material = new Material(template) { name = look.Name };
             SetTexture(material, "_MainTex", albedo);
             SetTexture(material, "_BaseMap", albedo);
             SetColor(material, "_Color", Color.white);
@@ -38,15 +57,64 @@ namespace Corruption.Content
             material.EnableKeyword("_EMISSION");
             material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
 
-            RemoveVisuals(prefab);
+            Material addonMaterial = null;
+            if (addonMesh)
+            {
+                addonMaterial = new Material(template) { name = look.Name + "_addon" };
+                var plain = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+                var pixels = new Color32[16];
+                for (int i = 0; i < pixels.Length; i++)
+                {
+                    pixels[i] = look.AddonColor;
+                }
+                plain.SetPixels32(pixels);
+                plain.Apply();
+                SetTexture(addonMaterial, "_MainTex", plain);
+                SetTexture(addonMaterial, "_BaseMap", plain);
+                SetColor(addonMaterial, "_Color", Color.white);
+                SetColor(addonMaterial, "_EmissionColor", Color.black);
+                addonMaterial.DisableKeyword("_EMISSION");
+            }
 
-            var model = new GameObject("CorruptionShardModel");
-            model.transform.SetParent(prefab.transform, false);
-            model.AddComponent<MeshFilter>().sharedMesh = mesh;
-            var renderer = model.AddComponent<MeshRenderer>();
+            RemoveVisuals(prefab);
+            AddPart(prefab, look.Name + "Model", mesh, material);
+            if (addonMesh)
+            {
+                AddPart(prefab, look.Name + "Addon", addonMesh, addonMaterial);
+            }
+            return true;
+        }
+
+        /// <summary>
+        ///     A small light on the dropped item, so it lights the ground around it and is easy to spot. Only items
+        ///     lying in the world have it (items in inventories have no object). Add after rendering the icon.
+        /// </summary>
+        public static void AddGlow(GameObject prefab, Color color)
+        {
+            float intensity = CorruptionConfig.ShardGlowIntensity.Value;
+            if (intensity <= 0f)
+            {
+                return;
+            }
+            var glow = new GameObject("CorruptionGlow");
+            glow.transform.SetParent(prefab.transform, false);
+            glow.transform.localPosition = new Vector3(0f, 0.25f, 0f);
+            var light = glow.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.color = color;
+            light.intensity = intensity;
+            light.range = CorruptionConfig.ShardGlowRange.Value;
+            light.shadows = LightShadows.None;
+        }
+
+        private static void AddPart(GameObject prefab, string name, Mesh mesh, Material material)
+        {
+            var part = new GameObject(name);
+            part.transform.SetParent(prefab.transform, false);
+            part.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var renderer = part.AddComponent<MeshRenderer>();
             renderer.sharedMaterial = material;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-            return true;
         }
 
         private static Material FindTemplateMaterial(GameObject prefab)
@@ -93,9 +161,9 @@ namespace Corruption.Content
             }
         }
 
-        private static Mesh LoadMesh()
+        private static Mesh LoadMesh(string file)
         {
-            string text = ReadResourceText("shard.obj");
+            string text = ReadResourceText(file);
             if (text == null)
             {
                 return null;
@@ -113,7 +181,7 @@ namespace Corruption.Content
                 normals[i] = new Vector3(obj.Normals[i * 3], obj.Normals[i * 3 + 1], obj.Normals[i * 3 + 2]);
                 uvs[i] = new Vector2(obj.Uvs[i * 2], obj.Uvs[i * 2 + 1]);
             }
-            var mesh = new Mesh { name = "CorruptionShard" };
+            var mesh = new Mesh { name = file };
             mesh.vertices = vertices;
             mesh.normals = normals;
             mesh.uv = uvs;
@@ -124,7 +192,7 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     Raw RGBA32 pixels written by tools/make_shard.py (8-byte width/height header, rows bottom to top), so no
+        ///     Raw RGBA32 pixels written by tools/make_shard.py and make_essences.py (8-byte width/height header, rows bottom to top), so no
         ///     image decoder is needed.
         /// </summary>
         private static Texture2D LoadTexture(string file)
@@ -148,7 +216,7 @@ namespace Corruption.Content
             {
                 pixels[i] = new Color32(bytes[b], bytes[b + 1], bytes[b + 2], bytes[b + 3]);
             }
-            var texture = new Texture2D(width, height, TextureFormat.RGBA32, true) { name = "CorruptionShard_" + file };
+            var texture = new Texture2D(width, height, TextureFormat.RGBA32, true) { name = "Corruption_" + file };
             texture.SetPixels32(pixels);
             texture.Apply(true, false);
             texture.wrapMode = TextureWrapMode.Repeat;

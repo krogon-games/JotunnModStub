@@ -1,13 +1,13 @@
 # Current state
 
-**Last updated:** 2026-10-27 · **Branch:** `claude/valheim-modding-exploration-izv3l8` · **Game:** Valheim 1.0.20
+**Last updated:** 2026-10-28 · **Branch:** `claude/valheim-modding-exploration-izv3l8` · **Game:** Valheim 1.0.20
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
-## Build health (checked 2026-10-27)
+## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **77 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap and drop tables, shard model).
+- `dotnet test CraftingOverhaul.Tests`: **81 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop and essence tables, gem model parser).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -36,11 +36,12 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
+| Boss essences (phase 3, 2026-10-28) | `spawn CorruptionEssence_eikthyr` (and the other six): look, icon, glow, add-on parts on the Elder and Yagluth essences; each boss drops 1 per kill |
 | Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
 
 ## Not built (proposed)
 
-Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Corruption phases 4–10 (maps and rips, map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -66,6 +67,7 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
 - Before phase 4: accept "server decides, owner spawns" and an own wave spawner instead of the raid system.
 - Corrupted bosses/gear: red like the shard, or the design doc's purple.
+- Essences for Kall Fimbulbringer (`FrozenKing`, Deep North) and the Hive (`Hive`, Mistlands), and whether Fader's essence should still map into the Deep North now that the Deep North has its own boss.
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
 - Play-test results for everything under "Built, not verified".
 
@@ -73,7 +75,7 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 1. Play-test the rest of talismans (see the table above), with EquipmentAndQuickSlots, PlantEasily and AdventureBackpacks installed (the group's setup); run the compatibility checks in `docs/mod-compatibility.md`. Record results in `FEATURES.md` and here.
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
-3. **Phase 3: boss essences.** One new drop per boss (1 on a normal kill), cloned item + red tint, `CharacterDrop` hook like `ShardDrops`, boss list from game data (creatures with a defeat key), pure rule + tests.
+3. Play-test boss essences (above); settle the FrozenKing/Hive question.
 4. Run the multiplayer checklist when a second player is available.
 5. Settle the open decisions above before phase 4 (maps and rips).
 

@@ -12,6 +12,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 - **Riftforge.** A new crafting station, built with the hammer next to a workbench from fine wood, a corruption shard, Eikthyr's trophy, bronze nails and Surtling cores. It appears in the build menu once you've picked up all of those. It has no recipes yet; maps come in a later phase.
 
 - **Talismans** ("<creature> charm"). Craft at the workbench from 3 of a creature's trophies, 1 chain and 10 leather scraps. Placed in a Talisman slot, a charm stops that creature family (e.g. greydwarfs, brutes and shamans) from attacking you, unless you hit them first. Bosses are never repelled. You get 2 talisman slots on top of the vanilla trinket slot. The slots appear in the equipment panel of [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/), which talismans need.
+- **Boss essences.** Every boss drops 1 essence per kill, each a glowing gem in its boss's colours. They will be used at the Riftforge to craft maps into the next biome.
 
 ## Configuration
 
@@ -28,6 +29,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 | Talismans / Slots | 2 | How many talisman slots work (1–3) |
 | Talismans / ProvokeSeconds | 30 | How long a creature you hit fights back |
 | Talismans / ExcludedCreatures | \*Hildir\*, GoblinBruteBros\*, Charred_Melee_Dyrnwyn | Creatures never repelled |
+| Essences / Enabled | true | Bosses drop their essence |
 
 Look settings (per player, not synced, restart to apply):
 
@@ -43,4 +45,4 @@ Look settings (per player, not synced, restart to apply):
 | Look / RiftforgeTintStrength | 0.6 | 0 = Galdr table colours, 1 = fully the tint colour |
 
 ## Changelog
-- 0.1.0 (unreleased): corruption shards, the Riftforge and talismans.
+- 0.1.0 (unreleased): corruption shards, the Riftforge, talismans and boss essences.

@@ -8,8 +8,9 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`affix_caps.csv`](affix_caps.csv) | The most a stat can gain from all affixes together (movement speed, attack speed, pickup radius, resistances, life steal) |
 | [`drop_chances.csv`](drop_chances.csv) | Base chance of each rarity dropping |
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
+| [`essences.csv`](essences.csv) | Boss essences: which boss drops which essence, how many per kill, its name, description and colours |
 
-None of them is loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
+`essences.csv` is compiled into the mod: **rebuild after editing it**. The others aren't loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
 
 ## How to edit
 
@@ -50,3 +51,16 @@ Every table has a `status` column: `approved` (the user agreed), `proposed` (awa
 Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`scar`, magic and rare ×1.5, unique blank) has a Magic chance of 1/50 × 1.5 × 1.5 = 1 in about 22, and a unique chance of 1/2500 × 1.5 = 1 in about 1,667.
 
 **Roll rules (decided 2026-10-27):** each player near a kill rolls separately (personal loot). Magic and Rare roll separately, but if both succeed only the Rare drops. Uniques roll on their own, on top. Code: `DropTable.Roll` in `Corruption/Rules/DropTable.cs`.
+
+## essences.csv
+
+| Column | Meaning |
+|---|---|
+| `boss` | The boss's prefab name, e.g. `Eikthyr`, `gd_king` (the Elder), `Dragon` (Moder), `GoblinKing` (Yagluth), `SeekerQueen`, `Fader`. The tests check it's a boss in the game data |
+| `look` | Short id, lowercase. Names the item (`CorruptionEssence_<look>`) and its texture files; a **new** look needs textures from `tools/make_essences.py` |
+| `name`, `description` | In-game text |
+| `glow` | Colour of the gem's glow and ground light, like `#8CD9FF` |
+| `addon`, `addon_color` | Optional extra part (`essence_root`, `essence_ring`) and its colour; leave both blank for none |
+| `per_kill` | Essences dropped per boss kill (every kill), 1 or more |
+| `maps_into` | Biome the essence will craft maps into (used from phase 4) |
+| `status`, `notes` | As above |

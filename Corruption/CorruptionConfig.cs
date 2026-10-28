@@ -8,6 +8,7 @@ namespace Corruption
         private const string ShardSection = "1 - Corruption Shards";
         private const string LookSection = "2 - Look";
         private const string TalismanSection = "3 - Talismans";
+        private const string EssenceSection = "4 - Essences";
 
         public static ConfigEntry<float> OneStarShardChance;
         public static ConfigEntry<float> TwoStarShardChance;
@@ -16,6 +17,7 @@ namespace Corruption
         public static ConfigEntry<bool> BossShardsFirstKillOnly;
 
         public static ConfigEntry<bool> TalismansEnabled;
+        public static ConfigEntry<bool> EssencesEnabled;
         public static ConfigEntry<int> TalismanSlots;
         public static ConfigEntry<float> ProvokeSeconds;
         public static ConfigEntry<string> TalismanExcludedCreatures;
@@ -53,6 +55,10 @@ namespace Corruption
             TalismanExcludedCreatures = config.Bind(TalismanSection, "ExcludedCreatures", CorruptionDefaults.ExcludedCreatures,
                 AdminOnly("Creature prefab names talismans never repel (quest and named minibosses). '*' matches any text. Restart to apply."));
 
+            EssencesEnabled = config.Bind(EssenceSection, "Enabled", true,
+                AdminOnly("Bosses drop their essence on every kill (how many per kill: Corruption/Data/essences.csv). " +
+                          "Off: no essence drops; essences already found stay."));
+
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",
                 "Vanilla item whose model the shard uses, e.g. GemstoneRed (Bloodstone), Crystal, Ruby. Restart to apply.");
@@ -64,10 +70,10 @@ namespace Corruption
             ShardCustomModel = config.Bind(LookSection, "ShardCustomModel", true,
                 "Use the shard's own crystal model and texture. Off: the ShardBaseItem's model with the tint below. Restart to apply.");
             ShardGlowIntensity = config.Bind(LookSection, "ShardGlowIntensity", 2f,
-                new ConfigDescription("Brightness of the red glow a dropped shard casts on the ground, so it's easy to spot. 0 = no glow. Restart to apply.",
+                new ConfigDescription("Brightness of the glow a dropped shard or essence casts on the ground, so it's easy to spot. 0 = no glow. Restart to apply.",
                     new AcceptableValueRange<float>(0f, 8f)));
             ShardGlowRange = config.Bind(LookSection, "ShardGlowRange", 2.5f,
-                new ConfigDescription("How far the shard's glow reaches, in metres. Restart to apply.",
+                new ConfigDescription("How far the shard and essence glow reaches, in metres. Restart to apply.",
                     new AcceptableValueRange<float>(0.5f, 10f)));
             RiftforgeColor = config.Bind(LookSection, "RiftforgeColor", "#B3170D",
                 "Riftforge colour as an HTML colour. Restart to apply.");

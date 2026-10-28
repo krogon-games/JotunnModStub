@@ -43,9 +43,9 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 ### Custom assets
 
-- `tools/make_shard.py` (Python, numpy + Pillow) generates the corruption shard's model (`Corruption/Assets/shard.obj`), textures (PNG for viewing, raw `.rgba` for the game) and `docs/images/shard_preview.png`, from a fixed seed. Rerun it after changing it; commit the outputs.
-- The mod embeds the `.obj` and `.rgba` files (`EmbeddedResource` in `Corruption.csproj`). `Rules/ObjMesh.cs` (tested) reads the model; `Content/ShardModel.cs` builds the Unity mesh and material on the base item's shader and removes the base item's visuals (colliders stay).
-- Textures are raw pixels because `Texture2D.LoadImage` (ImageConversion module) references netstandard 2.1, which the net462 build can't compile against.
+- `tools/make_shard.py` and `tools/make_essences.py` (Python, numpy + Pillow) generate the gem models (`Corruption/Assets/*.obj`), textures (PNG for viewing, raw `.rgba` for the game) and previews in `docs/images/`, from fixed seeds. Rerun after changing them; commit the outputs.
+- `Corruption.csproj` embeds every `Assets/*.obj` and `Assets/*.rgba` (wildcard) plus `Data/essences.csv`. `Rules/ObjMesh.cs` (tested) reads the models; `Content/GemModel.cs` builds the Unity mesh and material on the base item's shader, adds optional plain-colour add-on parts and the ground glow, and removes the base item's visuals (colliders stay). A failed look always falls back to a tint, so the item still registers.
+- Textures are raw pixels because `Texture2D.LoadImage` (ImageConversion module) references netstandard 2.1, which the net462 build can't compile against. They make up most of the DLL's size (about 4 MB).
 
 ## Code patterns (follow these)
 
@@ -53,7 +53,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 2. **Never break vanilla.** Code that runs inside game methods goes through `Safe.Run` / `Safe.Report`: log once per action, fall back to vanilla behaviour.
 3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.20/*.csv` for real game data.
 4. **Data-driven first.** Derive lists from game data (biomes, talisman families); config overrides only for real exceptions (`BiomeMaterialOverrides`, `ExcludedCreatures`).
-5. **Clone, don't import** (exception: the shard's own model, below). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models or animations in v1.
+5. **Clone, don't import** (exceptions: the shard and essence models, above). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models or animations in v1.
 6. **Config scope.** Gameplay numbers admin-only (server-synced); visual settings per player.
 7. **Robust patch arguments.** Use `__0`/`__1` positional arguments where parameter names may change.
 8. **No hard-coded positional limits without a guard** (e.g. `Riftforge` refuses more than 5 ingredients and logs an error).

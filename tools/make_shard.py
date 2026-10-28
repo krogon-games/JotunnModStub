@@ -154,9 +154,14 @@ def make_textures(size=256):
 # ---------------------------------------------------------------- preview
 
 def render(tris, albedo, emission, yaw, size=360, background=(34, 36, 40)):
-    """Tiny software renderer: flat shading, textured facets, glow added on top. For previews only."""
-    alb = np.asarray(albedo, dtype=float) / 255.0
-    emi = np.asarray(emission, dtype=float) / 255.0
+    """Preview of one textured model."""
+    return render_parts([(tris, albedo, emission, (0.55, 0.05, 0.05), facet_uv)], yaw, size, background)
+
+
+def render_parts(parts, yaw, size=360, background=(34, 36, 40), height=None, zoom=3.6, shine=0.9):
+    """Tiny software renderer: flat shading, textured facets, glow added on top. For previews only.
+    parts: (triangles, albedo image, emission image, glow colour, uv function) sharing one depth buffer."""
+    height = HEIGHT if height is None else height
     img = np.ones((size, size, 3)) * np.array(background) / 255.0
     zbuf = np.full((size, size), np.inf)
     light = np.array([-0.45, 0.55, -0.7])   # view space: from the upper left, towards the camera
@@ -168,10 +173,18 @@ def render(tris, albedo, emission, yaw, size=360, background=(34, 36, 40)):
     def view(p):
         x, y, z = p
         x, z = x * cy - z * sy, x * sy + z * cy                # turn around the vertical axis
-        y, z = (y - HEIGHT / 2) * ct - z * st, (y - HEIGHT / 2) * st + z * ct  # look slightly down
+        y, z = (y - height / 2) * ct - z * st, (y - height / 2) * st + z * ct  # look slightly down
         return np.array([x, y, z])
 
-    scale = size * 3.6
+    scale = size * zoom
+    for tris, albedo, emission, glow_colour, uv_fn in parts:
+        alb = np.asarray(albedo.convert("RGB"), dtype=float) / 255.0
+        emi = np.asarray(emission.convert("L"), dtype=float) / 255.0
+        draw_part(tris, alb, emi, np.array(glow_colour), uv_fn, view, light, scale, size, img, zbuf, shine)
+    return Image.fromarray((img * 255).astype(np.uint8))
+
+
+def draw_part(tris, alb, emi, glow_colour, uv_fn, view, light, scale, size, img, zbuf, shine=0.9):
     for tri in tris:
         v = [view(p) for p in tri]
         n = np.cross(v[1] - v[0], v[2] - v[0])
@@ -181,7 +194,7 @@ def render(tris, albedo, emission, yaw, size=360, background=(34, 36, 40)):
         if n[2] > 0:   # facing away
             continue
         shade = 0.3 + 0.7 * max(0.0, float(np.dot(n, light)))
-        uvs = facet_uv(tri)
+        uvs = uv_fn(tri)
         pts = np.array([[size / 2 + p[0] * scale, size * 0.5 - p[1] * scale] for p in v])
         x0, y0 = np.floor(pts.min(axis=0)).astype(int)
         x1, y1 = np.ceil(pts.max(axis=0)).astype(int)
@@ -204,16 +217,15 @@ def render(tris, albedo, emission, yaw, size=360, background=(34, 36, 40)):
         vv = np.clip(w0 * uvs[0][1] + w1 * uvs[1][1] + w2 * uvs[2][1], 0, 0.999)
         tx = (u * (alb.shape[1] - 1)).astype(int)
         ty = ((1 - vv) * (alb.shape[0] - 1)).astype(int)
-        colour = alb[ty, tx] * shade + emi[ty, tx][..., None] * np.array([0.55, 0.05, 0.05]) * 0.5
+        colour = alb[ty, tx] * shade + emi[ty, tx][..., None] * glow_colour * 0.5
         # Specular glint on facets facing the light, like a cut gem.
         half = light + np.array([0.0, 0.0, -1.0])
         half /= np.linalg.norm(half)
-        colour += np.array([1.0, 0.9, 0.9]) * max(0.0, float(np.dot(n, half))) ** 40 * 0.9
+        colour += np.array([1.0, 0.9, 0.9]) * max(0.0, float(np.dot(n, half))) ** 40 * shine
         region = (slice(y0, y1 + 1), slice(x0, x1 + 1))
         closer = inside & (depth < zbuf[region])
         zbuf[region][closer] = depth[closer]
         img[region][closer] = np.clip(colour[closer], 0, 1)
-    return Image.fromarray((img * 255).astype(np.uint8))
 
 
 def write_raw(image, path):

@@ -14,9 +14,10 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-28 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Config reload on save](#config-reload-on-save) | Dev tools | Built, untested | Both plugins: `0 - Development` → `ReloadConfigOnFileChange` | `Shared/ConfigWatcher.cs`, `CraftingOverhaul/CraftingOverhaul.cs`, `Corruption/CorruptionPlugin.cs`, both `.csproj` | 2026-10-28 |
-| [Corruption shards](#corruption-shards) | Loot | Tested in-game | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardCustomModel`, `ShardGlowIntensity`, `ShardGlowRange`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs`, `Corruption/Content/ShardModel.cs`, `Corruption/Rules/ObjMesh.cs`, `Corruption/Assets/*`, `tools/make_shard.py` | 2026-10-28 |
+| [Corruption shards](#corruption-shards) | Loot | Tested in-game | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardCustomModel`, `ShardGlowIntensity`, `ShardGlowRange`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/ObjMesh.cs`, `Corruption/Assets/*`, `tools/make_shard.py` | 2026-10-28 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
+| [Boss essences](#boss-essences) | Loot | Built, untested | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -408,6 +409,50 @@ Also calls EquipmentAndQuickSlots' public API (`AddSlot`, `TryGetSlotItem`) to a
 
 ---
 
+## Boss essences
+
+*Corruption plugin, design phase 3.*
+
+**What it does in-game:** Every boss drops **1 essence per kill** (every kill, not only the first). Essences are the map ingredient of the core loop: each boss's essence will craft maps into the next biome at the Riftforge (phase 4; until then they have no use). They stack to 20, weigh 0.5, go through portals and can't be sold.
+
+| Boss | Item | Look | Maps into |
+|---|---|---|---|
+| Eikthyr | `CorruptionEssence_eikthyr` | Pale ice-blue gem with lightning veins | Black Forest |
+| The Elder (`gd_king`) | `CorruptionEssence_elder` | Amber sap gem with a wooden root wrapped round it | Swamp |
+| Bonemass | `CorruptionEssence_bonemass` | Toxic green gem with bone-white flecks | Mountains |
+| Moder (`Dragon`) | `CorruptionEssence_moder` | Frosted white-blue gem with ice cracks | Plains |
+| Yagluth (`GoblinKing`) | `CorruptionEssence_yagluth` | Ember-orange gem with a gold ring | Mistlands |
+| The Queen (`SeekerQueen`) | `CorruptionEssence_queen` | Violet chitin gem | Ashlands |
+| Fader | `CorruptionEssence_fader` | Molten orange-black gem | Deep North |
+
+All seven share one egg-shaped gem model (`essence.obj`) with the boss's own texture, glow colour and, for the Elder and Yagluth, an extra part. The looks follow the user's concept render (`docs/images/essences_reference.jpg`); the in-game preview is `docs/images/essences_preview.png`, both made by `tools/make_essences.py`.
+
+**How to use it:** Kill a boss. Test without fighting: `spawn CorruptionEssence_eikthyr` (or any item above).
+
+**Data table:** [`Corruption/Data/essences.csv`](Corruption/Data/essences.csv): boss, name, description, glow colour, add-on part, `per_kill`, target biome. Compiled into the DLL, so **rebuild after editing**. `dotnet test` checks the file, that every boss is a boss in the 1.0.20 game data, and that every look has its model files. A new look needs its textures made by `tools/make_essences.py`.
+
+**Config settings:**
+
+| Setting | Default | Description |
+|---|---|---|
+| `Enabled` (`4 - Essences`) | `true` | Admin-only. Bosses drop essences; off = no drops (essences already found stay) |
+| `ShardGlowIntensity`, `ShardGlowRange` (`2 - Look`) | `2`, `2.5` | Shared with the shard: the ground glow of a dropped essence. Per player, restart to apply |
+
+**Known issues:**
+- Untested in-game (81 tests pass). Risks to check: textures or the add-on parts not showing, essences lying oddly (they keep Bloodstone's collider), icons.
+- Kall Fimbulbringer (the Deep North boss, `FrozenKing`) and the Hive (`Hive`) have no essence yet; Fader's essence maps into the Deep North although the Deep North has its own boss. Waiting on the user.
+- If a custom look fails, that essence falls back to a tinted Bloodstone and logs an error; the item is always registered.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `CharacterDrop.GenerateDropList` | Postfix | Adds the boss's essence (`per_kill`) to its drop list. A second postfix next to the shard one |
+
+New items registered through Jötunn: `CorruptionEssence_<look>` for each table row (cloned from `GemstoneRed`).
+
+---
+
 ## Loot system
 
 **Status:** Planned. Not started.
@@ -445,6 +490,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Boss essences (phase 3):** every boss drops 1 essence per kill. Seven essences with their own looks after the user's concept render, defined in `Corruption/Data/essences.csv` (validated by tests). Setting `4 - Essences` → `Enabled`. The shard's model code is now shared (`GemModel.cs`). Untested in-game (81 tests).
 - **Corruption shard look tested in-game:** the rough-cut ruby model, its icon and the ground glow all work.
 - **Corruption shard reshaped** after the user's reference picture: a rough-cut, egg-shaped faceted ruby replaces the tall spiky crystal. Untested in-game.
 - **Fix: shards disappeared with the new look.** Texture loading threw during registration (raw data without mip levels), so the shard item didn't exist. Textures now load with `SetPixels32`, and a failing custom look falls back to the tinted Bloodstone instead of blocking registration.

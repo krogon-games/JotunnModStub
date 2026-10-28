@@ -40,7 +40,7 @@ namespace Corruption.Content
             {
                 try
                 {
-                    custom = ShardModel.Apply(item.ItemPrefab, color);
+                    custom = GemModel.Apply(item.ItemPrefab, GemModel.Shard, color);
                 }
                 catch (System.Exception ex)
                 {
@@ -64,31 +64,9 @@ namespace Corruption.Content
                 }
             });
             // After the icon render, so the light doesn't colour the icon.
-            Safe.Run("add the shard glow", () => AddGlow(item.ItemPrefab, color));
+            Safe.Run("add the shard glow", () => GemModel.AddGlow(item.ItemPrefab, color));
 
             ItemManager.Instance.AddItem(item);
-        }
-
-        /// <summary>
-        ///     A small red light on the dropped shard, so it lights the ground around it and is easy to spot. Only
-        ///     shards lying in the world have it (items in inventories have no object).
-        /// </summary>
-        private static void AddGlow(GameObject prefab, Color color)
-        {
-            float intensity = CorruptionConfig.ShardGlowIntensity.Value;
-            if (intensity <= 0f)
-            {
-                return;
-            }
-            var glow = new GameObject("CorruptionGlow");
-            glow.transform.SetParent(prefab.transform, false);
-            glow.transform.localPosition = new Vector3(0f, 0.25f, 0f);
-            var light = glow.AddComponent<Light>();
-            light.type = LightType.Point;
-            light.color = color;
-            light.intensity = intensity;
-            light.range = CorruptionConfig.ShardGlowRange.Value;
-            light.shadows = LightShadows.None;
         }
     }
 }

@@ -20,6 +20,7 @@
     <Compile Include="..\Corruption\Rules\AffixCaps.cs" Link="Linked\AffixCaps.cs" />
     <Compile Include="..\Corruption\Rules\TalismanSlotRules.cs" Link="Linked\TalismanSlotRules.cs" />
     <Compile Include="..\Corruption\Rules\ObjMesh.cs" Link="Linked\ObjMesh.cs" />
+    <Compile Include="..\Corruption\Rules\EssenceTable.cs" Link="Linked\EssenceTable.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
   </ItemGroup>
 
