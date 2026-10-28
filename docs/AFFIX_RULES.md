@@ -110,10 +110,10 @@ Vanilla has no pickaxe after the Mistlands and no one-handed axe from the Ashlan
 |---|---|---|
 | Prospector's | Pickaxe damage against mineral deposits | Scale the pickaxe damage of hits on rocks and ore (`MineRock`, `MineRock5`, `Destructible`) |
 | Artisan | Chance to generate one additional ore | Needs the harvest message |
-| Excavator's | Pickaxe damage against terrain | Digging isn't damage: each hit applies a fixed terrain operation. **Proposed:** a deeper and wider dig per hit (a scaled copy of the pickaxe's dig) |
+| Excavator's | Pickaxe damage against terrain | Digging isn't damage: each hit applies a fixed terrain operation. A deeper and wider dig per hit (a scaled copy of the pickaxe's dig) |
 | Veinbreaker's | Every 5th mining hit deals extra damage | Per-player hit counter on the striker's machine |
 | Fit | Chance to conserve stamina on a swing | Roll once per swing; that swing costs no stamina |
-| Gemseeker's | Small chance to find a gemstone or rare mineral from deposits | Needs the harvest message. Gem pool to define |
+| Gemseeker's | Small chance to find a gemstone or rare mineral from deposits | Needs the harvest message. Pool: Amber, Amber pearl, Ruby, by biome (see [Interpretations](#interpretations-decided-2026-10-28)) |
 | Seismic | Chance for a mining strike to damage nearby parts of the same deposit | Multi-part deposits (`MineRock5`) already accept area hits (`HitData.m_radius`); give that hit a radius |
 
 ### 3. Woodcutting pool (axes only)
@@ -169,7 +169,7 @@ Each half keeps the original affix's range; both halves have half the normal rol
 | Keen-eyed | Universal | Larger item pickup radius while the tool is held. Adds on top of Magnetic | `Player.m_autoPickupRange` |
 | Stonecutter's | Mining | Chance of 1 extra stone from rocks and deposits | Harvest message |
 | Resinous | Woodcutting | Chance of 1 extra resin from trees | Harvest message |
-| Forester's | Woodcutting | Chance a harvested tree also drops its seed (pine cone, beech seed, birch seed, fir cone, acorn) | Harvest message; seed per tree from game knowledge, to confirm in the data |
+| Forester's | Woodcutting | Chance a harvested tree also drops its seed (pine cone, beech seed, birch seed, fir cone, acorn) | Harvest message; the seed is the one in the tree's own drop table (confirmed in the 1.0.20 data) |
 
 ### More gathering affixes (user, 2026-10-28)
 
@@ -178,23 +178,26 @@ Each half keeps the original affix's range; both halves have half the normal rol
 | Magnetic | Universal | Draws drops to you from further away: sets the pickup radius. The stronger, rarer relative of Keen-eyed, which still adds on top (radius capped, see caps) | `Player.m_autoPickupRange` |
 | Charring | Woodcutting | Chance that harvested wood turns into coal. **Replaces** the wood (user's choice, 2026-10-28). The user's "Ember", renamed because it clashed with "of Embers" | Harvest message |
 
-### Proposed interpretations (to confirm)
+### Interpretations (decided 2026-10-28)
 
-- **Universal Bountiful** drops the harvested object's resources once more; **woodcutting Bountiful** adds 1 wood of the type that dropped; **Artisan** adds 1 of the ore that dropped.
-- **Odin's Grace** has Rare roll weight. "Touching" chunks are those whose colliders overlap the hit chunk's bounds, slightly expanded. The game doesn't link a fallen log to its stump, so the mod tags them: when a tree falls or a log splits, the log pieces and the stump get a shared tree ID (stored on each object). Odin's Grace on any piece then harvests every loaded piece with that ID, plus the pieces each log would still split into. Trees felled before the mod was installed have no ID: there it harvests the piece hit and everything it would split into.
-- **Harvest event:** every object or deposit part that drops resources when it breaks counts once (a tree, each log, a stump, a rock, each chunk of a copper deposit). On-harvest chances roll per event.
-- **Prospector's** covers everything a pickaxe mines (stone rocks and ore); **Excavator's** covers digging the ground.
-- **Lumberjack's** covers standing trees only; logs are Timberfall's and stumps Rootbreaker's.
-- **Gemseeker's** pool: gems and rare minerals whose biome (from the biome detection) is no later than the deposit's biome, e.g. Amber, Ruby, Crystal, Obsidian; Bloodstone, Iolite and Jade from the Deep North; the ancient gemstones only there. Exact list to agree.
-- **Determined:** the user gave no amount; the table's range is a proposal (status `proposed`).
-- **Seismic:** radius about 2 m; **Splintering:** the copy deals half the hit's damage, within about 4 m. Both proposed.
+**Decided by the user:**
+- **Universal Bountiful:** +5–15% of everything the harvest dropped. **Woodcutting Bountiful:** +5–15% of the wood it dropped. Fractions round up by chance (+10% of 5 stone = 1 extra stone half the time). **Artisan:** 1 extra ore of the kind that dropped (the user's spec).
+- **Determined:** each harvest restores 5–15% of max stamina.
+- **Gemseeker's** pool: the trader valuables Amber, Amber pearl and Ruby (1.0.20 data: the only sellable gems), limited to items whose biome (biome detection) is no later than the deposit's: Meadows deposits give Amber or Amber pearl, Black Forest and later also Ruby.
+- **Prospector's** (and its twin) covers everything a pickaxe breaks: stone rocks and ore deposits. **Excavator's** covers digging the ground.
+
+**Derived from the user's spec and the game code (no new numbers):**
+- **Odin's Grace** (the user's spec: the chunk hit plus every chunk touching it; the whole tree from tree, log or stump). "Touching" = the chunks' colliders overlap the hit chunk's bounds. The game doesn't link a fallen log to its stump, so the mod tags them: when a tree falls or a log splits, the pieces and the stump get a shared tree ID (stored on each object), and Odin's Grace harvests every loaded piece with that ID plus the pieces each log would still split into. Trees felled before the mod was installed have no ID: there it harvests the piece hit and everything it would split into.
+- **Seismic** uses the same "touching" rule: the hit also lands on the touching chunks. **Splintering** sends a copy of the same hit to the nearest other tree or log within the axe's own attack range (read from the item). Neither needs a radius or damage share of its own.
+- **Harvest event:** every object or deposit part that drops resources when it breaks counts once (a tree, each log, a stump, a rock, each chunk of a copper deposit). On-harvest effects roll per event.
+- **Lumberjack's** covers standing trees, **Timberfall** fallen logs, **Rootbreaker** stumps: the user's three separate affixes.
+- **Forester's:** the seed is the one the tree's own vanilla drop table already lists (1.0.20: Beech → Beech seeds, Pine → Pine cone, Birch → Birch seeds, Fir → Fir cone, Oak → Acorn, Deep North fir → its fir cone).
 - **Veinbreaker's** counts hits on rocks and deposits only; the count resets when the tool is unequipped.
-- **Efficient and Fit stack** on a pickaxe.
+- **Efficient and Fit stack** on a pickaxe: one lowers each swing's cost, the other sometimes makes it free.
 
 ### Open questions (gathering tools)
 
-1. ~~Prefix/suffix split~~, ~~roll weight classes~~, ~~one combined pool for one-handed axes~~: decided 2026-10-28.
-2. The proposed interpretations above, including how Odin's Grace treats logs and stumps.
+None left: sides, weights, the axe pool, twins and the interpretations above were decided 2026-10-28. Rootbreaker's assumption that stumps are `Destructible` objects is checked against `destructibles.csv` from the next `co_dump`.
 
 ## Proc and utility affixes (user, 2026-10-28)
 

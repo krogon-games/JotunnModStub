@@ -585,6 +585,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Gathering affix behaviour decided** (no code yet): Bountiful amounts, Determined, Gemseeker's pool, Prospector's scope; Seismic, Splintering and Forester's derived from the game data.
 - **Affix decisions** (no code yet; loot system): gathering affix sides, roll weights, the combined one-handed axe pool, the twin reading (Magic items resonate too) and five gathering twin pairs, recorded in `affixes.csv` and `docs/AFFIX_RULES.md`.
 - **Corrupted bosses (core):** corrupted bosses deal 1.5× and take 0.7× damage, drop 2–3 essences and 3–5 shards, and turn red (design starting values). `co_corrupt` corrupts the nearest boss for testing. Offerings and summons follow. Decided: corrupted offerings use the full normal offering + 1 shard; the Queen uses a corrupted Sealbreaker. Untested in-game.
 - **`co_dump` writes six more files:** world spawn tables, raids and their spawns, status effects, container loot, destructibles and boss altars, so rip waves, maddened creatures and rip loot (phase 4 step B) can be based on the game's own numbers. Untested in-game.
