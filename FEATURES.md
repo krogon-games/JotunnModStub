@@ -413,19 +413,20 @@ Also calls EquipmentAndQuickSlots' public API (`AddSlot`, `TryGetSlotItem`) to a
 
 *Corruption plugin, design phase 3.*
 
-**What it does in-game:** Every boss drops **1 essence per kill** (every kill, not only the first). Essences are the map ingredient of the core loop: each boss's essence will craft maps into the next biome at the Riftforge (phase 4; until then they have no use). They stack to 20, weigh 0.5, go through portals and can't be sold.
+**What it does in-game:** Every boss drops **1 essence per kill** (every kill, not only the first). Essences are the map ingredient of the core loop: each boss's essence will craft maps into the corrupted version of its own biome at the Riftforge (phase 4; until then they have no use). They stack to 20, weigh 0.5, go through portals and can't be sold.
 
 | Boss | Item | Look | Maps into |
 |---|---|---|---|
-| Eikthyr | `CorruptionEssence_eikthyr` | Pale ice-blue gem with lightning veins | Black Forest |
-| The Elder (`gd_king`) | `CorruptionEssence_elder` | Amber sap gem with a wooden root wrapped round it | Swamp |
-| Bonemass | `CorruptionEssence_bonemass` | Toxic green gem with bone-white flecks | Mountains |
-| Moder (`Dragon`) | `CorruptionEssence_moder` | Frosted white-blue gem with ice cracks | Plains |
-| Yagluth (`GoblinKing`) | `CorruptionEssence_yagluth` | Ember-orange gem with a gold ring | Mistlands |
-| The Queen (`SeekerQueen`) | `CorruptionEssence_queen` | Violet chitin gem | Ashlands |
-| Fader | `CorruptionEssence_fader` | Molten orange-black gem | Deep North |
+| Eikthyr | `CorruptionEssence_eikthyr` | Pale ice-blue gem with lightning veins | Corrupted Meadows |
+| The Elder (`gd_king`) | `CorruptionEssence_elder` | Amber sap gem with a wooden root wrapped round it | Corrupted Black Forest |
+| Bonemass | `CorruptionEssence_bonemass` | Toxic green gem with bone-white flecks | Corrupted Swamp |
+| Moder (`Dragon`) | `CorruptionEssence_moder` | Frosted white-blue gem with ice cracks | Corrupted Mountains |
+| Yagluth (`GoblinKing`) | `CorruptionEssence_yagluth` | Ember-orange gem with a gold ring | Corrupted Plains |
+| The Queen (`SeekerQueen`) | `CorruptionEssence_queen` | Violet chitin gem | Corrupted Mistlands |
+| Fader | `CorruptionEssence_fader` | Molten orange-black gem | Corrupted Ashlands |
+| Kall Fimbulbringer (`FrozenKing_p3`, the final phase) | `CorruptionEssence_kall` | Midnight-blue ice with glowing frost runes and a silver crown | Corrupted Deep North |
 
-All seven share one egg-shaped gem model (`essence.obj`) with the boss's own texture, glow colour and, for the Elder and Yagluth, an extra part. The looks follow the user's concept render (`docs/images/essences_reference.jpg`); the in-game preview is `docs/images/essences_preview.png`, both made by `tools/make_essences.py`.
+All eight share one egg-shaped gem model (`essence.obj`) with the boss's own texture, glow colour and, for the Elder, Yagluth and Kall, an extra part. The first seven follow the user's concept render (`docs/images/essences_reference.jpg`); Kall's look is ours (not in the render, awaiting the user's opinion); the in-game preview is `docs/images/essences_preview.png`, both made by `tools/make_essences.py`.
 
 **How to use it:** Kill a boss. Test without fighting: `spawn CorruptionEssence_eikthyr` (or any item above).
 
@@ -440,7 +441,8 @@ All seven share one egg-shaped gem model (`essence.obj`) with the boss's own tex
 
 **Known issues:**
 - Untested in-game (81 tests pass). Risks to check: textures or the add-on parts not showing, essences lying oddly (they keep Bloodstone's collider), icons.
-- Kall Fimbulbringer (the Deep North boss, `FrozenKing`) and the Hive (`Hive`) have no essence yet; Fader's essence maps into the Deep North although the Deep North has its own boss. Waiting on the user.
+- The Hive (an unused, console-only boss in the game files) is deliberately left out (user, 2026-10-28).
+- Kall Fimbulbringer's earlier phases (`FrozenKing`, `FrozenKing_p2`) don't drop it; only the final phase does, like vanilla's drops.
 - If a custom look fails, that essence falls back to a tinted Bloodstone and logs an error; the item is always registered.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
@@ -490,6 +492,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Maps redesigned:** each essence now crafts maps into the corrupted version of its own boss's biome (Eikthyr → Meadows … Fader → Ashlands). **Kall Fimbulbringer essence** added (Deep North, dropped by the final phase; frost-crown look, not from the render). The Hive is left out. Untested in-game.
 - **Boss essences (phase 3):** every boss drops 1 essence per kill. Seven essences with their own looks after the user's concept render, defined in `Corruption/Data/essences.csv` (validated by tests). Setting `4 - Essences` → `Enabled`. The shard's model code is now shared (`GemModel.cs`). Untested in-game (81 tests).
 - **Corruption shard look tested in-game:** the rough-cut ruby model, its icon and the ground glow all work.
 - **Corruption shard reshaped** after the user's reference picture: a rough-cut, egg-shaped faceted ruby replaces the tall spiky crystal. Untested in-game.

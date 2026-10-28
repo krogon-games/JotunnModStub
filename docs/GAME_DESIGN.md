@@ -27,7 +27,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 1: corruption shards | Corruption | Built (spawned item verified; drops untested) | `FEATURES.md` |
 | Phase 1: Riftforge station | Corruption | Verified (no recipes yet) | `FEATURES.md` |
 | Phase 2: talismans | Corruption | Built, untested | `FEATURES.md` |
-| Phase 3: boss essences | Corruption | Built, untested (7 bosses; FrozenKing and Hive open) | `FEATURES.md`, `Corruption/Data/essences.csv` |
+| Phase 3: boss essences | Corruption | Built, untested (8 bosses; Hive left out) | `FEATURES.md`, `Corruption/Data/essences.csv` |
 | Phase 4: maps and rips | Corruption | Proposed | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
 | Phase 6: corrupted bosses | Corruption | Proposed | design doc + review 4 |
@@ -42,7 +42,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 
 - Design pillars: the world is the dungeon; extend vanilla, don't fight it; reuse before you create; risk buys reward; Norse names.
 - v1 constraints: no new animations or attacks; new models only where the user asks (shard, essences); otherwise tints and reused particles; vanilla pickup-unlock rules; must work on a dedicated server.
-- Core loop per biome: farm → summon boss → essence → craft map → open rip → loot and escape. Each boss's essence crafts maps for the next biome; no skipping biomes.
+- Core loop per biome: farm → summon boss → essence → craft map → open rip → loot and escape. Each boss's essence crafts maps into the corrupted version of its own biome (Eikthyr → corrupted Meadows … Kall Fimbulbringer → corrupted Deep North); no skipping biomes (changed 2026-10-28). The Hive is left out.
 - Riftforge recipe: Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Surtling cores (5 ingredients; leather scraps dropped for the 5-ingredient limit).
 - Rip return: heart-gated; both portals close after 1 in-game day; no safety fallback.
 - Talismans: full repel of one creature family; provoked creatures fight back; bosses never; two talisman slots plus the vanilla trinket slot (changed 2026-10-28); rings get their own slot later and raise skills.

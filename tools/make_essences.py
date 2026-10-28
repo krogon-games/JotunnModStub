@@ -6,7 +6,8 @@ Generates the boss essences' models and textures, after the user's concept rende
 
 Writes to Corruption/Assets/:
     essence.obj                               the shared gem shape (taller cut than the shard, bigger facets)
-    essence_root.obj, essence_ring.obj        add-ons: the Elder's root, Yagluth's crown ring
+    essence_root.obj, essence_ring.obj,       add-ons: the Elder's root, Yagluth's crown ring,
+    essence_crown.obj                         Kall Fimbulbringer's frost crown
     essence_<boss>_albedo.png/.rgba           colour texture per essence (PNG to view, raw for the game)
     essence_<boss>_emission.png/.rgba         glow mask per essence
 and docs/images/essences_preview.png.
@@ -131,6 +132,25 @@ def build_ring():
         y = HEIGHT * 0.45 + x * math.tan(tilt)
         path.append((x, y, z))
     return tube(path, 0.0035, sides=4)
+
+
+def build_crown():
+    """A spiked circlet round the gem's shoulder (Kall Fimbulbringer, the frost king). Not in the concept render."""
+    h = HEIGHT * 0.84
+    path = []
+    for k in range(29):
+        a = 2 * math.pi * k / 28
+        path.append((WIDTH / 2 * 0.74 * math.cos(a), h, DEPTH / 2 * 0.76 * math.sin(a)))
+    tris = tube(path, 0.003, sides=4)
+    for k in range(7):
+        a = 2 * math.pi * (k + 0.5) / 7
+        cx, cz = WIDTH / 2 * 0.74 * math.cos(a), DEPTH / 2 * 0.76 * math.sin(a)
+        tall = 0.045 if k % 2 == 0 else 0.03
+        apex = (cx * 0.92, h + tall, cz * 0.92)
+        base = [(cx + 0.007 * math.cos(a + t), h - 0.002, cz + 0.007 * math.sin(a + t)) for t in (0, 2.1, 4.2)]
+        for i in range(3):
+            tris.append((base[i], base[(i + 1) % 3], apex))
+    return tris
 
 
 # ---------------------------------------------------------------- painting helpers
@@ -290,6 +310,27 @@ def fader(rng):
     return albedo, glow, (1.0, 0.4, 0.05)
 
 
+def kall(rng):
+    """Kall Fimbulbringer: midnight-blue ice with glowing frost runes and white rime on top. Not in the concept render."""
+    base = mix([14, 22, 52], [40, 70, 120], noise(rng, (3, 6, 12)) * 0.8 + up * 0.2)
+    r = random.Random(7)
+    segs = []
+    for row in range(3):
+        for col in range(6):
+            x0, y0 = 14 + col * 42 + r.uniform(-4, 4), 60 + row * 52 + r.uniform(-4, 4)
+            segs.append([(x0, y0), (x0, y0 + 30)])                       # rune stave
+            for _ in range(2):                                          # branches
+                yb = y0 + r.uniform(0, 18)
+                segs.append([(x0, yb), (x0 + r.choice((-10, 10)), yb + r.uniform(6, 12))])
+    runes = lines_mask(segs, 2, 0.6)
+    halo = lines_mask(segs, 6, 3)
+    albedo = mix(base, [150, 245, 240], np.clip(runes * 1.2 + halo * 0.3, 0, 1))
+    rime = np.clip((up - 0.78) * 4.5, 0, 1) * (0.5 + 0.5 * noise(rng, (16, 32)))
+    albedo = mix(albedo, [235, 245, 255], rime)
+    glow = np.clip(runes * 1.3 + halo * 0.4 + 0.06, 0, 1)
+    return albedo, glow, (0.25, 0.9, 0.85)
+
+
 ESSENCES = [
     # id, painter, add-on (obj name or None), add-on colour
     ("eikthyr", eikthyr, None, None),
@@ -299,12 +340,13 @@ ESSENCES = [
     ("yagluth", yagluth, "essence_ring", (196, 150, 60)),
     ("queen", queen, None, None),
     ("fader", fader, None, None),
+    ("kall", kall, "essence_crown", (205, 220, 235)),
 ]
 
 
 def main():
     gem = build_gem()
-    addons = {"essence_root": build_root(), "essence_ring": build_ring()}
+    addons = {"essence_root": build_root(), "essence_ring": build_ring(), "essence_crown": build_crown()}
     write_obj_with(gem, gem_uv, os.path.join(ASSETS, "essence.obj"))
     for name, tris in addons.items():
         write_obj_with(tris, flat_uv, os.path.join(ASSETS, name + ".obj"))
@@ -328,7 +370,7 @@ def main():
     for i, tile in enumerate(tiles):
         sheet.paste(tile, (i * 300, 0))
     sheet.save(os.path.join(ROOT, "docs", "images", "essences_preview.png"))
-    print("gem triangles:", len(gem), "| root:", len(addons["essence_root"]), "| ring:", len(addons["essence_ring"]))
+    print("gem triangles:", len(gem), "|", ", ".join(f"{k}: {len(v)}" for k, v in addons.items()))
 
 
 def write_obj_with(tris, uv_fn, path):

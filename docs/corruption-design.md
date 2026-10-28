@@ -36,7 +36,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft map
 5. **Open the rip**: unexplored land, waves.
 6. **Loot and escape**: shards, corrupted gear. Shards and trophies go back into step 1.
 
-The loop runs once per biome. The essence from this biome's boss crafts maps for the next biome up, so finishing a loop is also the key to starting the next one. Shards and trophies from the rip feed the talisman bench and corrupted boss summons, so every piece connects.
+The loop runs once per biome. The essence from a biome's boss crafts maps into the corrupted version of that same biome, so beating a boss opens its biome's endgame, and moving on to the next biome's corrupted maps needs the next boss. *Changed 2026-10-28 (user): was "maps for the next biome up", which left no corrupted Meadows and gave the last boss's essence nowhere to go.* Shards and trophies from the rip feed the talisman bench and corrupted boss summons, so every piece connects.
 
 ## Corruption shards
 
@@ -62,25 +62,28 @@ The shard is the mod's currency. It unlocks the map bench, is an ingredient in e
 
 ## Boss essences and the biome chain
 
-Each boss drops a new item, its essence, which is the key ingredient for maps into the next biome. Using a new drop instead of the vanilla trophy or antler keeps vanilla recipes untouched and gives full control over drop rates.
+Each boss drops a new item, its essence, which is the key ingredient for maps into the corrupted version of its own biome. Using a new drop instead of the vanilla trophy or antler keeps vanilla recipes untouched and gives full control over drop rates.
 
 | Boss | Essence (working name) | Crafts maps into | Biome material for the recipe |
 |---|---|---|---|
-| Eikthyr | Essence of Eikthyr | Black Forest | Greydwarf eye |
-| The Elder | Essence of the Elder | Swamp | Guck |
-| Bonemass | Essence of Bonemass | Mountains | Freeze gland |
-| Moder | Essence of Moder | Plains | Needle |
-| Yagluth | Essence of Yagluth | Mistlands | Carapace or Soft tissue |
-| The Queen | Essence of the Queen | Ashlands | Flametal or Charred bone |
-| Fader | Essence of Fader | Deep North | TBD once the biome ships |
+| Eikthyr | Essence of Eikthyr | Meadows | Deer hide (proposed) |
+| The Elder | Essence of the Elder | Black Forest | Greydwarf eye |
+| Bonemass | Essence of Bonemass | Swamp | Guck |
+| Moder | Essence of Moder | Mountains | Freeze gland |
+| Yagluth | Essence of Yagluth | Plains | Needle |
+| The Queen | Essence of the Queen | Mistlands | Carapace or Soft tissue |
+| Fader | Essence of Fader | Ashlands | Flametal or Charred bone |
+| Kall Fimbulbringer | Essence of Kall Fimbulbringer | Deep North | Timberwood (proposed) |
+
+The Hive (an unused Mistlands boss, console-spawn only, in the 1.0 game files) is left out on purpose; maybe revisited later (user, 2026-10-28). Names, colours and drop counts: [`Corruption/Data/essences.csv`](../Corruption/Data/essences.csv).
 
 ### Rules
 
 - Normal kill: 1 essence. Corrupted kill: 2–3 essences plus corrupted loot.
 - Essences are not tradeable at vanilla vendors and have no other recipe use, so they can't be farmed for anything but maps.
-- The chain means an Ashlands map needs the Queen dead first. No skipping biomes.
+- The chain means a corrupted Ashlands map needs Fader dead first. No skipping biomes: each biome's corrupted maps need that biome's boss.
 
-**Open point:** the Mistlands and Ashlands biome materials are placeholders; pick whichever drops earliest in that biome so the recipe unlocks on first visit.
+**Open point:** the Meadows, Mistlands, Ashlands and Deep North materials are placeholders; pick whichever drops earliest in that biome so the recipe is easy to unlock.
 
 ## Map bench and map recipes
 
@@ -93,10 +96,10 @@ The map bench is a new crafting station, unlocked by picking up the first corrup
 **Map recipe pattern** (every map follows it):
 
 1. 1 Corruption shard
-2. 1 Boss essence (the boss below the target biome)
+2. 1 Boss essence (the target biome's own boss)
 3. A small stack of the target biome's material (see the essence table)
 
-All three must have been picked up before the recipe appears, which is vanilla behaviour. In practice the map unlocks the moment you kill the boss and step into the new biome.
+All three must have been picked up before the recipe appears, which is vanilla behaviour. In practice the map unlocks the moment you kill the biome's boss (you already hold its material by then).
 
 ### Map item
 
@@ -120,6 +123,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 
 - Only terrain the activating player has not explored, read from their minimap explored data.
 - Only the map's target biome. A Black Forest map never lands you in Ashlands or open ocean.
+- **Open point (2026-10-28):** Meadows maps may struggle to find unexplored Meadows, since players explore most of the Meadows early. Options when building rips: allow explored land for Meadows, or prefer the far side of the world.
 - Prefer land at least a set distance from the player's bases (no ward or bed nearby) so rips don't trash a build.
 - The area isn't loaded until arrival, so validate the spot after the zone loads and re-roll if it's water or a cliff face.
 - Multiplayer: the activator's explored data decides. Others may already know the area; that's fine.
@@ -401,7 +405,7 @@ Moved to [`AFFIX_RULES.md`](AFFIX_RULES.md) on 2026-10-27: prefixes and suffixes
 
 ### Rules to hold to
 
-- Map rewards scale to the map's biome, not the player's gear. An endgame character farming Eikthyr gets Black Forest loot, so there's no reason to farm low maps for top rewards.
+- Map rewards scale to the map's biome, not the player's gear. An endgame character running Meadows maps (from Eikthyr's essence) gets Meadows loot, so there's no reason to farm low maps for top rewards.
 - Shards drop fastest from high-tier rips, so progression pulls players upward.
 - Nothing in the mod removes a vanilla logistics constraint outright (portals, carry weight, boat travel). Boosts, not bypasses.
 - Loot never carries downsides. Danger lives in maps and fights, not in items.

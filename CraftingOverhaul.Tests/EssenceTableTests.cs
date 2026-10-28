@@ -31,7 +31,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void RealFileHasNoProblems()
         {
-            Assert.Equal(7, ParseReal().Count);
+            Assert.Equal(8, ParseReal().Count);
         }
 
         [Fact]

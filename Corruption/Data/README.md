@@ -56,11 +56,11 @@ Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`sc
 
 | Column | Meaning |
 |---|---|
-| `boss` | The boss's prefab name, e.g. `Eikthyr`, `gd_king` (the Elder), `Dragon` (Moder), `GoblinKing` (Yagluth), `SeekerQueen`, `Fader`. The tests check it's a boss in the game data |
+| `boss` | The boss's prefab name, e.g. `Eikthyr`, `gd_king` (the Elder), `Dragon` (Moder), `GoblinKing` (Yagluth), `SeekerQueen`, `Fader`, `FrozenKing_p3` (Kall Fimbulbringer's final phase). The tests check it's a boss in the game data |
 | `look` | Short id, lowercase. Names the item (`CorruptionEssence_<look>`) and its texture files; a **new** look needs textures from `tools/make_essences.py` |
 | `name`, `description` | In-game text |
 | `glow` | Colour of the gem's glow and ground light, like `#8CD9FF` |
-| `addon`, `addon_color` | Optional extra part (`essence_root`, `essence_ring`) and its colour; leave both blank for none |
+| `addon`, `addon_color` | Optional extra part (`essence_root`, `essence_ring`, `essence_crown`) and its colour; leave both blank for none |
 | `per_kill` | Essences dropped per boss kill (every kill), 1 or more |
 | `maps_into` | Biome the essence will craft maps into (used from phase 4) |
 | `status`, `notes` | As above |

@@ -36,7 +36,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
-| Boss essences (phase 3, 2026-10-28) | `spawn CorruptionEssence_eikthyr` (and the other six): look, icon, glow, add-on parts on the Elder and Yagluth essences; each boss drops 1 per kill |
+| Boss essences (phase 3, 2026-10-28) | `spawn CorruptionEssence_eikthyr` (and the other seven, including `_kall`): look, icon, glow, add-on parts on the Elder, Yagluth and Kall essences; each boss drops 1 per kill (Kall: from the final phase) |
 | Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
 
 ## Not built (proposed)
@@ -67,7 +67,7 @@ Corruption phases 4–10 (maps and rips, map affixes, corrupted bosses, loot/aff
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
 - Before phase 4: accept "server decides, owner spawns" and an own wave spawner instead of the raid system.
 - Corrupted bosses/gear: red like the shard, or the design doc's purple.
-- Essences for Kall Fimbulbringer (`FrozenKing`, Deep North) and the Hive (`Hive`, Mistlands), and whether Fader's essence should still map into the Deep North now that the Deep North has its own boss.
+- Kall Fimbulbringer's essence look (made without a concept render; status `proposed` in `essences.csv`).
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
 - Play-test results for everything under "Built, not verified".
 
@@ -75,7 +75,7 @@ Corruption phases 4–10 (maps and rips, map affixes, corrupted bosses, loot/aff
 
 1. Play-test the rest of talismans (see the table above), with EquipmentAndQuickSlots, PlantEasily and AdventureBackpacks installed (the group's setup); run the compatibility checks in `docs/mod-compatibility.md`. Record results in `FEATURES.md` and here.
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
-3. Play-test boss essences (above); settle the FrozenKing/Hive question.
+3. Play-test boss essences (above).
 4. Run the multiplayer checklist when a second player is available.
 5. Settle the open decisions above before phase 4 (maps and rips).
 

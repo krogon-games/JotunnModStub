@@ -4,7 +4,7 @@ Prompts for concept renders made with an image model (Nano Banana / Gemini image
 
 ## Boss essences (design phase 3)
 
-Each boss drops its essence, the key ingredient for maps into the next biome (`corruption-design.md` → Boss essences). The seven should read as **one family** (same size, same rough-cut gem shape as the corruption shard, same camera and lighting) but each clearly belongs to its boss.
+Each boss drops its essence, the key ingredient for maps into the corrupted version of its own biome (`corruption-design.md` → Boss essences). The seven should read as **one family** (same size, same rough-cut gem shape as the corruption shard, same camera and lighting) but each clearly belongs to its boss.
 
 **How to use:** attach the corruption shard picture (`docs/images/shard_preview.png` or an in-game screenshot) as a reference image, paste the sheet prompt, then use the single prompts to refine any essence you don't like. Ask for a change in plain words ("make Bonemass greener and wetter, fewer bones").
 
