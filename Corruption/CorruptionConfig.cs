@@ -23,6 +23,8 @@ namespace Corruption
         public static ConfigEntry<string> ShardBasePrefab;
         public static ConfigEntry<string> ShardColor;
         public static ConfigEntry<float> ShardTintStrength;
+        public static ConfigEntry<float> ShardGlowIntensity;
+        public static ConfigEntry<float> ShardGlowRange;
         public static ConfigEntry<string> RiftforgeColor;
         public static ConfigEntry<float> RiftforgeTintStrength;
 
@@ -58,6 +60,12 @@ namespace Corruption
             ShardTintStrength = config.Bind(LookSection, "ShardTintStrength", 0.35f,
                 new ConfigDescription("How strongly the colour is applied: 0 = base item's own colours, 1 = fully the shard colour. Restart to apply.",
                     new AcceptableValueRange<float>(0f, 1f)));
+            ShardGlowIntensity = config.Bind(LookSection, "ShardGlowIntensity", 2f,
+                new ConfigDescription("Brightness of the red glow a dropped shard casts on the ground, so it's easy to spot. 0 = no glow. Restart to apply.",
+                    new AcceptableValueRange<float>(0f, 8f)));
+            ShardGlowRange = config.Bind(LookSection, "ShardGlowRange", 2.5f,
+                new ConfigDescription("How far the shard's glow reaches, in metres. Restart to apply.",
+                    new AcceptableValueRange<float>(0.5f, 10f)));
             RiftforgeColor = config.Bind(LookSection, "RiftforgeColor", "#B3170D",
                 "Riftforge colour as an HTML colour. Restart to apply.");
             RiftforgeTintStrength = config.Bind(LookSection, "RiftforgeTintStrength", 0.6f,

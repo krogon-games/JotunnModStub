@@ -22,7 +22,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Craft from nearby chests; build from nearby chests | CraftingOverhaul | Third play-test; "building from chests works well" |
 | `co_dump`, `co_biome` | CraftingOverhaul | Two dumps received |
 | `spawn CorruptionShard` (name, description, weight) | Corruption | 2026-10-26 |
-| Shard drops from 1-star creatures | Corruption | 2026-10-28, `OneStarChance` = 1, `spawn Greydwarf 1 2` |
+| Shard drops from 1-star and 2-star creatures and from a boss's first kill; red look | Corruption | 2026-10-28: forced chances with `spawn Greydwarf`; Eikthyr; "the shard is red" |
 | Riftforge: unlock, build, opens as "Riftforge", red glow, raven lore plays once | Corruption | 2026-10-26 ("fixed, crow works now") |
 | No build-menu errors after the 5-ingredient fix | Corruption | 2026-10-26 |
 | Talismans: recipes, charm in an EquipmentAndQuickSlots Talisman slot, tooltip without trinket bonuses, repel | Corruption | 2026-10-28 with all mods loaded ("working as intended now") |
@@ -32,8 +32,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Item | What to check |
 |---|---|
 | Talismans: the rest | Two charms at once plus a vanilla trinket; hitting a repelled creature provokes it for 30 s; bosses unaffected; on a friend's game too |
-| Shard drops: 2-star and boss first kill | `TwoStarChance` = 1 with `spawn Greydwarf 1 3`; kill a boss in a fresh world |
-| Shard red look (Bloodstone + tint) | Not explicitly confirmed after the change |
+| Shard glow on the ground (2026-10-28) | Drop a shard (`spawn CorruptionShard`) at night and by day: easy to spot, not too bright? Tune `ShardGlowIntensity` / `ShardGlowRange` (restart to apply) |
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
@@ -72,7 +71,7 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 ## Next actionable tasks
 
-1. Play-test the rest of talismans (see the table above), shard drops and the shard look, with EquipmentAndQuickSlots, PlantEasily and AdventureBackpacks installed (the group's setup); run the compatibility checks in `docs/mod-compatibility.md`. Record results in `FEATURES.md` and here.
+1. Play-test the rest of talismans and the shard glow (see the table above), with EquipmentAndQuickSlots, PlantEasily and AdventureBackpacks installed (the group's setup); run the compatibility checks in `docs/mod-compatibility.md`. Record results in `FEATURES.md` and here.
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
 3. **Phase 3: boss essences.** One new drop per boss (1 on a normal kill), cloned item + red tint, `CharacterDrop` hook like `ShardDrops`, boss list from game data (creatures with a defeat key), pure rule + tests.
 4. Run the multiplayer checklist when a second player is available.

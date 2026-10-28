@@ -14,7 +14,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-28 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `CraftingOverhaul.cs` | 2026-10-26 |
 | [Config reload on save](#config-reload-on-save) | Dev tools | Built, untested | Both plugins: `0 - Development` → `ReloadConfigOnFileChange` | `Shared/ConfigWatcher.cs`, `CraftingOverhaul/CraftingOverhaul.cs`, `Corruption/CorruptionPlugin.cs`, both `.csproj` | 2026-10-28 |
-| [Corruption shards](#corruption-shards) | Loot | Partly tested in-game (1-star drops) | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-26 |
+| [Corruption shards](#corruption-shards) | Loot | Tested in-game | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs` | 2026-10-28 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
@@ -292,12 +292,15 @@ Tamed creatures never drop shards, so a pen of starred wolves can't be farmed. R
 | `BossShardsFirstKillOnly` | `true` | Only on a boss's first defeat per world; off = every kill |
 | `ShardBaseItem` (Look) | `GemstoneRed` | Vanilla item whose model the shard uses (e.g. `GemstoneRed` = Bloodstone, `Crystal`, `Ruby`). Per player, restart to apply |
 | `ShardColor` (Look) | `#B3170D` | Tint colour (HTML). Per player, restart to apply |
+| `ShardGlowIntensity` (Look) | `2` | Brightness of the red glow a dropped shard casts on the ground; 0 = off. Per player, restart to apply |
+| `ShardGlowRange` (Look) | `2.5` | How far the glow reaches, in metres. Per player, restart to apply |
 | `ShardTintStrength` (Look) | `0.35` | 0 = base item's own colours, 1 = fully the tint colour. Per player, restart to apply |
 
 The drop rules are unit-tested (`ShardRulesTests`).
 
 **Known issues:**
-- Play-test 2026-10-28: with `OneStarChance` set to 1, 1-star creatures (`spawn Greydwarf 1 2`) drop shards. Not yet confirmed: 2-star drops, boss first-kill drops, the normal 2% rate in play.
+- Play-test 2026-10-28: 1-star creatures (`OneStarChance` = 1) and 2-star creatures (`TwoStarChance` = 1) drop shards, Eikthyr drops shards on first kill, and the shard is red. The normal 2% / 5% rates haven't been judged in normal play yet.
+- The user found dropped shards easy to miss, so they now cast a small red glow on the ground (`ShardGlowIntensity`, `ShardGlowRange`). Glow untested in-game.
 - Play-test 2026-10-26: the mod loads and `spawn CorruptionShard` works (name, description and weight correct). The first version, a crystal with a purple tint, came out pale blue: the tint only changed the main colour, not the crystal's glow colours. The tint now changes every colour property, and the shard uses the naturally red Bloodstone model. Awaiting re-test. Drops from creatures and bosses are untested.
 - The icon is rendered at startup from the tinted model. If that fails, the vanilla crystal icon is used and a warning is logged.
 - A boss killed before installing the mod counts as already defeated, so it won't drop shards unless `BossShardsFirstKillOnly` is turned off.
@@ -437,6 +440,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Corruption shards tested in-game:** 1-star, 2-star and boss (Eikthyr) drops work and the shard is red. Dropped shards now glow red on the ground so they're easier to spot (configurable, untested).
 - **Config reload on save** (dev aid, both plugins): saving a `.cfg` file while the game runs reloads it. Off switch: `0 - Development` → `ReloadConfigOnFileChange`. Marked for removal or default-off before release.
 - **Corruption shards:** 1-star creature drops confirmed in-game.
 - **Talismans tested in-game (single player):** working as intended with all mods loaded after the fixes.
