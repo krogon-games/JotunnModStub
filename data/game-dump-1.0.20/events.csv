@@ -1,0 +1,32 @@
+m_name,m_enabled,m_devDisabled,m_random,m_duration,m_nearBaseOnly,m_pauseIfNoPlayerInArea,m_eventRange,m_standaloneInterval,m_standaloneChance,m_spawnerDelay,m_biome,m_requiredGlobalKeys,m_altRequiredPlayerKeysAny,m_altRequiredPlayerKeysAll,m_notRequiredGlobalKeys,m_altNotRequiredPlayerKeys,m_startMessage,m_endMessage,m_forceMusic,m_forceEnvironment,m_time,m_pos,spawn_entries
+army_eikthyr,True,False,True,90,True,True,96,0,100,0,"Meadows, BlackForest",,,,defeated_eikthyr,GP_Eikthyr,$event_eikthyrarmy_start,$event_eikthyrarmy_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",2
+army_goblin,True,False,True,120,True,True,96,0,100,0,"Meadows, BlackForest, Plains",defeated_dragon,$se_moder_name,,defeated_goblinking,GP_Yagluth,$event_goblinarmy_start,$event_goblinarmy_end,CombatEventL4,,0,"(0.00, 0.00, 0.00)",3
+army_theelder,True,False,True,120,True,True,96,0,100,0,"Meadows, Swamp, BlackForest, Plains",defeated_eikthyr,GP_TheElder,,defeated_gdking,GP_TheElder,$event_gdkingarmy_start,$event_gdkingarmy_end,CombatEventL2,,0,"(0.00, 0.00, 0.00)",4
+wolves,True,False,True,120,False,False,96,0,100,0,"Mountain, Plains",defeated_bonemass,GP_Bonemass,,,,$event_wolves_start,$event_wolves_end,CombatEventL3,,0,"(0.00, 0.00, 0.00)",1
+skeletons,True,False,True,120,True,True,96,0,100,0,"Meadows, Swamp, Mountain, BlackForest, Plains, Mistlands",defeated_bonemass,GP_Bonemass,,,,$event_skeletons_start,$event_skeletons_end,CombatEventL3,,0,"(0.00, 0.00, 0.00)",2
+army_bonemass,True,False,True,150,True,True,96,0,100,0,"Meadows, Swamp, Mountain, BlackForest, Plains",defeated_gdking,GP_TheElder,,defeated_bonemass,GP_Bonemass,$event_bonemassarmy_start,$event_bonemassarmy_end,CombatEventL3,SwampRain,0,"(0.00, 0.00, 0.00)",2
+army_moder,True,False,True,150,True,True,96,0,100,0,"Meadows, Swamp, Mountain, BlackForest, Plains",defeated_bonemass,$se_bonemass_name,,defeated_dragon,GP_Moder,$event_moderarmy_start,$event_moderarmy_end,CombatEventL4,Snow,0,"(0.00, 0.00, 0.00)",1
+blobs,True,False,True,120,True,True,96,0,100,0,"Meadows, Swamp, BlackForest, Plains",defeated_bonemass,GP_Bonemass,,,,$event_bonemassarmy_start,$event_bonemassarmy_end,CombatEventL3,SwampRain,0,"(0.00, 0.00, 0.00)",2
+foresttrolls,True,False,True,80,True,True,96,0,100,0,"Meadows, Swamp, BlackForest, Plains",KilledTroll|defeated_gdking,,KilledTroll|defeated_gdking,,,$event_foresttrolls_start,$event_foresttrolls_end,CombatEventL2,,0,"(0.00, 0.00, 0.00)",1
+surtlings,True,False,True,120,True,True,96,0,100,0,"Meadows, Swamp, BlackForest, Plains",killed_surtling|defeated_bonemass,,killed_surtling|defeated_bonemass,,,$event_surtlings_start,$event_surtlings_end,CombatEventL3,Ashrain,0,"(0.00, 0.00, 0.00)",1
+boss_eikthyr,True,False,False,0,False,True,96,0,100,0,"Meadows, Swamp, BlackForest, Plains",,,,,,,,boss_eikthyr,Eikthyr,0,"(0.00, 0.00, 0.00)",0
+boss_bonemass,True,False,False,0,False,True,96,0,100,0,"Meadows, Swamp, BlackForest, Plains",,,,,,,,boss_bonemass,Bonemass,0,"(0.00, 0.00, 0.00)",0
+boss_moder,True,False,False,0,False,True,96,0,100,0,1023,,,,,,,,boss_moder,Moder,0,"(0.00, 0.00, 0.00)",0
+boss_gdking,True,False,False,0,False,True,96,0,100,0,1023,,,,,,,,boss_gdking,GDKing,0,"(0.00, 0.00, 0.00)",0
+boss_goblinking,True,False,False,0,False,True,96,0,100,0,1023,,,,,,,,boss_goblinking,GoblinKing,0,"(0.00, 0.00, 0.00)",0
+ghosts,True,False,True,150,True,True,96,0,100,0,"Meadows, Swamp, Mountain, BlackForest, Plains",defeated_bonemass,GP_Bonemass,,,GP_Moder,$event_ghosts_start,$event_ghosts_end,forestcrypt,Ghosts,0,"(0.00, 0.00, 0.00)",2
+fimbulvinter,True,False,False,0,False,True,96,0,100,0,1023,,,,,,,,,,0,"(0.00, 0.00, 0.00)",0
+boss_frozenking,True,False,False,0,False,True,96,0,100,0,1023,,,,,,,,boss_frozenking,,0,"(0.00, 0.00, 0.00)",0
+bats,True,False,True,120,True,True,96,0,100,0,All,KilledBat|defeated_bonemass,,KilledBat|defeated_bonemass,,,$event_bats_start,$event_bats_end,CombatEventL3,,0,"(0.00, 0.00, 0.00)",1
+boss_queen,True,False,False,0,False,True,96,0,100,0,All,,,,,,,,boss_queen,Queen,0,"(0.00, 0.00, 0.00)",0
+army_gjall,True,False,True,90,True,True,96,0,100,0,Mistlands,defeated_goblinking,$se_yagluth_name,,defeated_queen,GP_Queen,$event_gjallarmy_start,$event_gjallarmy_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",2
+army_seekers,True,False,True,90,True,True,96,0,100,0,"BlackForest, Plains, AshLands, DeepNorth, Mistlands",defeated_goblinking,,,defeated_queen,GP_Queen,$event_seekerarmy_start,$event_seekerarmy_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",3
+hildirboss1,True,False,True,90,True,True,96,0,100,0,All,hildir1,BossHildir1,,,,$event_hildirboss1_start,$event_hildirboss1_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",4
+hildirboss2,True,False,True,90,True,True,96,0,100,0,All,hildir2,BossHildir2,,,,$event_hildirboss2_start,$event_hildirboss2_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",3
+hildirboss3,True,False,True,90,True,True,96,0,100,0,All,hildir3,BossHildir3,,,,$event_hildirboss3_start,$event_hildirboss3_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",3
+gemgoblin,False,False,True,90,False,True,96,0,100,0,"BlackForest, Plains, AshLands, DeepNorth, Mistlands",defeated_fader,,,defeated_queen,GP_Queen,$event_gemgoblin_start,$event_gemgoblin_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",1
+boss_fader,True,False,False,0,False,True,96,0,100,0,1023,,,,,,,,boss_fader,Fader,0,"(0.00, 0.00, 0.00)",0
+army_charred,True,False,True,90,True,True,96,0,100,0,"BlackForest, Plains, AshLands, DeepNorth, Mistlands",defeated_queen,,,defeated_fader,,$event_charredarmy_start,$event_charredarmy_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",3
+army_charredspawners,True,False,True,90,True,True,96,0,100,0,"BlackForest, Plains, AshLands, DeepNorth, Mistlands",defeated_queen,,,defeated_fader,,$event_charredspawnerarmy_start,$event_charrespawnerarmy_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",2
+army_elakingar,True,False,True,90,True,True,96,0,100,0,DeepNorth,elakingmole_defeated,,,defeated_frozenking_p3,,$event_elakingarmy_start,$event_elakingarmy_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",3
+army_jotuns,True,False,True,90,True,True,96,0,100,0,"Meadows, Swamp, Mountain, BlackForest, Plains, DeepNorth, Mistlands",jotun_killed,,,defeated_frozenking_p3,,$event_jotunarmy_start,$event_jotunarmy_end,CombatEventL1,,0,"(0.00, 0.00, 0.00)",2

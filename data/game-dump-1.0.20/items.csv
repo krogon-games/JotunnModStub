@@ -169,6 +169,14 @@ AxeJotunBane,$item_axe_jotunbane,Jotun Bane,OneHandedWeapon,Axes,1,2,4,0,True,4,
 AxeStone,$item_axe_stone,Stone Axe,OneHandedWeapon,Axes,1,1.5,4,0,True,0,100,20,1,3,-0.05,0,0,15,0,20,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_AxeStone
 AxeWood,$item_axe_wood,Wooden Axe,OneHandedWeapon,Axes,1,2,4,0,True,1,125,20,1,12,-0.05,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location ShipSetting01 > ShipSetting01 > Container
 babyseeker_attack,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,60,0,0,0,0,0,0,0,0,0,0,0,,
+BackpackAshlands,$vapok_mod_item_backpack_ashlands,Cinderward Pack,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe BackpackAshlands_Recipe_BlackForge @ blackforge
+BackpackBlackForest,$vapok_mod_item_backpack_blackforest,Rugged Backpack,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe BackpackBlackForest_Recipe_Forge @ forge
+BackpackDeepNorth,$vapok_mod_item_backpack_deepnorth,Frostbound Haversack,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe BackpackDeepNorth_Recipe_BlackForge @ blackforge
+BackpackMeadows,$vapok_mod_item_backpack_meadows,Satchel,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe BackpackMeadows_Recipe_Workbench @ piece_workbench
+BackpackMistlands,$vapok_mod_item_backpack_mistlands,Explorers Wisppack,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe BackpackMistlands_Recipe_BlackForge @ blackforge
+BackpackMountains,$vapok_mod_item_backpack_mountains,Arctic Sherpa Pack,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe BackpackMountains_Recipe_Forge @ forge
+BackpackPlains,$vapok_mod_item_backpack_plains,Lox Hide Knappsack,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe BackpackPlains_Recipe_Forge @ forge
+BackpackSwamp,$vapok_mod_item_backpack_swamp,Bloodbag Wetpack,Shoulder,None,1,2,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe BackpackSwamp_Recipe_Workbench @ piece_workbench
 BakedPoteitr,$item_bakedpoteitr,Baked Poteitr,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,34,17,100,1500,DeepNorth,Conversions: piece_oven: BakedPoteitrUncooked > BakedPoteitr
 BakedPoteitrUncooked,$item_bakedpoteitr_uncooked,Unbaked Poteitr,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,37,19,110,1500,DeepNorth,Recipes: Recipe Recipe_BakedPoteitr @ piece_cauldron
 BarberKit,$item_barberkit,Barber Kit,Misc,Swords,1,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location Hildir_camp > Hildir_camp > Trader Hildir
@@ -268,7 +276,7 @@ BombBlob_Morkhalla,$item_bombblob_morkhalla,Blob Bomb: Pulp,OneHandedWeapon,None
 BombBlob_Poison,$item_bombblob_poison,Blob Bomb: Poison,OneHandedWeapon,None,50,0.3,1,0,True,0,100,15,1,2,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_BombBlob_Poison @ piece_workbench
 BombBlob_PoisonElite,$item_bombblob_poisonelite,Blob Bomb: Elite Poison,OneHandedWeapon,None,50,0.3,1,0,True,0,100,15,1,2,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_BombBlob_PoisonElite @ piece_workbench
 BombBlob_Tar,$item_bombblob_tar,Blob Bomb: Tar,OneHandedWeapon,None,50,0.3,1,0,True,0,100,15,1,2,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_BombBlob_Tar @ piece_workbench
-BombDynamite,$item_bomb_dynamite,Ember Charge,OneHandedWeapon,None,50,0.3,1,0,True,6,100,15,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+BombDynamite,$item_bomb_dynamite,Ember Charge,OneHandedWeapon,None,50,0.3,1,0,True,6,100,15,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BombDynamite @ piece_workbench
 BombLava,$item_lavabomb,Basalt Bomb,OneHandedWeapon,None,50,0.3,1,0,True,4,100,15,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_BombLava @ piece_workbench
 BombOoze,$item_oozebomb,Ooze Bomb,OneHandedWeapon,None,50,0.3,1,0,True,0,100,15,1,2,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_BombOoze @ piece_workbench
 BombSiege,$item_catapult_ammo,Explosive Payload,Material,None,50,0.3,1,0,True,6,100,15,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_BombSiege @ piece_workbench
@@ -312,9 +320,11 @@ CapeDeepNorth,$item_cape_deepnorth,Moose Hide Cape,Shoulder,Swords,1,4,4,0,True,
 CapeDeepNorthMage,$item_cape_deepnorth_mage,Cape of the Caller,Shoulder,Swords,1,4,4,0,True,4,1200,12,2,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CapeDeepNorthMage @ piece_magetable
 CapeDeerHide,$item_cape_deerhide,Deer Hide Cape,Shoulder,Swords,1,4,4,0,True,0,400,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_CapeDeerHide @ piece_workbench
 CapeFeather,$item_cape_feather,Feather Cape,Shoulder,Swords,1,4,4,0,True,5,1200,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CapeFeather @ piece_magetable
+CapeIronBackpack,$vapok_mod_item_rugged_backpack,Old Rugged Backpack,Shoulder,None,1,5,1,0,True,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CapeLinen,$item_cape_linen,Linen Cape,Shoulder,Swords,1,4,4,0,True,4,1500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_CapeLinen @ piece_workbench
 CapeLox,$item_cape_lox,Lox Cape,Shoulder,Swords,1,4,4,0,True,4,1200,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_CapeLox @ piece_workbench
 CapeOdin,$item_cape_odin,Cape of Oden,Shoulder,Swords,1,4,4,0,True,1,1500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_CapeOdin @ piece_workbench
+CapeSilverBackpack,$vapok_mod_item_arctic_backpack,Old Arctic Backpack,Shoulder,None,1,5,1,0,True,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CapeTest,CAPE TEST,CAPE TEST,Shoulder,Swords,1,4,4,0,True,0,100,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CapeTrollHide,$item_cape_trollhide,Troll Hide Cape,Shoulder,Swords,1,4,4,0,True,1,500,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_CapeTrollHide @ piece_workbench
 CapeWolf,$item_cape_wolf,Wolf Fur Cape,Shoulder,Swords,1,4,4,0,True,3,1000,1,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_CapeWolf @ piece_workbench
@@ -383,6 +393,66 @@ CookedWolfMeat,$item_wolf_meat_cooked,Cooked Wolf Meat,Consumable,Swords,20,1,1,
 Copper,$item_copper,Copper,Material,Swords,30,12,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Conversions: smelter: CopperOre > Copper
 CopperOre,$item_copperore,Copper Ore,Material,Swords,30,10,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Vegetation: rock4_copper > Destructible > MineRock
 CopperScrap,$item_copperscrap,Copper Scrap,Material,Swords,30,10,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Locations: Location Mistlands_GuardTower1_new > Mistlands_GuardTower1_new > DropOnDestroyed
+CorruptionEssence_bonemass,$item_corruptionessence_bonemass,Essence of Bonemass,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionEssence_eikthyr,$item_corruptionessence_eikthyr,Essence of Eikthyr,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionEssence_elder,$item_corruptionessence_elder,Essence of the Elder,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionEssence_fader,$item_corruptionessence_fader,Essence of Fader,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionEssence_kall,$item_corruptionessence_kall,Essence of Kall Fimbulbringer,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionEssence_moder,$item_corruptionessence_moder,Essence of Moder,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionEssence_queen,$item_corruptionessence_queen,Essence of the Queen,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionEssence_yagluth,$item_corruptionessence_yagluth,Essence of Yagluth,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_AshLands,$item_corruptionmap_ashlands,Corrupted Ashlands map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_BlackForest,$item_corruptionmap_blackforest,Corrupted Black Forest map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_DeepNorth,$item_corruptionmap_deepnorth,Corrupted Deep North map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Meadows,$item_corruptionmap_meadows,Corrupted Meadows map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Mistlands,$item_corruptionmap_mistlands,Corrupted Mistlands map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Mountain,$item_corruptionmap_mountain,Corrupted Mountains map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Plains,$item_corruptionmap_plains,Corrupted Plains map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Swamp,$item_corruptionmap_swamp,Corrupted Swamp map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionShard,$item_corruptionshard,Corruption shard,Material,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionTalisman_Abomination,Abomination charm,Abomination charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Abomination @ piece_workbench
+CorruptionTalisman_Asksvin,Asksvin charm,Asksvin charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_Asksvin @ piece_workbench
+CorruptionTalisman_Barka,Barka charm,Barka charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CorruptionTalisman_Barka @ piece_workbench
+CorruptionTalisman_Bjorn,Bear charm,Bear charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Bjorn @ piece_workbench
+CorruptionTalisman_Blob,Blob charm,Blob charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Blob @ piece_workbench
+CorruptionTalisman_Boar,Boar charm,Boar charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Boar @ piece_workbench
+CorruptionTalisman_BogWitchKvastur,Kvastur charm,Kvastur charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_BogWitchKvastur @ piece_workbench
+CorruptionTalisman_BonemawSerpent,Bonemaw charm,Bonemaw charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_BonemawSerpent @ piece_workbench
+CorruptionTalisman_Charred_Archer,Charred Marksman charm,Charred Marksman charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_Charred_Archer @ piece_workbench
+CorruptionTalisman_Charred_Mage,Charred Warlock charm,Charred Warlock charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_Charred_Mage @ piece_workbench
+CorruptionTalisman_Charred_Melee,Charred Warrior charm,Charred Warrior charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_Charred_Melee @ piece_workbench
+CorruptionTalisman_Deathsquito,Deathsquito charm,Deathsquito charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_CorruptionTalisman_Deathsquito @ piece_workbench
+CorruptionTalisman_Draugr,Draugr charm,Draugr charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Draugr @ piece_workbench
+CorruptionTalisman_Dverger,Dvergr Rogue charm,Dvergr Rogue charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CorruptionTalisman_Dverger @ piece_workbench
+CorruptionTalisman_Elaking,Elaking charm,Elaking charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CorruptionTalisman_Elaking @ piece_workbench
+CorruptionTalisman_FallenValkyrie,Fallen Valkyrie charm,Fallen Valkyrie charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_FallenValkyrie @ piece_workbench
+CorruptionTalisman_Fenring,Fenring charm,Fenring charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_CorruptionTalisman_Fenring @ piece_workbench
+CorruptionTalisman_Ghost,Ghost charm,Ghost charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Ghost @ piece_workbench
+CorruptionTalisman_Gjall,Gjall charm,Gjall charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CorruptionTalisman_Gjall @ piece_workbench
+CorruptionTalisman_Goblin,Fuling charm,Fuling charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_CorruptionTalisman_Goblin @ piece_workbench
+CorruptionTalisman_Greydwarf,Greydwarf charm,Greydwarf charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Greydwarf @ piece_workbench
+CorruptionTalisman_Hatchling,Drake charm,Drake charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_CorruptionTalisman_Hatchling @ piece_workbench
+CorruptionTalisman_JotunWarrior,Krigen charm,Krigen charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CorruptionTalisman_JotunWarrior @ piece_workbench
+CorruptionTalisman_JotunWitch,Hexen charm,Hexen charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CorruptionTalisman_JotunWitch @ piece_workbench
+CorruptionTalisman_Leech,Leech charm,Leech charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Leech @ piece_workbench
+CorruptionTalisman_Lox,Lox charm,Lox charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_CorruptionTalisman_Lox @ piece_workbench
+CorruptionTalisman_Moose,Moose charm,Moose charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CorruptionTalisman_Moose @ piece_workbench
+CorruptionTalisman_Morgen,Morgen charm,Morgen charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_Morgen @ piece_workbench
+CorruptionTalisman_Neck,Neck charm,Neck charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Neck @ piece_workbench
+CorruptionTalisman_Seeker,Seeker charm,Seeker charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CorruptionTalisman_Seeker @ piece_workbench
+CorruptionTalisman_Serpent,Serpent charm,Serpent charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ocean,Recipes: Recipe Recipe_CorruptionTalisman_Serpent @ piece_workbench
+CorruptionTalisman_Skeleton,Skeleton charm,Skeleton charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Skeleton @ piece_workbench
+CorruptionTalisman_StoneGolem,Stone Golem charm,Stone Golem charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_CorruptionTalisman_StoneGolem @ piece_workbench
+CorruptionTalisman_Surtling,Surtling charm,Surtling charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Surtling @ piece_workbench
+CorruptionTalisman_Tick,Tick charm,Tick charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CorruptionTalisman_Tick @ piece_workbench
+CorruptionTalisman_TrainingDummy,TrainingDummy charm,TrainingDummy charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_TrainingDummy @ piece_workbench
+CorruptionTalisman_Troll,Troll charm,Troll charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Troll @ piece_workbench
+CorruptionTalisman_Ulv,Ulv charm,Ulv charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_CorruptionTalisman_Ulv @ piece_workbench
+CorruptionTalisman_Unbjorn,Vile charm,Vile charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_CorruptionTalisman_Unbjorn @ piece_workbench
+CorruptionTalisman_Volture,Volture charm,Volture charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CorruptionTalisman_Volture @ piece_workbench
+CorruptionTalisman_Wolf,Wolf charm,Wolf charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_CorruptionTalisman_Wolf @ piece_workbench
+CorruptionTalisman_Wraith,Wraith charm,Wraith charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Wraith @ piece_workbench
+CorruptionTalisman_Writhan,Writhan charm,Writhan charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Writhan @ piece_workbench
 CrossbowArbalest,$item_crossbow_arbalest,Arbalest,Bow,Crossbows,1,1.5,4,0,True,5,150,15,1,3,-0.05,0,0,0,200,140,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CrossbowArbalest @ blackforge
 CrossbowGold,$item_crossbow_gold,Nord Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,264,180,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold @ blackforge
 CrossbowGold_BloodLightning,$item_crossbow_bloodlightning_gold,Thunderblood Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,274,180,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold_BloodLightning @ blackforge
@@ -402,7 +472,7 @@ Deathsquito_sting,Wraith melee,Wraith melee,OneHandedWeapon,Swords,1,1,1,0,True,
 DeerHide,$item_deerhide,Deer Hide,Material,Swords,50,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Deer > CharacterDrop
 DeerMeat,$item_deer_meat,Deer Meat,Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,20,20,0,600,Meadows,Spawns: Deer > CharacterDrop
 DeerStew,$item_deerstew,Deer Stew,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,45,15,0,1500,BlackForest,Recipes: Recipe Recipe_DeerStew @ piece_cauldron
-Demister,$item_demister,Wisplight,Utility,Swords,1,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+Demister,$item_demister,Wisplight,Utility,Swords,1,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_Demister @ piece_workbench
 dragon_bite,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,120,1000,1000,0,0,0,0,0,0,0,0,0,,
 dragon_claw_left,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,110,0,1000,1000,0,0,0,0,0,0,0,0,0,,
 dragon_claw_right,Dragon claw left,Dragon claw left,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,110,0,1000,1000,0,0,0,0,0,0,0,0,0,,
@@ -483,7 +553,7 @@ Fader_Spin,Fader Spin,Fader Spin,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,
 Fader_Taunt,Fader Taunt,Fader Taunt,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,120,1000,1000,0,0,0,0,0,0,0,0,0,,
 Fader_WallOfFire,Fader Wall of Fire,Fader Wall of Fire,OneHandedWeapon,Swords,1,1,1,0,True,3,100,10,1,10,0,0,0,0,120,1000,1000,0,0,0,0,0,0,0,0,0,,
 FaderDrop,$item_fader_drop,Kindled Ribs,Material,Swords,30,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Locations: Location FaderLocation > FaderLocation > OfferingBowl > CharacterDrop
-FaderEmber,$item_faderember,Embers,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+FaderEmber,$item_faderember,Embers,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Producers: piece_EternalPyre > LuredFaderEmber > Pickable
 fallenvalkyrie_claws,Fallen Valkyrie Claws,Fallen Valkyrie Claws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,105,55,0,0,0,0,0,0,0,0,0,0,0,,
 fallenvalkyrie_poisonbreath,Fallen Valkyrie Poison Breath,Fallen Valkyrie Poison Breath,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,100,0,0,0,0,0,,
 fallenvalkyrie_screech,Fallen Valkyrie Claws,Fallen Valkyrie Claws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,20,20,0,0,0,0,0,0,0,0,0,0,0,,
@@ -1171,7 +1241,7 @@ ShieldTowerGoldUncooked,$item_shield_tower_gold_uncooked,Cast: Nord Greatshield,
 ShieldWood,$item_shield_wood,Wood Shield,Shield,Blocking,1,4,3,0,True,0,200,100,1,6,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ShieldWood @ piece_workbench
 ShieldWoodTower,$item_shield_woodtower,Wood Tower Shield,Shield,Blocking,1,4,3,0,True,0,200,100,1,10,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ShieldWoodTower @ piece_workbench
 ShocklateSmoothie,$item_shocklatesmoothie,Muckshake,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,16,50,0,1200,Swamp,Recipes: Recipe Recipe_ShocklateSmoothie @ piece_cauldron
-Shovel,$item_snowshovel,Snow Shovel,TwoHandedWeapon,Farming,1,2,3,0,True,0,200,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+Shovel,$item_snowshovel,Snow Shovel,TwoHandedWeapon,Farming,1,2,3,0,True,0,200,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_SnowShovel @ blackforge
 Silver,$item_silver,Silver,Material,Swords,30,14,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Conversions: smelter: SilverOre > Silver
 SilverNecklace,$item_silvernecklace,Silver Necklace,Material,Swords,20,0.1,1,30,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location MountainGrave01 > MountainGrave01 > Pickable
 SilverOre,$item_silverore,Silver Ore,Material,Swords,30,14,1,0,False,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Vegetation: silvervein > Destructible > MineRock
@@ -1314,7 +1384,7 @@ SwordGold_FrostFire,$item_sword_gold_frostfire,Frostfire Sword,OneHandedWeapon,S
 SwordGoldUncooked,$item_sword_gold_uncooked,Cast: Nord Sword,Material,Swords,1,0.8,1,0,True,6,200,20,1,57,0,0,0,135,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordGoldUncooked @ blackforge
 SwordIron,$item_sword_iron,Iron Sword,OneHandedWeapon,Swords,1,0.8,4,0,True,2,200,20,1,21,-0.05,0,0,55,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_SwordIron @ forge
 SwordIronFire,$item_sword_fire,Dyrnwyn,OneHandedWeapon,Swords,1,1,4,0,True,0,200,20,1,21,-0.05,0,0,55,0,0,0,30,0,0,0,0,0,0,0,0,,
-SwordMistwalker,$item_sword_mistwalker,Mistwalker,OneHandedWeapon,Swords,1,0.8,4,0,True,5,250,20,1,48,-0.05,0,0,75,0,0,0,0,40,0,0,0,0,0,0,0,,
+SwordMistwalker,$item_sword_mistwalker,Mistwalker,OneHandedWeapon,Swords,1,0.8,4,0,True,5,250,20,1,48,-0.05,0,0,75,0,0,0,0,40,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_SwordMistwalker @ blackforge
 SwordNiedhogg,$item_sword_niedhogg,Nidhögg,OneHandedWeapon,Swords,1,0.8,4,0,True,6,300,20,1,57,-0.05,0,0,135,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_SwordNiedhogg @ blackforge
 SwordNiedhoggBlood,$item_sword_niedhogg_blood,Nidhögg the Bleeding,OneHandedWeapon,Swords,1,0.8,4,0,True,6,300,20,1,57,-0.05,0,0,135,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordNiedhogg_Blood @ blackforge
 SwordNiedhoggLightning,$item_sword_niedhogg_lightning,Nidhögg the Thundering,OneHandedWeapon,Swords,1,0.8,4,0,True,6,300,20,1,57,-0.05,0,0,135,0,0,0,0,0,10,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_SwordNiedhogg_Lightning @ blackforge
@@ -1497,7 +1567,7 @@ volture_talons,Volture Talons,Volture Talons,OneHandedWeapon,Swords,1,1,1,0,True
 VoltureEgg,$item_voltureegg,Volture Egg,Misc,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,20,60,0,1200,Ashlands,Spawns: Volture > CharacterDrop
 VoltureMeat,$item_volture_meat,Volture Meat,Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,70,24,0,1200,Ashlands,Spawns: Volture > CharacterDrop
 Wishbone,$item_wishbone,Wishbone,Utility,Swords,1,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location Bonemass > Bonemass > OfferingBowl > CharacterDrop
-Wisp,$item_wisp,Wisp,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+Wisp,$item_wisp,Wisp,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Producers: piece_wisplure > LuredWisp > Pickable
 WitheredBone,$item_witheredbone,Withered Bone,Material,Swords,30,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Vegetation: mudpile_beacon > Destructible > MineRock
 Wolf_Attack1,WolfAttack1,WolfAttack1,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,70,0,0,0,0,0,0,0,0,0,0,0,0,,
 Wolf_Attack2,WolfAttack2,WolfAttack2,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,70,0,0,0,0,0,0,0,0,0,0,0,0,,

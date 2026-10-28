@@ -21,6 +21,7 @@ namespace Corruption.Content
         public const string RavenText = "$raven_riftforge_text";
         public const string MapSubtitle = "$corruption_map_subtitle";
 
+        // Values are filled in with $1, $2... (Localization.InsertWords), not {0}.
         public static void Register()
         {
             CustomLocalization localization = LocalizationManager.Instance.GetLocalization();
@@ -36,19 +37,19 @@ namespace Corruption.Content
                 { "corruption_rip", "Rip" },
                 { "corruption_rip_heart", "Rip heart" },
                 { "corruption_rip_enter", "Enter" },
-                { "corruption_rip_to", "Leads into the corrupted {0}" },
+                { "corruption_rip_to", "Leads into the corrupted $1" },
                 { "corruption_rip_home", "Leads home" },
-                { "corruption_rip_closes", "Closes in {0}" },
+                { "corruption_rip_closes", "Closes in $1" },
                 { "corruption_rip_heart_hint", "Destroy it to open the way home" },
                 { "corruption_rip_closed", "The rip has closed." },
                 { "corruption_rip_searching", "The map stirs, searching for unexplored land..." },
                 { "corruption_rip_busy", "The map is still searching." },
                 { "corruption_rip_disabled", "Rips are turned off on this server." },
                 { "corruption_rip_not_here", "The map won't open a rip here." },
-                { "corruption_rip_no_land", "There is no unexplored {0} left for this map to reach." },
-                { "corruption_rip_only_bases", "Every unexplored {0} the map found is too close to someone's base. Try again." },
+                { "corruption_rip_no_land", "There is no unexplored $1 left for this map to reach." },
+                { "corruption_rip_only_bases", "Every unexplored $1 the map found is too close to someone's base. Try again." },
                 { "corruption_rip_no_answer", "The map falls silent. Try again." },
-                { "corruption_rip_opened", "A rip tears open into the corrupted {0}." },
+                { "corruption_rip_opened", "A rip tears open into the corrupted $1." },
                 { "corruption_rip_home_opened", "The heart shatters. A way home opens." },
                 { "raven_riftforge_topic", "The Riftforge" },
                 { "raven_riftforge_label", "Riftforge" },

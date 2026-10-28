@@ -1,0 +1,10 @@
+location,biome,altar,offering,offering_count,boss,use_item_stands,item_stand_prefix,item_stands,set_global_key,spawn_delay
+Eikthyrnir,Meadows,offeraltar_deer,TrophyDeer,2,Eikthyr,False,,,,12
+GoblinKing,Plains,offeraltar_goblinking,GoblinTotem,3,GoblinKing,True,goblinking_totemholder,goblinking_totemholder [GoblinTotem]; goblinking_totemholder (1) [GoblinTotem]; goblinking_totemholder (2) [GoblinTotem]; goblinking_totemholder (3) [GoblinTotem]; goblinking_totemholder (4) [GoblinTotem],,12
+GDKing,BlackForest,fire_button,AncientSeed,3,gd_king,False,,,,12
+Bonemass,Swamp,offeraltar,WitheredBone,10,Bonemass,False,,,,12
+Dragonqueen,Mountain,offeraltar_dragon,,0,Dragon,True,dragoneggcup,dragoneggcup [DragonEgg]; dragoneggcup (3) [DragonEgg]; dragoneggcup (4) [DragonEgg],,12
+FaderLocation,AshLands,offeraltar_fader,Bell,3,Fader,True,fader_bellholder,fader_bellholder [Bell]; fader_bellholder (1) [Bell]; fader_bellholder (2) [Bell],,25.014
+DN_Bossroom,DeepNorth,offeraltar_FrozenKing_bossroom,HatefulBlood,3,FrozenKing,False,,,,12
+DN_Bossroom,DeepNorth,offeraltar_FrozenKing,HatefulBlood,3,vfx_LastBossGate_destroyed,False,,,LastBossGate_Open,0
+NorthMemorialPlace,DeepNorth,offeraltar_memorialsite,MemorialCoal,3,memorialsite_offering,False,,,,1
