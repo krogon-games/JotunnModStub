@@ -123,7 +123,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 
 - Only terrain the activating player has not explored, read from their minimap explored data.
 - Only the map's target biome. A Black Forest map never lands you in Ashlands or open ocean.
-- **Open point (2026-10-28):** Meadows maps may struggle to find unexplored Meadows, since players explore most of the Meadows early. Options when building rips: allow explored land for Meadows, or prefer the far side of the world.
+- Meadows maps follow the same unexplored-land rule as every other map. The user expects plenty of unexplored Meadows to remain by the time the first corrupted map is crafted (decided 2026-10-28; revisit only if rips fail to find a spot in play-tests).
 - Prefer land at least a set distance from the player's bases (no ward or bed nearby) so rips don't trash a build.
 - The area isn't loaded until arrival, so validate the spot after the zone loads and re-roll if it's water or a cliff face.
 - Multiplayer: the activator's explored data decides. Others may already know the area; that's fine.
