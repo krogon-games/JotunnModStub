@@ -4,7 +4,7 @@ Prompts for concept renders made with an image model (Nano Banana / Gemini image
 
 ## Boss essences (design phase 3)
 
-Each boss drops its essence, the key ingredient for maps into the corrupted version of its own biome (`corruption-design.md` → Boss essences). The seven should read as **one family** (same size, same rough-cut gem shape as the corruption shard, same camera and lighting) but each clearly belongs to its boss.
+Each boss drops its essence, the key ingredient for maps into the corrupted version of its own biome (`corruption-design.md` → Boss essences). Kall Fimbulbringer's essence was added later without a render. The seven should read as **one family** (same size, same rough-cut gem shape as the corruption shard, same camera and lighting) but each clearly belongs to its boss.
 
 **How to use:** attach the corruption shard picture (`docs/images/shard_preview.png` or an in-game screenshot) as a reference image, paste the sheet prompt, then use the single prompts to refine any essence you don't like. Ask for a change in plain words ("make Bonemass greener and wetter, fewer bones").
 
@@ -52,3 +52,63 @@ then add one line:
 - **Possible but simple only:** small attachments (antler tips, a root, a crown ring, a bone fragment) as a few extra faceted pieces.
 - **Not possible:** fine sculpted detail, transparency with real refraction, animated effects other than a glow light.
 - Boss look notes are from game knowledge of the vanilla bosses, not checked against the game files.
+
+## Currency orbs (design phase 7)
+
+The nine orbs from `corruption-design.md` → Currency orbs. They should match the essences (same camera, lighting, background, size class and stylised Valheim look) but read as a **different family**: round, hand-made objects of stone and metal, not gems. Valheim, not Path of Exile: no polished glass marbles or sci-fi glow; think worn, carved, rune-marked objects a Viking smith or seer would make.
+
+**Visual language (so the use reads at a glance):**
+- **Material shows rarity**, following Valheim's metal progression: stone and wood (common) → bronze and iron (uncommon) → silver and gold (rare).
+- **Rune glow colour shows the result:** blue = magic, gold-yellow = rare, white-gold = rerolls, grey-violet = removes, mixed colours = chance.
+- **Every orb carries one carved Elder Futhark rune** that glows. Runes picked for meaning: Transmutation ᛇ Eihwaz (change), Augmentation ᚢ Uruz (strength), Alchemy ᚷ Gebo (gift), Regal ᛟ Othala (inheritance), Exalted ᛏ Tiwaz (victory), Divine ᛞ Dagaz (dawn, renewal), Annulment ᚾ Naudiz (need, loss), Chance ᛈ Perthro (fate, the lot cup), Jeweller's ᛃ Jera (harvest).
+
+**How to use:** attach the essence render (`docs/images/essences_reference.jpg`) as a reference for style, camera and lighting, paste the sheet prompt, then refine single orbs with the single prompts. Ask for changes in plain words ("make Exalted brighter, less gold trim").
+
+### Sheet prompt (all nine in one image)
+
+```
+Concept art sheet of nine magical crafting orbs for a Viking survival game, in the stylised, slightly low-poly painterly look of Valheim. Match the attached sheet of gemstones for style, camera, lighting and background, but these are a different family: each orb is a roughly round, hand-made sphere about the size of a fist, slightly hand-hewn rather than perfectly smooth, with large flat facets like a low-poly ball. Each has one Norse rune carved deep into its front face, and the rune glows from inside. Materials follow Valheim's progression: worn stone and wood for common orbs, bronze and iron for uncommon, silver and gold for rare. No glass, no polished marbles, no sci-fi glow: worn, carved, rune-marked objects a Viking smith or seer would make.
+
+Lay them out in a 3 by 3 grid on a plain dark slate-grey background, evenly spaced, each centred in its own square, same three-quarter camera angle, same soft key light from the upper left, subtle glow halo, no text, no labels, no hands, no other objects. Left to right, top to bottom:
+
+1. Orb of Transmutation: worn grey river stone, rune Eihwaz carved in the front, glowing soft blue.
+2. Orb of Augmentation: grey stone like the first, bound by one thin band of bronze around the middle, rune Uruz glowing blue.
+3. Orb of Alchemy: dark stone split by thin seams of molten gold-yellow light, rune Gebo glowing gold-yellow.
+4. Regal Orb: dark iron sphere with rivets and a small crown-like rim of bronze points on top, rune Othala glowing gold-yellow.
+5. Exalted Orb: bright Mountain silver with fine engraved knotwork, rune Tiwaz glowing radiant gold, a little brighter than the others.
+6. Divine Orb: pale gold and white bone, engraved with a Valknut, rune Dagaz glowing warm white-gold light.
+7. Orb of Annulment: hollow-looking blackened iron, cracked, the rune Naudiz scratched through as if cancelled, faint cold grey-violet glow.
+8. Orb of Chance: carved bone and dark wood in alternating facets, like a gambling lot, rune Perthro in the front and small runes on other facets glowing different colours (blue, gold, green, red).
+9. Jeweller's Orb: polished dark stone with three small round empty gem sockets set in bronze around it, rune Jera glowing soft teal.
+
+Game item render, readable at small icon size, strong silhouettes, high detail, square 1:1 image.
+```
+
+### Single prompts (refine one orb)
+
+Start each with:
+
+```
+A single magical crafting orb for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look, matching the attached item renders for camera, lighting and background. A roughly round, hand-hewn sphere about the size of a fist, with large flat facets, one Norse rune carved deep in its front face glowing from inside. Worn, carved and hand-made, not glass or polished. Centred on a plain dark slate-grey background, three-quarter view, soft key light from the upper left, subtle glow halo, no text, no other objects.
+```
+
+then add one line:
+
+| Orb | Add |
+|---|---|
+| Transmutation | `It is the Orb of Transmutation: worn grey river stone, the rune Eihwaz glowing soft blue.` |
+| Augmentation | `It is the Orb of Augmentation: grey stone bound by one thin bronze band around the middle, the rune Uruz glowing blue.` |
+| Alchemy | `It is the Orb of Alchemy: dark stone split by thin seams of molten gold-yellow light, the rune Gebo glowing gold-yellow.` |
+| Regal | `It is the Regal Orb: dark riveted iron with a small crown-like rim of bronze points on top, the rune Othala glowing gold-yellow.` |
+| Exalted | `It is the Exalted Orb: bright silver with fine engraved knotwork, the rune Tiwaz glowing radiant gold, brighter than ordinary orbs.` |
+| Divine | `It is the Divine Orb: pale gold and white bone engraved with a Valknut, the rune Dagaz glowing warm white-gold.` |
+| Annulment | `It is the Orb of Annulment: cracked, blackened iron that looks hollow, the rune Naudiz scratched through as if cancelled, a faint cold grey-violet glow.` |
+| Chance | `It is the Orb of Chance: alternating facets of carved bone and dark wood like a gambling lot, the rune Perthro in front and small runes on other facets glowing blue, gold, green and red.` |
+| Jeweller's | `It is the Jeweller's Orb: polished dark stone with three small empty round gem sockets set in bronze, the rune Jera glowing soft teal.` |
+
+### Notes for turning the renders into models
+
+- One shared faceted sphere model, like the shared essence gem; each orb is a texture (material, carved rune, cracks, knotwork) plus a glow mask and colour.
+- Simple extra parts are possible, as with the Elder's root and Yagluth's ring: the bronze band, the Regal crown rim, the Jeweller's sockets.
+- Fine engraving (knotwork, the Valknut) becomes painted texture lines, so it will be softer than in the render.
+- Rune meanings are common Elder Futhark readings, chosen for flavour.
