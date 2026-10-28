@@ -8,7 +8,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - `dotnet test CraftingOverhaul.Tests`: **74 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap and drop tables).
-- Last play-test: 2026-10-26, single player, by the user.
+- Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talisman slots seen; two charm bugs fixed).
 
 ## Implemented
 
@@ -35,7 +35,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
-| Talisman slots (2026-10-28) | Two talismans in the EquipmentAndQuickSlots Talisman slots plus a vanilla trinket; both families ignore you, also on a friend's game. Steps: `docs/mod-compatibility.md` → How to test |
+| Talisman slots (2026-10-28) | Slots and recipes **seen in-game** (2026-10-28, all mods loaded); Adrenaline/"Trinket" bugs fixed since. Still to check: two charms in the Talisman slots plus a vanilla trinket; both families ignore you, also on a friend's game. Steps: `docs/mod-compatibility.md` → How to test |
 | Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
 
 ## Not built (proposed)

@@ -24,9 +24,32 @@ namespace Corruption.Content
         /// <summary>Talisman prefab hash → prefab hashes of the creatures it repels.</summary>
         public static readonly Dictionary<int, HashSet<int>> RepelledBy = new Dictionary<int, HashSet<int>>();
 
-        /// <summary>A talisman's shared item data (the same object on every copy) → its prefab hash.</summary>
-        public static readonly Dictionary<ItemDrop.ItemData.SharedData, int> HashByShared =
-            new Dictionary<ItemDrop.ItemData.SharedData, int>();
+        /// <summary>Talisman display name → prefab hash, a fallback for items whose prefab reference is missing.</summary>
+        private static readonly Dictionary<string, int> HashByName = new Dictionary<string, int>();
+
+        /// <summary>
+        ///     Whether an item is a talisman, and which. Uses the prefab the item came from: an item picked up from the
+        ///     ground carries its own copy of the item data, so the shared data can't be compared by reference.
+        /// </summary>
+        public static bool TryGetTalisman(ItemDrop.ItemData item, out int talisman)
+        {
+            talisman = 0;
+            if (item == null)
+            {
+                return false;
+            }
+            if (item.m_dropPrefab)
+            {
+                int hash = item.m_dropPrefab.name.GetStableHashCode();
+                if (RepelledBy.ContainsKey(hash))
+                {
+                    talisman = hash;
+                    return true;
+                }
+                return false;
+            }
+            return item.m_shared != null && HashByName.TryGetValue(item.m_shared.m_name, out talisman);
+        }
 
         public static void Register()
         {
@@ -107,6 +130,8 @@ namespace Corruption.Content
             StripBonuses(item.ItemDrop.m_itemData.m_shared);
             // Not equippable: it works from a talisman slot, and the trinket slot stays free for vanilla trinkets.
             item.ItemDrop.m_itemData.m_shared.m_itemType = ItemDrop.ItemData.ItemType.Misc;
+            // The orange line under the description; the base trinket's says "Trinket".
+            item.ItemDrop.m_itemData.m_shared.m_subtitle = Texts.TalismanSubtitle;
 
             // The trophy's icon shows at a glance which creatures the charm repels.
             var trophy = PrefabManager.Instance.GetPrefab(family.Trophy).GetComponent<ItemDrop>();
@@ -123,19 +148,23 @@ namespace Corruption.Content
 
             RepelledBy[prefabName.GetStableHashCode()] =
                 new HashSet<int>(family.Members.Select(m => m.GetStableHashCode()));
-            HashByShared[item.ItemDrop.m_itemData.m_shared] = prefabName.GetStableHashCode();
+            HashByName[item.ItemDrop.m_itemData.m_shared.m_name] = prefabName.GetStableHashCode();
         }
 
-        /// <summary>The base trinket's own effects (health, adrenaline power, resistances) don't belong on a charm.</summary>
+        /// <summary>The base trinket's own effects (health, adrenaline, resistances) don't belong on a charm.</summary>
         private static void StripBonuses(ItemDrop.ItemData.SharedData shared)
         {
-            foreach (FieldInfo field in Player.s_equipmentModifierSourceFields ?? new FieldInfo[0])
+            // The game's list of equipment stat fields (movement, stamina modifiers, max adrenaline...). Read by name:
+            // the game only turns it into a field list once a player spawns, after talismans are registered.
+            foreach (string name in Player.s_equipmentModifierSources)
             {
-                if (field.FieldType == typeof(float) && field.DeclaringType == typeof(ItemDrop.ItemData.SharedData))
+                FieldInfo field = typeof(ItemDrop.ItemData.SharedData).GetField(name, BindingFlags.Instance | BindingFlags.Public);
+                if (field != null && field.FieldType == typeof(float))
                 {
                     field.SetValue(shared, 0f);
                 }
             }
+            shared.m_maxAdrenaline = 0f;
             shared.m_fullAdrenalineSE = null;
             shared.m_equipStatusEffect = null;
             shared.m_setStatusEffect = null;

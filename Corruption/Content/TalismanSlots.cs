@@ -81,7 +81,7 @@ namespace Corruption.Content
 
         private static bool FitsSlot(int index, ItemDrop.ItemData item)
         {
-            if (item == null || !Talismans.HashByShared.TryGetValue(item.m_shared, out int talisman))
+            if (!Talismans.TryGetTalisman(item, out int talisman))
             {
                 return false;
             }
@@ -107,7 +107,7 @@ namespace Corruption.Content
                     item = null;
                 }
                 SlotItems[i] = item;
-                SlotContents[i] = item != null && Talismans.HashByShared.TryGetValue(item.m_shared, out int hash) ? hash : 0;
+                SlotContents[i] = Talismans.TryGetTalisman(item, out int hash) ? hash : 0;
             }
         }
 

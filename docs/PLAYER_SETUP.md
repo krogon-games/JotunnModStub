@@ -82,7 +82,7 @@ When Krogon sends new DLLs, replace the old ones in the same folders (step 3), w
 ## Good to know
 
 - **Cape or backpack:** a backpack takes the cape slot, so you wear one or the other.
-- **Talismans:** craft a "<creature> charm" at the workbench from 3 of that creature's trophies, 1 chain and 10 leather scraps. Put it in one of the **Talisman** slots in the equipment panel (2 slots, plus the normal trinket slot). That creature family leaves you alone unless you hit them first.
+- **Talismans** (in game they're called "<creature> charm"): craft a "<creature> charm" at the workbench from 3 of that creature's trophies, 1 chain and 10 leather scraps. Put it in one of the **Talisman** slots in the equipment panel (2 slots, plus the normal trinket slot). That creature family leaves you alone unless you hit them first.
 - **Crafting from chests:** materials in chests within 20 m of the crafting station count for recipes and building, as well as your backpack.
 
 ---

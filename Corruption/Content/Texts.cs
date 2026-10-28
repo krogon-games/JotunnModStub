@@ -13,6 +13,7 @@ namespace Corruption.Content
         public const string ShardDescription = "$item_corruptionshard_description";
         public const string RiftforgeName = "$piece_riftforge";
         public const string RiftforgeDescription = "$piece_riftforge_description";
+        public const string TalismanSubtitle = "$corruption_talisman_subtitle";
         public const string RavenTopic = "$raven_riftforge_topic";
         public const string RavenLabel = "$raven_riftforge_label";
         public const string RavenText = "$raven_riftforge_text";
@@ -26,6 +27,7 @@ namespace Corruption.Content
                 { "item_corruptionshard_description", "A splinter of Ginnungagap, the void before the world. It hums against your palm." },
                 { "piece_riftforge", "Riftforge" },
                 { "corruption_slot_talisman", "Talisman" },
+                { "corruption_talisman_subtitle", "Talisman: place in a Talisman slot" },
                 { "piece_riftforge_description", "A forge that works the void itself. Here maps into the unknown are made." },
                 { "raven_riftforge_topic", "The Riftforge" },
                 { "raven_riftforge_label", "Riftforge" },

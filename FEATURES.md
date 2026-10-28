@@ -353,6 +353,12 @@ New item registered through Jötunn: `CorruptionShard` (cloned from the `ShardBa
 The family rules are unit-tested against the real 1.0 creature list (`TalismanFamiliesTests`).
 
 **Known issues:**
+- Play-test 2026-10-28 (with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded): the two **Talisman** slots appear in the EquipmentAndQuickSlots equipment panel next to the Trinket slot, and the charm recipes show at the workbench. Two bugs found and fixed (awaiting re-test):
+  - the charm's tooltip said "Trinket": that was the subtitle line copied from the vanilla trinket; it now says "Talisman: place in a Talisman slot";
+  - the charm kept the trinket's **Adrenaline 50**: its bonuses were stripped using a list the game only fills once a player spawns, after charms are made, so nothing was stripped. Now stripped by field name.
+  - Also fixed before it showed: charms picked up from the ground (or spawned with cheats) weren't recognised by the slots until relogging, because such items carry their own copy of the item data. Talismans are now recognised by the prefab they came from.
+  - Repelling creatures is still untested.
+- In game, talismans are called "<creature> charm" (lore: Ægishjálmur charms); "talisman" is the slot and system name.
 - Untested in-game.
 - Families are by name, so some group widely: one Blob charm covers every ooze (tar, frost, lava...), and the Troll charm also covers Deep North frost trolls. Exclusions can split off individual creatures.
 - A creature that already targets you when you put the charm on may keep following you, but can't hit you.
@@ -409,6 +415,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Talisman fixes after the first play-test with all mods:** charms no longer keep the base trinket's Adrenaline 50 or its "Trinket" subtitle, and charms picked up from the ground are recognised by the talisman slots. The slots themselves showed up correctly.
 - **Talismans: 2 talisman slots plus the vanilla trinket.** Talismans are no longer trinkets; they work from their own slots (default 2, admin setting `Slots`), added to EquipmentAndQuickSlots' equipment panel through its API, and are published to other players through the player object. Without EquipmentAndQuickSlots they do nothing. Untested in-game (74 tests).
 - **Mod compatibility** (`docs/mod-compatibility.md`): checked EquipmentAndQuickSlots 3.1.3, PlantEasily 2.3.1 and AdventureBackpacks 2.4.6 against our patches. Fixed in craft-from-chests: with AdventureBackpacks' craft-from-backpack, a cost the backpack covered was charged to nearby chests too; and the backpack's hidden container could be counted as a chest. Untested in-game.
 - Affix numbers for the new affixes approved. Caps moved into `Corruption/Data/affix_caps.csv` with a validator (`Corruption/Rules/AffixCaps.cs`); movement-speed cap raised to 35% (71 tests). No gameplay change yet.
