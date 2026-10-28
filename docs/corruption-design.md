@@ -405,6 +405,32 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 - Uniques can only be touched by Divine Orbs and Jeweller's Orbs.
 - Orbs stack, live in their own Currency tab, and can go through portals. They're meant to be traded between players.
 
+### Affix shards and shattering
+
+*Added 2026-10-28 (user), inspired by Last Epoch's affix shards and Rune of Shattering.* Every unwanted Magic or Rare drop becomes crafting material, and players can build the start of an item on purpose instead of only gambling with orbs.
+
+**Shattering** (at the Riftforge, free):
+- Put in a Magic or Rare item and shatter it. The item is destroyed.
+- Each of its affixes has a chance to become an **affix shard** of that affix. *Chance per affix: waiting on the user;* it will live in a data table under `Corruption/Data/`.
+- Costs nothing: no rune, no Corruption shard.
+
+**Affix shards:**
+- One shard holds **one affix and the exact value it had** on the shattered item (e.g. "Swift +12% attack speed"). Affix ranges are the same on every item (the one-range rule in [`AFFIX_RULES.md`](AFFIX_RULES.md)), so the value means the same on any item it moves to.
+- Because each shard carries its own value, shards **don't stack**.
+- Applied at the Riftforge: put in the item and the shard, press craft. The affix lands with the shard's value; the shard is used up.
+- **Only on Normal and Magic items, and at most 2 affixes from shards**, i.e. the Magic limit of 1 prefix + 1 suffix. A shard on a Normal item makes it Magic. Shards can't touch Rares, uniques or corrupted items. To go further, use the orbs: Regal Orb (Magic → Rare) and Exalted Orb, so orbs stay the way to finish an item.
+- The normal affix rules apply: the affix must be one the item's class can roll (the item-class columns in `affixes.csv`), one affix per family per side, and a prefix shard needs a free prefix slot (suffix likewise). A shard that completes a twin resonates as usual.
+- Shards can go through portals and be traded, like orbs.
+
+**Open (2026-10-28):**
+- The shatter chance per affix.
+- Can uniques and corrupted items be shattered? If corrupted items can, does the corrupted affix give a shard?
+- Shattering a resonant twin line: what value does each half's shard carry? (The line rolled from the wider resonant range.)
+- In-game name: "affix shard" is easy to confuse with the Corruption shard.
+- Shards don't stack, so they take a slot each until the Currency tab (phase 9).
+
+**Technical notes:** one shard item (a cloned, tinted vanilla prefab) whose affix and value live in `m_customData`, like affixes on gear; the tooltip shows which affix it holds. No new prefab per affix, so new rows in `affixes.csv` need no shard work. Max stack size 1, so the game never merges two shards with different values.
+
 ### Sockets
 
 Sockets are a placeholder for now. They will feed a Diablo 2-style runeword system: specific runes in a specific order in a socketed item create a named runeword with fixed bonuses. Runewords are crafted at a bench rather than socketed by hand, to keep the mod simpler to write. Details to come.
@@ -445,7 +471,7 @@ Build in the order below. Each phase is playable on its own and teaches a system
 4. **Maps and rips, basic.** Map item and the Maps inventory tab, landing-spot picker, two-way rip portal, one wave event via the raid system, maddened status effect. This is the big one.
 5. **Affixes and tiers.** Bench rolling, affix data on the map item, 3-star scaling, tooltip.
 6. **Corrupted bosses.** Corrupted offering items the altars accept, multipliers, summon timer, tint.
-7. **Loot and uniques.** Rip chest, rarity tiers and affixes, currency orbs and the Currency inventory tab, shard corruption with brick chance, unique drops, personal loot, loot beams.
+7. **Loot and uniques.** Rip chest, rarity tiers and affixes, currency orbs and the Currency inventory tab, affix shards and shattering, shard corruption with brick chance, unique drops, personal loot, loot beams.
 8. **Scars.** Area corruption after a rip closes, minimap marker, expiry. Then terror zones, roaming rare elites and the Svartalfheim secret map.
 9. **Wheel of powers and inventory.** Radial menu extension, item powers, bag UI.
 10. **Skill rework.** Separate optional module.
