@@ -31,7 +31,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 4: maps and rips | Corruption | Proposed | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
 | Phase 6: corrupted bosses | Corruption | Proposed | design doc + review 4 |
-| Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft) | design doc, `AFFIX_RULES.md` |
+| Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28) | design doc, `mod-compatibility.md` |
 | Phase 10: skill rework (optional module) | — | Proposed | design doc |

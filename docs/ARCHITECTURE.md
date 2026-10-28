@@ -44,6 +44,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 ### Custom assets
 
 - `tools/make_shard.py` and `tools/make_essences.py` (Python, numpy + Pillow) generate the gem models (`Corruption/Assets/*.obj`), textures (PNG for viewing, raw `.rgba` for the game) and previews in `docs/images/`, from fixed seeds. Rerun after changing them; commit the outputs.
+- `tools/make_orbs.py` makes the currency orbs into `Corruption/Assets/Orbs/`, which the wildcard deliberately doesn't cover until the orbs are built (add `Assets\Orbs\*` then). It paints patterns in 3D per texel, so runes don't stretch on the sphere's UV map.
 - `Corruption.csproj` embeds every `Assets/*.obj` and `Assets/*.rgba` (wildcard) plus `Data/essences.csv`. `Rules/ObjMesh.cs` (tested) reads the models; `Content/GemModel.cs` builds the Unity mesh and material on the base item's shader, adds optional plain-colour add-on parts and the ground glow, and removes the base item's visuals (colliders stay). A failed look always falls back to a tint, so the item still registers.
 - Textures are raw pixels because `Texture2D.LoadImage` (ImageConversion module) references netstandard 2.1, which the net462 build can't compile against. They make up most of the DLL's size (about 4 MB).
 

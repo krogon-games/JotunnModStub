@@ -474,6 +474,8 @@ Decided 2026-10-27: we build our own loot system rather than depend on Epic Loot
 
 The technical review is in `docs/corruption-design-review.md`. It suggests building the corruption mod as a separate plugin in this repository.
 
+**Orb art (2026-10-28):** models and textures for the nine currency orbs exist (`tools/make_orbs.py`, `Corruption/Assets/Orbs/`, preview `docs/images/orbs_preview.png`), after the user's concept render (`docs/images/orbs_reference.jpg`). They are not in the mod yet: they get embedded and registered as items when the orbs are built. The orbs keep their Path of Exile names (user, 2026-10-28).
+
 ---
 
 ## Combat mechanics
@@ -492,6 +494,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Currency orb art** (no feature yet): nine orb models and textures generated from the user's concept render, kept out of the DLL until the orbs are built (phase 7).
 - **Maps redesigned:** each essence now crafts maps into the corrupted version of its own boss's biome (Eikthyr → Meadows … Fader → Ashlands). **Kall Fimbulbringer essence** added (Deep North, dropped by the final phase; frost-crown look, not from the render). The Hive is left out. Untested in-game.
 - **Boss essences (phase 3):** every boss drops 1 essence per kill. Seven essences with their own looks after the user's concept render, defined in `Corruption/Data/essences.csv` (validated by tests). Setting `4 - Essences` → `Enabled`. The shard's model code is now shared (`GemModel.cs`). Untested in-game (81 tests).
 - **Corruption shard look tested in-game:** the rough-cut ruby model, its icon and the ground glow all work.

@@ -55,6 +55,8 @@ then add one line:
 
 ## Currency orbs (design phase 7)
 
+*Render received 2026-10-28 (`docs/images/orbs_reference.jpg`); models made from it by `tools/make_orbs.py`. It differs from the prompt in places and the models follow the render: Regal's rim goes all round, Annulment is broken open at the top rather than its rune being scratched out, and Jeweller's has sockets all round.*
+
 The nine orbs from `corruption-design.md` → Currency orbs. They should match the essences (same camera, lighting, background, size class and stylised Valheim look) but read as a **different family**: round, hand-made objects of stone and metal, not gems. Valheim, not Path of Exile: no polished glass marbles or sci-fi glow; think worn, carved, rune-marked objects a Viking smith or seer would make.
 
 **Visual language (so the use reads at a glance):**

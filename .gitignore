@@ -378,3 +378,4 @@ Environment.props
 
 # The shard model is a source asset (made by tools/make_shard.py), not a compiler object file.
 !Corruption/Assets/*.obj
+!Corruption/Assets/Orbs/*.obj
