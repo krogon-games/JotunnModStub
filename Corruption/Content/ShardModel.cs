@@ -70,8 +70,13 @@ namespace Corruption.Content
             }
             foreach (var particles in prefab.GetComponentsInChildren<ParticleSystem>(true))
             {
-                UnityEngine.Object.DestroyImmediate(particles.gameObject.GetComponent<ParticleSystemRenderer>());
+                // The system first: Unity won't remove a renderer its particle system still needs.
+                var particleRenderer = particles.GetComponent<ParticleSystemRenderer>();
                 UnityEngine.Object.DestroyImmediate(particles);
+                if (particleRenderer)
+                {
+                    UnityEngine.Object.DestroyImmediate(particleRenderer);
+                }
             }
             foreach (var renderer in prefab.GetComponentsInChildren<Renderer>(true))
             {
@@ -136,10 +141,15 @@ namespace Corruption.Content
                 Jotunn.Logger.LogWarning($"Embedded texture '{file}' has the wrong size.");
                 return null;
             }
-            var pixels = new byte[width * height * 4];
-            Buffer.BlockCopy(bytes, 8, pixels, 0, pixels.Length);
+            // SetPixels32 fills the top level and Apply builds the smaller mip levels. (LoadRawTextureData would need
+            // every mip level's data and throws without it, which broke the shard's registration on 2026-10-28.)
+            var pixels = new Color32[width * height];
+            for (int i = 0, b = 8; i < pixels.Length; i++, b += 4)
+            {
+                pixels[i] = new Color32(bytes[b], bytes[b + 1], bytes[b + 2], bytes[b + 3]);
+            }
             var texture = new Texture2D(width, height, TextureFormat.RGBA32, true) { name = "CorruptionShard_" + file };
-            texture.LoadRawTextureData(pixels);
+            texture.SetPixels32(pixels);
             texture.Apply(true, false);
             texture.wrapMode = TextureWrapMode.Repeat;
             texture.filterMode = FilterMode.Trilinear;

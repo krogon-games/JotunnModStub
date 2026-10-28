@@ -33,8 +33,20 @@ namespace Corruption.Content
             }
 
             // Our own crystal model and texture; the base item only provides the item, physics and networking parts.
-            // Falls back to the tinted base item if the custom look is off or its assets fail to load.
-            bool custom = CorruptionConfig.ShardCustomModel.Value && ShardModel.Apply(item.ItemPrefab, color);
+            // Falls back to the tinted base item if the custom look is off or fails: a broken look must never stop
+            // the shard from being registered (an unregistered item vanishes from every inventory and chest).
+            bool custom = false;
+            if (CorruptionConfig.ShardCustomModel.Value)
+            {
+                try
+                {
+                    custom = ShardModel.Apply(item.ItemPrefab, color);
+                }
+                catch (System.Exception ex)
+                {
+                    Jotunn.Logger.LogError($"Custom shard model failed; using the tinted base item instead. {ex}");
+                }
+            }
             if (!custom)
             {
                 Corrupted.Tint(item.ItemPrefab, color, CorruptionConfig.ShardTintStrength.Value);
@@ -43,13 +55,16 @@ namespace Corruption.Content
             var shared = item.ItemDrop.m_itemData.m_shared;
             shared.m_itemType = ItemDrop.ItemData.ItemType.Material;
             shared.m_teleportable = true;
-            var icon = Corrupted.RenderIcon(item.ItemPrefab);
-            if (icon)
+            Safe.Run("render the shard icon", () =>
             {
-                shared.m_icons = new[] { icon };
-            }
+                var icon = Corrupted.RenderIcon(item.ItemPrefab);
+                if (icon)
+                {
+                    shared.m_icons = new[] { icon };
+                }
+            });
             // After the icon render, so the light doesn't colour the icon.
-            AddGlow(item.ItemPrefab, color);
+            Safe.Run("add the shard glow", () => AddGlow(item.ItemPrefab, color));
 
             ItemManager.Instance.AddItem(item);
         }
