@@ -129,6 +129,12 @@ namespace CraftingOverhaul.Containers
                 return false;
             }
 
+            // Containers carried by a player, e.g. AdventureBackpacks' backpack: that mod counts and spends them itself.
+            if (container.GetComponentInParent<Player>())
+            {
+                return false;
+            }
+
             if (container.GetComponent<TombStone>())
             {
                 return false;

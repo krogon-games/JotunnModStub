@@ -6,7 +6,7 @@ Ideas saved for later exploration. Nothing here is planned or built yet. When an
 
 ## Inventory and equipment
 
-- **Backpack**, World of Warcraft style: extra bag storage you carry with you. → [Inventory and equipment slots](corruption-design.md#inventory-and-equipment-slots)
+- **Backpack**, World of Warcraft style: extra bag storage you carry with you. → [Inventory and equipment slots](corruption-design.md#inventory-and-equipment-slots). *Covered by the AdventureBackpacks mod (2026-10-28).*
 - **Equipment slots and inventory tabs** → [Inventory and equipment slots](corruption-design.md#inventory-and-equipment-slots):
   - dedicated slots for gear instead of keeping everything in the main grid;
   - tabs to organise the inventory.

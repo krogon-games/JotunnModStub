@@ -32,7 +32,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 6: corrupted bosses | Corruption | Proposed | design doc + review 4 |
 | Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
-| Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed | design doc |
+| Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28) | design doc, `mod-compatibility.md` |
 | Phase 10: skill rework (optional module) | — | Proposed | design doc |
 | Storage and quests | Undecided plugin | Proposed, saved for later | `storage-quests-design.md` |
 | Combat mechanics (parry, posture, combos) | — | Ideas only | `FEATURES.md` → Combat mechanics |

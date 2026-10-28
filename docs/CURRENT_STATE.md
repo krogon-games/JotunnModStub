@@ -34,6 +34,8 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Shard red look (Bloodstone + tint) | Not explicitly confirmed after the change |
 | Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
 | `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
+| Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
+| Talismans with EquipmentAndQuickSlots | Wear a talisman in the EAQS trinket slot |
 | Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
 
 ## Not built (proposed)
@@ -59,8 +61,9 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 ## Waiting on the user
 
+- **Backpacks and affixes:** AdventureBackpacks backpacks are cape-slot items. Should they roll cape affixes?
 - **Gathering tool affixes:** confirm the prefix/suffix split, roll weight classes, one combined pool for one-handed axes (gathering + weapon families), and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
-- **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation and name collisions still open.
+- **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation still open.
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
 - Before phase 4: accept "server decides, owner spawns" and an own wave spawner instead of the raid system.
 - Corrupted bosses/gear: red like the shard, or the design doc's purple.
@@ -69,7 +72,7 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 ## Next actionable tasks
 
-1. Play-test talismans, shard drops and the shard look; record results in `FEATURES.md` and here.
+1. Play-test talismans, shard drops and the shard look, with EquipmentAndQuickSlots, PlantEasily and AdventureBackpacks installed (the group's setup); run the compatibility checks in `docs/mod-compatibility.md`. Record results in `FEATURES.md` and here.
 2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
 3. **Phase 3: boss essences.** One new drop per boss (1 on a normal kill), cloned item + red tint, `CharacterDrop` hook like `ShardDrops`, boss list from game data (creatures with a defeat key), pure rule + tests.
 4. Run the multiplayer checklist when a second player is available.
