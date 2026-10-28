@@ -33,8 +33,8 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 | Essences / Enabled | true | Bosses drop their essence |
 | Rips / Enabled | true | Maps open rips |
 | Rips / OpenDays | 1 | How long a rip stays open (in-game days) |
-| Rips / BaseDistance | 100 | Rips never open this close (m) to a bed, ward or portal |
-| Rips / HeartHealth | 400 | Health of a rip's heart |
+| Rips / BaseDistance | 0 | Rips never open this close (m) to a bed, ward or portal; 0 = a ward's radius |
+| Rips / HeartHealth | 0 | Health of a rip's heart; 0 = a greydwarf nest's health |
 
 Look settings (per player, not synced, restart to apply):
 

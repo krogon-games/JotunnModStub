@@ -111,10 +111,8 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void FlatnessAndTimeText()
+        public void TimeText()
         {
-            Assert.True(RipRules.IsFlat(10, 11, 9, 10.5f, 10, 1.5f));
-            Assert.False(RipRules.IsFlat(10, 14, 9, 10, 10, 1.5f));
             Assert.Equal("less than a minute", RipRules.TimeLeft(30));
             Assert.Equal("12 min", RipRules.TimeLeft(12 * 60 + 5));
             Assert.Equal("1 h 05 min", RipRules.TimeLeft(65 * 60));

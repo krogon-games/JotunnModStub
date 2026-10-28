@@ -119,7 +119,10 @@ namespace Corruption.Content
             var destructible = GetComponent<Destructible>();
             if (destructible)
             {
-                destructible.m_health = CorruptionConfig.RipHeartHealth.Value;
+                if (CorruptionConfig.RipHeartHealth.Value > 0f)
+                {
+                    destructible.m_health = CorruptionConfig.RipHeartHealth.Value;
+                }
                 destructible.m_onDestroyed += () => Safe.Run("open the way home", () => Rips.OpenExit(m_nview.GetZDO(), transform.position));
             }
             InvokeRepeating(nameof(Tick), 1f, 1f);

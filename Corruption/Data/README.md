@@ -76,4 +76,6 @@ Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`sc
 | `essence` | The essence in the recipe, by its `look` in `essences.csv` (e.g. `elder`) |
 | `material`, `material_amount` | The biome material in the recipe, by item prefab name (e.g. `GreydwarfEye`), and how many. The tests check it's a real item |
 | `shards` | Corruption shards in the recipe |
+
+How the current values were chosen (from the 1.0.20 game data, not guessed): shards and essence 1 each from the design doc; the material the design doc names, or where it gives two the earlier drop, or where it names none the guaranteed non-food drop of the weakest creature found only in that biome; the amount is the median amount of that material in vanilla recipes and pieces, rounded up. Each row's `notes` says which applied.
 | `status`, `notes` | As above |

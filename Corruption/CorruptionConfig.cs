@@ -69,11 +69,12 @@ namespace Corruption
             RipOpenDays = config.Bind(RipSection, "OpenDays", 1f,
                 AdminOnly("How long a rip stays open, in in-game days (sleeping skips time). Both its portals close then.",
                     new AcceptableValueRange<float>(0.1f, 10f)));
-            RipBaseDistance = config.Bind(RipSection, "BaseDistance", 100f,
-                AdminOnly("Rips never open within this many metres of a bed, ward or portal (any player's).",
-                    new AcceptableValueRange<float>(0f, 1000f)));
-            RipHeartHealth = config.Bind(RipSection, "HeartHealth", 400f,
-                AdminOnly("Health of a rip's heart. Destroying it opens the way home.", new AcceptableValueRange<float>(1f, 100000f)));
+            RipBaseDistance = config.Bind(RipSection, "BaseDistance", 0f,
+                AdminOnly("Rips never open within this many metres of a bed, ward or portal (any player's). " +
+                          "0 = the game's ward radius (the area a ward protects).", new AcceptableValueRange<float>(0f, 1000f)));
+            RipHeartHealth = config.Bind(RipSection, "HeartHealth", 0f,
+                AdminOnly("Health of a rip's heart. Destroying it opens the way home. " +
+                          "0 = the health of the greydwarf nest it's made from.", new AcceptableValueRange<float>(0f, 100000f)));
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",

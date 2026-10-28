@@ -461,16 +461,19 @@ New items registered through Jötunn: `CorruptionEssence_<look>` for each table 
 *Corruption plugin, design phase 4, step A: travel only. Waves, maddened creatures and the end loot come in step B.*
 
 **What it does in-game:**
-- **Maps.** Eight maps, one per biome (Corrupted Meadows map … Corrupted Deep North map), crafted at the **Riftforge** from 1 corruption shard, 1 of that biome's boss essence and 5 of a biome material. Like vanilla recipes, a map shows up once you've picked up all three. Maps don't stack, go through portals and can't be sold. Placeholder look: a bundle of leather tinted in the essence's colour.
-- **Opening a rip.** Use the map (right-click it in your inventory, or from the hotbar). Your game looks for flat, dry land of that biome **you haven't explored** (your map, including what you've added from a cartography table); the server then picks the first spot that's at least `BaseDistance` (100 m) from **anyone's** bed, ward or portal. The map is used up and a red stone portal, the **rip**, opens 4 m in front of you. If nothing suitable is found you're told why and keep the map.
+- **Maps.** Eight maps, one per biome (Corrupted Meadows map … Corrupted Deep North map), crafted at the **Riftforge** from 1 corruption shard, 1 of that biome's boss essence and a stack of a biome material (Leather scraps 5, Greydwarf eye 5, Guck 2, Freeze gland 3, Needle 5, Carapace 16, Charred bone 8, Ice 5). Where each comes from: [Data table](#maps-and-rips-step-a) below. Like vanilla recipes, a map shows up once you've picked up all three. Maps don't stack, go through portals and can't be sold. Placeholder look: a bundle of leather tinted in the essence's colour.
+- **Opening a rip.** Use the map (right-click it in your inventory, or from the hotbar). Your game looks for land of that biome **you haven't explored** (your map, including what you've added from a cartography table), above water and as flat as the game requires for placing a location; the server then picks the first spot outside a ward's protected radius (`BaseDistance`) from **anyone's** bed, ward or portal. The map is used up and a red stone portal, the **rip**, opens 4 m in front of you. If nothing suitable is found you're told why and keep the map.
 - **Through the rip.** Walk in (or press E) to travel to the landing spot. Vanilla portal rules apply: no ores or metals. Anyone can follow while it's open. You land beside the **rip heart**, a giant glowing corruption shard.
-- **Getting home.** Destroy the heart (`HeartHealth`, 400) to open a second rip beside it that leads back to the first. Both rips and the heart close after `OpenDays` (1 in-game day, 30 minutes unless you sleep). No other way back: bring a portal kit or walk.
+- **Getting home.** Destroy the heart (it has a greydwarf nest's health unless `HeartHealth` is set) to open a second rip beside it that leads back to the first. Both rips and the heart close after `OpenDays` (1 in-game day, as in the design; sleeping skips time). No other way back: bring a portal kit or walk.
 
 **How to test:**
 - `spawn CorruptionMap_Meadows` (or `_BlackForest`, `_Swamp`, `_Mountain`, `_Plains`, `_Mistlands`, `_AshLands`, `_DeepNorth`), then right-click it.
 - Crafting: a Riftforge, a shard, an essence and the material.
 
-**Data table:** [`Corruption/Data/maps.csv`](Corruption/Data/maps.csv): recipe per biome. Compiled into the DLL, so **rebuild after editing**. `dotnet test` checks it, that every essence exists and every material is a game item.
+**Data table:** [`Corruption/Data/maps.csv`](Corruption/Data/maps.csv): recipe per biome. Compiled into the DLL, so **rebuild after editing**. `dotnet test` checks it, that every essence exists and every material is a game item. Where the numbers come from (2026-10-28, from the 1.0.20 game data):
+- **Shards and essence:** 1 each, from the design doc's map recipe.
+- **Material:** the one the design doc names (Black Forest, Swamp, Mountains, Plains). Where it offers two, the one that drops earliest, as the design asks: Carapace (guaranteed from Seekers) over Soft tissue (25% from Dvergers); Charred bone (guaranteed from the Charred) over Flametal (mining and smelting). Where it names none (Meadows, Deep North): the guaranteed non-food drop of the weakest creature found only in that biome: Leather scraps (Boar), Ice (Frozen greydwarf, Deep North skeleton).
+- **Amount:** the median amount of that material in vanilla recipes and building pieces, rounded up: what the game itself typically asks for.
 
 **Config settings** (admin-only, synced from the server):
 
@@ -478,8 +481,8 @@ New items registered through Jötunn: `CorruptionEssence_<look>` for each table 
 |---|---|---|
 | `Enabled` | `true` | Maps open rips; off = using a map does nothing (the map is kept) |
 | `OpenDays` | `1` | How long a rip stays open, in in-game days |
-| `BaseDistance` | `100` | Rips never open within this many metres of a bed, ward or portal |
-| `HeartHealth` | `400` | Health of the rip heart |
+| `BaseDistance` | `0` | Rips never open within this many metres of a bed, ward or portal. 0 = the game's ward radius (read from the ward) |
+| `HeartHealth` | `0` | Health of the rip heart. 0 = the greydwarf nest's own health |
 
 **Known issues:**
 - Untested in-game (89 tests pass). Riskiest parts: the far-away heart appearing at the landing spot, landing on the ground (not inside a rock or on a tree), the stone portal's look and swirl without its vanilla logic, the heart's model on the greydwarf-nest base.
@@ -540,6 +543,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 
 ### 2026-10-28
 - **Maps and rips, step A:** eight maps crafted at the Riftforge; using one opens a rip to unexplored land of its biome (server keeps rips away from bases); destroying the rip's heart opens the way home; rips close after an in-game day. Table `maps.csv`, settings `5 - Rips`. Untested in-game (89 tests).
+- **Map recipes and rip numbers from game data, not guesses** (user, 2026-10-28): materials follow the design doc or, where it names none, the biome's weakest native creature's guaranteed drop; amounts are the material's median vanilla recipe amount; the base distance defaults to the ward radius, the heart to the nest's health, and landing flatness uses the game's location placement test.
 - **Currency orb art** (no feature yet): nine orb models and textures generated from the user's concept render, kept out of the DLL until the orbs are built (phase 7).
 - **Maps redesigned:** each essence now crafts maps into the corrupted version of its own boss's biome (Eikthyr → Meadows … Fader → Ashlands). **Kall Fimbulbringer essence** added (Deep North, dropped by the final phase; frost-crown look, not from the render). The Hive is left out. Untested in-game.
 - **Boss essences (phase 3):** every boss drops 1 essence per kill. Seven essences with their own looks after the user's concept render, defined in `Corruption/Data/essences.csv` (validated by tests). Setting `4 - Essences` → `Enabled`. The shard's model code is now shared (`GemModel.cs`). Untested in-game (81 tests).

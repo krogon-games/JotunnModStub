@@ -59,3 +59,4 @@ Don't duplicate: design detail lives in `docs/corruption-design.md`, `docs/AFFIX
 
 - Plain, concise English; short answers when asked.
 - Ask before changing an agreed design; record the user's design decisions in `DECISIONS.md`.
+- **Never guess numbers or choices.** Take them from the design docs or derive them from the game data (`data/game-dump-1.0.20/`, the game code), and write down the source. Ask the user only when neither answers.

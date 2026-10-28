@@ -37,6 +37,7 @@ namespace Corruption.Content
         private static string s_pendingMap;
         private static Vector3? s_snapTarget;
         private static List<string> s_baseMarkerPrefabs;
+        private static float s_wardRadius;
 
         // ------------------------------------------------------------------ opening
 
@@ -63,6 +64,9 @@ namespace Corruption.Content
             var world = WorldGenerator.instance;
             float water = ZoneSystem.instance ? ZoneSystem.instance.m_waterLevel : 30f;
             var minimap = Minimap.instance;
+            // The game's own flatness test for placing locations: height change within a radius, from world generation.
+            float maxDelta = new ZoneSystem.ZoneLocation().m_maxTerrainDelta;
+            float radius = ArrivalOffset.magnitude;
             var random = new System.Random();
             var spots = RipRules.Sample(random.NextDouble, Samples, Candidates, (x, z) =>
             {
@@ -71,9 +75,12 @@ namespace Corruption.Content
                     return false;
                 }
                 float h = world.GetHeight(x, z);
-                if (h < water + 1f ||
-                    !RipRules.IsFlat(h, world.GetHeight(x, z + 4f), world.GetHeight(x, z - 4f),
-                        world.GetHeight(x + 4f, z), world.GetHeight(x - 4f, z), 2f))
+                if (h <= water)
+                {
+                    return false;
+                }
+                world.GetTerrainDelta(new Vector3(x, h, z), radius, out float delta, out _);
+                if (delta > maxDelta)
                 {
                     return false;
                 }
@@ -119,7 +126,9 @@ namespace Corruption.Content
                     candidates.Add(new RipRules.Spot(package.ReadSingle(), package.ReadSingle()));
                 }
 
-                var spot = RipRules.FirstAwayFromBases(candidates, BaseMarkers(), CorruptionConfig.RipBaseDistance.Value);
+                var bases = BaseMarkers();
+                float distance = CorruptionConfig.RipBaseDistance.Value > 0f ? CorruptionConfig.RipBaseDistance.Value : s_wardRadius;
+                var spot = RipRules.FirstAwayFromBases(candidates, bases, distance);
                 double dayLength = EnvMan.instance ? EnvMan.instance.m_dayLengthSec : 1800.0;
                 double closeAt = ZNet.instance.GetTimeSeconds() + CorruptionConfig.RipOpenDays.Value * dayLength;
 
@@ -140,9 +149,13 @@ namespace Corruption.Content
             if (s_baseMarkerPrefabs == null)
             {
                 // From the game's prefabs, so modded beds, wards and portals count too.
-                s_baseMarkerPrefabs = ZNetScene.instance.m_prefabs
+                var markers = ZNetScene.instance.m_prefabs
                     .Where(p => p && (p.GetComponent<Bed>() || p.GetComponent<PrivateArea>() || p.GetComponent<TeleportWorld>()))
-                    .Select(p => p.name).ToList();
+                    .ToList();
+                s_baseMarkerPrefabs = markers.Select(p => p.name).ToList();
+                // The default distance: the largest area a ward protects.
+                s_wardRadius = markers.Select(p => p.GetComponent<PrivateArea>()).Where(w => w).Select(w => w.m_radius)
+                    .DefaultIfEmpty(0f).Max();
             }
             var spots = new List<RipRules.Spot>();
             var zdos = new List<ZDO>();

@@ -5,7 +5,7 @@ namespace Corruption.Rules
 {
     /// <summary>
     ///     Game-independent parts of opening a rip: sampling landing spots, rejecting spots near bases, timing.
-    ///     The game checks (biome, height, explored) are passed in, so this is unit-tested.
+    ///     The game checks (biome, height, flatness, explored) are passed in, so this is unit-tested.
     /// </summary>
     internal static class RipRules
     {
@@ -68,13 +68,6 @@ namespace Corruption.Rules
                 }
             }
             return null;
-        }
-
-        /// <summary>Flat enough to stand on: the height changes by at most <paramref name="maxStep" /> over a few metres.</summary>
-        public static bool IsFlat(float centre, float north, float south, float east, float west, float maxStep)
-        {
-            return Math.Abs(north - centre) <= maxStep && Math.Abs(south - centre) <= maxStep &&
-                   Math.Abs(east - centre) <= maxStep && Math.Abs(west - centre) <= maxStep;
         }
 
         /// <summary>Time left until a rip closes, as "1 h 05 min" / "12 min" / "less than a minute".</summary>
