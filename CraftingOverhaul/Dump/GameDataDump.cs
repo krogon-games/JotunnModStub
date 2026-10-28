@@ -15,7 +15,7 @@ namespace CraftingOverhaul.Dump
     /// <summary>
     ///     Writes the loaded game data (vanilla plus any mods) to CSV files, for checking mod logic against real
     ///     data: items, recipes, pieces, creatures, locations, spawn tables, raids, status effects, chest and
-    ///     destructible loot, and the biome resolver's inputs and results.
+    ///     destructible loot, boss altars, and the biome resolver's inputs and results.
     /// </summary>
     internal static class GameDataDump
     {
@@ -37,6 +37,7 @@ namespace CraftingOverhaul.Dump
             WriteStatusEffects(Path.Combine(dir, "status_effects.csv"));
             WriteContainers(Path.Combine(dir, "containers.csv"));
             WriteDestructibles(Path.Combine(dir, "destructibles.csv"));
+            WriteAltars(Path.Combine(dir, "altars.csv"));
             WriteBiomeSources(Path.Combine(dir, "biome_sources.csv"));
             WriteBiomeResolution(Path.Combine(dir, "biome_items.csv"));
             WriteUnresolved(Path.Combine(dir, "biome_unresolved.csv"));
@@ -269,6 +270,46 @@ namespace CraftingOverhaul.Dump
                     var table = prefab.GetComponent<DropOnDestroyed>()?.m_dropWhenDestroyed;
                     csv.Row(prefab.name, destructible.m_health, destructible.m_minToolTier, destructible.m_destructibleType,
                         table?.m_dropMin, table?.m_dropMax, table?.m_dropChance, table == null ? "" : DropList(table));
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Boss altars (offering bowls) in every location: the offering item and count, the boss they summon, and
+        ///     for item-stand altars the stands and the items they take.
+        /// </summary>
+        private static void WriteAltars(string path)
+        {
+            using (var csv = new CsvWriter(path, "location", "biome", "altar", "offering", "offering_count", "boss",
+                       "use_item_stands", "item_stand_prefix", "item_stands", "set_global_key", "spawn_delay"))
+            {
+                foreach (var location in ZoneSystem.instance.m_locations.Where(l => l.m_enable && l.m_prefab.IsValid))
+                {
+                    var prefab = LocationCollector.Load(location.m_prefab);
+                    if (!prefab)
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        foreach (var bowl in prefab.GetComponentsInChildren<OfferingBowl>(true))
+                        {
+                            var stands = bowl.m_useItemStands
+                                ? prefab.GetComponentsInChildren<ItemStand>(true)
+                                    .Where(st => string.IsNullOrEmpty(bowl.m_itemStandPrefix) || st.gameObject.name.StartsWith(bowl.m_itemStandPrefix))
+                                    .Select(st => st.gameObject.name + " [" + string.Join("|", (st.m_supportedItems ?? new List<ItemDrop>())
+                                        .Where(it => it).Select(it => it.gameObject.name)) + "]")
+                                : Enumerable.Empty<string>();
+                            csv.Row(location.m_prefabName, location.m_biome, bowl.gameObject.name,
+                                bowl.m_bossItem ? bowl.m_bossItem.gameObject.name : "", bowl.m_bossItems,
+                                bowl.m_bossPrefab ? bowl.m_bossPrefab.name : "", bowl.m_useItemStands, bowl.m_itemStandPrefix,
+                                CsvWriter.Join(stands), bowl.m_setGlobalKey, bowl.m_spawnBossDelay);
+                        }
+                    }
+                    finally
+                    {
+                        location.m_prefab.Release();
+                    }
                 }
             }
         }

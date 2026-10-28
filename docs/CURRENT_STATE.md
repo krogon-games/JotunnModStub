@@ -30,6 +30,8 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 ### Built, not verified
 
+Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
+
 | Item | What to check |
 |---|---|
 | Talismans: the rest | Two charms at once plus a vanilla trinket; hitting a repelled creature provokes it for 30 s; bosses unaffected; on a friend's game too |
@@ -63,7 +65,7 @@ Corruption phase 4 step B (waves, maddened, rip loot), phases 5–10 ( map affix
 
 ## Waiting on the user
 
-- **Run `co_dump` once in a world (2026-10-28) and send the new files** (`spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them instead of guessing.
+- **Run `co_dump` once in a world (2026-10-28) and send the new files** (`spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them, and phase 6 its altar offerings, instead of guessing.
 
 - **Gathering tool affixes:** confirm the prefix/suffix split, roll weight classes, one combined pool for one-handed axes (gathering + weapon families), and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
 - **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation still open.
@@ -89,6 +91,8 @@ Development aids to switch off or remove before sharing a public release:
 ## Update routine
 
 Do this in the same commit whenever a significant feature is completed, changed, deferred or play-tested:
+
+0. `PLAYTEST.md`: add steps for anything new and untested; remove what the user has tested.
 
 1. `FEATURES.md`: table row, section, dated changelog entry (mandatory, see `CLAUDE.md`).
 2. This file: move items between *Verified* / *Built, not verified* / *Not built*; update bugs, assumptions, waiting-on-user and next tasks; bump **Last updated** and the test count.
