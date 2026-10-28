@@ -16,20 +16,22 @@ One row per affix, for every item type. There are no separate lists: an affix's 
 |---|---|
 | `id` | Permanent key, stored on items. Lowercase, digits, `_`. **Never rename one that has shipped**, or existing items lose the affix |
 | `status` | `approved` (user agreed), `proposed` (awaiting review), `draft` (starting numbers, untested) |
-| `pool` | `gathering-universal`, `gathering-mining`, `gathering-woodcutting` or `gear`. The test checks it matches the item classes |
+| `pool` | `gathering-universal`, `gathering-mining`, `gathering-woodcutting`, `gear`, or `any` (every item class, e.g. Fleet on anything held). The test checks it matches the item classes |
 | `side` | `prefix` or `suffix` |
 | `family` | Affixes with the same family can't both roll on one side of an item. A prefix and suffix sharing a family are **twins** and resonate |
 | `name` | Label for the tooltip line |
-| `item_name` | Word added to the item's name. Several separated by `/` = roll-quality names, lowest quarter first |
+| `item_name` | Word added to the item's name. Several separated by `/` = roll-quality names, worst quarter first. **Every name must be unique** across the table (the test checks) |
 | `text` | Tooltip text; `{0}` is replaced by the rolled value |
 | `min`, `max` | The roll range, the same on every item. Use a dot for decimals |
-| `unit` | `%`, `flat`, `m` or `levels` |
-| `weight` | How often it rolls compared with the others: 100 = common filler, 50 = normal, 25 = twin half, 10 = rare and special |
+| `unit` | `%`, `flat`, `m`, `levels` or `minutes` |
+| `lower_is_better` | `x` when a lower roll is better (e.g. Deathless's cooldown); used for roll-quality names and how the bracket reads |
+| `weight` | How often it rolls compared with the others. **The stronger the affix, the lower the weight** (user rule): 100 = filler, 50 = standard, 25 = strong (procs, twin halves), 10 = very strong, 5 = build-defining |
 | `effect` | Which piece of code applies it. Several affixes can share one effect with different numbers; a **new** effect needs code |
+| `requires` | Optional mechanic the item must have, worked out from its game data: `melee`, `ranged`, `magic` (from its skill), `combo` (its attack chains 2+ hits), `block` (it can block, so it can parry). Blank = none |
 | `weapon` … `axe_1h` | `x` = can roll on that item class |
 | `notes` | Free text |
 
-What needs a developer: a new `effect`, or a new item class column. Everything else (numbers, names, weights, adding an affix that reuses an existing effect, removing one) is a table edit.
+What needs a developer: a new `effect`, a new `requires` mechanic, or a new item class column. Everything else (numbers, names, weights, adding an affix that reuses an existing effect, removing one) is a table edit.
 
 ## Background
 
@@ -152,10 +154,17 @@ Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **pre
 | Light | Universal | Lighter tool | `ItemData.GetWeight` |
 | Careful | Universal | Chance a hit costs no durability | Durability drain per hit in `Attack` |
 | Hushed | Universal | Quieter strikes (less noise drawing creatures) | Attack hit noise |
-| Keen-eyed | Universal | Larger item pickup radius while the tool is held | `Player.m_autoPickupRange` |
+| Keen-eyed | Universal | Larger item pickup radius while the tool is held. Adds on top of Magnetic | `Player.m_autoPickupRange` |
 | Stonecutter's | Mining | Chance of 1 extra stone from rocks and deposits | Harvest message |
 | Resinous | Woodcutting | Chance of 1 extra resin from trees | Harvest message |
 | Forester's | Woodcutting | Chance a harvested tree also drops its seed (pine cone, beech seed, birch seed, fir cone, acorn) | Harvest message; seed per tree from game knowledge, to confirm in the data |
+
+### More gathering affixes (user, 2026-10-28)
+
+| Affix | Pool | Effect | Hook |
+|---|---|---|---|
+| Magnetic | Universal | Draws drops to you from further away: sets the pickup radius. The stronger, rarer relative of Keen-eyed, which still adds on top (radius capped at 8 m) | `Player.m_autoPickupRange` |
+| Charring | Woodcutting | Chance that harvested wood turns into coal. **Replaces** the wood (user's choice, 2026-10-28). The user's "Ember", renamed because it clashed with "of Embers" | Harvest message |
 
 ### Proposed interpretations (to confirm)
 
@@ -177,6 +186,29 @@ Magic and Rare items need each affix to be a prefix or a suffix. Proposed: **pre
 3. Confirm one combined pool for one-handed axes (gathering + weapon families).
 4. The proposed interpretations above, including how Odin's Grace treats logs and stumps.
 
+## Proc and utility affixes (user, 2026-10-28)
+
+New gear affixes that trigger on events. Numbers are Claude's proposals (status `proposed` in the table), based on the existing ranges.
+
+| Affix | Side | Rolls on | Effect |
+|---|---|---|---|
+| Fleet | Prefix | Anything held: weapons, shields, tools | Movement speed while the item is in your hand. Added at the user's request for a held-item movement affix |
+| Foraging | Suffix | Armour only (helmet, chest, legs, cape) | Short movement-speed boost after picking a wild plant (mushrooms, berries, thistle…). Encourages foraging while exploring (user) |
+| Bloodforged | Prefix | Weapons | Killing an enemy restores a share of max health (a %, so it grows with the player) |
+| Deathless | Prefix | Armour, shields, jewellery | Survive a fatal blow with 1 health, then a long cooldown. The user's "Undying", renamed. Build-defining, so the rarest weight (5); several never stack |
+| Shieldwall, Rallying, Skald's, Steadfast | Prefix | Weapons and shields that can block | Parrying buffs you and allies within 10 m: armour, damage on the next hit, attack speed, or stamina. The user's "Warding", renamed and split into variants with different effects; each is its own family, so several can roll on one item |
+| Reprisal | Suffix | Weapons and shields that can block | Chance a parry calls lightning on the attacker; damage is a % of the item's block power |
+| Wrath | Suffix | Weapons with a combo | The last hit of a combo sends a knockback shockwave |
+| Skadi | Suffix | Weapons | Repeated hits on one target add stacking frost damage, up to a cap |
+| Fenrir | Suffix | Weapons | Kills give stacking attack speed for a short time |
+
+**Rules for these:**
+- **Parry** = a block within 0.25 s of the hit (the game's own perfect-block window). You parry with whatever is blocking: the shield, or the weapon if you have none.
+- **Kills:** a creature's death is handled on the machine that owns the creature, which may not be the killer's. Bloodforged and Fenrir use the same "you killed it" message back to the killer as the harvest affixes.
+- **Buffs on allies** use the game's own status-effect message (`SEMan.RPC_AddStatusEffect`), so they reach other players' games.
+- **Damage procs scale with the item** (Reprisal from block power, Wrath and Skadi from the hit or weapon damage), following the one-range rule.
+- **Effects reuse vanilla visuals** (lightning, area hits), per the v1 "no new art" constraint.
+
 ## General gear pool (draft)
 
 Pickaxes roll only from the [gathering tool pools](#gathering-tool-affixes); one-handed axes roll from those and the weapon (**W**) families. The general pool's Woodcutting / mining row and tool (**T**) slot entries are replaced by the gathering pools.
@@ -196,7 +228,7 @@ Caps and resonance (+25% on a twin's combined top) are unchanged.
 
 - **Twin interpretation (unconfirmed).** The brief said "both same suffix and same suffix". The draft reads it as *one prefix and one suffix that share a stat* (a twin). Needs the user's confirmation.
 - Can a **Magic** item (one prefix + one suffix) resonate, or only Rares? The draft doesn't restrict it.
-- **Name collisions to fix:** "of Warding" is both a Block and an All resistances name; "of the Lox" both a Max stamina and a Carry weight name; "of Sleipnir" (stamina) vs "of Sleipnir's Stride" (movement); prefixes "Hardened" (durability) and "Smouldering" (fire) reuse map-affix names.
+- ~~Name collisions~~ fixed 2026-10-28 by renaming the old placeholder roll-quality names: of Warding → of Protection (all resistances) and of Bracing (block), of the Lox → of the Elk and of Sleipnir → of Vidar (stamina), Hardened → Tempered (durability), Smouldering → Kindled (fire), of Light → of Radiance (spirit), Undying → Everlasting (health regen). The test now rejects any repeated item name.
 
 ### How an item rolls
 
@@ -246,7 +278,9 @@ Twin families (resonate when both halves roll): fire, frost, lightning, poison a
 ### Caps and guards
 
 - **Resistances:** the total from all gear is capped at 75%.
-- **Movement speed:** gear adds at most +20%.
+- **Movement speed:** gear adds at most +20% (including Fleet and Foraging).
+- **Attack speed:** affixes add at most +30% in total (Swift, Skald's, Fenrir). Proposed.
+- **Pickup radius:** at most 8 m (Magnetic plus Keen-eyed). Proposed.
 - **Life steal:** gear adds at most 10%.
 - **No item downsides**, in line with "loot never carries downsides".
 - **Carry weight** stays a boost, not a bypass: there's no "unlimited" affix, so the "boosts, not bypasses" balance rule holds.

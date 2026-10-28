@@ -10,8 +10,11 @@ namespace CraftingOverhaul.Tests
     public class AffixTableTests
     {
         private const string Header =
-            "id,status,pool,side,family,name,item_name,text,min,max,unit,weight,effect," +
+            "id,status,pool,side,family,name,item_name,text,min,max,unit,lower_is_better,weight,effect,requires," +
             "weapon,shield,helmet,chest,legs,cape,jewellery,pickaxe,axe_1h,notes";
+
+        private static readonly string[] NoMechanics = new string[0];
+        private static readonly string[] AxeMechanics = { "melee", "combo", "block" };
 
         private static string RealFile()
         {
@@ -43,8 +46,8 @@ namespace CraftingOverhaul.Tests
         {
             var affixes = ParseReal();
             var pickaxe = new[] { "pickaxe" };
-            var all = AffixTable.Candidates(affixes, pickaxe, true).Concat(AffixTable.Candidates(affixes, pickaxe, false));
-            Assert.All(all, a => Assert.StartsWith("gathering-", a.Pool));
+            var all = AffixTable.Candidates(affixes, pickaxe, NoMechanics, true).Concat(AffixTable.Candidates(affixes, pickaxe, NoMechanics, false));
+            Assert.All(all, a => Assert.True(a.Pool.StartsWith("gathering-") || a.Pool == "any", a.Id));
             Assert.DoesNotContain(all, a => a.Pool == "gathering-woodcutting");
         }
 
@@ -53,7 +56,7 @@ namespace CraftingOverhaul.Tests
         {
             var affixes = ParseReal();
             var axe = new[] { "weapon", "axe_1h" };
-            var pools = AffixTable.Candidates(affixes, axe, true).Concat(AffixTable.Candidates(affixes, axe, false))
+            var pools = AffixTable.Candidates(affixes, axe, AxeMechanics, true).Concat(AffixTable.Candidates(affixes, axe, AxeMechanics, false))
                 .Select(a => a.Pool).Distinct().ToList();
             Assert.Contains("gathering-universal", pools);
             Assert.Contains("gathering-woodcutting", pools);
@@ -66,8 +69,27 @@ namespace CraftingOverhaul.Tests
         {
             var affixes = ParseReal();
             var battleaxe = new[] { "weapon" };
-            Assert.All(AffixTable.Candidates(affixes, battleaxe, true), a => Assert.Equal("gear", a.Pool));
-            Assert.All(AffixTable.Candidates(affixes, battleaxe, false), a => Assert.Equal("gear", a.Pool));
+            Assert.All(AffixTable.Candidates(affixes, battleaxe, AxeMechanics, true), a => Assert.True(a.Pool == "gear" || a.Pool == "any", a.Id));
+            Assert.All(AffixTable.Candidates(affixes, battleaxe, AxeMechanics, false), a => Assert.True(a.Pool == "gear" || a.Pool == "any", a.Id));
+        }
+
+        [Fact]
+        public void MechanicAffixesNeedTheMechanic()
+        {
+            var affixes = ParseReal();
+            var bow = new[] { "weapon" };
+            var bowMechanics = new[] { "ranged" };
+            var all = AffixTable.Candidates(affixes, bow, bowMechanics, true)
+                .Concat(AffixTable.Candidates(affixes, bow, bowMechanics, false)).Select(a => a.Id).ToList();
+            Assert.DoesNotContain("wrath", all);
+            Assert.DoesNotContain("reprisal", all);
+            Assert.Contains("skadi", all);
+
+            var sword = new[] { "weapon" };
+            var swordMechanics = new[] { "melee", "combo", "block" };
+            var swordAll = AffixTable.Candidates(affixes, sword, swordMechanics, false).Select(a => a.Id).ToList();
+            Assert.Contains("wrath", swordAll);
+            Assert.Contains("reprisal", swordAll);
         }
 
         [Fact]
@@ -75,7 +97,7 @@ namespace CraftingOverhaul.Tests
         {
             var errors = new List<string>();
             var affixes = AffixTable.Parse(
-                Header + "\r\nkeen,approved,gathering-universal,suffix,pickup,\"Keen, eyed\",of Eyes,+{0} m,0.5,2,m,100,pickup_range,,,,,,,,x,x,\"say \"\"hi\"\"\"",
+                Header + "\r\nkeen,approved,gathering-universal,suffix,pickup,\"Keen, eyed\",of Eyes,+{0} m,0.5,2,m,,100,pickup_range,,,,,,,,,x,x,\"say \"\"hi\"\"\"",
                 errors);
             Assert.Empty(errors);
             var a = Assert.Single(affixes);
@@ -91,9 +113,9 @@ namespace CraftingOverhaul.Tests
             var errors = new List<string>();
             AffixTable.Parse(
                 Header + "\n" +
-                "dup,approved,gathering-mining,prefix,f1,A,A,+{0}%,20,10,%,50,e,,,,,,,,x,,\n" +
-                "dup,maybe,gathering-mining,middle,f1,B,B,no value,1,2,flat,0,e,,,,,,,,yes,,\n" +
-                "Bad Id,approved,gathering-mining,prefix,f2,C,C,+{0}%,1,two,%,50,e,x,,,,,,,,,",
+                "dup,approved,gathering-mining,prefix,f1,A,A,+{0}%,20,10,%,,50,e,,,,,,,,,x,,\n" +
+                "dup,maybe,gathering-mining,middle,f1,B,B,no value,1,2,flat,yes,0,e,parry,,,,,,,,yes,,\n" +
+                "Bad Id,approved,gathering-mining,prefix,f2,C,A,+{0}%,1,two,%,,50,e,,x,,,,,,,,,",
                 errors);
             Assert.Contains(errors, e => e.Contains("min is larger than max"));
             Assert.Contains(errors, e => e.Contains("id is used twice"));
@@ -106,6 +128,9 @@ namespace CraftingOverhaul.Tests
             Assert.Contains(errors, e => e.Contains("lowercase letters"));
             Assert.Contains(errors, e => e.Contains("'two' is not a number"));
             Assert.Contains(errors, e => e.Contains("can't roll on weapon"));
+            Assert.Contains(errors, e => e.Contains("requires 'parry'"));
+            Assert.Contains(errors, e => e.Contains("lower_is_better should be x"));
+            Assert.Contains(errors, e => e.Contains("item name 'A' is also used"));
         }
 
         [Fact]

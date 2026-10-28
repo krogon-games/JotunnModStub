@@ -396,6 +396,9 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 
 ## Changelog
 
+### 2026-10-28
+- Affix table: added Magnetic, Charring, Fleet, Foraging, Bloodforged, Deathless, Shieldwall, Rallying, Skald's, Steadfast, Reprisal, Wrath, Skadi and Fenrir (79 affixes); new `requires` and `lower_is_better` columns and an `any` pool; name clashes fixed and now rejected by the validator (68 tests). Not used in game yet; no gameplay change.
+
 ### 2026-10-27
 - Drop tables approved: stars and rip tier 1 now raise Magic and Rare chances too; proposed rip, scar and terror-zone values accepted. If a kill rolls both Magic and Rare, only the Rare drops (`DropTable.Roll`, 67 tests). No gameplay change yet.
 - Added the drop chance tables (`Corruption/Data/drop_chances.csv`, `drop_modifiers.csv`) with a reader and chance calculation (`Corruption/Rules/DropTable.cs`) and tests (65 tests), plus a guide to the data folder. Not used in game yet; no gameplay change.

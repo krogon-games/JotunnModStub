@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-27)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **67 passed, 0 failed** (biome solver, shard rules, talisman families, affix and drop tables).
+- `dotnet test CraftingOverhaul.Tests`: **68 passed, 0 failed** (biome solver, shard rules, talisman families, affix and drop tables).
 - Last play-test: 2026-10-26, single player, by the user.
 
 ## Implemented
@@ -61,6 +61,7 @@ Corruption phases 3–10 (essences, maps and rips, map affixes, corrupted bosses
 
 - **Gathering tool affixes:** confirm the prefix/suffix split, roll weight classes, one combined pool for one-handed axes (gathering + weapon families), and the proposed interpretations ([`AFFIX_RULES.md`](AFFIX_RULES.md#gathering-tool-affixes)).
 - **General gear affixes:** review the proposed one-range numbers ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)); twin interpretation and name collisions still open.
+- **New affixes (2026-10-28):** review the proposed numbers for Fleet, Foraging, Bloodforged, Deathless, the parry buffs, Reprisal, Wrath, Skadi and Fenrir; the +30% attack-speed and 8 m pickup caps; Keen-eyed kept alongside Magnetic.
 - General gear affix draft: approve; confirm the twin interpretation (prefix + suffix sharing a stat).
 - Before phase 4: accept "server decides, owner spawns" and an own wave spawner instead of the raid system.
 - Corrupted bosses/gear: red like the shard, or the design doc's purple.

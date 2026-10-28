@@ -17,12 +17,19 @@ namespace Corruption.Rules
 
         private static readonly string[] RequiredColumns =
         {
-            "id", "status", "pool", "side", "family", "name", "item_name", "text", "min", "max", "unit", "weight", "effect"
+            "id", "status", "pool", "side", "family", "name", "item_name", "text", "min", "max", "unit", "lower_is_better",
+            "weight", "effect", "requires"
         };
 
         private static readonly string[] Statuses = { "approved", "proposed", "draft" };
         private static readonly string[] Sides = { "prefix", "suffix" };
-        private static readonly string[] Units = { "%", "flat", "m", "levels" };
+        private static readonly string[] Units = { "%", "flat", "m", "levels", "minutes" };
+
+        /// <summary>
+        ///     Mechanics an affix can need from the item, checked against the item's game data: melee/ranged/magic from
+        ///     its skill, combo = its attack chains 2+ hits, block = it can block (and so parry).
+        /// </summary>
+        public static readonly string[] Requirements = { "melee", "ranged", "magic", "combo", "block" };
 
         /// <summary>Item classes each pool may use. Gathering pools stay on tools; gear stays off pickaxes.</summary>
         private static readonly Dictionary<string, string[]> PoolClasses = new Dictionary<string, string[]>
@@ -30,7 +37,8 @@ namespace Corruption.Rules
             { "gathering-universal", new[] { "pickaxe", "axe_1h" } },
             { "gathering-mining", new[] { "pickaxe" } },
             { "gathering-woodcutting", new[] { "axe_1h" } },
-            { "gear", new[] { "weapon", "shield", "helmet", "chest", "legs", "cape", "jewellery" } }
+            { "gear", new[] { "weapon", "shield", "helmet", "chest", "legs", "cape", "jewellery" } },
+            { "any", ItemClasses }
         };
 
         public sealed class Affix
@@ -46,8 +54,10 @@ namespace Corruption.Rules
             public float Min;
             public float Max;
             public string Unit;
+            public bool LowerIsBetter;
             public float Weight;
             public string Effect;
+            public string Requires;
             public HashSet<string> Classes = new HashSet<string>();
             public string Notes;
 
@@ -80,6 +90,7 @@ namespace Corruption.Rules
 
             var ids = new HashSet<string>();
             var familyUnits = new Dictionary<string, string>();
+            var itemNames = new Dictionary<string, string>();
             for (int i = 1; i < rows.Count; i++)
             {
                 var cells = rows[i];
@@ -107,6 +118,7 @@ namespace Corruption.Rules
                     Text = cell("text"),
                     Unit = cell("unit"),
                     Effect = cell("effect"),
+                    Requires = cell("requires").ToLowerInvariant(),
                     Notes = header.Contains("notes") ? cell("notes") : ""
                 };
                 string where = $"Line {line} ({(affix.Id.Length > 0 ? affix.Id : "no id")})";
@@ -122,6 +134,27 @@ namespace Corruption.Rules
                 Check(errors, where, "status", affix.Status, Statuses);
                 Check(errors, where, "side", affix.Side, Sides);
                 Check(errors, where, "unit", affix.Unit, Units);
+                if (affix.Requires.Length > 0)
+                {
+                    Check(errors, where, "requires", affix.Requires, Requirements);
+                }
+                string lower = cell("lower_is_better").ToLowerInvariant();
+                affix.LowerIsBetter = lower == "x";
+                if (lower.Length > 0 && lower != "x")
+                {
+                    errors.Add($"{where}: lower_is_better should be x or empty, not '{lower}'.");
+                }
+                foreach (var part in affix.ItemName.Split('/').Select(n => n.Trim()).Where(n => n.Length > 0))
+                {
+                    if (itemNames.TryGetValue(part.ToLowerInvariant(), out var other))
+                    {
+                        errors.Add($"{where}: item name '{part}' is also used by {other}.");
+                    }
+                    else
+                    {
+                        itemNames[part.ToLowerInvariant()] = affix.Id;
+                    }
+                }
                 if (!PoolClasses.ContainsKey(affix.Pool))
                 {
                     errors.Add($"{where}: pool '{affix.Pool}' must be one of {string.Join(", ", PoolClasses.Keys)}.");
@@ -188,10 +221,15 @@ namespace Corruption.Rules
             return affixes;
         }
 
-        /// <summary>Affixes that can roll on an item belonging to the given classes, on one side.</summary>
-        public static List<Affix> Candidates(IEnumerable<Affix> affixes, ICollection<string> itemClasses, bool prefix)
+        /// <summary>
+        ///     Affixes that can roll on one side of an item belonging to the given classes and having the given mechanics
+        ///     (see <see cref="Requirements" />).
+        /// </summary>
+        public static List<Affix> Candidates(IEnumerable<Affix> affixes, ICollection<string> itemClasses,
+            ICollection<string> itemMechanics, bool prefix)
         {
-            return affixes.Where(a => a.IsPrefix == prefix && a.Classes.Any(itemClasses.Contains)).ToList();
+            return affixes.Where(a => a.IsPrefix == prefix && a.Classes.Any(itemClasses.Contains) &&
+                                      (a.Requires.Length == 0 || itemMechanics.Contains(a.Requires))).ToList();
         }
 
         private static void Check(List<string> errors, string where, string column, string value, string[] allowed)
