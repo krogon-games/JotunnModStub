@@ -12,7 +12,17 @@ For everyone joining our Valheim server. Takes about 10 minutes. You only do thi
 | [AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) | Craftable backpacks | Thunderstore |
 | [PlantEasily](https://thunderstore.io/c/valheim/p/Advize/PlantEasily/) | Plant and harvest crops in bulk | Thunderstore (optional) |
 
-The mod manager also installs what these need (BepInEx, Jötunn, YamlDotNet) automatically.
+### Dependencies
+
+These mods need three more packages. r2modman installs them automatically when you download the mods (accept when it asks); if you install by hand, you need them too:
+
+| Package | Minimum version | Needed by |
+|---|---|---|
+| [BepInExPack Valheim](https://thunderstore.io/c/valheim/p/denikson/BepInExPack_Valheim/) (denikson) | 5.4.2351 | Everything: it's the mod loader |
+| [Jötunn](https://thunderstore.io/c/valheim/p/ValheimModding/Jotunn/) (ValheimModding) | 2.30.2 | Corruption, CraftingOverhaul, AdventureBackpacks, EquipmentAndQuickSlots |
+| [YamlDotNet](https://thunderstore.io/c/valheim/p/ValheimModding/YamlDotNet/) (ValheimModding) | 16.3.1 | AdventureBackpacks |
+
+PlantEasily needs only BepInExPack.
 
 **Everyone must have the same version of Corruption and AdventureBackpacks as the server**, or the game won't let you join. Our two mods aren't on Thunderstore, so always use the files Krogon sends.
 
@@ -30,6 +40,13 @@ In r2modman, go to **Online**, search for each mod and click **Download** (accep
 - EquipmentAndQuickSlots (by RandyKnapp)
 - AdventureBackpacks (by Vapok)
 - PlantEasily (by Advize), optional
+
+### Or install by hand (without r2modman)
+
+1. **BepInExPack Valheim:** download it, open the zip, and copy everything inside its `BepInExPack_Valheim` folder into your Valheim game folder (Steam: right-click Valheim → Manage → Browse local files), next to `valheim.exe`.
+2. Start Valheim once and close it. This creates the `BepInEx\plugins` folder.
+3. **Jötunn, YamlDotNet, EquipmentAndQuickSlots, AdventureBackpacks, PlantEasily:** download each, open the zip, and copy its `.dll` files (with any folder they're in) into `BepInEx\plugins`, one folder per mod.
+4. Continue with step 3 below, using `BepInEx\plugins` in your Valheim folder. Then start Valheim from Steam as normal.
 
 ## 3. Add our two mods
 
@@ -55,6 +72,7 @@ When Krogon sends new DLLs, replace the old ones in the same folders (step 3), w
 |---|---|
 | "Incompatible version" or kicked when joining | Your Corruption or AdventureBackpacks version differs from the server's. Get the latest DLLs from Krogon / update the mod to the version the server runs |
 | Game starts without mods | Start it from r2modman with **Start modded** |
+| Game crashes or mods don't load; the log mentions a missing dependency | A package from the Dependencies table is missing or too old. Install or update it |
 | No talisman slots | EquipmentAndQuickSlots isn't installed in your profile |
 | Talismans do nothing | Same: they need EquipmentAndQuickSlots |
 | Something else odd | Send Krogon your `BepInEx/LogOutput.log` from the profile folder |
@@ -75,7 +93,7 @@ The dedicated server needs, in its own BepInEx install:
 
 | Mod | Needed on the server? |
 |---|---|
-| BepInExPack_Valheim, Jötunn | Yes |
+| BepInExPack_Valheim, Jötunn | Yes (same minimum versions as the Dependencies table) |
 | Corruption | **Yes** (adds items; everyone must match) |
 | AdventureBackpacks (+ YamlDotNet) | **Yes** (adds items) |
 | CraftingOverhaul | Recommended: its chest settings then come from the server |
