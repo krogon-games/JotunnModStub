@@ -1,6 +1,6 @@
 # Current state
 
-**Last updated:** 2026-10-28 · **Branch:** `claude/valheim-modding-exploration-izv3l8` · **Game:** Valheim 1.0.20
+**Last updated:** 2026-10-28 (after the first big play-test) · **Branch:** `claude/valheim-modding-exploration-izv3l8` · **Game:** Valheim 1.0.20
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
@@ -27,6 +27,13 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Riftforge: unlock, build, opens as "Riftforge", red glow, raven lore plays once | Corruption | 2026-10-26 ("fixed, crow works now") |
 | No build-menu errors after the 5-ingredient fix | Corruption | 2026-10-26 |
 | Talismans: recipes, charm in an EquipmentAndQuickSlots Talisman slot, tooltip without trinket bonuses, repel | Corruption | 2026-10-28 with all mods loaded ("working as intended now") |
+| Talismans: two charms plus a vanilla trinket, same charm refused twice, provoking for ~30 s, bosses unaffected | Corruption | 2026-10-28 play-test log |
+| Boss essences: all eight looks, icons, glow and add-ons; 1 per kill on every kill; Kall's from the last phase | Corruption | 2026-10-28 play-test log |
+| Maps and rips step A: opening, landing beside the heart, heart → exit rip home, Plains map, map recipe at the Riftforge | Corruption | 2026-10-28 play-test log (two bugs found and fixed, below) |
+| Corrupted bosses core: red tint, harder hits, slower kill, 2–3 essences and 3–5 shards | Corruption | 2026-10-28 play-test log |
+| Craft from chests with AdventureBackpacks: backpack alone, backpack + chest, no double charge | CraftingOverhaul | 2026-10-28 play-test log |
+| Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
+| `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
 
 ### Built, not verified
 
@@ -34,14 +41,10 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
-| Talismans: the rest | Two charms at once plus a vanilla trinket; hitting a repelled creature provokes it for 30 s; bosses unaffected; on a friend's game too |
-| Category header alignment and `HeaderFontSize` | Headers line up with recipe icons, one line, readable size |
-| `Wisp` biome after the wisp-fountain rule | `co_biome Wisp`: if Plains, add `Wisp:Mistlands` override |
-| Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
-| Boss essences (phase 3, 2026-10-28) | `spawn CorruptionEssence_eikthyr` (and the other seven, including `_kall`): look, icon, glow, add-on parts on the Elder, Yagluth and Kall essences; each boss drops 1 per kill (Kall: from the final phase) |
-| Maps and rips, step A (2026-10-28) | `spawn CorruptionMap_Meadows`, right-click it: rip opens, travel, land on the ground beside the heart, destroy the heart, exit rip leads home, both close after a day. Crafting a map at the Riftforge. Then with a friend: following through the rip, rip near someone's base refused. Steps: `FEATURES.md` → Maps and rips |
-| Corrupted bosses core (2026-10-28) | `spawn Eikthyr`, `co_corrupt`: red, harder hits, slower to kill, 2–3 essences and 3–5 shards. Steps: `PLAYTEST.md` |
-| Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
+| Maps and rips: the two fixes (2026-10-28) | Portal hover shows the biome and time left (not `{0}`); no red console error when the heart loads |
+| Rips closing after an in-game day | Sleep or wait a day: both portals and the heart disappear |
+| PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
+| Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
 
@@ -49,7 +52,7 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 
 ## Outstanding bugs and open issues
 
-- `FaderEmber` (Embers) has no source in the game data; needs a `BiomeMaterialOverrides` entry once its in-game source is known.
+- Corruption's shard and essences have no biome in recipe grouping: they come from our drop patches, which the biome detection doesn't see. Harmless today (map recipes still group by their biome material).
 - Chest race: two players taking from the same chest at the same instant, last write wins (same as Valheim Plus).
 - Any-one-ingredient recipes don't use chest contents.
 - Talisman families group widely by name (one Blob charm covers every ooze; Troll covers frost trolls).
@@ -77,11 +80,15 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 
 ## Next actionable tasks
 
-1. Play-test the rest of talismans (see the table above), with EquipmentAndQuickSlots, PlantEasily and AdventureBackpacks installed (the group's setup); run the compatibility checks in `docs/mod-compatibility.md`. Record results in `FEATURES.md` and here.
-2. Run `co_biome Wisp`; add overrides for `Wisp` (if needed) and `FaderEmber` once its source is known.
-3. Play-test boss essences (above).
-4. Run the multiplayer checklist when a second player is available.
-5. Play-test phase 4 step A, then build **step B**: our own wave spawner driven by the heart, maddened status effect, the end-of-rip loot, and checking the landing area once loaded (locations, water).
+1. **Phase 4 step B** with the 2026-10-28 dump: own wave spawner driven by the heart, maddened status effect, end-of-rip loot, checking the landing area once loaded. Numbers from `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`.
+2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
+3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
+4. Re-test the two rip fixes; play-test the rest of `PLAYTEST.md` (rip closing, PlantEasily, Session 2 with a friend).
+5. Then open a PR into `master` (user, after the play-test).
+
+## Later (user's to-do, 2026-10-28)
+
+- **UI work:** the recipe list needs a redesign (headers work but the user wants a better look), and the crafting screen with AdventureBackpacks' backpack panel open needs layout work. Ask the user what they want changed before starting.
 
 ## Before release
 

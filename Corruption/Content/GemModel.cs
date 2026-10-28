@@ -137,7 +137,7 @@ namespace Corruption.Content
             return null;
         }
 
-        /// <summary>Removes the base item's meshes, particles and LOD setup; keeps colliders, rigidbody and item logic.</summary>
+        /// <summary>Removes the base item's meshes, particles, lights and LOD setup; keeps colliders, rigidbody and item logic.</summary>
         private static void RemoveVisuals(GameObject prefab)
         {
             foreach (var lod in prefab.GetComponentsInChildren<LODGroup>(true))
@@ -162,6 +162,11 @@ namespace Corruption.Content
                 {
                     UnityEngine.Object.DestroyImmediate(filter);
                 }
+            }
+            // Flicker scripts first: they read their Light in Awake and throw if it's gone (play-test 2026-10-28).
+            foreach (var flicker in prefab.GetComponentsInChildren<LightFlicker>(true))
+            {
+                UnityEngine.Object.DestroyImmediate(flicker);
             }
             foreach (var light in prefab.GetComponentsInChildren<Light>(true))
             {

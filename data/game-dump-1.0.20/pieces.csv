@@ -424,6 +424,7 @@ piece_pot3,$piece_pot_small_green,Small Green Pot,Furniture,True,,Pot_Shard_Gree
 piece_pot3_cracked,$piece_pot_small_cracked,Small Clay Pot,Furniture,False,,Pot_Shard_Green x3; CharcoalResin x1
 piece_pot3_red,$piece_pot_small_red,Small Red Pot,Furniture,False,,Pot_Shard_Red x3; CharcoalResin x1
 piece_preptable,$piece_preptable,Food Preparation Table,Crafting,True,$piece_workbench,Iron x5 (+1/lvl); FineWood x20 (+1/lvl); LeatherScraps x15 (+1/lvl)
+piece_riftforge,$piece_riftforge,Riftforge,Crafting,True,$piece_workbench,FineWood x10; CorruptionShard x1; TrophyEikthyr x1; BronzeNails x10; SurtlingCore x2
 piece_sapcollector,$piece_sapcollector,Sap Extractor,Crafting,True,$piece_workbench,YggdrasilWood x10 (+1/lvl); BlackMetal x5 (+1/lvl); DvergrNeedle x1 (+1/lvl)
 piece_sharpstakes,$piece_sharpstakes,Sharp Stakes,Misc,True,$piece_workbench,Wood x6 (+1/lvl); RoundLog x4 (+1/lvl)
 piece_shieldgenerator,$piece_shieldgenerator,Shield Generator,Misc,True,$piece_workbench,Iron x5 (+1/lvl); Copper x5 (+1/lvl); ShieldCore x1 (+1/lvl)

@@ -15,6 +15,7 @@ AxeHead1,Curious Axe Head,Meadows,False,Locations,Location WoodHouse6 > WoodHous
 AxeHead2,Mysterious Axe Head,Meadows,False,Locations,Location WoodHouse2 > WoodHouse2 > Container
 AxeStone,Stone Axe,Meadows,False,Recipes,Recipe Recipe_AxeStone
 AxeWood,Wooden Axe,Meadows,False,Locations,Location ShipSetting01 > ShipSetting01 > Container
+BackpackMeadows,Satchel,Meadows,False,Recipes,Recipe BackpackMeadows_Recipe_Workbench @ piece_workbench
 BarberKit,Barber Kit,Meadows,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 BeechSeeds,Beech Seeds,Meadows,False,Vegetation,Beech1 > Tree
 BoneFragments,Bone Fragments,Meadows,False,Locations,Location Dolmen01 > Dolmen01 > Pickable
@@ -96,6 +97,7 @@ ArrowBronze,Bronzehead Arrow,BlackForest,False,Recipes,Recipe Recipe_ArrowBronze
 AtgeirBronze,Bronze Atgeir,BlackForest,False,Recipes,Recipe Recipe_AtgeirBronze @ forge
 AxeBronze,Bronze Axe,BlackForest,False,Recipes,Recipe Recipe_AxeBronze @ forge
 AxeEarly,Early Axes,BlackForest,False,Recipes,Recipe Recipe_AxeEarly @ piece_workbench
+BackpackBlackForest,Rugged Backpack,BlackForest,False,Recipes,Recipe BackpackBlackForest_Recipe_Forge @ forge
 BarrelRings,Barrel Hoops,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
 BeltStrength,Megingjord,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
 BirchSeeds,Birch Seeds,BlackForest,False,Vegetation,Birch1 > Tree
@@ -198,6 +200,7 @@ ArmorRootLegs,Root Leggings,Swamp,False,Recipes,Recipe Recipe_ArmorRootLegs @ pi
 ArrowIron,Ironhead Arrow,Swamp,False,Recipes,Recipe Recipe_ArrowIron @ forge
 AtgeirIron,Iron Atgeir,Swamp,False,Recipes,Recipe Recipe_AtgeirIron @ forge
 AxeIron,Iron Axe,Swamp,False,Recipes,Recipe Recipe_AxeIron @ forge
+BackpackSwamp,Bloodbag Wetpack,Swamp,False,Recipes,Recipe BackpackSwamp_Recipe_Workbench @ piece_workbench
 Battleaxe,Battleaxe,Swamp,False,Recipes,Recipe Recipe_Battleaxe @ forge
 BlackSoup,Black Soup,Swamp,False,Recipes,Recipe Recipe_Blacksoup @ piece_cauldron
 BlobVial,Corked Vial,Swamp,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
@@ -208,6 +211,22 @@ BombOoze,Ooze Bomb,Swamp,False,Recipes,Recipe Recipe_BombOoze @ piece_workbench
 BowHuntsman,Huntsman Bow,Swamp,False,Recipes,Recipe Recipe_BowHuntsman @ forge
 CandleWick,Candle Wick,Swamp,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 Chain,Chain,Swamp,False,Spawns,Wraith > CharacterDrop
+CorruptionTalisman_Abomination,Abomination charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Abomination @ piece_workbench
+CorruptionTalisman_Bjorn,Bear charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Bjorn @ piece_workbench
+CorruptionTalisman_Blob,Blob charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Blob @ piece_workbench
+CorruptionTalisman_Boar,Boar charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Boar @ piece_workbench
+CorruptionTalisman_BogWitchKvastur,Kvastur charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_BogWitchKvastur @ piece_workbench
+CorruptionTalisman_Draugr,Draugr charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Draugr @ piece_workbench
+CorruptionTalisman_Ghost,Ghost charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Ghost @ piece_workbench
+CorruptionTalisman_Greydwarf,Greydwarf charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Greydwarf @ piece_workbench
+CorruptionTalisman_Leech,Leech charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Leech @ piece_workbench
+CorruptionTalisman_Neck,Neck charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Neck @ piece_workbench
+CorruptionTalisman_Skeleton,Skeleton charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Skeleton @ piece_workbench
+CorruptionTalisman_Surtling,Surtling charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Surtling @ piece_workbench
+CorruptionTalisman_TrainingDummy,TrainingDummy charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_TrainingDummy @ piece_workbench
+CorruptionTalisman_Troll,Troll charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Troll @ piece_workbench
+CorruptionTalisman_Wraith,Wraith charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Wraith @ piece_workbench
+CorruptionTalisman_Writhan,Writhan charm,Swamp,False,Recipes,Recipe Recipe_CorruptionTalisman_Writhan @ piece_workbench
 CuredSquirrelHamstring,Cured Squirrel Hamstring,Swamp,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 ElderBark,Ancient Bark,Swamp,False,Vegetation,SwampTree1 > Tree > Log
 FeastBlackforest_Material,Black Forest Buffet Platter,Swamp,False,Recipes,Recipe Recipe_FeastBlackforest @ piece_preptable
@@ -275,6 +294,7 @@ Wishbone,Wishbone,Swamp,False,Locations,Location Bonemass > Bonemass > OfferingB
 WitheredBone,Withered Bone,Swamp,False,Vegetation,mudpile_beacon > Destructible > MineRock
 WrithanRoots,Writhan Roots,Swamp,False,Spawns,Writhan > CharacterDrop
 Chitin,Chitin,Ocean,False,Vegetation,Leviathan > MineRock
+CorruptionTalisman_Serpent,Serpent charm,Ocean,False,Recipes,Recipe Recipe_CorruptionTalisman_Serpent @ piece_workbench
 Fish12,Pufferfish,Ocean,False,Spawns,Fish12
 Fish3,Tuna,Ocean,False,Spawns,Fish3
 Fish8,Coral Cod,Ocean,False,Spawns,Fish8
@@ -303,6 +323,7 @@ ArrowFrost,Frost Arrow,Mountain,False,Recipes,Recipe Recipe_ArrowFrost @ piece_w
 ArrowObsidian,Obsidian Arrow,Mountain,False,Recipes,Recipe Recipe_ArrowObsidian @ piece_workbench
 ArrowPoison,Poison Arrow,Mountain,False,Recipes,Recipe Recipe_ArrowPoison @ piece_workbench
 ArrowSilver,Silver Arrow,Mountain,False,Recipes,Recipe Recipe_ArrowSilver @ forge
+BackpackMountains,Arctic Sherpa Pack,Mountain,False,Recipes,Recipe BackpackMountains_Recipe_Forge @ forge
 BattleaxeCrystal,Crystal Battleaxe,Mountain,False,Recipes,Recipe Recipe_Battleaxe_Crystal @ forge
 BattleaxeWood,Wooden Battleaxe,Mountain,False,Locations,Location StoneTowerRuins04 > StoneTowerRuins04 > Container
 BombBlob_Frost,Blob Bomb: Frost,Mountain,False,Recipes,Recipe Recipe_BombBlob_Frost @ piece_workbench
@@ -310,6 +331,11 @@ BowDraugrFang,Draugr Fang,Mountain,False,Recipes,Recipe Recipe_BowDraugrFang @ f
 CapeWolf,Wolf Fur Cape,Mountain,False,Recipes,Recipe Recipe_CapeWolf @ piece_workbench
 chest_hildir2,Hildir's Silver Chest,Mountain,False,Locations,Location MountainCave02 > Room > cave_shrine_endcap01 > CreatureSpawner > CharacterDrop
 CookedWolfMeat,Cooked Wolf Meat,Mountain,False,Conversions,piece_cookingstation: WolfMeat > CookedWolfMeat
+CorruptionTalisman_Fenring,Fenring charm,Mountain,False,Recipes,Recipe Recipe_CorruptionTalisman_Fenring @ piece_workbench
+CorruptionTalisman_Hatchling,Drake charm,Mountain,False,Recipes,Recipe Recipe_CorruptionTalisman_Hatchling @ piece_workbench
+CorruptionTalisman_StoneGolem,Stone Golem charm,Mountain,False,Recipes,Recipe Recipe_CorruptionTalisman_StoneGolem @ piece_workbench
+CorruptionTalisman_Ulv,Ulv charm,Mountain,False,Recipes,Recipe Recipe_CorruptionTalisman_Ulv @ piece_workbench
+CorruptionTalisman_Wolf,Wolf charm,Mountain,False,Recipes,Recipe Recipe_CorruptionTalisman_Wolf @ piece_workbench
 Crystal,Crystal,Mountain,False,Spawns,StoneGolem > CharacterDrop
 DragonEgg,Dragon Egg,Mountain,False,Locations,Location DrakeNest01 > DrakeNest01 > Pickable
 DragonTear,Dragon Tear,Mountain,False,Locations,Location Dragonqueen > Dragonqueen > OfferingBowl > CharacterDrop
@@ -381,6 +407,7 @@ ArrowNeedle,Needle Arrow,Plains,False,Recipes,Recipe Recipe_ArrowNeedle @ piece_
 AtgeirBlackmetal,Black Metal Atgeir,Plains,False,Recipes,Recipe Recipe_AtgeirBlackmetal @ forge
 AtgeirWood,Wooden Atgeir,Plains,False,Locations,Location StoneHouse1_heath > StoneHouse1_heath > Container
 AxeBlackMetal,Black Metal Axe,Plains,False,Recipes,Recipe Recipe_AxeBlackMetal @ forge
+BackpackPlains,Lox Hide Knappsack,Plains,False,Recipes,Recipe BackpackPlains_Recipe_Forge @ forge
 Barley,Barley,Plains,False,Locations,Location GoblinCamp2 > Room > gobvill_barley > Pickable
 BarleyFlour,Barley Flour,Plains,False,Conversions,windmill: Barley > BarleyFlour
 BarleyWine,Fire Resistance Barley Wine,Plains,False,Conversions,fermenter: BarleyWineBase > BarleyWine
@@ -401,6 +428,11 @@ Cloudberry,Cloudberries,Plains,False,Vegetation,CloudberryBush > Pickable
 CookedChickenMeat,Cooked Chicken Meat,Plains,False,Conversions,piece_cookingstation: ChickenMeat > CookedChickenMeat
 CookedEgg,Cooked Egg,Plains,False,Recipes,Recipe Recipe_CookedEgg @ piece_cauldron
 CookedLoxMeat,Cooked Lox Meat,Plains,False,Conversions,piece_cookingstation_iron: LoxMeat > CookedLoxMeat
+CorruptionTalisman_Deathsquito,Deathsquito charm,Plains,False,Recipes,Recipe Recipe_CorruptionTalisman_Deathsquito @ piece_workbench
+CorruptionTalisman_Goblin,Fuling charm,Plains,False,Recipes,Recipe Recipe_CorruptionTalisman_Goblin @ piece_workbench
+CorruptionTalisman_Lox,Lox charm,Plains,False,Recipes,Recipe Recipe_CorruptionTalisman_Lox @ piece_workbench
+CorruptionTalisman_Unbjorn,Vile charm,Plains,False,Recipes,Recipe Recipe_CorruptionTalisman_Unbjorn @ piece_workbench
+Demister,Wisplight,Plains,False,Recipes,Recipe Recipe_Demister @ piece_workbench
 FeastPlains_Material,Plains Pie Picnic,Plains,False,Recipes,Recipe Recipe_FeastPlains @ piece_preptable
 FireworksRocket_Blue,Blue Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksBlue @ piece_workbench
 FireworksRocket_Cyan,Cyan Fireworks,Plains,False,Recipes,Recipe Recipe_FireworksCyan @ piece_workbench
@@ -465,6 +497,7 @@ Upgrader5Armor,Black Marble Protection Idol,Plains,False,Locations,Location Hild
 Upgrader5Weapon,Black Marble Battle Idol,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Floor0 > DropOnDestroyed
 VikingCupcake,Frosted Sweetbread,Plains,False,Conversions,piece_oven: VikingCupcakeUncooked > VikingCupcake
 VikingCupcakeUncooked,Unbaked Sweetbread,Plains,False,Recipes,Recipe Recipe_VikingCupcake @ piece_preptable
+Wisp,Wisp,Plains,False,Producers,piece_wisplure > LuredWisp > Pickable
 YagluthDrop,Torn Spirit,Plains,False,Locations,Location GoblinKing > GoblinKing > OfferingBowl > CharacterDrop
 ArmorCarapaceChest,Carapace Breastplate,Mistlands,False,Recipes,Recipe Recipe_ArmorCarapaceChest @ blackforge
 ArmorCarapaceLegs,Carapace Greaves,Mistlands,False,Recipes,Recipe Recipe_ArmorCarapaceLegs @ blackforge
@@ -473,6 +506,7 @@ ArmorMageLegs,Eitr-weave Trousers,Mistlands,False,Recipes,Recipe Recipe_ArmorMag
 ArrowCarapace,Carapace Arrow,Mistlands,False,Recipes,Recipe Recipe_ArrowCarapace @ blackforge
 AtgeirHimminAfl,Himminafl,Mistlands,False,Recipes,Recipe Recipe_AtgeirHimminAfl @ blackforge
 AxeJotunBane,Jotun Bane,Mistlands,False,Recipes,Recipe Recipe_AxeJotunBane @ blackforge
+BackpackMistlands,Explorers Wisppack,Mistlands,False,Recipes,Recipe BackpackMistlands_Recipe_BlackForge @ blackforge
 BattleaxeSkullSplittur,Skull Splittur,Mistlands,False,Recipes,Recipe Recipe_Battleaxe_SkullSplittur @ blackforge
 Bilebag,Bilebag,Mistlands,False,Spawns,Gjall > CharacterDrop
 BlackCore,Black Core,Mistlands,False,Locations,Location Mistlands_DvergrTownEntrance1 > Room > dvergr_roombig_windows01 > Pickable
@@ -490,6 +524,10 @@ CeramicPlate,Ceramic Plate,Mistlands,False,Recipes,Recipe Recipe_CeramicPlate @ 
 CookedBugMeat,Cooked Seeker Meat,Mistlands,False,Conversions,piece_cookingstation_iron: BugMeat > CookedBugMeat
 CookedHareMeat,Cooked Hare Meat,Mistlands,False,Conversions,piece_cookingstation: HareMeat > CookedHareMeat
 CopperScrap,Copper Scrap,Mistlands,False,Locations,Location Mistlands_GuardTower1_new > Mistlands_GuardTower1_new > DropOnDestroyed
+CorruptionTalisman_Dverger,Dvergr Rogue charm,Mistlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Dverger @ piece_workbench
+CorruptionTalisman_Gjall,Gjall charm,Mistlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Gjall @ piece_workbench
+CorruptionTalisman_Seeker,Seeker charm,Mistlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Seeker @ piece_workbench
+CorruptionTalisman_Tick,Tick charm,Mistlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Tick @ piece_workbench
 CrossbowArbalest,Arbalest,Mistlands,False,Recipes,Recipe Recipe_CrossbowArbalest @ blackforge
 DvergrKey,Sealbreaker,Mistlands,False,Recipes,Recipe Recipe_DvergrKey @ piece_magetable
 DvergrKeyFragment,Sealbreaker Fragment,Mistlands,False,Locations,Location Mistlands_DvergrTownEntrance1 > Room > dvergr_roombig_windows01 > Destructible
@@ -553,6 +591,7 @@ StaffFireball,Staff of Embers,Mistlands,False,Recipes,Recipe Recipe_StaffFirebal
 StaffIceShards,Staff of Frost,Mistlands,False,Recipes,Recipe Recipe_StaffIceShards @ piece_magetable
 StaffShield,Staff of Protection,Mistlands,False,Recipes,Recipe Recipe_StaffShield @ piece_magetable
 StaffSkeleton,Dead Raiser,Mistlands,False,Recipes,Recipe Recipe_StaffSkeleton @ piece_magetable
+SwordMistwalker,Mistwalker,Mistlands,False,Recipes,Recipe Recipe_SwordMistwalker @ blackforge
 Tankard_dvergr,Dvergr Tankard,Mistlands,False,Locations,Location Mistlands_GuardTower1_new > Mistlands_GuardTower1_new > Pickable
 THSwordKrom,Krom,Mistlands,False,Recipes,Recipe Recipe_SwordKrom @ blackforge
 THSwordWood,Wooden Greatsword,Mistlands,False,Locations,Location Mistlands_GuardTower1_ruined_new > Mistlands_GuardTower1_ruined_new > Container
@@ -584,6 +623,7 @@ AsksvinCarrionSkull,Asksvin Skull,Ashlands,False,Locations,Location VoltureNest 
 AsksvinEgg,Asksvin Egg,Ashlands,False,Spawns,Asksvin > Offspring
 AsksvinMeat,Asksvin Tail,Ashlands,False,Spawns,Asksvin > CharacterDrop
 AxeBerzerkr,Berserkir Axes,Ashlands,False,Recipes,Recipe Recipe_AxeBerzerkr @ blackforge
+BackpackAshlands,Cinderward Pack,Ashlands,False,Recipes,Recipe BackpackAshlands_Recipe_BlackForge @ blackforge
 Bell,Bell,Ashlands,False,Recipes,Recipe Recipe_Bell @ blackforge
 BellFragment,Bell Fragment,Ashlands,False,Locations,Location CharredFortress > CharredFortress > DropOnDestroyed
 Blackwood,Ashwood,Ashlands,False,Vegetation,AshlandsTree1 > Tree
@@ -607,11 +647,20 @@ Charredskull,Charred Skull,Ashlands,False,Vegetation,Pickable_Charredskull > Pic
 CookedAsksvinMeat,Cooked Asksvin Tail,Ashlands,False,Conversions,piece_cookingstation_iron: AsksvinMeat > CookedAsksvinMeat
 CookedBoneMawSerpentMeat,Cooked Bonemaw Meat,Ashlands,False,Conversions,piece_cookingstation_iron: BoneMawSerpentMeat > CookedBoneMawSerpentMeat
 CookedVoltureMeat,Cooked Volture Meat,Ashlands,False,Conversions,piece_cookingstation_iron: VoltureMeat > CookedVoltureMeat
+CorruptionTalisman_Asksvin,Asksvin charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Asksvin @ piece_workbench
+CorruptionTalisman_BonemawSerpent,Bonemaw charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_BonemawSerpent @ piece_workbench
+CorruptionTalisman_Charred_Archer,Charred Marksman charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Charred_Archer @ piece_workbench
+CorruptionTalisman_Charred_Mage,Charred Warlock charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Charred_Mage @ piece_workbench
+CorruptionTalisman_Charred_Melee,Charred Warrior charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Charred_Melee @ piece_workbench
+CorruptionTalisman_FallenValkyrie,Fallen Valkyrie charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_FallenValkyrie @ piece_workbench
+CorruptionTalisman_Morgen,Morgen charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Morgen @ piece_workbench
+CorruptionTalisman_Volture,Volture charm,Ashlands,False,Recipes,Recipe Recipe_CorruptionTalisman_Volture @ piece_workbench
 CrossbowRipper,Ripper,Ashlands,False,Recipes,Recipe Recipe_CrossbowRipper @ blackforge
 DyrnwynBladeFragment,Dyrnwyn Blade Fragment,Ashlands,False,Locations,Location PlaceofMystery2 > PlaceofMystery2 > Pickable
 DyrnwynHiltFragment,Dyrnwyn Hilt Fragment,Ashlands,False,Locations,Location PlaceofMystery3 > PlaceofMystery3 > CreatureSpawner > CharacterDrop
 DyrnwynTipFragment,Dyrnwyn Tip Fragment,Ashlands,False,Locations,Location PlaceofMystery1 > PlaceofMystery1 > Pickable
 FaderDrop,Kindled Ribs,Ashlands,False,Locations,Location FaderLocation > FaderLocation > OfferingBowl > CharacterDrop
+FaderEmber,Embers,Ashlands,False,Producers,piece_EternalPyre > LuredFaderEmber > Pickable
 FeastAshlands_Material,Ashlands Gourmet Bowl,Ashlands,False,Recipes,Recipe Recipe_FeastAshlands @ piece_preptable
 Fiddleheadfern,Fiddlehead,Ashlands,False,Locations,Location FortressRuins > Room > CharredRuins15 > Pickable
 FierySvinstew,Fiery Svinstew,Ashlands,False,Recipes,Recipe Recipe_FierySvinstew @ piece_cauldron
@@ -649,6 +698,7 @@ SaddleAsksvin,Asksvin Saddle,Ashlands,False,Recipes,Recipe Recipe_SaddleAsksvin 
 ScorchingMedley,Scorching Medley,Ashlands,False,Recipes,Recipe Recipe_ScorchingMedley @ piece_cauldron
 ShieldFlametal,Flametal Shield,Ashlands,False,Recipes,Recipe Recipe_ShieldFlametal @ blackforge
 ShieldFlametalTower,Flametal Tower Shield,Ashlands,False,Recipes,Recipe Recipe_ShieldFlametalTower @ blackforge
+Shovel,Snow Shovel,Ashlands,False,Recipes,Recipe Recipe_SnowShovel @ blackforge
 SizzlingBerryBroth,Sizzling Berry Broth,Ashlands,False,Recipes,Recipe Recipe_SizzlingBerryBroth @ piece_cauldron
 SparklingShroomshake,Sparkling Shroomshake,Ashlands,False,Recipes,Recipe Recipe_SparklingShroomshake @ piece_cauldron
 SpearSplitner,Splitnir,Ashlands,False,Recipes,Recipe Recipe_SpearSplitner @ blackforge
@@ -707,6 +757,7 @@ AxeGold,Nord Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGold @ blackforge
 AxeGold_BloodLightning,Thunderblood Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGold_BloodLightning @ blackforge
 AxeGold_FrostFire,Frostfire Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGold_FrostFire @ blackforge
 AxeGoldUncooked,Cast: Nord Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGoldUncooked @ blackforge
+BackpackDeepNorth,Frostbound Haversack,DeepNorth,False,Recipes,Recipe BackpackDeepNorth_Recipe_BlackForge @ blackforge
 BakedPoteitr,Baked Poteitr,DeepNorth,False,Conversions,piece_oven: BakedPoteitrUncooked > BakedPoteitr
 BakedPoteitrUncooked,Unbaked Poteitr,DeepNorth,False,Recipes,Recipe Recipe_BakedPoteitr @ piece_cauldron
 Barka_Backslam,Barka Backslam,DeepNorth,False,Spawns,Barka > Creature attack Barka
@@ -722,6 +773,7 @@ BattleaxeGoldUncooked,Cast: Nord Greataxe,DeepNorth,False,Recipes,Recipe Recipe_
 BloodGoldKey,Intricate Key,DeepNorth,False,Locations,Location MorkBorg > Room > morkhalla_entrance01 > CreatureSpawner > CharacterDrop
 BoltBloodGold,Bloodgold Bolt,DeepNorth,False,Recipes,Recipe Recipe_BoltBloodGold @ blackforge
 BombBlob_Morkhalla,Blob Bomb: Pulp,DeepNorth,False,Recipes,Recipe Recipe_BombBlob_Morkhalla @ piece_workbench
+BombDynamite,Ember Charge,DeepNorth,False,Recipes,Recipe Recipe_BombDynamite @ piece_workbench
 BowAshlandsBlood,Blood Fang,DeepNorth,False,Recipes,Recipe Recipe_BowAshlands_Blood @ blackforge
 BowAshlandsRoot,Root Fang,DeepNorth,False,Recipes,Recipe Recipe_BowAshlands_Nature @ blackforge
 BowAshlandsStorm,Storm Fang,DeepNorth,False,Recipes,Recipe Recipe_BowAshlands_Lightning @ blackforge
@@ -734,6 +786,11 @@ CapeDeepNorthMage,Cape of the Caller,DeepNorth,False,Recipes,Recipe Recipe_CapeD
 Catapult_Ammo_BloodGold,Bloodgold Payload,DeepNorth,False,Recipes,Recipe Recipe_Catapult_Ammo_BloodGold @ blackforge
 CookedMooseMeat,Cooked Moose Meat,DeepNorth,False,Conversions,piece_cookingstation_iron: MooseMeat > CookedMooseMeat
 CookedSealBlubber,Cooked Seal Blubber,DeepNorth,False,Conversions,piece_oven: SealBlubber > CookedSealBlubber
+CorruptionTalisman_Barka,Barka charm,DeepNorth,False,Recipes,Recipe Recipe_CorruptionTalisman_Barka @ piece_workbench
+CorruptionTalisman_Elaking,Elaking charm,DeepNorth,False,Recipes,Recipe Recipe_CorruptionTalisman_Elaking @ piece_workbench
+CorruptionTalisman_JotunWarrior,Krigen charm,DeepNorth,False,Recipes,Recipe Recipe_CorruptionTalisman_JotunWarrior @ piece_workbench
+CorruptionTalisman_JotunWitch,Hexen charm,DeepNorth,False,Recipes,Recipe Recipe_CorruptionTalisman_JotunWitch @ piece_workbench
+CorruptionTalisman_Moose,Moose charm,DeepNorth,False,Recipes,Recipe Recipe_CorruptionTalisman_Moose @ piece_workbench
 CrossbowGold,Nord Crossbow,DeepNorth,False,Recipes,Recipe Recipe_CrossbowGold @ blackforge
 CrossbowGold_BloodLightning,Thunderblood Crossbow,DeepNorth,False,Recipes,Recipe Recipe_CrossbowGold_BloodLightning @ blackforge
 CrossbowGold_FrostFire,Frostfire Crossbow,DeepNorth,False,Recipes,Recipe Recipe_CrossbowGold_FrostFire @ blackforge

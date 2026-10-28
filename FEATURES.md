@@ -13,13 +13,13 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Data-driven biome detection](#data-driven-biome-detection) | UI | Tested in-game | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*` (incl. `HatchCollector.cs`), `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-28 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `Biomes/Collectors/LocationCollector.cs`, `CraftingOverhaul.cs` | 2026-10-28 |
-| [Config reload on save](#config-reload-on-save) | Dev tools | Built, untested | Both plugins: `0 - Development` → `ReloadConfigOnFileChange` | `Shared/ConfigWatcher.cs`, `CraftingOverhaul/CraftingOverhaul.cs`, `Corruption/CorruptionPlugin.cs`, both `.csproj` | 2026-10-28 |
+| [Config reload on save](#config-reload-on-save) | Dev tools | Tested in-game | Both plugins: `0 - Development` → `ReloadConfigOnFileChange` | `Shared/ConfigWatcher.cs`, `CraftingOverhaul/CraftingOverhaul.cs`, `Corruption/CorruptionPlugin.cs`, both `.csproj` | 2026-10-28 |
 | [Corruption shards](#corruption-shards) | Loot | Tested in-game | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardCustomModel`, `ShardGlowIntensity`, `ShardGlowRange`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/ObjMesh.cs`, `Corruption/Assets/*`, `tools/make_shard.py` | 2026-10-28 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
 | [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
-| [Boss essences](#boss-essences) | Loot | Built, untested | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
-| [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Built, untested | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs` | 2026-10-28 |
-| [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Built, untested | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
+| [Boss essences](#boss-essences) | Loot | Tested in-game (single player) | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
+| [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Tested in-game (single player); 2 bugs fixed, re-test | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs` | 2026-10-28 |
+| [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -83,7 +83,8 @@ Biome overrides are covered under [data-driven biome detection](#data-driven-bio
 - Which categories are collapsed is remembered only until the game closes.
 - Collapsing the category that holds the selected recipe moves the selection to the first visible recipe.
 - Category labels are English only.
-- Play-test 2026-10-26: collapsing, expanding and both grouping modes work. Header text was smaller than the recipe names and indented too far; headers now start where the item icon sits and use the recipe names' font size (adjustable with `HeaderFontSize`). Awaiting re-test. The first header styled logs the row's font settings (`Recipe row font: ...`) in case the size needs tuning.
+- Play-test 2026-10-26: collapsing, expanding and both grouping modes work. Header text was smaller than the recipe names and indented too far; headers now start where the item icon sits and use the recipe names' font size (adjustable with `HeaderFontSize`).
+- Play-test 2026-10-28: headers line up and are readable. The user wants a **UI redesign of the recipe list later** (see `docs/CURRENT_STATE.md` → Later). The first header styled logs the row's font settings (`Recipe row font: ...`) in case the size needs tuning.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 
@@ -121,6 +122,7 @@ Ship and cart storage and tombstones are never used. Taking from a ship or cart 
 
 **Known issues:**
 - Play-test 2026-10-26: crafting at the workbench and building with materials from nearby chests both work in single player. Multiplayer is untested; see `docs/multiplayer-test.md`.
+- Play-test 2026-10-28 with AdventureBackpacks: crafting from the backpack alone, and from backpack + chest, charge the right amounts (the double-payment fix works). With the backpack panel open the layout still works, but **needs UI work later** (user). Bulk planting with PlantEasily from chests not yet tested.
 - If two players take from the same chest at the same moment, the last save wins and one of them may keep or lose items incorrectly. Valheim Plus's version has the same race.
 - Recipes that accept any one of several ingredients don't use chest contents. The game picks the item from your inventory directly, so chest stock isn't shown for them either.
 - Chest contents are re-checked every 0.5 s, so a chest someone just changed may be briefly out of date in the counts.
@@ -272,6 +274,7 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 **Config settings:** None.
 
 **Known issues:**
+- Play-test 2026-10-28: saving a changed setting while in game reloads it (user).
 - Names in the CSVs use the game's current language.
 - The dump is game data owned by Iron Gate. It's fine for development, but don't ship it with the mod.
 
@@ -398,6 +401,7 @@ The family rules are unit-tested against the real 1.0 creature list (`TalismanFa
   - the charm kept the trinket's **Adrenaline 50**: its bonuses were stripped using a list the game only fills once a player spawns, after charms are made, so nothing was stripped. Now stripped by field name.
   - Also fixed before it showed: charms picked up from the ground (or spawned with cheats) weren't recognised by the slots until relogging, because such items carry their own copy of the item data. Talismans are now recognised by the prefab they came from.
 - Play-test 2026-10-28, after the fixes: **working as intended** (user). A Greydwarf charm in a Talisman slot shows the new subtitle and no Adrenaline, and the user confirmed the behaviour. Not yet covered: two charms at once plus a vanilla trinket, provoking, and multiplayer.
+- **Play-test 2026-10-28 (single player): passed.** Two different charms plus a vanilla trinket work together; the same charm can't go in both slots; a hit creature fights back for about 30 s, then ignores you again; bosses ignore charms. Multiplayer still untested.
 - In game, talismans are called "<creature> charm" (lore: Ægishjálmur charms); "talisman" is the slot and system name.
 - Untested in-game.
 - Families are by name, so some group widely: one Blob charm covers every ooze (tar, frost, lava...), and the Troll charm also covers Deep North frost trolls. Exclusions can split off individual creatures.
@@ -449,7 +453,7 @@ All eight share one egg-shaped gem model (`essence.obj`) with the boss's own tex
 | `ShardGlowIntensity`, `ShardGlowRange` (`2 - Look`) | `2`, `2.5` | Shared with the shard: the ground glow of a dropped essence. Per player, restart to apply |
 
 **Known issues:**
-- Untested in-game (81 tests pass). Risks to check: textures or the add-on parts not showing, essences lying oddly (they keep Bloodstone's collider), icons.
+- **Play-test 2026-10-28 (single player): all passed.** All eight essences look right on the ground and in the inventory (models, icons, glow, the Elder's root, Yagluth's ring, Kall's crown); Eikthyr drops 1 essence on every kill; Kall's essence drops from the last phase only.
 - The Hive (an unused, console-only boss in the game files) is deliberately left out (user, 2026-10-28).
 - Kall Fimbulbringer's earlier phases (`FrozenKing`, `FrozenKing_p2`) don't drop it; only the final phase does, like vanilla's drops.
 - If a custom look fails, that essence falls back to a tinted Bloodstone and logs an error; the item is always registered.
@@ -493,7 +497,7 @@ New items registered through Jötunn: `CorruptionEssence_<look>` for each table 
 | `HeartHealth` | `0` | Health of the rip heart. 0 = the greydwarf nest's own health |
 
 **Known issues:**
-- Untested in-game (89 tests pass). Riskiest parts: the far-away heart appearing at the landing spot, landing on the ground (not inside a rock or on a tree), the stone portal's look and swirl without its vanilla logic, the heart's model on the greydwarf-nest base.
+- **Play-test 2026-10-28 (single player):** opening a rip, landing on the ground beside the heart, destroying the heart, the exit rip leading home, a second biome (Plains) and the map recipe at the Riftforge all work. Two bugs, **fixed, to re-test**: the portal hover showed `{0}` instead of the biome and time left (our texts used `{0}`; the game fills in `$1`), and a red console error (`NullReferenceException` in `LightFlicker.Awake`) when the heart loaded (the nest's light-flicker script stayed after its light was removed). Not yet tested: rips closing after a day, anything in multiplayer.
 - The landing spot comes from world generation. Locations (villages, altars) aren't avoided yet; step B adds checks once the area has loaded.
 - The map look is a placeholder until map art is asked for.
 - With AdventureBackpacks' backpack open, right-clicking a map moves it (AB's quick transfer) instead of using it. Close the backpack first.
@@ -534,7 +538,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 | `CorruptedBossTintStrength` (Look) | `0.6` | Per player. The Riftforge's tint strength, which was tested in-game |
 
 **Known issues:**
-- Untested in-game. The only way to make a corrupted boss for now is `co_corrupt`.
+- **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. The only way to make a corrupted boss for now is `co_corrupt`.
 - The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet: which particle prefab to reuse comes from the game data with the summons.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
@@ -586,6 +590,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Play-test results (single player):** boss essences, corrupted bosses, the rest of talismans, config reload and craft-from-chests with AdventureBackpacks pass; maps and rips work apart from two bugs. **Fixed:** rip hover texts showed `{0}` (now `$1`, the game's placeholder); a console error from the rip heart's leftover light-flicker script (custom looks now remove flicker scripts with the lights, also on the shard and essences). UI work noted for later.
 - **Affix shards and shattering designed** (design only, from Last Epoch): free shattering at the Riftforge, a chance per affix to get a shard that keeps its exact value, shards add up to 2 affixes to Normal and Magic items only.
 - **Shard corruption rules completed** (design only): the corrupted affix may repeat a family, resonates when it completes a twin and ignores the affix caps; corrupted gear only comes from a shard (the first draft's corrupted drops are removed).
 - **Shard corruption outcomes decided** (no gameplay change yet; loot system): 25% bricked, 25% unchanged but locked, 50% one corrupted affix on top of the normal prefix/suffix limit; Normal, Magic and Rare items can be corrupted; the affix rolls from the normal pool. Chances in `Corruption/Data/corruption_outcomes.csv` with a reader and roll (`Corruption/Rules/CorruptionOutcomes.cs`) and tests (94 tests).

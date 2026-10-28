@@ -1,3 +1,10 @@
 item,name,sources_found,used_in_recipes
-FaderEmber,Embers,0,BombDynamite; Shovel
-Wisp,Wisp,0,Demister; SwordMistwalker
+CorruptionEssence_bonemass,Essence of Bonemass,0,CorruptionMap_Swamp
+CorruptionEssence_eikthyr,Essence of Eikthyr,0,CorruptionMap_Meadows
+CorruptionEssence_elder,Essence of the Elder,0,CorruptionMap_BlackForest
+CorruptionEssence_fader,Essence of Fader,0,CorruptionMap_AshLands
+CorruptionEssence_kall,Essence of Kall Fimbulbringer,0,CorruptionMap_DeepNorth
+CorruptionEssence_moder,Essence of Moder,0,CorruptionMap_Mountain
+CorruptionEssence_queen,Essence of the Queen,0,CorruptionMap_Mistlands
+CorruptionEssence_yagluth,Essence of Yagluth,0,CorruptionMap_Plains
+CorruptionShard,Corruption shard,0,CorruptionMap_Meadows; CorruptionMap_BlackForest; CorruptionMap_Swamp; CorruptionMap_Mountain; CorruptionMap_Plains; CorruptionMap_Mistlands; CorruptionMap_AshLands; CorruptionMap_DeepNorth

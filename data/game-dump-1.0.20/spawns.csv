@@ -1,0 +1,104 @@
+list,m_name,m_enabled,m_devDisabled,m_prefab,m_biome,m_biomeArea,m_maxSpawned,m_spawnInterval,m_spawnChance,m_spawnDistance,m_spawnRadiusMin,m_spawnRadiusMax,m_requiredGlobalKey,m_requiredEnvironments,m_requiredPersistentEvent,m_groupSizeMin,m_groupSizeMax,m_groupRadius,m_spawnAtNight,m_spawnAtDay,m_minAltitude,m_maxAltitude,m_minTilt,m_maxTilt,m_inForest,m_outsideForest,m_inLava,m_outsideLava,m_canSpawnCloseToPlayer,m_insidePlayerBase,m_minOceanDepth,m_maxOceanDepth,m_huntPlayer,m_groundOffset,m_groundOffsetRandom,m_minDistanceFromCenter,m_maxDistanceFromCenter,m_maxLevel,m_minLevel,m_levelUpMinCenterDistance,m_overrideLevelupChance,m_foldout
+_SpawnList_base,deer,True,False,Deer,"Meadows, BlackForest",7,4,100,50,64,0,0,,,,1,3,5,True,True,0,1000,0,35,True,False,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Boar,True,False,Boar,Meadows,7,4,150,50,64,0,0,,,,1,3,5,True,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,800,-1,False
+_SpawnList_base,Neck lakes,True,False,Neck,Meadows,7,6,100,50,5,0,0,,,,2,4,5,True,True,-1.5,0.5,0,35,True,True,False,True,False,False,0,1,False,0.5,0,0,0,3,1,800,-1,False
+_SpawnList_base,Neck IN RAIN,True,False,Neck,Meadows,7,8,30,100,32,0,0,,Rain|ThunderStorm|LightRain,,2,4,5,True,True,0,10,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,800,-1,False
+_SpawnList_base,Seagull,True,False,Seagal,"Meadows, BlackForest, Plains, Ocean",7,5,120,50,51,0,0,,,,1,2,2,True,True,-4,0.2,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Fish1,True,False,Fish1,"Meadows, BlackForest, Plains",7,5,120,50,20,0,0,,,,2,6,2,True,True,-3,-1.5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish2,True,False,Fish2,"Meadows, BlackForest, Plains",7,4,120,50,20,0,0,,,,2,4,2,True,True,-5,-2,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish3,True,False,Fish3,Ocean,7,3,120,50,20,0,0,,,,1,2,2,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,True
+_SpawnList_base,Fish5,True,False,Fish5,BlackForest,7,10,80,50,12,0,0,,,,3,7,2,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish6,True,False,Fish6,Swamp,7,10,80,60,10,0,0,,,,3,7,2,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish7,True,False,Fish7,Plains,7,7,80,60,20,0,0,,,,3,6,2,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish8,True,False,Fish8,Ocean,7,10,80,50,12,0,0,,,,2,7,2,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish9,True,False,Fish9,Mistlands,7,5,60,50,12,0,0,,,,2,7,2,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish12,True,False,Fish12,"Ocean, Mistlands",7,8,80,40,12,0,0,,,,2,5,2,True,True,-999,-6,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,20,False
+_SpawnList_base,Fish10,True,False,Fish10,DeepNorth,7,10,70,60,12,0,0,,,,3,10,3,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,15,False
+_SpawnList_base,Fish11,True,False,Fish11,AshLands,7,10,80,60,8,0,0,,,,3,7,2,True,True,-999,-5,0,99,True,True,False,True,False,False,0,0,False,0.1,0,0,0,5,1,0,15,False
+_SpawnList_base,greydwarf DAY,True,False,Greydwarf,BlackForest,7,3,120,30,10,0,0,,,,2,3,3,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Bjorn DAY,True,False,Bjorn,BlackForest,-1,1,2000,15,10,0,0,,,,1,1,3,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,2,1,0,-1,False
+_SpawnList_base,Bjorn NIGHT,True,False,Bjorn,BlackForest,-1,1,2000,20,10,0,0,,,,1,1,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,True
+_SpawnList_base,greydwarf After boss,True,False,Greydwarf,Meadows,7,1,120,30,10,0,0,defeated_eikthyr,,,2,3,3,True,False,0,1000,0,35,True,False,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,greydwarf Night,True,False,Greydwarf,BlackForest,7,6,60,100,10,0,0,,,,3,4,10,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,greydwarf ELITE,True,False,Greydwarf_Elite,BlackForest,7,1,120,50.6,10,0,0,,,,1,1,1,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,2000,-1,False
+_SpawnList_base,Fenring,True,False,Fenring,Mountain,Median,2,400,20,10,0,0,,,,1,1,1,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Greydwarf Elite,True,False,Greydwarf_Elite,Meadows,7,1,120,50.6,10,0,0,defeated_gdking,,,1,1,1,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Greydwarf Shaman,True,False,Greydwarf_Shaman,Meadows,7,1,120,50.6,10,0,0,defeated_gdking,,,1,1,1,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Skeleton,True,False,Skeleton,"Meadows, Swamp, Mountain, BlackForest, Plains",7,3,300,25,10,0,0,defeated_bonemass,,,1,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Draugr,True,False,Draugr,"Meadows, Mountain, BlackForest, Plains",7,1,300,5,10,0,0,defeated_gdking,Misty,,1,1,1,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Goblin,True,False,Goblin,"Meadows, Mountain, BlackForest",7,3,3000,5,10,0,0,defeated_goblinking,,,3,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Greydwarf Shaman,True,False,Greydwarf_Shaman,BlackForest,7,2,60,50.6,10,0,0,,,,1,1,1,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Greydwarf,True,False,Greydwarf,Meadows,7,2,200,50,20,0,0,defeated_eikthyr,,,1,1,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Greyling,True,False,Greyling,Meadows,7,2,300,50,30,0,0,,,,1,1,3,True,True,0,1000,0,35,True,False,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,ODIN,True,False,odin,"Meadows, Swamp, BlackForest, Plains",7,1,3000,10,10,35,35,defeated_gdking,,,1,1,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Troll,True,False,Troll,BlackForest,-1,1,4000,5,10,0,0,,,,1,1,3,True,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,2000,-1,False
+_SpawnList_base,Unbjorn,True,False,Unbjorn,Plains,-1,1,4000,25,10,0,0,,,,1,1,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,2000,-1,False
+_SpawnList_base,Marsh draugr,True,False,Draugr,Swamp,7,4,120,50,10,0,0,,,,1,2,3,True,True,-1.5,10,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Skeleton,True,False,Skeleton_Swamps,Swamp,7,4,400,25,15,0,0,,,,2,4,4,True,True,-1,10,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Draugr Elite,True,False,Draugr_Elite,Swamp,Median,1,300,5,15,0,0,,,,1,1,1,True,False,-1.5,10,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Marsh surtling,False,False,Surtling,Swamp,7,2,40,30,30,0,0,,,,1,2,1,True,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Blob,True,False,Blob,Swamp,7,2,500,20,20,0,0,,,,1,2,1,True,True,-1,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Leech,True,False,Leech,Swamp,-1,10,200,50,5,0,0,,,,1,1,2,True,True,-3,-0.1,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,BlobElite,True,False,BlobElite,Swamp,7,1,120,20,20,0,0,,,,1,1,1,True,False,-1,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Goblin,True,False,Goblin,Plains,7,5,60,33,30,0,0,,,,3,5,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Goblin,True,False,Goblin,Plains,7,2,1000,33,30,0,0,,,,1,2,3,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,GoblinBrute,True,False,GoblinBrute,Plains,7,1,1000,20,100,0,0,,,,1,2,3,False,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Lox,True,False,Lox,Plains,7,3,1000,5,100,0,0,,,,2,4,10,True,True,1,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Deathsquito,True,False,Deathsquito,Plains,7,3,500,20,30,0,0,,,,1,2,10,True,True,1,1000,0,99,True,True,False,True,False,False,0,0,False,1,0,0,0,1,1,0,-1,False
+_SpawnList_base,Wraith,True,False,Wraith,Swamp,-1,2,200,30,20,0,0,,,,1,1,1,True,False,-2,1000,0,35,True,True,False,True,False,False,0,0,False,50,0,0,0,1,1,0,-1,False
+_SpawnList_base,StoneGolem,True,False,StoneGolem,Mountain,6,1,120,25.6,10,0,0,,,,1,1,4,True,True,120,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Hatchling,True,False,Hatchling,Mountain,6,2,120,25.6,10,0,0,,,,1,1,4,True,True,100,1000,0,66,True,True,False,True,False,False,0,0,False,10,0,0,0,1,1,0,-1,False
+_SpawnList_base,Wolf,True,False,Wolf,Mountain,6,6,120,50,30,0,0,,,,2,4,5,True,False,0,1000,0,45,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_base,Wolf,True,False,Wolf,Mountain,6,3,400,25.6,30,0,0,,,,1,2,5,False,True,0,1000,0,45,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,True
+_SpawnList_base,FireFlies,True,False,FireFlies,BlackForest,7,4,20,100,10,0,0,,,,1,1,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Surtling,False,False,Surtling,AshLands,-1,10,16,100,10,0,0,,,,1,1,3,True,True,-1000,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Serpent,True,False,Serpent,Ocean,Median,1,1000,5,50,0,0,,,,1,1,3,True,False,-1000,-5,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_base,Serpent,True,False,Serpent,Ocean,Median,1,1000,5,50,0,0,,ThunderStorm|Rain,,1,1,3,True,True,-1000,-5,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,True
+_SpawnList_base,Abomination,True,False,Abomination,Swamp,Median,1,4000,15,30,0,0,,,,1,1,1,True,True,-2,5,0,35,True,True,False,True,False,False,0,0,False,0,0,0,0,0,1,0,-1,False
+_SpawnList_base,Writhan,True,False,Writhan,Swamp,Median,1,4000,10,30,0,0,,,,1,1,1,True,True,-2,10,0,35,True,True,False,True,False,False,0,0,False,0,0,2000,8000,3,1,0,-1,True
+_SpawnList_mistlands,Seeker,True,False,Seeker,Mistlands,Median,2,200,30,30,0,0,,,,2,3,6,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,2,1,0,-1,False
+_SpawnList_mistlands,Dverger,True,False,Dverger,Mistlands,Median,2,1000,30,30,0,0,,,,1,2,3,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_mistlands,Seeker,True,False,Seeker,Mistlands,Median,6,300,20,40,0,0,,,,2,3,6,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_mistlands,Gjall,True,False,Gjall,Mistlands,Median,1,4000,10,50,0,0,,,,1,1,1,False,True,0,1000,0,90,True,True,False,True,False,False,0,0,False,6,0,0,0,0,0,0,-1,False
+_SpawnList_mistlands,Gjall,True,False,Gjall,Mistlands,Median,1,4000,10,50,0,0,,,,1,1,1,True,False,0,1000,0,90,True,True,False,True,False,False,0,0,False,6,0,0,0,3,1,0,-1,False
+_SpawnList_mistlands,Hare,True,False,Hare,Mistlands,Everything,10,100,50,10,0,0,,,,1,3,6,True,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_mistlands,Seeker Brute,True,False,SeekerBrute,Mistlands,Median,1,4000,10,40,0,0,,,,1,1,12,True,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,True
+_SpawnList_mistlands,Seeker defeated queen other biomes,True,False,Seeker,"Meadows, Swamp, Mountain, BlackForest, Plains",Median,2,3000,5,10,0,0,defeated_queen,,,3,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_mistlands,SeekerBrood  defeated queen other biomes,True,False,SeekerBrood,Mistlands,Median,5,3000,5,10,0,0,defeated_queen,,,3,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_mistlands,Tick defeated queen other biomes,True,False,Tick,Mistlands,Median,4,3000,5,10,0,0,defeated_queen,,,3,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_ashlands,Meteor,False,True,projectile_ashlandmeteor,AshLands,Median,0,5,5,0,3,20,,,,1,3,30,True,True,-1000,1000,0,35,True,True,False,True,False,False,0,0,False,150,100,0,0,1,1,0,-1,False
+_SpawnList_ashlands,CinderSky CinderRain,True,False,CinderSky,AshLands,Median,0,6,70,0,1,60,,Ashlands_CinderRain,,1,14,100,True,True,-1000,1000,0,90,True,True,True,True,True,True,0,0,False,100,40,0,0,1,1,0,-1,False
+_SpawnList_ashlands,CinderSky Ashrain,True,False,CinderSky,AshLands,Median,0,20,40,0,1,40,,Ashlands_ashrain,,1,3,15,True,True,-1000,1000,0,90,True,True,True,True,True,True,0,0,False,100,40,0,0,1,1,0,-1,False
+_SpawnList_ashlands,CinderSky Storm,True,False,CinderStorm,AshLands,Median,0,1,60,0,1,40,,Ashlands_storm,,1,3,15,True,True,-1000,1000,0,90,True,True,True,True,True,True,0,0,False,50,40,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Bonemaw Serpent,True,False,BonemawSerpent,AshLands,-1,1,1000,20,50,0,0,,,,1,1,3,True,True,-1000,-5,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Fallen Valkyrie,True,False,FallenValkyrie,AshLands,Everything,1,4000,15,15,50,0,,,,1,1,3,True,True,15,1000,0,35,True,True,True,True,False,False,0,0,False,20,0,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Morgen [Non-sleeper],True,False,Morgen_NonSleeping,AshLands,Everything,1,4000,5,15,50,0,,,,1,1,3,True,True,0,1000,0,35,True,True,True,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Asksvin [DAY],True,False,Asksvin,AshLands,Median,2,220,20,25,50,0,,,,1,3,10,False,True,9,1000,0,45,True,True,False,True,False,False,0,0,False,0.5,0,0,0,2,1,0,-1,False
+_SpawnList_ashlands,Asksvin [NIGHT],True,False,Asksvin,AshLands,Median,3,220,30,20,0,0,,,,1,3,10,True,False,9,1000,0,45,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_ashlands,Volture,True,False,Volture,AshLands,Everything,3,120,15,10,50,0,,,,1,2,3,True,True,-20,-2,0,35,True,True,False,True,False,False,0,0,False,20,0,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Charred Twitcher [DAY],True,False,Charred_Twitcher,AshLands,-1,3,400,20,10,50,0,,,,2,4,15,False,True,1,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,2,1,0,-1,False
+_SpawnList_ashlands,Charred Twitcher [NIGHT],True,False,Charred_Twitcher,AshLands,-1,4,200,40,10,50,0,,,,3,6,15,True,False,2,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_ashlands,Charred Archer,True,False,Charred_Archer,AshLands,-1,4,700,15,10,50,0,,,,1,2,15,True,True,1,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,2,1,0,-1,False
+_SpawnList_ashlands,Charred Melee,True,False,Charred_Melee,AshLands,Everything,4,700,15,10,50,0,,,,1,2,15,True,True,1,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_ashlands,Lava Blob,True,False,BlobLava,AshLands,-1,2,400,15,10,50,0,,,,1,2,10,True,True,2,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Lava Rock,True,False,LavaRock,AshLands,-1,0,4,80,0,0.1,0,,,,1,2,12,True,True,2,1000,0,60,True,True,True,False,True,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Dverger,True,False,DvergerAshlands,AshLands,Median,2,1000,10,30,50,0,,,,1,2,3,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_ashlands,Charred Melee [Other biomes when Fader is defeated],True,False,Charred_Melee,"Meadows, Swamp, Mountain, BlackForest, Plains",7,3,3000,5,10,0,0,defeated_fader,,,1,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_ashlands,Charred Archer [Other biomes when Fader is defeated],True,False,Charred_Archer,"Meadows, Swamp, Mountain, BlackForest, Plains",7,3,3000,5,10,0,0,defeated_fader,,,1,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_DeepNorth,Seal,True,False,Seal,DeepNorth,Everything,5,100,50,64,0,0,,,,1,2,6,True,True,-2,5,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_DeepNorth,Shadow People,True,False,ShadowPerson,DeepNorth,Everything,5,300,10,10,0,0,,,,2,4,6,True,False,10,1000,0,35,True,False,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_DeepNorth,Frozen GD,True,False,Greydwarf_Frozen,DeepNorth,Everything,5,600,10,10,0,0,,,,2,4,6,True,True,10,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_DeepNorth,Frozen GD shaman,True,False,Greydwarf_Shaman_Frozen,DeepNorth,Everything,1,600,10,10,0,0,,,,2,4,6,True,True,10,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_DeepNorth,Frozen Skeleton,True,False,Skeleton_DeepNorth,DeepNorth,Everything,5,600,10,10,0,0,,,,2,4,6,True,True,10,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_DeepNorth,Seal pup,True,False,Seal_Pup,DeepNorth,Everything,3,200,50,64,0,0,,,,1,3,6,True,True,-2,5,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_DeepNorth,Elakingar NIGHT,True,False,Elaking,DeepNorth,7,2,120,15,10,0,0,,,,2,3,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,2,1,0,-1,False
+_SpawnList_DeepNorth,Elakingar Lantern NIGHT,True,False,ElakingLantern,DeepNorth,7,1,120,10,10,0,0,,,,1,2,3,True,False,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,2,1,0,-1,False
+_SpawnList_DeepNorth,Jotun Melee Patrol,True,False,JotunWarrior,DeepNorth,7,2,3000,5,40,0,0,jotun_killed,,,1,2,3,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_DeepNorth,Jotun Witch Patrol,True,False,JotunWitch,DeepNorth,7,2,3000,5,40,0,0,jotun_killed,,,1,1,3,False,True,0,1000,0,35,True,True,False,True,False,False,0,0,True,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_DeepNorth,Giant Troll,True,False,Spawner_TrollFrost,DeepNorth,7,1,1500,15,30,0,0,,,,1,1,3,True,True,10,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,2000,-1,False
+_SpawnList_DeepNorth,Barka,True,False,Barka,DeepNorth,7,1,1000,12,10,0,0,,,,1,1,3,True,True,0,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,2000,-1,True
+_SpawnList_DeepNorth,Älg,True,False,Moose,DeepNorth,Everything,3,1200,10,70,0,0,,,,1,1,3,True,True,3,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,3,1,0,-1,False
+_SpawnList_DeepNorth,Fimbulvinter - Jotun Warriors,True,False,JotunWarrior,-1,Everything,4,500,100,10,0,0,,,jotun_invasion,1,2,3,True,True,-1000,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_DeepNorth,Fimbulvinter - Jotun Witches,True,False,JotunWitch,-1,Everything,2,500,100,10,0,0,,,jotun_invasion,1,1,3,True,True,-1000,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_DeepNorth,Fimbulvinter - Elakingar,True,False,Elaking,-1,Everything,6,1000,100,10,0,0,,,jotun_invasion,1,3,3,True,True,-1000,1000,0,35,True,True,False,True,False,False,0,0,False,0.5,0,0,0,1,1,0,-1,False
+_SpawnList_DeepNorth,Fimbulvinter - Meteors,True,False,projectile_FimbulvinterMeteor,-1,Everything,0,5,100,0,0,0,,,jotun_invasion,1,3,30,True,True,-1000,1000,0,35,True,True,False,True,False,False,0,0,False,150,0,0,0,1,1,0,-1,False

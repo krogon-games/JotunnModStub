@@ -1,4 +1,12 @@
 recipe,output,output_name,amount,enabled,station,min_station_level,ingredients,type_category,biome_category
+BackpackAshlands_Recipe_BlackForge,BackpackAshlands,Cinderward Pack,1,True,$piece_blackforge,3,CapeAsh x1; AskHide x6 (+2/lvl); FlametalNew x5 (+3/lvl); MorgenSinew x2; CharredBone x0 (+5/lvl); Upgrader6Armor x1,Armor,Ashlands
+BackpackBlackForest_Recipe_Forge,BackpackBlackForest,Rugged Backpack,1,True,$piece_forge,1,CapeTrollHide x1; Copper x5; TrollHide x0 (+3/lvl); Bronze x0 (+3/lvl); Upgrader1Armor x1,Armor,Black Forest
+BackpackDeepNorth_Recipe_BlackForge,BackpackDeepNorth,Frostbound Haversack,1,True,$piece_blackforge,4,CapeDeepNorth x1; MooseHide x6 (+3/lvl); MooseSinew x2 (+1/lvl); FrostCore x3; Ice x0 (+10/lvl); Upgrader7Armor x1,Armor,Deep North
+BackpackMeadows_Recipe_Workbench,BackpackMeadows,Satchel,1,True,$piece_workbench,2,CapeDeerHide x1; DeerHide x8 (+3/lvl); BoneFragments x2; LeatherScraps x0 (+5/lvl); Upgrader0Armor x1,Armor,Meadows
+BackpackMistlands_Recipe_BlackForge,BackpackMistlands,Explorers Wisppack,1,True,$piece_blackforge,1,CapeFeather x1; ScaleHide x5 (+4/lvl); Eitr x10 (+2/lvl); Softtissue x0 (+5/lvl); Upgrader5Armor x1,Armor,Mistlands
+BackpackMountains_Recipe_Forge,BackpackMountains,Arctic Sherpa Pack,1,True,$piece_forge,3,CapeWolf x1; WolfHairBundle x10; WolfPelt x0 (+5/lvl); Silver x0 (+5/lvl); Upgrader3Armor x1,Armor,Mountain
+BackpackPlains_Recipe_Forge,BackpackPlains,Lox Hide Knappsack,1,True,$piece_forge,3,CapeLox x1; Tar x5; BlackMetal x5 (+5/lvl); LoxPelt x0 (+2/lvl); Upgrader4Armor x1,Armor,Plains
+BackpackSwamp_Recipe_Workbench,BackpackSwamp,Bloodbag Wetpack,1,True,$piece_workbench,2,Bloodbag x10 (+2/lvl); Root x4; Guck x4; Iron x0 (+5/lvl); Upgrader2Armor x1,Armor,Swamp
 Recipe_ArmorBerserkerChest,ArmorBerserkerChest,Patterns of the Bear,1,True,$piece_workbench,2,BjornHide x5 (+2/lvl); BjornPaw x2; Blueberries x4 (+1/lvl); Upgrader1Armor x1,Armor,Black Forest
 Recipe_ArmorBerserkerLegs,ArmorBerserkerLegs,Loincloth of the Bear,1,True,$piece_workbench,2,BjornHide x5 (+2/lvl); Blueberries x4 (+1/lvl); Upgrader1Armor x1,Armor,Black Forest
 Recipe_ArmorBerserkerUndeadChest,ArmorBerserkerUndeadChest,Vilebone Cage,1,True,$piece_forge,2,BjornHide x4 (+2/lvl); UndeadBjornRibcage x3 (+1/lvl); LinenThread x4 (+1/lvl); Upgrader4Armor x1,Armor,Plains
@@ -173,6 +181,57 @@ Recipe_CatapultPayload_Grausten,Catapult_ammo,Grausten Payload,5,True,$piece_wor
 Recipe_CeramicPlate,CeramicPlate,Ceramic Plate,5,True,$piece_artisanstation,2,BlackMarble x5 (+3/lvl),Materials,Mistlands
 Recipe_Club,Club,Club,1,True,,1,Wood x6; BoneFragments x0 (+5/lvl); Upgrader0Weapon x1,Melee Weapons,Meadows
 Recipe_CookedEgg,CookedEgg,Cooked Egg,1,True,$piece_cauldron,1,ChickenEgg x1 (+1/lvl),Food & Potions,Plains
+Recipe_CorruptionMap_AshLands,CorruptionMap_AshLands,Corrupted Ashlands map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_fader x1; CharredBone x8,Materials,Ashlands
+Recipe_CorruptionMap_BlackForest,CorruptionMap_BlackForest,Corrupted Black Forest map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_elder x1; GreydwarfEye x5,Materials,Meadows
+Recipe_CorruptionMap_DeepNorth,CorruptionMap_DeepNorth,Corrupted Deep North map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_kall x1; Ice x5,Materials,Deep North
+Recipe_CorruptionMap_Meadows,CorruptionMap_Meadows,Corrupted Meadows map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_eikthyr x1; LeatherScraps x5,Materials,Meadows
+Recipe_CorruptionMap_Mistlands,CorruptionMap_Mistlands,Corrupted Mistlands map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_queen x1; Carapace x16,Materials,Mistlands
+Recipe_CorruptionMap_Mountain,CorruptionMap_Mountain,Corrupted Mountains map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_moder x1; FreezeGland x3,Materials,Mountain
+Recipe_CorruptionMap_Plains,CorruptionMap_Plains,Corrupted Plains map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_yagluth x1; Needle x5,Materials,Plains
+Recipe_CorruptionMap_Swamp,CorruptionMap_Swamp,Corrupted Swamp map,1,True,$piece_riftforge,1,CorruptionShard x1; CorruptionEssence_bonemass x1; Guck x2,Materials,Swamp
+Recipe_CorruptionTalisman_Abomination,CorruptionTalisman_Abomination,Abomination charm,1,True,$piece_workbench,1,TrophyAbomination x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Asksvin,CorruptionTalisman_Asksvin,Asksvin charm,1,True,$piece_workbench,1,TrophyAsksvin x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Barka,CorruptionTalisman_Barka,Barka charm,1,True,$piece_workbench,1,TrophyBarka x3; Chain x1; LeatherScraps x10,Other,Deep North
+Recipe_CorruptionTalisman_Bjorn,CorruptionTalisman_Bjorn,Bear charm,1,True,$piece_workbench,1,TrophyBjorn x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Blob,CorruptionTalisman_Blob,Blob charm,1,True,$piece_workbench,1,TrophyBlob x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Boar,CorruptionTalisman_Boar,Boar charm,1,True,$piece_workbench,1,TrophyBoar x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_BogWitchKvastur,CorruptionTalisman_BogWitchKvastur,Kvastur charm,1,True,$piece_workbench,1,TrophyKvastur x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_BonemawSerpent,CorruptionTalisman_BonemawSerpent,Bonemaw charm,1,True,$piece_workbench,1,TrophyBonemawSerpent x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Charred_Archer,CorruptionTalisman_Charred_Archer,Charred Marksman charm,1,True,$piece_workbench,1,TrophyCharredArcher x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Charred_Mage,CorruptionTalisman_Charred_Mage,Charred Warlock charm,1,True,$piece_workbench,1,TrophyCharredMage x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Charred_Melee,CorruptionTalisman_Charred_Melee,Charred Warrior charm,1,True,$piece_workbench,1,TrophyCharredMelee x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Deathsquito,CorruptionTalisman_Deathsquito,Deathsquito charm,1,True,$piece_workbench,1,TrophyDeathsquito x3; Chain x1; LeatherScraps x10,Other,Plains
+Recipe_CorruptionTalisman_Draugr,CorruptionTalisman_Draugr,Draugr charm,1,True,$piece_workbench,1,TrophyDraugr x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Dverger,CorruptionTalisman_Dverger,Dvergr Rogue charm,1,True,$piece_workbench,1,TrophyDvergr x3; Chain x1; LeatherScraps x10,Other,Mistlands
+Recipe_CorruptionTalisman_Elaking,CorruptionTalisman_Elaking,Elaking charm,1,True,$piece_workbench,1,TrophyElaking x3; Chain x1; LeatherScraps x10,Other,Deep North
+Recipe_CorruptionTalisman_FallenValkyrie,CorruptionTalisman_FallenValkyrie,Fallen Valkyrie charm,1,True,$piece_workbench,1,TrophyFallenValkyrie x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Fenring,CorruptionTalisman_Fenring,Fenring charm,1,True,$piece_workbench,1,TrophyFenring x3; Chain x1; LeatherScraps x10,Other,Mountain
+Recipe_CorruptionTalisman_Ghost,CorruptionTalisman_Ghost,Ghost charm,1,True,$piece_workbench,1,TrophyGhost x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Gjall,CorruptionTalisman_Gjall,Gjall charm,1,True,$piece_workbench,1,TrophyGjall x3; Chain x1; LeatherScraps x10,Other,Mistlands
+Recipe_CorruptionTalisman_Goblin,CorruptionTalisman_Goblin,Fuling charm,1,True,$piece_workbench,1,TrophyGoblin x3; Chain x1; LeatherScraps x10,Other,Plains
+Recipe_CorruptionTalisman_Greydwarf,CorruptionTalisman_Greydwarf,Greydwarf charm,1,True,$piece_workbench,1,TrophyGreydwarf x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Hatchling,CorruptionTalisman_Hatchling,Drake charm,1,True,$piece_workbench,1,TrophyHatchling x3; Chain x1; LeatherScraps x10,Other,Mountain
+Recipe_CorruptionTalisman_JotunWarrior,CorruptionTalisman_JotunWarrior,Krigen charm,1,True,$piece_workbench,1,TrophyJotunWarrior x3; Chain x1; LeatherScraps x10,Other,Deep North
+Recipe_CorruptionTalisman_JotunWitch,CorruptionTalisman_JotunWitch,Hexen charm,1,True,$piece_workbench,1,TrophyJotunWitch x3; Chain x1; LeatherScraps x10,Other,Deep North
+Recipe_CorruptionTalisman_Leech,CorruptionTalisman_Leech,Leech charm,1,True,$piece_workbench,1,TrophyLeech x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Lox,CorruptionTalisman_Lox,Lox charm,1,True,$piece_workbench,1,TrophyLox x3; Chain x1; LeatherScraps x10,Other,Plains
+Recipe_CorruptionTalisman_Moose,CorruptionTalisman_Moose,Moose charm,1,True,$piece_workbench,1,TrophyMoose x3; Chain x1; LeatherScraps x10,Other,Deep North
+Recipe_CorruptionTalisman_Morgen,CorruptionTalisman_Morgen,Morgen charm,1,True,$piece_workbench,1,TrophyMorgen x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Neck,CorruptionTalisman_Neck,Neck charm,1,True,$piece_workbench,1,TrophyNeck x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Seeker,CorruptionTalisman_Seeker,Seeker charm,1,True,$piece_workbench,1,TrophySeeker x3; Chain x1; LeatherScraps x10,Other,Mistlands
+Recipe_CorruptionTalisman_Serpent,CorruptionTalisman_Serpent,Serpent charm,1,True,$piece_workbench,1,TrophySerpent x3; Chain x1; LeatherScraps x10,Other,Ocean
+Recipe_CorruptionTalisman_Skeleton,CorruptionTalisman_Skeleton,Skeleton charm,1,True,$piece_workbench,1,TrophySkeleton x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_StoneGolem,CorruptionTalisman_StoneGolem,Stone Golem charm,1,True,$piece_workbench,1,TrophySGolem x3; Chain x1; LeatherScraps x10,Other,Mountain
+Recipe_CorruptionTalisman_Surtling,CorruptionTalisman_Surtling,Surtling charm,1,True,$piece_workbench,1,TrophySurtling x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Tick,CorruptionTalisman_Tick,Tick charm,1,True,$piece_workbench,1,TrophyTick x3; Chain x1; LeatherScraps x10,Other,Mistlands
+Recipe_CorruptionTalisman_TrainingDummy,CorruptionTalisman_TrainingDummy,TrainingDummy charm,1,True,$piece_workbench,1,TrophyDraugr x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Troll,CorruptionTalisman_Troll,Troll charm,1,True,$piece_workbench,1,TrophyFrostTroll x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Ulv,CorruptionTalisman_Ulv,Ulv charm,1,True,$piece_workbench,1,TrophyUlv x3; Chain x1; LeatherScraps x10,Other,Mountain
+Recipe_CorruptionTalisman_Unbjorn,CorruptionTalisman_Unbjorn,Vile charm,1,True,$piece_workbench,1,TrophyBjornUndead x3; Chain x1; LeatherScraps x10,Other,Plains
+Recipe_CorruptionTalisman_Volture,CorruptionTalisman_Volture,Volture charm,1,True,$piece_workbench,1,TrophyVolture x3; Chain x1; LeatherScraps x10,Other,Ashlands
+Recipe_CorruptionTalisman_Wolf,CorruptionTalisman_Wolf,Wolf charm,1,True,$piece_workbench,1,TrophyWolf x3; Chain x1; LeatherScraps x10,Other,Mountain
+Recipe_CorruptionTalisman_Wraith,CorruptionTalisman_Wraith,Wraith charm,1,True,$piece_workbench,1,TrophyWraith x3; Chain x1; LeatherScraps x10,Other,Swamp
+Recipe_CorruptionTalisman_Writhan,CorruptionTalisman_Writhan,Writhan charm,1,True,$piece_workbench,1,TrophyWrithan x3; Chain x1; LeatherScraps x10,Other,Swamp
 Recipe_CrossbowArbalest,CrossbowArbalest,Arbalest,1,True,$piece_blackforge,1,Wood x10 (+5/lvl); Iron x8 (+4/lvl); Root x4 (+1/lvl); Upgrader5Weapon x1,Bows & Crossbows,Plains
 Recipe_CrossbowGold,CrossbowGold,Nord Crossbow,1,True,$piece_blackforge,4,Gold x20 (+10/lvl); MoldCrossbow x1; Frostwood x10 (+5/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
 Recipe_CrossbowGold_BloodLightning,CrossbowGold_BloodLightning,Thunderblood Crossbow,1,True,$piece_blackforge,4,CrossbowGold x1; Gold x20 (+10/lvl); OrbThunderBlood x1 (+1/lvl); Upgrader7Weapon x1,Bows & Crossbows,Deep North
@@ -184,7 +243,7 @@ Recipe_CrossbowRipper_Lightning,CrossbowRipperLightning,Storm Ripper,1,True,$pie
 Recipe_CrossbowRipper_Nature,CrossbowRipperNature,Root Ripper,1,True,$piece_blackforge,4,CrossbowRipper x1; FlametalNew x8 (+8/lvl); GemstoneGreen x1 (+1/lvl); Upgrader6Weapon x1,Bows & Crossbows,Deep North
 Recipe_Cultivator,Cultivator,Cultivator,1,True,$piece_forge,1,RoundLog x5 (+1/lvl); Bronze x5 (+1/lvl); Upgrader0Weapon x1,Tools,Black Forest
 Recipe_DeerStew,DeerStew,Deer Stew,1,True,$piece_cauldron,1,CookedDeerMeat x1 (+1/lvl); Blueberries x1 (+1/lvl); Carrot x1 (+1/lvl),Food & Potions,Black Forest
-Recipe_Demister,Demister,Wisplight,1,True,$piece_workbench,1,Silver x1 (+1/lvl); Wisp x1 (+1/lvl),Utility & Trinkets,Mountain
+Recipe_Demister,Demister,Wisplight,1,True,$piece_workbench,1,Silver x1 (+1/lvl); Wisp x1 (+1/lvl),Utility & Trinkets,Plains
 Recipe_DvergrKey,DvergrKey,Sealbreaker,1,True,$piece_magetable,1,DvergrKeyFragment x9 (+1/lvl),Other,Mistlands
 Recipe_Eyescream,Eyescream,Eyescream,1,True,$piece_cauldron,3,GreydwarfEye x3 (+1/lvl); FreezeGland x1 (+1/lvl),Food & Potions,Mountain
 Recipe_FeastAshlands,FeastAshlands_Material,Ashlands Gourmet Bowl,1,True,$piece_preptable,1,CookedAsksvinMeat x3 (+1/lvl); Vineberry x5 (+1/lvl); ScorchingMedley x2 (+1/lvl); SpiceAshlands x1 (+1/lvl),Materials,Ashlands
