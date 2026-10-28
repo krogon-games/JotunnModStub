@@ -33,6 +33,7 @@ namespace Corruption
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
             Safe.Run("add talisman slots", TalismanSlots.Register);
+            Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
         }

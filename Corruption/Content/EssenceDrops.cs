@@ -29,9 +29,13 @@ namespace Corruption.Content
                     return;
                 }
                 var prefab = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(essence.Item) : null;
-                if (prefab)
+                // A corrupted boss drops its own range instead of the normal amount (design: 2-3 instead of 1).
+                int amount = CorruptedBosses.IsCorrupted(character)
+                    ? Random.Range(CorruptionConfig.CorruptedEssencesMin.Value, Mathf.Max(CorruptionConfig.CorruptedEssencesMin.Value, CorruptionConfig.CorruptedEssencesMax.Value) + 1)
+                    : essence.PerKill;
+                if (prefab && amount > 0)
                 {
-                    __result.Add(new KeyValuePair<GameObject, int>(prefab, essence.PerKill));
+                    __result.Add(new KeyValuePair<GameObject, int>(prefab, amount));
                 }
             }
             catch (System.Exception ex)

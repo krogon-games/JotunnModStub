@@ -32,8 +32,11 @@ namespace Corruption.Content
                 bool alreadyDefeated = isBoss && !string.IsNullOrEmpty(key) && ZoneSystem.instance &&
                                        ZoneSystem.instance.GetGlobalKey(key);
 
-                int shards = ShardRules.ShardsFor(isBoss, character.GetLevel(), alreadyDefeated, CurrentSettings(),
-                    () => Random.value * 0.99999f);
+                // A corrupted boss drops its guaranteed range on every kill (design: 3-5).
+                int shards = isBoss && CorruptedBosses.IsCorrupted(character)
+                    ? Random.Range(CorruptionConfig.CorruptedShardsMin.Value, Mathf.Max(CorruptionConfig.CorruptedShardsMin.Value, CorruptionConfig.CorruptedShardsMax.Value) + 1)
+                    : ShardRules.ShardsFor(isBoss, character.GetLevel(), alreadyDefeated, CurrentSettings(),
+                        () => Random.value * 0.99999f);
                 if (shards <= 0)
                 {
                     return;

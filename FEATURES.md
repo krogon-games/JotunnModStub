@@ -19,6 +19,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
 | [Boss essences](#boss-essences) | Loot | Built, untested | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
 | [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Built, untested | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs` | 2026-10-28 |
+| [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Built, untested | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -509,6 +510,42 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 
 ---
 
+## Corrupted bosses (core)
+
+*Corruption plugin, design phase 6, the parts the design fully specifies. Corrupted offerings at the altars (and the corrupted Sealbreaker for the Queen) follow once `altars.csv` from the next `co_dump` shows each altar's real offering; the summons follow phase 4 step B's maddened creatures.*
+
+**What it does in-game:** a corrupted boss is the vanilla boss, tinted red, that:
+- deals 1.5× damage and takes 0.7× damage (health unchanged), as the design's starting values;
+- drops 2–3 of its essence instead of 1, and 3–5 corruption shards on every kill, plus its normal vanilla drops.
+
+The flag is stored on the boss itself, so every player sees the same corrupted boss.
+
+**How to test:** `devcommands`, `spawn Eikthyr`, then `co_corrupt` (corrupts the nearest boss within 50 m): it turns red, hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards.
+
+**Config settings** (admin-only unless noted; defaults from `corruption-design.md` → Corrupted bosses):
+
+| Setting | Default | Description |
+|---|---|---|
+| `DamageDealt` | `1.5` | Damage multiplier on the boss's attacks |
+| `DamageTaken` | `0.7` | Damage multiplier on hits the boss takes |
+| `EssencesMin` / `EssencesMax` | `2` / `3` | Essences per corrupted kill (replaces the normal amount) |
+| `ShardsMin` / `ShardsMax` | `3` / `5` | Shards per corrupted kill, every kill |
+| `CorruptedBossTintStrength` (Look) | `0.6` | Per player. The Riftforge's tint strength, which was tested in-game |
+
+**Known issues:**
+- Untested in-game. The only way to make a corrupted boss for now is `co_corrupt`.
+- The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet: which particle prefab to reuse comes from the game data with the summons.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Character.Awake` | Postfix | Adds a watcher to bosses that tints them red once they're corrupted |
+| `Character.RPC_Damage` | Prefix | Scales hits on and from corrupted bosses |
+| `CharacterDrop.GenerateDropList` | Postfix (the existing shard and essence ones) | Corrupted bosses: 3–5 shards and 2–3 essences |
+
+---
+
 ## Loot system
 
 **Status:** Planned. Not started.
@@ -548,6 +585,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-28
+- **Corrupted bosses (core):** corrupted bosses deal 1.5× and take 0.7× damage, drop 2–3 essences and 3–5 shards, and turn red (design starting values). `co_corrupt` corrupts the nearest boss for testing. Offerings and summons follow. Decided: corrupted offerings use the full normal offering + 1 shard; the Queen uses a corrupted Sealbreaker. Untested in-game.
 - **`co_dump` writes six more files:** world spawn tables, raids and their spawns, status effects, container loot, destructibles and boss altars, so rip waves, maddened creatures and rip loot (phase 4 step B) can be based on the game's own numbers. Untested in-game.
 - **Meadows and Deep North map materials approved** by the user (Leather scraps, Ice).
 - **Maps and rips, step A:** eight maps crafted at the Riftforge; using one opens a rip to unexplored land of its biome (server keeps rips away from bases); destroying the rip's heart opens the way home; rips close after an in-game day. Table `maps.csv`, settings `5 - Rips`. Untested in-game (89 tests).

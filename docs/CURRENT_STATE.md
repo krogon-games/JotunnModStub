@@ -40,11 +40,12 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | Craft-from-chests fixes for AdventureBackpacks (2026-10-28) | With AdventureBackpacks: craft from the backpack only, then backpack + chest, and check nothing is charged twice. Steps: `docs/mod-compatibility.md` → How to test |
 | Boss essences (phase 3, 2026-10-28) | `spawn CorruptionEssence_eikthyr` (and the other seven, including `_kall`): look, icon, glow, add-on parts on the Elder, Yagluth and Kall essences; each boss drops 1 per kill (Kall: from the final phase) |
 | Maps and rips, step A (2026-10-28) | `spawn CorruptionMap_Meadows`, right-click it: rip opens, travel, land on the ground beside the heart, destroy the heart, exit rip leads home, both close after a day. Crafting a map at the Riftforge. Then with a friend: following through the rip, rip near someone's base refused. Steps: `FEATURES.md` → Maps and rips |
+| Corrupted bosses core (2026-10-28) | `spawn Eikthyr`, `co_corrupt`: red, harder hits, slower to kill, 2–3 essences and 3–5 shards. Steps: `PLAYTEST.md` |
 | Anything in multiplayer | `docs/multiplayer-test.md` (11 steps, needs a second player) |
 
 ## Not built (proposed)
 
-Corruption phase 4 step B (waves, maddened, rip loot), phases 5–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 

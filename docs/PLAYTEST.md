@@ -26,19 +26,24 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 7. Optional: sleep or wait an in-game day: both portals and the heart disappear.
 8. Things to note: anything that looks wrong (portal look, heart look, sinking, floating), and any red errors in the console.
 
-### 4. Talismans (the parts not yet tested)
+### 4. Corrupted bosses
+1. `spawn Eikthyr`, then `co_corrupt`: Eikthyr turns red.
+2. Fight it: its hits hurt more and it takes longer to kill than a normal Eikthyr.
+3. It drops 2–3 essences and 3–5 shards (plus its normal drops).
+
+### 5. Talismans (the parts not yet tested)
 1. Wear two different charms in the two Talisman slots and a vanilla trinket in the Trinket slot: creatures of both families ignore you and the trinket works.
 2. Try putting the same charm in both slots: it should refuse.
 3. Hit a repelled creature: it fights back for about 30 seconds, then ignores you again.
 4. A boss ignores charms.
 
-### 5. Craft from chests with AdventureBackpacks
+### 6. Craft from chests with AdventureBackpacks
 1. Craft something whose ingredients are only in your backpack, with the same items in a nearby chest: only the backpack pays.
 2. Split a cost between the backpack and a chest; check the totals afterwards (nothing charged twice).
 3. Build with the hammer using backpack + chest materials, and bulk-plant a PlantEasily grid with seeds only in a chest.
 4. Open a crafting station with the backpack panel open: the recipe search bar and categories still line up.
 
-### 6. Small checks
+### 7. Small checks
 1. Recipe list: category headers line up with the recipe icons, on one line, readable.
 2. `co_biome Wisp`: tell Claude which biome it says.
 3. Config reload: change a setting in a `.cfg` file and save while in game; the log says it reloaded.

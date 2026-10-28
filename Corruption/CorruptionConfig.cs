@@ -10,6 +10,7 @@ namespace Corruption
         private const string TalismanSection = "3 - Talismans";
         private const string EssenceSection = "4 - Essences";
         private const string RipSection = "5 - Rips";
+        private const string CorruptedSection = "6 - Corrupted Bosses";
 
         public static ConfigEntry<float> OneStarShardChance;
         public static ConfigEntry<float> TwoStarShardChance;
@@ -23,6 +24,13 @@ namespace Corruption
         public static ConfigEntry<float> RipOpenDays;
         public static ConfigEntry<float> RipBaseDistance;
         public static ConfigEntry<float> RipHeartHealth;
+        public static ConfigEntry<float> CorruptedDamageDealt;
+        public static ConfigEntry<float> CorruptedDamageTaken;
+        public static ConfigEntry<int> CorruptedEssencesMin;
+        public static ConfigEntry<int> CorruptedEssencesMax;
+        public static ConfigEntry<int> CorruptedShardsMin;
+        public static ConfigEntry<int> CorruptedShardsMax;
+        public static ConfigEntry<float> CorruptedTintStrength;
         public static ConfigEntry<int> TalismanSlots;
         public static ConfigEntry<float> ProvokeSeconds;
         public static ConfigEntry<string> TalismanExcludedCreatures;
@@ -76,6 +84,20 @@ namespace Corruption
                 AdminOnly("Health of a rip's heart. Destroying it opens the way home. " +
                           "0 = the health of the greydwarf nest it's made from.", new AcceptableValueRange<float>(0f, 100000f)));
 
+            // Starting values from the design doc (corruption-design.md -> Corrupted bosses).
+            CorruptedDamageDealt = config.Bind(CorruptedSection, "DamageDealt", 1.5f,
+                AdminOnly("Damage multiplier on a corrupted boss's attacks.", new AcceptableValueRange<float>(0.1f, 10f)));
+            CorruptedDamageTaken = config.Bind(CorruptedSection, "DamageTaken", 0.7f,
+                AdminOnly("Damage multiplier on hits a corrupted boss takes (0.7 = 30% less).", new AcceptableValueRange<float>(0.1f, 10f)));
+            CorruptedEssencesMin = config.Bind(CorruptedSection, "EssencesMin", 2,
+                AdminOnly("Fewest essences a corrupted boss drops (instead of the normal per-kill amount).", new AcceptableValueRange<int>(0, 20)));
+            CorruptedEssencesMax = config.Bind(CorruptedSection, "EssencesMax", 3,
+                AdminOnly("Most essences a corrupted boss drops.", new AcceptableValueRange<int>(0, 20)));
+            CorruptedShardsMin = config.Bind(CorruptedSection, "ShardsMin", 3,
+                AdminOnly("Fewest corruption shards a corrupted boss drops (every kill).", new AcceptableValueRange<int>(0, 50)));
+            CorruptedShardsMax = config.Bind(CorruptedSection, "ShardsMax", 5,
+                AdminOnly("Most corruption shards a corrupted boss drops.", new AcceptableValueRange<int>(0, 50)));
+
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",
                 "Vanilla item whose model the shard uses, e.g. GemstoneRed (Bloodstone), Crystal, Ruby. Restart to apply.");
@@ -94,6 +116,9 @@ namespace Corruption
                     new AcceptableValueRange<float>(0.5f, 10f)));
             RiftforgeColor = config.Bind(LookSection, "RiftforgeColor", "#B3170D",
                 "Riftforge colour as an HTML colour. Restart to apply.");
+            CorruptedTintStrength = config.Bind(LookSection, "CorruptedBossTintStrength", 0.6f,
+                new ConfigDescription("How strongly corrupted bosses are tinted red (0-1). Default: the Riftforge's, which was tested in-game.",
+                    new AcceptableValueRange<float>(0f, 1f)));
             RiftforgeTintStrength = config.Bind(LookSection, "RiftforgeTintStrength", 0.6f,
                 new ConfigDescription("How strongly the Riftforge colour is applied (0-1). Restart to apply.",
                     new AcceptableValueRange<float>(0f, 1f)));

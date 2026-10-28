@@ -30,7 +30,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 3: boss essences | Corruption | Built, untested (8 bosses; Hive left out) | `FEATURES.md`, `Corruption/Data/essences.csv` |
 | Phase 4: maps and rips | Corruption | Step A built, untested (maps, rip travel, heart, way home); step B next (waves, maddened, loot) | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
-| Phase 6: corrupted bosses | Corruption | Proposed | design doc + review 4 |
+| Phase 6: corrupted bosses | Corruption | Core built, untested (multipliers, loot, tint, `co_corrupt`); offerings wait for `altars.csv`, summons for phase 4 step B | `FEATURES.md`, design doc + review 4 |
 | Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28) | design doc, `mod-compatibility.md` |
@@ -76,7 +76,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Validate the landing spot after teleporting | Biome, height and explored state can be checked before (review 6) | Proposal |
 | Corrupted look is a purple tint | Shard and Riftforge use red `#B3170D` at the user's request | Decided 2026-10-28: everything corrupted is red |
 | Talismans in "one new slot"; stave icon with creature tint | Built on the vanilla Trinket slot (review 7) with the trophy as icon | Implemented; dedicated slot can come with phase 9 |
-| Corrupted Queen via offering | The Queen has no altar (game knowledge, unverified) | Needs a different trigger |
+| Corrupted Queen via offering | The Queen has no altar (game knowledge, unverified) | Decided 2026-10-28: a corrupted Sealbreaker opens her door and makes her corrupted |
 
 ## Open design questions
 
