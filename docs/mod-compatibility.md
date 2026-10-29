@@ -44,12 +44,13 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Rip waves: maddened (`Character.Awake` postfix, `BaseAI.IsEnemy` postfix at last priority) | None of the three patch these; our own talisman postfix on `IsEnemy` runs first, so maddened creatures ignore charms. The maddened effect is added with `SEMan.AddStatusEffect`, which AdventureBackpacks prefixes (for its backpack effects on players) | Verified in code; to test |
 | Maps (`Humanoid.UseItem` prefix) | AB's quick transfer also prefixes `UseItem` (higher priority): with the backpack open, right-clicking moves the item. Our prefix steps aside when another skipped the original, so a map gets moved, not used. EAQS quick slots call `UseItem` normally, so maps work from quick slots | Verified in code; to test |
 | Rips (`Player.UpdateTeleport` postfix, `Game.Start` postfix) | None of the three patch these. AB patches `Inventory.IsTeleportable` (backpack contents count), which our rip check uses, so ores in a backpack block rips like portals | Verified in code |
+| Loot step 1 (2026-10-29): `CharacterDrop.OnDeath`, `InventoryGrid.CreateItemTooltip`, `ItemDrop.GetHoverText`, `ItemData.GetDamage`/`GetArmor`/`GetMaxDurability`/`GetBaseBlockPower`, `Attack.GetAttackStamina`, `Character.Damage`, `SEMan.ModifyTimedBlockBonus` | None of the three patch these (AB patches `Player.OnDeath`, PlantEasily `Beehive`/`Pickable.GetHoverText`, not these). Our character sheet moves EAQS's cells in `InventoryGrid.UpdateGui`, not the tooltip | Verified in code (2026-10-29) |
+| Affix tooltips (`ItemData.GetTooltip` postfix) | AB also postfixes it (priority 200): for backpacks it inserts an armour line after the quality or weight line. We append our lines at the end; both work | Verified in code (2026-10-29) |
 
 ## Corruption (planned): keep in mind when building
 
 | Planned feature | Overlap | Note |
 |---|---|---|
-| Affix tooltips (`ItemData.GetTooltip` postfix) | AB also postfixes `GetTooltip` (backpack contents) | Several postfixes are fine; append our lines, don't replace the text |
 | Light affix (`ItemData.GetWeight`) | AB postfixes `GetWeight` (backpack weight) | Light only applies to tools; multiply, don't overwrite |
 | Magnetic / Keen-eyed (pickup radius) | EAQS patches `Player.AutoPickup` (fills quick slots) | We change the radius field, not the method; compatible |
 | Deathless (cheat death) | EAQS patches `Character.CheckDeath` and `Player.OnDeath` | Hook the damage before death, test with EAQS keep-on-death |

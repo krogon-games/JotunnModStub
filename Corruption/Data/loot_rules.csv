@@ -1,0 +1,7 @@
+﻿setting,status,value,notes
+previous_biome_percent,approved,20,"Chance a drop is a base item from the biome just before the creature's (user, 2026-10-29). Meadows has none before it, so Meadows drops are always Meadows items."
+drop_quality,approved,1,"Upgrade level of dropped gear, as when freshly crafted (user, 2026-10-29)."
+magic_1_affix_weight,approved,2,"Magic items: 1 affix twice as often as 2 (user, 2026-10-29: fewer is likelier, 2 in 3)."
+magic_2_affix_weight,approved,1,"Magic items: 2 affixes (1 in 3)."
+rare_3_affix_weight,approved,2,"Rare items: 3 affixes twice as often as 4 (user, 2026-10-29: fewer is likelier, 2 in 3)."
+rare_4_affix_weight,approved,1,"Rare items: 4 affixes (1 in 3)."

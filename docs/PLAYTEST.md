@@ -33,6 +33,20 @@ The sheet itself was tested on 2026-10-29 (look, picture, slots, stats). Still t
 2. Open a chest and the AdventureBackpacks backpack: the sheet shouldn't overlap either panel.
 3. With a friend nearby (Session 2): they never appear in your character picture.
 
+## Session 3: loot system step 1 (about 15 minutes)
+
+Build from branch **`claude/affixes-loot`** (the log line says `build: claude/affixes-loot …`). The log should also say `Loot: 84 affixes, 248 base items.`
+
+1. **Spawn loot:** `co_loot` (Rare), `co_loot magic`, and `co_loot rare SwordBronze`. Each drops an item in front of you; the console names it in blue (Magic) or yellow (Rare).
+2. **Names:** hover over the item on the ground: its name is coloured (Magic: e.g. "Cruel Bronze Sword of Embers"; Rare: two words, e.g. "Grim Fang"). Pick it up: the inventory tooltip title has the same coloured name.
+3. **Tooltip:** at the bottom, "Magic" or "Rare Bronze Sword", then one line per affix with its range, e.g. `+24% damage [5–40]`. Lines the game doesn't apply yet are grey with "(not active yet)". Look out for a `◆ resonant` line (both halves of a twin).
+4. **Stats change:** compare with a plain crafted copy of the same item: an item with enhanced damage or elemental damage shows higher damage numbers (or a fire/frost/… line); enhanced armour, durability and block show in armour, durability and block power.
+5. **Durability:** a durability affix raises the max; the item starts full. Repair it at the workbench: it goes back to the raised max.
+6. **Upgrade:** upgrade a dropped item at its station: it keeps its name and affixes.
+7. **Natural drops:** kill some starred creatures (`spawn Boar 10 2` spawns ten 1-star boars). Drops are rare (1 in 50 Magic, 1 in 100 Rare; stars raise it), so this mostly checks nothing breaks. Items come from the biome you're in, and 1 in 5 from the biome before it (Meadows: always Meadows items).
+8. **Combat:** hit something with a knockback or backstab item and parry with a parry item: no errors (the effect is subtle).
+9. No red errors in the console or `LogOutput.log`.
+
 ## Session 2: with a friend
 
 Needs a second player (host a world or use the dedicated server, everyone on the same build).

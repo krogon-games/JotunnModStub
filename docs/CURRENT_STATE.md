@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **129 passed, 0 failed** (2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **145 passed, 0 failed** (2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, loot base, loot rule, roller and loot item, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -44,13 +44,14 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 |---|---|
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
+| **Loot system step 1** (2026-10-29, branch `claude/affixes-loot`) | `co_loot`: coloured names, tooltip lines with [ranges], damage/armour/durability/block numbers change; natural drops from kills; `PLAYTEST.md` → Session 3 |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet: close button, dragging, layout with a chest and the backpack open, multiplayer | `PLAYTEST.md` → Session 1d (the rest of the sheet is verified) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
 
-Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Loot system: step 1 built (drops, tooltips, item-stat affixes); orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -76,6 +77,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
 - Kall Fimbulbringer's essence look (made without a concept render; status `proposed` in `essences.csv`).
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
+- **Draft gear affix ranges (2026-10-29):** 28 gear affixes roll with their draft ranges in loot step 1 (user). Claude proposes ranges from the game data with sources; the user approves them before the loot PR. The dump has no resistance values or %-damage trinkets, so some need the user's call.
 - Play-test results for everything under "Built, not verified".
 - **Pull request:** nothing since PR #1 (merged 2026-09-29); `master` lacks everything Corruption. The user wants to revisit this after the first play-test session (2026-10-28): open a PR from the branch into `master` then.
 

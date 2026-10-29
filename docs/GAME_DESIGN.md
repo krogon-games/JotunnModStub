@@ -31,7 +31,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 4: maps and rips | Corruption | Step A tested in-game (single player); step B built, untested (waves, maddened, loot) | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
 | Phase 6: corrupted bosses | Corruption | Core built, untested (multipliers, loot, tint, `co_corrupt`); offerings wait for `altars.csv`, summons for phase 4 step B | `FEATURES.md`, design doc + review 4 |
-| Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
+| Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Step 1 built, untested (Magic/Rare drops, rolled affixes, names, tooltips, item-stat affixes; branch `claude/affixes-loot`); orbs, uniques, other effects to come (orb art made, PoE names kept; 28 gear ranges still draft) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28). The slots are shown in a WoW-style **character sheet** (CraftingOverhaul, built 2026-10-29, untested); the Currency and Maps tabs are still to come | design doc, `mod-compatibility.md`, `FEATURES.md` → Character sheet |
 | Phase 10: skill rework (optional module) | — | Proposed | design doc |
@@ -48,6 +48,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 - Talismans: full repel of one creature family; provoked creatures fight back; bosses never; two talisman slots plus the vanilla trinket slot (changed 2026-10-28); rings get their own slot later and raise skills.
 - Uniques: unlimited copies; not craftable; ~1 per 20 hours of play (base 1 in 2,500, small source multipliers).
 - Personal loot (60 s owner lock) and loot beams.
+- Loot drops (2026-10-29): a craftable item of the biome the creature died in, 20% from the biome before; level 1; Magic 1 affix twice as often as 2, Rare 3 twice as often as 4.
 - Loot system (rarity, affixes, orbs, uniques) is our own, not Epic Loot (decided 2026-10-27).
 - Workbench and forge craft Normal (vanilla) items only; orb crafting at the Riftforge upgrades them; monsters drop items with random rolls. Magic = up to 1 prefix + 1 suffix, Rare = up to 2 + 2 (2026-10-27).
 - Gathering tools get their own affix pools (universal, mining, woodcutting) plus 7 low-impact affixes. Every one-handed axe (Jotun Bane, Thunderblood and Frostfire included) is both a tool and a weapon: it rolls gathering and weapon affixes. Pickaxes roll gathering affixes only (2026-10-27).

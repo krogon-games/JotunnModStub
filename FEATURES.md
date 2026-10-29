@@ -23,7 +23,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone) | Corruption | Tested in-game (single player) | — (heart distance from the game data and the user; recipe in code) | `Corruption/Content/CorruptedWishbone.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/CorruptionPlugin.cs`, `CraftingOverhaul.Tests/MapListTests.cs`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
-| [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
+| [Loot system](#loot-system) | Loot | Built, untested (step 1: drops, tooltips, item stats) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs` | 2026-10-29 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
 There are two plugins: **CraftingOverhaul** (quality of life; works when only some players have it) and **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg` and `com.krogongames.corruption.cfg`.
@@ -693,22 +693,52 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 
 ## Loot system
 
-**Status:** Planned. Not started.
+*Corruption plugin, design phase 7, step 1 of several: drops, tooltips and item-stat affixes. Orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects come in later steps.*
 
-**Ideas so far:**
-- Rarity tiers for dropped gear, with randomly rolled bonus stats.
-- Stats stored on the item (`ItemDrop.ItemData.m_customData`), shown in tooltips and synced in multiplayer.
-- Likely patch points: `CharacterDrop` / `DropTable` for drops, and item tooltips.
+**What it does in-game:**
+- **Magic and Rare drops.** Every creature kill (not tamed creatures or players) rolls for loot, once **per player within the game's nearby-players range** (`Game.m_difficultyScaleRange`, the range the game counts players in to scale creature difficulty; 100 m in the 1.0 code). Chances come from `drop_chances.csv` (Magic 1 in 50, Rare 1 in 100) times `drop_modifiers.csv`: stars (`star_1`–`star_3`), rip creatures (`rip_tier_1`; maps have no tiers yet), corrupted bosses (uniques only). If Magic and Rare both succeed, only the Rare drops (`DropTable.Roll`). Unique rolls are ignored until uniques exist.
+- **Which item:** a random player-craftable weapon, shield, armour piece, cape (backpacks included), trinket or pickaxe **from the biome the creature died in**; with **20%** chance one from the biome just before it (user, 2026-10-29). Meadows always gives Meadows items; the Ocean gives none. The list is `loot_bases.csv`, built from the game dump by `tools/make_loot_bases.py` (248 items; the biome is the item's own from the dump, e.g. gem-socketed Ashlands weapons count as Deep North because their recipe needs a Deep North material).
+- **Upgrade level 1**, full durability, like a freshly crafted item (user). Upgrading at the workbench or forge keeps the affixes.
+- **Affix count:** Magic 1 or 2 (1 twice as often), Rare 3 or 4 (3 twice as often) (user: fewer is likelier). Magic holds at most 1 prefix + 1 suffix, Rare 2 + 2.
+- **Rolling** (`AffixRoller`): each affix is picked by its `weight` among every affix that fits the item's classes and mechanics (`requires`), one per family per side; values are whole numbers anywhere in the range (every range in the table is whole). Both halves of a twin merge into one **resonant** line rolled from the resonant range (+25% on the combined top). **Every affix in `affixes.csv` rolls, including rows still marked `draft`** (user, 2026-10-29: test with the draft numbers while the ranges are settled).
+- **Names:** Magic items take their affixes' names around the base name, the roll deciding which of a family's names (e.g. *Sharp/Fine/Cruel/Merciless*): "Cruel Bronze Sword of Embers". Rare items get a two-word name from `rare_names.csv` ("Grim Fang"). Names are blue (Magic, `#8888FF`) or yellow (Rare, `#FFFF77`), the Path of Exile colours, in inventory tooltips and when hovering over the item on the ground.
+- **Tooltips:** after vanilla's lines, the rarity (and for Rares the base item), then one line per affix with its range in brackets, e.g. `+24% damage [5–40]`; resonant lines end in `◆ resonant`. Affixes this step doesn't apply yet are grey and say "(not active yet)".
+- **Affixes that work in this step** (through the game's own stat getters, so vanilla tooltips, combat and repairs see them): enhanced damage (every combat damage type, not chop or pickaxe damage), fire/frost/lightning/poison/spirit damage (a % of the enhanced physical damage), armour, durability, block power, attack stamina (also the tools' "per swing" version), knockback and backstab (raised on the attacker's game when the hit is made), parry bonus.
+- **Storage:** `ItemData.m_customData` keys `corruption.rarity`, `corruption.name` (Rares) and `corruption.affixes` (`id=value;prefix+suffix=value`), saved and synced with the item by the game.
 
-Decided 2026-10-27: we build our own loot system rather than depend on Epic Loot.
+**How to test:** `co_loot` drops a Rare item of the biome you stand in; `co_loot magic` a Magic one; `co_loot rare SwordBronze` a chosen base item (any prefab in `loot_bases.csv`). Kill starred creatures for natural drops (1 in 50 / 1 in 100 per kill is slow; `co_loot` is the quick way).
 
-**Design:** now covered by the Corruption mod design in `docs/corruption-design.md`:
-- corruption shards, maps and rips;
-- corrupted bosses;
-- rarity tiers, currency orbs and uniques;
-- gear prefixes and suffixes (draft), and the gathering tool affixes that come first: `docs/AFFIX_RULES.md`.
+**Config settings** (admin-only, `7 - Loot`):
 
-The technical review is in `docs/corruption-design-review.md`. It suggests building the corruption mod as a separate plugin in this repository.
+| Setting | Default | Description |
+|---|---|---|
+| `Enabled` | `true` | Creatures drop Magic and Rare items. Off: no new drops; items already found keep their affixes |
+
+**Data tables** (compiled into the DLL; rebuild after editing): `affixes.csv`, `loot_bases.csv` (rerun `tools/make_loot_bases.py` after a new game dump), `loot_rules.csv` (previous-biome chance, drop level, affix-count weights), `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`. `dotnet test` checks all of them, and that `loot_bases.csv` matches the dump.
+
+**Known issues:**
+- Untested in-game (145 tests pass; both plugins compile against the stand-in game assemblies).
+- 28 gear affixes still have their draft ranges (marked `draft` in `affixes.csv`); ranges from the game data are proposed separately for the user's approval.
+- Personal loot is only the separate rolls: dropped items aren't locked to a player yet (the 60 s owner lock and loot beams come later).
+- The tables are compiled in; the design wants the server's copy to be the one everybody uses (later step).
+- Knockback and backstab use the weapon in hand when the hit lands; switching weapons while an arrow flies uses the new one.
+- Vanilla tooltip lines for knockback, backstab, parry and stamina show the base item's numbers; the affix line shows the bonus.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `CharacterDrop.OnDeath` | Postfix | Magic and Rare drops, rolled per nearby player |
+| `ItemDrop.ItemData.GetTooltip(ItemData, int, bool, float, int, bool)` | Postfix | Appends rarity and affix lines (AdventureBackpacks also postfixes it; both append) |
+| `InventoryGrid.CreateItemTooltip` | Postfix | Tooltip title in the rarity colour |
+| `ItemDrop.GetHoverText` | Postfix | Ground hover name in the rarity colour |
+| `ItemDrop.ItemData.GetDamage(int, float)` | Postfix | Enhanced and elemental damage |
+| `ItemDrop.ItemData.GetArmor(int, float)` | Postfix | Enhanced armour |
+| `ItemDrop.ItemData.GetMaxDurability(int)` | Postfix | Durability |
+| `ItemDrop.ItemData.GetBaseBlockPower(int)` | Postfix | Block power |
+| `Attack.GetAttackStamina` | Postfix | Less stamina per attack |
+| `Character.Damage(HitData)` | Prefix | Knockback and backstab on the local player's hits |
+| `SEMan.ModifyTimedBlockBonus` | Postfix | Parry bonus |
 
 **Orb art (2026-10-28):** models and textures for the nine currency orbs exist (`tools/make_orbs.py`, `Corruption/Assets/Orbs/`, preview `docs/images/orbs_preview.png`), after the user's concept render (`docs/images/orbs_reference.jpg`). They are not in the mod yet: they get embedded and registered as items when the orbs are built. The orbs keep their Path of Exile names (user, 2026-10-28).
 
@@ -730,6 +760,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-29
+- **Loot system, step 1 (new, untested):** creatures drop Magic (1 in 50) and Rare (1 in 100) items, rolled per nearby player: a craftable item of the biome they died in (20% the biome before), level 1, with 1–2 or 3–4 rolled affixes, Magic names from the affixes and two-word Rare names, coloured names, and tooltip lines with [ranges]. Damage, elemental damage, armour, durability, block, attack stamina, knockback, backstab and parry affixes work; the rest show as "not active yet". `co_loot` spawns one. New tables `loot_bases.csv` (from the game dump), `loot_rules.csv`, `rare_names.csv`; admin setting `7 - Loot` → `Enabled`.
 - **Rip heart search tested in-game; pings mostly red:** finding the heart with the corrupted wishbone works; the pings now shade into purple only for about a fifth of their colours (they looked mostly purple). Busier waves and maddened creatures fighting each other also passed.
 - **Rip heart search and corrupted wishbone (new, untested):** the heart now stands 96–128 m from the landing spot (outside the waves' range), and a Corrupted wishbone (Wishbone + 1 shard at the Riftforge) pings towards it in red and purple, faster the closer you get; everyone nearby sees the pings.
 - **Rip waves tested in-game; busier waves:** new setting `WaveMultiplier` (default 2): each raid entry's most-alive-at-once doubled and its interval halved in rips (Meadows: 8 alive, one every 10 s), after the play-test found the vanilla pacing too slow.

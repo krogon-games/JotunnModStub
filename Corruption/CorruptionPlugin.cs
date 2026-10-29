@@ -34,6 +34,8 @@ namespace Corruption
             PatchAllSafely();
             Safe.Run("add talisman slots", TalismanSlots.Register);
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
+            Safe.Run("read the loot tables", Loot.Load);
+            Safe.Run("add the co_loot command", Loot.Register);
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
         }
