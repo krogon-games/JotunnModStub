@@ -13,19 +13,13 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 ### 1. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
-## Session 1d: character sheet (5 minutes, branch `claude/ui-overhaul`)
+## Session 1d: character sheet leftovers (2 minutes)
 
-Needs the CraftingOverhaul build from that branch and EquipmentAndQuickSlots. First test (2026-10-29): slots and stats worked; it looked too plain. Second test: the new look and the live picture work. Compare with `docs/images/sheet_preview.png`.
+The sheet itself was tested on 2026-10-29 (look, picture, slots, stats). Still to check:
 
-0. **If you tested the first version:** your config still has the old position. Open `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, delete the `Position = ...` line under `[3 - Character Sheet]` (or just drag the sheet later).
-1. Open the inventory (Tab). Right of the inventory grid: an iron-framed dark wood panel titled **CHARACTER**, framed slot tiles labelled HEAD, CHEST, LEGS, CAPE, UTILITY on the left and TRINKET, TALISMAN, TALISMAN on the right, **your character standing on a stone in the arch** in the middle, a parchment with your name on a ribbon, your quick slots at the bottom. It should no longer cover the inventory's weight number.
-2. **The picture:** whole body in view, feet on the stone? Drag the picture sideways: it turns; close and reopen the inventory: it faces you again. Change your helmet or cape: the picture changes. Check at night and in a dark place: still visible. Other players or creatures nearby shouldn't appear in it. Close the inventory: nothing odd happens to your character in the world.
-3. Empty slots show a faint picture of what goes there (helmet, tunic, legs, cape, belt, pendant, trophy); equipped items no longer have a blue background in the sheet.
-4. Drag a helmet from the bag into HEAD: it equips. Drag it back out. Right-click a chest piece in the bag: it goes into CHEST. Hover a slot: the tooltip shows. Put a charm in a TALISMAN slot: works as before. A quick-slot hotkey still uses its item.
-5. Stats: armor and weight match the inventory's own numbers; "Rested" (with its icon) appears on the right after sleeping; a Troll armour piece makes speed from gear negative (red).
-6. The X button closes the inventory. Drag the sheet by its wood: it moves and stays there next time.
-7. Open a chest and the AdventureBackpacks backpack: the sheet shouldn't overlap either panel. Does it fit on your screen top to bottom?
-8. If the picture misbehaves, set `ShowCharacter = false` and save (config reload) and send the BepInEx log.
+1. The X button closes the inventory. Drag the sheet by its wood: it moves and stays there next time.
+2. Open a chest and the AdventureBackpacks backpack: the sheet shouldn't overlap either panel.
+3. With a friend nearby (Session 2): they never appear in your character picture.
 
 ## Session 2: with a friend
 
