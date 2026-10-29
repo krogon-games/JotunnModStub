@@ -119,27 +119,35 @@ then add one line:
 
 *Asked for 2026-10-29: the maps' placeholder icon (a tinted bundle of leather scraps) is hard to read. The render is cut into the eight inventory icons directly; the map's look on the ground stays the leather bundle for now.*
 
-The eight maps from `Corruption/Data/maps.csv`. Their in-game text says they are "drawn in ash on a slain guardian's hide", so: one family of small rolled hide maps, same hide, same tie, each with its biome drawn in ash and charcoal and a glowing red rip mark (the rips are red in game). A small bead tied on the cord takes the colour of the essence the map is made from, so the map matches its essence at a glance.
+*First render (2026-10-29) rejected by the user: "the maps look too similar, a lot of the fine details will get lost". Shrunk to inventory size (64 px), all eight were the same beige scroll with a red mark; only the hide colour, the red tear and the Ashlands lava still showed, and the ash drawings disappeared. The prompt below is the second version, built for small icons:*
+- *each map has its own strong colour over the whole hide (colour is what reads at 64 px);*
+- *one huge, bold silhouette instead of a scene;*
+- *a different chunky material for the roller ends;*
+- *the shared red tear is smaller and in a corner, so it stops making them all look alike.*
+
+The eight maps from `Corruption/Data/maps.csv`. Their in-game text says they are "drawn in ash on a slain guardian's hide": each is a hide stained by its land, with one bold mark in ash. A small red tear (the rips are red in game) marks them all as corrupted, and the bead on the cord takes the colour of the essence the map is made from.
 
 **How to use:** attach the essence render (`docs/images/essences_reference.jpg`) and the orb render (`docs/images/orbs_reference.jpg`) as references for style, camera, lighting and background, paste the sheet prompt, then refine single maps with the single prompts. Keep the background plain and even: the icons are cut out of it.
 
 ### Sheet prompt (all eight in one image)
 
 ```
-Concept art sheet of eight magical maps for a Viking survival game, in the stylised, slightly low-poly painterly look of Valheim. Match the attached item renders for style, camera, lighting and background. Each map is a small piece of rough tanned hide, half unrolled so the drawing shows, rolled up at one end and tied with a thin leather cord. The map is drawn in black ash and charcoal: a simple, bold sketch of one land, readable at small icon size. In the middle of every drawing is the same mark: a jagged tear that glows deep red, like a wound in the hide, with faint red light bleeding into the hide around it. A single small glowing bead hangs from each cord in its own colour. They are clearly one family: same hide, same size, same cord, same red tear; only the drawing and the bead change.
+Concept art sheet of eight magical maps for a Viking survival game, in the stylised, slightly low-poly painterly look of Valheim. Match the attached item renders for style, lighting and background. These will be used as tiny inventory icons (64 by 64 pixels), so every map must be recognisable from its colour and one big shape alone: no small details, no scenes, no thin lines.
 
-Lay them out in a 4 by 2 grid on a plain, even dark slate-grey background, evenly spaced, each centred in its own square with empty space around it, same three-quarter top-down camera angle, same soft key light from the upper left, a subtle glow halo, no text, no letters, no labels, no hands, no other objects. Left to right, top row then bottom row:
+Each map is a thick piece of hide on a short wooden roller, shown almost flat and facing the camera, filling most of its square. The whole hide is strongly stained in the map's own colour. On it is ONE huge, bold silhouette painted in thick black ash strokes, filling most of the hide. In one top corner, a small jagged tear glows deep red. The two ends of the roller are big chunky knobs made of the map's own material. A large round glowing bead hangs from a short cord. All eight have the same size, shape and layout; the colour, the silhouette, the roller ends and the bead are different on each, so no two maps look alike.
 
-1. Meadows: gentle rolling hills, a few round oak trees, a small stag-antler symbol. Bead: pale icy blue-white.
-2. Black Forest: a dense wall of pointed fir trees and a ruined stone tower. Bead: amber-green.
-3. Swamp: twisted dead trees standing in water and a sunken crypt doorway. Bead: toxic green.
-4. Mountains: sharp snowy peaks with a dragon's wing shape above them. Bead: cold glacier blue.
-5. Plains: flat open grassland, a tar pit and a ring of sharpened stakes. Bead: ember orange.
-6. Mistlands: jagged rock spires in swirls of mist and a giant ribcage. Bead: violet.
-7. Ashlands: a volcano with rivers of lava; this hide is singed and charred at the edges. Bead: molten orange.
-8. Deep North: glaciers, icebergs and cracked sea ice; this hide has frost on its edges. Bead: icy teal.
+Lay them out in a 4 by 2 grid on a plain, even dark slate-grey background, evenly spaced, each centred in its own square, same camera, same soft key light from the upper left, no text, no letters, no labels, no hands, no other objects. Left to right, top row then bottom row:
 
-Game item render, readable at small icon size, strong silhouettes, high detail, 2:1 image.
+1. Meadows: hide stained fresh light green. Silhouette: a stag's head with big antlers. Roller ends: antler tips. Bead: pale icy blue-white.
+2. Black Forest: hide stained very dark blue-green, almost black. Silhouette: one giant pointed fir tree. Roller ends: gnarled roots. Bead: amber.
+3. Swamp: hide stained murky brown-olive, wet and dripping. Silhouette: a big skull. Roller ends: yellowed bone. Bead: toxic green.
+4. Mountains: hide white as snow with slate-grey shadows and grey wolf fur along the top edge. Silhouette: one jagged mountain peak. Roller ends: grey stone. Bead: glacier blue.
+5. Plains: hide stained golden straw yellow. Silhouette: the head of a huge shaggy horned beast. Roller ends: gold rings. Bead: ember orange.
+6. Mistlands: hide stained deep purple with pale mist swirls. Silhouette: a giant insect with long mandibles. Roller ends: shiny black chitin. Bead: bright violet.
+7. Ashlands: hide charred black with glowing orange lava cracks. Silhouette: a volcano, glowing orange. Roller ends: black obsidian. Bead: molten orange.
+8. Deep North: hide frozen inside a slab of glowing cyan-teal ice with icicles hanging below. Silhouette: a big iceberg. Roller ends: clear ice. Bead: icy teal.
+
+Game item icons, bold, high contrast, strong silhouettes, 2:1 image.
 ```
 
 ### Single prompts (refine one map)
@@ -147,23 +155,24 @@ Game item render, readable at small icon size, strong silhouettes, high detail, 
 Start each with:
 
 ```
-A single magical map item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look, matching the attached item renders for camera, lighting and background. A small piece of rough tanned hide, half unrolled, rolled up at one end and tied with a thin leather cord, drawn in black ash and charcoal with a bold, simple sketch of one land. In the middle of the drawing a jagged tear glows deep red like a wound in the hide. One small glowing bead hangs from the cord. Centred on a plain, even dark slate-grey background, three-quarter top-down view, soft key light from the upper left, subtle glow halo, no text, no letters, no other objects.
+A single magical map item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look, matching the attached item renders for lighting and background. It will be a tiny 64 by 64 pixel inventory icon, so it must read from its colour and one big shape alone: no small details, no thin lines. A thick piece of hide on a short wooden roller, almost flat and facing the camera, filling most of the image. The whole hide is strongly stained in one colour, with ONE huge bold silhouette in thick black ash strokes. A small jagged tear glows deep red in one top corner. The roller ends are big chunky knobs, and a large round glowing bead hangs from a short cord. Centred on a plain, even dark slate-grey background, soft key light from the upper left, no text, no letters, no other objects.
 ```
 
 then add one line:
 
 | Map | Add |
 |---|---|
-| Meadows | `The drawing shows the Meadows: gentle rolling hills, a few round oak trees, a small stag-antler symbol. The bead is pale icy blue-white.` |
-| Black Forest | `The drawing shows the Black Forest: a dense wall of pointed fir trees and a ruined stone tower. The bead is amber-green.` |
-| Swamp | `The drawing shows the Swamp: twisted dead trees standing in water and a sunken crypt doorway. The bead is toxic green.` |
-| Mountains | `The drawing shows the Mountains: sharp snowy peaks with a dragon's wing shape above them. The bead is cold glacier blue.` |
-| Plains | `The drawing shows the Plains: flat open grassland, a tar pit and a ring of sharpened stakes. The bead is ember orange.` |
-| Mistlands | `The drawing shows the Mistlands: jagged rock spires in swirls of mist and a giant ribcage. The bead is violet.` |
-| Ashlands | `The drawing shows the Ashlands: a volcano with rivers of lava. The hide is singed and charred at the edges. The bead is molten orange.` |
-| Deep North | `The drawing shows the Deep North: glaciers, icebergs and cracked sea ice. The hide has frost on its edges. The bead is icy teal.` |
+| Meadows | `The hide is stained fresh light green; the silhouette is a stag's head with big antlers; the roller ends are antler tips; the bead is pale icy blue-white.` |
+| Black Forest | `The hide is stained very dark blue-green, almost black; the silhouette is one giant pointed fir tree; the roller ends are gnarled roots; the bead is amber.` |
+| Swamp | `The hide is stained murky brown-olive, wet and dripping; the silhouette is a big skull; the roller ends are yellowed bone; the bead is toxic green.` |
+| Mountains | `The hide is white as snow with slate-grey shadows and grey wolf fur along the top edge; the silhouette is one jagged mountain peak; the roller ends are grey stone; the bead is glacier blue.` |
+| Plains | `The hide is stained golden straw yellow; the silhouette is the head of a huge shaggy horned beast; the roller ends are gold rings; the bead is ember orange.` |
+| Mistlands | `The hide is stained deep purple with pale mist swirls; the silhouette is a giant insect with long mandibles; the roller ends are shiny black chitin; the bead is bright violet.` |
+| Ashlands | `The hide is charred black with glowing orange lava cracks; the silhouette is a glowing orange volcano; the roller ends are black obsidian; the bead is molten orange.` |
+| Deep North | `The hide is frozen inside a slab of glowing cyan-teal ice with icicles hanging below; the silhouette is a big iceberg; the roller ends are clear ice; the bead is icy teal.` |
 
 ### Notes
 
 - Bead colours follow each essence's glow colour in `Corruption/Data/essences.csv` (Eikthyr #8CD9FF … Kall #40E6D9), named in words because image models follow names better than hex codes.
-- Landmarks are well-known sights of each biome (game knowledge, not checked against the game files); change any you like.
+- Hide colours were picked so no two maps share a hue at icon size; silhouettes are the biome's best-known sight or boss (game knowledge, not checked against the game files). Change any you like.
+- Check a render by shrinking it to 64 px before accepting it.
