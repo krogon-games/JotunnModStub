@@ -1,13 +1,13 @@
 # Current state
 
-**Last updated:** 2026-10-28 (after the first big play-test) · **Branch:** `claude/valheim-modding-exploration-izv3l8` · **Game:** Valheim 1.0.20
+**Last updated:** 2026-10-29 (character sheet tested and merged into `master`) · **Branch:** `claude/ui-overhaul` (UI work; other sessions on their own branches, see `CLAUDE.md`) · **Game:** Valheim 1.0.20
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **100 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence and map tables, rip rules, gem model parser).
+- `dotnet test CraftingOverhaul.Tests`: **124 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence and map tables, rip rules, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -33,6 +33,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Corrupted bosses core: red tint, harder hits, slower kill, 2–3 essences and 3–5 shards | Corruption | 2026-10-28 play-test log |
 | Craft from chests with AdventureBackpacks: backpack alone, backpack + chest, no double charge | CraftingOverhaul | 2026-10-28 play-test log |
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
+| Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better") |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
 
 ### Built, not verified
@@ -42,6 +43,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | Item | What to check |
 |---|---|
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
+| Character sheet: close button, dragging, layout with a chest and the backpack open, multiplayer | `PLAYTEST.md` → Session 1d (the rest of the sheet is verified) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
@@ -83,9 +85,14 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
 
-## Later (user's to-do, 2026-10-28)
+## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 
-- **UI work:** the recipe list needs a redesign (headers work but the user wants a better look), and the crafting screen with AdventureBackpacks' backpack panel open needs layout work. Ask the user what they want changed before starting.
+The user wants the inventory screen to look like an RPG character screen (concept image, 2026-10-29). Done and to do, in order:
+
+1. **Character sheet**: built; first play-test 2026-10-29 worked (slots, stats) but looked too plain. Reworked the same day: generated art (`tools/make_sheet_ui.py`, mock-up `docs/images/sheet_preview.png`), labelled tiles with silhouettes, and the **live character picture** (brought forward from step 2). Decisions in `DECISIONS.md` (2026-10-29): keep EquipmentAndQuickSlots, no hand or feet slots, no tabs. Second play-test (2026-10-29): the look matches the mock-up and the live picture works (turning it by dragging works); the feet stood above a thin stone and a talisman kept the blue backing, fixed the same day. Third play-test: "looking much better" (user). **Merged into `master` 2026-10-29.**
+2. **Revisit later (user, 2026-10-29): make the sheet's look consistent with the rest of the game's UI.** Its darker wood, iron frame and parchment stand out next to the vanilla panels (inventory grid, crafting). Not now; ask the user what to change when picking it up. Tweak the numbers in `tools/make_sheet_ui.py` and `SheetLayout.cs`, rerun the script, and check the mock-up before asking for a test.
+3. **Currency and Maps tabs** off the inventory (design phase 9; the concept image's icon tabs). Separate feature; Affix Splinters depend on it.
+4. The recipe list redesign and the crafting screen with AdventureBackpacks' backpack panel open (user's to-do, 2026-10-28): ask what they want changed before starting.
 
 ## Before release
 

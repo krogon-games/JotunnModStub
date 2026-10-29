@@ -33,7 +33,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 6: corrupted bosses | Corruption | Core built, untested (multipliers, loot, tint, `co_corrupt`); offerings wait for `altars.csv`, summons for phase 4 step B | `FEATURES.md`, design doc + review 4 |
 | Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
-| Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28) | design doc, `mod-compatibility.md` |
+| Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28). The slots are shown in a WoW-style **character sheet** (CraftingOverhaul, built 2026-10-29, untested); the Currency and Maps tabs are still to come | design doc, `mod-compatibility.md`, `FEATURES.md` → Character sheet |
 | Phase 10: skill rework (optional module) | — | Proposed | design doc |
 | Storage and quests | Undecided plugin | Proposed, saved for later | `storage-quests-design.md` |
 | Combat mechanics (parry, posture, combos) | — | Ideas only | `FEATURES.md` → Combat mechanics |
