@@ -720,7 +720,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 
 **Known issues:**
 - Untested in-game (146 tests pass; both plugins compile against the stand-in game assemblies).
-- **First look 2026-10-29 (user's screenshots):** `co_loot` Rares work: "Night Ward" (Rare Leather Trousers: +15% armour, armour 2 → 2.3) and "Skull Song" (Rare Bronze Sword: +37% damage, slash 35 → 48), yellow titles, affix lines with ranges, inactive lines grey. Still to check: Magic items, ground hover names, durability, block, repair, upgrade, natural drops, combat affixes.
+- **First look 2026-10-29 (user's screenshots):** `co_loot` Rares work: "Night Ward" (Rare Leather Trousers: +15% armour, armour 2 → 2.3) and "Skull Song" (Rare Bronze Sword: +37% damage, slash 35 → 48), yellow titles, affix lines with ranges, inactive lines grey. Magic items work too: "Shieldwall Bronze Atgeir", "Seismic Antler Pickaxe" (gathering affix on a pickaxe), "Crackling Club" (+19% of physical as lightning: blunt 12 adds lightning 2), blue names. Still to check: ground hover names, durability, block, repair, upgrade, natural drops, combat affixes.
 - 28 gear affixes still have their draft ranges (marked `draft` in `affixes.csv`); ranges from the game data are proposed separately for the user's approval.
 - Personal loot is only the separate rolls: dropped items aren't locked to a player yet (the 60 s owner lock and loot beams come later).
 - The tables are compiled in; the design wants the server's copy to be the one everybody uses (later step).
