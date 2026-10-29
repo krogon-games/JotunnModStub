@@ -35,7 +35,15 @@ namespace Corruption
             Safe.Run("add talisman slots", TalismanSlots.Register);
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
 
-            Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
+            Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
+        }
+
+        /// <summary>The git branch and commit this DLL was built from (stamped by Corruption.csproj).</summary>
+        internal static string BuildStamp()
+        {
+            var stamp = typeof(CorruptionPlugin).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyMetadataAttribute), false)
+                .OfType<System.Reflection.AssemblyMetadataAttribute>().FirstOrDefault(a => a.Key == "GitBuild");
+            return stamp == null || string.IsNullOrWhiteSpace(stamp.Value) ? "unknown" : stamp.Value.Trim();
         }
 
         private void Update()
@@ -60,6 +68,9 @@ namespace Corruption
             // After essences: map recipes and colours use them.
             Safe.Run("register maps", MapItems.Register);
             Safe.Run("register rips", RipPrefabs.Register);
+            Safe.Run("register the corrupted wishbone", CorruptedWishbone.Register);
+            Safe.Run("register the maddened effect", Maddened.RegisterEffect);
+            Safe.Run("read the rip loot table", RipLoot.Load);
         }
 
         /// <summary>Applies each patch class on its own, so one broken by a game update only disables that feature.</summary>

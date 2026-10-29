@@ -20,8 +20,9 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 ### CraftingOverhaul
 
 - `CraftingOverhaul.cs`: plugin entry, `PatchAllSafely()`, console commands.
-- `ModConfig.cs`: `1 - Recipe List` (per player), `2 - Nearby Containers` (admin-only, server-synced).
+- `ModConfig.cs`: `1 - Recipe List` (per player), `2 - Nearby Containers` (admin-only, server-synced), `3 - Character Sheet` (per player).
 - `RecipeList/`: `RecipeListOrganizer` (postfix on `InventoryGui.UpdateRecipeList`; computes rows first, then mutates the list), `SearchBar`, `RecipeCategories`.
+- `CharacterSheet/`: `SheetLayout` (pure, tested: where each EquipmentAndQuickSlots slot goes, labels, silhouettes), `FlatJson` (pure, tested: reads that mod's JSON API answers), `CharacterSheetPanel` (postfix after EAQS's on `InventoryGrid.UpdateGui`: moves EAQS's slot cells onto our panel, stats, drag-to-move), `CharacterPortrait` (live picture: own camera and render texture; swaps the player's renderers to an unused layer only during that camera's render, via `Camera.onPreCull`/`onPostRender`), `SheetArt` (loads the embedded art as sprites, 9-sliced where sizes vary). Pattern: **re-use another mod's UI objects instead of replacing them**: EAQS keeps owning the cells and the items; we only set their positions after it did.
 - `Biomes/`: data-driven biome detection.
   - `Collectors/` turn game data into *sources* (vegetation, spawns, locations and dungeon rooms, conversions, producers, hatching, recipes); `PrefabWalker` reads drop/harvest components.
   - `BiomeSolver.cs` (pure, tested): an item's biome is its earliest source; a source's biome is the latest of its location, requirements, tool tier and boss key; weak sources (random chest loot) only place items nothing else places; config overrides are fixed points.
@@ -45,15 +46,21 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 - `tools/make_shard.py` and `tools/make_essences.py` (Python, numpy + Pillow) generate the gem models (`Corruption/Assets/*.obj`), textures (PNG for viewing, raw `.rgba` for the game) and previews in `docs/images/`, from fixed seeds. Rerun after changing them; commit the outputs.
 - `tools/make_orbs.py` makes the currency orbs into `Corruption/Assets/Orbs/`, which the wildcard deliberately doesn't cover until the orbs are built (add `Assets\Orbs\*` then). It paints patterns in 3D per texel, so runes don't stretch on the sphere's UV map.
+- `tools/make_sheet_ui.py` makes the character sheet's UI art (CraftingOverhaul) into `CraftingOverhaul/Assets/Sheet/` (embedded by `CraftingOverhaul.csproj`, about 1.3 MB) and a mock-up of the whole sheet, `docs/images/sheet_preview.png`, so the look can be checked without the game. Its sizes mirror `SheetLayout.cs`; change both together.
 - `Corruption.csproj` embeds every `Assets/*.obj` and `Assets/*.rgba` (wildcard) plus `Data/essences.csv`. `Rules/ObjMesh.cs` (tested) reads the models; `Content/GemModel.cs` builds the Unity mesh and material on the base item's shader, adds optional plain-colour add-on parts and the ground glow, and removes the base item's visuals (colliders stay). A failed look always falls back to a tint, so the item still registers.
 - Textures are raw pixels because `Texture2D.LoadImage` (ImageConversion module) references netstandard 2.1, which the net462 build can't compile against. They make up most of the DLL's size (about 4 MB).
 
 ### Server messages (rips)
 
-- Requests that need the whole world go to the server with `ZRoutedRpc` (registered in a `Game.Start` postfix): the player's game sends `Corruption_RipRequest` to `GetServerPeerID()`, the server answers the sender with `Corruption_RipReply`. In single player and on a host the "server" is the same game; routed RPCs to yourself are handled locally.
+- Requests that need the whole world go to the server with `ZRoutedRpc` (registered in a `Game.Start` postfix): the player's game sends `Corruption_RipRequest` to `GetServerPeerID()`, the server answers the sender with `Corruption_RipReply`. In single player and on a host the "server" is the same game; routed RPCs to yourself are handled locally. Effects other players should see go to `ZRoutedRpc.Everybody` (which includes your own game), and each game shows them on the sender's character if it has it loaded (`Corruption_RipPing`, the corrupted wishbone).
+- Per-character state that must survive logging out (the heart of the rip you entered) goes in `Player.m_customData`, which the game saves with the character.
 - Only the server holds every object in the world (`ZDOMan.GetAllZDOsWithPrefabIterative` covers them all there), so checks like "near anyone's base" belong on the server.
 - Objects for far-away places (the rip heart) are instantiated there directly: their persistent ZDO stays when the instance is removed as out of range, and they appear when someone arrives. Settle them on the ground once the area is loaded.
 - Rip state lives on the objects' ZDOs (`corruption_rip_*` keys in `Rips.cs`), so it survives restarts and works for every player.
+
+### Build stamp
+
+`Corruption.csproj` writes the git branch and short commit into the DLL (`AssemblyMetadata("GitBuild", …)`, target `StampGitCommit`); the plugin logs it on load. When a play-test result looks like "nothing happened", check that line first.
 
 ## Code patterns (follow these)
 

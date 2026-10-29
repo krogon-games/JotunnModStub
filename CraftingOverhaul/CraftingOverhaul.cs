@@ -10,6 +10,8 @@ namespace CraftingOverhaul
 {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid)]
+    // The character sheet rearranges EquipmentAndQuickSlots' slots; load after it when it's installed.
+    [BepInDependency(CharacterSheet.CharacterSheetPanel.EaqsGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.VersionCheckOnly, VersionStrictness.Minor)]
     internal class CraftingOverhaul : BaseUnityPlugin
     {

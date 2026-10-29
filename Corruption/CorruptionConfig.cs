@@ -24,6 +24,11 @@ namespace Corruption
         public static ConfigEntry<float> RipOpenDays;
         public static ConfigEntry<float> RipBaseDistance;
         public static ConfigEntry<float> RipHeartHealth;
+        public static ConfigEntry<int> RipMaxStars;
+        public static ConfigEntry<float> RipWaveMultiplier;
+        public static ConfigEntry<int> RipChestShardsMin;
+        public static ConfigEntry<int> RipChestShardsMax;
+        public static ConfigEntry<float> RipKillShardMultiplier;
         public static ConfigEntry<float> CorruptedDamageDealt;
         public static ConfigEntry<float> CorruptedDamageTaken;
         public static ConfigEntry<int> CorruptedEssencesMin;
@@ -83,6 +88,20 @@ namespace Corruption
             RipHeartHealth = config.Bind(RipSection, "HeartHealth", 0f,
                 AdminOnly("Health of a rip's heart. Destroying it opens the way home. " +
                           "0 = the health of the greydwarf nest it's made from.", new AcceptableValueRange<float>(0f, 100000f)));
+            RipMaxStars = config.Bind(RipSection, "MaxStars", 2,
+                AdminOnly("Most stars a rip creature can roll (design: tier 1 maps, up to 2 stars). Stars roll with the game's own level-up chance.",
+                    new AcceptableValueRange<int>(0, 5)));
+            RipWaveMultiplier = config.Bind(RipSection, "WaveMultiplier", 2f,
+                AdminOnly("Rip waves are the biome boss's army raid made busier: each raid entry's 'most alive at once' is multiplied " +
+                          "by this and its spawn interval divided by it. 1 = the vanilla raid. Default 2 (user, after play-testing).",
+                    new AcceptableValueRange<float>(1f, 10f)));
+            RipChestShardsMin = config.Bind(RipSection, "ChestShardsMin", 1,
+                AdminOnly("Fewest corruption shards in the chest a destroyed rip heart leaves.", new AcceptableValueRange<int>(0, 50)));
+            RipChestShardsMax = config.Bind(RipSection, "ChestShardsMax", 3,
+                AdminOnly("Most corruption shards in the rip chest.", new AcceptableValueRange<int>(0, 50)));
+            RipKillShardMultiplier = config.Bind(RipSection, "KillShardMultiplier", 2f,
+                AdminOnly("Multiplies the starred-creature shard chances for maddened (rip) creatures. 2 = twice as likely.",
+                    new AcceptableValueRange<float>(0f, 20f)));
 
             // Starting values from the design doc (corruption-design.md -> Corrupted bosses).
             CorruptedDamageDealt = config.Bind(CorruptedSection, "DamageDealt", 1.5f,

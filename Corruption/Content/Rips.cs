@@ -11,7 +11,7 @@ namespace Corruption.Content
     ///     Opening and travelling through rips (design phase 4, step A). Using a map: the player's game samples
     ///     unexplored spots of the map's biome from world generation, the server picks the first one away from every
     ///     base (only it knows every bed, ward and portal) and sets the closing time, then the player's game consumes
-    ///     the map and spawns the entry rip next to the player and the heart at the landing spot.
+    ///     the map and spawns the entry rip next to the player and the heart 96-128 m from the landing spot.
     /// </summary>
     internal static class Rips
     {
@@ -21,6 +21,7 @@ namespace Corruption.Content
         public const string KeyExit = "corruption_rip_exit";
         public const string KeyHome = "corruption_rip_home";
         public const string KeyGrounded = "corruption_rip_grounded";
+        public const string KeyHeart = "corruption_rip_heart";
 
         private const string RpcRequest = "Corruption_RipRequest";
         private const string RpcReply = "Corruption_RipReply";
@@ -28,8 +29,10 @@ namespace Corruption.Content
         // How many random world spots to test, and how many matches to send to the server.
         private const int Samples = 8000;
         private const int Candidates = 30;
-        // Players arrive this far from the heart, so they don't land on it.
-        private static readonly Vector3 ArrivalOffset = new Vector3(6f, 0f, 0f);
+        // Heart and landing spots must be flat within this radius (metres), the area players arrive on.
+        private const float FlatRadius = 6f;
+        // Directions tried around each heart spot for a landing spot.
+        private const int LandingTries = 16;
 
         private static int s_requestId;
         private static int s_pendingId;
@@ -66,9 +69,8 @@ namespace Corruption.Content
             var minimap = Minimap.instance;
             // The game's own flatness test for placing locations: height change within a radius, from world generation.
             float maxDelta = new ZoneSystem.ZoneLocation().m_maxTerrainDelta;
-            float radius = ArrivalOffset.magnitude;
             var random = new System.Random();
-            var spots = RipRules.Sample(random.NextDouble, Samples, Candidates, (x, z) =>
+            bool Suitable(float x, float z)
             {
                 if (world.GetBiome(x, z) != biome)
                 {
@@ -79,13 +81,23 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                world.GetTerrainDelta(new Vector3(x, h, z), radius, out float delta, out _);
+                world.GetTerrainDelta(new Vector3(x, h, z), FlatRadius, out float delta, out _);
                 if (delta > maxDelta)
                 {
                     return false;
                 }
                 return !minimap || !minimap.IsExplored(new Vector3(x, h, z));
-            });
+            }
+            // The heart stands 96-128 m from where players land, so they have to go and find it (user, 2026-10-29).
+            var spots = new List<RipRules.Placement>();
+            foreach (var heart in RipRules.Sample(random.NextDouble, Samples, Candidates, Suitable))
+            {
+                var landing = RipRules.SpotAround(heart, random.NextDouble, RipRules.HeartMinDistance, RipRules.HeartMaxDistance, LandingTries, Suitable);
+                if (landing.HasValue)
+                {
+                    spots.Add(new RipRules.Placement(heart, landing.Value));
+                }
+            }
             if (spots.Count == 0)
             {
                 player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_no_land", map.Label));
@@ -101,14 +113,16 @@ namespace Corruption.Content
             package.Write(spots.Count);
             foreach (var spot in spots)
             {
-                package.Write(spot.X);
-                package.Write(spot.Z);
+                package.Write(spot.Heart.X);
+                package.Write(spot.Heart.Z);
+                package.Write(spot.Landing.X);
+                package.Write(spot.Landing.Z);
             }
             player.Message(MessageHud.MessageType.Center, "$corruption_rip_searching");
             ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.instance.GetServerPeerID(), RpcRequest, package);
         }
 
-        /// <summary>Server: pick the first candidate away from every base; reply with it and the closing time.</summary>
+        /// <summary>Server: pick the first candidate whose heart and landing spot are away from every base; reply with it and the closing time.</summary>
         private static void RPC_Request(long sender, ZPackage package)
         {
             if (!ZNet.instance || !ZNet.instance.IsServer())
@@ -120,10 +134,12 @@ namespace Corruption.Content
                 int id = package.ReadInt();
                 string mapItem = package.ReadString();
                 int count = package.ReadInt();
-                var candidates = new List<RipRules.Spot>();
+                var candidates = new List<RipRules.Placement>();
                 for (int i = 0; i < count; i++)
                 {
-                    candidates.Add(new RipRules.Spot(package.ReadSingle(), package.ReadSingle()));
+                    var heart = new RipRules.Spot(package.ReadSingle(), package.ReadSingle());
+                    var landing = new RipRules.Spot(package.ReadSingle(), package.ReadSingle());
+                    candidates.Add(new RipRules.Placement(heart, landing));
                 }
 
                 var bases = BaseMarkers();
@@ -136,8 +152,10 @@ namespace Corruption.Content
                 reply.Write(id);
                 reply.Write(mapItem);
                 reply.Write(spot.HasValue);
-                reply.Write(spot.HasValue ? spot.Value.X : 0f);
-                reply.Write(spot.HasValue ? spot.Value.Z : 0f);
+                reply.Write(spot.HasValue ? spot.Value.Heart.X : 0f);
+                reply.Write(spot.HasValue ? spot.Value.Heart.Z : 0f);
+                reply.Write(spot.HasValue ? spot.Value.Landing.X : 0f);
+                reply.Write(spot.HasValue ? spot.Value.Landing.Z : 0f);
                 reply.Write(closeAt);
                 ZRoutedRpc.instance.InvokeRoutedRPC(sender, RpcReply, reply);
             });
@@ -179,8 +197,10 @@ namespace Corruption.Content
                 int id = package.ReadInt();
                 string mapItem = package.ReadString();
                 bool found = package.ReadBool();
-                float x = package.ReadSingle();
-                float z = package.ReadSingle();
+                float heartX = package.ReadSingle();
+                float heartZ = package.ReadSingle();
+                float landingX = package.ReadSingle();
+                float landingZ = package.ReadSingle();
                 double closeAt = package.ReadDouble();
                 if (id != s_pendingId || mapItem != s_pendingMap)
                 {
@@ -206,7 +226,8 @@ namespace Corruption.Content
                 }
                 inventory.RemoveOneItem(item);
 
-                var landing = new Vector3(x, WorldGenerator.instance.GetHeight(x, z), z);
+                var landing = new Vector3(landingX, WorldGenerator.instance.GetHeight(landingX, landingZ), landingZ);
+                var heartPosition = new Vector3(heartX, WorldGenerator.instance.GetHeight(heartX, heartZ), heartZ);
                 var forward = player.transform.forward;
                 forward.y = 0f;
                 forward = forward.sqrMagnitude > 0.01f ? forward.normalized : Vector3.forward;
@@ -217,11 +238,13 @@ namespace Corruption.Content
                 long closeMs = (long)(closeAt * 1000.0);
 
                 var entry = Spawn(Texts.RipPrefab, entryPosition, entryRotation);
-                entry.Set(KeyTarget, landing + ArrivalOffset);
+                entry.Set(KeyTarget, landing);
+                // For the corrupted wishbone: travellers remember where the heart is.
+                entry.Set(KeyHeart, heartPosition);
                 entry.Set(KeyClose, closeMs);
                 entry.Set(KeyBiome, map.Biome);
 
-                var heart = Spawn(Texts.RipHeartPrefab, landing, Quaternion.identity);
+                var heart = Spawn(Texts.RipHeartPrefab, heartPosition, Quaternion.identity);
                 // Exit travellers arrive just in front of the entry rip, back home.
                 heart.Set(KeyHome, entryPosition + forward * -2.5f);
                 heart.Set(KeyClose, closeMs);
@@ -234,13 +257,16 @@ namespace Corruption.Content
         /// <summary>The heart was destroyed (on its owner's game): open the exit rip beside it, leading home.</summary>
         public static void OpenExit(ZDO heart, Vector3 position)
         {
+            Jotunn.Logger.LogInfo($"Rip heart destroyed at {position}.");
             if (heart == null || IsExpired(heart))
             {
+                Jotunn.Logger.LogWarning(heart == null ? "Rip heart: no data, no exit." : "Rip heart: the rip had already closed, no exit.");
                 return;
             }
             var home = heart.GetVec3(KeyHome, Vector3.zero);
             if (home == Vector3.zero)
             {
+                Jotunn.Logger.LogWarning("Rip heart: no way home stored, no exit.");
                 return;
             }
             var spot = position + new Vector3(0f, 0f, 3f);
@@ -250,6 +276,8 @@ namespace Corruption.Content
             exit.Set(KeyClose, heart.GetLong(KeyClose, 0L));
             exit.Set(KeyBiome, heart.GetString(KeyBiome, ""));
             exit.Set(KeyExit, true);
+            Jotunn.Logger.LogInfo($"Rip exit opened at {spot}, leading to {home}.");
+            Safe.Run("leave the rip chest", () => RipLoot.SpawnChest(heart.GetString(KeyBiome, ""), position));
             Player.m_localPlayer?.Message(MessageHud.MessageType.Center, "$corruption_rip_home_opened");
         }
 
@@ -290,6 +318,18 @@ namespace Corruption.Content
             if (player.TeleportTo(destination, player.transform.rotation, true))
             {
                 s_snapTarget = destination;
+                if (rip.GetBool(KeyExit))
+                {
+                    RipCompass.Forget(player);
+                }
+                else
+                {
+                    var heart = rip.GetVec3(KeyHeart, Vector3.zero);
+                    if (heart != Vector3.zero)
+                    {
+                        RipCompass.Remember(player, heart, rip.GetLong(KeyClose, 0L));
+                    }
+                }
             }
         }
 
