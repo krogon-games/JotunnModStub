@@ -208,4 +208,4 @@ A single item for a Viking survival game, in Valheim's stylised, slightly low-po
 ### Notes
 
 - A fits the rips (glowing tears onto the void), B fits the corruption shard and essences (crystal), C shows how the offering is made (the trophies plus a shard, bound in a ritual).
-- Once a take is chosen, the same treatment applies to the other offerings (the Elder's ancient seeds, Bonemass's withered bones, Moder's dragon eggs and so on, from `altars.csv`).
+- Once a take is chosen, the same treatment applies to the other offerings in `altars.csv`: Ancient seed (the Elder), Withered bone (Bonemass), Fuling totem (Yagluth), Bell (Fader), Memorial coal and Hateful blood (the Deep North). Moder's altar has no offering in the dump (her dragon eggs go on item stands); check it before making hers.
