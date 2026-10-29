@@ -36,6 +36,18 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void EveryMapHasItsIcon()
+        {
+            // tools/make_map_icons.py: 128 x 128 raw RGBA with an 8-byte header.
+            foreach (var m in ParseReal())
+            {
+                string file = Path.Combine(RepoRoot(), "Corruption", "Assets", $"map_icon_{m.Biome}.rgba");
+                Assert.True(File.Exists(file), $"missing {file}");
+                Assert.Equal(8 + 128 * 128 * 4, new FileInfo(file).Length);
+            }
+        }
+
+        [Fact]
         public void EveryEssenceIsInTheEssenceTable()
         {
             var errors = new List<string>();

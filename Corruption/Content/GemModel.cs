@@ -205,10 +205,10 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     Raw RGBA32 pixels written by tools/make_shard.py and make_essences.py (8-byte width/height header, rows bottom to top), so no
+        ///     Raw RGBA32 pixels written by the scripts in tools/ (8-byte width/height header, rows bottom to top), so no
         ///     image decoder is needed.
         /// </summary>
-        private static Texture2D LoadTexture(string file)
+        public static Texture2D LoadTexture(string file)
         {
             byte[] bytes = ReadResource(file);
             if (bytes == null || bytes.Length < 8)
@@ -235,6 +235,18 @@ namespace Corruption.Content
             texture.wrapMode = TextureWrapMode.Repeat;
             texture.filterMode = FilterMode.Trilinear;
             return texture;
+        }
+
+        /// <summary>An item icon from an embedded raw texture (see <see cref="LoadTexture" />), or null if it's missing.</summary>
+        public static Sprite LoadIcon(string file)
+        {
+            var texture = LoadTexture(file);
+            if (!texture)
+            {
+                return null;
+            }
+            texture.wrapMode = TextureWrapMode.Clamp;
+            return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
         }
 
         private static string ReadResourceText(string file)

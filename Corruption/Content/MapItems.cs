@@ -13,7 +13,7 @@ namespace Corruption.Content
     /// </summary>
     internal static class MapItems
     {
-        // Placeholder look until the user asks for map art: a bundle of leather, tinted with the essence's colour.
+        // On the ground a map is still a bundle of leather, tinted with the essence's colour; the icon is the map art.
         private const string BasePrefab = "LeatherScraps";
 
         /// <summary>Registered maps by item prefab name.</summary>
@@ -81,9 +81,10 @@ namespace Corruption.Content
             shared.m_subtitle = Texts.MapSubtitle;
             shared.m_teleportable = true;
             shared.m_value = 0;
-            Safe.Run($"render the {map.Item} icon", () =>
+            Safe.Run($"set the {map.Item} icon", () =>
             {
-                var icon = Corrupted.RenderIcon(item.ItemPrefab);
+                // Cut from the user's concept render by tools/make_map_icons.py; rendered from the model if missing.
+                var icon = GemModel.LoadIcon($"map_icon_{map.Biome}.rgba") ?? Corrupted.RenderIcon(item.ItemPrefab);
                 if (icon)
                 {
                     shared.m_icons = new[] { icon };
