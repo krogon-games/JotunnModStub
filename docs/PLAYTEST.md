@@ -49,6 +49,7 @@ Build from branch **`claude/affixes-loot`** (the log line says `build: claude/af
 7. **Natural drops:** kill some starred creatures (`spawn Boar 10 2` spawns ten 1-star boars). Drops are rare (1 in 50 Magic, 1 in 100 Rare; stars raise it), so this mostly checks nothing breaks. Items come from the biome you're in, and 1 in 5 from the biome before it (Meadows: always Meadows items).
 8. **Combat:** hit something with a knockback or backstab item and parry with a parry item: no errors (the effect is subtle).
 9. No red errors in the console or `LogOutput.log`.
+10. **Bigger backpacks** (after setting the sizes in `PLAYER_SETUP.md` → For the server admin): the satchel opens with 2 rows (6 slots); items already in a backpack are kept; a 5-row backpack (`spawn BackpackPlains`) fits on screen.
 
 ## Session 2: with a friend
 

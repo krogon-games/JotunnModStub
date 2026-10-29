@@ -65,6 +65,10 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 
 With AdventureBackpacks and EquipmentAndQuickSlots together you wear a cape **or** a backpack, not both: backpacks are shoulder items, and EAQS has one shoulder slot. That's AdventureBackpacks' intended design (several backpacks carry cape perks: the Swamp pack is waterproof, the Mountain pack resists frost, the Plains pack is crafted from a Lox cape). AdventureBackpacks supports both at once only with extra-slot mods (AzuExtendedPlayerInventory, ExtraSlots), which EAQS refuses to load with. **Kept as is for now** (user, 2026-10-28). If it's ever wanted, a dedicated backpack slot through EAQS's custom-slot API is the route to try.
 
+## Backpack sizes
+
+AdventureBackpacks' sizes are its own synced settings, not our code. The group plays with one extra row on every level (user, 2026-10-29); the values and where to set them: [`PLAYER_SETUP.md`](PLAYER_SETUP.md) → For the server admin. AdventureBackpacks checks a backpack's size when it's opened, so growing a backpack keeps its items. Check in-game that 5-row backpacks (Plains and later) fit on screen.
+
 ## How to test (when playing)
 
 1. Craft something whose ingredients are only in the backpack, with the same items in a nearby chest: the backpack alone should pay.
