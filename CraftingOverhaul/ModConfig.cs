@@ -38,6 +38,7 @@ namespace CraftingOverhaul
         public static ConfigEntry<UnityEngine.Vector2> SheetPosition;
         public static ConfigEntry<bool> SheetStats;
         public static ConfigEntry<bool> SheetQuickSlots;
+        public static ConfigEntry<bool> SheetPortrait;
 
         public static void Bind(ConfigFile config)
         {
@@ -72,12 +73,14 @@ namespace CraftingOverhaul
             SheetEnabled = config.Bind(SheetSection, "Enabled", true,
                 "Show a World of Warcraft style character sheet in the inventory: EquipmentAndQuickSlots' equipment slots " +
                 "down two columns round a character frame, with a stats box. Needs EquipmentAndQuickSlots; off with Auga.");
-            SheetPosition = config.Bind(SheetSection, "Position", new UnityEngine.Vector2(615f, 28f),
+            SheetPosition = config.Bind(SheetSection, "Position", new UnityEngine.Vector2(655f, 28f),
                 "Top-left corner of the sheet, relative to the inventory grid. Drag the sheet by its wood in game to move it.");
             SheetStats = config.Bind(SheetSection, "ShowStats", true,
                 "Show the stats box (armor, weight, health, stamina, eitr, speed from gear, active effects) under the character.");
             SheetQuickSlots = config.Bind(SheetSection, "ShowQuickSlots", true,
                 "Put EquipmentAndQuickSlots' quick slots in a row at the bottom of the sheet. Off: that mod places them.");
+            SheetPortrait = config.Bind(SheetSection, "ShowCharacter", true,
+                "Show a live picture of your character, with its gear, in the sheet's arch. Drag it sideways to turn it.");
 
             BiomeMaterialOverrides.SettingChanged += (_, __) =>
             {

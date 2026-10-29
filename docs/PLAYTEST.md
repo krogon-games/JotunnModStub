@@ -15,15 +15,17 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 ## Session 1d: character sheet (5 minutes, branch `claude/ui-overhaul`)
 
-Needs the CraftingOverhaul build from that branch and EquipmentAndQuickSlots.
+Needs the CraftingOverhaul build from that branch and EquipmentAndQuickSlots. First test (2026-10-29): slots and stats worked; it looked too plain. This is the reworked version; compare it with `docs/images/sheet_preview.png`.
 
-1. Open the inventory (Tab). Instead of EAQS's panel there should be a wood panel titled **Character** right of the inventory grid: Head, Chest, Legs, Shoulders, Utility down the left; Trinket, Talisman, Talisman down the right; a dark frame in the middle; a stats box; your 3 quick slots in a row at the bottom. The log says `Character sheet created with N slots`.
-2. **Does it fit?** Note whether it overlaps the crafting panel on the right or runs off the bottom of the screen. Drag it by its wood to a good place; tell Claude roughly where it ended up (the saved value is `Position` in `com.krogongames.craftingoverhaul.cfg`), so the default can be fixed.
-3. Drag a helmet from the bag into Head: it equips. Drag it back out. Right-click a chest piece in the bag: it goes into Chest. Hover a slot: the tooltip shows.
-4. Put a charm in a Talisman slot: works as before. Press a quick-slot hotkey: it still uses the item.
-5. Stats box: armor and weight match the numbers vanilla shows on the inventory panel; health/stamina change when you eat; "Rested" appears in Effects after sleeping; put on a Troll armour piece or a heavy cape: speed from gear goes negative.
-6. Open a chest and the AdventureBackpacks backpack: the sheet shouldn't overlap either panel.
-7. Set `Enabled = false` in the cfg and save (config reload): EAQS's old panel comes back; set it to true again: the sheet returns.
+0. **If you tested the first version:** your config still has the old position. Open `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, delete the `Position = ...` line under `[3 - Character Sheet]` (or just drag the sheet later).
+1. Open the inventory (Tab). Right of the inventory grid: an iron-framed dark wood panel titled **CHARACTER**, framed slot tiles labelled HEAD, CHEST, LEGS, CAPE, UTILITY on the left and TRINKET, TALISMAN, TALISMAN on the right, **your character standing on a stone in the arch** in the middle, a parchment with your name on a ribbon, your quick slots at the bottom. It should no longer cover the inventory's weight number.
+2. **The picture:** is the whole character in view, feet on the stone? Drag the picture sideways: it turns. Change your helmet or cape: the picture changes. Check at night and in a dark place: still visible. Other players or creatures nearby shouldn't appear in it. Close the inventory: nothing odd happens to your character in the world.
+3. Empty slots show a faint picture of what goes there (helmet, tunic, legs, cape, belt, pendant, trophy); equipped items no longer have a blue background in the sheet.
+4. Drag a helmet from the bag into HEAD: it equips. Drag it back out. Right-click a chest piece in the bag: it goes into CHEST. Hover a slot: the tooltip shows. Put a charm in a TALISMAN slot: works as before. A quick-slot hotkey still uses its item.
+5. Stats: armor and weight match the inventory's own numbers; "Rested" (with its icon) appears on the right after sleeping; a Troll armour piece makes speed from gear negative (red).
+6. The X button closes the inventory. Drag the sheet by its wood: it moves and stays there next time.
+7. Open a chest and the AdventureBackpacks backpack: the sheet shouldn't overlap either panel. Does it fit on your screen top to bottom?
+8. If the picture misbehaves, set `ShowCharacter = false` and save (config reload) and send the BepInEx log.
 
 ## Session 2: with a friend
 

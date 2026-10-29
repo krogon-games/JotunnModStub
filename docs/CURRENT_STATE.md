@@ -1,13 +1,13 @@
 # Current state
 
-**Last updated:** 2026-10-29 (character sheet built) · **Branch:** `claude/ui-overhaul` (UI work; other sessions on their own branches, see `CLAUDE.md`) · **Game:** Valheim 1.0.20
+**Last updated:** 2026-10-29 (character sheet reworked after its first test) · **Branch:** `claude/ui-overhaul` (UI work; other sessions on their own branches, see `CLAUDE.md`) · **Game:** Valheim 1.0.20
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **114 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence and map tables, rip rules, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **124 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence and map tables, rip rules, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -42,7 +42,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | Item | What to check |
 |---|---|
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
-| **Character sheet** (CraftingOverhaul, 2026-10-29): EquipmentAndQuickSlots' slots laid out WoW-style with a stats box | `PLAYTEST.md` → Session 1d. Especially whether the default position fits the screen next to the crafting panel |
+| **Character sheet** (CraftingOverhaul, 2026-10-29): EquipmentAndQuickSlots' slots laid out WoW-style; first test worked but looked plain, reworked with generated art and a live character picture | `PLAYTEST.md` → Session 1d. Especially the picture (framing, lighting) and the size on screen |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
@@ -88,8 +88,8 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 
 The user wants the inventory screen to look like an RPG character screen (concept image, 2026-10-29). Done and to do, in order:
 
-1. **Character sheet**: built (see *Built, not verified*). Decisions in `DECISIONS.md` (2026-10-29): keep EquipmentAndQuickSlots, no hand or feet slots, no tabs.
-2. **Live character render** in the sheet's frame (step 2, user's choice): a second camera renders the local player's model, with its gear, into a texture shown in the frame. Needs care: a UI-only camera and layer so the world and HUD aren't affected, and the model's `VisEquipment` already updates for the local player. Start after the sheet's layout is confirmed in-game.
+1. **Character sheet**: built; first play-test 2026-10-29 worked (slots, stats) but looked too plain. Reworked the same day: generated art (`tools/make_sheet_ui.py`, mock-up `docs/images/sheet_preview.png`), labelled tiles with silhouettes, and the **live character picture** (brought forward from step 2). Decisions in `DECISIONS.md` (2026-10-29): keep EquipmentAndQuickSlots, no hand or feet slots, no tabs. Awaiting re-test.
+2. Tune the look from the re-test (picture framing and light, colours, sizes). Tweak the numbers in `tools/make_sheet_ui.py` and `SheetLayout.cs`, rerun the script, and check the mock-up before asking for another test.
 3. **Currency and Maps tabs** off the inventory (design phase 9; the concept image's icon tabs). Separate feature; Affix Splinters depend on it.
 4. The recipe list redesign and the crafting screen with AdventureBackpacks' backpack panel open (user's to-do, 2026-10-28): ask what they want changed before starting.
 
