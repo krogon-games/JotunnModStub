@@ -250,12 +250,14 @@ Pickaxes roll only from the [gathering tool pools](#gathering-tool-affixes); one
 | Attack stamina | 4–20% less | Deep North cape, Crown of Valheim, Ashlands medium set: −20% |
 | Health regen (each half) | 6–30% | Berserkir set +30% (Bronze trinket +25%) |
 | Stamina regen | 8–40% | Undead Berserkir set +40% |
-| Carry weight | 30–150 | Megingjord +150 |
+| Carry weight | 10–50 | Megingjord +150, cut by 100 (user: closer to the draft) |
 | Weapon skill (each half) | 4–20 levels | Trinkets: +20 to clubs, bows, spears, elemental or blood magic |
 
-**Which sources count (user, 2026-10-29):** gear only (items, set bonuses, trinkets, Megingjord), not meads, Forsaken powers or food. Item stats with no vanilla "+%" source take what a full forge upgrade adds (median over the loot base items). Rows from 2026-10-29 are `proposed` in the table until the user approves the numbers.
+**Which sources count (user, 2026-10-29):** gear only (items, set bonuses, trinkets, Megingjord), not meads, Forsaken powers or food. Item stats with no vanilla "+%" source take what a full forge upgrade adds (median over the loot base items). The user reviewed these on 2026-10-29 and approved them, changing only carry weight.
 
-**Still open (2026-10-29):** max health, stamina and eitr have no gear source (only food and up-front trinket heals); life steal has none either: the user decides. Resistances (four elements and all resistances) wait for the next `co_dump`, which now writes item and status-effect damage modifiers.
+**Kept as drafts (user, 2026-10-29):** max health, stamina and eitr (no gear source; only food and up-front trinket heals) and life steal (no vanilla source).
+
+**Stacking (user, 2026-10-29): no caps on carry weight, regen or max health/stamina/eitr for now**, although they add up over 5–6 items (e.g. carry up to 250, health regen up to 375%): the mod is meant to be much harder than vanilla. Revisit after play-tests. Item-stat affixes (damage, armour, durability, block, backstab, knockback, parry, elemental) only change their own item, so they don't stack. Resistances (four elements and all resistances) wait for the next `co_dump`, which now writes item and status-effect damage modifiers.
 
 Earlier note: the rest wait for the next `co_dump`: max health, stamina and eitr, regen, carry weight, skills and resistances come from set bonuses, meads, Megingjord and trinkets (`status_effects.csv`); armour, durability, block, knockback, parry, backstab and attack stamina from item details (`item_details.csv`). Affixes the user already approved with their numbers (Fleet, Foraging, the proc affixes) keep them.
 
