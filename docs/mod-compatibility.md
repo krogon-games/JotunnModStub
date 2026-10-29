@@ -28,6 +28,8 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Nearby chests vs PlantEasily **replant on harvest** | Replanting pays inside `Player.Interact`, outside our building scope, so replanting only uses seeds you carry | Known limit (harmless) |
 | Nearby chests vs **EAQS** | EAQS keeps equipped items in extra rows of the player inventory; vanilla counting already includes them, as without EAQS. EAQS's `Container.Awake` patch is for gravestones, which we never use | Verified in code |
 | Recipe search and categories | AB patches `InventoryGui.UpdateRecipeList`/`UpdateRecipe` only to mark crafting in progress (no list changes). AB can open the backpack panel next to a crafting station, and EAQS adds an equipment panel to the inventory screen; our search bar sits above the recipe list | Verified in code; **check the layout in-game** |
+| **Character sheet** vs **EAQS** | Built on EAQS (2026-10-29): EAQS positions its slot cells every frame in a postfix on `InventoryGrid.UpdateGui`; ours runs after it (low priority, `HarmonyAfter` its Harmony id) and moves the same cells onto our sheet. Which slots exist comes from EAQS's public API (`GetSlotIdsJson`, `GetSlotInfoJson`, API version 2). We also hide its three panel backgrounds and its paperdoll by name (`EaqsEquipmentBkg`, `EaqsQuickSlotBkg`, `EaqsCustomSlotBkg`) and disable its `PanelDragHandle`; its `EquipmentPanelPosition` config is unused while the sheet is on. If an EAQS update renames these, the sheet finds nothing and EAQS's panel shows as before. **Off when Auga is installed** (Auga lays out EAQS's slots itself) | Built against EAQS 3.1.3; **to test in-game** |
+| Character sheet vs **AB** backpack panel | AB opens the backpack as a container panel (left, under the inventory grid); the sheet sits right of the grid, where EAQS's panel was | Verified in code; check the layout in-game |
 | Biome detection | No overlap | — |
 
 ## Corruption (built)
@@ -68,4 +70,5 @@ With AdventureBackpacks and EquipmentAndQuickSlots together you wear a cape **or
 2. Then split the cost: some in the backpack, the rest in a chest. Check the totals after crafting.
 3. Build with the hammer from backpack + chest, and bulk-plant a PlantEasily grid with seeds only in a chest.
 4. Open a crafting station with the backpack panel open: the search bar and categories should still line up.
-5. With EAQS: put two talismans in the Talisman slots and a vanilla trinket in the Trinket slot; creatures of both families ignore you, the trinket works, and a friend's game agrees (their creatures ignore you too). Try putting the same talisman in both slots: it should refuse.
+5. With EAQS: the character sheet (`PLAYTEST.md` → Session 1d) replaces EAQS's panel; check the layout with a chest and the backpack open.
+6. With EAQS: put two talismans in the Talisman slots and a vanilla trinket in the Trinket slot; creatures of both families ignore you, the trinket works, and a friend's game agrees (their creatures ignore you too). Try putting the same talisman in both slots: it should refuse.
