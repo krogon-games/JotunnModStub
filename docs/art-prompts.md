@@ -119,6 +119,8 @@ then add one line:
 
 *Asked for 2026-10-29: the maps' placeholder icon (a tinted bundle of leather scraps) is hard to read. The render is cut into the eight inventory icons directly; the map's look on the ground stays the leather bundle for now.*
 
+*Second render received 2026-10-29 (`docs/images/maps_reference.jpg`) and used for the icons (`tools/make_map_icons.py`, preview `docs/images/map_icons_preview.png`); at 64 px all eight read apart.*
+
 *First render (2026-10-29) rejected by the user: "the maps look too similar, a lot of the fine details will get lost". Shrunk to inventory size (64 px), all eight were the same beige scroll with a red mark; only the hide colour, the red tear and the Ashlands lava still showed, and the ash drawings disappeared. The prompt below is the second version, built for small icons:*
 - *each map has its own strong colour over the whole hide (colour is what reads at 64 px);*
 - *one huge, bold silhouette instead of a scene;*
