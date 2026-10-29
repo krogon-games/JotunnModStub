@@ -10,7 +10,7 @@ namespace Corruption.Content
     ///     a player's game. The waves are the rip biome's boss army: the game's own raid(s) for that boss, with their
     ///     own creatures, counts, intervals, chances and group sizes (<see cref="RipRules.ArmyRaids" />). They start
     ///     when a player comes within the raid's range, maddening the creatures already there, and keep coming while
-    ///     the heart stands. Spawned creatures are maddened and can have up to <c>MaxStars</c> stars (design tier 1).
+    ///     the heart stands. Spawned creatures are maddened and have <c>MinStars</c> to <c>MaxStars</c> stars (user; design tier 1).
     /// </summary>
     internal class RipWaves : MonoBehaviour
     {
@@ -208,9 +208,10 @@ namespace Corruption.Content
             {
                 character.GetBaseAI()?.SetHuntPlayer(true);
             }
-            // Stars as vanilla rolls them (SpawnSystem.Spawn), up to the design's tier 1 limit.
+            // Stars as vanilla rolls them (SpawnSystem.Spawn), up to the design's tier 1 limit, starting from at least
+            // MinStars (user, 2026-10-29: every rip spawn at least 1 star).
             int maxLevel = Mathf.Max(entry.m_maxLevel, CorruptionConfig.RipMaxStars.Value + 1);
-            int level = entry.m_minLevel;
+            int level = Mathf.Min(Mathf.Max(entry.m_minLevel, CorruptionConfig.RipMinStars.Value + 1), maxLevel);
             float chance = SpawnSystem.GetLevelUpChance(point, entry);
             while (level < maxLevel && Random.Range(0f, 100f) <= chance)
             {
