@@ -133,9 +133,13 @@ namespace Corruption.Content
         /// <summary>One raid entry, following SpawnSystem.UpdateSpawnList: spawns per elapsed interval, chance, count limit, groups.</summary>
         private void UpdateEntry(SpawnSystem.SpawnData entry)
         {
+            // The raid made busier (user, 2026-10-29): more alive at once, shorter interval.
+            float multiplier = Mathf.Max(1f, CorruptionConfig.RipWaveMultiplier.Value);
+            int maxSpawned = entry.m_maxSpawned > 0 ? Mathf.RoundToInt(entry.m_maxSpawned * multiplier) : 0;
+            float interval = Mathf.Max(entry.m_spawnInterval / multiplier, 1f);
             m_timers.TryGetValue(entry, out float elapsed);
             elapsed += 1f;
-            int due = Mathf.Min(entry.m_maxSpawned == 0 ? 1 : entry.m_maxSpawned, (int)(elapsed / Mathf.Max(entry.m_spawnInterval, 1f)));
+            int due = Mathf.Min(maxSpawned == 0 ? 1 : maxSpawned, (int)(elapsed / interval));
             m_timers[entry] = due > 0 ? 0f : elapsed;
             for (int i = 0; i < due; i++)
             {
@@ -148,7 +152,7 @@ namespace Corruption.Content
                     break;
                 }
                 int alive = CountAlive(entry.m_prefab.name);
-                if (entry.m_maxSpawned > 0 && alive >= entry.m_maxSpawned)
+                if (maxSpawned > 0 && alive >= maxSpawned)
                 {
                     break;
                 }
@@ -157,7 +161,7 @@ namespace Corruption.Content
                     continue;
                 }
                 int group = Mathf.Min(Random.Range(entry.m_groupSizeMin, entry.m_groupSizeMax + 1),
-                    entry.m_maxSpawned > 0 ? entry.m_maxSpawned - alive : 100);
+                    maxSpawned > 0 ? maxSpawned - alive : 100);
                 float radius = group > 1 ? entry.m_groupRadius : 0f;
                 for (int g = 0; g < group; g++)
                 {

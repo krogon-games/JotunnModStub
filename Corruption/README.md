@@ -37,6 +37,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 | Rips / BaseDistance | 0 | Rips never open this close (m) to a bed, ward or portal; 0 = a ward's radius |
 | Rips / HeartHealth | 0 | Health of a rip's heart; 0 = a greydwarf nest's health |
 | Rips / MaxStars | 2 | Most stars a rip creature can have |
+| Rips / WaveMultiplier | 2 | Rip waves: twice as many alive at once, twice as often, as the vanilla raid |
 | Rips / ChestShardsMin–Max | 1–3 | Shards in the rip chest |
 | Rips / KillShardMultiplier | 2 | Rip creatures drop shards this many times as often |
 | Corrupted Bosses / DamageDealt, DamageTaken | 1.5, 0.7 | Corrupted boss damage multipliers |

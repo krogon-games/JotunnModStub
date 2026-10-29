@@ -42,7 +42,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
-| Rip waves and loot, step B (2026-10-28) | Waves of the biome army while the heart stands, maddened (red, no fleeing, ignore charms), the end chest with shards. Steps: `PLAYTEST.md` |
+| Rip waves pacing (2026-10-29) | Waves tested in-game; now busier (`WaveMultiplier` 2). Check the pace and whether maddened creatures fight each other. Steps: `PLAYTEST.md` |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet: close button, dragging, layout with a chest and the backpack open, multiplayer | `PLAYTEST.md` → Session 1d (the rest of the sheet is verified) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |

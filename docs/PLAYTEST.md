@@ -13,7 +13,9 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 ### 1. Rip waves (step B)
 0. Check the build: `BepInEx/LogOutput.log` has `Corruption 0.1.0 loaded (build: claude/rips-bosses …)`. A build from `master` doesn't have step B yet.
 1. ~~Waves start with the army message; a 2-star dropped a shard; the heart leaves a chest with shards~~ (passed 2026-10-29).
-1a. After the maddened fix: the log shows `Maddened: damage ×1.2 (from SE_Dvergr_buff), speed +15% (from Potion_hasty)` once a rip creature appears; rip creatures look red and hit a little harder and run a little faster than normal ones.
+1b. ~~Maddened bonuses, charms, chests in Meadows and Swamp~~ (passed 2026-10-29).
+1c. Busier waves (`WaveMultiplier` 2): Meadows rip keeps up to 8 creatures coming, a new one about every 10 s. Is the pace right now? Do maddened creatures fight each other?
+1a. (passed) After the maddened fix: the log shows `Maddened: damage ×1.2 (from SE_Dvergr_buff), speed +15% (from Potion_hasty)` once a rip creature appears; rip creatures look red and hit a little harder and run a little faster than normal ones.
 2. Wear a Boar or Neck charm: rip creatures still attack you.
 3. Watch whether maddened creatures also fight each other.
 4. Destroy the heart: the exit rip opens and a chest appears with Meadows chest loot plus 1–3 corruption shards; the waves stop.

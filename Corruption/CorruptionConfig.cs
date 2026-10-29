@@ -25,6 +25,7 @@ namespace Corruption
         public static ConfigEntry<float> RipBaseDistance;
         public static ConfigEntry<float> RipHeartHealth;
         public static ConfigEntry<int> RipMaxStars;
+        public static ConfigEntry<float> RipWaveMultiplier;
         public static ConfigEntry<int> RipChestShardsMin;
         public static ConfigEntry<int> RipChestShardsMax;
         public static ConfigEntry<float> RipKillShardMultiplier;
@@ -90,6 +91,10 @@ namespace Corruption
             RipMaxStars = config.Bind(RipSection, "MaxStars", 2,
                 AdminOnly("Most stars a rip creature can roll (design: tier 1 maps, up to 2 stars). Stars roll with the game's own level-up chance.",
                     new AcceptableValueRange<int>(0, 5)));
+            RipWaveMultiplier = config.Bind(RipSection, "WaveMultiplier", 2f,
+                AdminOnly("Rip waves are the biome boss's army raid made busier: each raid entry's 'most alive at once' is multiplied " +
+                          "by this and its spawn interval divided by it. 1 = the vanilla raid. Default 2 (user, after play-testing).",
+                    new AcceptableValueRange<float>(1f, 10f)));
             RipChestShardsMin = config.Bind(RipSection, "ChestShardsMin", 1,
                 AdminOnly("Fewest corruption shards in the chest a destroyed rip heart leaves.", new AcceptableValueRange<int>(0, 50)));
             RipChestShardsMax = config.Bind(RipSection, "ChestShardsMax", 3,
