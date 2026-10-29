@@ -26,6 +26,7 @@ namespace Corruption
         public static ConfigEntry<float> RipOpenDays;
         public static ConfigEntry<float> RipBaseDistance;
         public static ConfigEntry<float> RipHeartHealth;
+        public static ConfigEntry<int> RipMinStars;
         public static ConfigEntry<int> RipMaxStars;
         public static ConfigEntry<float> RipWaveMultiplier;
         public static ConfigEntry<int> RipChestShardsMin;
@@ -90,6 +91,9 @@ namespace Corruption
             RipHeartHealth = config.Bind(RipSection, "HeartHealth", 0f,
                 AdminOnly("Health of a rip's heart. Destroying it opens the way home. " +
                           "0 = the health of the greydwarf nest it's made from.", new AcceptableValueRange<float>(0f, 100000f)));
+            RipMinStars = config.Bind(RipSection, "MinStars", 1,
+                AdminOnly("Fewest stars a rip wave creature has. Default 1 (user, 2026-10-29: waves weren't challenging enough). " +
+                          "Higher stars still roll on top, up to MaxStars.", new AcceptableValueRange<int>(0, 5)));
             RipMaxStars = config.Bind(RipSection, "MaxStars", 2,
                 AdminOnly("Most stars a rip creature can roll (design: tier 1 maps, up to 2 stars). Stars roll with the game's own level-up chance.",
                     new AcceptableValueRange<int>(0, 5)));
