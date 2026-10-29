@@ -25,6 +25,7 @@
     <Compile Include="..\Corruption\Rules\EssenceTable.cs" Link="Linked\EssenceTable.cs" />
     <Compile Include="..\Corruption\Rules\MapList.cs" Link="Linked\MapList.cs" />
     <Compile Include="..\Corruption\Rules\RipRules.cs" Link="Linked\RipRules.cs" />
+    <Compile Include="..\Corruption\Rules\RipLootTable.cs" Link="Linked\RipLootTable.cs" />
     <Compile Include="..\Corruption\Rules\CorruptionOutcomes.cs" Link="Linked\CorruptionOutcomes.cs" />
     <Compile Include="..\Corruption\Rules\ShatterRules.cs" Link="Linked\ShatterRules.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />

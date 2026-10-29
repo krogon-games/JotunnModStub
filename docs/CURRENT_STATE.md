@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **124 passed, 0 failed** (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence and map tables, rip rules, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **129 passed, 0 failed** (2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -42,13 +42,15 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
+| Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
+| Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet: close button, dragging, layout with a chest and the backpack open, multiplayer | `PLAYTEST.md` → Session 1d (the rest of the sheet is verified) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
 
-Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -79,7 +81,7 @@ Corruption phase 4 step B (waves, maddened, rip loot), phase 5, phase 6 offering
 
 ## Next actionable tasks
 
-1. **Phase 4 step B** with the 2026-10-28 dump: own wave spawner driven by the heart, maddened status effect, end-of-rip loot, checking the landing area once loaded. Numbers from `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`.
+1. **Rips step B and the heart search passed in single player (2026-10-29)**; PR into `master` opened. Re-check the ping colour; multiplayer tests with the group. Still open from the design: checking the landing area once loaded (locations, water).
 2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).

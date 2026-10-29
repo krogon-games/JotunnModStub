@@ -44,7 +44,7 @@
     <!-- Our own gem models and textures (made by tools/make_shard.py and tools/make_essences.py), embedded in the DLL. -->
     <EmbeddedResource Include="Assets\*.obj;Assets\*.rgba" LogicalName="Corruption.Assets.%(Filename)%(Extension)" />
     <!-- The essence and map tables. Compiled in, so rebuild after editing them. -->
-    <EmbeddedResource Include="Data\essences.csv;Data\maps.csv" LogicalName="Corruption.Data.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Data\essences.csv;Data\maps.csv;Data\rip_loot.csv" LogicalName="Corruption.Data.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +62,30 @@
     <Error Condition="$(_BuiltAssemblyText.Contains('System.ValueTuple'))" Text="$(TargetFileName) references System.ValueTuple, which Valheim doesn't ship. Replace tuples with a small class or struct." />
     <Error Condition="$(_BuiltAssemblyText.Contains('System.Memory'))" Text="$(TargetFileName) references System.Memory (Span/Memory), which Valheim doesn't ship." />
     <Error Condition="$(_BuiltAssemblyText.Contains('System.Buffers'))" Text="$(TargetFileName) references System.Buffers, which Valheim doesn't ship." />
+  </Target>
+
+  <!-- Stamp the git branch and commit into the DLL, so the log shows exactly which build is running (play-test
+       2026-10-29: a build from the wrong branch looked like broken features). Read straight from the .git folder, so
+       it works without the git program (GitHub Desktop and Visual Studio keep .git up to date). No .git = "unknown". -->
+  <Target Name="StampGitCommit" BeforeTargets="GetAssemblyAttributes">
+    <PropertyGroup>
+      <_GitDir>$(MSBuildProjectDirectory)\..\.git</_GitDir>
+      <_GitHead Condition="Exists('$(_GitDir)\HEAD')">$([System.IO.File]::ReadAllText('$(_GitDir)\HEAD').Trim())</_GitHead>
+      <_GitRef Condition="$(_GitHead.StartsWith('ref: '))">$(_GitHead.Substring(5))</_GitRef>
+      <GitBranch Condition="'$(_GitRef)' != ''">$(_GitRef.Replace('refs/heads/', ''))</GitBranch>
+      <GitBranch Condition="'$(GitBranch)' == '' and '$(_GitHead)' != ''">detached</GitBranch>
+      <_GitCommitFull Condition="'$(_GitRef)' != '' and Exists('$(_GitDir)\$(_GitRef)')">$([System.IO.File]::ReadAllText('$(_GitDir)\$(_GitRef)').Trim())</_GitCommitFull>
+      <_GitCommitFull Condition="'$(_GitRef)' == '' and '$(_GitHead)' != ''">$(_GitHead)</_GitCommitFull>
+      <GitCommit Condition="'$(_GitCommitFull)' != ''">$(_GitCommitFull.Substring(0, 7))</GitCommit>
+      <GitBuild>$(GitBranch) $(GitCommit)</GitBuild>
+      <GitBuild Condition="'$(GitBranch)' == ''">unknown</GitBuild>
+    </PropertyGroup>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>GitBuild</_Parameter1>
+        <_Parameter2>$(GitBuild)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
   </Target>
 
   <Target Name="JotunnPostBuildTaskWin" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">

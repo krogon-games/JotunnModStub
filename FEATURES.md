@@ -19,6 +19,8 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Talismans](#talismans) | Combat | Tested in-game (single player) | Corruption: `3 - Talismans` → `Enabled`, `Slots`, `ProvokeSeconds`, `ExcludedCreatures` | `Corruption/Content/Talismans.cs`, `Corruption/Content/TalismanSlots.cs`, `Corruption/Content/TalismanRepel.cs`, `Corruption/Rules/TalismanFamilies.cs`, `Corruption/Rules/TalismanSlotRules.cs`, `Corruption/CorruptionDefaults.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `CraftingOverhaul.Tests/TalismanFamiliesTests.cs`, `CraftingOverhaul.Tests/TalismanSlotRulesTests.cs` | 2026-10-28 |
 | [Boss essences](#boss-essences) | Loot | Tested in-game (single player) | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
 | [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs` | 2026-10-28 |
+| [Rip waves and loot (step B)](#rip-waves-and-loot-step-b) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `MaxStars`, `WaveMultiplier`, `ChestShardsMin`, `ChestShardsMax`, `KillShardMultiplier`; table `Corruption/Data/rip_loot.csv` | `Corruption/Content/RipWaves.cs`, `Corruption/Content/Maddened.cs`, `Corruption/Content/RipLoot.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Rules/RipLootTable.cs`, `Corruption/Data/rip_loot.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
+| [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone) | Corruption | Tested in-game (single player) | — (heart distance from the game data and the user; recipe in code) | `Corruption/Content/CorruptedWishbone.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/CorruptionPlugin.cs`, `CraftingOverhaul.Tests/MapListTests.cs`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
@@ -533,7 +535,7 @@ New items registered through Jötunn: `CorruptionEssence_<look>` for each table 
 **What it does in-game:**
 - **Maps.** Eight maps, one per biome (Corrupted Meadows map … Corrupted Deep North map), crafted at the **Riftforge** from 1 corruption shard, 1 of that biome's boss essence and a stack of a biome material (Leather scraps 5, Greydwarf eye 5, Guck 2, Freeze gland 3, Needle 5, Carapace 16, Charred bone 8, Ice 5). Where each comes from: [Data table](#maps-and-rips-step-a) below. Like vanilla recipes, a map shows up once you've picked up all three. Maps don't stack, go through portals and can't be sold. Placeholder look: a bundle of leather tinted in the essence's colour.
 - **Opening a rip.** Use the map (right-click it in your inventory, or from the hotbar). Your game looks for land of that biome **you haven't explored** (your map, including what you've added from a cartography table), above water and as flat as the game requires for placing a location; the server then picks the first spot outside a ward's protected radius (`BaseDistance`) from **anyone's** bed, ward or portal. The map is used up and a red stone portal, the **rip**, opens 4 m in front of you. If nothing suitable is found you're told why and keep the map.
-- **Through the rip.** Walk in (or press E) to travel to the landing spot. Vanilla portal rules apply: no ores or metals. Anyone can follow while it's open. You land beside the **rip heart**, a giant glowing corruption shard.
+- **Through the rip.** Walk in (or press E) to travel to the landing spot. Vanilla portal rules apply: no ores or metals. Anyone can follow while it's open. *Changed 2026-10-29:* the **rip heart** (a giant glowing corruption shard) is no longer beside the landing spot but 96–128 m away: see [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone).
 - **Getting home.** Destroy the heart (it has a greydwarf nest's health unless `HeartHealth` is set) to open a second rip beside it that leads back to the first. Both rips and the heart close after `OpenDays` (1 in-game day, as in the design; sleeping skips time). No other way back: bring a portal kit or walk.
 
 **How to test:**
@@ -572,6 +574,84 @@ New items registered through Jötunn: `CorruptionEssence_<look>` for each table 
 | `Game.Start` | Postfix | Registers the rip messages between players' games and the server (`Corruption_RipRequest`, `Corruption_RipReply`) |
 
 New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `corruption_rip` (cloned from `portal_stone`, falling back to `portal_wood`; vanilla portal logic, building and damage removed) and `corruption_rip_heart` (cloned from `Spawner_GreydwarfNest`; spawning and drops removed, the shard model at 6× size).
+
+---
+
+## Rip waves and loot (step B)
+
+*Corruption plugin, design phase 4, step B. Every number comes from the game data or the user (sources below).*
+
+**What it does in-game:**
+- **Waves.** When a player comes within 96 m of a rip heart (the raids' own range), the rip "tears open": the raid's start message shows, and every creature already nearby turns **maddened** and hunts you. Then waves keep coming **while the heart stands**.
+- **Which creatures and how many:** the biome boss's own **army raid**, exactly as the game defines it: Meadows = Eikthyr's army (boars, necks), Black Forest = the Elder's (greydwarfs, greylings, shamans, brutes), Swamp = Bonemass's (draugr, skeletons), Mountains = Moder's (drakes), Plains = Yagluth's (fulings, brutes, shamans), Mistlands = the Queen's (gjall, ticks, seekers), Ashlands = Fader's (charred and their spawner stones), Deep North = Kall's (elakingar, Jotuns). Each raid entry's own limit on how many are alive, spawn interval, chance and group size apply; groups appear 40–80 m from a player, as in vanilla raids.
+- **Stars:** up to 2 stars (design: tier 1 maps), rolled with the game's own level-up chance.
+- **Maddened:** red, damage ×1.2 (the game's own Dvergr power buff), speed +15% (the Tonic of Ratatosk), never flee, and treat every creature and player as an enemy, so they fight each other too. **Charms don't repel them** (user).
+- **End loot:** destroying the heart leaves a chest next to the exit rip: one of that biome's own vanilla chests with its normal loot (weighted by how often each appears in the biome) plus **1–3 corruption shards**.
+- **Shards from rip creatures:** twice the normal starred chances (1-star 4%, 2-star 10%).
+
+**How to test:** `spawn CorruptionMap_Meadows`, use it, go through: "The ground is shaking" (Eikthyr's army message), red boars and necks attack in waves; destroy the heart: exit rip plus a Meadows chest with shards.
+
+**Data table:** [`Corruption/Data/rip_loot.csv`](Corruption/Data/rip_loot.csv): chests per biome and their weights, worked out from the 1.0.20 dump (each location's chest matched to its chest prefab by drop list). Compiled into the DLL. `dotnet test` checks every chest is a real container and every biome has one, and that every essence boss has an army raid.
+
+**Config settings** (admin-only, `5 - Rips`):
+
+| Setting | Default | Description |
+|---|---|---|
+| `MaxStars` | `2` | Most stars a rip creature can roll (design tier 1) |
+| `WaveMultiplier` | `2` | Each raid entry's most-alive-at-once ×2 and spawn interval ÷2 in rips (user, 2026-10-29). 1 = the vanilla raid |
+| `ChestShardsMin` / `ChestShardsMax` | `1` / `3` | Shards in the rip chest (user) |
+| `KillShardMultiplier` | `2` | Multiplies the starred shard chances for rip creatures (user) |
+
+**Known issues:**
+- Untested in-game (103 tests pass). **Play-test 2026-10-29 didn't run step B:** no waves, no chest and no errors, because the build came from `master`, which doesn't have step B yet (it's on `claude/rips-bosses`). The log now names the build's branch and commit, so the next test can check.
+- **Play-test 2026-10-29, right build:** waves start with Eikthyr's army message, creatures spawn, a 2-star dropped a shard. On a later run, destroying the heart opened the exit and left a Meadows chest with corruption shards (the log shows each step); on the first run the user saw no chest, not reproduced since.
+- **Fixed 2026-10-29:** maddened creatures got **no damage or speed bonus**: the vanilla effects they copy were read at startup, before the game makes them available (log: "SE_Dvergr_buff not found"). They're now read in the world, the first time a creature is maddened, and the log says what was copied (`Maddened: damage ×1.2 …`). To re-test.
+- **Play-test 2026-10-29 (build 65e6271): passed.** Maddened bonuses read correctly (log: `Maddened: damage ×1.2 (from SE_Dvergr_buff), speed +15% (from Potion_hasty)`); charms don't stop rip creatures; Meadows and Swamp rips each left a chest with shards. **Waves felt too slow** (Meadows: at most 4 alive, one every 20 s): rips now use `WaveMultiplier` 2 (user). Whether maddened creatures fight each other couldn't be judged yet. The user wants the heart moved away from the landing spot and found with a corrupted wishbone (to design).
+- A `Failed to find rpc method 327122920` warning when first opening the chest is the game's own: vanilla chests call `discovered` but register `RPC_Discovered`. Harmless, happens with every vanilla treasure chest.
+- Maddened creatures stay after the heart is destroyed (the waves stop; the ones alive keep fighting). Vanilla raid creatures despawn when the raid ends; rips have no such end yet.
+- **Play-test 2026-10-29:** the busier waves (`WaveMultiplier` 2) passed, and maddened creatures were seen fighting each other, as the design says.
+- Map tiers (more waves, more stars) come with phase 5.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Character.Awake` | Postfix | Restores maddened behaviour on creatures loaded with the flag |
+| `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them |
+| `CharacterDrop.GenerateDropList` | Postfix (the existing shard one) | Double starred shard chances for rip creatures |
+
+New status effect `SE_CorruptionMaddened` (built from `SE_Dvergr_buff` and `Potion_hasty` at startup). The rip heart gets a wave spawner; the chest is the vanilla chest prefab itself.
+
+---
+
+## Rip heart search and corrupted wishbone
+
+*Corruption plugin, after the step B play-test (user, 2026-10-29): "the heart is literally right next to the portal; the players need to go find it", guided by a corrupted wishbone.*
+
+**What it does in-game:**
+- **The heart is out of sight.** Players land 96–128 m from the rip heart, in a random direction. 96 m is the boss army raids' own range (every `army_*` raid in the 1.0.20 dump), so the landing spot is quiet and **the waves start as you close in on the heart**; 128 m is the user's choice. Heart and landing spot both pass the old checks (the map's biome, above water, flat, unexplored, away from bases).
+- **Corrupted wishbone.** Crafted at the Riftforge from 1 Wishbone and 1 corruption shard (the design's rule for every corrupted item: the normal item plus 1 shard). Worn in the utility slot it works like the vanilla Wishbone, but points at **the heart of the rip you came through**: red-and-purple pings, every 5 s at the edge of its range and every 0.5 s on top of the heart (the vanilla Wishbone's own pacing and its near/medium/far pings), within 128 m of the heart (the farthest you can land from it). **Everyone nearby sees and hears the pings** (user).
+- Your game remembers the heart when you go through the entry rip, in your character's saved data, so it still works after logging out inside the rip. It forgets it when the heart is destroyed, the rip closes, or you go home through the exit rip.
+- Without the wishbone you can still find the heart: the waves start within 96 m of it.
+
+**How to test:** `spawn Wishbone`, `spawn CorruptionShard`, craft the Corrupted wishbone at the Riftforge (or `spawn CorruptedWishbone`) and wear it. `spawn CorruptionMap_Meadows`, use it, go through: no heart in sight, no waves; red/purple pings, faster as you walk towards the heart; waves start on the way; destroy the heart, pings stop. A second player nearby sees your pings.
+
+**Config settings:** none. The distances come from the game data and the user (`RipRules.HeartMinDistance` / `HeartMaxDistance`; a test checks every army raid's range still fits).
+
+**Known issues:**
+- **Play-test 2026-10-29 (single player): works.** The heart is out of sight on landing, the wishbone's pings lead to it. The pings looked **mostly purple** with some red; the user wants mostly red, so now only about a fifth of the colour range shades into purple (`PurpleShare` in `CorruptedWishbone.cs`). To re-check the colour.
+- Not yet tested with a second player (whether they see the pings). The log says how the pings reach other players (`shared with other players by …`).
+- It only finds rip hearts, not buried treasure; keep the vanilla Wishbone for that.
+- Rips opened before this update still have the heart beside the landing spot.
+- The landing spot still doesn't avoid locations (villages, altars), as before.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Game.Start` | Postfix | Registers the ping message (`Corruption_RipPing`) |
+
+New item `CorruptedWishbone` (cloned from `Wishbone`, tinted). New status effect `SE_CorruptedWishbone` (class `SE_RipFinder`: the vanilla `SE_Finder` behaviour aimed at the remembered heart). New effect prefabs `corruption_<vanilla ping effect>` (tinted clones of the Wishbone's pings). The heart's position is stored on the entry rip (`corruption_rip_heart`) and in the player's custom data (`corruption_rip_heart`).
 
 ---
 
@@ -650,12 +730,19 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-29
+- **Rip heart search tested in-game; pings mostly red:** finding the heart with the corrupted wishbone works; the pings now shade into purple only for about a fifth of their colours (they looked mostly purple). Busier waves and maddened creatures fighting each other also passed.
+- **Rip heart search and corrupted wishbone (new, untested):** the heart now stands 96–128 m from the landing spot (outside the waves' range), and a Corrupted wishbone (Wishbone + 1 shard at the Riftforge) pings towards it in red and purple, faster the closer you get; everyone nearby sees the pings.
+- **Rip waves tested in-game; busier waves:** new setting `WaveMultiplier` (default 2): each raid entry's most-alive-at-once doubled and its interval halved in rips (Meadows: 8 alive, one every 10 s), after the play-test found the vanilla pacing too slow.
+- **Fix: maddened bonuses** (damage ×1.2, speed +15%) were missing because the vanilla effects were read too early; now read in the world. **Build stamp** now reads the branch and commit from the `.git` folder, so it works without the git program (the user's PC has none). Rip chest with shards confirmed in-game.
+- **Rip end diagnostics:** play-test found no chest after destroying a rip heart; the heart, exit and chest steps now write to the log.
+- **Build stamp:** the Corruption log line now says which git branch and commit the DLL was built from (`Corruption 0.1.0 loaded (build: claude/rips-bosses 79279a1)`), after a play-test ran a `master` build that didn't have the feature being tested.
 - **Character sheet tested in-game** (single player, third version): looks and works as intended. Noted for later: make its look more consistent with the vanilla UI. Merged into `master`.
 - **Character sheet, second play-test:** look confirmed close to the mock-up; the live picture works and turns by dragging. Changed: the picture resets to the front on each open; feet now on a bigger stone; brighter side light; no blue backing on talismans either.
 - **Character sheet reworked after the first play-test** (it worked, but looked too plain): generated art closer to the concept image (iron-framed dark wood, rope-knot title, framed slot tiles with labels and faint silhouettes, arched frame with a stone pedestal, parchment stats with a name ribbon, close button), a **live picture of the character** (drag to turn), stats in the game's colours with effect icons, and a default position that no longer covers the inventory's weight. New setting `ShowCharacter`. Untested in-game (124 tests).
 - **Character sheet** (CraftingOverhaul, branch `claude/ui-overhaul`): EquipmentAndQuickSlots' slots rearranged into a World of Warcraft style sheet (armour left, trinket and talismans right, character frame in the middle, stats box, quick slots row), from the user's concept image. The slots stay EAQS's; only their cells move. Decided: no hand slots, no feet, no tabs; a live character render comes as step 2. Untested in-game (114 tests).
 
 ### 2026-10-28
+- **Rip waves and loot (phase 4 step B):** each rip spawns its biome boss's army raid while the heart stands; maddened creatures (Dvergr power damage, Ratatosk speed, no fleeing, enemies of all, unaffected by charms); up to 2 stars; the heart leaves a vanilla biome chest plus 1–3 shards; rip creatures drop shards at double chances. Table `rip_loot.csv`. Untested in-game (103 tests).
 - **Rip fixes confirmed in-game;** maps and rips step A now tested in single player. Rips last a full in-game day; sleeping skips only the night.
 - **Affix Splinters and shattering designed** (from Last Epoch; no gameplay change yet): free shattering of Magic and Rare items at the Riftforge (not uniques or corrupted), 50% per affix line to get a splinter that keeps its exact value (a resonant line keeps the combined value); splinters go on Normal and Magic items with fewer than 2 affixes; they need the Currency tab. Chance in `Corruption/Data/shattering.csv`, rules in `Corruption/Rules/ShatterRules.cs`, with tests (100 tests).
 - **Play-test results (single player):** boss essences, corrupted bosses, the rest of talismans, config reload and craft-from-chests with AdventureBackpacks pass; maps and rips work apart from two bugs. **Fixed:** rip hover texts showed `{0}` (now `$1`, the game's placeholder); a console error from the rip heart's leftover light-flicker script (custom looks now remove flicker scripts with the lights, also on the shard and essences). UI work noted for later.

@@ -42,6 +42,73 @@ namespace Corruption.Content
             }
         }
 
+        /// <summary>
+        ///     A two-colour tint for effects: each particle starts at a random colour that is <paramref name="main" />
+        ///     most of the time and shades into <paramref name="accent" /> for the last <paramref name="accentShare" />
+        ///     of the range (their colour-over-life keeps only its brightness, so it can't pull the hue back). Lights
+        ///     and other renderers take <paramref name="main" />. Particle materials are left as they are, as they
+        ///     multiply the particle colour.
+        /// </summary>
+        public static void TintTwo(GameObject prefab, Color main, Color accent, float accentShare)
+        {
+            foreach (var particles in prefab.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                var start = particles.main;
+                var original = Representative(start.startColor);
+                var mainColor = Recolor(original, main, 1f);
+                var accentColor = Recolor(original, accent, 1f);
+                var mix = new Gradient();
+                mix.SetKeys(
+                    new[] { new GradientColorKey(mainColor, 0f), new GradientColorKey(mainColor, 1f - accentShare), new GradientColorKey(accentColor, 1f) },
+                    new[] { new GradientAlphaKey(original.a, 0f), new GradientAlphaKey(original.a, 1f) });
+                start.startColor = new ParticleSystem.MinMaxGradient(mix) { mode = ParticleSystemGradientMode.RandomColor };
+                var life = particles.colorOverLifetime;
+                if (life.enabled)
+                {
+                    life.color = Recolor(life.color, Color.white, 1f);
+                }
+            }
+            foreach (var light in prefab.GetComponentsInChildren<Light>(true))
+            {
+                light.color = Recolor(light.color, main, 1f);
+            }
+            foreach (var renderer in prefab.GetComponentsInChildren<Renderer>(true))
+            {
+                if (renderer is ParticleSystemRenderer)
+                {
+                    continue;
+                }
+                var shared = renderer.sharedMaterials;
+                var copies = new Material[shared.Length];
+                for (int i = 0; i < shared.Length; i++)
+                {
+                    if (shared[i])
+                    {
+                        copies[i] = new Material(shared[i]);
+                        TintMaterial(copies[i], main, 1f);
+                    }
+                }
+                renderer.sharedMaterials = copies;
+            }
+        }
+
+        private static Color Representative(ParticleSystem.MinMaxGradient value)
+        {
+            switch (value.mode)
+            {
+                case ParticleSystemGradientMode.TwoColors:
+                    return value.colorMax;
+                case ParticleSystemGradientMode.Gradient:
+                    return value.gradient != null ? value.gradient.Evaluate(0.5f) : Color.white;
+                case ParticleSystemGradientMode.TwoGradients:
+                    return value.gradientMax != null ? value.gradientMax.Evaluate(0.5f) : Color.white;
+                case ParticleSystemGradientMode.Color:
+                    return value.color;
+                default:
+                    return Color.white;
+            }
+        }
+
         private static void TintMaterial(Material material, Color target, float strength)
         {
             var shader = material.shader;

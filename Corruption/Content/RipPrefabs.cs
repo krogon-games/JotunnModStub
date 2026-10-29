@@ -83,6 +83,7 @@ namespace Corruption.Content
             destructible.m_spawnWhenDestroyed = null;
             destructible.m_spawnWhenDamaged = null;
             prefab.AddComponent<RipHeart>();
+            prefab.AddComponent<RipWaves>();
 
             bool custom = false;
             try

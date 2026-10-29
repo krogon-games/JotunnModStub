@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Corruption.Content
@@ -100,13 +101,28 @@ namespace Corruption.Content
     }
 
     /// <summary>
-    ///     The rip's heart at the landing spot. Destroying it opens the exit rip home; it collapses with the rip when
+    ///     The rip's heart, 96-128 m from the landing spot. Destroying it opens the exit rip home; it collapses with the rip when
     ///     the rip's time runs out. Settles onto the ground once its area has loaded (it was placed from world
     ///     generation heights, before anyone had been there).
     /// </summary>
     internal class RipHeart : MonoBehaviour, Hoverable
     {
+        private static readonly List<RipHeart> Instances = new List<RipHeart>();
+
         private ZNetView m_nview;
+
+        /// <summary>Whether a loaded heart stands within <paramref name="distance" /> metres (ground distance) of a point.</summary>
+        public static bool IsNear(Vector3 point, float distance)
+        {
+            foreach (var heart in Instances)
+            {
+                if (heart && Utils.DistanceXZ(heart.transform.position, point) <= distance)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private void Awake()
         {
@@ -116,6 +132,7 @@ namespace Corruption.Content
                 enabled = false;
                 return;
             }
+            Instances.Add(this);
             var destructible = GetComponent<Destructible>();
             if (destructible)
             {
@@ -126,6 +143,11 @@ namespace Corruption.Content
                 destructible.m_onDestroyed += () => Safe.Run("open the way home", () => Rips.OpenExit(m_nview.GetZDO(), transform.position));
             }
             InvokeRepeating(nameof(Tick), 1f, 1f);
+        }
+
+        private void OnDestroy()
+        {
+            Instances.Remove(this);
         }
 
         private void Tick()

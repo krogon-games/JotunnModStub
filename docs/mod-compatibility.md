@@ -41,6 +41,7 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Shard drops (`CharacterDrop.GenerateDropList`) | No overlap | — |
 | Riftforge | No overlap | — |
 | Corrupted bosses (`Character.Awake` postfix, `Character.RPC_Damage` prefix) | None of the three patch these | Verified in code |
+| Rip waves: maddened (`Character.Awake` postfix, `BaseAI.IsEnemy` postfix at last priority) | None of the three patch these; our own talisman postfix on `IsEnemy` runs first, so maddened creatures ignore charms. The maddened effect is added with `SEMan.AddStatusEffect`, which AdventureBackpacks prefixes (for its backpack effects on players) | Verified in code; to test |
 | Maps (`Humanoid.UseItem` prefix) | AB's quick transfer also prefixes `UseItem` (higher priority): with the backpack open, right-clicking moves the item. Our prefix steps aside when another skipped the original, so a map gets moved, not used. EAQS quick slots call `UseItem` normally, so maps work from quick slots | Verified in code; to test |
 | Rips (`Player.UpdateTeleport` postfix, `Game.Start` postfix) | None of the three patch these. AB patches `Inventory.IsTeleportable` (backpack contents count), which our rip check uses, so ores in a backpack block rips like portals | Verified in code |
 
