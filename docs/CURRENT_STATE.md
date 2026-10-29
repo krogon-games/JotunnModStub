@@ -33,7 +33,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Corrupted bosses core: red tint, harder hits, slower kill, 2–3 essences and 3–5 shards | Corruption | 2026-10-28 play-test log |
 | Craft from chests with AdventureBackpacks: backpack alone, backpack + chest, no double charge | CraftingOverhaul | 2026-10-28 play-test log |
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
-| Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better") |
+| Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
 
 ### Built, not verified
@@ -45,7 +45,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
-| Character sheet: close button, dragging, layout with a chest and the backpack open, multiplayer | `PLAYTEST.md` → Session 1d (the rest of the sheet is verified) |
+| Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)

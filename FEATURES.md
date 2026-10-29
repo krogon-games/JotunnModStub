@@ -322,7 +322,7 @@ The layout, labels and silhouettes are unit-tested (`SheetLayoutTests`, `FlatJso
 - **Play-test 2026-10-29 (second version):** the look matches the mock-up (frame, title, labelled tiles, silhouettes, parchment, ribbon) and the live picture works, (the side-on view in the screenshot was the user turning it by dragging, which works). Its feet stood a little above a stone that was too thin, and a talisman kept the blue backing. **Fixed the same day** (awaiting re-test): the picture starts from the front each time the inventory opens; the character is a little smaller with a bigger, lighter stone under its feet; the light is brighter and comes from one side; no blue backing in any labelled slot.
 - **Play-test 2026-10-29 (third version): "looking much better" (user).** The character faces front, whole body in view, feet on the stone, lit at night; slots, labels, silhouettes and stats as designed.
 - **To revisit later (user, 2026-10-29):** the sheet's look is a bit inconsistent with the rest of the game's UI (its darker wood, iron and parchment next to the vanilla panels). Not changed for now.
-- Not yet checked in game: the close button, dragging the sheet, the layout with a chest and the AdventureBackpacks backpack open, multiplayer (other players never appear in the picture). Things to watch: the character too small/large or off the pedestal, too dark or too bright, or not appearing at all (then `ShowCharacter = false` and tell Claude what the log says).
+- Play-test 2026-10-29 (user): the X button closes the inventory, dragging the sheet works, and the layout works with a chest and the AdventureBackpacks backpack open. Not yet checked: multiplayer (other players never appear in the picture). Things to watch: the character too small/large or off the pedestal, too dark or too bright, or not appearing at all (then `ShowCharacter = false` and tell Claude what the log says).
 - Panel size is about 500×860 UI units with 3 quick slots; on small screens drag it, or turn off `ShowQuickSlots`.
 - The picture camera has none of the game's post-processing, so colours may look a little flatter than in the world.
 - `Enabled` off at runtime re-shows EAQS's panel, but EAQS's panel position config is its own.
@@ -732,6 +732,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-29
+- **Character sheet, last single-player checks passed:** the close button, dragging the sheet, and the layout with a chest and the AdventureBackpacks backpack open. Only multiplayer is left (`PLAYTEST.md` → Session 2).
 - **Rip waves at least 1 star:** new setting `MinStars` (default 1); every wave creature spawns with at least one star (user: waves still not challenging enough). Tested in game: definitely more challenging. Corrupted wishbone colour re-check passed.
 - **Map icons:** the eight maps have their own icons, cut from the user's concept render (`tools/make_map_icons.py`), replacing the icon rendered from the tinted leather bundle. Tested in game: they look good.
 - **Rip heart search tested in-game; pings mostly red:** finding the heart with the corrupted wishbone works; the pings now shade into purple only for about a fifth of their colours (they looked mostly purple). Busier waves and maddened creatures fighting each other also passed.

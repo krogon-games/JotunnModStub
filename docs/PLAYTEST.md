@@ -27,14 +27,6 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
-## Session 1d: character sheet leftovers (2 minutes)
-
-The sheet itself was tested on 2026-10-29 (look, picture, slots, stats). Still to check:
-
-1. The X button closes the inventory. Drag the sheet by its wood: it moves and stays there next time.
-2. Open a chest and the AdventureBackpacks backpack: the sheet shouldn't overlap either panel.
-3. With a friend nearby (Session 2): they never appear in your character picture.
-
 ## Session 2: with a friend
 
 Needs a second player (host a world or use the dedicated server, everyone on the same build).
@@ -43,3 +35,4 @@ Needs a second player (host a world or use the dedicated server, everyone on the
 2. **Talismans:** your friend sees creatures ignore you when you wear a charm.
 3. **Rips:** you open a rip, your friend follows you through, you both come home through the exit rip. Your friend sees and hears your corrupted wishbone's pings. If a rip ever lands near anyone's base, tell Claude (the server should prevent that).
 4. **Essences:** kill a boss together: it drops 1 essence.
+5. **Character sheet:** with your friend standing next to you, open your inventory: only you appear in the character picture, never them.
