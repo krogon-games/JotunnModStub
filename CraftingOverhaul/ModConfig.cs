@@ -19,6 +19,7 @@ namespace CraftingOverhaul
     {
         private const string RecipeListSection = "1 - Recipe List";
         private const string ContainerSection = "2 - Nearby Containers";
+        private const string SheetSection = "3 - Character Sheet";
 
         public static ConfigEntry<GroupingMode> Grouping;
         public static ConfigEntry<bool> StartCollapsed;
@@ -32,6 +33,11 @@ namespace CraftingOverhaul
         public static ConfigEntry<float> ContainerRange;
         public static ConfigEntry<bool> ContainersForBuilding;
         public static ConfigEntry<string> ExcludedContainers;
+
+        public static ConfigEntry<bool> SheetEnabled;
+        public static ConfigEntry<UnityEngine.Vector2> SheetPosition;
+        public static ConfigEntry<bool> SheetStats;
+        public static ConfigEntry<bool> SheetQuickSlots;
 
         public static void Bind(ConfigFile config)
         {
@@ -62,6 +68,16 @@ namespace CraftingOverhaul
                 AdminOnly("Also use materials in nearby containers when building with the hammer, hoe or cultivator."));
             ExcludedContainers = config.Bind(ContainerSection, "ExcludedContainers", "",
                 AdminOnly("Comma separated container prefab names that are never used, e.g. 'piece_chest_private'."));
+
+            SheetEnabled = config.Bind(SheetSection, "Enabled", true,
+                "Show a World of Warcraft style character sheet in the inventory: EquipmentAndQuickSlots' equipment slots " +
+                "down two columns round a character frame, with a stats box. Needs EquipmentAndQuickSlots; off with Auga.");
+            SheetPosition = config.Bind(SheetSection, "Position", new UnityEngine.Vector2(615f, 28f),
+                "Top-left corner of the sheet, relative to the inventory grid. Drag the sheet by its wood in game to move it.");
+            SheetStats = config.Bind(SheetSection, "ShowStats", true,
+                "Show the stats box (armor, weight, health, stamina, eitr, speed from gear, active effects) under the character.");
+            SheetQuickSlots = config.Bind(SheetSection, "ShowQuickSlots", true,
+                "Put EquipmentAndQuickSlots' quick slots in a row at the bottom of the sheet. Off: that mod places them.");
 
             BiomeMaterialOverrides.SettingChanged += (_, __) =>
             {

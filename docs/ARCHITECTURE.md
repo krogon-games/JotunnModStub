@@ -20,8 +20,9 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 ### CraftingOverhaul
 
 - `CraftingOverhaul.cs`: plugin entry, `PatchAllSafely()`, console commands.
-- `ModConfig.cs`: `1 - Recipe List` (per player), `2 - Nearby Containers` (admin-only, server-synced).
+- `ModConfig.cs`: `1 - Recipe List` (per player), `2 - Nearby Containers` (admin-only, server-synced), `3 - Character Sheet` (per player).
 - `RecipeList/`: `RecipeListOrganizer` (postfix on `InventoryGui.UpdateRecipeList`; computes rows first, then mutates the list), `SearchBar`, `RecipeCategories`.
+- `CharacterSheet/`: `SheetLayout` (pure, tested: where each EquipmentAndQuickSlots slot goes), `FlatJson` (pure, tested: reads that mod's JSON API answers), `CharacterSheetPanel` (postfix after EAQS's on `InventoryGrid.UpdateGui`: moves EAQS's slot cells onto our wood panel, stats box, drag-to-move). Pattern: **re-use another mod's UI objects instead of replacing them**: EAQS keeps owning the cells and the items; we only set their positions after it did.
 - `Biomes/`: data-driven biome detection.
   - `Collectors/` turn game data into *sources* (vegetation, spawns, locations and dungeon rooms, conversions, producers, hatching, recipes); `PrefabWalker` reads drop/harvest components.
   - `BiomeSolver.cs` (pure, tested): an item's biome is its earliest source; a source's biome is the latest of its location, requirements, tool tier and boss key; weak sources (random chest loot) only place items nothing else places; config overrides are fixed points.

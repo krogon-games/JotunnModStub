@@ -20,6 +20,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Boss essences](#boss-essences) | Loot | Tested in-game (single player) | Corruption: `4 - Essences` → `Enabled`; table `Corruption/Data/essences.csv`; glow uses `2 - Look` → `ShardGlowIntensity`, `ShardGlowRange` | `Corruption/Content/EssenceItems.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/EssenceTable.cs`, `Corruption/Data/essences.csv`, `Corruption/Assets/essence*`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `tools/make_essences.py`, `CraftingOverhaul.Tests/EssenceTableTests.cs` | 2026-10-28 |
 | [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs` | 2026-10-28 |
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
+| [Character sheet](#character-sheet) | UI | Built, untested | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `ModConfig.cs`, `CraftingOverhaul.cs`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -279,6 +280,53 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 - The dump is game data owned by Iron Gate. It's fine for development, but don't ship it with the mod.
 
 **Vanilla behaviour overridden:** None. Registers the two console commands through Jötunn's `CommandManager`.
+
+---
+
+## Character sheet
+
+*CraftingOverhaul. Needs EquipmentAndQuickSlots (EAQS); per player.*
+
+**What it does:** turns EquipmentAndQuickSlots' equipment panel into a World of Warcraft style character sheet in the inventory screen, modelled on the user's concept image (2026-10-29):
+
+- **Left column**, top to bottom: Head, Chest, Legs, Shoulders (cape or AdventureBackpacks backpack), Utility, then EAQS's extra utility slots if its utility count is raised.
+- **Right column**: Trinket, then every slot other mods add through EAQS's API in the order they were added: our Talisman slots (2 by default), and later the Ring slot.
+- **Middle**: a dark frame for the character. Empty for now; a live render of your character with its gear is step 2 (user's choice).
+- **Stats box** underneath: name, armor, weight (red when over), max health, stamina and eitr (eitr only once you have some), movement speed from gear (sum of your equipment's movement modifiers, as the game applies it), and the names of your active status effects (Rested, Cold, Wet...). Refreshed four times a second.
+- **Quick slots** in a centred row at the bottom (EAQS's, 0–6 as it is configured).
+- The sheet is a vanilla wood panel titled "Character", next to the inventory grid where EAQS's panel was; drag it by its wood to move it (saved to `Position`). EAQS's own backgrounds and paperdoll are hidden while the sheet is on.
+- Not in the sheet (decided 2026-10-29): hands (Valheim has no weapon slots; weapons are swapped from the hotbar), feet (no boots in Valheim), tabs (the Skills, Trophies and Compendium buttons stay where vanilla puts them).
+
+**How it works:** the slots are EAQS's: cells of hidden inventory rows that EAQS moves into its panel every frame (its postfix on `InventoryGrid.UpdateGui`). Our postfix runs after it and moves the same cells to where `SheetLayout` puts them, so dragging, equipping, tooltips, keep-on-death, quick-slot hotkeys and the Talisman slots keep working exactly as before, with no change to how items are stored. Which slots exist and where their cells are comes from EAQS's public API (`GetSlotIdsJson`, `GetSlotInfoJson`), re-read once a second, so slots that appear or disappear (a config change, a mod adding one) re-plan the sheet. Without EAQS, or with Auga installed, nothing changes (logged at the first inventory open).
+
+**Config settings** (per player, `3 - Character Sheet`; all apply live with config reload):
+
+| Setting | Default | Description |
+|---|---|---|
+| `Enabled` | `true` | Show the sheet. Off: EAQS's own panel comes back |
+| `Position` | `615, 28` | Top-left corner of the sheet, relative to the inventory grid (EAQS's default panel position). Set by dragging |
+| `ShowStats` | `true` | Show the stats box |
+| `ShowQuickSlots` | `true` | Put the quick slots in the row at the bottom. Off: EAQS places them where it always did |
+
+The layout rules are unit-tested (`SheetLayoutTests`, `FlatJsonTests`: 14 tests).
+
+**Known issues:**
+- Untested in-game. The default position and the panel size (about 470×750 px with 3 quick slots) were worked out from EAQS's numbers, not seen on screen; if it overlaps the crafting panel or hangs off the bottom at the user's resolution, drag it, and tell Claude the position that works so the default can change.
+- The character frame is empty until step 2 (live render).
+- Slot labels are EAQS's ("Head", "Shoulders", "Talisman"...), drawn by EAQS at the top-left of each cell.
+- The stats text uses the Averia font through Jötunn (same as the search bar), not the game's TextMeshPro font.
+- `Enabled` off at runtime re-shows EAQS's panel, but EAQS's panel position config is its own.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `InventoryGrid.UpdateGui` | Postfix, low priority, after `randyknapp.mods.equipmentandquickslots` | Player grid only: creates the sheet the first time, moves EAQS's slot cells onto it, hides EAQS's backgrounds, refreshes the stats |
+| `InventoryGui.OnDestroy` | Postfix | Forgets the sheet's objects (the GUI is rebuilt per world) |
+
+Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJson`, API version 2); no patches on that mod. Finds its objects by name (`EaqsSlotRoot`, `EaqsEquipmentBkg`, `EaqsQuickSlotBkg`, `EaqsCustomSlotBkg`, its `PanelDragHandle` script), checked against EAQS 3.1.3.
+
+**Conflicts:** anything else that repositions EAQS's slot cells (Auga does; the sheet switches itself off when Auga is installed). AdventureBackpacks' backpack panel opens as a container on the left, under the inventory grid, so it shouldn't overlap; check in-game.
 
 ---
 
@@ -590,6 +638,9 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ---
 
 ## Changelog
+
+### 2026-10-29
+- **Character sheet** (CraftingOverhaul, branch `claude/ui-overhaul`): EquipmentAndQuickSlots' slots rearranged into a World of Warcraft style sheet (armour left, trinket and talismans right, character frame in the middle, stats box, quick slots row), from the user's concept image. The slots stay EAQS's; only their cells move. Decided: no hand slots, no feet, no tabs; a live character render comes as step 2. Untested in-game (114 tests).
 
 ### 2026-10-28
 - **Rip fixes confirmed in-game;** maps and rips step A now tested in single player. Rips last a full in-game day; sleeping skips only the night.

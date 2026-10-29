@@ -12,6 +12,8 @@
     <Compile Include="..\CraftingOverhaul\Biomes\Biome.cs" Link="Linked\Biome.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\ItemSource.cs" Link="Linked\ItemSource.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
+    <Compile Include="..\CraftingOverhaul\CharacterSheet\SheetLayout.cs" Link="Linked\SheetLayout.cs" />
+    <Compile Include="..\CraftingOverhaul\CharacterSheet\FlatJson.cs" Link="Linked\FlatJson.cs" />
     <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />
     <Compile Include="..\Corruption\Rules\TalismanFamilies.cs" Link="Linked\TalismanFamilies.cs" />
     <Compile Include="..\Corruption\Rules\AffixTable.cs" Link="Linked\AffixTable.cs" />
