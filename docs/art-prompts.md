@@ -178,3 +178,34 @@ then add one line:
 - Bead colours follow each essence's glow colour in `Corruption/Data/essences.csv` (Eikthyr #8CD9FF … Kall #40E6D9), named in words because image models follow names better than hex codes.
 - Hide colours were picked so no two maps share a hue at icon size; silhouettes are the biome's best-known sight or boss (game knowledge, not checked against the game files). Change any you like.
 - Check a render by shrinking it to 64 px before accepting it.
+
+## Corrupted offerings (design phase 6)
+
+*Asked for 2026-10-29: each corrupted offering is the boss's normal offering made to look corrupted (user). Starting with the deer trophy (Eikthyr's altar takes 2 `TrophyDeer`, `altars.csv`; the corrupted one is crafted from both plus 1 shard). Three takes on "corrupted" to pick from before the other offerings follow.*
+
+The mod's corruption look so far: the deep red of the corruption shard and the rips, a red glow from inside, cracks and tears that open onto the void (Ginnungagap), small touches of purple. Prompts follow the map icon lesson: the item has to read at 64 px, so one strong silhouette and bold colour, no fine detail.
+
+**How to use:** attach an in-game picture of the vanilla Deer trophy (so the shape stays recognisable) and the essence render (`docs/images/essences_reference.jpg`) for style, camera, lighting and background. Run each prompt separately.
+
+### A. Void-cracked
+
+```
+A single item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look: the attached deer trophy (a severed deer head with antlers), corrupted by the void. Keep the same head, antlers and shape so it is clearly the same trophy. Deep jagged cracks split the fur and run up the antlers, glowing deep red from inside as if the head is splitting open onto a dark void; faint purple light flickers deep in the widest crack. The eyes glow red. The fur is darkened to a sooty brown-black around the cracks. It will be a tiny 64 by 64 pixel inventory icon, so keep it bold: strong silhouette, big glowing cracks, no fine detail. Centred on a plain, even dark slate-grey background, three-quarter view, soft key light from the upper left, subtle red glow halo, no text, no other objects. Square 1:1 image.
+```
+
+### B. Crystal antlers
+
+```
+A single item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look: the attached deer trophy (a severed deer head with antlers), taken over by corruption crystal. Keep the same head and shape so it is clearly the same trophy, but the antlers have turned into jagged, faceted dark-red crystal like a rough-cut gemstone, glowing from inside, and smaller red crystal shards break out through the fur of the brow and neck. The rest of the fur is ashen grey, drained of life. It will be a tiny 64 by 64 pixel inventory icon, so keep it bold: strong silhouette, big glowing crystal antlers, no fine detail. Centred on a plain, even dark slate-grey background, three-quarter view, soft key light from the upper left, subtle red glow halo, no text, no other objects. Square 1:1 image.
+```
+
+### C. Bound offering
+
+```
+A single item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look: a ritual offering made from the attached deer trophy (a severed deer head with antlers). Keep the same head and shape so it is clearly the same trophy. The head is bound with dark leather cords, and a glowing deep-red crystal shard is lashed to its forehead between the antlers. Bold glowing red runes are painted over the fur in thick strokes, and a thin dark-red and purple mist curls up from the shard. The fur is darkened, almost black. It will be a tiny 64 by 64 pixel inventory icon, so keep it bold: strong silhouette, one glowing shard and a few big runes, no fine detail. Centred on a plain, even dark slate-grey background, three-quarter view, soft key light from the upper left, subtle red glow halo, no text, no other objects. Square 1:1 image.
+```
+
+### Notes
+
+- A fits the rips (glowing tears onto the void), B fits the corruption shard and essences (crystal), C shows how the offering is made (the trophies plus a shard, bound in a ritual).
+- Once a take is chosen, the same treatment applies to the other offerings (the Elder's ancient seeds, Bonemass's withered bones, Moder's dragon eggs and so on, from `altars.csv`).
