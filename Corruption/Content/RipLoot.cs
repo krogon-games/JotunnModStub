@@ -17,6 +17,7 @@ namespace Corruption.Content
         {
             var errors = new List<string>();
             s_chests = RipLootTable.Parse(DataFiles.Read("rip_loot.csv"), errors);
+            Jotunn.Logger.LogInfo($"Rip loot: {s_chests.Count} chest entries loaded.");
             foreach (var error in errors)
             {
                 Jotunn.Logger.LogWarning(error);
@@ -36,6 +37,7 @@ namespace Corruption.Content
             position.y = ZoneSystem.instance.GetGroundHeight(position);
             // The chest fills its own vanilla loot when it's created on its owner's game (Container.Awake).
             var instance = Object.Instantiate(prefab, position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+            Jotunn.Logger.LogInfo($"Rip chest {chest} placed at {position} for biome {biome}.");
             var container = instance.GetComponent<Container>();
             var shard = ObjectDB.instance.GetItemPrefab(Texts.ShardPrefab);
             int min = CorruptionConfig.RipChestShardsMin.Value;
@@ -43,6 +45,11 @@ namespace Corruption.Content
             if (container && shard && shards > 0)
             {
                 container.GetInventory().AddItem(shard, shards);
+                Jotunn.Logger.LogInfo($"Rip chest: added {shards} corruption shards.");
+            }
+            else
+            {
+                Jotunn.Logger.LogWarning($"Rip chest: no shards added (container {(container ? "found" : "missing")}, shard item {(shard ? "found" : "missing")}).");
             }
         }
     }

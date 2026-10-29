@@ -544,6 +544,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 
 **Known issues:**
 - Untested in-game (103 tests pass). **Play-test 2026-10-29 didn't run step B:** no waves, no chest and no errors, because the build came from `master`, which doesn't have step B yet (it's on `claude/rips-bosses`). The log now names the build's branch and commit, so the next test can check.
+- **Play-test 2026-10-29, right build:** waves start with Eikthyr's army message, creatures spawn, a 2-star dropped a shard (works). **Destroying the heart left no chest and no shards:** under investigation. The rip now logs each step (heart destroyed, exit opened, which chest was placed, shards added) to find where it stops. Vanilla treasure chests delete themselves when empty, so a chest placed empty would vanish within a second.
 - Maddened creatures stay after the heart is destroyed (the waves stop; the ones alive keep fighting). Vanilla raid creatures despawn when the raid ends; rips have no such end yet.
 - Maddened creatures fight each other as the design says; a wave may thin itself out. To watch in play-tests.
 - Map tiers (more waves, more stars) come with phase 5.
@@ -635,6 +636,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-29
+- **Rip end diagnostics:** play-test found no chest after destroying a rip heart; the heart, exit and chest steps now write to the log.
 - **Build stamp:** the Corruption log line now says which git branch and commit the DLL was built from (`Corruption 0.1.0 loaded (build: claude/rips-bosses 79279a1)`), after a play-test ran a `master` build that didn't have the feature being tested.
 
 ### 2026-10-28

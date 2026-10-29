@@ -234,13 +234,16 @@ namespace Corruption.Content
         /// <summary>The heart was destroyed (on its owner's game): open the exit rip beside it, leading home.</summary>
         public static void OpenExit(ZDO heart, Vector3 position)
         {
+            Jotunn.Logger.LogInfo($"Rip heart destroyed at {position}.");
             if (heart == null || IsExpired(heart))
             {
+                Jotunn.Logger.LogWarning(heart == null ? "Rip heart: no data, no exit." : "Rip heart: the rip had already closed, no exit.");
                 return;
             }
             var home = heart.GetVec3(KeyHome, Vector3.zero);
             if (home == Vector3.zero)
             {
+                Jotunn.Logger.LogWarning("Rip heart: no way home stored, no exit.");
                 return;
             }
             var spot = position + new Vector3(0f, 0f, 3f);
@@ -250,6 +253,7 @@ namespace Corruption.Content
             exit.Set(KeyClose, heart.GetLong(KeyClose, 0L));
             exit.Set(KeyBiome, heart.GetString(KeyBiome, ""));
             exit.Set(KeyExit, true);
+            Jotunn.Logger.LogInfo($"Rip exit opened at {spot}, leading to {home}.");
             Safe.Run("leave the rip chest", () => RipLoot.SpawnChest(heart.GetString(KeyBiome, ""), position));
             Player.m_localPlayer?.Message(MessageHud.MessageType.Center, "$corruption_rip_home_opened");
         }
