@@ -114,3 +114,56 @@ then add one line:
 - Simple extra parts are possible, as with the Elder's root and Yagluth's ring: the bronze band, the Regal crown rim, the Jeweller's sockets.
 - Fine engraving (knotwork, the Valknut) becomes painted texture lines, so it will be softer than in the render.
 - Rune meanings are common Elder Futhark readings, chosen for flavour.
+
+## Corrupted maps (design phase 4)
+
+*Asked for 2026-10-29: the maps' placeholder icon (a tinted bundle of leather scraps) is hard to read. The render is cut into the eight inventory icons directly; the map's look on the ground stays the leather bundle for now.*
+
+The eight maps from `Corruption/Data/maps.csv`. Their in-game text says they are "drawn in ash on a slain guardian's hide", so: one family of small rolled hide maps, same hide, same tie, each with its biome drawn in ash and charcoal and a glowing red rip mark (the rips are red in game). A small bead tied on the cord takes the colour of the essence the map is made from, so the map matches its essence at a glance.
+
+**How to use:** attach the essence render (`docs/images/essences_reference.jpg`) and the orb render (`docs/images/orbs_reference.jpg`) as references for style, camera, lighting and background, paste the sheet prompt, then refine single maps with the single prompts. Keep the background plain and even: the icons are cut out of it.
+
+### Sheet prompt (all eight in one image)
+
+```
+Concept art sheet of eight magical maps for a Viking survival game, in the stylised, slightly low-poly painterly look of Valheim. Match the attached item renders for style, camera, lighting and background. Each map is a small piece of rough tanned hide, half unrolled so the drawing shows, rolled up at one end and tied with a thin leather cord. The map is drawn in black ash and charcoal: a simple, bold sketch of one land, readable at small icon size. In the middle of every drawing is the same mark: a jagged tear that glows deep red, like a wound in the hide, with faint red light bleeding into the hide around it. A single small glowing bead hangs from each cord in its own colour. They are clearly one family: same hide, same size, same cord, same red tear; only the drawing and the bead change.
+
+Lay them out in a 4 by 2 grid on a plain, even dark slate-grey background, evenly spaced, each centred in its own square with empty space around it, same three-quarter top-down camera angle, same soft key light from the upper left, a subtle glow halo, no text, no letters, no labels, no hands, no other objects. Left to right, top row then bottom row:
+
+1. Meadows: gentle rolling hills, a few round oak trees, a small stag-antler symbol. Bead: pale icy blue-white.
+2. Black Forest: a dense wall of pointed fir trees and a ruined stone tower. Bead: amber-green.
+3. Swamp: twisted dead trees standing in water and a sunken crypt doorway. Bead: toxic green.
+4. Mountains: sharp snowy peaks with a dragon's wing shape above them. Bead: cold glacier blue.
+5. Plains: flat open grassland, a tar pit and a ring of sharpened stakes. Bead: ember orange.
+6. Mistlands: jagged rock spires in swirls of mist and a giant ribcage. Bead: violet.
+7. Ashlands: a volcano with rivers of lava; this hide is singed and charred at the edges. Bead: molten orange.
+8. Deep North: glaciers, icebergs and cracked sea ice; this hide has frost on its edges. Bead: icy teal.
+
+Game item render, readable at small icon size, strong silhouettes, high detail, 2:1 image.
+```
+
+### Single prompts (refine one map)
+
+Start each with:
+
+```
+A single magical map item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look, matching the attached item renders for camera, lighting and background. A small piece of rough tanned hide, half unrolled, rolled up at one end and tied with a thin leather cord, drawn in black ash and charcoal with a bold, simple sketch of one land. In the middle of the drawing a jagged tear glows deep red like a wound in the hide. One small glowing bead hangs from the cord. Centred on a plain, even dark slate-grey background, three-quarter top-down view, soft key light from the upper left, subtle glow halo, no text, no letters, no other objects.
+```
+
+then add one line:
+
+| Map | Add |
+|---|---|
+| Meadows | `The drawing shows the Meadows: gentle rolling hills, a few round oak trees, a small stag-antler symbol. The bead is pale icy blue-white.` |
+| Black Forest | `The drawing shows the Black Forest: a dense wall of pointed fir trees and a ruined stone tower. The bead is amber-green.` |
+| Swamp | `The drawing shows the Swamp: twisted dead trees standing in water and a sunken crypt doorway. The bead is toxic green.` |
+| Mountains | `The drawing shows the Mountains: sharp snowy peaks with a dragon's wing shape above them. The bead is cold glacier blue.` |
+| Plains | `The drawing shows the Plains: flat open grassland, a tar pit and a ring of sharpened stakes. The bead is ember orange.` |
+| Mistlands | `The drawing shows the Mistlands: jagged rock spires in swirls of mist and a giant ribcage. The bead is violet.` |
+| Ashlands | `The drawing shows the Ashlands: a volcano with rivers of lava. The hide is singed and charred at the edges. The bead is molten orange.` |
+| Deep North | `The drawing shows the Deep North: glaciers, icebergs and cracked sea ice. The hide has frost on its edges. The bead is icy teal.` |
+
+### Notes
+
+- Bead colours follow each essence's glow colour in `Corruption/Data/essences.csv` (Eikthyr #8CD9FF … Kall #40E6D9), named in words because image models follow names better than hex codes.
+- Landmarks are well-known sights of each biome (game knowledge, not checked against the game files); change any you like.
