@@ -240,8 +240,24 @@ Pickaxes roll only from the [gathering tool pools](#gathering-tool-affixes); one
 |---|---|---|
 | Fire, frost, lightning, poison, spirit damage (each half) | 10–50% of physical | One top for all elements (user): the median of each element's strongest vanilla player weapon: fire 18% (Frostfire bow), lightning 47% (Himminafl), poison 50% (Jotun Bane), spirit 57% (Silver mace), frost 129% (Frostfire bow) |
 | Movement speed | 1–5% | Crown of Valheim +5% (Fenring pieces +3%) |
+| Enhanced damage | 4–19% | No vanilla +% damage source: a full forge upgrade adds 18.9% (median, 120 weapons) |
+| Enhanced armour | 10–50% | Full forge upgrade: +50% armour (median, 81 armour pieces) |
+| Durability (each half) | 11–55% | Full forge upgrade: +55% durability (median, 220 items) |
+| Block (each half) | 4–18% | Full forge upgrade: +17.7% block power (median, 18 shields) |
+| Backstab | 20–100% | Common weapons 3x, knives and fists 6x |
+| Knockback | 20–100% | Melee median 40; heavy weapons 100–210 (Claude's reading: doubling the median) |
+| Parry | 20–100% | Common weapons 2x, knives 4x, fists 6x |
+| Attack stamina | 4–20% less | Deep North cape, Crown of Valheim, Ashlands medium set: −20% |
+| Health regen (each half) | 6–30% | Berserkir set +30% (Bronze trinket +25%) |
+| Stamina regen | 8–40% | Undead Berserkir set +40% |
+| Carry weight | 30–150 | Megingjord +150 |
+| Weapon skill (each half) | 4–20 levels | Trinkets: +20 to clubs, bows, spears, elemental or blood magic |
 
-The rest wait for the next `co_dump`: max health, stamina and eitr, regen, carry weight, skills and resistances come from set bonuses, meads, Megingjord and trinkets (`status_effects.csv`); armour, durability, block, knockback, parry, backstab and attack stamina from item details (`item_details.csv`). Affixes the user already approved with their numbers (Fleet, Foraging, the proc affixes) keep them.
+**Which sources count (user, 2026-10-29):** gear only (items, set bonuses, trinkets, Megingjord), not meads, Forsaken powers or food. Item stats with no vanilla "+%" source take what a full forge upgrade adds (median over the loot base items). Rows from 2026-10-29 are `proposed` in the table until the user approves the numbers.
+
+**Still open (2026-10-29):** max health, stamina and eitr have no gear source (only food and up-front trinket heals); life steal has none either: the user decides. Resistances (four elements and all resistances) wait for the next `co_dump`, which now writes item and status-effect damage modifiers.
+
+Earlier note: the rest wait for the next `co_dump`: max health, stamina and eitr, regen, carry weight, skills and resistances come from set bonuses, meads, Megingjord and trinkets (`status_effects.csv`); armour, durability, block, knockback, parry, backstab and attack stamina from item details (`item_details.csv`). Affixes the user already approved with their numbers (Fleet, Foraging, the proc affixes) keep them.
 
 **Ranges** are in the table (`pool` = `gear`; rows still marked `draft` haven't been through the rule yet).
 
