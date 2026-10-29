@@ -19,13 +19,14 @@ namespace CraftingOverhaul.CharacterSheet
     internal class CharacterPortrait : MonoBehaviour, IBeginDragHandler, IDragHandler
     {
         /// <summary>Of the picture, how many metres of the scene fill the frame's height (at the art's base height).</summary>
-        private const float ViewHeight = 2.5f;
+        private const float ViewHeight = 2.7f;
         /// <summary>The feet stand on the pedestal drawn in the frame art, this far above the frame's bottom (pixels).</summary>
-        private const float FeetAboveBottom = 40f;
+        private const float FeetAboveBottom = 46f;
         private const float BaseHeight = 504f;
         private const float FieldOfView = 30f;
         private const float RendererRefreshInterval = 0.5f;
         private const float TurnPerPixel = 0.6f;
+        private const float FacingSmoothing = 4f;
         private const int MaxTextureHeight = 1024;
         private static readonly Color Backdrop = new Color(0.10f, 0.14f, 0.19f, 1f);
 
@@ -35,6 +36,8 @@ namespace CraftingOverhaul.CharacterSheet
         private RenderTexture _texture;
         private int _layer = -1;
         private float _yaw;
+        private Vector3 _facing;
+        private bool _hasFacing;
         private float _nextRendererRefresh;
         private readonly List<Renderer> _renderers = new List<Renderer>();
         private readonly List<int> _savedLayers = new List<int>();
@@ -60,6 +63,9 @@ namespace CraftingOverhaul.CharacterSheet
                 if (!show)
                 {
                     Stop();
+                    // Each time the inventory opens, the picture starts from the front again.
+                    _yaw = 0f;
+                    _hasFacing = false;
                     return;
                 }
                 if (!EnsureCamera())
@@ -92,20 +98,19 @@ namespace CraftingOverhaul.CharacterSheet
             float lookHeight = (0.5f - feet) * viewHeight;
             float distance = viewHeight / 2f / Mathf.Tan(FieldOfView * Mathf.Deg2Rad / 2f);
 
-            Vector3 forward = player.transform.forward;
-            forward.y = 0f;
-            if (forward.sqrMagnitude < 0.001f)
-            {
-                forward = Vector3.forward;
-            }
-            forward = Quaternion.Euler(0f, _yaw, 0f) * forward.normalized;
+            // Follow the way the body faces, smoothed so the idle animation's sway doesn't shake the view.
+            Vector3 facing = BodyFacing(player);
+            _facing = _hasFacing ? Vector3.Slerp(_facing, facing, 1f - Mathf.Exp(-Time.unscaledDeltaTime * FacingSmoothing)) : facing;
+            _hasFacing = true;
+            Vector3 forward = Quaternion.Euler(0f, _yaw, 0f) * _facing;
             Vector3 target = player.transform.position + Vector3.up * lookHeight;
             _camera.transform.position = target + forward * distance;
             _camera.transform.rotation = Quaternion.LookRotation(-forward, Vector3.up);
             _camera.fieldOfView = FieldOfView;
             _camera.nearClipPlane = Mathf.Max(0.1f, distance - 3f);
             _camera.farClipPlane = distance + 3f;
-            _light.transform.position = _camera.transform.position + Vector3.up * 1.5f;
+            // In front and above, a little to one side, so the face and gear get some shape.
+            _light.transform.position = _camera.transform.position + Vector3.up * 1.5f + _camera.transform.right * 1.2f;
             _light.range = distance + 6f;
 
             // The texture follows the frame's size on screen (sharp at any UI scale), capped.
@@ -126,6 +131,35 @@ namespace CraftingOverhaul.CharacterSheet
                 _image.texture = _texture;
             }
             _camera.aspect = rect.width / rect.height;
+        }
+
+        /// <summary>
+        ///     Where the model's body faces, from its hips and shoulders (the game's rig is humanoid): the root transform
+        ///     alone gave a side view in the first test (2026-10-29). Falls back to the root's forward.
+        /// </summary>
+        private static Vector3 BodyFacing(Player player)
+        {
+            var animator = player.m_animator;
+            if (animator && animator.isHuman)
+            {
+                Vector3 right = Across(animator, HumanBodyBones.LeftUpperLeg, HumanBodyBones.RightUpperLeg)
+                                + Across(animator, HumanBodyBones.LeftUpperArm, HumanBodyBones.RightUpperArm);
+                right.y = 0f;
+                if (right.sqrMagnitude > 0.0001f)
+                {
+                    return Vector3.Cross(right.normalized, Vector3.up);
+                }
+            }
+            Vector3 forward = player.transform.forward;
+            forward.y = 0f;
+            return forward.sqrMagnitude > 0.001f ? forward.normalized : Vector3.forward;
+        }
+
+        private static Vector3 Across(Animator animator, HumanBodyBones left, HumanBodyBones right)
+        {
+            var l = animator.GetBoneTransform(left);
+            var r = animator.GetBoneTransform(right);
+            return l && r ? r.position - l.position : Vector3.zero;
         }
 
         private bool EnsureCamera()
@@ -158,7 +192,7 @@ namespace CraftingOverhaul.CharacterSheet
             _light = lightGo.AddComponent<Light>();
             _light.type = LightType.Point;
             _light.color = new Color(1f, 0.93f, 0.82f);
-            _light.intensity = 1.1f;
+            _light.intensity = 1.6f;
             _light.shadows = LightShadows.None;
             _light.cullingMask = 1 << _layer;
             _light.enabled = false;

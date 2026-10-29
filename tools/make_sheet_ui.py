@@ -36,6 +36,7 @@ FRAME_BORDER = 56
 ARCH_WIDTH = 270
 ARCH_TOP = ARCH_WIDTH // 2 + 12      # 9-slice top border: the whole arch
 ARCH_BOTTOM = 72                     # 9-slice bottom border: the pedestal
+FEET_LINE = 46                       # the character's feet, above the arch's bottom (CharacterPortrait.FeetAboveBottom)
 ARCH_HEIGHT = ARCH_TOP + ARCH_BOTTOM + 4
 PARCHMENT_WIDTH = PANEL_WIDTH - 36
 PARCHMENT_HEIGHT = 160
@@ -333,7 +334,8 @@ def make_arch_rim():
         rivet(rgb, alpha, w / 2 - (r + 3) * math.cos(a), 8 + r - (r + 3) * math.sin(a), 3.4)
     # Stone pedestal: a flat round stone the character stands on, in front of the feet.
     # The character's feet stand on the stone's centre line, so only the stone's front half (and its side) is drawn.
-    px, py, prx, pry, thick = w / 2, h - 40, w * 0.40, 16, 16
+    # FEET_LINE must match CharacterPortrait.FeetAboveBottom.
+    px, py, prx, pry, thick = w / 2, h - FEET_LINE, w * 0.42, 20, 20
     n = noise(w, h, 41, 7)
     u = np.clip((x - px) / prx, -1, 1)
     within = np.abs(x - px) < prx
@@ -341,7 +343,7 @@ def make_arch_rim():
     e = ((x - px) / prx) ** 2 + ((y - py) / pry) ** 2
     top = (e < 1) & (y > py - 2)
     side = within & (y >= lower) & (y < lower + thick)
-    stone_top = lerp(np.array([84, 82, 80], float), np.array([150, 146, 140], float),
+    stone_top = lerp(np.array([96, 94, 90], float), np.array([168, 164, 156], float),
                      np.clip(0.45 + 0.35 * (y - py) / pry + 0.2 * n - 0.15 * np.abs(u), 0, 1))
     stone_side = lerp(np.array([34, 33, 34], float), np.array([86, 83, 80], float),
                       np.clip(0.65 - 0.5 * (y - lower) / thick + 0.2 * n - 0.3 * np.abs(u), 0, 1))
@@ -479,7 +481,7 @@ def preview(pieces):
     # A stand-in figure where the live render goes.
     fig = Image.new("RGBA", (ARCH_WIDTH, col_h))
     fd = ImageDraw.Draw(fig)
-    cxf, feet = ARCH_WIDTH / 2, col_h - 40
+    cxf, feet = ARCH_WIDTH / 2, col_h - FEET_LINE
     fd.ellipse((cxf - 22, feet - 330, cxf + 22, feet - 282), fill=(90, 80, 70, 255))
     fd.polygon([(cxf - 55, feet - 280), (cxf + 55, feet - 280), (cxf + 40, feet - 140), (cxf - 40, feet - 140)], fill=(80, 70, 60, 255))
     fd.rectangle((cxf - 38, feet - 140, cxf - 8, feet), fill=(70, 60, 52, 255))

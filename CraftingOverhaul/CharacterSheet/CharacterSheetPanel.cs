@@ -222,7 +222,8 @@ namespace CraftingOverhaul.CharacterSheet
 
         /// <summary>
         ///     Labelled slots: our label replaces EAQS's (which it re-enables every frame, before us), the blue "equipped"
-        ///     backing goes (everything in an equipment slot is equipped), and an empty slot shows what goes in it.
+        ///     backing goes (everything in these slots is worn; talismans showed it too), and an empty slot shows what
+        ///     goes in it.
         /// </summary>
         private static void DressCell(InventoryElement element, int index)
         {
@@ -236,7 +237,7 @@ namespace CraftingOverhaul.CharacterSheet
             {
                 label.enabled = false;
             }
-            if (_slots[index].Kind == SlotKind.Equipment && element.m_equiped)
+            if (element.m_equiped)
             {
                 element.m_equiped.enabled = false;
             }
