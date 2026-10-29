@@ -14,8 +14,8 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 0. Check the build: `BepInEx/LogOutput.log` has `Corruption 0.1.0 loaded (build: claude/rips-bosses …)`. A build from `master` doesn't have step B yet.
 1. ~~Waves start with the army message; a 2-star dropped a shard; the heart leaves a chest with shards~~ (passed 2026-10-29).
 1a. ~~Maddened bonuses in the log, red creatures; charms ignored; chests in Meadows and Swamp~~ (passed 2026-10-29).
-1b. **New:** busier waves (`WaveMultiplier` 2): a Meadows rip keeps up to 8 creatures coming, a new one about every 10 s. Is the pace right now?
-1c. **New: heart search.** `spawn Wishbone` and `spawn CorruptionShard`, craft the **Corrupted wishbone** at the Riftforge and wear it. Open a Meadows rip and go through: the heart is out of sight (96–128 m away) and no waves start yet. Red/purple pings, slow at first, faster as you walk towards the heart; waves start on the way. After destroying the heart the pings stop. The log line `Corrupted wishbone: pings every …` appears at startup.
+1b. ~~Busier waves (`WaveMultiplier` 2); maddened creatures fight each other; heart search with the corrupted wishbone~~ (passed 2026-10-29).
+1c. **Re-check:** the corrupted wishbone's pings are now mostly red with bits of purple.
 2. Wear a Boar or Neck charm: rip creatures still attack you.
 3. Watch whether maddened creatures also fight each other.
 4. Destroy the heart: the exit rip opens and a chest appears with Meadows chest loot plus 1–3 corruption shards; the waves stop.

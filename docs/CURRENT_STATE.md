@@ -42,8 +42,8 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
-| Rip heart search and corrupted wishbone (2026-10-29) | Heart 96–128 m from the landing spot; the Corrupted wishbone (Wishbone + 1 shard) pings towards it in red and purple, others see the pings. Steps: `PLAYTEST.md` |
-| Rip waves pacing (2026-10-29) | Waves tested in-game; now busier (`WaveMultiplier` 2). Check the pace and whether maddened creatures fight each other. Steps: `PLAYTEST.md` |
+| Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
+| Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet: close button, dragging, layout with a chest and the backpack open, multiplayer | `PLAYTEST.md` → Session 1d (the rest of the sheet is verified) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
@@ -81,7 +81,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Next actionable tasks
 
-1. Play-test the **rip heart search and corrupted wishbone** and the busier waves (built 2026-10-29, `claude/rips-bosses`; step B itself passed). Still open from the design: checking the landing area once loaded (locations, water).
+1. **Rips step B and the heart search passed in single player (2026-10-29)**; PR into `master` opened. Re-check the ping colour; multiplayer tests with the group. Still open from the design: checking the landing area once loaded (locations, water).
 2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).

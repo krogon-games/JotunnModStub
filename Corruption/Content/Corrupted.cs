@@ -43,18 +43,25 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     A two-colour tint for effects: particles start at a random mix of <paramref name="main" /> and
-        ///     <paramref name="accent" /> (their colour-over-life keeps only its brightness, so it can't pull the hue
-        ///     back), lights and other renderers take <paramref name="main" />. Particle materials are left as they
-        ///     are, as they multiply the particle colour.
+        ///     A two-colour tint for effects: each particle starts at a random colour that is <paramref name="main" />
+        ///     most of the time and shades into <paramref name="accent" /> for the last <paramref name="accentShare" />
+        ///     of the range (their colour-over-life keeps only its brightness, so it can't pull the hue back). Lights
+        ///     and other renderers take <paramref name="main" />. Particle materials are left as they are, as they
+        ///     multiply the particle colour.
         /// </summary>
-        public static void TintTwo(GameObject prefab, Color main, Color accent)
+        public static void TintTwo(GameObject prefab, Color main, Color accent, float accentShare)
         {
             foreach (var particles in prefab.GetComponentsInChildren<ParticleSystem>(true))
             {
                 var start = particles.main;
                 var original = Representative(start.startColor);
-                start.startColor = new ParticleSystem.MinMaxGradient(Recolor(original, main, 1f), Recolor(original, accent, 1f));
+                var mainColor = Recolor(original, main, 1f);
+                var accentColor = Recolor(original, accent, 1f);
+                var mix = new Gradient();
+                mix.SetKeys(
+                    new[] { new GradientColorKey(mainColor, 0f), new GradientColorKey(mainColor, 1f - accentShare), new GradientColorKey(accentColor, 1f) },
+                    new[] { new GradientAlphaKey(original.a, 0f), new GradientAlphaKey(original.a, 1f) });
+                start.startColor = new ParticleSystem.MinMaxGradient(mix) { mode = ParticleSystemGradientMode.RandomColor };
                 var life = particles.colorOverLifetime;
                 if (life.enabled)
                 {

@@ -24,6 +24,9 @@ namespace Corruption.Content
 
         private static readonly Color Red = new Color(0.7f, 0.09f, 0.05f);
         private static readonly Color Purple = new Color(0.45f, 0.1f, 0.65f);
+        // Mostly red with bits of purple (user). An even mix looked mostly purple in the 2026-10-29 play-test, as
+        // purple reads brighter; now only the last fifth of the colour range shades into purple.
+        private const float PurpleShare = 0.2f;
         // The near, medium and far lists can share effects; each is cloned once.
         private static readonly Dictionary<string, GameObject> Clones = new Dictionary<string, GameObject>();
 
@@ -99,7 +102,7 @@ namespace Corruption.Content
                 if (!Clones.TryGetValue(data.m_prefab.name, out var prefab))
                 {
                     prefab = PrefabManager.Instance.CreateClonedPrefab("corruption_" + data.m_prefab.name, data.m_prefab);
-                    Corrupted.TintTwo(prefab, Red, Purple);
+                    Corrupted.TintTwo(prefab, Red, Purple, PurpleShare);
                     PrefabManager.Instance.AddPrefab(new CustomPrefab(prefab, false));
                     Clones[data.m_prefab.name] = prefab;
                 }
