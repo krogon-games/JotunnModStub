@@ -561,7 +561,7 @@ New items registered through Jötunn: `CorruptionEssence_<look>` for each table 
 - **Re-test 2026-10-28: both fixes confirmed** (hover shows the biome and time left; no errors). A `GetBiome error Meadows -> BlackForest` warning in the log is the game's own, logged when standing on a biome border.
 - **Rips last a full in-game day:** sleeping only skips the night, so a rip opened in the evening is still open the next morning (seen 2026-10-28; the user is fine with it).
 - The landing spot comes from world generation. Locations (villages, altars) aren't avoided yet; step B adds checks once the area has loaded.
-- The map icons are new (2026-10-29) and not yet seen in game. The look on the ground is still the tinted leather bundle.
+- **Map icons tested in game 2026-10-29:** all eight show in the inventory and look good (user). The look on the ground is still the tinted leather bundle.
 - With AdventureBackpacks' backpack open, right-clicking a map moves it (AB's quick transfer) instead of using it. Close the backpack first.
 - A rip opened by a player who then leaves: its objects close when someone is next near them after the time is up.
 
@@ -730,7 +730,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-29
-- **Map icons:** the eight maps have their own icons, cut from the user's concept render (`tools/make_map_icons.py`), replacing the icon rendered from the tinted leather bundle. Untested in game.
+- **Map icons:** the eight maps have their own icons, cut from the user's concept render (`tools/make_map_icons.py`), replacing the icon rendered from the tinted leather bundle. Tested in game: they look good.
 - **Rip heart search tested in-game; pings mostly red:** finding the heart with the corrupted wishbone works; the pings now shade into purple only for about a fifth of their colours (they looked mostly purple). Busier waves and maddened creatures fighting each other also passed.
 - **Rip heart search and corrupted wishbone (new, untested):** the heart now stands 96–128 m from the landing spot (outside the waves' range), and a Corrupted wishbone (Wishbone + 1 shard at the Riftforge) pings towards it in red and purple, faster the closer you get; everyone nearby sees the pings.
 - **Rip waves tested in-game; busier waves:** new setting `WaveMultiplier` (default 2): each raid entry's most-alive-at-once doubled and its interval halved in rips (Meadows: 8 alive, one every 10 s), after the play-test found the vanilla pacing too slow.

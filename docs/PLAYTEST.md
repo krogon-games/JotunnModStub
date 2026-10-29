@@ -16,7 +16,7 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 1a. ~~Maddened bonuses in the log, red creatures; charms ignored; chests in Meadows and Swamp~~ (passed 2026-10-29).
 1b. ~~Busier waves (`WaveMultiplier` 2); maddened creatures fight each other; heart search with the corrupted wishbone~~ (passed 2026-10-29).
 1c. **Re-check:** the corrupted wishbone's pings are now mostly red with bits of purple.
-1d. **New: map icons.** `spawn CorruptionMap_Meadows` (and the other seven): each shows its own icon (green stag, dark fir, skull, white peak, yellow beast, purple insect, volcano, ice) in the inventory and at the Riftforge.
+1d. ~~Map icons~~ (passed 2026-10-29).
 2. Wear a Boar or Neck charm: rip creatures still attack you.
 3. Watch whether maddened creatures also fight each other.
 4. Destroy the heart: the exit rip opens and a chest appears with Meadows chest loot plus 1–3 corruption shards; the waves stop.
