@@ -11,6 +11,8 @@ namespace Corruption
         private const string EssenceSection = "4 - Essences";
         private const string RipSection = "5 - Rips";
         private const string CorruptedSection = "6 - Corrupted Bosses";
+        // Numbered after the design phase (9: inventory), so other features can take the numbers in between.
+        private const string TabsSection = "9 - Inventory Tabs";
 
         public static ConfigEntry<float> OneStarShardChance;
         public static ConfigEntry<float> TwoStarShardChance;
@@ -18,6 +20,7 @@ namespace Corruption
         public static ConfigEntry<int> BossShardsMax;
         public static ConfigEntry<bool> BossShardsFirstKillOnly;
 
+        public static ConfigEntry<bool> TabsEnabled;
         public static ConfigEntry<bool> TalismansEnabled;
         public static ConfigEntry<bool> EssencesEnabled;
         public static ConfigEntry<bool> RipsEnabled;
@@ -120,6 +123,11 @@ namespace Corruption
                 AdminOnly("Fewest corruption shards a corrupted boss drops (every kill).", new AcceptableValueRange<int>(0, 50)));
             CorruptedShardsMax = config.Bind(CorruptedSection, "ShardsMax", 5,
                 AdminOnly("Most corruption shards a corrupted boss drops.", new AcceptableValueRange<int>(0, 50)));
+
+            TabsEnabled = config.Bind(TabsSection, "Enabled", true,
+                AdminOnly("Currency and Maps tabs on the player inventory: shards, essences and maps go there instead of the bag, " +
+                          "weigh nothing, and still pay for crafting and drop into the gravestone. Off: the tabs are hidden and " +
+                          "their contents kept (not lost) until they're turned on again."));
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",

@@ -7,7 +7,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **129 passed, 0 failed** (2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **145 passed, 0 failed** (2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader, inventory tab rules).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -45,6 +45,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
+| **Currency and Maps tabs** (Corruption, 2026-10-29, branch `claude/ui-overhaul`): Bag / Currency / Maps on the inventory; pickup straight to the tab, weightless, pays for recipes, maps open rips from the tab, gravestone on death | `PLAYTEST.md` → Session 1e |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
@@ -94,7 +95,7 @@ The user wants the inventory screen to look like an RPG character screen (concep
 
 1. **Character sheet**: built; first play-test 2026-10-29 worked (slots, stats) but looked too plain. Reworked the same day: generated art (`tools/make_sheet_ui.py`, mock-up `docs/images/sheet_preview.png`), labelled tiles with silhouettes, and the **live character picture** (brought forward from step 2). Decisions in `DECISIONS.md` (2026-10-29): keep EquipmentAndQuickSlots, no hand or feet slots, no tabs. Second play-test (2026-10-29): the look matches the mock-up and the live picture works (turning it by dragging works); the feet stood above a thin stone and a talisman kept the blue backing, fixed the same day. Third play-test: "looking much better" (user). **Merged into `master` 2026-10-29.**
 2. **Revisit later (user, 2026-10-29): make the sheet's look consistent with the rest of the game's UI.** Its darker wood, iron frame and parchment stand out next to the vanilla panels (inventory grid, crafting). Not now; ask the user what to change when picking it up. Tweak the numbers in `tools/make_sheet_ui.py` and `SheetLayout.cs`, rerun the script, and check the mock-up before asking for a test.
-3. **Currency and Maps tabs** off the inventory (design phase 9; the concept image's icon tabs). Separate feature; Affix Splinters depend on it.
+3. **Currency and Maps tabs**: built 2026-10-29 (see *Built, not verified*); the user's choices in `DECISIONS.md`. Affix Splinters, orbs and runes go in the Currency tab when the loot system makes them (their prefab names must be added to `TabRules.TabFor`).
 4. The recipe list redesign and the crafting screen with AdventureBackpacks' backpack panel open (user's to-do, 2026-10-28): ask what they want changed before starting.
 
 ## Before release

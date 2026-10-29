@@ -27,6 +27,19 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
+## Session 1e: Currency and Maps tabs (10 minutes, branch `claude/ui-overhaul`)
+
+Rebuild **both** mods from `claude/ui-overhaul` for this one (the tabs are in Corruption). Have some maps in your bag from before, and `spawn CorruptionShard 20` and an essence ready (`spawn CorruptionEssence_eikthyr 3`).
+
+1. Open the inventory: **Bag | Currency | Maps** buttons on top of the inventory panel. Within a second, the maps that were in your bag move to the Maps tab. Click each button: the grid switches; the character sheet stays put. Close and reopen: back on Bag.
+2. Drop some shards and pick them up: they go to Currency, not the bag (the pickup message still shows). Fill your bag with junk and pick up shards again: they still go in. Your weight number doesn't change when shards are picked up.
+3. At the Riftforge, craft a map using shards and an essence that are only in the Currency tab: the recipe shows enough, crafting takes them from the tab, and the new map lands in the Maps tab.
+4. Right-click a map in the Maps tab: it opens a rip as before, and the map is used up.
+5. Open a chest: drag a shard from the Currency tab into the chest and back; shift-click one in the tab: it goes to the chest. Try dragging wood into the Currency tab: refused.
+6. Die (god mode off, e.g. a long fall). Your gravestone holds the tab items in extra rows under the bag's items. Take all: the shards, essences and maps go back to their tabs.
+7. Log out and back in: the tabs still hold their items.
+8. No red errors in the console.
+
 ## Session 2: with a friend
 
 Needs a second player (host a world or use the dedicated server, everyone on the same build).

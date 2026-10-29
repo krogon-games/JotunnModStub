@@ -23,6 +23,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone) | Corruption | Tested in-game (single player) | — (heart distance from the game data and the user; recipe in code) | `Corruption/Content/CorruptedWishbone.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/CorruptionPlugin.cs`, `CraftingOverhaul.Tests/MapListTests.cs`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
+| [Currency and Maps tabs](#currency-and-maps-tabs) | UI | Built, untested | Corruption: `9 - Inventory Tabs` → `Enabled` | `Corruption/Content/InventoryTabs.cs`, `Corruption/Content/InventoryTabsUi.cs`, `Corruption/Rules/TabRules.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/Texts.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TabRulesTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 
@@ -693,6 +694,62 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 
 ---
 
+## Currency and Maps tabs
+
+*Corruption plugin, design phase 9. Behaviour decided by the user, 2026-10-29.*
+
+**What it does:** two extra tabs on the player inventory, so currency and maps don't take bag space.
+
+- **Tab buttons** **Bag | Currency | Maps** sit on top of the inventory panel. Currency or Maps shows that tab in place of the bag (the character sheet and equipment slots stay put); the inventory opens on Bag each time.
+- **Currency tab** (8 × 4): corruption shards and boss essences; later orbs, Affix Splinters and runes. **Maps tab** (8 × 4): rip maps. Items are recognised by their prefab name (`CorruptionShard`, `CorruptionEssence_*`, `CorruptionMap_*`), so new essences and maps from the data tables go to their tab without code changes.
+- **Straight to the tab:** picking up (by hand or auto-pickup) puts currency and maps in their tab, even when the bag is full. Only a full tab sends them to the bag. Anything that still lands in the bag (crafted at the Riftforge, dragged in, taken from a chest, maps from before this update) moves to its tab within half a second. EquipmentAndQuickSlots' quick and equipment slots are left alone.
+- **Weightless:** tab contents don't count towards carry weight.
+- **Still usable:** the tabs count and pay as part of your inventory for every recipe (Riftforge maps, building costs, boss altars), and pay before the bag. Right-click a map in the Maps tab to open its rip. Drag between a tab and a chest, shift-click to send an item to an open chest, split stacks, hover for tooltips, as in the bag. A tab only takes its own items.
+- **Death:** tab contents go into the gravestone with the rest of your inventory, in rows under the bag's (world settings that keep or delete items on death apply to them too). Taking everything from the gravestone puts them back in their tabs; they don't count against the gravestone's "room and weight" check.
+- Saved with the character (in its custom data), so they come with you between worlds and servers like the bag. Only you see your tabs.
+
+**Config settings** (admin-only, synced from the server):
+
+| Setting | Default | Description |
+|---|---|---|
+| `Enabled` | `true` | Off: the tab buttons are hidden and the tabs' contents are kept (not lost) but can't be reached or used until it's turned on again |
+
+Tab size (8 × 4) is fixed by the user's choice; which item goes where and the gravestone layout are unit-tested (`TabRulesTests`, against the real `maps.csv` and `essences.csv`).
+
+**Known issues:**
+- Untested in-game.
+- Mouse only: the tab grid isn't part of the game's gamepad navigation.
+- Auto-pickup still checks the item's weight against your carry limit, so when you're overloaded it skips currency (picking up with E works).
+- With a tab full, extra items stay in the bag; when space frees up they move over on their own.
+- A dropped item can't swap a non-tab item into a tab (the drop is refused).
+- If a character's saved tabs can't be read, they're never saved over (the log says so); tell Claude.
+
+**Vanilla behaviour overridden (Harmony patch targets):** all act only on the local player's own inventory.
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Player.Load` | Postfix | Reads the tabs from the character's custom data (`corruption_tab_currency`, `corruption_tab_maps`) |
+| `Player.Save` | Prefix | Writes the tabs into the character's custom data |
+| `Inventory.AddItem(ItemData)` | Prefix, high priority (skips the original) | Puts currency and maps in their tab when it has room (pickup, take from a chest) |
+| `Inventory.CanAddItem(ItemData, int)` | Postfix, low priority | A full bag can still take currency and maps while their tab has room |
+| `Inventory.MoveAll` | Prefix | "Take all" (gravestone, chest): currency and maps to their tabs first |
+| `Player.Update` | Postfix | Local player, twice a second: moves currency and maps from the bag's rows to their tab |
+| `Inventory.CountItems(string, int, bool)` | Postfix | Adds the tabs' stock |
+| `Inventory.HaveItem(string, bool)` | Postfix | Also true when only a tab has the item |
+| `Inventory.RemoveItem(string, int, int, bool)` | Prefix, high priority (changes `amount`) | Pays from the tabs first; does nothing if an earlier prefix already skipped the original |
+| `Player.CreateTombStone` | Prefix | Moves the tabs' items into rows under the bag, so the gravestone takes them like everything else |
+| `Inventory.MoveInventoryToGrave` | Postfix | Gives the gravestone enough rows for them |
+| `TombStone.EasyFitInInventory` | Postfix | Leaves tab items (which go to the tabs and weigh nothing) out of the room and weight check |
+| `InventoryGui.Show` / `Hide` / `UpdateInventory` / `OnDestroy` | Postfix | Creates the tab buttons and grid, resets to Bag on close, keeps the shown tab's grid current |
+| `InventoryGrid.DropItem` | Prefix | Refuses items that don't belong in the tab, and swaps that would put a non-tab item in a tab |
+| `InventoryGui.OnSelectedItem` | Prefix (our grid only) | Shift-click in a tab with a chest open moves the item to the chest |
+
+Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps in the Maps tab, and opening the rip takes the map from the bag or the tab.
+
+**Conflicts:** see `docs/mod-compatibility.md`. EquipmentAndQuickSlots also patches `AddItem`, `CanAddItem`, `MoveInventoryToGrave`, `EasyFitInInventory` and the gravestone's height; AdventureBackpacks and CraftingOverhaul's craft-from-chests also patch `CountItems` and `RemoveItem`. Payment order: tabs, then AdventureBackpacks' backpack, then nearby chests, then the bag.
+
+---
+
 ## Loot system
 
 **Status:** Planned. Not started.
@@ -732,6 +789,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-29
+- **Currency and Maps tabs** (Corruption, branch `claude/ui-overhaul`): Bag | Currency | Maps tabs on the inventory, 8 × 4 each. Shards and essences go to Currency and maps to Maps straight from pickup; tab contents weigh nothing, pay for recipes first, open rips from the tab, and go into the gravestone on death (all decided by the user). Untested in-game.
 - **Character sheet, last single-player checks passed:** the close button, dragging the sheet, and the layout with a chest and the AdventureBackpacks backpack open. Only multiplayer is left (`PLAYTEST.md` → Session 2).
 - **Rip waves at least 1 star:** new setting `MinStars` (default 1); every wave creature spawns with at least one star (user: waves still not challenging enough). Tested in game: definitely more challenging. Corrupted wishbone colour re-check passed.
 - **Map icons:** the eight maps have their own icons, cut from the user's concept render (`tools/make_map_icons.py`), replacing the icon rendered from the tinted leather bundle. Tested in game: they look good.
