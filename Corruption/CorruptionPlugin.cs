@@ -68,6 +68,7 @@ namespace Corruption
             // After essences: map recipes and colours use them.
             Safe.Run("register maps", MapItems.Register);
             Safe.Run("register rips", RipPrefabs.Register);
+            Safe.Run("register the corrupted wishbone", CorruptedWishbone.Register);
             Safe.Run("register the maddened effect", Maddened.RegisterEffect);
             Safe.Run("read the rip loot table", RipLoot.Load);
         }

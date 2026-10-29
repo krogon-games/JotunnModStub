@@ -63,6 +63,16 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void PlayersLandOutsideEveryArmyRaidsRange()
+        {
+            // Waves start when a player is within the raid's range of the heart; the landing spot must be outside it.
+            var armies = ReadCsv(Dump("events.csv")).Where(e => e["m_name"].StartsWith("army_")).ToList();
+            Assert.NotEmpty(armies);
+            Assert.All(armies, e => Assert.True(float.Parse(e["m_eventRange"], System.Globalization.CultureInfo.InvariantCulture) <= RipRules.HeartMinDistance,
+                $"{e["m_name"]} has range {e["m_eventRange"]}, more than the heart's minimum distance {RipRules.HeartMinDistance}."));
+        }
+
+        [Fact]
         public void RipLootTableIsValidAndUsesRealChests()
         {
             var errors = new List<string>();

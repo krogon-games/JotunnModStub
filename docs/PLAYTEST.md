@@ -15,6 +15,7 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 1. ~~Waves start with the army message; a 2-star dropped a shard; the heart leaves a chest with shards~~ (passed 2026-10-29).
 1a. ~~Maddened bonuses in the log, red creatures; charms ignored; chests in Meadows and Swamp~~ (passed 2026-10-29).
 1b. **New:** busier waves (`WaveMultiplier` 2): a Meadows rip keeps up to 8 creatures coming, a new one about every 10 s. Is the pace right now?
+1c. **New: heart search.** `spawn Wishbone` and `spawn CorruptionShard`, craft the **Corrupted wishbone** at the Riftforge and wear it. Open a Meadows rip and go through: the heart is out of sight (96–128 m away) and no waves start yet. Red/purple pings, slow at first, faster as you walk towards the heart; waves start on the way. After destroying the heart the pings stop. The log line `Corrupted wishbone: pings every …` appears at startup.
 2. Wear a Boar or Neck charm: rip creatures still attack you.
 3. Watch whether maddened creatures also fight each other.
 4. Destroy the heart: the exit rip opens and a chest appears with Meadows chest loot plus 1–3 corruption shards; the waves stop.
@@ -38,5 +39,5 @@ Needs a second player (host a world or use the dedicated server, everyone on the
 
 1. **Craft and build from chests:** the 11 steps in [`multiplayer-test.md`](multiplayer-test.md).
 2. **Talismans:** your friend sees creatures ignore you when you wear a charm.
-3. **Rips:** you open a rip, your friend follows you through, you both come home through the exit rip. If a rip ever lands near anyone's base, tell Claude (the server should prevent that).
+3. **Rips:** you open a rip, your friend follows you through, you both come home through the exit rip. Your friend sees and hears your corrupted wishbone's pings. If a rip ever lands near anyone's base, tell Claude (the server should prevent that).
 4. **Essences:** kill a boss together: it drops 1 essence.

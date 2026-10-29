@@ -52,7 +52,8 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 ### Server messages (rips)
 
-- Requests that need the whole world go to the server with `ZRoutedRpc` (registered in a `Game.Start` postfix): the player's game sends `Corruption_RipRequest` to `GetServerPeerID()`, the server answers the sender with `Corruption_RipReply`. In single player and on a host the "server" is the same game; routed RPCs to yourself are handled locally.
+- Requests that need the whole world go to the server with `ZRoutedRpc` (registered in a `Game.Start` postfix): the player's game sends `Corruption_RipRequest` to `GetServerPeerID()`, the server answers the sender with `Corruption_RipReply`. In single player and on a host the "server" is the same game; routed RPCs to yourself are handled locally. Effects other players should see go to `ZRoutedRpc.Everybody` (which includes your own game), and each game shows them on the sender's character if it has it loaded (`Corruption_RipPing`, the corrupted wishbone).
+- Per-character state that must survive logging out (the heart of the rip you entered) goes in `Player.m_customData`, which the game saves with the character.
 - Only the server holds every object in the world (`ZDOMan.GetAllZDOsWithPrefabIterative` covers them all there), so checks like "near anyone's base" belong on the server.
 - Objects for far-away places (the rip heart) are instantiated there directly: their persistent ZDO stays when the instance is removed as out of range, and they appear when someone arrives. Settle them on the ground once the area is loaded.
 - Rip state lives on the objects' ZDOs (`corruption_rip_*` keys in `Rips.cs`), so it survives restarts and works for every player.

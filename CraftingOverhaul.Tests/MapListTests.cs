@@ -100,14 +100,32 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void PicksTheFirstCandidateAwayFromBases()
+        public void PicksTheFirstCandidateWithHeartAndLandingAwayFromBases()
         {
-            var candidates = new[] { new RipRules.Spot(0, 0), new RipRules.Spot(500, 0), new RipRules.Spot(1000, 0) };
+            RipRules.Placement P(float heartX, float landingX) => new RipRules.Placement(new RipRules.Spot(heartX, 0), new RipRules.Spot(landingX, 0));
             var bases = new[] { new RipRules.Spot(50, 0) };
-            var spot = RipRules.FirstAwayFromBases(candidates, bases, 100);
-            Assert.True(spot.HasValue);
-            Assert.Equal(500, spot.Value.X);
-            Assert.Null(RipRules.FirstAwayFromBases(new[] { new RipRules.Spot(0, 0) }, bases, 100));
+            // Heart near the base; then landing near the base; then both clear.
+            var candidates = new[] { P(0, 500), P(500, 120), P(1000, 1100) };
+            var pick = RipRules.FirstAwayFromBases(candidates, bases, 100);
+            Assert.True(pick.HasValue);
+            Assert.Equal(1000, pick.Value.Heart.X);
+            Assert.Null(RipRules.FirstAwayFromBases(new[] { P(0, 500) }, bases, 100));
+        }
+
+        [Fact]
+        public void LandingSpotIsWithinTheHeartDistanceAndAccepted()
+        {
+            var rng = new Random(3);
+            var heart = new RipRules.Spot(100, -200);
+            for (int i = 0; i < 200; i++)
+            {
+                var spot = RipRules.SpotAround(heart, rng.NextDouble, RipRules.HeartMinDistance, RipRules.HeartMaxDistance, 16, (x, z) => x > heart.X);
+                Assert.True(spot.HasValue);
+                double d = Math.Sqrt(Math.Pow(spot.Value.X - heart.X, 2) + Math.Pow(spot.Value.Z - heart.Z, 2));
+                Assert.InRange(d, RipRules.HeartMinDistance - 0.01, RipRules.HeartMaxDistance + 0.01);
+                Assert.True(spot.Value.X > heart.X);
+            }
+            Assert.Null(RipRules.SpotAround(heart, rng.NextDouble, 96, 128, 16, (x, z) => false));
         }
 
         [Fact]

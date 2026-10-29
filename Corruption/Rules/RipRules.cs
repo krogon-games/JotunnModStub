@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     Game-independent parts of opening a rip: sampling landing spots, rejecting spots near bases, timing.
+    ///     Game-independent parts of opening a rip: sampling heart and landing spots, rejecting spots near bases, timing.
     ///     The game checks (biome, height, flatness, explored) are passed in, so this is unit-tested.
     /// </summary>
     internal static class RipRules
@@ -45,29 +45,76 @@ namespace Corruption.Rules
             return spots;
         }
 
-        /// <summary>The first candidate with no base marker within <paramref name="distance" /> metres, or null.</summary>
-        public static Spot? FirstAwayFromBases(IList<Spot> candidates, IList<Spot> bases, float distance)
+        /// <summary>
+        ///     The heart is at least this far from the landing spot (metres): the range of every boss army raid
+        ///     (<c>m_eventRange</c> 96 in <c>data/game-dump-1.0.20/events.csv</c>), so players land in quiet and the
+        ///     waves start as they close in on the heart. A test checks the game data still agrees.
+        /// </summary>
+        public const float HeartMinDistance = 96f;
+
+        /// <summary>The heart is at most this far from the landing spot (user, 2026-10-29: "just past 96 m", 96–128 m).</summary>
+        public const float HeartMaxDistance = 128f;
+
+        /// <summary>Where a rip's heart stands and where its travellers land.</summary>
+        public struct Placement
         {
-            float limit = distance * distance;
+            public Spot Heart;
+            public Spot Landing;
+
+            public Placement(Spot heart, Spot landing)
+            {
+                Heart = heart;
+                Landing = landing;
+            }
+        }
+
+        /// <summary>
+        ///     A random spot between <paramref name="min" /> and <paramref name="max" /> metres from
+        ///     <paramref name="centre" /> that passes <paramref name="accept" />, trying up to <paramref name="tries" />
+        ///     directions; null if none passes.
+        /// </summary>
+        public static Spot? SpotAround(Spot centre, Func<double> random, float min, float max, int tries, Func<float, float, bool> accept)
+        {
+            for (int i = 0; i < tries; i++)
+            {
+                double a = 2 * Math.PI * random();
+                double d = min + (max - min) * random();
+                float x = (float)(centre.X + d * Math.Cos(a));
+                float z = (float)(centre.Z + d * Math.Sin(a));
+                if (accept(x, z))
+                {
+                    return new Spot(x, z);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>The first candidate whose heart and landing spot both have no base marker within <paramref name="distance" /> metres, or null.</summary>
+        public static Placement? FirstAwayFromBases(IList<Placement> candidates, IList<Spot> bases, float distance)
+        {
             foreach (var c in candidates)
             {
-                bool near = false;
-                foreach (var b in bases)
-                {
-                    float dx = c.X - b.X;
-                    float dz = c.Z - b.Z;
-                    if (dx * dx + dz * dz < limit)
-                    {
-                        near = true;
-                        break;
-                    }
-                }
-                if (!near)
+                if (IsAwayFromBases(c.Heart, bases, distance) && IsAwayFromBases(c.Landing, bases, distance))
                 {
                     return c;
                 }
             }
             return null;
+        }
+
+        public static bool IsAwayFromBases(Spot spot, IList<Spot> bases, float distance)
+        {
+            float limit = distance * distance;
+            foreach (var b in bases)
+            {
+                float dx = spot.X - b.X;
+                float dz = spot.Z - b.Z;
+                if (dx * dx + dz * dz < limit)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>One random event (raid) as the game defines it, reduced to what choosing a rip's army needs.</summary>

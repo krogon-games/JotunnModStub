@@ -137,14 +137,16 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 
 *Built 2026-10-28 (step B), from the game data and the user's answers:*
 - **Waves are the biome boss's army:** the game's own raid(s) that stop once that boss is defeated (Eikthyr → army_eikthyr … Kall Fimbulbringer → army_elakingar and army_jotuns), with their own creatures, counts, intervals, chances and group sizes. They start when a player comes within the raid's range (96 m), with the raid's own start message, and keep coming **while the heart stands**.
-- On arrival every creature already within that range is **maddened** and hunts the players.
+- When the waves start, every creature already within that range is **maddened** and hunts the players.
 - **Maddened:** damage from Dvergr power (the game's creature buff, ×1.2), speed from the Tonic of Ratatosk (+15%), no fleeing, enemies of everything; **charms don't repel them** (user).
 - **Stars:** up to 2 (tier 1), rolled with the game's own level-up chance.
 - **End loot:** destroying the heart leaves one of the biome's own vanilla chests (weighted by how often each appears there; `Corruption/Data/rip_loot.csv`) with 1–3 corruption shards added (user). Rip creatures drop shards at **twice** the normal starred chances (user).
 
 ### Getting home
 
-The rip's heart is a destructible object at the landing spot. Destroying it opens the return rip home.
+The rip's heart is a destructible object **96–128 m from the landing spot** (just outside the waves' 96 m range), so players have to go and find it; the waves start as they close in. *Changed 2026-10-29 (user): it was at the landing spot.* Destroying it opens the return rip home.
+
+**Corrupted wishbone** (user, 2026-10-29): crafted at the Riftforge from a Wishbone and 1 shard. Worn, it pings towards the heart of the rip you came through, like the vanilla Wishbone finds buried treasure, in red and purple, faster the closer you get (the vanilla pacing: 5 s far, 0.5 s close). Everyone nearby sees the pings. Since the Wishbone drops from Bonemass, early rips are searched without it (the user's choice).
 
 **Decided: heart-gated return.** Both rip portals close after 1 in-game day. There is no safety fallback: survival games reward preparation, so a player who arrives without a plan for getting home (a portal kit, food, repairs) and dies or is stranded pays the price.
 
