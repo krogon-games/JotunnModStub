@@ -185,27 +185,30 @@ then add one line:
 
 The mod's corruption look so far: the deep red of the corruption shard and the rips, a red glow from inside, cracks and tears that open onto the void (Ginnungagap), small touches of purple. Prompts follow the map icon lesson: the item has to read at 64 px, so one strong silhouette and bold colour, no fine detail.
 
-**How to use:** attach an in-game picture of the vanilla Deer trophy (so the shape stays recognisable) and the essence render (`docs/images/essences_reference.jpg`) for style, camera, lighting and background. Run each prompt separately.
+*First three takes (void-cracked, crystal antlers, bound offering) rejected by the user 2026-10-29: "way too over the top. The new icon needs to look a lot closer to the original. Mostly recolouring and very small tweaks." The prompts below are edits of the vanilla icon, from least to most changed.*
 
-### A. Void-cracked
+**How to use:** attach only the vanilla Deer trophy icon (a screenshot of it in the inventory, cropped to the one slot) and run each prompt on it separately. These are edits: the model should change as little as possible.
 
-```
-A single item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look: the attached deer trophy (a severed deer head with antlers), corrupted by the void. Keep the same head, antlers and shape so it is clearly the same trophy. Deep jagged cracks split the fur and run up the antlers, glowing deep red from inside as if the head is splitting open onto a dark void; faint purple light flickers deep in the widest crack. The eyes glow red. The fur is darkened to a sooty brown-black around the cracks. It will be a tiny 64 by 64 pixel inventory icon, so keep it bold: strong silhouette, big glowing cracks, no fine detail. Centred on a plain, even dark slate-grey background, three-quarter view, soft key light from the upper left, subtle red glow halo, no text, no other objects. Square 1:1 image.
-```
-
-### B. Crystal antlers
+### A. Recolour only
 
 ```
-A single item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look: the attached deer trophy (a severed deer head with antlers), taken over by corruption crystal. Keep the same head and shape so it is clearly the same trophy, but the antlers have turned into jagged, faceted dark-red crystal like a rough-cut gemstone, glowing from inside, and smaller red crystal shards break out through the fur of the brow and neck. The rest of the fur is ashen grey, drained of life. It will be a tiny 64 by 64 pixel inventory icon, so keep it bold: strong silhouette, big glowing crystal antlers, no fine detail. Centred on a plain, even dark slate-grey background, three-quarter view, soft key light from the upper left, subtle red glow halo, no text, no other objects. Square 1:1 image.
+Edit the attached game icon. Keep it exactly the same: same deer trophy, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the fur from light brown to a dark, deep red-brown, darken the antlers to a dark brown-grey with a faint red tint at the tips, and add a very soft, thin dark-red glow around the outline. Do not add anything, remove anything or redraw any part.
 ```
 
-### C. Bound offering
+### B. Recolour and red eyes
 
 ```
-A single item for a Viking survival game, in Valheim's stylised, slightly low-poly painterly look: a ritual offering made from the attached deer trophy (a severed deer head with antlers). Keep the same head and shape so it is clearly the same trophy. The head is bound with dark leather cords, and a glowing deep-red crystal shard is lashed to its forehead between the antlers. Bold glowing red runes are painted over the fur in thick strokes, and a thin dark-red and purple mist curls up from the shard. The fur is darkened, almost black. It will be a tiny 64 by 64 pixel inventory icon, so keep it bold: strong silhouette, one glowing shard and a few big runes, no fine detail. Centred on a plain, even dark slate-grey background, three-quarter view, soft key light from the upper left, subtle red glow halo, no text, no other objects. Square 1:1 image.
+Edit the attached game icon. Keep it exactly the same: same deer trophy, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the fur from light brown to a dark, deep red-brown and darken the antlers to a dark brown-grey. The one small addition: the eyes glow a small, bright red. Do not add anything else, remove anything or redraw any part.
+```
+
+### C. Recolour and one thin crack
+
+```
+Edit the attached game icon. Keep it exactly the same: same deer trophy, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the fur from light brown to a dark, deep red-brown and darken the antlers to a dark brown-grey. The one small addition: a single thin crack on the forehead that glows deep red. Do not add anything else, remove anything or redraw any part.
 ```
 
 ### Notes
 
-- A fits the rips (glowing tears onto the void), B fits the corruption shard and essences (crystal), C shows how the offering is made (the trophies plus a shard, bound in a ritual).
+- The same edit, with the same wording, then works for every other offering's vanilla icon, so they all match.
+- Without any art, the mod could also recolour the vanilla icon itself in code (as it already tints corrupted bosses), which would match option A.
 - Once a take is chosen, the same treatment applies to the other offerings in `altars.csv`: Ancient seed (the Elder), Withered bone (Bonemass), Fuling totem (Yagluth), Bell (Fader), Memorial coal and Hateful blood (the Deep North). Moder's altar has no offering in the dump (her dragon eggs go on item stands); check it before making hers.
