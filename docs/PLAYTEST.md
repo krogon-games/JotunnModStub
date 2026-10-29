@@ -16,7 +16,7 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 1a. ~~Maddened bonuses in the log, red creatures; charms ignored; chests in Meadows and Swamp~~ (passed 2026-10-29).
 1b. ~~Busier waves (`WaveMultiplier` 2); maddened creatures fight each other; heart search with the corrupted wishbone~~ (passed 2026-10-29).
 1c. ~~Wishbone pings mostly red; stop when the heart dies~~ (passed 2026-10-29).
-1e. **New: every wave creature has at least 1 star** (`MinStars` 1), some 2. Are the waves challenging enough now?
+1e. ~~Every wave creature at least 1 star: more challenging~~ (passed 2026-10-29).
 1d. ~~Map icons~~ (passed 2026-10-29).
 2. Wear a Boar or Neck charm: rip creatures still attack you.
 3. Watch whether maddened creatures also fight each other.

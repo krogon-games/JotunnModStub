@@ -611,7 +611,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 - A `Failed to find rpc method 327122920` warning when first opening the chest is the game's own: vanilla chests call `discovered` but register `RPC_Discovered`. Harmless, happens with every vanilla treasure chest.
 - Maddened creatures stay after the heart is destroyed (the waves stop; the ones alive keep fighting). Vanilla raid creatures despawn when the raid ends; rips have no such end yet.
 - **Play-test 2026-10-29:** the busier waves (`WaveMultiplier` 2) passed, and maddened creatures were seen fighting each other, as the design says.
-- **Play-test 2026-10-29, after the busier waves:** still not challenging enough (user: too few or too weak). Wave creatures now have at least 1 star (`MinStars` 1); untested. With every creature starred, 1-star shard drops (4% in rips) apply to all of them, so rips give more shards, and 2 stars come one level-up roll sooner (10% instead of about 1%).
+- **Play-test 2026-10-29, after the busier waves:** still not challenging enough (user: too few or too weak). Wave creatures now have at least 1 star (`MinStars` 1). **Re-tested 2026-10-29: "definitely more challenging"** (user). With every creature starred, 1-star shard drops (4% in rips) apply to all of them, so rips give more shards, and 2 stars come one level-up roll sooner (10% instead of about 1%).
 - Map tiers (more waves, more stars) come with phase 5.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
@@ -732,7 +732,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-29
-- **Rip waves at least 1 star:** new setting `MinStars` (default 1); every wave creature spawns with at least one star (user: waves still not challenging enough). Corrupted wishbone colour re-check passed.
+- **Rip waves at least 1 star:** new setting `MinStars` (default 1); every wave creature spawns with at least one star (user: waves still not challenging enough). Tested in game: definitely more challenging. Corrupted wishbone colour re-check passed.
 - **Map icons:** the eight maps have their own icons, cut from the user's concept render (`tools/make_map_icons.py`), replacing the icon rendered from the tinted leather bundle. Tested in game: they look good.
 - **Rip heart search tested in-game; pings mostly red:** finding the heart with the corrupted wishbone works; the pings now shade into purple only for about a fifth of their colours (they looked mostly purple). Busier waves and maddened creatures fighting each other also passed.
 - **Rip heart search and corrupted wishbone (new, untested):** the heart now stands 96–128 m from the landing spot (outside the waves' range), and a Corrupted wishbone (Wishbone + 1 shard at the Riftforge) pings towards it in red and purple, faster the closer you get; everyone nearby sees the pings.
