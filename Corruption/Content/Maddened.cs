@@ -24,6 +24,8 @@ namespace Corruption.Content
         private static readonly Color Red = new Color(0.7f, 0.09f, 0.05f);
         private static readonly HashSet<Character> Active = new HashSet<Character>();
         private static int s_effectHash;
+        private static SE_Stats s_effect;
+        private static bool s_sourcesCopied;
 
         public static bool IsMaddened(Character character)
         {
@@ -53,27 +55,47 @@ namespace Corruption.Content
             effect.m_name = "$corruption_maddened";
             effect.m_tooltip = "$corruption_maddened_tooltip";
             effect.m_ttl = 0f;   // lasts until the creature dies
-            var damage = ObjectDB.instance.GetStatusEffect(DamageSource.GetStableHashCode()) as SE_Stats;
+            ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(effect, false));
+            s_effect = effect;
+            s_effectHash = StatusEffectName.GetStableHashCode();
+        }
+
+        /// <summary>
+        ///     Copies the numbers from the vanilla effects. Done in a loaded world, the first time a creature is
+        ///     maddened: at startup the game hasn't made its status effects available yet (play-test 2026-10-29 log:
+        ///     "not found" for both).
+        /// </summary>
+        private static void CopySources()
+        {
+            if (s_sourcesCopied || !s_effect || !ObjectDB.instance || ObjectDB.instance.m_StatusEffects == null)
+            {
+                return;
+            }
+            s_sourcesCopied = true;
+            SE_Stats Find(string name)
+            {
+                foreach (var se in ObjectDB.instance.m_StatusEffects)
+                {
+                    if (se && se.name == name)
+                    {
+                        return se as SE_Stats;
+                    }
+                }
+                return null;
+            }
+            var damage = Find(DamageSource);
             if (damage)
             {
-                effect.m_modifyAttackSkill = damage.m_modifyAttackSkill;
-                effect.m_damageModifier = damage.m_damageModifier;
+                s_effect.m_modifyAttackSkill = damage.m_modifyAttackSkill;
+                s_effect.m_damageModifier = damage.m_damageModifier;
             }
-            else
-            {
-                Jotunn.Logger.LogWarning($"Maddened: {DamageSource} not found; maddened creatures get no damage bonus.");
-            }
-            var speed = ObjectDB.instance.GetStatusEffect(SpeedSource.GetStableHashCode()) as SE_Stats;
+            var speed = Find(SpeedSource);
             if (speed)
             {
-                effect.m_speedModifier = speed.m_speedModifier;
+                s_effect.m_speedModifier = speed.m_speedModifier;
             }
-            else
-            {
-                Jotunn.Logger.LogWarning($"Maddened: {SpeedSource} not found; maddened creatures get no speed bonus.");
-            }
-            ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(effect, false));
-            s_effectHash = StatusEffectName.GetStableHashCode();
+            Jotunn.Logger.LogInfo($"Maddened: damage ×{s_effect.m_damageModifier} (from {(damage ? DamageSource : "nothing, not found")}), " +
+                                  $"speed +{s_effect.m_speedModifier * 100f}% (from {(speed ? SpeedSource : "nothing, not found")}).");
         }
 
         /// <summary>Creatures loaded with the flag (another player maddened them, or after a reload) get the behaviour too.</summary>
@@ -154,6 +176,7 @@ namespace Corruption.Content
                     var seman = m_character.GetSEMan();
                     if (seman != null && !seman.HaveStatusEffect(s_effectHash))
                     {
+                        CopySources();
                         seman.AddStatusEffect(s_effectHash, true);
                     }
                 });

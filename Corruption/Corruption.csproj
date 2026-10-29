@@ -65,18 +65,25 @@
   </Target>
 
   <!-- Stamp the git branch and commit into the DLL, so the log shows exactly which build is running (play-test
-       2026-10-29: a build from the wrong branch looked like broken features). Builds without git say "unknown". -->
+       2026-10-29: a build from the wrong branch looked like broken features). Read straight from the .git folder, so
+       it works without the git program (GitHub Desktop and Visual Studio keep .git up to date). No .git = "unknown". -->
   <Target Name="StampGitCommit" BeforeTargets="GetAssemblyAttributes">
-    <Exec Command="git rev-parse --abbrev-ref HEAD" ConsoleToMSBuild="true" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitBranch" />
-    </Exec>
-    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommit" />
-    </Exec>
+    <PropertyGroup>
+      <_GitDir>$(MSBuildProjectDirectory)\..\.git</_GitDir>
+      <_GitHead Condition="Exists('$(_GitDir)\HEAD')">$([System.IO.File]::ReadAllText('$(_GitDir)\HEAD').Trim())</_GitHead>
+      <_GitRef Condition="$(_GitHead.StartsWith('ref: '))">$(_GitHead.Substring(5))</_GitRef>
+      <GitBranch Condition="'$(_GitRef)' != ''">$(_GitRef.Replace('refs/heads/', ''))</GitBranch>
+      <GitBranch Condition="'$(GitBranch)' == '' and '$(_GitHead)' != ''">detached</GitBranch>
+      <_GitCommitFull Condition="'$(_GitRef)' != '' and Exists('$(_GitDir)\$(_GitRef)')">$([System.IO.File]::ReadAllText('$(_GitDir)\$(_GitRef)').Trim())</_GitCommitFull>
+      <_GitCommitFull Condition="'$(_GitRef)' == '' and '$(_GitHead)' != ''">$(_GitHead)</_GitCommitFull>
+      <GitCommit Condition="'$(_GitCommitFull)' != ''">$(_GitCommitFull.Substring(0, 7))</GitCommit>
+      <GitBuild>$(GitBranch) $(GitCommit)</GitBuild>
+      <GitBuild Condition="'$(GitBranch)' == ''">unknown</GitBuild>
+    </PropertyGroup>
     <ItemGroup>
       <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
         <_Parameter1>GitBuild</_Parameter1>
-        <_Parameter2>$(GitBranch) $(GitCommit)</_Parameter2>
+        <_Parameter2>$(GitBuild)</_Parameter2>
       </AssemblyAttribute>
     </ItemGroup>
   </Target>

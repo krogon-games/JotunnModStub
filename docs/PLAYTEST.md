@@ -12,7 +12,8 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 ### 1. Rip waves (step B)
 0. Check the build: `BepInEx/LogOutput.log` has `Corruption 0.1.0 loaded (build: claude/rips-bosses …)`. A build from `master` doesn't have step B yet.
-1. `spawn CorruptionMap_Meadows`, use it and go through. A raid message shows and red boars and necks come at you in waves; some may have stars.
+1. ~~Waves start with the army message; a 2-star dropped a shard; the heart leaves a chest with shards~~ (passed 2026-10-29).
+1a. After the maddened fix: the log shows `Maddened: damage ×1.2 (from SE_Dvergr_buff), speed +15% (from Potion_hasty)` once a rip creature appears; rip creatures look red and hit a little harder and run a little faster than normal ones.
 2. Wear a Boar or Neck charm: rip creatures still attack you.
 3. Watch whether maddened creatures also fight each other.
 4. Destroy the heart: the exit rip opens and a chest appears with Meadows chest loot plus 1–3 corruption shards; the waves stop.
