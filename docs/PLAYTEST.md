@@ -6,11 +6,12 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 **Results so far:** the first session (2026-10-28) passed boss essences, corrupted bosses, talismans, craft from chests with AdventureBackpacks, category headers, `co_biome` and config reload; maps and rips worked apart from two bugs, fixed and confirmed in a re-test. Details: `FEATURES.md`.
 
-**Before you start:** rebuild both mods (`CraftingOverhaul.sln`), start the game with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily installed (the group's setup), load a test world, open the console (F5) and type `devcommands`. `god` and `fly` help.
+**Before you start:** switch your copy of the code to the branch the checks below are for (now `claude/rips-bosses`), rebuild both mods (`CraftingOverhaul.sln`), start the game with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily installed (the group's setup), load a test world, open the console (F5) and type `devcommands`. `god` and `fly` help.
 
 ## Session 1c: solo (about 20 minutes)
 
 ### 1. Rip waves (step B)
+0. Check the build: `BepInEx/LogOutput.log` has `Corruption 0.1.0 loaded (build: claude/rips-bosses …)`. A build from `master` doesn't have step B yet.
 1. `spawn CorruptionMap_Meadows`, use it and go through. A raid message shows and red boars and necks come at you in waves; some may have stars.
 2. Wear a Boar or Neck charm: rip creatures still attack you.
 3. Watch whether maddened creatures also fight each other.

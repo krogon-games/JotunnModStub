@@ -543,7 +543,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 | `KillShardMultiplier` | `2` | Multiplies the starred shard chances for rip creatures (user) |
 
 **Known issues:**
-- Untested in-game (103 tests pass).
+- Untested in-game (103 tests pass). **Play-test 2026-10-29 didn't run step B:** no waves, no chest and no errors, because the build came from `master`, which doesn't have step B yet (it's on `claude/rips-bosses`). The log now names the build's branch and commit, so the next test can check.
 - Maddened creatures stay after the heart is destroyed (the waves stop; the ones alive keep fighting). Vanilla raid creatures despawn when the raid ends; rips have no such end yet.
 - Maddened creatures fight each other as the design says; a wave may thin itself out. To watch in play-tests.
 - Map tiers (more waves, more stars) come with phase 5.
@@ -633,6 +633,9 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ---
 
 ## Changelog
+
+### 2026-10-29
+- **Build stamp:** the Corruption log line now says which git branch and commit the DLL was built from (`Corruption 0.1.0 loaded (build: claude/rips-bosses 79279a1)`), after a play-test ran a `master` build that didn't have the feature being tested.
 
 ### 2026-10-28
 - **Rip waves and loot (phase 4 step B):** each rip spawns its biome boss's army raid while the heart stands; maddened creatures (Dvergr power damage, Ratatosk speed, no fleeing, enemies of all, unaffected by charms); up to 2 stars; the heart leaves a vanilla biome chest plus 1–3 shards; rip creatures drop shards at double chances. Table `rip_loot.csv`. Untested in-game (103 tests).

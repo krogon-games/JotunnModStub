@@ -55,6 +55,10 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - Objects for far-away places (the rip heart) are instantiated there directly: their persistent ZDO stays when the instance is removed as out of range, and they appear when someone arrives. Settle them on the ground once the area is loaded.
 - Rip state lives on the objects' ZDOs (`corruption_rip_*` keys in `Rips.cs`), so it survives restarts and works for every player.
 
+### Build stamp
+
+`Corruption.csproj` writes the git branch and short commit into the DLL (`AssemblyMetadata("GitBuild", …)`, target `StampGitCommit`); the plugin logs it on load. When a play-test result looks like "nothing happened", check that line first.
+
 ## Code patterns (follow these)
 
 1. **Isolated patches.** `PatchAllSafely()` applies each `[HarmonyPatch]` class separately inside try/catch, so one broken target doesn't disable the rest.

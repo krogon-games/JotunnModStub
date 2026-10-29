@@ -64,6 +64,23 @@
     <Error Condition="$(_BuiltAssemblyText.Contains('System.Buffers'))" Text="$(TargetFileName) references System.Buffers, which Valheim doesn't ship." />
   </Target>
 
+  <!-- Stamp the git branch and commit into the DLL, so the log shows exactly which build is running (play-test
+       2026-10-29: a build from the wrong branch looked like broken features). Builds without git say "unknown". -->
+  <Target Name="StampGitCommit" BeforeTargets="GetAssemblyAttributes">
+    <Exec Command="git rev-parse --abbrev-ref HEAD" ConsoleToMSBuild="true" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitBranch" />
+    </Exec>
+    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low" WorkingDirectory="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommit" />
+    </Exec>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>GitBuild</_Parameter1>
+        <_Parameter2>$(GitBranch) $(GitCommit)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
   <Target Name="JotunnPostBuildTaskWin" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <Exec Command="powershell.exe -ExecutionPolicy RemoteSigned -File &quot;$(SolutionDir)publish.ps1&quot; -Target &quot;$(ConfigurationName)&quot; -TargetPath &quot;$(TargetDir.TrimEnd('\'))&quot; -TargetAssembly &quot;$(TargetFileName)&quot; -ValheimPath &quot;$(VALHEIM_INSTALL.TrimEnd('\'))&quot; -DeployPath &quot;$(MOD_DEPLOYPATH.TrimEnd('\'))&quot; -ProjectPath &quot;$(ProjectDir.TrimEnd('\'))&quot; " />
   </Target>

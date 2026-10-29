@@ -35,7 +35,15 @@ namespace Corruption
             Safe.Run("add talisman slots", TalismanSlots.Register);
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
 
-            Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
+            Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
+        }
+
+        /// <summary>The git branch and commit this DLL was built from (stamped by Corruption.csproj).</summary>
+        internal static string BuildStamp()
+        {
+            var stamp = typeof(CorruptionPlugin).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyMetadataAttribute), false)
+                .OfType<System.Reflection.AssemblyMetadataAttribute>().FirstOrDefault(a => a.Key == "GitBuild");
+            return stamp == null || string.IsNullOrWhiteSpace(stamp.Value) ? "unknown" : stamp.Value.Trim();
         }
 
         private void Update()
