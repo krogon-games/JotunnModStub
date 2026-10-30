@@ -259,16 +259,17 @@ namespace Corruption.Content
 
         /// <summary>
         ///     The game drops any drag whose item isn't in the bag whenever no chest is open (every frame in
-        ///     <c>UpdateInventory</c>, and in <c>CloseContainer</c>): it assumes such an item came from a chest that's no
+        ///     <c>UpdateContainer</c>, and in <c>CloseContainer</c>): it assumes such an item came from a chest that's no
         ///     longer there. A drag from a tab is kept (play-test 2026-10-30: left-click couldn't pick up tab items
-        ///     unless a container was open). Every other way of ending a drag is untouched.
+        ///     unless a container was open; the first fix guarded <c>UpdateInventory</c> by mistake). Every other way
+        ///     of ending a drag is untouched.
         /// </summary>
         [HarmonyPatch]
         private static class KeepTabDrag_Scope
         {
             private static IEnumerable<MethodBase> TargetMethods()
             {
-                yield return AccessTools.Method(typeof(InventoryGui), nameof(InventoryGui.UpdateInventory));
+                yield return AccessTools.Method(typeof(InventoryGui), nameof(InventoryGui.UpdateContainer));
                 yield return AccessTools.Method(typeof(InventoryGui), nameof(InventoryGui.CloseContainer));
             }
 

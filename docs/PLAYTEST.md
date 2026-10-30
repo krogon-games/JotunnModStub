@@ -35,7 +35,7 @@ Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
 
 Build the whole solution from `claude/ui-overhaul` for this one (the tabs are in Corruption; the branch includes everything merged into `master` up to 2026-10-30). Have some maps in your bag from before, and `spawn CorruptionShard 20` and an essence ready (`spawn CorruptionEssence_eikthyr 3`).
 
-**Tests 2026-10-30:** steps 1, 3, 4, 5 and 8 passed after the grid fix. Left-click pick-up from a tab with no container open failed (fixed): re-test step 2 and step 2a. Steps 6 and 7 not done yet. For step 4 use a world with unexplored Meadows (`resetmap` if the map was revealed with `exploremap`).
+**Tests 2026-10-30:** steps 1, 3, 4, 5 and 8 passed after the grid fix. Steps 2, 6 and 7 passed in the second re-test. Left-click pick-up from a tab with no container open still failed (the first fix guarded the wrong method; fixed again): re-test step 2a. For step 4 use a world with unexplored Meadows (`resetmap` if the map was revealed with `exploremap`).
 
 1. ~~Open the inventory: **Bag | Currency | Maps** buttons on top of the inventory panel. Within a second, the maps that were in your bag move to the Maps tab. Click each button: the grid switches; the character sheet stays put. Close and reopen: back on Bag.~~ (passed 2026-10-30)
 2. Drop some shards and pick them up: they go to Currency, not the bag (the pickup message still shows). Fill your bag with junk and pick up shards again: they still go in. Your weight number doesn't change when shards are picked up.
