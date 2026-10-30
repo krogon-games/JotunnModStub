@@ -62,7 +62,13 @@ D2's item stat requirements are left out: Valheim gates gear by biome materials 
   2. **Upgrade choices on the big skills, later:** at set point counts (for example 10 and 20) a signature skill offers one of two variants. That is where reworked skills get their Valheim twists without changing D2's layout.
 - **Why not one Diablo 4 tree:** our point economy is D2's (about 110 skill points by level 99, 20 per skill), which fits 30 skills in three themed tabs; D4's tree is built for about 60 points and skills capped at 5, so most of it would get filled and every character would end up alike.
 - **Skills we can't do well are left out or reworked**, not forced in (user: "as much as we can without breaking the game"). Each skill has a status in the table: `v1`, `later`, `reworked`, `dropped`.
-- **Casting:** hotkeys on an ability bar (Jötunn `ButtonConfig`, with gamepad), cooldowns as status effects. Whether a selected combat skill replaces the weapon's secondary attack (closer to D2's right-click skill) is open (§10).
+- **Casting (decided, user 2026-10-30): D2's layout.** The normal attack stays the weapon's own; the **chosen skill** goes on the skill button.
+  - **Skill bar: 4 skill slots**, a new UI element styled like the rest of the UI (built by the UI session, §9). The number keys 1–0 stay the vanilla hotbar for weapons, tools and items. Players drag skills from the skills panel into the slots; to change a skill, drag another one onto the slot. Passives don't take a slot. Slots are saved per character.
+  - **Each slot has its own hotkey** (rebindable). Pressing it: an attack skill (an arrow mode, a spear or javelin skill) becomes the skill on the skill button, and its slot lights up; a cast skill (Inner Sight, later Decoy and Valkyrie) casts at once.
+  - **Skill button:** the user asked for right click. With a bow or crossbow that's free, because their block is a token 3 (a wood shield is 6, a carapace spear 48). With a spear or other melee weapon, right click is block and parry, so the proposal there is Valheim's secondary attack button (middle mouse, where the vanilla spear throw already is). To confirm (§10).
+  - Proposed details: the chosen skill is remembered per weapon kind (the last bow skill comes back when you take the bow out again); a slot greys out when the weapon in hand can't use it, or when you can't pay its cost; cost and cooldown show on the slot.
+  - Default slot hotkeys are picked from keys that neither Valheim nor the group's mods (EquipmentAndQuickSlots, AdventureBackpacks, PlantEasily) bind by default, read from their code and config before building.
+  - Technical: drawing a bow on a button other than the attack button needs a patch to the player's input; prove it in the first prototype.
 - **Cost:** D2 uses mana; open (§10).
 - **Damage types:** D2 magic and holy damage → Valheim **spirit** (strong against undead, as holy is in D2); fire, cold → frost, lightning and poison map directly. Valheim has no attack rating or critical hits; crits would be a new mechanic (Amazon Critical Strike, Barbarian masteries).
 - **Weapon skills:** Valheim's `m_skillType` decides which mastery applies (Swords and Knives → Blade, Axes, Clubs → Mace, Polearms, Spears).
@@ -84,7 +90,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 - A summon system with a friendly creature (`Skeleton_Friendly`, faction Players) for Decoy and Valkyrie.
 
 **How her skills are used (proposed):** D2 puts the chosen skill on the right mouse button; Valheim's bow has no secondary attack and the spear throws on its secondary. So:
-- **Bow skills are arrow modes.** Pick one on the ability bar; every shot of the bow or crossbow uses it and pays its cost. No mode = a normal shot.
+- **Bow skills fire on the skill button** (§4): the attack button shoots a normal arrow; the skill button draws and shoots the chosen skill and pays its cost. Example: Multiple Shot chosen, the skill button fans out several arrows for one arrow from the quiver; Magic Arrow works with an empty quiver.
 - **Spear skills ride the spear's own attacks:** thrust skills (Jab, Power Strike, Impale, Charged and Lightning Strike, Fend) on the primary attack, javelin skills (Poison, Plague, Lightning Bolt, Lightning Fury) on the throw.
 - **Javelin skills throw a spectral copy** of the spear, so the real spear stays in hand (a vanilla throw leaves it on the ground to pick up, which doesn't suit casting). Decided (user, 2026-10-30).
 - **Passives** (Critical Strike, Dodge, Avoid, Evade, Pierce) need no casting.
@@ -178,7 +184,8 @@ Before step 1: check `docs/mod-compatibility.md` for every game method we'll pat
 
 The **XP bar and the skills panel** are built in the UI overhaul session (`claude/ui-overhaul`, CraftingOverhaul). This plugin owns the rules and the data and gives the UI what it needs through a small public API read by reflection (the same pattern as the character sheet reading EquipmentAndQuickSlots' JSON API), so CraftingOverhaul has no hard dependency:
 - **Read:** class, level, XP and XP for the next level, unspent stat and skill points, attribute values, the skill table (tab, row, column, name, icon, required level, prerequisites, max points, status), each skill's hard points and effective level (with +skills and synergies).
-- **Do:** spend a stat point, spend a skill point (refused with a reason when the rules say no), respec.
+- **Skill bar:** the 4 slots' skills and hotkeys, which slot is on the skill button, each slot's usable/cost/cooldown state.
+- **Do:** spend a stat point, spend a skill point (refused with a reason when the rules say no), respec, put a skill in a slot or clear it.
 - **Events:** level-up and points-changed, so the panel can refresh without polling.
 
 The exact API is written here before either side builds it.
@@ -189,7 +196,7 @@ The exact API is written here before either side builds it.
 2. **Skill resource:** stamina (the Valheim warrior's resource), eitr (Valheim's mana, but only magic food gives it), or a new bar (e.g. rage)?
 3. **Numbers:** ~~D2 rules or not~~ **answered 2026-10-30:** D2's rules, all changeable in config. Still open: XP per creature (EpicMMOSystem's tables, or derived from creature health in the game dump), and how attribute and skill values scale from D2 to Valheim stats.
 4. **Choosing a class:** at a station or altar, with an item (Valheim Legends uses Eikthyr's altar), or with a console command for now? Can a character change class?
-5. **Casting:** hotkeys only, or can a combat skill replace the weapon's secondary attack?
+5. ~~Casting~~ **Answered 2026-10-30:** D2 layout, a 4-slot skill bar with its own hotkeys (§4). Open: right click for melee weapons too (it is block and parry), or the secondary attack button there?
 6. **Names:** keep D2 class and skill names (as the orbs keep PoE names, because the group knows them), with a Norse plugin name? "Berserkir" is taken by vanilla axes; "Úlfheðnar" (wolf-warriors) is free. The Amazon could be a Valkyrie or Shieldmaiden (*skjaldmær*).
 7. **Vanilla skills:** keep levelling by use alongside class levels (recommended), or replace use-to-level as in the original skill rework idea?
 8. ~~Death penalty~~ **Answered 2026-10-30:** Valheim's own skill loss only; no XP loss.
@@ -197,4 +204,4 @@ The exact API is written here before either side builds it.
 10. ~~Javelins~~ **Answered 2026-10-30:** spectral copy.
 11. ~~Penetrate~~ **Answered 2026-10-30:** ignore the creature's resistance to the hit. Open: immunity too?
 12. ~~Decoy and Valkyrie looks~~ **Answered 2026-10-30:** a tinted clone of the player character (feasibility to prove).
-13. **Arrow modes:** happy with bow skills as a mode chosen on the ability bar, used by every shot (§5)?
+13. ~~Arrow modes~~ **Answered 2026-10-30:** no modes; the chosen skill fires on the skill button, normal shots stay on the attack button (§4).
