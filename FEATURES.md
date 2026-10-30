@@ -722,7 +722,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 - Tested in single player 2026-10-29/30 (146 tests pass); not yet with several players.
 - **First look 2026-10-29 (user's screenshots):** `co_loot` Rares work: "Night Ward" (Rare Leather Trousers: +15% armour, armour 2 → 2.3) and "Skull Song" (Rare Bronze Sword: +37% damage, slash 35 → 48), yellow titles, affix lines with ranges, inactive lines grey. Magic items work too: "Shieldwall Bronze Atgeir", "Seismic Antler Pickaxe" (gathering affix on a pickaxe), "Crackling Club" (+19% of physical as lightning: blunt 12 adds lightning 2), blue names. Still to check: ground hover names, durability, block, repair, upgrade, natural drops, combat affixes.
 - **Play-test 2026-10-29 (phone log):** build check, natural drops from kills, combat affixes (no errors), a resonant line and no errors all passed. **Ground hover name failed** (showed the base name): the game localizes the hover text before our patch sees it, so the patch looked for the untranslated name. **Fixed 2026-10-30; re-test passed.** **Upgrading passed 2026-10-30:** a Rare Bronze Sword taken to level 4 kept its name and affixes; its numbers follow the level (slash 53 = 35 + 3×6; spirit 23 = 43% of 53; durability 623 = 350 × 1.78). **Durability and repair passed 2026-10-30.** Every Session 3 step has passed; multiplayer (personal rolls for each player) not tested yet.
-- Gear ranges: 16 set from the game data and approved (2026-10-29); max health, stamina, eitr and life steal are drafts by choice; the 5 resistance rows wait for a new `co_dump`. No caps on stacking carry weight, regen or max health/stamina/eitr (user, for now).
+- Gear ranges: 16 set from the game data and approved (2026-10-29); max health, stamina, eitr and life steal are drafts by choice; resistances settled 2026-10-30 (fire, frost, poison, lightning 10–50%; all resistances 2–10%). No caps on stacking carry weight, regen or max health/stamina/eitr (user, for now).
 - Personal loot is only the separate rolls: dropped items aren't locked to a player yet (the 60 s owner lock and loot beams come later).
 - The tables are compiled in; the design wants the server's copy to be the one everybody uses (later step).
 - Knockback and backstab use the weapon in hand when the hit lands; switching weapons while an arrow flies uses the new one.
@@ -764,6 +764,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ## Changelog
 
 ### 2026-10-30
+- **Resistance ranges settled** (user): fire, frost, poison and lightning 10–50%, all resistances 2–10%. Every gear affix now has its range.
 - **Loot: ground names and upgrading tested in-game.** Fire, frost and poison resistance ranges 10–50% from the new `co_dump` (gear that makes you Resistant; proposed); lightning and all resistances have no gear source (asked). Dump files `item_details.csv` and `status_effects.csv` refreshed with resistances.
 - **Fix: loot names on the ground** showed the base item name: the game localizes the hover text before our patch, which looked for the untranslated name. To re-test. Play-test results for loot step 1 recorded (drops, combat affixes, resonant lines, no errors passed).
 

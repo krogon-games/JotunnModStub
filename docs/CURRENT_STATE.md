@@ -77,7 +77,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
 - Kall Fimbulbringer's essence look (made without a concept render; status `proposed` in `essences.csv`).
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
-- **Gear affix ranges (2026-10-29):** 16 of the 28 draft rows now have ranges from the game data under the user's rules, approved (carry weight cut to 10–50); max health, stamina, eitr and life steal keep their drafts; no stacking caps for now (all user, sources in `AFFIX_RULES.md`). The 5 resistance rows need a new `co_dump` run (it now writes damage modifiers): **run `co_dump` once and send `item_details.csv` and `status_effects.csv`**.
+- **Gear affix ranges (2026-10-29):** 16 of the 28 draft rows now have ranges from the game data under the user's rules, approved (carry weight cut to 10–50); max health, stamina, eitr and life steal keep their drafts; no stacking caps for now (all user, sources in `AFFIX_RULES.md`). The resistance rows are settled too (2026-10-30): every gear affix has its range.
 - Play-test results for everything under "Built, not verified".
 - **Pull request:** nothing since PR #1 (merged 2026-09-29); `master` lacks everything Corruption. The user wants to revisit this after the first play-test session (2026-10-28): open a PR from the branch into `master` then.
 
