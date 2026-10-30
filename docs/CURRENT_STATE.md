@@ -8,7 +8,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - Orlog (the classes plugin, new 2026-10-30) compiles the same way.
-- `dotnet test CraftingOverhaul.Tests`: **179 passed, 0 failed** (2026-10-30, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **194 passed, 0 failed** (2026-10-30, after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -34,6 +34,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Corrupted bosses core: red tint, harder hits, slower kill, 2–3 essences and 3–5 shards | Corruption | 2026-10-28 play-test log |
 | Craft from chests with AdventureBackpacks: backpack alone, backpack + chest, no double charge | CraftingOverhaul | 2026-10-28 play-test log |
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
+| Currency and Maps tabs: Bag / Currency / Maps on the inventory; pickup straight to the tab (full bag too), weightless, pays for recipes, maps open rips from the tab, chests, drag and drop, gravestone on death, kept after relogging | Corruption | 2026-10-30, three play-test rounds (two bugs found and fixed) |
 | Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
 | Orlog levels and XP: XP per kill, stars, level-up, level-difference cut, saved with the character | Orlog | 2026-10-30 play-test; pace fix re-tested the same day ("pace feels better") |
@@ -102,7 +103,7 @@ The user wants the inventory screen to look like an RPG character screen (concep
 
 1. **Character sheet**: built; first play-test 2026-10-29 worked (slots, stats) but looked too plain. Reworked the same day: generated art (`tools/make_sheet_ui.py`, mock-up `docs/images/sheet_preview.png`), labelled tiles with silhouettes, and the **live character picture** (brought forward from step 2). Decisions in `DECISIONS.md` (2026-10-29): keep EquipmentAndQuickSlots, no hand or feet slots, no tabs. Second play-test (2026-10-29): the look matches the mock-up and the live picture works (turning it by dragging works); the feet stood above a thin stone and a talisman kept the blue backing, fixed the same day. Third play-test: "looking much better" (user). **Merged into `master` 2026-10-29.**
 2. **Revisit later (user, 2026-10-29): make the sheet's look consistent with the rest of the game's UI.** Its darker wood, iron frame and parchment stand out next to the vanilla panels (inventory grid, crafting). Not now; ask the user what to change when picking it up. Tweak the numbers in `tools/make_sheet_ui.py` and `SheetLayout.cs`, rerun the script, and check the mock-up before asking for a test.
-3. **Currency and Maps tabs** off the inventory (design phase 9; the concept image's icon tabs). Separate feature; Affix Splinters depend on it.
+3. **Currency and Maps tabs**: built 2026-10-29, tested in single player 2026-10-30; the user's choices in `DECISIONS.md`. Affix Splinters, orbs and runes go in the Currency tab when the loot system makes them (their prefab names must be added to `TabRules.TabFor`).
 4. The recipe list redesign and the crafting screen with AdventureBackpacks' backpack panel open (user's to-do, 2026-10-28): ask what they want changed before starting.
 
 ## Before release

@@ -104,7 +104,7 @@ All three must have been picked up before the recipe appears, which is vanilla b
 ### Map item
 
 - Stackable? No. Each map is a single item so affixes can live on it.
-- Consumed on use. Kept in the normal inventory for now (1 per slot); the Maps tab comes with the inventory work in phase 9 (2026-10-28).
+- Consumed on use. Kept in the Maps tab (built 2026-10-29, see [Inventory and equipment slots](#inventory-and-equipment-slots)); before that, the normal inventory (1 per slot).
 - Tooltip shows target biome, tier, and any rolled affixes.
 - Teleportable through portals (it's the key to the content, not a resource).
 
@@ -295,6 +295,7 @@ These came from the original brainstorm. They're worth doing but are not part of
 ### Inventory and equipment slots
 
 - Dedicated equipment slots for talismans and rings, so they don't eat bag space. Two extra tabs off the main player inventory: a Currency tab (orbs, shards, Affix Splinters, runes) and a Maps tab. Affix Splinters don't stack, so they need the Currency tab (user, 2026-10-28).
+- *Decided 2026-10-29 (user), built:* the tabs are 8 × 4 each; picked-up currency and maps go straight to their tab (the bag only when it's full); tab contents weigh nothing; on death they go into the gravestone like the rest of the inventory. Boss essences count as currency. Detail: `FEATURES.md` → Currency and Maps tabs.
 - WoW-style backpack with tabs is UI work on top of existing extended-inventory approaches. Check compatibility with popular inventory mods before building; it may be better to depend on one than to compete.
 - *Decided 2026-10-28:* the group uses **AdventureBackpacks** for backpacks (it has its own models and textures) instead of us building one, and **EquipmentAndQuickSlots** for equipment slots. See [`mod-compatibility.md`](mod-compatibility.md).
 

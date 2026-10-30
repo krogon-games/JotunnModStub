@@ -12,6 +12,8 @@ namespace Corruption
         private const string RipSection = "5 - Rips";
         private const string CorruptedSection = "6 - Corrupted Bosses";
         private const string LootSection = "7 - Loot";
+        // Numbered after the design phase (9: inventory), so other features can take the numbers in between.
+        private const string TabsSection = "9 - Inventory Tabs";
 
         public static ConfigEntry<float> OneStarShardChance;
         public static ConfigEntry<float> TwoStarShardChance;
@@ -19,6 +21,7 @@ namespace Corruption
         public static ConfigEntry<int> BossShardsMax;
         public static ConfigEntry<bool> BossShardsFirstKillOnly;
 
+        public static ConfigEntry<bool> TabsEnabled;
         public static ConfigEntry<bool> TalismansEnabled;
         public static ConfigEntry<bool> LootEnabled;
         public static ConfigEntry<bool> EssencesEnabled;
@@ -126,6 +129,10 @@ namespace Corruption
             LootEnabled = config.Bind(LootSection, "Enabled", true,
                 AdminOnly("Creatures drop Magic and Rare items with rolled affixes (chances: Corruption/Data/drop_chances.csv and " +
                           "drop_modifiers.csv). Off: no new loot drops; items already found keep their affixes."));
+            TabsEnabled = config.Bind(TabsSection, "Enabled", true,
+                AdminOnly("Currency and Maps tabs on the player inventory: shards, essences and maps go there instead of the bag, " +
+                          "weigh nothing, and still pay for crafting and drop into the gravestone. Off: the tabs are hidden and " +
+                          "their contents kept (not lost) until they're turned on again."));
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",

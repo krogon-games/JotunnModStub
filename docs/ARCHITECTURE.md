@@ -100,6 +100,7 @@ Full 1.0.14 game code (method bodies, not just signatures) comes from the NuGet 
 **Multiplayer**
 - The player whose game owns an area simulates its creatures, AI and physics; the dedicated server only relays and stores. "Server-authoritative spawning" is not how vanilla works. Details: [`coop-networking.md`](coop-networking.md).
 - Harvesting (trees, logs, stumps, rocks, deposits): `Damage()` on the striker's machine only sends the hit by RPC; the object's owner applies it, decides the break and spawns the drops. Changes to the hit must be made striker-side; extra drops need a message back to the striker.
+- `Player.m_customData` is saved with the character (profile), so per-character data that isn't in the world goes there: the inventory tabs (base64 of `Inventory.Save`), the corrupted wishbone's rip target. A gravestone's inventory keeps items in rows past its height when loaded (`Container.UpdateRows`), which is how tab items fit in it.
 - Items in EquipmentAndQuickSlots custom slots (our talisman slots) live only in the owner's inventory; other games can't see them. What other games need to know (worn talismans) is published on the player's own ZDO, which the player owns and every game receives.
 - Taking from a chest requires owning it: `NearbyContainers` claims ownership right before removing items.
 - Other players' trinkets are readable on any client via `VisEquipment.m_currentTrinketItemHash` (synced through the ZDO), which is how talismans work for remote players.
