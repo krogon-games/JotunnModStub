@@ -23,6 +23,7 @@
     <Compile Include="..\Corruption\Rules\TalismanSlotRules.cs" Link="Linked\TalismanSlotRules.cs" />
     <Compile Include="..\Corruption\Rules\ObjMesh.cs" Link="Linked\ObjMesh.cs" />
     <Compile Include="..\Corruption\Rules\EssenceTable.cs" Link="Linked\EssenceTable.cs" />
+    <Compile Include="..\Corruption\Rules\OfferingTable.cs" Link="Linked\OfferingTable.cs" />
     <Compile Include="..\Corruption\Rules\MapList.cs" Link="Linked\MapList.cs" />
     <Compile Include="..\Corruption\Rules\RipRules.cs" Link="Linked\RipRules.cs" />
     <Compile Include="..\Corruption\Rules\RipLootTable.cs" Link="Linked\RipLootTable.cs" />

@@ -22,6 +22,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Rip waves and loot (step B)](#rip-waves-and-loot-step-b) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `MinStars`, `MaxStars`, `WaveMultiplier`, `ChestShardsMin`, `ChestShardsMax`, `KillShardMultiplier`; table `Corruption/Data/rip_loot.csv` | `Corruption/Content/RipWaves.cs`, `Corruption/Content/Maddened.cs`, `Corruption/Content/RipLoot.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Rules/RipLootTable.cs`, `Corruption/Data/rip_loot.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone) | Corruption | Tested in-game (single player) | — (heart distance from the game data and the user; recipe in code) | `Corruption/Content/CorruptedWishbone.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/CorruptionPlugin.cs`, `CraftingOverhaul.Tests/MapListTests.cs`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
+| [Corrupted offerings](#corrupted-offerings) | Combat | Built, untested | — (table `Corruption/Data/offerings.csv`) | `Corruption/Content/CorruptedOfferings.cs`, `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/OfferingTable.cs`, `Corruption/Data/offerings.csv`, `Corruption/Assets/offering_icon_*.rgba`, `tools/make_offering_icons.py`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/OfferingTableTests.cs` | 2026-10-30 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
@@ -657,6 +658,56 @@ New item `CorruptedWishbone` (cloned from `Wishbone`, tinted). New status effect
 
 ---
 
+## Corrupted offerings
+
+*Corruption plugin, design phase 6: summoning corrupted bosses. Which item each boss takes and how many come from the game data (`altars.csv`); the rules from the user (2026-10-28 and 2026-10-30).*
+
+**What it does in-game:** each boss's vanilla offering has a corrupted version, crafted at the **Riftforge** and shown with its own icon (the vanilla icon recoloured dark red with a glowing crack, from the user's renders). How it's used follows the boss's own summoning:
+
+| Boss | Corrupted item | Recipe | How |
+|---|---|---|---|
+| Eikthyr | Corrupted deer trophy | 2 Deer trophies + 1 shard | Offer it at the altar like the trophies: the one item is the whole offering |
+| The Elder | Corrupted ancient seed | 3 Ancient seeds + 1 shard | Same |
+| Bonemass | Corrupted withered bone | 10 Withered bones + 1 shard | Same |
+| Moder | Corrupted dragon egg | 1 Dragon egg + 1 shard | Put one in **every** egg cup (3), then use the altar |
+| Yagluth | Corrupted fuling totem | 1 Fuling totem + 1 shard | One on **every** totem stand (5) |
+| The Queen | Corrupted sealbreaker | 1 Sealbreaker + 1 shard | Open her door with it: bosses in that location turn corrupted, now or when they appear |
+| Fader | Corrupted bell | 1 Bell + 1 shard | One in **every** bell holder (3) |
+| Kall Fimbulbringer | Corrupted malicious blood | 3 Malicious blood + 1 shard | Offer it at his altar; his later phases stay corrupted |
+
+- At a stand altar, a **mix** of corrupted and normal items is refused ("Every offering here must be corrupted, or none."), so no corrupted item is used up on a normal fight.
+- Pressing Use on an empty stand, or on the Queen's door, uses a **corrupted** item first if you carry one. Carry only normal ones for a normal fight.
+- A corrupted item offered at the wrong altar gets the game's own "wrong offering" message.
+- Corrupted items are only found in your **main inventory**, not in an AdventureBackpacks backpack (unlike normal keys, which AB lets you use from the backpack).
+
+**How to test:** `devcommands`, then `spawn CorruptedTrophyDeer` (or `CorruptedAncientSeed`, `CorruptedWitheredBone`, `CorruptedDragonEgg`, `CorruptedGoblinTotem`, `CorruptedDvergrKey`, `CorruptedBell`, `CorruptedHatefulBlood`), go to the boss's altar (`goto` or the map) and offer it. The boss arrives red and corrupted; the log says `Corrupted offering: Eikthyr summoned corrupted.`
+
+**Data table:** [`Corruption/Data/offerings.csv`](Corruption/Data/offerings.csv): boss, vanilla item, how it's used (`altar`, `stand`, `door`), vanilla items per corrupted item, name and description. Compiled into the DLL. `dotnet test` checks every row against the game's altars (item, count, stand altars) and that each has its icon.
+
+**Known issues:**
+- Untested in-game (134 tests pass).
+- Kall's phases: the next phase is corrupted when a corrupted phase dies and a boss named like its next phase (`FrozenKing_p2`, `_p3`) appears on the same game. Assumes his phases come from his death; the log says `next phase … is corrupted too` when it works.
+- The Queen: assumes she is in the same game location as her door (checked with the game's own location lookup). The log says how many bosses were corrupted when the door opened.
+- The corrupted bosses' summons (maddened adds) and extra particles come later.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `OfferingBowl.UseItem` | Prefix | A corrupted offering at its altar summons the boss with the one item |
+| `OfferingBowl.RPC_RemoveBossSpawnInventoryItems` | Prefix | Takes the one corrupted item instead of the full offering's count |
+| `OfferingBowl.Interact` | Prefix | Stand altars: all stands corrupted = corrupted summon; a mix is refused |
+| `OfferingBowl.DelayedSpawnBoss` | Postfix | Corrupts the boss just summoned |
+| `ItemStand.IsSupported` | Postfix | Stands that take an offering take its corrupted version |
+| `ItemStand.Interact` | Prefix | Use on an empty offering stand places a carried corrupted item first |
+| `Door.Interact`, `Door.UseItem` | Prefix | A corrupted key opens the door and marks it |
+| `Character.OnDeath` | Prefix | Remembers that a corrupted boss died, for its next phase |
+| `Character.Awake` | Postfix | Corrupts a corrupted boss's next phase, and bosses behind a corrupted door |
+
+New items `Corrupted<Item>` (cloned from the vanilla item, tinted red). Door data key `corruption_corrupted_door`.
+
+---
+
 ## Corrupted bosses (core)
 
 *Corruption plugin, design phase 6, the parts the design fully specifies. Corrupted offerings at the altars (and the corrupted Sealbreaker for the Queen) follow once `altars.csv` from the next `co_dump` shows each altar's real offering; the summons follow phase 4 step B's maddened creatures.*
@@ -680,7 +731,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 | `CorruptedBossTintStrength` (Look) | `0.6` | Per player. The Riftforge's tint strength, which was tested in-game |
 
 **Known issues:**
-- **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. The only way to make a corrupted boss for now is `co_corrupt`.
+- **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. Since 2026-10-30, corrupted offerings summon them too (see [Corrupted offerings](#corrupted-offerings)).
 - The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet: which particle prefab to reuse comes from the game data with the summons.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
@@ -730,6 +781,9 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ---
 
 ## Changelog
+
+### 2026-10-30
+- **Corrupted offerings (new, untested):** every boss's offering has a corrupted version, crafted at the Riftforge (the full offering + 1 shard at altars, 1 item + 1 shard per stand at Moder's, Yagluth's and Fader's altars, Sealbreaker + 1 shard for the Queen's door), with icons from the user's renders. They summon the boss corrupted; Kall's later phases stay corrupted.
 
 ### 2026-10-29
 - **Character sheet, last single-player checks passed:** the close button, dragging the sheet, and the layout with a chest and the AdventureBackpacks backpack open. Only multiplayer is left (`PLAYTEST.md` → Session 2).

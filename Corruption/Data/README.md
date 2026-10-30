@@ -13,8 +13,9 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`essences.csv`](essences.csv) | Boss essences: which boss drops which essence, how many per kill, its name, description and colours |
 | [`maps.csv`](maps.csv) | Maps: one per biome, its Riftforge recipe (shards, essence, material) and text |
 | [`rip_loot.csv`](rip_loot.csv) | Which vanilla chest a rip leaves, per biome, weighted by how often each appears in that biome |
+| [`offerings.csv`](offerings.csv) | Corrupted offerings: per boss, the vanilla item, how it's used (`altar`, `stand`, `door`), how many vanilla items one corrupted item takes (plus 1 shard), name and description |
 
-`essences.csv`, `maps.csv` and `rip_loot.csv` are compiled into the mod: **rebuild after editing them**. The others aren't loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
+`essences.csv`, `maps.csv`, `rip_loot.csv` and `offerings.csv` are compiled into the mod: **rebuild after editing them**. The others aren't loaded by the game yet; they are used when the loot system is built (design phase 7). Then the server's copy will be the one everybody plays with, so the group can rebalance without a new mod version.
 
 ## How to edit
 
