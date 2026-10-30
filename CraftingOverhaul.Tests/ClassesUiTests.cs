@@ -196,7 +196,7 @@ namespace CraftingOverhaul.Tests
             var straight = lines.Single(l => l.From == "MagicArrow" && l.To == "MultipleShot");
             Assert.Equal(straight.X1, straight.X2);
             Assert.Equal(-90f, straight.AngleDegrees, 3);
-            Assert.Equal(SkillTreeLayout.RowGap, straight.Length, 3);
+            Assert.Equal(SkillTreeLayout.RowGap - SkillTreeLayout.NameHeight, straight.Length, 3);
         }
 
         [Fact]

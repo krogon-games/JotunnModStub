@@ -371,7 +371,9 @@ Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJso
 
 **How it works:** our bars live under the HUD's root (`Hud.m_rootObject`), so they hide with the HUD. The game's displays (`m_healthPanel`, `m_staminaBar2Root`, `m_eitrBarRoot`, `m_foodBarRoot`, the food icons and times) are scaled to zero in a `LateUpdate` (the game's animators set them after `Hud.Update`), and scaled back when `Bars` is turned off.
 
-**Known issues:** untested. To check: nothing else the game shows lives under `m_healthPanel` (if something vanishes from the HUD, tell Claude); the mount's stamina panel still shows when riding.
+**Known issues:**
+- **Play-test 2026-10-30 (first look, single player, with the demo):** bars, food slots and the XP bar show and work; the game's displays are gone. The user wanted the XP bar "a little bit lower": now 14 px further below the bars (re-check). The look "could use a lot of polish" (user); a polish pass is to be agreed.
+- To check: nothing else the game shows lives under `m_healthPanel` (if something vanishes from the HUD, tell Claude); the mount's stamina panel still shows when riding.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 
@@ -403,7 +405,9 @@ Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJso
 | `SkillCrossPosition` | `24, 180` | Bottom-left corner of the cross, in pixels from the bottom left of the screen (proposed) |
 | `Demo` | `false` | Development: sample data instead of Orlog's. **Off before release** |
 
-**Known issues:** untested. With Orlog installed (and `Demo` off) nothing class-related shows yet: its API only answers the character so far, with no class. To check: the cross next to EAQS's quick slots (EAQS puts them at 216, 150 from the bottom left by default; the cross ends at x 210); the panel (about 644 × 794) fits the screen.
+**Known issues:**
+- **Play-test 2026-10-30 (first look, screenshots, single player, with the demo):** the panel opens, the three tabs switch, spending skill and stat points works, and dragging skills onto the slots fills the panel row and the HUD cross. Broken in the screenshots, **fixed the same day** (re-check): an empty cross slot showed a white square; the tab names ran into each other; long skill names (and "(later)") overlapped or ran off the panel; prerequisite lines crossed the names; locked skills' icons were too dark to see; the selected slot's gold outline barely showed; "Skill button: Right mouse" overlapped the Forsaken power's name (now above the cross). The look is "very basic" (user): a polish pass is to be agreed. More testing to come.
+- With Orlog installed (and `Demo` off) nothing class-related shows yet: its API only answers the character so far, with no class. To check: the cross next to EAQS's quick slots (EAQS puts them at 216, 150 from the bottom left by default; the cross ends at x 210); the panel (about 644 × 794) fits the screen.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 
@@ -1005,6 +1009,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-10-30
+- **Classes UI, first look** (screenshots): panel, tabs, spending, attributes and drag-to-slot work; food and XP bar pass. Fixed: white empty cross slot, overlapping tab and skill names, lines through names, too-dark locked icons, faint selected outline and points hint, cross label over the Forsaken power; XP bar lowered (user). A polish pass for the look is to be agreed.
 - **Classes UI built** (untested, from `docs/classes-ui-brief.md`): new health/eitr/stamina bars at the bottom centre with food beside them and an XP bar; the skill cross; the skills panel with the three skill tabs, prerequisite lines, spending, tooltips, drag-to-slot and the attribute points; the class choice window for the Orlog stone. Reads Orlog's API by reflection; a `Demo` setting serves a sample Amazon until Orlog's API is filled in (207 tests).
 - **Currency and Maps tabs tested in-game** (single player): every step passed after the drag fix.
 - **Currency and Maps tabs, second re-test:** death and gravestone, relogging and full-bag pickup pass. The drag fix guarded the wrong method (`UpdateInventory`); the cancel is in `UpdateContainer`. Fixed; re-test.

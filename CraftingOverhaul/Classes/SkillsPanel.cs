@@ -24,6 +24,8 @@ namespace CraftingOverhaul.Classes
         private const float SlotsHeight = 96f;
         private const float SlotTile = 58f;
         private const float MessageHeight = 24f;
+        /// <summary>Room each side of the tree for skill names wider than their tile (play-test 2026-10-30: they ran off the panel).</summary>
+        private const float TreePad = 30f;
 
         private static readonly string[] Attributes = { "strength", "dexterity", "vitality", "energy" };
 
@@ -106,7 +108,8 @@ namespace CraftingOverhaul.Classes
 
         // ------------------------------------------------------------ building
 
-        private static float PanelWidth => Margin + AttributesWidth + Margin + SkillTreeLayout.GridWidth + Margin;
+        private static float TreeWidth => SkillTreeLayout.GridWidth + 2f * TreePad;
+        private static float PanelWidth => Margin + AttributesWidth + Margin + TreeWidth + Margin;
         private static float TreeTop => HeaderHeight + TabHeight + 12f;
         private static float PanelHeight => TreeTop + SkillTreeLayout.GridHeight + 16f + SlotsHeight + MessageHeight + Margin;
 
@@ -130,10 +133,10 @@ namespace CraftingOverhaul.Classes
 
             float treeLeft = Margin + AttributesWidth + Margin;
             _skillPoints = UiKit.Text("SkillPoints", _root, 16, UiKit.Gold, TextAnchor.MiddleRight);
-            PlaceTopLeft(_skillPoints.rectTransform, treeLeft, HeaderHeight - 14f, SkillTreeLayout.GridWidth, 20f);
+            PlaceTopLeft(_skillPoints.rectTransform, treeLeft, HeaderHeight - 14f, TreeWidth, 20f);
 
             _grid = UiKit.Rect("Tree", _root);
-            PlaceTopLeft(_grid, treeLeft, TreeTop, SkillTreeLayout.GridWidth, SkillTreeLayout.GridHeight);
+            PlaceTopLeft(_grid, treeLeft + TreePad, TreeTop, SkillTreeLayout.GridWidth, SkillTreeLayout.GridHeight);
             // Lines first so the tiles cover their ends.
             _linesRoot = UiKit.Rect("Lines", _grid);
             UiKit.Stretch(_linesRoot);
@@ -142,7 +145,7 @@ namespace CraftingOverhaul.Classes
             for (int row = 1; row <= SkillTreeLayout.Rows; row++)
             {
                 SkillTreeLayout.TilePosition(row, 1, out _, out float y);
-                var label = UiKit.Text("Tier" + row, _grid, 14, UiKit.Dim, TextAnchor.MiddleLeft);
+                var label = UiKit.Text("Tier" + row, _grid, 15, new Color(1f, 1f, 1f, 0.6f), TextAnchor.MiddleLeft);
                 UiKit.SetText(label, "Lv " + SkillTreeLayout.TierLevels[row - 1]);
                 PlaceTopLeft(label.rectTransform, 0f, y, SkillTreeLayout.LabelWidth, SkillTreeLayout.Tile);
             }
@@ -202,7 +205,7 @@ namespace CraftingOverhaul.Classes
         private static void BuildTabs()
         {
             float left = Margin + AttributesWidth + Margin;
-            float width = (SkillTreeLayout.GridWidth - 2f * 6f) / 3f;
+            float width = (TreeWidth - 2f * 6f) / 3f;
             for (int i = 0; i < TabLabels.Length; i++)
             {
                 int tab = i;
@@ -218,8 +221,9 @@ namespace CraftingOverhaul.Classes
                     _lastCounter = -1;
                 });
                 TabBacks[i] = back;
-                TabLabels[i] = UiKit.Text("Label", back.rectTransform, 14, UiKit.Gold, TextAnchor.MiddleCenter);
-                UiKit.Stretch(TabLabels[i].rectTransform, 4f);
+                TabLabels[i] = UiKit.Text("Label", back.rectTransform, 15, UiKit.Gold, TextAnchor.MiddleCenter);
+                FitText(TabLabels[i], 11, 15);
+                UiKit.Stretch(TabLabels[i].rectTransform, 5f);
             }
         }
 
@@ -230,7 +234,7 @@ namespace CraftingOverhaul.Classes
             UiKit.SetText(label, "Skill slots: drag skills here");
             PlaceTopLeft(label.rectTransform, Margin, top + 18f, AttributesWidth, 24f);
             float rowWidth = Slots.Length * SlotTile + (Slots.Length - 1) * 14f;
-            float left = treeLeft + (SkillTreeLayout.GridWidth - rowWidth) / 2f;
+            float left = treeLeft + (TreeWidth - rowWidth) / 2f;
             for (int i = 0; i < Slots.Length; i++)
             {
                 var frame = UiKit.Image("Slot" + i, _root, SheetArt.Tile, Image.Type.Sliced, true);
@@ -368,16 +372,17 @@ namespace CraftingOverhaul.Classes
             var icon = UiKit.Image("Icon", frame.rectTransform, ClassesSource.SkillIcon(skill.Id));
             icon.preserveAspect = true;
             icon.enabled = icon.sprite;
-            icon.color = locked ? new Color(0.35f, 0.35f, 0.35f, 0.85f) : Color.white;
+            icon.color = skill.Later ? new Color(0.45f, 0.45f, 0.45f, 0.8f) : locked ? new Color(0.65f, 0.65f, 0.65f, 1f) : Color.white;
             UiKit.Stretch(icon.rectTransform, 8f);
 
             var points = UiKit.Text("Points", frame.rectTransform, 16, skill.CanSpend ? new Color(0.6f, 1f, 0.5f) : Color.white, TextAnchor.LowerRight);
             UiKit.Place(points.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-6f, 3f), new Vector2(40f, 20f));
-            UiKit.SetText(points, skill.Later ? "" : skill.Points.ToString());
+            UiKit.SetText(points, skill.Later ? "<size=12>later</size>" : skill.Points.ToString());
 
-            var name = UiKit.Text("Name", frame.rectTransform, 12, skill.Later ? UiKit.Dim : UiKit.Gold, TextAnchor.UpperCenter);
-            UiKit.Place(name.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -1f), new Vector2(size + SkillTreeLayout.ColGap - 4f, 16f));
-            UiKit.SetText(name, skill.Later ? skill.Name + " (later)" : skill.Name);
+            var name = UiKit.Text("Name", frame.rectTransform, 13, skill.Later ? new Color(0.7f, 0.66f, 0.6f) : UiKit.Gold, TextAnchor.UpperCenter);
+            FitText(name, 10, 13);
+            UiKit.Place(name.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -1f), new Vector2(size + SkillTreeLayout.ColGap - 4f, SkillTreeLayout.NameHeight));
+            UiKit.SetText(name, skill.Name);
 
             if (skill.CanSpend)
             {
@@ -744,6 +749,16 @@ namespace CraftingOverhaul.Classes
                 _skillIds = new string[0];
                 TreeObjects.Clear();
             }
+        }
+
+        /// <summary>Shrinks a label to its box (down to <paramref name="min" />) instead of letting it run into its neighbours.</summary>
+        private static void FitText(Text text, int min, int max)
+        {
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            text.verticalOverflow = VerticalWrapMode.Truncate;
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = min;
+            text.resizeTextMaxSize = max;
         }
 
         private static void PlaceTopLeft(RectTransform rt, float x, float y, float width, float height)

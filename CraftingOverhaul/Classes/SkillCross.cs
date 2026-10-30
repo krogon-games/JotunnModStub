@@ -70,7 +70,7 @@ namespace CraftingOverhaul.Classes
             for (int i = 0; i < SlotViews.Length; i++)
             {
                 var view = new Slot();
-                view.Highlight = UiKit.Image("Highlight" + i, _root, SheetArt.Tile, Image.Type.Sliced);
+                view.Highlight = UiKit.Image("Highlight" + i, _root, null);
                 view.Highlight.color = new Color(1f, 0.78f, 0.3f, 0.95f);
                 var frame = UiKit.Image("Slot" + i, _root, SheetArt.Tile, Image.Type.Sliced);
                 if (!frame.sprite)
@@ -83,6 +83,7 @@ namespace CraftingOverhaul.Classes
                 UiKit.Place(view.Highlight.rectTransform, Vector2.zero, Vector2.zero, cell - new Vector2(4f, 4f), new Vector2(Tile + 8f, Tile + 8f));
 
                 view.Icon = UiKit.Image("Icon", view.Root, null);
+                view.Icon.enabled = false;
                 view.Icon.preserveAspect = true;
                 UiKit.Stretch(view.Icon.rectTransform, 9f);
 
@@ -100,8 +101,9 @@ namespace CraftingOverhaul.Classes
                 UiKit.Place(view.Blocked.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 6f), new Vector2(Tile, 14f));
                 SlotViews[i] = view;
             }
-            _button = UiKit.Text("SkillButton", _root, 12, UiKit.Gold, TextAnchor.UpperCenter);
-            UiKit.Place(_button.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -4f), new Vector2(size + 60f, 16f));
+            // Above the cross: under it is the Forsaken power's name (play-test 2026-10-30).
+            _button = UiKit.Text("SkillButton", _root, 14, UiKit.Gold, TextAnchor.LowerCenter);
+            UiKit.Place(_button.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 0f), new Vector2(0f, 6f), new Vector2(size + 60f, 18f));
             Jotunn.Logger.LogInfo("Skill cross added.");
         }
 

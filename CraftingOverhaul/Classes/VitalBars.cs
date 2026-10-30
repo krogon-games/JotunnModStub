@@ -24,6 +24,8 @@ namespace CraftingOverhaul.Classes
         private const float BarHeight = 14f;
         private const float BarGap = 4f;
         private const float XpHeight = 8f;
+        /// <summary>The XP bar sits this far below the bars' base line (user, play-test 2026-10-30: "drop it down a little bit lower").</summary>
+        private const float XpDrop = 14f;
         private const float FoodSize = 30f;
         private const float FoodGap = 6f;
         private const float BuildOrShipHeight = 320f;
@@ -146,7 +148,7 @@ namespace CraftingOverhaul.Classes
             float y = 0f;
             if (xp)
             {
-                UpdateXp(left, maxLength, y);
+                UpdateXp(left, maxLength, y - XpDrop);
                 y += XpHeight + BarGap + 2f;
             }
             SetActive(_xp, xp);
@@ -233,7 +235,7 @@ namespace CraftingOverhaul.Classes
             if (stat > 0 || skill > 0)
             {
                 // Pulses like the game's "can eat again" food icons, so it's noticed.
-                float alpha = 0.6f + Mathf.Sin(Time.time * 4f) * 0.4f;
+                float alpha = 0.875f + Mathf.Sin(Time.time * 4f) * 0.125f;
                 string key = ModConfig.SkillsPanelKey.Value.ToString();
                 hint = (stat > 0 ? stat + " stat" : "") + (stat > 0 && skill > 0 ? ", " : "") + (skill > 0 ? skill + " skill" : "") +
                        (stat + skill == 1 ? " point" : " points") + (hasClass ? " (" + key + ")" : "");

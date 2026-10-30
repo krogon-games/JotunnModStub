@@ -58,6 +58,8 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 ## Classes UI (branch `claude/ui-overhaul`, about 15 minutes)
 
+**First look 2026-10-30 (screenshots):** food (2) and the XP bar (4) pass; panel, tabs, spending, attributes and drag-to-slot work. Fixed after it, to re-check: an empty cross slot was a white square, tab and skill names overlapped, lines crossed the names, locked icons were too dark, the XP bar is lower and the "Skill button" label is now above the cross.
+
 Build `CraftingOverhaul` from **`claude/ui-overhaul`**. In `BepInEx/config/com.krogongames.craftingoverhaul.cfg` set `[5 - Classes UI]` → `Demo = true` (sample Amazon at level 12; works with or without Orlog installed). The log says `Skill cross added.` once you're in the world.
 
 1. **Bars:** health (red, top), eitr (blue, middle, only once you have eitr: eat Yggdrasil porridge or another eitr food), stamina (yellow, bottom) together at the bottom centre with "current / max" at their ends. The game's own round health display, stamina bar, eitr bar and food icons are gone. Take a hit: a pale trail shows what you lost and catches up. Sprint: stamina drains.

@@ -91,7 +91,9 @@ namespace CraftingOverhaul.Classes
         public const int Cols = 3;
         public const float Tile = 64f;
         public const float ColGap = 56f;
-        public const float RowGap = 30f;
+        public const float RowGap = 36f;
+        /// <summary>The skill's name under its tile; lines start below it so they don't run through the text.</summary>
+        public const float NameHeight = 16f;
         /// <summary>Room left of the grid for the level tier labels.</summary>
         public const float LabelWidth = 44f;
 
@@ -150,7 +152,7 @@ namespace CraftingOverhaul.Classes
                         From = prereq.Id,
                         To = skill.Id,
                         X1 = px + Tile / 2f,
-                        Y1 = py + Tile,
+                        Y1 = py + Tile + NameHeight,
                         X2 = sx + Tile / 2f,
                         Y2 = sy
                     });
