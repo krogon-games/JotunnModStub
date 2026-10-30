@@ -27,6 +27,19 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
+## Orlog levels and XP (branch `claude/class-skills`, about 15 minutes)
+
+New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and check `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)`.
+1. In the console: `orlog_info`. It shows level 1, 0 / 500 XP, and the biome's creature levels (Meadows: 1–4, boss 5).
+2. Kill a boar and a neck: "+N XP" top-left for each (a few dozen XP). `orlog_info` shows the total.
+3. `spawn Boar 2` (a 1-star) and kill it: about twice a normal boar's XP.
+4. `orlog_xp 500`: "Level 2" in the centre with the level-up effect.
+5. `orlog_level 20`, kill a boar: little or no XP (far below you). `orlog_level 1` to go back.
+6. Log out and back in: level and XP kept.
+7. Your feel for the pace once you've played a while: what level at Eikthyr? (The guide says 5; `XpMultiplier` changes it.)
+8. With a friend (Session 2): both within 70 m of a kill each get XP; the lower-level player gets the bigger share of a low creature.
+9. No red errors in the console.
+
 ## Session 2: with a friend
 
 Needs a second player (host a world or use the dedicated server, everyone on the same build).

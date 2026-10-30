@@ -1,8 +1,9 @@
-# Valheim mods: CraftingOverhaul and Corruption
+# Valheim mods: CraftingOverhaul, Corruption and Orlog
 
-Valheim 1.0 mods (BepInEx + Jötunn + Harmony) for a group of four friends on a dedicated server. Two plugins in one solution:
+Valheim 1.0 mods (BepInEx + Jötunn + Harmony) for a group of four friends on a dedicated server. Three plugins in one solution:
 - `CraftingOverhaul/`: quality of life (recipe search and categories, biome grouping, craft/build from nearby chests). Works when only some players have it.
 - `Corruption/`: Diablo/Path of Exile-style endgame. The server and every player need it.
+- `Orlog/`: Diablo 2-style classes, levels and skill trees ([`docs/class-design.md`](docs/class-design.md)). The server and every player need it.
 
 ## Read first
 
@@ -17,6 +18,7 @@ Valheim 1.0 mods (BepInEx + Jötunn + Harmony) for a group of four friends on a 
 | [`docs/AFFIX_RULES.md`](docs/AFFIX_RULES.md) | Affix rules and reasoning |
 | [`docs/mod-compatibility.md`](docs/mod-compatibility.md) | Other mods the group runs (EquipmentAndQuickSlots, PlantEasily, AdventureBackpacks), where they patch the same game methods as us, and what to test. **Check it before patching a game method** |
 | [`Corruption/Data/`](Corruption/Data/README.md) | **Tunable numbers**: `affixes.csv` (every affix), `affix_caps.csv` (stat caps), `drop_chances.csv` and `drop_modifiers.csv` (loot drop rates). Edit numbers here, never in the docs; `dotnet test` validates them |
+| [`Orlog/Data/`](Orlog/Data/README.md) | Levelling tables (XP per level, XP per creature level, biome level ranges), made by `tools/make_orlog_tables.py` |
 
 Game reference data: `data/game-dump-1.0.20/` (from `co_dump`; development only, never ship it). Diablo 2 class data for the class design: `data/d2-reference/` (never ship it).
 
