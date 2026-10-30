@@ -37,7 +37,8 @@ D2 base rules (reference): max level 99; 5 stat points and 1 skill point per lev
 **Decided (user, 2026-10-30): follow D2's rules, with every rule in admin config** (server-synced) so it can be changed: max level (default 99), stat points per level (5), skill points per level (1), bonus points from bosses, the 20-point cap per skill, the one-point-per-level pace. The XP needed per level is a table, D2's experience table by default, in the plugin's `Data/` folder, with a config multiplier. Still open: how much XP each creature gives (§10).
 
 Valheim version:
-- **Pace (user, 2026-10-30): slow, like classic World of Warcraft.** Proposed way to get there from game data, WoW-style: each creature gets a **level from its biome** (as WoW's zones have level ranges) plus its stars; XP per kill follows WoW's classic formula for a creature of your level (level × 5 + 45), more for higher creatures and nothing for creatures far below you ("grey" mobs), so staying in an old biome stops paying and players move on, as in WoW. The XP needed per level stays D2's table, scaled by the config multiplier. Still needed from the user: the target pace (§10).
+- **Levelling guide (user, 2026-10-30):** the level a player should be at each boss: Eikthyr 5, The Elder 11, Bonemass 20, Moder 35, Yagluth 50, The Queen 62, Fader 76, Kall Fimbulbringer 90. This also gives each biome's creature level range for the XP formula below: Meadows 1–5, Black Forest 5–11, Swamp 11–20, Mountains 20–35, Plains 35–50, Mistlands 50–62, Ashlands 62–76, Deep North 76–90; levels 91–99 are endgame (rips, corrupted bosses). How creatures spread inside their biome's range (for example by health, from the game dump) is to propose.
+- **Pace (user, 2026-10-30): slow, like classic World of Warcraft.** Proposed way to get there from game data, WoW-style: each creature gets a **level from its biome** (as WoW's zones have level ranges) plus its stars; XP per kill follows WoW's classic formula for a creature of your level (level × 5 + 45), more for higher creatures and nothing for creatures far below you ("grey" mobs), so staying in an old biome stops paying and players move on, as in WoW. The XP needed per level stays D2's table, scaled by the config multiplier. The XP table is then tuned so these levels match the boss order.
 - **XP from kills**, more for starred creatures, bosses and corrupted creatures. Players near the kill share it, as in a D2 party (Valheim has no parties). D2's quest points → **each boss's first kill** gives bonus skill points (and maybe stat points).
 - **Per level:** stat points for the D2 attributes, 1 skill point.
 - **Vanilla skills stay** (decided, user 2026-10-30) and keep levelling by use (they set how well you use a weapon). The class adds to them; it doesn't replace them. This is less invasive than the original "skill rework" idea of replacing use-to-level.
@@ -75,8 +76,9 @@ D2's item stat requirements are left out: Valheim gates gear by biome materials 
 ### Eitr: making it usable for classes
 
 Today eitr is punishing for anyone who isn't a late-game mage (game dump): a character has **no eitr at all** until eitr food, and almost all eitr food and both eitr meads come from the Mistlands or later (Magecap 25, Yggdrasil porridge 80, Seeker aspic 85; Minor eitr mead +125 eitr over 10 s, Lingering eitr mead eitr regen ×1.25 for 5 minutes). An Amazon in the Meadows couldn't cast once. Proposed redesign (user asked for it; numbers still to set):
-- **A base eitr pool from the class**, from D2's rules: the Amazon's starting mana (15), mana per level (1.5) and per Energy point (1.5) in `data/d2-reference/classes.csv`, scaled to Valheim. Eitr food adds on top, as today. Without a class nothing changes.
-- **Eitr regeneration** that works without eitr food (vanilla regen only fills the pool food gives).
+- **A base eitr pool from the class** (decided, user 2026-10-30): every class starts with **15 eitr** and gains **1.5 per level** and **1.5 per Energy point** (D2's Amazon and Paladin values, `data/d2-reference/classes.csv`), scaled to Valheim. Eitr food adds on top. Without a class nothing changes. Note for the scale: at 1:1 a level-90 character has about 149 eitr before Energy, and late eitr foods give 80–110 each, so 1:1 may already fit (to confirm when building).
+- **Eitr regeneration that works without eitr food** (decided, user 2026-10-30; rate to set). Vanilla regen only refills the pool that food gives.
+- **Eitr affixes on loot** (user, 2026-10-30): the Magic and Rare affixes being designed in the loot work add max eitr (already a twin family in `AFFIX_RULES.md`) and eitr regeneration on top of the class pool.
 - **Eitr potions from the early biomes**, like D2's mana potions: craftable with early materials, modelled on the vanilla minor eitr mead (instant or over a few seconds) and lingering mead (regen). Players can carry them in the EquipmentAndQuickSlots quick slots.
 - Vanilla staffs use the same eitr, so the class pool also makes a mage build easier. That's intended for classes; a character without a class keeps vanilla eitr.
 - **Damage types:** D2 magic and holy damage → Valheim **spirit** (strong against undead, as holy is in D2); fire, cold → frost, lightning and poison map directly. Valheim has no attack rating or critical hits; crits would be a new mechanic (Amazon Critical Strike, Barbarian masteries).
@@ -149,7 +151,7 @@ Decided (user, 2026-10-30): **a class is chosen at the spawn area** (the `StartT
 - Name (user, 2026-10-30): the **Orlog stone** (*örlög*, fate).
 - Proposed build: cloned from the start area's own stone prefabs (same mesh and material, no new model), placed once per world beside the trophy stones by the server (the start temple's position comes from the world's location list; the stone is a persistent object like the rip heart).
 - Interact (E) to open the class choice (UI from the UI session); a character without a class gets a raven hint the first time it spawns, as the Riftforge's raven does.
-- Open: can a character change class later, and at what cost (§10)?
+- **Changing class** (user, 2026-10-30): possible at the Orlog stone, for a cost. Details later; not part of the first build.
 
 ## 6. Barbarian (later)
 
@@ -218,8 +220,8 @@ Reference images (Elden Ring): `docs/images/hud_reference_bars.jpg` (bars), `doc
 
 1. ~~Own levels vs EpicMMOSystem~~ **Answered 2026-10-30:** our own.
 2. ~~Skill resource~~ **Answered 2026-10-30:** eitr for every skill that costs mana in D2, with the eitr redesign in §4. Open: its numbers.
-3. **Numbers:** ~~D2 rules or not~~ **answered 2026-10-30:** D2's rules, all changeable in config. XP per creature: slow, like classic WoW (§3). Still open: the target pace (for example, which level at each boss, or hours to the level cap), and how attribute and skill values scale from D2 to Valheim stats.
-4. ~~Choosing a class~~ **Answered 2026-10-30:** at a new stone at the spawn area (§5a). Open: can a character change class, and at what cost?
+3. **Numbers:** ~~D2 rules or not~~ **answered 2026-10-30:** D2's rules, all changeable in config. XP: slow, like classic WoW, with the user's levelling guide per boss (§3). Still open: how attribute and skill values scale from D2 to Valheim stats.
+4. ~~Choosing a class~~ **Answered 2026-10-30:** at the Orlog stone at the spawn area (§5a). Changing class: at the stone for a cost, details later.
 5. ~~Casting~~ **Answered 2026-10-30:** D2 layout, a 4-slot skill bar with its own hotkeys; right click fires the skill for every weapon; block and parry move to a rebindable key; the skill button is rebindable too (§4).
 6. ~~Names~~ **Answered 2026-10-30:** D2's class and skill names; the class stone is the Orlog stone; the plugin name doesn't matter (working name Orlog).
 7. ~~Vanilla skills~~ **Answered 2026-10-30:** keep levelling by use.
