@@ -1,0 +1,31 @@
+tab,row,col,name,req_level,prerequisites,type,mana_base,mana_per_lvl,synergies,description
+Combat Skills,1,1,Sacrifice,1,none,active,0,0,Redemption +15% dmg; Fanaticism +5% dmg,Bonus damage at the cost of own life; no mana
+Combat Skills,1,3,Smite,1,none,active,2,0,none,Shield bash that always hits; stuns and knocks back
+Combat Skills,2,2,Holy Bolt,6,none,active,2,0.0625,Fist of the Heavens +50% magic dmg; Prayer +20% life healed,Bolt damages undead/demons (2.4) and heals allies
+Combat Skills,3,1,Zeal,12,Sacrifice,active,2,0,Sacrifice +12% dmg,Rapid multiple attacks on nearby enemies
+Combat Skills,3,3,Charge,12,Smite,active,9,0,Vigor +20% dmg; Might +20% dmg,Rush to target and strike with knockback
+Combat Skills,4,1,Vengeance,18,Zeal,active,4,0.25,Resist Fire +10% fire; Resist Cold +10% cold; Resist Lightning +10% light; Salvation +2% elemental,Adds fire/cold/lightning damage to a melee attack
+Combat Skills,4,2,Blessed Hammer,18,Holy Bolt,active,5,0.25,Blessed Aim +14% magic dmg; Vigor +14% magic dmg,Spiralling magic hammer; extra damage to undead
+Combat Skills,5,1,Conversion,24,Vengeance,active,4,0,none,Hit may convert a monster to fight for you
+Combat Skills,5,3,Holy Shield,24,Charge+Blessed Hammer,active,35,0,Defiance +15% defense,Buffs shield: +defense +block +smite damage
+Combat Skills,6,2,Fist of the Heavens,30,Blessed Hammer+Conversion,active,25,0,Holy Bolt +15% holy bolt dmg; Holy Shock +7% light dmg,Lightning strikes target and releases holy bolts
+Offensive Auras,1,1,Might,1,none,aura,0,0,none,Increases damage of you and party
+Offensive Auras,2,2,Holy Fire,6,Might,aura,0,0,Resist Fire +21% fire dmg; Salvation +10% fire dmg,Periodic fire damage to nearby enemies; adds fire to attacks
+Offensive Auras,2,3,Thorns,6,none,aura,0,0,none,Reflects melee damage back to attackers
+Offensive Auras,3,1,Blessed Aim,12,Might,aura,0,0,none,Increases attack rating of you and party
+Offensive Auras,4,1,Concentration,18,Blessed Aim,aura,0,0,none,Increases damage; attacks harder to interrupt
+Offensive Auras,4,2,Holy Freeze,18,Holy Fire,aura,0,0,Resist Cold +15% cold dmg; Salvation +7% cold dmg,Cold damage pulses slow nearby enemies
+Offensive Auras,5,2,Holy Shock,24,Holy Freeze,aura,0,0,Resist Lightning +12% light dmg; Salvation +4% light dmg,Lightning damage pulses hit nearby enemies
+Offensive Auras,5,3,Sanctuary,24,Thorns+Holy Freeze,aura,0,0,Cleansing +7% magic dmg (knockback only),Knocks back and damages nearby undead
+Offensive Auras,6,1,Fanaticism,30,Concentration,aura,0,0,none,"Increases attack speed, damage and AR of party"
+Offensive Auras,6,3,Conviction,30,Sanctuary,aura,0,0,none,Lowers nearby enemies' defense and resistances
+Defensive Auras,1,1,Prayer,1,none,aura,1,0.1875,none,Periodically heals you and party; costs mana per heal
+Defensive Auras,1,3,Resist Fire,1,none,aura,0,0,none,+fire resist (and max fire resist) for party
+Defensive Auras,2,2,Defiance,6,none,aura,0,0,none,Increases defense of you and party
+Defensive Auras,2,3,Resist Cold,6,none,aura,0,0,none,+cold resist (and max cold resist) for party
+Defensive Auras,3,1,Cleansing,12,Prayer,aura,0,0,Prayer (also heals as if Prayer active),Shortens poison and curse duration on party
+Defensive Auras,3,3,Resist Lightning,12,none,aura,0,0,none,+lightning resist (and max) for party
+Defensive Auras,4,2,Vigor,18,Cleansing+Defiance,aura,0,0,none,"Increases speed, stamina and stamina recovery"
+Defensive Auras,5,1,Meditation,24,Cleansing,aura,0,0,Prayer (also heals as if Prayer active),Increases mana regeneration of party
+Defensive Auras,6,2,Redemption,30,Vigor,aura,0,0,none,Redeems nearby corpses for life and mana
+Defensive Auras,6,3,Salvation,30,none,aura,0,0,none,+fire/cold/lightning resist for party

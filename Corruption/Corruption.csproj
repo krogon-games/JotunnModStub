@@ -43,8 +43,8 @@
   <ItemGroup>
     <!-- Our own gem models and textures (made by tools/make_shard.py and tools/make_essences.py), embedded in the DLL. -->
     <EmbeddedResource Include="Assets\*.obj;Assets\*.rgba" LogicalName="Corruption.Assets.%(Filename)%(Extension)" />
-    <!-- The essence and map tables. Compiled in, so rebuild after editing them. -->
-    <EmbeddedResource Include="Data\essences.csv;Data\maps.csv;Data\rip_loot.csv" LogicalName="Corruption.Data.%(Filename)%(Extension)" />
+    <!-- The data tables the mod reads (essences, maps, rip loot, offerings, loot system). Compiled in, so rebuild after editing them. -->
+    <EmbeddedResource Include="Data\essences.csv;Data\maps.csv;Data\rip_loot.csv;Data\offerings.csv;Data\affixes.csv;Data\loot_bases.csv;Data\loot_rules.csv;Data\rare_names.csv;Data\drop_chances.csv;Data\drop_modifiers.csv" LogicalName="Corruption.Data.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

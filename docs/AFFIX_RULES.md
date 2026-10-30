@@ -240,8 +240,29 @@ Pickaxes roll only from the [gathering tool pools](#gathering-tool-affixes); one
 |---|---|---|
 | Fire, frost, lightning, poison, spirit damage (each half) | 10–50% of physical | One top for all elements (user): the median of each element's strongest vanilla player weapon: fire 18% (Frostfire bow), lightning 47% (Himminafl), poison 50% (Jotun Bane), spirit 57% (Silver mace), frost 129% (Frostfire bow) |
 | Movement speed | 1–5% | Crown of Valheim +5% (Fenring pieces +3%) |
+| Enhanced damage | 4–19% | No vanilla +% damage source: a full forge upgrade adds 18.9% (median, 120 weapons) |
+| Enhanced armour | 10–50% | Full forge upgrade: +50% armour (median, 81 armour pieces) |
+| Durability (each half) | 11–55% | Full forge upgrade: +55% durability (median, 220 items) |
+| Block (each half) | 4–18% | Full forge upgrade: +17.7% block power (median, 18 shields) |
+| Backstab | 20–100% | Common weapons 3x, knives and fists 6x |
+| Knockback | 20–100% | Melee median 40; heavy weapons 100–210 (Claude's reading: doubling the median) |
+| Parry | 20–100% | Common weapons 2x, knives 4x, fists 6x |
+| Attack stamina | 4–20% less | Deep North cape, Crown of Valheim, Ashlands medium set: −20% |
+| Health regen (each half) | 6–30% | Berserkir set +30% (Bronze trinket +25%) |
+| Stamina regen | 8–40% | Undead Berserkir set +40% |
+| Carry weight | 10–50 | Megingjord +150, cut by 100 (user: closer to the draft) |
+| Weapon skill (each half) | 4–20 levels | Trinkets: +20 to clubs, bows, spears, elemental or blood magic |
+| Fire, frost, poison resistance | 10–50% | Gear that makes you "Resistant" (the game: 50% less damage): Fenring set (fire); Wolf, Fenring and Deep North chests and most capes (frost); Root helmet (poison). 2026-10-30 dump |
+| Lightning resistance | 10–50% | No gear source (only Yagluth's power); matches the other elements (user) |
+| All resistances | 2–10% | No vanilla source; near the draft (user) |
 
-The rest wait for the next `co_dump`: max health, stamina and eitr, regen, carry weight, skills and resistances come from set bonuses, meads, Megingjord and trinkets (`status_effects.csv`); armour, durability, block, knockback, parry, backstab and attack stamina from item details (`item_details.csv`). Affixes the user already approved with their numbers (Fleet, Foraging, the proc affixes) keep them.
+**Which sources count (user, 2026-10-29):** gear only (items, set bonuses, trinkets, Megingjord), not meads, Forsaken powers or food. Item stats with no vanilla "+%" source take what a full forge upgrade adds (median over the loot base items). The user reviewed these on 2026-10-29 and approved them, changing only carry weight.
+
+**Kept as drafts (user, 2026-10-29):** max health, stamina and eitr (no gear source; only food and up-front trinket heals) and life steal (no vanilla source).
+
+**Stacking (user, 2026-10-29): no caps on carry weight, regen or max health/stamina/eitr for now**, although they add up over 5–6 items (e.g. carry up to 250, health regen up to 375%): the mod is meant to be much harder than vanilla. Revisit after play-tests. Item-stat affixes (damage, armour, durability, block, backstab, knockback, parry, elemental) only change their own item, so they don't stack. Resistances (2026-10-30): fire, frost and poison from the dump; lightning matches them (no gear source); all resistances 2–10% (user). **Every gear affix now has a settled range**; max health, stamina, eitr and life steal are drafts by the user's choice.
+
+Earlier note: the rest wait for the next `co_dump`: max health, stamina and eitr, regen, carry weight, skills and resistances come from set bonuses, meads, Megingjord and trinkets (`status_effects.csv`); armour, durability, block, knockback, parry, backstab and attack stamina from item details (`item_details.csv`). Affixes the user already approved with their numbers (Fleet, Foraging, the proc affixes) keep them.
 
 **Ranges** are in the table (`pool` = `gear`; rows still marked `draft` haven't been through the rule yet).
 
@@ -283,13 +304,13 @@ Every affix line ends with its possible range in brackets. Twin lines show the r
 ```
 Grim Fang                                  (rare, yellow)
 Bronze Sword
-+24% damage [5–40]
++24% damage (+14) [5–40]
 +12% damage as fire [5–20]
 +27 max health [10–50] ◆ resonant
 -12% attack stamina [5–25]
 ```
 
-- **Bracket:** the affix's range, the same on every item, so it answers "how good is this roll?". Percentage lines can also show the resulting value (e.g. "+24% damage (+14)") so the base item's role is visible.
+- **Bracket:** the affix's range, the same on every item, so it answers "how good is this roll?". Item-stat lines also show the bonus they give this item at its current upgrade level, before the bracket: "+24% damage (+14) [5–40]" (user, 2026-10-30, after a play-test where the unchanging bracket read like a damage range). Player-stat lines show their value only.
 - **Twin lines:** shown merged, as Diablo 2 does. Hovering with a modifier key (e.g. Shift) could show the two halves separately.
 - **Uniques:** they show their own fixed ranges the same way.
 
@@ -320,5 +341,5 @@ Two random words, like Diablo 2's "Grim Fang", from Norse-flavoured lists:
 - **Storage:** affixes live on the item in `ItemDrop.ItemData.m_customData`. It exists in 1.0 and is saved and synced with the item. Each affix is stored as family and rolled value, so tooltips can show the bracket range and Divine Orbs can reroll in place.
 - **Effects:** applied by patches on the stat getters the game already uses: `ItemData.GetDamage`, `GetArmor`, `GetMaxDurability`, the player's max health/stamina/eitr, regen and movement modifiers, and damage taken for resistances.
 - **Tooltips:** a postfix on `ItemDrop.ItemData.GetTooltip` adds the affix lines with their bracket ranges. Rarity colours the item name.
-- **Data:** [`Corruption/Data/affixes.csv`](../Corruption/Data/affixes.csv), read and checked by `Corruption/Rules/AffixTable.cs` (unit-tested against the real file). Not loaded by the game yet: when loot is built, the server's copy becomes the one everyone uses, so the group can tune it without a rebuild.
-- **Roll logic:** a pure, unit-tested function, as with shard drops and talisman families. Its inputs are rarity, item class (including which pools the item uses) and a random source, and it outputs the affix list including resonance.
+- **Data:** [`Corruption/Data/affixes.csv`](../Corruption/Data/affixes.csv), read and checked by `Corruption/Rules/AffixTable.cs` (unit-tested against the real file). Compiled into the DLL since loot step 1 (2026-10-29); later the server's copy becomes the one everyone uses, so the group can tune it without a rebuild.
+- **Roll logic:** `Corruption/Rules/AffixRoller.cs` (unit-tested): rarity, affix count, item classes, mechanics and a random source in; the affix lines out, twins merged into resonant lines. Storage, names and tooltip text: `Corruption/Rules/LootItem.cs`. Built 2026-10-29 (loot step 1).

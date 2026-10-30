@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraftingOverhaul.Tests", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corruption", "Corruption\Corruption.csproj", "{C6FFB180-967F-4E3E-A5BF-CFD6B8DA8851}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orlog", "Orlog\Orlog.csproj", "{A771791A-BC01-431C-8699-B818692A8F0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C6FFB180-967F-4E3E-A5BF-CFD6B8DA8851}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6FFB180-967F-4E3E-A5BF-CFD6B8DA8851}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6FFB180-967F-4E3E-A5BF-CFD6B8DA8851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A771791A-BC01-431C-8699-B818692A8F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A771791A-BC01-431C-8699-B818692A8F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A771791A-BC01-431C-8699-B818692A8F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A771791A-BC01-431C-8699-B818692A8F0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

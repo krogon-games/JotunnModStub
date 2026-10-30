@@ -1,0 +1,4 @@
+class,str,dex,vit,energy,start_life,start_stamina,start_mana,life_per_lvl,stamina_per_lvl,mana_per_lvl,life_per_vit,stamina_per_vit,mana_per_energy
+Barbarian,30,20,25,10,55,92,10,2,1,1,4,1,1
+Amazon,20,25,20,15,50,84,15,2,1,1.5,3,1,1.5
+Paladin,25,20,25,15,55,89,15,2,1,1.5,3,1,1.5

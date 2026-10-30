@@ -24,12 +24,16 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 5. Try one later biome, e.g. `spawn CorruptionMap_Swamp` (draugr and skeletons) or `CorruptionMap_Plains` (fulings).
 6. No red errors in the console.
 
+### 1f. Corrupted offerings
+Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
+1. **Icons re-check:** the Corrupted ancient seed is the red three-pointed seed, the Corrupted malicious blood the red blob (they were swapped).
+
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
 ## Session 1e: Currency and Maps tabs (10 minutes, branch `claude/ui-overhaul`)
 
-Rebuild **both** mods from `claude/ui-overhaul` for this one (the tabs are in Corruption). Have some maps in your bag from before, and `spawn CorruptionShard 20` and an essence ready (`spawn CorruptionEssence_eikthyr 3`).
+Build the whole solution from `claude/ui-overhaul` for this one (the tabs are in Corruption; the branch includes everything merged into `master` up to 2026-10-30). Have some maps in your bag from before, and `spawn CorruptionShard 20` and an essence ready (`spawn CorruptionEssence_eikthyr 3`).
 
 1. Open the inventory: **Bag | Currency | Maps** buttons on top of the inventory panel. Within a second, the maps that were in your bag move to the Maps tab. Click each button: the grid switches; the character sheet stays put. Close and reopen: back on Bag.
 2. Drop some shards and pick them up: they go to Currency, not the bag (the pickup message still shows). Fill your bag with junk and pick up shards again: they still go in. Your weight number doesn't change when shards are picked up.
@@ -39,6 +43,31 @@ Rebuild **both** mods from `claude/ui-overhaul` for this one (the tabs are in Co
 6. Die (god mode off, e.g. a long fall). Your gravestone holds the tab items in extra rows under the bag's items. Take all: the shards, essences and maps go back to their tabs.
 7. Log out and back in: the tabs still hold their items.
 8. No red errors in the console.
+
+## Session 3: loot system step 1 (about 15 minutes)
+
+Build from branch **`claude/affixes-loot`** (the log line says `build: claude/affixes-loot …`). The log should also say `Loot: 84 affixes, 248 base items.`
+
+1. ~~Rares from `co_loot`: names, tooltip lines with ranges, grey inactive lines; armour and damage numbers rise~~ (passed 2026-10-29, screenshots; Magic items and lightning damage too). Still to check below: hover names, durability, block, repair, upgrade, drops, combat.
+1b. ~~Build check, natural drops, combat affixes, a resonant line, no errors~~ (passed 2026-10-29). ~~Re-test step 2 (ground names) and step 6 (upgrade)~~ (passed 2026-10-30). ~~Step 5 (durability and repair)~~ passed 2026-10-30. Only step 10 (bigger backpacks, after the server setting) is left.
+1c. **New (2026-10-30): the actual bonus** next to item-stat lines, e.g. `+43% of physical damage as spirit (+23) [10–50]`. It matches the vanilla number above (Spirit 23), and goes up when you upgrade the item; the bracket stays the same.
+1a. **Spawn loot:** `co_loot magic` and `co_loot rare SwordBronze`. Each drops an item in front of you; the console names it in blue (Magic) or yellow (Rare).
+2. **Names:** hover over the item on the ground: its name is coloured (Magic: e.g. "Cruel Bronze Sword of Embers"; Rare: two words, e.g. "Grim Fang"). Pick it up: the inventory tooltip title has the same coloured name.
+3. **Tooltip:** at the bottom, "Magic" or "Rare Bronze Sword", then one line per affix with its range, e.g. `+24% damage (+14) [5–40]`. Lines the game doesn't apply yet are grey with "(not active yet)". Look out for a `◆ resonant` line (both halves of a twin).
+4. **Stats change:** compare with a plain crafted copy of the same item: an item with enhanced damage or elemental damage shows higher damage numbers (or a fire/frost/… line); enhanced armour, durability and block show in armour, durability and block power.
+5. **Durability:** a durability affix raises the max; the item starts full. Repair it at the workbench: it goes back to the raised max.
+6. **Upgrade:** upgrade a dropped item at its station: it keeps its name and affixes.
+7. **Natural drops:** kill some starred creatures (`spawn Boar 10 2` spawns ten 1-star boars). Drops are rare (1 in 50 Magic, 1 in 100 Rare; stars raise it), so this mostly checks nothing breaks. Items come from the biome you're in, and 1 in 5 from the biome before it (Meadows: always Meadows items).
+8. **Combat:** hit something with a knockback or backstab item and parry with a parry item: no errors (the effect is subtle).
+9. No red errors in the console or `LogOutput.log`.
+10. **Bigger backpacks** (after setting the sizes in `PLAYER_SETUP.md` → For the server admin): the satchel opens with 2 rows (6 slots); items already in a backpack are kept; a 5-row backpack (`spawn BackpackPlains`) fits on screen.
+## Orlog levels and XP (branch `claude/class-skills`, about 15 minutes)
+
+New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and check `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)`.
+1–6, 9. ~~`orlog_info`, XP per kill, 1-star ×2, level-up, low creatures give little, kept after relogging, no errors~~ (passed 2026-10-30).
+7. ~~Pace~~: too fast at first; fixed and re-tested 2026-10-30 ("pace feels better"). `XpMultiplier` in `com.krogongames.orlog.cfg` tunes it later (reloads on save).
+8. With a friend (Session 2): both within 70 m of a kill each get XP; the lower-level player gets the bigger share of a low creature.
+9. No red errors in the console.
 
 ## Session 2: with a friend
 

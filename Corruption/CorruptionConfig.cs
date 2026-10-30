@@ -11,6 +11,7 @@ namespace Corruption
         private const string EssenceSection = "4 - Essences";
         private const string RipSection = "5 - Rips";
         private const string CorruptedSection = "6 - Corrupted Bosses";
+        private const string LootSection = "7 - Loot";
         // Numbered after the design phase (9: inventory), so other features can take the numbers in between.
         private const string TabsSection = "9 - Inventory Tabs";
 
@@ -22,6 +23,7 @@ namespace Corruption
 
         public static ConfigEntry<bool> TabsEnabled;
         public static ConfigEntry<bool> TalismansEnabled;
+        public static ConfigEntry<bool> LootEnabled;
         public static ConfigEntry<bool> EssencesEnabled;
         public static ConfigEntry<bool> RipsEnabled;
         public static ConfigEntry<float> RipOpenDays;
@@ -124,6 +126,9 @@ namespace Corruption
             CorruptedShardsMax = config.Bind(CorruptedSection, "ShardsMax", 5,
                 AdminOnly("Most corruption shards a corrupted boss drops.", new AcceptableValueRange<int>(0, 50)));
 
+            LootEnabled = config.Bind(LootSection, "Enabled", true,
+                AdminOnly("Creatures drop Magic and Rare items with rolled affixes (chances: Corruption/Data/drop_chances.csv and " +
+                          "drop_modifiers.csv). Off: no new loot drops; items already found keep their affixes."));
             TabsEnabled = config.Bind(TabsSection, "Enabled", true,
                 AdminOnly("Currency and Maps tabs on the player inventory: shards, essences and maps go there instead of the bag, " +
                           "weigh nothing, and still pay for crafting and drop into the gravestone. Off: the tabs are hidden and " +

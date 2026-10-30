@@ -1,0 +1,94 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <AssemblyName>Orlog</AssemblyName>
+    <RootNamespace>Orlog</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Version>0.1.0</Version>
+    <Product>Orlog</Product>
+    <Description>Diablo 2-style classes for Valheim: character levels from XP, stat and skill points, class skill trees.</Description>
+    <Copyright>Copyright © 2026</Copyright>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Game, Unity and BepInEx assemblies are already present in the game install. -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- publish.ps1 converts the PDB to MDB with pdb2mdb, which needs a full (Windows) PDB. -->
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <DebugType>full</DebugType>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(VALHEIM_INSTALL)\valheim.exe</StartProgram>
+    <StartArguments>-console</StartArguments>
+    <StartWorkingDirectory>$(VALHEIM_INSTALL)</StartWorkingDirectory>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <Reference>
+      <Private>False</Private>
+    </Reference>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <!-- Brings in Jotunn plus references to the (publicized) game, Unity and BepInEx assemblies. -->
+    <PackageReference Include="JotunnLib" Version="2.30.2" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Shared between the plugins: reloads the .cfg file when saved (development aid). -->
+    <Compile Include="..\Shared\ConfigWatcher.cs" Link="Shared\ConfigWatcher.cs" />
+    <!-- Corruption's CSV reader (pure, tested), shared rather than copied. -->
+    <Compile Include="..\Corruption\Rules\Csv.cs" Link="Rules\Csv.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The levelling tables (made by tools/make_orlog_tables.py). Compiled in, so rebuild after editing them. -->
+    <EmbeddedResource Include="Data\*.csv" LogicalName="Orlog.Data.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Package\manifest.json" />
+    <None Include="Package\icon.png" />
+    <None Include="README.md" />
+  </ItemGroup>
+
+  <!-- Valheim's Mono runtime doesn't ship these assemblies. Using a feature that needs one (e.g. C# tuples need
+       System.ValueTuple) compiles fine but crashes in game, so fail the build instead. -->
+  <Target Name="CheckNoUnshippedReferences" AfterTargets="Build">
+    <PropertyGroup>
+      <_BuiltAssemblyText>$([System.IO.File]::ReadAllText('$(TargetPath)'))</_BuiltAssemblyText>
+    </PropertyGroup>
+    <Error Condition="$(_BuiltAssemblyText.Contains('System.ValueTuple'))" Text="$(TargetFileName) references System.ValueTuple, which Valheim doesn't ship. Replace tuples with a small class or struct." />
+    <Error Condition="$(_BuiltAssemblyText.Contains('System.Memory'))" Text="$(TargetFileName) references System.Memory (Span/Memory), which Valheim doesn't ship." />
+    <Error Condition="$(_BuiltAssemblyText.Contains('System.Buffers'))" Text="$(TargetFileName) references System.Buffers, which Valheim doesn't ship." />
+  </Target>
+
+  <!-- Stamp the git branch and commit into the DLL, so the log shows exactly which build is running (play-test
+       2026-10-29: a build from the wrong branch looked like broken features). Read straight from the .git folder, so
+       it works without the git program (GitHub Desktop and Visual Studio keep .git up to date). No .git = "unknown". -->
+  <Target Name="StampGitCommit" BeforeTargets="GetAssemblyAttributes">
+    <PropertyGroup>
+      <_GitDir>$(MSBuildProjectDirectory)\..\.git</_GitDir>
+      <_GitHead Condition="Exists('$(_GitDir)\HEAD')">$([System.IO.File]::ReadAllText('$(_GitDir)\HEAD').Trim())</_GitHead>
+      <_GitRef Condition="$(_GitHead.StartsWith('ref: '))">$(_GitHead.Substring(5))</_GitRef>
+      <GitBranch Condition="'$(_GitRef)' != ''">$(_GitRef.Replace('refs/heads/', ''))</GitBranch>
+      <GitBranch Condition="'$(GitBranch)' == '' and '$(_GitHead)' != ''">detached</GitBranch>
+      <_GitCommitFull Condition="'$(_GitRef)' != '' and Exists('$(_GitDir)\$(_GitRef)')">$([System.IO.File]::ReadAllText('$(_GitDir)\$(_GitRef)').Trim())</_GitCommitFull>
+      <_GitCommitFull Condition="'$(_GitRef)' == '' and '$(_GitHead)' != ''">$(_GitHead)</_GitCommitFull>
+      <GitCommit Condition="'$(_GitCommitFull)' != ''">$(_GitCommitFull.Substring(0, 7))</GitCommit>
+      <GitBuild>$(GitBranch) $(GitCommit)</GitBuild>
+      <GitBuild Condition="'$(GitBranch)' == ''">unknown</GitBuild>
+    </PropertyGroup>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>GitBuild</_Parameter1>
+        <_Parameter2>$(GitBuild)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="JotunnPostBuildTaskWin" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+    <Exec Command="powershell.exe -ExecutionPolicy RemoteSigned -File &quot;$(SolutionDir)publish.ps1&quot; -Target &quot;$(ConfigurationName)&quot; -TargetPath &quot;$(TargetDir.TrimEnd('\'))&quot; -TargetAssembly &quot;$(TargetFileName)&quot; -ValheimPath &quot;$(VALHEIM_INSTALL.TrimEnd('\'))&quot; -DeployPath &quot;$(MOD_DEPLOYPATH.TrimEnd('\'))&quot; -ProjectPath &quot;$(ProjectDir.TrimEnd('\'))&quot; " />
+  </Target>
+</Project>

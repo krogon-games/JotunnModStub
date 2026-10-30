@@ -46,6 +46,7 @@ namespace Corruption.Content
                 { "corruption_rip_home", "Leads home" },
                 { "corruption_rip_closes", "Closes in $1" },
                 { "corruption_rip_heart_hint", "Destroy it to open the way home" },
+                { "corruption_offering_mixed", "Every offering here must be corrupted, or none." },
                 { "item_corruptedwishbone", "Corrupted wishbone" },
                 { "item_corruptedwishbone_description", "A wishbone steeped in the void. Inside a rip it tugs towards the rip's heart, pulsing faster the closer you get." },
                 { "se_corrupted_wishbone", "Corrupted wishbone" },
