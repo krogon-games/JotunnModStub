@@ -8,7 +8,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - Orlog (the classes plugin, new 2026-10-30) compiles the same way.
-- `dotnet test CraftingOverhaul.Tests`: **162 passed, 0 failed** (2026-10-30, with Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **179 passed, 0 failed** (2026-10-30, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -46,6 +46,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 |---|---|
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
+| **Loot system step 1** (2026-10-29, branch `claude/affixes-loot`) | Passed 2026-10-29: Rare and Magic names, tooltip lines with ranges, armour/damage/lightning numbers, natural drops, combat affixes, resonant line, no errors. Ground names (fixed), upgrading, durability and repair passed 2026-10-30: **every single-player step passed**. Still: multiplayer (each player's own roll); bigger backpacks after the server setting |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
 | Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Orlog levels, step 8 (everything else passed 2026-10-30, including the pace fix) |
@@ -53,7 +54,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 ## Not built (proposed)
 
-Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Loot system: step 1 tested in single player (drops, tooltips, item-stat affixes); orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -80,6 +81,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
 - Kall Fimbulbringer's essence look (made without a concept render; status `proposed` in `essences.csv`).
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
+- **Gear affix ranges (2026-10-29):** 16 of the 28 draft rows now have ranges from the game data under the user's rules, approved (carry weight cut to 10–50); max health, stamina, eitr and life steal keep their drafts; no stacking caps for now (all user, sources in `AFFIX_RULES.md`). The resistance rows are settled too (2026-10-30): every gear affix has its range.
 - Play-test results for everything under "Built, not verified".
 - **Pull request:** nothing since PR #1 (merged 2026-09-29); `master` lacks everything Corruption. The user wants to revisit this after the first play-test session (2026-10-28): open a PR from the branch into `master` then.
 

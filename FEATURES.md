@@ -12,7 +12,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Tested in-game | `1 - Recipe List` → `Grouping`, `StartCollapsed`, `HeaderFontSize` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-10-26 |
 | [Data-driven biome detection](#data-driven-biome-detection) | UI | Tested in-game | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*` (incl. `HatchCollector.cs`), `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-28 |
-| [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `Biomes/Collectors/LocationCollector.cs`, `CraftingOverhaul.cs` | 2026-10-28 |
+| [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `Biomes/Collectors/LocationCollector.cs`, `CraftingOverhaul.cs` | 2026-10-29 |
 | [Config reload on save](#config-reload-on-save) | Dev tools | Tested in-game | Both plugins: `0 - Development` → `ReloadConfigOnFileChange` | `Shared/ConfigWatcher.cs`, `CraftingOverhaul/CraftingOverhaul.cs`, `Corruption/CorruptionPlugin.cs`, both `.csproj` | 2026-10-28 |
 | [Corruption shards](#corruption-shards) | Loot | Tested in-game | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardCustomModel`, `ShardGlowIntensity`, `ShardGlowRange`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/ObjMesh.cs`, `Corruption/Assets/*`, `tools/make_shard.py` | 2026-10-28 |
 | [Riftforge](#riftforge) | Crafting | Tested in-game | Corruption: `2 - Look` → `RiftforgeColor`, `RiftforgeTintStrength` | `Corruption/Content/Riftforge.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs` | 2026-10-26 |
@@ -24,7 +24,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Corrupted offerings](#corrupted-offerings) | Combat | Tested in-game (single player) | — (table `Corruption/Data/offerings.csv`) | `Corruption/Content/CorruptedOfferings.cs`, `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/OfferingTable.cs`, `Corruption/Data/offerings.csv`, `Corruption/Assets/offering_icon_*.rgba`, `tools/make_offering_icons.py`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/OfferingTableTests.cs` | 2026-10-30 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
-| [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
+| [Loot system](#loot-system) | Loot | Tested in-game (single player; step 1: drops, tooltips, item stats) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs` | 2026-10-29 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
@@ -258,14 +258,14 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 |---|---|
 | `meta.txt` | Game and mod version, language, every loaded plugin |
 | `items.csv` | Every item: type, skill, weight, stack, tool tier, durability, armor, block, all damage types, food values, resolved biome |
-| `item_details.csv` | Every item's full shared data, field by field (upgrade amounts, knockback, backstab, parry, set bonuses, equip effects, modifiers), plus attack stamina and per-level damage |
+| `item_details.csv` | Every item's full shared data, field by field (upgrade amounts, knockback, backstab, parry, set bonuses, equip effects, modifiers), plus attack stamina and per-level damage; resistances in `m_damageModifiers` (e.g. `Frost:Resistant`, added 2026-10-29) |
 | `recipes.csv` | Every recipe: output, station and level, ingredients (with per-level amounts), type and biome category |
 | `pieces.csv` | Every buildable piece: category, station, build cost |
 | `creatures.csv` | Every creature: health, faction, boss flag, defeat key, spawn biomes, drops with amounts and chances |
 | `locations.csv` | Every location: biome, quantity, unique |
 | `spawns.csv` | The world spawn tables: every entry with all its settings (biome, max spawned, interval, chance, group size, levels, day/night, required keys) |
 | `events.csv`, `event_spawns.csv` | Random events (raids): duration, biomes, required keys, messages; and each raid's spawn entries with all their settings |
-| `status_effects.csv` | Every status effect: class and every number it sets |
+| `status_effects.csv` | Every status effect: class and every number it sets, including its resistances (`m_mods`, e.g. `Frost:Resistant`; added 2026-10-29) |
 | `containers.csv` | Chests and containers that come with loot: drop counts, chance and the weighted drop list |
 | `destructibles.csv` | Destructible objects (nests, rocks, crates): health, tool tier and drops |
 | `altars.csv` | Boss altars in every location: offering item and count, the boss, item stands and the items they take, the key set on summoning |
@@ -749,22 +749,54 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 
 ## Loot system
 
-**Status:** Planned. Not started.
+*Corruption plugin, design phase 7, step 1 of several: drops, tooltips and item-stat affixes. Orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects come in later steps.*
 
-**Ideas so far:**
-- Rarity tiers for dropped gear, with randomly rolled bonus stats.
-- Stats stored on the item (`ItemDrop.ItemData.m_customData`), shown in tooltips and synced in multiplayer.
-- Likely patch points: `CharacterDrop` / `DropTable` for drops, and item tooltips.
+**What it does in-game:**
+- **Magic and Rare drops.** Every creature kill (not tamed creatures or players) rolls for loot, once **per player within the game's nearby-players range** (`Game.m_difficultyScaleRange`, the range the game counts players in to scale creature difficulty; 100 m in the 1.0 code). Chances come from `drop_chances.csv` (Magic 1 in 50, Rare 1 in 100) times `drop_modifiers.csv`: stars (`star_1`–`star_3`), rip creatures (`rip_tier_1`; maps have no tiers yet), corrupted bosses (uniques only). If Magic and Rare both succeed, only the Rare drops (`DropTable.Roll`). Unique rolls are ignored until uniques exist.
+- **Which item:** a random player-craftable weapon, shield, armour piece, cape (backpacks included), trinket or pickaxe **from the biome the creature died in**; with **20%** chance one from the biome just before it (user, 2026-10-29). Meadows always gives Meadows items; the Ocean gives none. The list is `loot_bases.csv`, built from the game dump by `tools/make_loot_bases.py` (248 items; the biome is the item's own from the dump, e.g. gem-socketed Ashlands weapons count as Deep North because their recipe needs a Deep North material).
+- **Upgrade level 1**, full durability, like a freshly crafted item (user). Upgrading at the workbench or forge keeps the affixes.
+- **Affix count:** Magic 1 or 2 (1 twice as often), Rare 3 or 4 (3 twice as often) (user: fewer is likelier). Magic holds at most 1 prefix + 1 suffix, Rare 2 + 2.
+- **Rolling** (`AffixRoller`): each affix is picked by its `weight` among every affix that fits the item's classes and mechanics (`requires`), one per family per side; values are whole numbers anywhere in the range (every range in the table is whole). Both halves of a twin merge into one **resonant** line rolled from the resonant range (+25% on the combined top). **Every affix in `affixes.csv` rolls, including rows still marked `draft`** (user, 2026-10-29: test with the draft numbers while the ranges are settled).
+- **Names:** Magic items take their affixes' names around the base name, the roll deciding which of a family's names (e.g. *Sharp/Fine/Cruel/Merciless*): "Cruel Bronze Sword of Embers". Rare items get a two-word name from `rare_names.csv` ("Grim Fang"). Names are blue (Magic, `#8888FF`) or yellow (Rare, `#FFFF77`), the Path of Exile colours, in inventory tooltips and when hovering over the item on the ground.
+- **Tooltips:** after vanilla's lines, the rarity (and for Rares the base item), then one line per affix: its value, the bonus it gives this item at its current level (item-stat affixes, e.g. `(+14)`), and its roll range in brackets, e.g. `+24% damage (+14) [5–40]`; resonant lines end in `◆ resonant`. Affixes this step doesn't apply yet are grey and say "(not active yet)".
+- **Affixes that work in this step** (through the game's own stat getters, so vanilla tooltips, combat and repairs see them): enhanced damage (every combat damage type, not chop or pickaxe damage), fire/frost/lightning/poison/spirit damage (a % of the enhanced physical damage), armour, durability, block power, attack stamina (also the tools' "per swing" version), knockback and backstab (raised on the attacker's game when the hit is made), parry bonus.
+- **Storage:** `ItemData.m_customData` keys `corruption.rarity`, `corruption.name` (Rares) and `corruption.affixes` (`id=value;prefix+suffix=value`), saved and synced with the item by the game.
 
-Decided 2026-10-27: we build our own loot system rather than depend on Epic Loot.
+**How to test:** `co_loot` drops a Rare item of the biome you stand in; `co_loot magic` a Magic one; `co_loot rare SwordBronze` a chosen base item (any prefab in `loot_bases.csv`). Kill starred creatures for natural drops (1 in 50 / 1 in 100 per kill is slow; `co_loot` is the quick way).
 
-**Design:** now covered by the Corruption mod design in `docs/corruption-design.md`:
-- corruption shards, maps and rips;
-- corrupted bosses;
-- rarity tiers, currency orbs and uniques;
-- gear prefixes and suffixes (draft), and the gathering tool affixes that come first: `docs/AFFIX_RULES.md`.
+**Config settings** (admin-only, `7 - Loot`):
 
-The technical review is in `docs/corruption-design-review.md`. It suggests building the corruption mod as a separate plugin in this repository.
+| Setting | Default | Description |
+|---|---|---|
+| `Enabled` | `true` | Creatures drop Magic and Rare items. Off: no new drops; items already found keep their affixes |
+
+**Data tables** (compiled into the DLL; rebuild after editing): `affixes.csv`, `loot_bases.csv` (rerun `tools/make_loot_bases.py` after a new game dump), `loot_rules.csv` (previous-biome chance, drop level, affix-count weights), `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`. `dotnet test` checks all of them, and that `loot_bases.csv` matches the dump.
+
+**Known issues:**
+- Tested in single player 2026-10-29/30 (179 tests pass); not yet with several players.
+- **First look 2026-10-29 (user's screenshots):** `co_loot` Rares work: "Night Ward" (Rare Leather Trousers: +15% armour, armour 2 → 2.3) and "Skull Song" (Rare Bronze Sword: +37% damage, slash 35 → 48), yellow titles, affix lines with ranges, inactive lines grey. Magic items work too: "Shieldwall Bronze Atgeir", "Seismic Antler Pickaxe" (gathering affix on a pickaxe), "Crackling Club" (+19% of physical as lightning: blunt 12 adds lightning 2), blue names. Still to check: ground hover names, durability, block, repair, upgrade, natural drops, combat affixes.
+- **Play-test 2026-10-29 (phone log):** build check, natural drops from kills, combat affixes (no errors), a resonant line and no errors all passed. **Ground hover name failed** (showed the base name): the game localizes the hover text before our patch sees it, so the patch looked for the untranslated name. **Fixed 2026-10-30; re-test passed.** **Upgrading passed 2026-10-30:** a Rare Bronze Sword taken to level 4 kept its name and affixes; its numbers follow the level (slash 53 = 35 + 3×6; spirit 23 = 43% of 53; durability 623 = 350 × 1.78). **Durability and repair passed 2026-10-30.** Every Session 3 step has passed; multiplayer (personal rolls for each player) not tested yet.
+- Gear ranges: 16 set from the game data and approved (2026-10-29); max health, stamina, eitr and life steal are drafts by choice; resistances settled 2026-10-30 (fire, frost, poison, lightning 10–50%; all resistances 2–10%). No caps on stacking carry weight, regen or max health/stamina/eitr (user, for now).
+- Personal loot is only the separate rolls: dropped items aren't locked to a player yet (the 60 s owner lock and loot beams come later).
+- The tables are compiled in; the design wants the server's copy to be the one everybody uses (later step).
+- Knockback and backstab use the weapon in hand when the hit lands; switching weapons while an arrow flies uses the new one.
+- Vanilla tooltip lines for knockback, backstab, parry and stamina show the base item's numbers; the affix line shows the bonus.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `CharacterDrop.OnDeath` | Postfix | Magic and Rare drops, rolled per nearby player |
+| `ItemDrop.ItemData.GetTooltip(ItemData, int, bool, float, int, bool)` | Postfix | Appends rarity and affix lines (AdventureBackpacks also postfixes it; both append) |
+| `InventoryGrid.CreateItemTooltip` | Postfix | Tooltip title in the rarity colour |
+| `ItemDrop.GetHoverText` | Postfix | Ground hover name in the rarity colour |
+| `ItemDrop.ItemData.GetDamage(int, float)` | Postfix | Enhanced and elemental damage |
+| `ItemDrop.ItemData.GetArmor(int, float)` | Postfix | Enhanced armour |
+| `ItemDrop.ItemData.GetMaxDurability(int)` | Postfix | Durability |
+| `ItemDrop.ItemData.GetBaseBlockPower(int)` | Postfix | Block power |
+| `Attack.GetAttackStamina` | Postfix | Less stamina per attack |
+| `Character.Damage(HitData)` | Prefix | Knockback and backstab on the local player's hits |
+| `SEMan.ModifyTimedBlockBonus` | Postfix | Parry bonus |
 
 **Orb art (2026-10-28):** models and textures for the nine currency orbs exist (`tools/make_orbs.py`, `Corruption/Assets/Orbs/`, preview `docs/images/orbs_preview.png`), after the user's concept render (`docs/images/orbs_reference.jpg`). They are not in the mod yet: they get embedded and registered as items when the orbs are built. The orbs keep their Path of Exile names (user, 2026-10-28).
 
@@ -842,6 +874,10 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-10-30
+- **Loot tooltips show the actual bonus** (user): item-stat affix lines add what they give this item at its current level before the roll range, e.g. `+43% of physical damage as spirit (+23) [10–50]`; the number follows upgrades. Untested in-game.
+- **Resistance ranges settled** (user): fire, frost, poison and lightning 10–50%, all resistances 2–10%. Every gear affix now has its range.
+- **Loot: ground names and upgrading tested in-game.** Fire, frost and poison resistance ranges 10–50% from the new `co_dump` (gear that makes you Resistant; proposed); lightning and all resistances have no gear source (asked). Dump files `item_details.csv` and `status_effects.csv` refreshed with resistances.
+- **Fix: loot names on the ground** showed the base item name: the game localizes the hover text before our patch, which looked for the untranslated name. To re-test. Play-test results for loot step 1 recorded (drops, combat affixes, resonant lines, no errors passed).
 - **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons.
 - **Corrupted offerings (new, untested):** every boss's offering has a corrupted version, crafted at the Riftforge (the full offering + 1 shard at altars, 1 item + 1 shard per stand at Moder's, Yagluth's and Fader's altars, Sealbreaker + 1 shard for the Queen's door), with icons from the user's renders. They summon the boss corrupted; Kall's later phases stay corrupted.
 - **Levels: pace fix re-tested** (single player): "pace feels better". Only sharing with a friend is left to test.
@@ -853,6 +889,8 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 - **New animations allowed where necessary** (user): the v1 "no new animations" rule is lifted; vanilla animations and emotes still come first.
 
 ### 2026-10-29
+- **Gear affix ranges from the game data** (loot; approved by the user): enhanced damage 4–19%, armour 10–50%, durability 11–55%, block 4–18%, backstab, knockback and parry 20–100%, attack stamina 4–20%, health regen 6–30%, stamina regen 8–40%, carry weight 10–50 (user cut it from 30–150), weapon skill 4–20; max health/stamina/eitr and life steal keep their drafts; no stacking caps for now, under the user's rules (gear-only sources; a full forge upgrade where vanilla has no +% source). **`co_dump` now writes resistances** (item `m_damageModifiers`, status effect `m_mods`) for the resistance affixes.
+- **Loot system, step 1 (new, untested):** creatures drop Magic (1 in 50) and Rare (1 in 100) items, rolled per nearby player: a craftable item of the biome they died in (20% the biome before), level 1, with 1–2 or 3–4 rolled affixes, Magic names from the affixes and two-word Rare names, coloured names, and tooltip lines with [ranges]. Damage, elemental damage, armour, durability, block, attack stamina, knockback, backstab and parry affixes work; the rest show as "not active yet". `co_loot` spawns one. New tables `loot_bases.csv` (from the game dump), `loot_rules.csv`, `rare_names.csv`; admin setting `7 - Loot` → `Enabled`.
 - **Character sheet, last single-player checks passed:** the close button, dragging the sheet, and the layout with a chest and the AdventureBackpacks backpack open. Only multiplayer is left (`PLAYTEST.md` → Session 2).
 - **Rip waves at least 1 star:** new setting `MinStars` (default 1); every wave creature spawns with at least one star (user: waves still not challenging enough). Tested in game: definitely more challenging. Corrupted wishbone colour re-check passed.
 - **Map icons:** the eight maps have their own icons, cut from the user's concept render (`tools/make_map_icons.py`), replacing the icon rendered from the tinted leather bundle. Tested in game: they look good.

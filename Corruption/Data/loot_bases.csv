@@ -1,0 +1,249 @@
+﻿prefab,name,biome,classes
+ArmorLeatherChest,Leather Tunic,Meadows,chest
+ArmorLeatherLegs,Leather Trousers,Meadows,legs
+ArmorRagsChest,Rag Tunic,Meadows,chest
+ArmorRagsLegs,Rag Trousers,Meadows,legs
+AxeFlint,Flint Axe,Meadows,weapon;axe_1h
+AxeStone,Stone Axe,Meadows,weapon;axe_1h
+BackpackMeadows,Satchel,Meadows,cape
+Bow,Crude Bow,Meadows,weapon
+CapeDeerHide,Deer Hide Cape,Meadows,cape
+Club,Club,Meadows,weapon
+HelmetLeather,Leather Helmet,Meadows,helmet
+KnifeFlint,Flint Knife,Meadows,weapon
+PickaxeAntler,Antler Pickaxe,Meadows,pickaxe
+ShieldBoneTower,Bone Tower Shield,Meadows,shield
+ShieldWood,Wood Shield,Meadows,shield
+ShieldWoodTower,Wood Tower Shield,Meadows,shield
+SpearFlint,Flint Spear,Meadows,weapon
+ArmorBerserkerChest,Patterns of the Bear,BlackForest,chest
+ArmorBerserkerLegs,Loincloth of the Bear,BlackForest,legs
+ArmorBronzeChest,Bronze Plate Tunic,BlackForest,chest
+ArmorBronzeLegs,Bronze Plate Leggings,BlackForest,legs
+ArmorTrollLeatherChest,Troll Leather Tunic,BlackForest,chest
+ArmorTrollLeatherLegs,Troll Leather Trousers,BlackForest,legs
+AtgeirBronze,Bronze Atgeir,BlackForest,weapon
+AxeBronze,Bronze Axe,BlackForest,weapon;axe_1h
+AxeEarly,Early Axes,BlackForest,weapon
+BackpackBlackForest,Rugged Backpack,BlackForest,cape
+BowFineWood,Finewood Bow,BlackForest,weapon
+CapeOdin,Cape of Oden,BlackForest,cape
+CapeTrollHide,Troll Hide Cape,BlackForest,cape
+FistBjornClaw,Paws of the Bear,BlackForest,weapon
+HelmetBronze,Bronze Helmet,BlackForest,helmet
+HelmetCelebration,Celebratory Cap,BlackForest,helmet
+HelmetOdin,Hood of Oden,BlackForest,helmet
+HelmetTrollLeather,Troll Leather Hood,BlackForest,helmet
+KnifeButcher,Butcher Knife,BlackForest,weapon
+KnifeCopper,Copper Knife,BlackForest,weapon
+MaceBronze,Bronze Mace,BlackForest,weapon
+PickaxeBronze,Bronze Pickaxe,BlackForest,pickaxe
+ShieldBronzeBuckler,Bronze Buckler,BlackForest,shield
+SledgeStagbreaker,Stagbreaker,BlackForest,weapon
+SpearBronze,Bronze Spear,BlackForest,weapon
+SwordBronze,Bronze Sword,BlackForest,weapon
+SwordWood,Wooden Sword,BlackForest,weapon
+Tankard,Tankard,BlackForest,weapon
+TankardOdin,Mead Horn of Oden,BlackForest,weapon
+TrinketBronzeHealth,Heart of the Forest,BlackForest,jewellery
+TrinketBronzeStamina,Bronze Pendant,BlackForest,jewellery
+ArmorIronChest,Iron Scale Mail,Swamp,chest
+ArmorIronLegs,Iron Greaves,Swamp,legs
+ArmorRootChest,Root Harnesk,Swamp,chest
+ArmorRootLegs,Root Leggings,Swamp,legs
+AtgeirIron,Iron Atgeir,Swamp,weapon
+AxeIron,Iron Axe,Swamp,weapon;axe_1h
+BackpackSwamp,Bloodbag Wetpack,Swamp,cape
+Battleaxe,Battleaxe,Swamp,weapon
+BowHuntsman,Huntsman Bow,Swamp,weapon
+HelmetIron,Iron Helmet,Swamp,helmet
+HelmetRoot,Root Mask,Swamp,helmet
+MaceIron,Iron Mace,Swamp,weapon
+PickaxeIron,Iron Pickaxe,Swamp,pickaxe
+ShieldBanded,Banded Shield,Swamp,shield
+ShieldIronBuckler,Iron Buckler,Swamp,shield
+ShieldIronTower,Iron Tower Shield,Swamp,shield
+ShieldRoots,Shield of Roots,Swamp,shield
+SledgeIron,Iron Sledge,Swamp,weapon
+SpearElderbark,Ancient Bark Spear,Swamp,weapon
+SwordIron,Iron Sword,Swamp,weapon
+TankardAnniversary,Horn of Celebration,Swamp,weapon
+TrinketIronHealth,Iron Brooch,Swamp,jewellery
+TrinketIronStamina,Nimble Anklet,Swamp,jewellery
+ArmorFenringChest,Fenris Coat,Mountain,chest
+ArmorFenringLegs,Fenris Leggings,Mountain,legs
+ArmorWolfChest,Wolf Hide Chestpiece,Mountain,chest
+ArmorWolfLegs,Wolf Hide Trousers,Mountain,legs
+BackpackMountains,Arctic Sherpa Pack,Mountain,cape
+BattleaxeCrystal,Crystal Battleaxe,Mountain,weapon
+BowDraugrFang,Draugr Fang,Mountain,weapon
+CapeWolf,Wolf Fur Cape,Mountain,cape
+FistFenrirClaw,Flesh Rippers,Mountain,weapon
+HelmetDrake,Drake Helmet,Mountain,helmet
+HelmetFenring,Fenris Hood,Mountain,helmet
+KnifeSilver,Silver Knife,Mountain,weapon
+MaceSilver,Frostner,Mountain,weapon
+ShieldSilver,Silver Shield,Mountain,shield
+SpearWolfFang,Fang Spear,Mountain,weapon
+SwordSilver,Silver Sword,Mountain,weapon
+TrinketSilverDamage,Wolf Sight,Mountain,jewellery
+TrinketSilverResist,Crystal Heart,Mountain,jewellery
+ArmorBerserkerUndeadChest,Vilebone Cage,Plains,chest
+ArmorBerserkerUndeadLegs,Vilebone Drapes,Plains,legs
+ArmorLoxChest,Lox Fur Jacket,Plains,chest
+ArmorLoxLegs,Lox Fur Trousers,Plains,legs
+ArmorPaddedCuirass,Padded Cuirass,Plains,chest
+ArmorPaddedGreaves,Padded Greaves,Plains,legs
+AtgeirBlackmetal,Black Metal Atgeir,Plains,weapon
+AxeBlackMetal,Black Metal Axe,Plains,weapon;axe_1h
+BackpackPlains,Lox Hide Knappsack,Plains,cape
+BattleaxeBlackmetal,Black Metal Battleaxe,Plains,weapon
+CapeLinen,Linen Cape,Plains,cape
+CapeLox,Lox Cape,Plains,cape
+FistBjornUndeadClaw,Vilebone Maulclaws,Plains,weapon
+HelmetBerserkerHood,Headdress of the Bear,Plains,helmet
+HelmetBerserkerUndead,Vilebone Visage,Plains,helmet
+HelmetLox,Lox Fur Hood,Plains,helmet
+HelmetPadded,Padded Helmet,Plains,helmet
+KnifeBlackMetal,Black Metal Knife,Plains,weapon
+MaceNeedle,Porcupine,Plains,weapon
+ShieldBlackmetal,Black Metal Shield,Plains,shield
+ShieldBlackmetalTower,Black Metal Tower Shield,Plains,shield
+SwordBlackmetal,Black Metal Sword,Plains,weapon
+TrinketBlackDamageHealth,Bracelets of the Brave,Plains,jewellery
+TrinketBlackStamina,Evasion Mantle,Plains,jewellery
+ArmorCarapaceChest,Carapace Breastplate,Mistlands,chest
+ArmorCarapaceLegs,Carapace Greaves,Mistlands,legs
+ArmorMageChest,Eitr-weave Robe,Mistlands,chest
+ArmorMageLegs,Eitr-weave Trousers,Mistlands,legs
+AtgeirHimminAfl,Himminafl,Mistlands,weapon
+AxeJotunBane,Jotun Bane,Mistlands,weapon;axe_1h
+BackpackMistlands,Explorers Wisppack,Mistlands,cape
+BattleaxeSkullSplittur,Skull Splittur,Mistlands,weapon
+BowSpineSnap,Spinesnap,Mistlands,weapon
+CapeFeather,Feather Cape,Mistlands,cape
+CrossbowArbalest,Arbalest,Mistlands,weapon
+HelmetCarapace,Carapace Helmet,Mistlands,helmet
+HelmetMage,Eitr-weave Hood,Mistlands,helmet
+KnifeSkollAndHati,Skoll and Hati,Mistlands,weapon
+PickaxeBlackMetal,Black Metal Pickaxe,Mistlands,pickaxe
+ShieldCarapace,Carapace Shield,Mistlands,shield
+ShieldCarapaceBuckler,Carapace Buckler,Mistlands,shield
+SledgeDemolisher,Demolisher,Mistlands,weapon
+SpearCarapace,Carapace Spear,Mistlands,weapon
+StaffFireball,Staff of Embers,Mistlands,weapon
+StaffIceShards,Staff of Frost,Mistlands,weapon
+StaffShield,Staff of Protection,Mistlands,weapon
+StaffSkeleton,Dead Raiser,Mistlands,weapon
+SwordMistwalker,Mistwalker,Mistlands,weapon
+THSwordKrom,Krom,Mistlands,weapon
+TrinketCarapaceEitr,Pulsating Earrings,Mistlands,jewellery
+TrinketScaleStaminaDamage,Resounding Shackle,Mistlands,jewellery
+ArmorAshlandsMediumChest,Breastplate of Ask,Ashlands,chest
+ArmorAshlandsMediumlegs,Trousers of Ask,Ashlands,legs
+ArmorFlametalChest,Flametal Breastplate,Ashlands,chest
+ArmorFlametalLegs,Flametal Greaves,Ashlands,legs
+ArmorMageChest_Ashlands,Robes of Embla,Ashlands,chest
+ArmorMageLegs_Ashlands,Trousers of Embla,Ashlands,legs
+AxeBerzerkr,Berserkir Axes,Ashlands,weapon
+BackpackAshlands,Cinderward Pack,Ashlands,cape
+BowAshlands,Ash Fang,Ashlands,weapon
+CapeAsh,Ashen Cape,Ashlands,cape
+CapeAsksvin,Asksvin Cloak,Ashlands,cape
+CrossbowRipper,Ripper,Ashlands,weapon
+HelmetAshlandsMediumHood,Hood of Ask,Ashlands,helmet
+HelmetFlametal,Flametal Helmet,Ashlands,helmet
+HelmetMage_Ashlands,Hood of Embla,Ashlands,helmet
+MaceEldner,Flametal Mace,Ashlands,weapon
+ShieldFlametal,Flametal Shield,Ashlands,shield
+ShieldFlametalTower,Flametal Tower Shield,Ashlands,shield
+SpearSplitner,Splitnir,Ashlands,weapon
+StaffClusterbomb,Staff of Fracturing,Ashlands,weapon
+SwordNiedhogg,Nidhögg,Ashlands,weapon
+THSwordSlayer,Slayer,Ashlands,weapon
+TrinketFlametalStaminaHealth,Brimstone,Ashlands,jewellery
+ArmorDeepNorthHeavyChest,Breastplate of the Protector,DeepNorth,chest
+ArmorDeepNorthHeavylegs,Trousers of the Protector,DeepNorth,legs
+ArmorDeepNorthMageChest,Robes of the Caller,DeepNorth,chest
+ArmorDeepNorthMagelegs,Trousers of the Caller,DeepNorth,legs
+ArmorDeepNorthMediumChest,Chestpiece of the Vanguard,DeepNorth,chest
+ArmorDeepNorthMediumlegs,Trousers of the Vanguard,DeepNorth,legs
+AtgeirGold,Nord Atgeir,DeepNorth,weapon
+AtgeirGold_BloodLightning,Thunderblood Atgeir,DeepNorth,weapon
+AtgeirGold_FrostFire,Frostfire Atgeir,DeepNorth,weapon
+AxeBerzerkrBlood,Bleeding Berserkir Axes,DeepNorth,weapon
+AxeBerzerkrLightning,Thundering Berserkir Axes,DeepNorth,weapon
+AxeBerzerkrNature,Primal Berserkir Axes,DeepNorth,weapon
+AxeGold,Nord Axe,DeepNorth,weapon;axe_1h
+AxeGold_BloodLightning,Thunderblood Axe,DeepNorth,weapon;axe_1h
+AxeGold_FrostFire,Frostfire Axe,DeepNorth,weapon;axe_1h
+BackpackDeepNorth,Frostbound Haversack,DeepNorth,cape
+BattleaxeGold,Nord Greataxe,DeepNorth,weapon
+BattleaxeGold_BloodLightning,Thunderblood Greataxe,DeepNorth,weapon
+BattleaxeGold_FrostFire,Frostfire Greataxe,DeepNorth,weapon
+BowAshlandsBlood,Blood Fang,DeepNorth,weapon
+BowAshlandsRoot,Root Fang,DeepNorth,weapon
+BowAshlandsStorm,Storm Fang,DeepNorth,weapon
+BowGold,Nord Bow,DeepNorth,weapon
+BowGold_BloodLightning,Thunderblood Bow,DeepNorth,weapon
+BowGold_FrostFire,Frostfire Bow,DeepNorth,weapon
+CapeDeepNorth,Moose Hide Cape,DeepNorth,cape
+CapeDeepNorthMage,Cape of the Caller,DeepNorth,cape
+CrossbowGold,Nord Crossbow,DeepNorth,weapon
+CrossbowGold_BloodLightning,Thunderblood Crossbow,DeepNorth,weapon
+CrossbowGold_FrostFire,Frostfire Crossbow,DeepNorth,weapon
+CrossbowRipperBlood,Wound Ripper,DeepNorth,weapon
+CrossbowRipperLightning,Storm Ripper,DeepNorth,weapon
+CrossbowRipperNature,Root Ripper,DeepNorth,weapon
+FistGold,Nord Knucklechains,DeepNorth,weapon
+FistGold_BloodLightning,Thunderblood Knucklechains,DeepNorth,weapon
+FistGold_FrostFire,Frostfire Knucklechains,DeepNorth,weapon
+HelmetCrownofValheim,Crown of Valheim,DeepNorth,helmet
+HelmetDNHeavy,Helmet of the Protector,DeepNorth,helmet
+HelmetDNMage,Headdress of the Caller,DeepNorth,helmet
+HelmetDNMediumHood,Hood of the Vanguard,DeepNorth,helmet
+HelmetFishingHat,Fishing Hat,DeepNorth,helmet
+KnifeGold,Nord Dagger,DeepNorth,weapon
+KnifeGold_BloodLightning,Thunderblood Dagger,DeepNorth,weapon
+KnifeGold_FrostFire,Frostfire Dagger,DeepNorth,weapon
+MaceEldnerBlood,Bloodgeon,DeepNorth,weapon
+MaceEldnerLightning,Storm Star,DeepNorth,weapon
+MaceEldnerNature,Klossen,DeepNorth,weapon
+MaceGold,Nord Mace,DeepNorth,weapon
+MaceGold_BloodLightning,Thunderblood Mace,DeepNorth,weapon
+MaceGold_FrostFire,Frostfire Mace,DeepNorth,weapon
+ShieldGold,Nord Shield,DeepNorth,shield
+ShieldGoldBuckler,Nord Buckler,DeepNorth,shield
+ShieldGoldTower,Nord Greatshield,DeepNorth,shield
+SledgeGold,Nord Sledge,DeepNorth,weapon
+SledgeGold_BloodLightning,Thunderblood Sledge,DeepNorth,weapon
+SledgeGold_FrostFire,Frostfire Sledge,DeepNorth,weapon
+SpearGold,Nord Spear,DeepNorth,weapon
+SpearGold_BloodLightning,Thunderblood Spear,DeepNorth,weapon
+SpearGold_FrostFire,Frostfire Spear,DeepNorth,weapon
+SpearSplitner_Blood,Splitnir the Bleeding,DeepNorth,weapon
+SpearSplitner_Lightning,Splitnir the Storming,DeepNorth,weapon
+SpearSplitner_Nature,Splitnir the Primal,DeepNorth,weapon
+StaffFrostOrbs,Northern Vengeance,DeepNorth,weapon
+StaffGreenRoots,Staff of the Wild,DeepNorth,weapon
+StaffLightning,Dundr,DeepNorth,weapon
+StaffOrbofAhri,Echo Spike,DeepNorth,weapon
+StaffRedTroll,Trollstav,DeepNorth,weapon
+StaffSpiritCaller,Spirit Caller,DeepNorth,weapon
+StaffThunderBlood,Lightning Strike,DeepNorth,weapon
+SwordDyrnwyn,Dyrnwyn,DeepNorth,weapon
+SwordGold,Nord Sword,DeepNorth,weapon
+SwordGold_BloodLightning,Thunderblood Sword,DeepNorth,weapon
+SwordGold_FrostFire,Frostfire Sword,DeepNorth,weapon
+SwordNiedhoggBlood,Nidhögg the Bleeding,DeepNorth,weapon
+SwordNiedhoggLightning,Nidhögg the Thundering,DeepNorth,weapon
+SwordNiedhoggNature,Nidhögg the Primal,DeepNorth,weapon
+THSwordGold,Nord Greatsword,DeepNorth,weapon
+THSwordGold_BloodLightning,Thunderblood Greatsword,DeepNorth,weapon
+THSwordGold_FrostFire,Frostfire Greatsword,DeepNorth,weapon
+THSwordSlayerBlood,Brutal Slayer,DeepNorth,weapon
+THSwordSlayerLightning,Scourging Slayer,DeepNorth,weapon
+THSwordSlayerNature,Primal Slayer,DeepNorth,weapon
+TrinketBloodGoldHealth,Neckstabber,DeepNorth,jewellery
+TrinketBloodGoldStamina,Witch Crown,DeepNorth,jewellery
+TrinketFlametalEitr,Jörmundling,DeepNorth,jewellery

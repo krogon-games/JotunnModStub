@@ -45,6 +45,8 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Maps (`Humanoid.UseItem` prefix) | AB's quick transfer also prefixes `UseItem` (higher priority): with the backpack open, right-clicking moves the item. Our prefix steps aside when another skipped the original, so a map gets moved, not used. EAQS quick slots call `UseItem` normally, so maps work from quick slots | Verified in code; to test |
 | Corrupted offerings (`OfferingBowl.UseItem`, `.Interact`, `.RPC_RemoveBossSpawnInventoryItems` prefixes, `.DelayedSpawnBoss` postfix; `ItemStand.IsSupported` postfix, `ItemStand.Interact` prefix; `Door.Interact`, `Door.UseItem` prefixes; `Character.OnDeath` prefix) | AB postfixes `Door.HaveKey` so a normal key in the backpack opens doors, and prefixes `ItemStand.UseItem`/`UpdateAttach` (move protection only). Ours look for corrupted items in the **main inventory only**: a corrupted Sealbreaker or egg in the backpack isn't used. EAQS patches `Player.OnDeath` and `Character.CheckDeath` for players only. No overlap otherwise | Verified in code (decompiled AB and EAQS); to test |
 | Rips (`Player.UpdateTeleport` postfix, `Game.Start` postfix) | None of the three patch these. AB patches `Inventory.IsTeleportable` (backpack contents count), which our rip check uses, so ores in a backpack block rips like portals | Verified in code |
+| Loot step 1 (2026-10-29): `CharacterDrop.OnDeath`, `InventoryGrid.CreateItemTooltip`, `ItemDrop.GetHoverText`, `ItemData.GetDamage`/`GetArmor`/`GetMaxDurability`/`GetBaseBlockPower`, `Attack.GetAttackStamina`, `Character.Damage`, `SEMan.ModifyTimedBlockBonus` | None of the three patch these (AB patches `Player.OnDeath`, PlantEasily `Beehive`/`Pickable.GetHoverText`, not these). Our character sheet moves EAQS's cells in `InventoryGrid.UpdateGui`, not the tooltip | Verified in code (2026-10-29) |
+| Affix tooltips (`ItemData.GetTooltip` postfix) | AB also postfixes it (priority 200): for backpacks it inserts an armour line after the quality or weight line. We append our lines at the end; both work | Verified in code (2026-10-29) |
 
 ## Orlog (built)
 
@@ -58,7 +60,6 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 
 | Planned feature | Overlap | Note |
 |---|---|---|
-| Affix tooltips (`ItemData.GetTooltip` postfix) | AB also postfixes `GetTooltip` (backpack contents) | Several postfixes are fine; append our lines, don't replace the text |
 | Light affix (`ItemData.GetWeight`) | AB postfixes `GetWeight` (backpack weight) | Light only applies to tools; multiply, don't overwrite |
 | Magnetic / Keen-eyed (pickup radius) | EAQS patches `Player.AutoPickup` (fills quick slots) | We change the radius field, not the method; compatible |
 | Deathless (cheat death) | EAQS patches `Character.CheckDeath` and `Player.OnDeath` | Hook the damage before death, test with EAQS keep-on-death |
@@ -72,6 +73,10 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 ## Cape or backpack
 
 With AdventureBackpacks and EquipmentAndQuickSlots together you wear a cape **or** a backpack, not both: backpacks are shoulder items, and EAQS has one shoulder slot. That's AdventureBackpacks' intended design (several backpacks carry cape perks: the Swamp pack is waterproof, the Mountain pack resists frost, the Plains pack is crafted from a Lox cape). AdventureBackpacks supports both at once only with extra-slot mods (AzuExtendedPlayerInventory, ExtraSlots), which EAQS refuses to load with. **Kept as is for now** (user, 2026-10-28). If it's ever wanted, a dedicated backpack slot through EAQS's custom-slot API is the route to try.
+
+## Backpack sizes
+
+AdventureBackpacks' sizes are its own synced settings, not our code. The group plays with one extra row on every level (user, 2026-10-29); the values and where to set them: [`PLAYER_SETUP.md`](PLAYER_SETUP.md) → For the server admin. AdventureBackpacks checks a backpack's size when it's opened, so growing a backpack keeps its items. Check in-game that 5-row backpacks (Plains and later) fit on screen.
 
 ## How to test (when playing)
 

@@ -11,6 +11,7 @@ namespace Corruption
         private const string EssenceSection = "4 - Essences";
         private const string RipSection = "5 - Rips";
         private const string CorruptedSection = "6 - Corrupted Bosses";
+        private const string LootSection = "7 - Loot";
 
         public static ConfigEntry<float> OneStarShardChance;
         public static ConfigEntry<float> TwoStarShardChance;
@@ -19,6 +20,7 @@ namespace Corruption
         public static ConfigEntry<bool> BossShardsFirstKillOnly;
 
         public static ConfigEntry<bool> TalismansEnabled;
+        public static ConfigEntry<bool> LootEnabled;
         public static ConfigEntry<bool> EssencesEnabled;
         public static ConfigEntry<bool> RipsEnabled;
         public static ConfigEntry<float> RipOpenDays;
@@ -120,6 +122,10 @@ namespace Corruption
                 AdminOnly("Fewest corruption shards a corrupted boss drops (every kill).", new AcceptableValueRange<int>(0, 50)));
             CorruptedShardsMax = config.Bind(CorruptedSection, "ShardsMax", 5,
                 AdminOnly("Most corruption shards a corrupted boss drops.", new AcceptableValueRange<int>(0, 50)));
+
+            LootEnabled = config.Bind(LootSection, "Enabled", true,
+                AdminOnly("Creatures drop Magic and Rare items with rolled affixes (chances: Corruption/Data/drop_chances.csv and " +
+                          "drop_modifiers.csv). Off: no new loot drops; items already found keep their affixes."));
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",
