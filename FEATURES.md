@@ -26,8 +26,10 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
+| [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
+| [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
-There are two plugins: **CraftingOverhaul** (quality of life; works when only some players have it) and **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg` and `com.krogongames.corruption.cfg`.
+There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
 
 ---
 
@@ -775,9 +777,65 @@ The technical review is in `docs/corruption-design-review.md`. It suggests build
 **Ideas so far:**
 - Perfect-parry timing windows, combos, a posture/stagger bar, dodge i-frames and weapon special moves.
 - Likely patch points: `Humanoid`, `Attack`, `Character.Damage`.
-- New animations would need asset-bundle work in the `JotunnModUnity` project.
+- New animations need asset-bundle work in the `JotunnModUnity` project. They are allowed where necessary (user, 2026-10-30).
 
-The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses), but adds no new attacks or animations in v1. These combat ideas remain a separate track.
+The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses) without new attacks or animations. These combat ideas remain a separate track.
+
+## Levels and XP
+
+*Orlog (new plugin, `com.krogongames.orlog`). The server and every player need it.*
+
+**What it does:** characters gain XP from kills and level up to 99, Diablo 2 style. Built 2026-10-30; not yet tested in-game.
+- **XP needed per level:** Diablo 2's experience table (500 for level 2, 7,875 for level 5 … 3.5 billion for 99), `Orlog/Data/levels.csv`.
+- **Creature levels:** bosses have the user's levelling guide level (Eikthyr 5, The Elder 11, Bonemass 20, Moder 35, Yagluth 50, The Queen 62, Fader 76, Kall Fimbulbringer 90, all three phases). Any other creature takes the level range of the **biome it dies in** (Meadows 1–4, Black Forest 5–10, Swamp 11–19, Mountains 20–34, Plains 35–49, Mistlands 50–61, Ashlands 62–75, Deep North 76–89) and is placed in it by its base health on a log scale between the biome's weakest and strongest creature (from the game dump's spawn lists). A draugr is a strong Meadows creature but a weak Swamp one. The ocean has no range: its creatures count as the players' average level.
+- **XP per kill:** `Orlog/Data/creature_xp.csv` at the creature's level: D2's XP to the next level divided by **classic WoW's kills per level** (WoW's XP table ÷ level×5+45), so a player needs about as many same-level kills per level as in classic WoW without quests (8 at level 1, about 60 at level 11, 290 at 51, 617 from level 89). At the default pace that is about 60 same-level kills to reach Eikthyr's level, 320 to the Elder's, 1,050 to Bonemass's, 3,200 to Moder's, 6,600 to Yagluth's, 10,600 to the Queen's, 16,800 to Fader's and 24,600 to Kall's (from the tables; real play mixes in weaker and starred creatures). `XpMultiplier` changes the pace.
+- **Stars:** a 1-star creature gives ×2, a 2-star ×3 (its health is base × its game level, from the game code).
+- **Level difference:** a creature **at or below** your level gives its own XP, cut by Diablo 2's rule when it's far below (within 5 levels full XP; 6–10 below 81% down to 5%). A creature **above** your level gives the XP of a creature of *your* level plus classic WoW's bonus, +5% per level above, at most +20% (changed 2026-10-30 after the play-test, user's choice: D2 paid a higher creature's full XP, which made early levels 2–3× too fast). Level 2 now takes about 8 Meadows greydwarves (was 3), Eikthyr's level about 60 kills of the Meadows' toughest creatures.
+- **Sharing:** every player within `ShareRange` (70 m) of the kill shares it, D2 party style: +35% per extra player, split by level, each share taken of what the kill is worth to that player (level difference above). Only kills by a player or a creature on the players' side (tamed, summoned) give XP; tamed creatures and the training dummy give none.
+- XP is kept with the character (custom data `orlog_xp`), like vanilla skills, so it carries across worlds. Vanilla skills keep levelling by use. No XP loss on death (user).
+- On each kill "+N XP" in the top-left (per-player setting); on a new level "Level N" in the centre with the vanilla skill level-up effect.
+- Stat and skill points are counted (5 and 1 per level by default) for the UI, but can't be spent yet (attributes and skills come next).
+
+**How it works:** the creature's owner (the game that ran the fight) works out the XP in a prefix on `Character.OnDeath` and sends each player's share in the routed message `Orlog_Xp` to that player's game. Every game publishes its player's level on the player's ZDO (`orlog_level`) so the owner can split by level and apply the level difference. The UI reads level and XP through `Orlog.Api` (`docs/classes-ui-brief.md`).
+
+**Config settings** (`1 - Levels` admin-only, server-synced; `2 - Display` per player):
+
+| Setting | Default | Description |
+|---|---|---|
+| `MaxLevel` | `99` | Highest level (D2) |
+| `StatPointsPerLevel` | `5` | Attribute points per level (D2) |
+| `SkillPointsPerLevel` | `1` | Skill points per level (D2) |
+| `XpMultiplier` | `1` | Multiplies all kill XP; 1 = classic WoW's pace without quests |
+| `ShareRange` | `70` | Metres within which players share a kill (EpicMMOSystem's group range) |
+| `PartyBonusPerPlayer` | `0.35` | Extra XP per additional sharing player (D2) |
+| `HighLevelPenalty` | `false` | D2's XP cut from level 70; off because it would put level 90 by Kall out of reach |
+| `ShowXpGains` | `true` | "+N XP" per kill |
+
+Console commands: `orlog_info` (level, XP, the biome's creature levels), `orlog_xp <amount>` and `orlog_level <level>` (cheats, need `devcommands`).
+
+The tables, the level difference and party rules are unit-tested (`OrlogLevelTests`: 28 tests).
+
+**Known issues / not yet:**
+- **Play-test 2026-10-30 (user, single player):** `orlog_info`, "+N XP" per kill, ×2 XP from a 1-star, level-up message and effect, 6 XP for a boar at level 20 (far below), level and XP kept after relogging, no console errors: all work. Not yet tested: sharing with a friend.
+- **Pace too fast (user, 2026-10-30):** 3 greydwarves and 1–2 necks reached level 2. Why: the pace assumed same-level kills, but most Meadows enemies (greylings, greydwarves, skeletons, 20+ health) sit at the top of the Meadows range, level 4 (178 XP), and D2 pays a higher creature's full XP within 5 levels; a neck (level 1) gives 62. **Fixed the same day** (user chose option B): higher creatures now give your own level's XP + WoW's up to +20%; a greydwarf at level 1 gives 71. **Re-tested 2026-10-30: "pace feels better" (user).** `XpMultiplier` stays for fine-tuning.
+- D2's party bonus is read as +35% per extra player (Arreat: "+35% when a party member is in the area").
+- A kill only counts when the last hit came from a player or a creature on their side; a creature finished by fall damage or another creature gives nothing.
+- Modded creatures work (level from the biome they die in); modded bosses aren't in the boss list and count as their biome's creatures.
+- **Bosses give the XP of one creature of their level** (Eikthyr ≈ a level-5 creature). D2's act bosses give 9–65× a normal monster (`monstats` Exp%: Andariel 916%, Baal 6460%, a zombie 111%); how much more ours should give is open (asked the user).
+- Kall Fimbulbringer's three phases (`FrozenKing`, `_p2`, `_p3`) each count as a level-90 kill.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+- `Character.OnDeath` (prefix): works out and sends the kill's XP (owner only; reads `m_lastHit`, `m_health`, the star level).
+- `Player.OnSpawned` (postfix): publishes the local player's level on its ZDO.
+- `Game.Start` (postfix): registers the `Orlog_Xp` routed message.
+
+## Classes, levels and skill trees
+
+**Status:** Planned. Design only, no code (branch `claude/class-skills`).
+
+Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-10-30), then the Barbarian, maybe the Paladin. Character levels from XP, with stat points (D2's Strength, Dexterity, Vitality, Energy) and skill points each level, spent in D2's three-tab trees (skills open by level; prerequisites only where both skills are built). Only the skills that work in Valheim; the rest are reworked or dropped. Vanilla skills keep levelling by use. EpicMMOSystem was compared and is not used as a base. Design, open questions and build order: `docs/class-design.md`; D2 reference data: `data/d2-reference/`.
+
+**Harmony patch targets:** none yet.
 
 ---
 
@@ -786,6 +844,13 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ### 2026-10-30
 - **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons.
 - **Corrupted offerings (new, untested):** every boss's offering has a corrupted version, crafted at the Riftforge (the full offering + 1 shard at altars, 1 item + 1 shard per stand at Moder's, Yagluth's and Fader's altars, Sealbreaker + 1 shard for the Queen's door), with icons from the user's renders. They summon the boss corrupted; Kall's later phases stay corrupted.
+- **Levels: pace fix re-tested** (single player): "pace feels better". Only sharing with a friend is left to test.
+- **Levels: slower early levels** (after the play-test, user's choice): a creature above your level now gives your own level's XP + classic WoW's bonus (+5% per level, max +20%) instead of its full XP (D2). Level 2 takes about 8 greydwarves instead of 3. Lower creatures keep D2's cut. Untested in-game (158 tests).
+- **Levels and XP play-tested** (single player): XP per kill, stars, level-up, the level-difference cut and saving all work. Levelling felt too fast (level 2 after 3 greydwarves and 1–2 necks); cause found (most Meadows enemies are level 4 and D2 pays their full XP); fix being decided with the user.
+- **Levels and XP built** (new plugin Orlog, branch `claude/class-skills`): XP from kills up to level 99 with D2's level table, level difference and party rules; creature levels from the user's levelling guide and the biome they die in; classic WoW's kills per level for the pace; XP shared within 70 m; level published for other players; `Orlog.Api` level and XP calls for the UI; console commands `orlog_info`, `orlog_xp`, `orlog_level`. Untested in-game (155 tests).
+- **Classes: the Amazon comes first** (group vote), with 19 of her 30 skills planned for v1 and the rest later. Tree layout decided: D2's three tabs, level tiers instead of broken prerequisite chains, upgrade choices on big skills later. Levels follow D2's rules, all in admin config; no XP loss on death. Design only.
+- **Classes, levels and skill trees planned** (design only): `docs/class-design.md`, D2 reference tables in `data/d2-reference/`. EpicMMOSystem researched; own levels recommended. No mod code changed.
+- **New animations allowed where necessary** (user): the v1 "no new animations" rule is lifted; vanilla animations and emotes still come first.
 
 ### 2026-10-29
 - **Character sheet, last single-player checks passed:** the close button, dragging the sheet, and the layout with a chest and the AdventureBackpacks backpack open. Only multiplayer is left (`PLAYTEST.md` → Session 2).

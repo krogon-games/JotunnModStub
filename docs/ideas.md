@@ -24,7 +24,7 @@ Ideas saved for later exploration. Nothing here is planned or built yet. When an
 
 ## Progression
 
-- **Skill system redesign**: instead of a skill levelling up automatically as you use it, you earn levels and stat points and choose where to spend them. → [Skill rework](corruption-design.md#skill-rework)
+- **Skill system redesign**: instead of a skill levelling up automatically as you use it, you earn levels and stat points and choose where to spend them. → [Skill rework](corruption-design.md#skill-rework); now D2-style classes and levels, [`class-design.md`](class-design.md) (2026-10-30)
 
 ## Creatures
 

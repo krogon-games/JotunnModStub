@@ -30,6 +30,8 @@
     <Compile Include="..\Corruption\Rules\CorruptionOutcomes.cs" Link="Linked\CorruptionOutcomes.cs" />
     <Compile Include="..\Corruption\Rules\ShatterRules.cs" Link="Linked\ShatterRules.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
+    <Compile Include="..\Orlog\Rules\LevelTables.cs" Link="Linked\Orlog\LevelTables.cs" />
+    <Compile Include="..\Orlog\Rules\ExperienceRules.cs" Link="Linked\Orlog\ExperienceRules.cs" />
   </ItemGroup>
 
   <ItemGroup>

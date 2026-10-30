@@ -46,6 +46,14 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Corrupted offerings (`OfferingBowl.UseItem`, `.Interact`, `.RPC_RemoveBossSpawnInventoryItems` prefixes, `.DelayedSpawnBoss` postfix; `ItemStand.IsSupported` postfix, `ItemStand.Interact` prefix; `Door.Interact`, `Door.UseItem` prefixes; `Character.OnDeath` prefix) | AB postfixes `Door.HaveKey` so a normal key in the backpack opens doors, and prefixes `ItemStand.UseItem`/`UpdateAttach` (move protection only). Ours look for corrupted items in the **main inventory only**: a corrupted Sealbreaker or egg in the backpack isn't used. EAQS patches `Player.OnDeath` and `Character.CheckDeath` for players only. No overlap otherwise | Verified in code (decompiled AB and EAQS); to test |
 | Rips (`Player.UpdateTeleport` postfix, `Game.Start` postfix) | None of the three patch these. AB patches `Inventory.IsTeleportable` (backpack contents count), which our rip check uses, so ores in a backpack block rips like portals | Verified in code |
 
+## Orlog (built)
+
+| Our feature | Overlap | Status |
+|---|---|---|
+| Kill XP (`Character.OnDeath` prefix) | EAQS patches `Character.CheckDeath` and `Player.OnDeath` (not `Character.OnDeath`). Our prefix only reads the creature and sends messages; it skips players | No overlap known; to test |
+| Level on the player ZDO (`Player.OnSpawned` postfix), `Orlog_Xp` message (`Game.Start` postfix) | Corruption also has postfixes on both; postfixes don't block each other | No overlap known |
+| **EpicMMOSystem** (not in the group's list) | Also gives levels and XP, patches `Character.Damage`, HUD bars and more. Don't run both (decided 2026-10-30) | — |
+
 ## Corruption (planned): keep in mind when building
 
 | Planned feature | Overlap | Note |

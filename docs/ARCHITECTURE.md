@@ -15,7 +15,8 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 |---|---|---|---|
 | `CraftingOverhaul/` | `com.krogongames.craftingoverhaul` | `VersionCheckOnly` (works if only some players have it) | Quality of life: recipe search, collapsible categories, biome detection, craft/build from nearby chests, `co_dump` / `co_biome` |
 | `Corruption/` | `com.krogongames.corruption` | `EveryoneMustHaveMod` (server and every player) | Endgame mod from [`GAME_DESIGN.md`](GAME_DESIGN.md): shards, Riftforge, talismans so far |
-| `CraftingOverhaul.Tests/` | — | — | `net8.0` xunit tests for both plugins' pure code |
+| `Orlog/` | `com.krogongames.orlog` | `EveryoneMustHaveMod` | Diablo 2-style classes from [`class-design.md`](class-design.md): levels and XP so far |
+| `CraftingOverhaul.Tests/` | — | — | `net8.0` xunit tests for every plugin's pure code |
 
 ### CraftingOverhaul
 
@@ -38,9 +39,17 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - `Data/`: tunable data tables kept as CSV, one row per entry, so they open in any spreadsheet and diff cleanly in git: `affixes.csv`, `affix_caps.csv`, `drop_chances.csv`, `drop_modifiers.csv`, `corruption_outcomes.csv`, `shattering.csv` (guide: `Corruption/Data/README.md`). Each table has a pure reader with validation, and a test that checks the real file.
 - `Content/`: `ShardItem`, `Riftforge`, `ShardDrops`, `Talismans`, `TalismanRepel`, `Corrupted` (tint + icon rendering), `Texts` (localisation tokens, raven lore).
 
+### Orlog
+
+- `OrlogPlugin.cs`, `OrlogConfig.cs` (`1 - Levels` admin-only, `2 - Display` per player), `Safe.cs` (as Corruption's).
+- `Rules/` (pure, tested): `LevelTables` (`LevelTable`, `CreatureXpTable`, `BiomeLevels`: read and check the three tables), `ExperienceRules` (D2's level difference and party split). Corruption's `Csv` reader is linked in, not copied.
+- `Data/`: `levels.csv`, `creature_xp.csv`, `biome_levels.csv`, made by `tools/make_orlog_tables.py` from `data/d2-reference/`, `data/wow-reference/` and the game dump (guide: `Orlog/Data/README.md`).
+- `Content/`: `Progress` (the local player's XP in custom data `orlog_xp`, level on the player ZDO `orlog_level`, level-up), `KillXp` (creature owner works out the kill in a `Character.OnDeath` prefix, sends shares with the routed message `Orlog_Xp`), `Commands`, `Texts`.
+- `Api.cs`: the public `Orlog.Api` the UI reads by reflection ([`classes-ui-brief.md`](classes-ui-brief.md)).
+
 ### Shared
 
-- `Shared/ConfigWatcher.cs`: linked into both plugin projects (`<Compile Include="..\Shared\..." Link=...>`). Reloads the plugin's `.cfg` on save; development aid, see `CURRENT_STATE.md` → Before release.
+- `Shared/ConfigWatcher.cs`: linked into every plugin project (`<Compile Include="..\Shared\..." Link=...>`). Reloads the plugin's `.cfg` on save; development aid, see `CURRENT_STATE.md` → Before release.
 
 ### Custom assets
 
@@ -69,7 +78,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 2. **Never break vanilla.** Code that runs inside game methods goes through `Safe.Run` / `Safe.Report`: log once per action, fall back to vanilla behaviour.
 3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.20/*.csv` for real game data.
 4. **Data-driven first.** Derive lists from game data (biomes, talisman families); config overrides only for real exceptions (`BiomeMaterialOverrides`, `ExcludedCreatures`).
-5. **Clone, don't import** (exceptions: the shard and essence models, above). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models or animations in v1.
+5. **Clone, don't import** (exceptions: the shard and essence models, above). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models unless the user asks. New animations are allowed where no vanilla animation or emote fits (user, 2026-10-30); they come from asset bundles built in `JotunnModUnity/`.
 6. **Config scope.** Gameplay numbers admin-only (server-synced); visual settings per player.
 7. **Robust patch arguments.** Use `__0`/`__1` positional arguments where parameter names may change.
 8. **No hard-coded positional limits without a guard** (e.g. `Riftforge` refuses more than 5 ingredients and logs an error).
