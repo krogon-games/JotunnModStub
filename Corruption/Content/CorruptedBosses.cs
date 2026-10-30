@@ -8,8 +8,8 @@ namespace Corruption.Content
     /// <summary>
     ///     Corrupted bosses (design phase 6), the parts the design fully specifies: a corrupted boss hits harder,
     ///     takes less damage, drops more essences and guaranteed shards, and is tinted red. The flag lives on the
-    ///     boss's ZDO, so every player's game agrees. Summoning with corrupted offerings and the summons come later;
-    ///     until then <c>co_corrupt</c> corrupts the nearest boss for testing.
+    ///     boss's ZDO, so every player's game agrees. Corrupted offerings (<see cref="CorruptedOfferings" />) summon
+    ///     them; <c>co_corrupt</c> corrupts the nearest boss for testing. The summons come later.
     /// </summary>
     internal static class CorruptedBosses
     {

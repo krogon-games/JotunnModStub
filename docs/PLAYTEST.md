@@ -24,6 +24,10 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 5. Try one later biome, e.g. `spawn CorruptionMap_Swamp` (draugr and skeletons) or `CorruptionMap_Plains` (fulings).
 6. No red errors in the console.
 
+### 1f. Corrupted offerings
+Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
+1. **Icons re-check:** the Corrupted ancient seed is the red three-pointed seed, the Corrupted malicious blood the red blob (they were swapped).
+
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 

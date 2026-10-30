@@ -191,7 +191,7 @@ Affixes are the Path of Exile part: spend extra shards at the bench to roll modi
 
 A corrupted boss is the vanilla boss with its numbers turned up and its summons turned on. No new attacks or animations. The visual is a tint and reused particles.
 
-**Summoning:** offer a corrupted version of the boss's normal offering, e.g. a Corrupted deer trophy for Eikthyr. One item, same altar, same ritual, harder fight. Corrupted offerings are crafted at the Riftforge from the normal offering plus 1 Corruption shard. *Clarified 2026-10-28: the recipe takes the full normal offering (the altar's item and count, e.g. both deer trophies) plus 1 shard; the one corrupted item then summons the boss. The Queen, who has no altar, is corrupted with a corrupted Sealbreaker (Sealbreaker + 1 shard) used on her door.*
+**Summoning:** offer a corrupted version of the boss's normal offering, e.g. a Corrupted deer trophy for Eikthyr. One item, same altar, same ritual, harder fight. Corrupted offerings are crafted at the Riftforge from the normal offering plus 1 Corruption shard. *Clarified 2026-10-28: the recipe takes the full normal offering (the altar's item and count, e.g. both deer trophies) plus 1 shard; the one corrupted item then summons the boss. The Queen, who has no altar, is corrupted with a corrupted Sealbreaker (Sealbreaker + 1 shard) used on her door.* *Decided 2026-10-30 (user): at altars filled through item stands (Moder 3 egg cups, Yagluth 5 totem stands, Fader 3 bell holders), **every** stand needs a corrupted item, each made from 1 item + 1 shard; a mix of corrupted and normal is refused. Built: `FEATURES.md` → Corrupted offerings; recipes in `Corruption/Data/offerings.csv`.*
 
 ### Changes over the vanilla boss
 

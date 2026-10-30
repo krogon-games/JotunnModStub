@@ -178,3 +178,42 @@ then add one line:
 - Bead colours follow each essence's glow colour in `Corruption/Data/essences.csv` (Eikthyr #8CD9FF … Kall #40E6D9), named in words because image models follow names better than hex codes.
 - Hide colours were picked so no two maps share a hue at icon size; silhouettes are the biome's best-known sight or boss (game knowledge, not checked against the game files). Change any you like.
 - Check a render by shrinking it to 64 px before accepting it.
+
+## Corrupted offerings (design phase 6)
+
+*Asked for 2026-10-29: each corrupted offering is the boss's normal offering made to look corrupted (user). Starting with the deer trophy (Eikthyr's altar takes 2 `TrophyDeer`, `altars.csv`; the corrupted one is crafted from both plus 1 shard). Three takes on "corrupted" to pick from before the other offerings follow.*
+
+The mod's corruption look so far: the deep red of the corruption shard and the rips, a red glow from inside, cracks and tears that open onto the void (Ginnungagap), small touches of purple. Prompts follow the map icon lesson: the item has to read at 64 px, so one strong silhouette and bold colour, no fine detail.
+
+*First three takes (void-cracked, crystal antlers, bound offering) rejected by the user 2026-10-29: "way too over the top. The new icon needs to look a lot closer to the original. Mostly recolouring and very small tweaks."*
+
+**Chosen 2026-10-29:** the user's own edit of the vanilla Deer trophy icon, made with the prompt below. The other offerings use the same prompt with only the item's parts swapped in.
+
+**All eight renders received 2026-10-30** (`docs/images/offerings/<Item>.jpg`) and cut into icons by `tools/make_offering_icons.py` (preview `docs/images/offering_icons_preview.png`). They came back on black, white or grey backgrounds; the script handles each.
+
+**How to use:** attach only the vanilla icon of the offering (a screenshot of it in the inventory, cropped to the one slot) and run its prompt.
+
+### The user's prompt (Deer trophy, Eikthyr)
+
+```
+Edit the attached game icon. Keep it exactly the same: same deer trophy, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the fur from light brown to a dark, deep red-brown and recolour the antlers to a glowing red corrupted look. The one small addition: a single thin crack on the forehead that glows deep red. Give the deer head a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.
+```
+
+### The other offerings
+
+Which item each boss takes is from `altars.csv` (1.0.20 dump); the Queen's is the Sealbreaker for her door (design). The colours named for each item are from game knowledge, not the game files: if the icon looks different, say what you see instead.
+
+| Boss | Item (prefab) | Prompt |
+|---|---|---|
+| The Elder | Ancient seed (`AncientSeed`) | `Edit the attached game icon. Keep it exactly the same: same ancient seed, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the woody shell to a dark, deep red-brown and recolour its green glowing parts to a glowing red corrupted look. The one small addition: a single thin crack across the shell that glows deep red. Give the seed a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.` |
+| Bonemass | Withered bone (`WitheredBone`) | `Edit the attached game icon. Keep it exactly the same: same withered bone, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the bone to a dark, deep red-brown and recolour its knobbly ends to a glowing red corrupted look. The one small addition: a single thin crack along the bone that glows deep red. Give the bone a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.` |
+| Moder | Dragon egg (`DragonEgg`) | `Edit the attached game icon. Keep it exactly the same: same dragon egg, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the shell from pale blue-white to a dark, deep red and recolour its icy frost to a glowing red corrupted look. The one small addition: a single thin crack across the shell that glows deep red. Give the egg a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.` |
+| Yagluth | Fuling totem (`GoblinTotem`) | `Edit the attached game icon. Keep it exactly the same: same fuling totem, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the wood and bone to a dark, deep red-brown and recolour its painted markings and any glowing parts to a glowing red corrupted look. The one small addition: a single thin crack on the totem's face that glows deep red. Give the totem a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.` |
+| The Queen | Sealbreaker (`DvergrKey`) | `Edit the attached game icon. Keep it exactly the same: same sealbreaker key, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the metal to a dark, blackened iron with a deep red tint and recolour its glowing runes and light to a glowing red corrupted look. The one small addition: a single thin crack across the metal that glows deep red. Give the key a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.` |
+| Fader | Bell (`Bell`) | `Edit the attached game icon. Keep it exactly the same: same bell, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift the metal to a dark, deep red-tinted bronze and recolour its rim and engravings to a glowing red corrupted look. The one small addition: a single thin crack up the side of the bell that glows deep red. Give the bell a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.` |
+| Kall Fimbulbringer | Malicious blood (`HatefulBlood`) | `Edit the attached game icon. Keep it exactly the same: same item, same shape, pose, angle, outline, size, painting style and background. Change only the colours: shift its main colour to a dark, deep red-black and recolour its brightest parts to a glowing red corrupted look. The one small addition: a single thin crack on its surface that glows deep red. Give the item a subtle smokey red glow effect. Do not add anything else, remove anything or redraw any part.` |
+
+### Notes
+
+- Memorial coal (`altars.csv`, `NorthMemorialPlace`) is a Deep North memorial site, not a boss altar, so it gets no corrupted version.
+- Moder, Yagluth and Fader are summoned by filling several item stands (3 eggs, 5 totems, 3 bells; `altars.csv`), not by one offering. How one corrupted item works there is a design question for when the offerings are built.
