@@ -81,7 +81,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Next actionable tasks
 
-0. **Corrupted offerings** (phase 6): Eikthyr, Moder and the Queen passed 2026-10-30; swapped seed/blood icons fixed; re-check the icons and Kall's phases (`PLAYTEST.md`). Map icons merged (PR #5). **Rip waves at least 1 star** (`MinStars`, 2026-10-29): tested, "definitely more challenging"; PR into `master`.
+0. **Corrupted offerings** (phase 6): Eikthyr, Moder, the Queen and Kall's phases passed 2026-10-30; swapped seed/blood icons fixed (re-check); PR into `master`. Map icons merged (PR #5). **Rip waves at least 1 star** (`MinStars`, 2026-10-29): tested, "definitely more challenging"; PR into `master`.
 1. **Rips step B and the heart search passed in single player (2026-10-29)**; merged into `master` (PR #4). Ping colour re-checked (more red, stops when the heart dies); multiplayer tests with the group. Still open from the design: checking the landing area once loaded (locations, water).
 2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.

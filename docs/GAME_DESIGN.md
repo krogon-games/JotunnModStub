@@ -30,7 +30,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 3: boss essences | Corruption | Built, untested (8 bosses; Hive left out) | `FEATURES.md`, `Corruption/Data/essences.csv` |
 | Phase 4: maps and rips | Corruption | Step A tested in-game (single player); step B built, untested (waves, maddened, loot) | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
-| Phase 6: corrupted bosses | Corruption | Core tested (multipliers, loot, tint, `co_corrupt`); corrupted offerings built 2026-10-30, untested; summons and particles to come | `FEATURES.md`, design doc + review 4 |
+| Phase 6: corrupted bosses | Corruption | Core tested (multipliers, loot, tint, `co_corrupt`); corrupted offerings tested 2026-10-30; summons and particles to come | `FEATURES.md`, design doc + review 4 |
 | Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28). The slots are shown in a WoW-style **character sheet** (CraftingOverhaul, built 2026-10-29, untested); the Currency and Maps tabs are still to come | design doc, `mod-compatibility.md`, `FEATURES.md` → Character sheet |
