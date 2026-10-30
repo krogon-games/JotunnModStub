@@ -689,7 +689,7 @@ New item `CorruptedWishbone` (cloned from `Wishbone`, tinted). New status effect
 **Known issues:**
 - **Play-test 2026-10-30 (single player):** Eikthyr (one corrupted trophy summons him corrupted), Moder (all egg cups corrupted; a mix refused) and the Queen (her door with the corrupted Sealbreaker) passed. **Bug, fixed:** the Ancient seed and Malicious blood icons were swapped (the renders were matched to the wrong items when saved). **Kall's phases stay corrupted** (tested 2026-10-30 with `spawn FrozenKing`, `co_corrupt`, `killall`: phases 2 and 3 came up red).
 - Kall's phases: the next phase is corrupted when a corrupted phase dies and a boss named like its next phase (`FrozenKing_p2`, `_p3`) appears on the same game.
-- The fixed seed and blood icons are still to be seen in game.
+- The fixed seed and blood icons were re-checked in game 2026-10-30: correct.
 - The Queen: assumes she is in the same game location as her door (checked with the game's own location lookup). The log says how many bosses were corrupted when the door opened.
 - The corrupted bosses' summons (maddened adds) and extra particles come later.
 
@@ -842,7 +842,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-10-30
-- **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons.
+- **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons (re-checked in game).
 - **Corrupted offerings (new, untested):** every boss's offering has a corrupted version, crafted at the Riftforge (the full offering + 1 shard at altars, 1 item + 1 shard per stand at Moder's, Yagluth's and Fader's altars, Sealbreaker + 1 shard for the Queen's door), with icons from the user's renders. They summon the boss corrupted; Kall's later phases stay corrupted.
 - **Levels: pace fix re-tested** (single player): "pace feels better". Only sharing with a friend is left to test.
 - **Levels: slower early levels** (after the play-test, user's choice): a creature above your level now gives your own level's XP + classic WoW's bonus (+5% per level, max +20%) instead of its full XP (D2). Level 2 takes about 8 greydwarves instead of 3. Lower creatures keep D2's cut. Untested in-game (158 tests).
