@@ -31,7 +31,7 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and check `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)`.
 1–6, 9. ~~`orlog_info`, XP per kill, 1-star ×2, level-up, low creatures give little, kept after relogging, no errors~~ (passed 2026-10-30).
-7. ~~Pace~~: too fast (2026-10-30). **Re-test after the fix:** type `orlog_level 1` to start again at level 1, then kill greydwarves: about 70 XP each, level 2 after about 8. Then play on: how does reaching Eikthyr's level (5) feel? `XpMultiplier` in `com.krogongames.orlog.cfg` slows or speeds everything (reloads on save).
+7. ~~Pace~~: too fast at first; fixed and re-tested 2026-10-30 ("pace feels better"). `XpMultiplier` in `com.krogongames.orlog.cfg` tunes it later (reloads on save).
 8. With a friend (Session 2): both within 70 m of a kill each get XP; the lower-level player gets the bigger share of a low creature.
 9. No red errors in the console.
 
