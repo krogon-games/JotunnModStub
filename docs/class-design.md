@@ -46,7 +46,7 @@ Valheim version:
 - **Respec:** an item, as in D2. With Corruption, crafted from boss essences.
 - **Saved** in the player's custom data (`Player.m_customData`, already used by the corrupted wishbone), so it stays with the character. Level shown to others through the player's ZDO. XP is decided by the creature owner's game and sent to the players who share it. That trusts clients, which is fine for four friends.
 
-**Attributes.** D2's four, mapped onto Valheim stats (proposed mapping; values to set):
+**Attributes.** D2's four, mapped onto Valheim stats. **Built 2026-10-30** (`FEATURES.md` → Attributes and class eitr): Strength +1% physical damage per point (melee, thrown), Dexterity +1% (bows), Vitality and levels give D2's life and stamina scaled by Valheim's starting values (×0.5, ×0.89), Energy +1.5 eitr; the starting attributes count as vanilla. Carry weight from Strength dropped (not D2). Original proposal:
 
 | D2 | D2 effect | Valheim effect |
 |---|---|---|
@@ -76,7 +76,7 @@ D2's item stat requirements are left out: Valheim gates gear by biome materials 
 ### Eitr: making it usable for classes
 
 Today eitr is punishing for anyone who isn't a late-game mage (game dump): a character has **no eitr at all** until eitr food, and almost all eitr food and both eitr meads come from the Mistlands or later (Magecap 25, Yggdrasil porridge 80, Seeker aspic 85; Minor eitr mead +125 eitr over 10 s, Lingering eitr mead eitr regen ×1.25 for 5 minutes). An Amazon in the Meadows couldn't cast once. Proposed redesign (user asked for it; numbers still to set):
-- **A base eitr pool from the class** (decided, user 2026-10-30): every class starts with **15 eitr** and gains **1.5 per level** and **1.5 per Energy point** (D2's Amazon and Paladin values, `data/d2-reference/classes.csv`), scaled to Valheim. Eitr food adds on top. Without a class nothing changes. Note for the scale: at 1:1 a level-90 character has about 149 eitr before Energy, and late eitr foods give 80–110 each, so 1:1 may already fit (to confirm when building).
+- **A base eitr pool from the class** (decided, user 2026-10-30; **built 2026-10-30**, vanilla regen at 5/s refills it): every class starts with **15 eitr** and gains **1.5 per level** and **1.5 per Energy point** (D2's Amazon and Paladin values, `data/d2-reference/classes.csv`), scaled to Valheim. Eitr food adds on top. Without a class nothing changes. Note for the scale: at 1:1 a level-90 character has about 149 eitr before Energy, and late eitr foods give 80–110 each, so 1:1 may already fit (to confirm when building).
 - **Eitr regeneration that works without eitr food** (decided, user 2026-10-30; rate to set). Vanilla regen only refills the pool that food gives.
 - **Eitr affixes on loot** (user, 2026-10-30): the Magic and Rare affixes being designed in the loot work add max eitr (already a twin family in `AFFIX_RULES.md`) and eitr regeneration on top of the class pool.
 - **Eitr potions from the early biomes**, like D2's mana potions: craftable with early materials, modelled on the vanilla minor eitr mead (instant or over a few seconds) and lingering mead (regen). Players can carry them in the EquipmentAndQuickSlots quick slots.

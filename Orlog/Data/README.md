@@ -1,11 +1,12 @@
 # Orlog data tables
 
-Tunable numbers for levels and XP. Compiled into the DLL: rebuild after editing. `dotnet test CraftingOverhaul.Tests` checks them (`OrlogLevelTests`). All three are made by `tools/make_orlog_tables.py`; edit the script's sources or rules and rerun it, or edit a table by hand for a one-off change.
+Tunable numbers for levels, XP and classes. Compiled into the DLL: rebuild after editing. `dotnet test CraftingOverhaul.Tests` checks them (`OrlogLevelTests`). All of them are made by `tools/make_orlog_tables.py`; edit the script's sources or rules and rerun it, or edit a table by hand for a one-off change.
 
 | Table | One row per | Columns | Source |
 |---|---|---|---|
 | `levels.csv` | Level 1–99 | `xp_total` (XP to reach the level), `exp_ratio` (D2's high-level XP ratio out of 1024, used only with `HighLevelPenalty`) | Diablo 2's experience table (`data/d2-reference/experience.csv`) |
 | `creature_xp.csv` | Creature level 1–99 | `xp` (what a creature of that level gives a player of the same level, before stars, sharing and the level-difference factor), `kills_per_level` (for reading only) | D2's XP to the next level ÷ classic WoW's kills per level at the matching WoW level (WoW 1–59 spread over our 1–89; 90–98 keep WoW's last value). Never lower than the level before |
+| `classes.csv` | Class | `status` (`playable` or `later`), D2's starting `str`, `dex`, `vit`, `energy`, and `life_per_lvl`, `stamina_per_lvl`, `life_per_vit`, `stamina_per_vit` (D2 numbers; the scale to Valheim is in the `3 - Attributes` settings) | `data/d2-reference/classes.csv` (Arreat Summit / D2R `charstats`); the Amazon playable first (user) |
 | `biome_levels.csv` | Biome | `min_level`, `max_level` (creature levels), `health_min`, `health_max` (base health of the weakest and strongest creature the world spawns there without a boss key), `boss_level`, `bosses` (prefab names, `;`-separated) | The user's levelling guide (2026-10-30) and the game dump (`creatures.csv`, `spawns.csv`) |
 
 How a kill's XP is worked out (code: `Orlog/Rules/ExperienceRules.cs`, `Orlog/Content/KillXp.cs`):

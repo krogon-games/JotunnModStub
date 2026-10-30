@@ -50,6 +50,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | **Loot system step 1** (2026-10-29, branch `claude/affixes-loot`) | Passed 2026-10-29: Rare and Magic names, tooltip lines with ranges, armour/damage/lightning numbers, natural drops, combat affixes, resonant line, no errors. Ground names (fixed), upgrading, durability and repair passed 2026-10-30: **every single-player step passed**. Still: multiplayer (each player's own roll); bigger backpacks after the server setting |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
+| Orlog attributes and class eitr (2026-10-30) | `PLAYTEST.md` → Orlog attributes |
 | Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Orlog levels, step 8 (everything else passed 2026-10-30, including the pace fix) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
@@ -95,7 +96,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
 6. **Classes UI** (UI overhaul session, after its current merge): merge `master`, then build [`classes-ui-brief.md`](classes-ui-brief.md), HUD bars first.
-7. **Classes** (`claude/class-skills`): levels and XP built (2026-10-30, Orlog), play-tested 2026-10-30 including the pace fix; PR into `master` opened. Open: how much XP bosses should give; sharing with a friend. Next: attributes and the class eitr pool, then the Orlog stone and class choice, then the tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)).
+7. **Classes** (`claude/class-skills`): levels and XP merged (PR #9, play-tested). Attributes and the class eitr pool built 2026-10-30, to play-test. Next: the Orlog stone and class choice, then the skill tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)). Open: how much XP bosses should give.
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 

@@ -42,9 +42,9 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 ### Orlog
 
 - `OrlogPlugin.cs`, `OrlogConfig.cs` (`1 - Levels` admin-only, `2 - Display` per player), `Safe.cs` (as Corruption's).
-- `Rules/` (pure, tested): `LevelTables` (`LevelTable`, `CreatureXpTable`, `BiomeLevels`: read and check the three tables), `ExperienceRules` (D2's level difference and party split). Corruption's `Csv` reader is linked in, not copied.
-- `Data/`: `levels.csv`, `creature_xp.csv`, `biome_levels.csv`, made by `tools/make_orlog_tables.py` from `data/d2-reference/`, `data/wow-reference/` and the game dump (guide: `Orlog/Data/README.md`).
-- `Content/`: `Progress` (the local player's XP in custom data `orlog_xp`, level on the player ZDO `orlog_level`, level-up), `KillXp` (creature owner works out the kill in a `Character.OnDeath` prefix, sends shares with the routed message `Orlog_Xp`), `Commands`, `Texts`.
+- `Rules/` (pure, tested): `LevelTables` (`LevelTable`, `CreatureXpTable`, `BiomeLevels`: read and check the tables), `ExperienceRules` (level difference and party split), `AttributeRules` (`ClassTable`, points and bonuses). Corruption's `Csv` reader is linked in, not copied.
+- `Data/`: `levels.csv`, `creature_xp.csv`, `biome_levels.csv`, `classes.csv`, made by `tools/make_orlog_tables.py` from `data/d2-reference/`, `data/wow-reference/` and the game dump (guide: `Orlog/Data/README.md`).
+- `Content/`: `Progress` (the local player's XP in custom data `orlog_xp`, level on the player ZDO `orlog_level`, level-up), `KillXp` (creature owner works out the kill in a `Character.OnDeath` prefix, sends shares with the routed message `Orlog_Xp`), `Attributes` (class and spent points in custom data; health, stamina and eitr added to `Player.GetTotalFoodValue`, damage in `SEMan.ModifyAttack`; bonuses cached until `Progress.ChangeCounter` moves), `Commands`, `Texts`.
 - `Api.cs`: the public `Orlog.Api` the UI reads by reflection ([`classes-ui-brief.md`](classes-ui-brief.md)).
 
 ### Shared

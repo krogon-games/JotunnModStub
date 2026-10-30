@@ -56,6 +56,18 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 8. With a friend (Session 2): both within 70 m of a kill each get XP; the lower-level player gets the bigger share of a low creature.
 9. No red errors in the console.
 
+## Orlog attributes and class eitr (branch `claude/class-skills`, about 10 minutes)
+
+1. Eat no eitr food. `orlog_class Amazon`: an eitr bar appears with 15 eitr (`orlog_info` lists the bonuses).
+2. `orlog_level 11`: max health +10, stamina +about 9, eitr 30. `orlog_info` shows 50 stat points.
+3. `orlog_stat vitality 10`: max health +15 more, stamina +about 9 more.
+4. `orlog_stat energy 10`: eitr 45. Use a staff (e.g. `spawn StaffFireball`) until eitr runs low: it refills on its own without eitr food.
+5. Hit a training dummy or a creature with a club, then `orlog_stat strength 20` and hit again: about 20% more damage (the damage numbers).
+6. With a bow: `orlog_stat dexterity 20`, about 20% more arrow damage.
+7. `orlog_respec`: everything back to the level's bonuses; 50 points to spend again. `orlog_class none`: vanilla values.
+8. Log out and in: class and spent points kept. Your feel: are the health and damage numbers sensible?
+9. No red errors in the console.
+
 ## Session 2: with a friend
 
 Needs a second player (host a world or use the dedicated server, everyone on the same build).

@@ -23,11 +23,17 @@ namespace Orlog.Content
         public static LevelTable Levels { get; private set; }
         public static CreatureXpTable CreatureXp { get; private set; }
         public static BiomeLevels Biomes { get; private set; }
+        public static ClassTable Classes { get; private set; }
 
         /// <summary>Goes up whenever something the UI shows changes (read by <see cref="Api.GetChangeCounter" />).</summary>
         public static int ChangeCounter { get; private set; }
 
-        public static bool Ready => Levels != null && CreatureXp != null && Biomes != null;
+        public static bool Ready => Levels != null && CreatureXp != null && Biomes != null && Classes != null;
+
+        public static void NotifyChanged()
+        {
+            ChangeCounter++;
+        }
 
         public static void LoadTables()
         {
@@ -35,6 +41,7 @@ namespace Orlog.Content
             Levels = LevelTable.Parse(ReadData("levels.csv"), errors);
             CreatureXp = CreatureXpTable.Parse(ReadData("creature_xp.csv"), errors);
             Biomes = BiomeLevels.Parse(ReadData("biome_levels.csv"), errors);
+            Classes = ClassTable.Parse(ReadData("classes.csv"), errors);
             foreach (var error in errors)
             {
                 Jotunn.Logger.LogError("Orlog data: " + error);

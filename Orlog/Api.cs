@@ -1,14 +1,15 @@
 using System.Globalization;
 using System.Text;
 using Orlog.Content;
+using Orlog.Rules;
 using UnityEngine;
 
 namespace Orlog
 {
     /// <summary>
     ///     The contract with CraftingOverhaul's UI (<c>docs/classes-ui-brief.md</c>, version 1), read by reflection. Works on
-    ///     the local player; JSON answers are flat objects or string arrays; "" means no data. Levels and XP are built;
-    ///     classes, attributes and skills answer "no data" until they are.
+    ///     the local player; JSON answers are flat objects or string arrays; "" means no data. Levels, XP, attributes and
+    ///     the class (set with <c>orlog_class</c> until the Orlog stone exists) are built; skills answer "no data" until they are.
     /// </summary>
     public static class Api
     {
@@ -40,36 +41,88 @@ namespace Orlog
             long xp = Progress.GetXp(player);
             long start = Progress.Levels.TotalFor(level);
             long next = start + Progress.Levels.ToNext(level, Progress.MaxLevel);
+            var cls = Attributes.ClassOf(player);
             var json = new StringBuilder("{");
-            Field(json, "class", "");
+            Field(json, "class", cls != null ? cls.Name : "");
             Field(json, "level", level);
             Field(json, "maxLevel", Progress.MaxLevel);
             Field(json, "xp", xp);
             Field(json, "xpLevelStart", start);
             Field(json, "xpNextLevel", next);
-            Field(json, "statPoints", (long)(level - 1) * OrlogConfig.StatPointsPerLevel.Value);
-            Field(json, "skillPoints", (long)(level - 1) * OrlogConfig.SkillPointsPerLevel.Value);
-            Field(json, "strength", 0);
-            Field(json, "dexterity", 0);
-            Field(json, "vitality", 0);
-            Field(json, "energy", 0);
+            Field(json, "statPoints", cls != null ? Attributes.Unspent(player) : 0);
+            Field(json, "skillPoints", cls != null ? AttributeRules.Earned(level, OrlogConfig.SkillPointsPerLevel.Value) : 0);
+            Field(json, "strength", Attributes.Value(player, Attribute.Strength));
+            Field(json, "dexterity", Attributes.Value(player, Attribute.Dexterity));
+            Field(json, "vitality", Attributes.Value(player, Attribute.Vitality));
+            Field(json, "energy", Attributes.Value(player, Attribute.Energy));
             json.Length--;
             return json.Append('}').ToString();
         }
 
         public static string GetAttributeInfoJson(string attribute)
         {
-            return "";
+            var player = Player.m_localPlayer;
+            if (!player || !Progress.Ready || Attributes.ClassOf(player) == null || !Attributes.TryParse(attribute, out var which))
+            {
+                return "";
+            }
+            var cls = Attributes.ClassOf(player);
+            var scales = Attributes.Scales();
+            int spent = Attributes.Spent(player)[(int)which];
+            string effect;
+            switch (which)
+            {
+                case Attribute.Strength:
+                    effect = $"+{scales.DamagePerStrength * 100f * spent:0.#}% melee and thrown damage";
+                    break;
+                case Attribute.Dexterity:
+                    effect = $"+{scales.DamagePerDexterity * 100f * spent:0.#}% bow and crossbow damage";
+                    break;
+                case Attribute.Vitality:
+                    effect = $"+{scales.Health * cls.LifePerVitality * spent:0.#} health, +{scales.Stamina * cls.StaminaPerVitality * spent:0.#} stamina";
+                    break;
+                default:
+                    effect = $"+{scales.EitrPerEnergy * spent:0.#} eitr";
+                    break;
+            }
+            var json = new StringBuilder("{");
+            Field(json, "name", which.ToString());
+            Field(json, "value", Attributes.Value(player, which));
+            Field(json, "effect", effect);
+            json.Length--;
+            return json.Append('}').ToString();
         }
 
         public static string GetClassIdsJson()
         {
-            return "[]";
+            if (!Progress.Ready)
+            {
+                return "[]";
+            }
+            var json = new StringBuilder("[");
+            foreach (var cls in Progress.Classes.Playable)
+            {
+                json.Append('"').Append(cls.Name).Append("\",");
+            }
+            if (json.Length > 1)
+            {
+                json.Length--;
+            }
+            return json.Append(']').ToString();
         }
 
         public static string GetClassInfoJson(string classId)
         {
-            return "";
+            var cls = Progress.Ready ? Progress.Classes.Find(classId) : null;
+            if (cls == null)
+            {
+                return "";
+            }
+            var json = new StringBuilder("{");
+            Field(json, "id", cls.Name);
+            Field(json, "name", cls.Name);
+            json.Length--;
+            return json.Append('}').ToString();
         }
 
         public static Sprite GetClassIcon(string classId)
@@ -104,7 +157,12 @@ namespace Orlog
 
         public static string SpendStatPoint(string attribute)
         {
-            return NotYet;
+            var player = Player.m_localPlayer;
+            if (!player || !Progress.Ready)
+            {
+                return "No character";
+            }
+            return Attributes.TryParse(attribute, out var which) ? Attributes.Spend(player, which, 1) : "Unknown attribute";
         }
 
         public static string SpendSkillPoint(string skillId)
