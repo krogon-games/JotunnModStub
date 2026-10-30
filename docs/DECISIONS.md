@@ -23,6 +23,7 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 
 | Date | Decision | Why | Rejected | Status |
 |---|---|---|---|---|
+| 2026-10-30 | Amazon details: javelin skills throw a spectral copy (the real spear stays in hand); Penetrate becomes a chance to ignore the creature's resistance to the hit; Decoy and Valkyrie are tinted clones of the player character | User | Throwing the real spear; a tinted Dvergr or a new model | Decided by user; the player clone is unproven (prototype first) |
 | 2026-10-30 | Class levels follow D2's rules (max level 99, 5 stat points and 1 skill point per level, 20 points per skill, boss bonus points, D2's XP table), each changeable in admin config; no XP loss on death, Valheim's own skill loss stays | User | XP loss on death (D2 Nightmare/Hell, EpicMMOSystem) | Decided by user |
 | 2026-10-30 | The XP bar and the skills panel are built in the UI overhaul session; the classes plugin provides rules and data through a public API read by reflection | User | The classes session building its own UI | Decided by user; API to be written in `class-design.md` |
 | 2026-10-30 | Own levels, XP and D2 attributes; EpicMMOSystem not used and not run alongside | User confirmed the 2026-10-30 proposal | Depending on EpicMMOSystem | Decided by user (supersedes the Proposed row below) |

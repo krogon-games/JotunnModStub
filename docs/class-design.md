@@ -86,7 +86,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 **How her skills are used (proposed):** D2 puts the chosen skill on the right mouse button; Valheim's bow has no secondary attack and the spear throws on its secondary. So:
 - **Bow skills are arrow modes.** Pick one on the ability bar; every shot of the bow or crossbow uses it and pays its cost. No mode = a normal shot.
 - **Spear skills ride the spear's own attacks:** thrust skills (Jab, Power Strike, Impale, Charged and Lightning Strike, Fend) on the primary attack, javelin skills (Poison, Plague, Lightning Bolt, Lightning Fury) on the throw.
-- **Javelin skills throw a spectral copy** of the spear, so the real spear stays in hand (a vanilla throw leaves it on the ground to pick up, which doesn't suit casting). To confirm (§10).
+- **Javelin skills throw a spectral copy** of the spear, so the real spear stays in hand (a vanilla throw leaves it on the ground to pick up, which doesn't suit casting). Decided (user, 2026-10-30).
 - **Passives** (Critical Strike, Dodge, Avoid, Evade, Pierce) need no casting.
 
 | Tab | Skill | Valheim version | Status |
@@ -106,11 +106,11 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | | Avoid | Chance to avoid a projectile while standing or attacking | v1 |
 | | Evade | Chance to avoid any hit while moving | v1 |
 | | Inner Sight | Cast: nearby enemies glow and take more damage for a while | v1 |
-| | Penetrate | D2: attack rating, which Valheim lacks. Needs a rework (to choose, §10) | reworked |
+| | Penetrate | Reworked (user, 2026-10-30): chance for a hit to ignore the creature's resistance to its damage type (a resistant or very resistant creature takes normal damage). Whether it also breaks immunity is open | reworked |
 | | Pierce | Chance for an arrow or javelin to pass through and hit the next enemy | later |
 | | Slow Missiles | Enemy projectiles near you slow down (they belong to their shooter's game, so it needs messages) | later |
-| | Decoy | A copy of you that creatures attack instead; needs a look (§10) | later |
-| | Valkyrie | Summons a warrior to fight for you (the summon system works; she needs a look and fighting AI, §10) | later |
+| | Decoy | A tinted, standing copy of you that creatures attack instead | later |
+| | Valkyrie | A tinted copy of a player character that fights for you | later |
 | Javelin and Spear | Jab | A fast series of thrusts | v1 |
 | | Power Strike | Adds lightning damage to the thrust | v1 |
 | | Impale | One heavy thrust; wears the spear down faster | v1 |
@@ -123,6 +123,8 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | | Lightning Fury | The javelin bursts into lightning bolts on impact | later |
 
 19 skills in v1, 10 later, none dropped. With the tree rule in §4, a skill built before its prerequisite (for example Strafe before Guided Arrow) opens by level alone.
+
+**Decoy and Valkyrie look (user, 2026-10-30): a tinted clone of the player character.** Proposed approach, to prove in a prototype: clone the player prefab without the `Player` part, as a creature on the players' side (like `Skeleton_Friendly`) with monster AI; its equipment visuals (`VisEquipment`, synced through the object's ZDO) copy the caster's body, hair and gear, and a tint marks it (`Corrupted.Tint`'s method). The player model already plays every humanoid attack, so the Valkyrie can fight with the vanilla attacks of the weapon she holds. Risk: parts of the player prefab may expect the `Player` component; other mods have built human NPCs on the player model (unverified which and how).
 
 Animations: thrusts, throws, bow shots and the cast all exist in vanilla (`spear_poke`, `spear_throw`, the bow's own draw and shot, `gpower` or an emote for Inner Sight). Jab needs the thrust replayed faster; the speed change doesn't sync, so it needs our own message, as for Whirlwind (§4).
 
@@ -192,7 +194,7 @@ The exact API is written here before either side builds it.
 7. **Vanilla skills:** keep levelling by use alongside class levels (recommended), or replace use-to-level as in the original skill rework idea?
 8. ~~Death penalty~~ **Answered 2026-10-30:** Valheim's own skill loss only; no XP loss.
 9. ~~Tree layout~~ **Answered 2026-10-30:** D2's three tabs, with level tiers instead of broken prerequisite chains and upgrade choices later (§4).
-10. **Javelins:** do javelin skills throw a spectral copy (the spear stays in hand; proposed) or the real spear, as vanilla does?
-11. **Penetrate:** what should replace attack rating? For example, a chance to ignore a creature's resistance to the hit's damage type.
-12. **Decoy and Valkyrie looks:** a tinted clone of an existing creature (for example a Dvergr), or a new model (only where you ask)?
+10. ~~Javelins~~ **Answered 2026-10-30:** spectral copy.
+11. ~~Penetrate~~ **Answered 2026-10-30:** ignore the creature's resistance to the hit. Open: immunity too?
+12. ~~Decoy and Valkyrie looks~~ **Answered 2026-10-30:** a tinted clone of the player character (feasibility to prove).
 13. **Arrow modes:** happy with bow skills as a mode chosen on the ability bar, used by every shot (§5)?
