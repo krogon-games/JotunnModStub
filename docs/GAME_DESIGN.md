@@ -11,6 +11,8 @@ Entry point to the design. It summarises what has been agreed and where each sys
 | [`corruption-design.md`](corruption-design.md) | Corruption endgame: shards, essences, Riftforge, maps, rips, scars, corrupted bosses, exploration events, talismans, loot, uniques, orbs, build order | User (converted from PDF), with dated changes |
 | [`corruption-design-review.md`](corruption-design-review.md) | Where the design and Valheim's code disagree, simplifications, build-vs-depend options | Technical review, 2026-10-15 |
 | [`AFFIX_RULES.md`](AFFIX_RULES.md) | Gear prefixes/suffixes, tiers, twin resonance, range display | Draft, awaiting review |
+| [`class-design.md`](class-design.md) | Diablo 2-style classes (Amazon first, then Barbarian, maybe Paladin), character levels, stat and skill points, EpicMMOSystem comparison | User brief + Claude's proposal, 2026-10-30 |
+| [`classes-ui-brief.md`](classes-ui-brief.md) | Classes UI for the UI session: HUD bars, skill cross, XP bar, skills panel, class choice, and the API contract between the plugins | Classes session, 2026-10-30 |
 | [`storage-quests-design.md`](storage-quests-design.md) | Chest tiers, quest-unlocked super chest, Mistlands bank/vault | User brief + notes |
 | [`art-prompts.md`](art-prompts.md) | Image-model prompts for concept renders (boss essences, currency orbs) | Draft |
 | [`ideas.md`](ideas.md) | Original idea backlog, each linked to its design section | — |
@@ -34,14 +36,15 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Proposed (gathering tool pools specified by the user; general gear pool a draft; orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28). The slots are shown in a WoW-style **character sheet** (CraftingOverhaul, built 2026-10-29, untested); the Currency and Maps tabs are still to come | design doc, `mod-compatibility.md`, `FEATURES.md` → Character sheet |
-| Phase 10: skill rework (optional module) | — | Proposed | design doc |
+| Phase 10: skill rework (optional module) | — | Proposed; now part of classes and levels (2026-10-30) | design doc |
+| Classes, levels and skill trees (D2 Amazon first) | New plugin (proposed) | Proposed, design only | `class-design.md`, `data/d2-reference/` |
 | Storage and quests | Undecided plugin | Proposed, saved for later | `storage-quests-design.md` |
 | Combat mechanics (parry, posture, combos) | — | Ideas only | `FEATURES.md` → Combat mechanics |
 
 ## Agreed by the user
 
 - Design pillars: the world is the dungeon; extend vanilla, don't fight it; reuse before you create; risk buys reward; Norse names.
-- v1 constraints: no new animations or attacks; new models only where the user asks (shard, essences); otherwise tints and reused particles; vanilla pickup-unlock rules; must work on a dedicated server.
+- v1 constraints: ~~no new animations or attacks~~ new animations and attacks allowed where necessary, vanilla ones first (changed 2026-10-30); new models only where the user asks (shard, essences); otherwise tints and reused particles; vanilla pickup-unlock rules; must work on a dedicated server.
 - Core loop per biome: farm → summon boss → essence → craft map → open rip → loot and escape. Each boss's essence crafts maps into the corrupted version of its own biome (Eikthyr → corrupted Meadows … Kall Fimbulbringer → corrupted Deep North); no skipping biomes (changed 2026-10-28). The Hive is left out.
 - Riftforge recipe: Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Surtling cores (5 ingredients; leather scraps dropped for the 5-ingredient limit).
 - Rip return: heart-gated; both portals close after 1 in-game day; no safety fallback.
