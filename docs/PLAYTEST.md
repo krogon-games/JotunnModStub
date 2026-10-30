@@ -31,22 +31,6 @@ Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
-## Session 1e: Currency and Maps tabs (10 minutes, branch `claude/ui-overhaul`)
-
-Build the whole solution from `claude/ui-overhaul` for this one (the tabs are in Corruption; the branch includes everything merged into `master` up to 2026-10-30). Have some maps in your bag from before, and `spawn CorruptionShard 20` and an essence ready (`spawn CorruptionEssence_eikthyr 3`).
-
-**Tests 2026-10-30:** steps 1, 3, 4, 5 and 8 passed after the grid fix. Steps 2, 6 and 7 passed in the second re-test. Left-click pick-up from a tab with no container open still failed (the first fix guarded the wrong method; fixed again): re-test step 2a. For step 4 use a world with unexplored Meadows (`resetmap` if the map was revealed with `exploremap`).
-
-1. ~~Open the inventory: **Bag | Currency | Maps** buttons on top of the inventory panel. Within a second, the maps that were in your bag move to the Maps tab. Click each button: the grid switches; the character sheet stays put. Close and reopen: back on Bag.~~ (passed 2026-10-30)
-2. Drop some shards and pick them up: they go to Currency, not the bag (the pickup message still shows). Fill your bag with junk and pick up shards again: they still go in. Your weight number doesn't change when shards are picked up.
-2a. With no chest or backpack open, left-click a shard in the Currency tab: it picks up; drop it on another tab slot, or outside the panel to drop it on the ground.
-3. At the Riftforge, craft a map using shards and an essence that are only in the Currency tab: the recipe shows enough, crafting takes them from the tab, and the new map lands in the Maps tab.
-4. Right-click a map in the Maps tab: it opens a rip as before, and the map is used up.
-5. Open a chest: drag a shard from the Currency tab into the chest and back; shift-click one in the tab: it goes to the chest. Try dragging wood into the Currency tab: refused.
-6. Die (god mode off, e.g. a long fall). Your gravestone holds the tab items in extra rows under the bag's items. Take all: the shards, essences and maps go back to their tabs.
-7. Log out and back in: the tabs still hold their items.
-8. No red errors in the console.
-
 ## Session 3: loot system step 1 (about 15 minutes)
 
 Build from branch **`claude/affixes-loot`** (the log line says `build: claude/affixes-loot …`). The log should also say `Loot: 84 affixes, 248 base items.`
