@@ -12,6 +12,7 @@ Entry point to the design. It summarises what has been agreed and where each sys
 | [`corruption-design-review.md`](corruption-design-review.md) | Where the design and Valheim's code disagree, simplifications, build-vs-depend options | Technical review, 2026-10-15 |
 | [`AFFIX_RULES.md`](AFFIX_RULES.md) | Gear prefixes/suffixes, tiers, twin resonance, range display | Draft, awaiting review |
 | [`class-design.md`](class-design.md) | Diablo 2-style classes (Amazon first, then Barbarian, maybe Paladin), character levels, stat and skill points, EpicMMOSystem comparison | User brief + Claude's proposal, 2026-10-30 |
+| [`classes-ui-brief.md`](classes-ui-brief.md) | Classes UI for the UI session: HUD bars, skill cross, XP bar, skills panel, class choice, and the API contract between the plugins | Classes session, 2026-10-30 |
 | [`storage-quests-design.md`](storage-quests-design.md) | Chest tiers, quest-unlocked super chest, Mistlands bank/vault | User brief + notes |
 | [`art-prompts.md`](art-prompts.md) | Image-model prompts for concept renders (boss essences, currency orbs) | Draft |
 | [`ideas.md`](ideas.md) | Original idea backlog, each linked to its design section | — |

@@ -88,7 +88,8 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
-6. **Classes** (`claude/class-skills`): build step 1 (levels, XP, attributes; rules decided 2026-10-30, XP per creature still open) from [`class-design.md`](class-design.md#8-build-order-proposed).
+6. **Classes UI** (UI overhaul session, after its current merge): merge `master`, then build [`classes-ui-brief.md`](classes-ui-brief.md), HUD bars first.
+7. **Classes** (`claude/class-skills`): build step 1 (levels, XP, attributes; rules decided 2026-10-30, XP per creature still open) from [`class-design.md`](class-design.md#8-build-order-proposed).
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 

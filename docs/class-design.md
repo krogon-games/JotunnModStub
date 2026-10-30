@@ -207,7 +207,7 @@ The **XP bar and the skills panel** are built in the UI overhaul session (`claud
 - **Do:** spend a stat point, spend a skill point (refused with a reason when the rules say no), respec, put a skill in a slot or clear it.
 - **Events:** level-up and points-changed, so the panel can refresh without polling.
 
-The exact API is written here before either side builds it.
+**The full brief for the UI session, with the exact API contract (version 1) and a demo-data mode: [`classes-ui-brief.md`](classes-ui-brief.md).** Changes to the contract go there, in `master`.
 
 ### HUD layout (user, 2026-10-30)
 
