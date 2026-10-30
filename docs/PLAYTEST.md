@@ -31,6 +31,19 @@ Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
+## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
+
+Build from **`claude/affixes-loot`**. Roll items until you have the affix (`co_loot rare ArmorLeatherChest`, `co_loot rare CapeDeerHide`, `co_loot rare SwordBronze`…); these lines are no longer grey.
+
+1. **Max health / stamina / eitr:** equip an item with "+N max health" (or stamina, eitr): the health/stamina bar and the character sheet go up by N; unequip: back down.
+2. **Carry weight:** "+N carry weight": the weight limit (inventory and character sheet) rises by N.
+3. **Movement speed:** "+N% movement speed" (legs, cape, trinket) or Fleet "while held" (weapon or shield in hand): "Speed from gear" on the character sheet rises by N%; you run faster. Fleet stops counting when you sheathe.
+4. **Regen:** "+N% health regen" / "+N% stamina regen": regen is visibly faster (compare with the item off).
+5. **Resistances:** "N% less fire damage taken" (or frost, lightning, poison, all resistances): stand in a fire (`spawn Surtling` or a campfire) with and without the item: less damage with it.
+6. **Weapon skill:** "+N to the weapon's skill" on a weapon: with it in hand, the skill in the Skills tab shows +N; sheathed: back to normal.
+7. **Life steal:** "N% of damage dealt returned as health": take some damage, hit creatures: small green heals.
+8. No red errors in the console.
+
 ## Session 3: loot system step 1 (about 15 minutes)
 
 Build from branch **`claude/affixes-loot`** (the log line says `build: claude/affixes-loot …`). The log should also say `Loot: 84 affixes, 248 base items.`
