@@ -28,7 +28,7 @@ Researched 2026-10-30 from its Thunderstore page and source (https://github.com/
 - Network rule `EveryoneMustHaveMod`: warcries and auras touch other players and creatures, and new animations must play on every client.
 - Works without Corruption. With Corruption installed, its gear can roll "+N to <class> skills" and "+N to <skill>" affixes, and rings (already planned to raise skills) can raise class skills. Corruption's boss essences could craft the respec token (D2's Token of Absolution is made from boss essences too).
 - The character sheet (CraftingOverhaul) can show level, XP and attributes by reading them from the player, without a hard dependency.
-- Name: Norse; to choose (§10).
+- Name: not important to the user (2026-10-30); working name **Orlog**, after the class stone.
 
 ## 3. Levels and points
 
@@ -146,6 +146,7 @@ Animations: thrusts, throws, bow shots and the cast all exist in vanilla (`spear
 ## 5a. Choosing a class: the class stone
 
 Decided (user, 2026-10-30): **a class is chosen at the spawn area** (the `StartTemple` location in the Meadows, where the boss trophies go), at **a new stone structure that blends in** with the area's standing stones.
+- Name (user, 2026-10-30): the **Orlog stone** (*örlög*, fate).
 - Proposed build: cloned from the start area's own stone prefabs (same mesh and material, no new model), placed once per world beside the trophy stones by the server (the start temple's position comes from the world's location list; the stone is a persistent object like the rip heart).
 - Interact (E) to open the class choice (UI from the UI session); a character without a class gets a raven hint the first time it spawns, as the Riftforge's raven does.
 - Open: can a character change class later, and at what cost (§10)?
@@ -206,6 +207,13 @@ The **XP bar and the skills panel** are built in the UI overhaul session (`claud
 
 The exact API is written here before either side builds it.
 
+### HUD layout (user, 2026-10-30)
+
+Reference images (Elden Ring): `docs/images/hud_reference_bars.jpg` (bars), `docs/images/hud_reference_skills.jpg` (four slots in a cross).
+- **Health, eitr and stamina bars together, horizontal, at the bottom centre** of the screen, Dark Souls / Elden Ring style: health on top, eitr in the middle, stamina at the bottom, in Valheim's colours (health red, eitr blue, stamina yellow). A general HUD change for every player; the class only makes eitr matter.
+- **The 4 skill slots at the bottom left**, where vanilla's health display was, laid out as a cross like the reference.
+- Proposed details for the UI session to settle: bar length grows with the maximum (as in the reference), up to a cap; the eitr bar shows only when there is eitr (always, for a character with a class); a new place for the food icons, which sit beside vanilla's health display; the slot on right click is highlighted; cost, cooldown and greyed-out state on each slot; the slot's hotkey on it. To check against what vanilla already shows near the bottom centre (e.g. the sailing controls, the mount's stamina) and against EquipmentAndQuickSlots' own quick-slot bar on the HUD.
+
 ## 10. Open questions (for the user)
 
 1. ~~Own levels vs EpicMMOSystem~~ **Answered 2026-10-30:** our own.
@@ -213,7 +221,7 @@ The exact API is written here before either side builds it.
 3. **Numbers:** ~~D2 rules or not~~ **answered 2026-10-30:** D2's rules, all changeable in config. XP per creature: slow, like classic WoW (§3). Still open: the target pace (for example, which level at each boss, or hours to the level cap), and how attribute and skill values scale from D2 to Valheim stats.
 4. ~~Choosing a class~~ **Answered 2026-10-30:** at a new stone at the spawn area (§5a). Open: can a character change class, and at what cost?
 5. ~~Casting~~ **Answered 2026-10-30:** D2 layout, a 4-slot skill bar with its own hotkeys; right click fires the skill for every weapon; block and parry move to a rebindable key; the skill button is rebindable too (§4).
-6. **Names:** keep D2 class and skill names (as the orbs keep PoE names, because the group knows them), with a Norse plugin name? "Berserkir" is taken by vanilla axes; "Úlfheðnar" (wolf-warriors) is free. The Amazon could be a Valkyrie or Shieldmaiden (*skjaldmær*).
+6. ~~Names~~ **Answered 2026-10-30:** D2's class and skill names; the class stone is the Orlog stone; the plugin name doesn't matter (working name Orlog).
 7. ~~Vanilla skills~~ **Answered 2026-10-30:** keep levelling by use.
 8. ~~Death penalty~~ **Answered 2026-10-30:** Valheim's own skill loss only; no XP loss.
 9. ~~Tree layout~~ **Answered 2026-10-30:** D2's three tabs, with level tiers instead of broken prerequisite chains and upgrade choices later (§4).
