@@ -24,13 +24,10 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 5. Try one later biome, e.g. `spawn CorruptionMap_Swamp` (draugr and skeletons) or `CorruptionMap_Plains` (fulings).
 6. No red errors in the console.
 
-### 1f. Corrupted offerings (new)
-`devcommands`, then for each boss spawn its corrupted offering and go to its altar (`goto` near it, or the map):
-1. **Eikthyr:** `spawn CorruptedTrophyDeer`, offer it at his altar: one item is enough, Eikthyr arrives red. Log: `Corrupted offering: Eikthyr summoned corrupted.` Only one corrupted trophy is used up.
-2. **Moder** (stands): `spawn CorruptedDragonEgg 3`, put one in each egg cup (Use places a carried corrupted egg first), use the altar: corrupted Moder. Then try 2 corrupted + 1 normal egg: refused with "Every offering here must be corrupted, or none."
-3. **The Queen:** `spawn CorruptedDvergrKey`, open her door: she is corrupted (red). Log: `Corrupted key: door opened in …, N boss(es) there corrupted now.`
-4. **Kall:** `spawn CorruptedHatefulBlood`, offer it at his altar: every phase stays red. Log: `next phase FrozenKing_p2 is corrupted too`.
-5. The other icons look right in the inventory and at the Riftforge (recipes: e.g. 2 Deer trophies + 1 shard).
+### 1f. Corrupted offerings
+Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen.
+1. **Kall:** `spawn CorruptedHatefulBlood`, offer it at his altar: every phase stays red. Log: `next phase FrozenKing_p2 is corrupted too`.
+2. **Icons re-check:** the Corrupted ancient seed is the red three-pointed seed, the Corrupted malicious blood the red blob (they were swapped).
 
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.

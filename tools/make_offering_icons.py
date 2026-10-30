@@ -28,13 +28,13 @@ PREVIEW = os.path.join(ROOT, "docs", "images", "offering_icons_preview.png")
 # Item prefab -> background colour of its render.
 RENDERS = {
     "TrophyDeer": (255, 255, 255),
-    "AncientSeed": (0, 0, 0),
+    "AncientSeed": (255, 255, 255),
     "WitheredBone": (122, 122, 121),   # a grey square inside a black frame; the frame is cropped off first
     "DragonEgg": (255, 255, 255),
     "GoblinTotem": (0, 0, 0),
     "DvergrKey": (0, 0, 0),
     "Bell": (0, 0, 0),
-    "HatefulBlood": (255, 255, 255),
+    "HatefulBlood": (0, 0, 0),
 }
 SIZE = 128
 # A pixel lets the background through (for finding what's connected to the edges) while it is less than this opaque.
