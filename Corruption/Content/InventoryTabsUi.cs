@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Corruption.Rules;
 using HarmonyLib;
 using Jotunn.Managers;
@@ -33,6 +35,7 @@ namespace Corruption.Content
         private static CanvasGroup _bagGroup;
         private static Text[] _buttonTexts;
         private static GameObject _buttons;
+        private static int _keepTabDrag;
 
         private static void EnsureCreated(InventoryGui gui)
         {
@@ -251,6 +254,34 @@ namespace Corruption.Content
                     Safe.Report("move an item from an inventory tab to a chest", ex);
                     return false;
                 }
+            }
+        }
+
+        /// <summary>
+        ///     The game drops any drag whose item isn't in the bag whenever no chest is open (every frame in
+        ///     <c>UpdateInventory</c>, and in <c>CloseContainer</c>): it assumes such an item came from a chest that's no
+        ///     longer there. A drag from a tab is kept (play-test 2026-10-30: left-click couldn't pick up tab items
+        ///     unless a container was open). Every other way of ending a drag is untouched.
+        /// </summary>
+        [HarmonyPatch]
+        private static class KeepTabDrag_Scope
+        {
+            private static IEnumerable<MethodBase> TargetMethods()
+            {
+                yield return AccessTools.Method(typeof(InventoryGui), nameof(InventoryGui.UpdateInventory));
+                yield return AccessTools.Method(typeof(InventoryGui), nameof(InventoryGui.CloseContainer));
+            }
+
+            private static void Prefix() => _keepTabDrag++;
+            private static void Finalizer() => _keepTabDrag--;
+        }
+
+        [HarmonyPatch(typeof(InventoryGui), nameof(InventoryGui.SetupDragItem))]
+        private static class SetupDragItem_Patch
+        {
+            private static bool Prefix(InventoryGui __instance, ItemDrop.ItemData __0)
+            {
+                return _keepTabDrag <= 0 || __0 != null || !InventoryTabs.IsTab(__instance.m_dragInventory);
             }
         }
 
