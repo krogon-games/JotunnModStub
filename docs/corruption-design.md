@@ -19,7 +19,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft map
 ### Build constraints
 
 - BepInEx plugin, likely with Jötunn for items, recipes and pieces; Harmony patches for behaviour changes.
-- No new animations or attack types in v1. No new 3D models; tints and reused particles only. *Exception (user, 2026-10-28): the corruption shard has its own crystal model and texture.*
+- ~~No new animations or attack types in v1.~~ *Changed 2026-10-30 (user): new animations and attacks are allowed where necessary; a vanilla animation or emote still comes first.* No new 3D models; tints and reused particles only. *Exception (user, 2026-10-28): the corruption shard has its own crystal model and texture.*
 - Vanilla recipe-unlock rules: a recipe appears only once the player has picked up every ingredient.
 - Must work in multiplayer (dedicated server). Decisions below note where that matters.
 

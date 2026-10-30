@@ -41,7 +41,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 ## Agreed by the user
 
 - Design pillars: the world is the dungeon; extend vanilla, don't fight it; reuse before you create; risk buys reward; Norse names.
-- v1 constraints: no new animations or attacks; new models only where the user asks (shard, essences); otherwise tints and reused particles; vanilla pickup-unlock rules; must work on a dedicated server.
+- v1 constraints: ~~no new animations or attacks~~ new animations and attacks allowed where necessary, vanilla ones first (changed 2026-10-30); new models only where the user asks (shard, essences); otherwise tints and reused particles; vanilla pickup-unlock rules; must work on a dedicated server.
 - Core loop per biome: farm → summon boss → essence → craft map → open rip → loot and escape. Each boss's essence crafts maps into the corrupted version of its own biome (Eikthyr → corrupted Meadows … Kall Fimbulbringer → corrupted Deep North); no skipping biomes (changed 2026-10-28). The Hive is left out.
 - Riftforge recipe: Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Surtling cores (5 ingredients; leather scraps dropped for the 5-ingredient limit).
 - Rip return: heart-gated; both portals close after 1 in-game day; no safety fallback.

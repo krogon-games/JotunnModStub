@@ -723,9 +723,9 @@ The technical review is in `docs/corruption-design-review.md`. It suggests build
 **Ideas so far:**
 - Perfect-parry timing windows, combos, a posture/stagger bar, dodge i-frames and weapon special moves.
 - Likely patch points: `Humanoid`, `Attack`, `Character.Damage`.
-- New animations would need asset-bundle work in the `JotunnModUnity` project.
+- New animations need asset-bundle work in the `JotunnModUnity` project. They are allowed where necessary (user, 2026-10-30).
 
-The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses), but adds no new attacks or animations in v1. These combat ideas remain a separate track.
+The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses) without new attacks or animations. These combat ideas remain a separate track.
 
 ---
 

@@ -69,7 +69,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 2. **Never break vanilla.** Code that runs inside game methods goes through `Safe.Run` / `Safe.Report`: log once per action, fall back to vanilla behaviour.
 3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.20/*.csv` for real game data.
 4. **Data-driven first.** Derive lists from game data (biomes, talisman families); config overrides only for real exceptions (`BiomeMaterialOverrides`, `ExcludedCreatures`).
-5. **Clone, don't import** (exceptions: the shard and essence models, above). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models or animations in v1.
+5. **Clone, don't import** (exceptions: the shard and essence models, above). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models unless the user asks. New animations are allowed where no vanilla animation or emote fits (user, 2026-10-30); they come from asset bundles built in `JotunnModUnity/`.
 6. **Config scope.** Gameplay numbers admin-only (server-synced); visual settings per player.
 7. **Robust patch arguments.** Use `__0`/`__1` positional arguments where parameter names may change.
 8. **No hard-coded positional limits without a guard** (e.g. `Riftforge` refuses more than 5 ingredients and logs an error).
