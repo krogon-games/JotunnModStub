@@ -5,6 +5,9 @@ namespace Corruption.Rules
     /// <summary>How many corruption shards a dying creature drops. No game dependencies, so it is unit-tested.</summary>
     internal static class ShardRules
     {
+        /// <summary>The shard's prefab name (<c>Texts.ShardPrefab</c> uses this one).</summary>
+        public const string ShardPrefab = "CorruptionShard";
+
         public sealed class Settings
         {
             public float OneStarChance;

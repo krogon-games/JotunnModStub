@@ -358,7 +358,8 @@ namespace CraftingOverhaul.Dump
         private static bool IsSimple(Type t)
         {
             return t.IsPrimitive || t.IsEnum || t == typeof(string) || t == typeof(Vector3) || t == typeof(Color) ||
-                   typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(List<string>);
+                   typeof(UnityEngine.Object).IsAssignableFrom(t) || t == typeof(List<string>) ||
+                   t == typeof(List<HitData.DamageModPair>);
         }
 
         private static object Value(FieldInfo field, object owner)
@@ -370,6 +371,10 @@ namespace CraftingOverhaul.Dump
                     return unityObject ? unityObject.name : "";
                 case List<string> list:
                     return string.Join("|", list);
+                // Resistances and weaknesses (item damage modifiers, status effect m_mods), e.g. "Frost:Resistant|Fire:Weak".
+                case List<HitData.DamageModPair> mods:
+                    return string.Join("|", mods.Where(m => m.m_modifier != HitData.DamageModifier.Normal)
+                        .Select(m => m.m_type + ":" + m.m_modifier));
                 default:
                     return value;
             }

@@ -43,8 +43,12 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Corrupted bosses (`Character.Awake` postfix, `Character.RPC_Damage` prefix) | None of the three patch these | Verified in code |
 | Rip waves: maddened (`Character.Awake` postfix, `BaseAI.IsEnemy` postfix at last priority) | None of the three patch these; our own talisman postfix on `IsEnemy` runs first, so maddened creatures ignore charms. The maddened effect is added with `SEMan.AddStatusEffect`, which AdventureBackpacks prefixes (for its backpack effects on players) | Verified in code; to test |
 | Maps (`Humanoid.UseItem` prefix) | AB's quick transfer also prefixes `UseItem` (higher priority): with the backpack open, right-clicking moves the item. Our prefix steps aside when another skipped the original, so a map gets moved, not used. EAQS quick slots call `UseItem` normally, so maps work from quick slots | Verified in code; to test |
+| **Currency and Maps tabs** vs **EAQS** (`Inventory.AddItem(ItemData)`, `CanAddItem`, `MoveInventoryToGrave`, `TombStone.EasyFitInInventory`, gravestone height) | EAQS keeps its slots in hidden rows of the bag; the tabs are separate inventories and never touch those rows (the tidy-up only reads the bag's visible rows, from EAQS's `GetVisibleRows`). Our `AddItem` prefix (high priority) takes currency and maps into the tab before EAQS's quick-slot fallback postfix, which then does nothing. Our `CanAddItem` postfix runs after EAQS's (low priority), once it has restored the bag. On death the tab items go into rows under EAQS's full height; EAQS's `TombStone.Setup` postfix then saves the larger gravestone height, so it survives a reload. Both mods' `EasyFitInInventory` postfixes only ever turn false into true | **Tested in-game** 2026-10-30 with EAQS and AB loaded (pickup with a full bag, death and gravestone) |
+| Tabs vs **AB** and craft-from-chests (`Inventory.CountItems`, `RemoveItem`) | All three add stock to the player's count and pay part of a cost. Our `RemoveItem` prefix runs first (high priority) and pays from the tabs; AB's backpack, then CraftingOverhaul's chests (low priority) see only what's still owed; the bag pays the rest. Every prefix steps aside when an earlier one skipped the original | Crafting from the tabs tested in-game 2026-10-30 (with AB loaded); mixed payment with backpack and chests not specifically tested |
 | Corrupted offerings (`OfferingBowl.UseItem`, `.Interact`, `.RPC_RemoveBossSpawnInventoryItems` prefixes, `.DelayedSpawnBoss` postfix; `ItemStand.IsSupported` postfix, `ItemStand.Interact` prefix; `Door.Interact`, `Door.UseItem` prefixes; `Character.OnDeath` prefix) | AB postfixes `Door.HaveKey` so a normal key in the backpack opens doors, and prefixes `ItemStand.UseItem`/`UpdateAttach` (move protection only). Ours look for corrupted items in the **main inventory only**: a corrupted Sealbreaker or egg in the backpack isn't used. EAQS patches `Player.OnDeath` and `Character.CheckDeath` for players only. No overlap otherwise | Verified in code (decompiled AB and EAQS); to test |
 | Rips (`Player.UpdateTeleport` postfix, `Game.Start` postfix) | None of the three patch these. AB patches `Inventory.IsTeleportable` (backpack contents count), which our rip check uses, so ores in a backpack block rips like portals | Verified in code |
+| Loot step 1 (2026-10-29): `CharacterDrop.OnDeath`, `InventoryGrid.CreateItemTooltip`, `ItemDrop.GetHoverText`, `ItemData.GetDamage`/`GetArmor`/`GetMaxDurability`/`GetBaseBlockPower`, `Attack.GetAttackStamina`, `Character.Damage`, `SEMan.ModifyTimedBlockBonus` | None of the three patch these (AB patches `Player.OnDeath`, PlantEasily `Beehive`/`Pickable.GetHoverText`, not these). Our character sheet moves EAQS's cells in `InventoryGrid.UpdateGui`, not the tooltip | Verified in code (2026-10-29) |
+| Affix tooltips (`ItemData.GetTooltip` postfix) | AB also postfixes it (priority 200): for backpacks it inserts an armour line after the quality or weight line. We append our lines at the end; both work | Verified in code (2026-10-29) |
 
 ## Orlog (built)
 
@@ -58,7 +62,6 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 
 | Planned feature | Overlap | Note |
 |---|---|---|
-| Affix tooltips (`ItemData.GetTooltip` postfix) | AB also postfixes `GetTooltip` (backpack contents) | Several postfixes are fine; append our lines, don't replace the text |
 | Light affix (`ItemData.GetWeight`) | AB postfixes `GetWeight` (backpack weight) | Light only applies to tools; multiply, don't overwrite |
 | Magnetic / Keen-eyed (pickup radius) | EAQS patches `Player.AutoPickup` (fills quick slots) | We change the radius field, not the method; compatible |
 | Deathless (cheat death) | EAQS patches `Character.CheckDeath` and `Player.OnDeath` | Hook the damage before death, test with EAQS keep-on-death |
@@ -72,6 +75,10 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 ## Cape or backpack
 
 With AdventureBackpacks and EquipmentAndQuickSlots together you wear a cape **or** a backpack, not both: backpacks are shoulder items, and EAQS has one shoulder slot. That's AdventureBackpacks' intended design (several backpacks carry cape perks: the Swamp pack is waterproof, the Mountain pack resists frost, the Plains pack is crafted from a Lox cape). AdventureBackpacks supports both at once only with extra-slot mods (AzuExtendedPlayerInventory, ExtraSlots), which EAQS refuses to load with. **Kept as is for now** (user, 2026-10-28). If it's ever wanted, a dedicated backpack slot through EAQS's custom-slot API is the route to try.
+
+## Backpack sizes
+
+AdventureBackpacks' sizes are its own synced settings, not our code. The group plays with one extra row on every level (user, 2026-10-29); the values and where to set them: [`PLAYER_SETUP.md`](PLAYER_SETUP.md) → For the server admin. AdventureBackpacks checks a backpack's size when it's opened, so growing a backpack keeps its items. Check in-game that 5-row backpacks (Plains and later) fit on screen.
 
 ## How to test (when playing)
 

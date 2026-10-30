@@ -218,8 +218,8 @@ namespace Corruption.Content
                     player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_only_bases", map.Label));
                     return;
                 }
-                var inventory = player.GetInventory();
-                var item = inventory.GetAllItems().FirstOrDefault(i => MapItems.Find(i) == map);
+                // The map is in the bag or in the Maps tab.
+                var item = InventoryTabs.Find(player, i => MapItems.Find(i) == map, out Inventory inventory);
                 if (item == null)
                 {
                     return;
@@ -410,8 +410,8 @@ namespace Corruption.Content
                 try
                 {
                     var map = MapItems.Find(__1);
-                    // Only maps in the player's own inventory (not in a chest or backpack): that's where the map is taken from.
-                    if (map == null || (__0 != null && __0 != Player.m_localPlayer.GetInventory()))
+                    // Only maps in the player's own inventory or Maps tab (not in a chest or backpack): that's where the map is taken from.
+                    if (map == null || (__0 != null && __0 != Player.m_localPlayer.GetInventory() && !InventoryTabs.IsTab(__0)))
                     {
                         return true;
                     }

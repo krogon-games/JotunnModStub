@@ -104,7 +104,7 @@ All three must have been picked up before the recipe appears, which is vanilla b
 ### Map item
 
 - Stackable? No. Each map is a single item so affixes can live on it.
-- Consumed on use. Kept in the normal inventory for now (1 per slot); the Maps tab comes with the inventory work in phase 9 (2026-10-28).
+- Consumed on use. Kept in the Maps tab (built 2026-10-29, see [Inventory and equipment slots](#inventory-and-equipment-slots)); before that, the normal inventory (1 per slot).
 - Tooltip shows target biome, tier, and any rolled affixes.
 - Teleportable through portals (it's the key to the content, not a resource).
 
@@ -295,6 +295,7 @@ These came from the original brainstorm. They're worth doing but are not part of
 ### Inventory and equipment slots
 
 - Dedicated equipment slots for talismans and rings, so they don't eat bag space. Two extra tabs off the main player inventory: a Currency tab (orbs, shards, Affix Splinters, runes) and a Maps tab. Affix Splinters don't stack, so they need the Currency tab (user, 2026-10-28).
+- *Decided 2026-10-29 (user), built:* the tabs are 8 × 4 each; picked-up currency and maps go straight to their tab (the bag only when it's full); tab contents weigh nothing; on death they go into the gravestone like the rest of the inventory. Boss essences count as currency. Detail: `FEATURES.md` → Currency and Maps tabs.
 - WoW-style backpack with tabs is UI work on top of existing extended-inventory approaches. Check compatibility with popular inventory mods before building; it may be better to depend on one than to compete.
 - *Decided 2026-10-28:* the group uses **AdventureBackpacks** for backpacks (it has its own models and textures) instead of us building one, and **EquipmentAndQuickSlots** for equipment slots. See [`mod-compatibility.md`](mod-compatibility.md).
 
@@ -377,6 +378,7 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 
 - **Personal loot.** Every player near a kill gets their own roll for rare and unique items, so nobody fights over drops. Magic and Rare roll separately, but a kill that succeeds on both drops only the Rare; uniques roll on top (decided 2026-10-27). Drops are tagged to their owner: only that player can pick them up for the first 60 seconds, then anyone can. Players can still drop or trade items to each other freely.
 - **Magic and rare drops** *(decided 2026-10-27)*: monsters drop randomly rolled items at low rates, starting at **Magic 1 in 50** and **Rare 1 in 100** per kill. Uniques and later rarities have their own separate chances. All chances live in easily tuned data tables ([`Corruption/Data/`](../Corruption/Data/README.md)), and other systems multiply them (corruption zones, scars, terror zones, map tiers). Workbench and forge crafting only makes Normal (vanilla) items; orbs are the path to better ones.
+- **Which item drops** *(user, 2026-10-29)*: a random player-craftable weapon, shield, armour piece, cape (backpacks included), trinket or pickaxe from the creature's biome, with a 20% chance of one from the biome just before it; at upgrade level 1. Magic items get 1 affix twice as often as 2, Rares 3 twice as often as 4. Numbers: [`loot_rules.csv`](../Corruption/Data/loot_rules.csv); item list: [`loot_bases.csv`](../Corruption/Data/loot_bases.csv), built from the game data.
 - **Loot beams.** Rare items get a yellow light pillar and uniques an orange-gold one, visible from about 50 m with a distinct sound. At 1 unique per 20 hours, nobody should ever lose one in the grass.
 
 ## Currency orbs

@@ -101,5 +101,18 @@ The dedicated server needs, in its own BepInEx install:
 | PlantEasily | No |
 
 - **Settings:** the gameplay settings of our mods are server-controlled. Edit them on the server in `BepInEx/config/com.krogongames.corruption.cfg` and `com.krogongames.craftingoverhaul.cfg`; players' own values for those are ignored. Look settings (shard and Riftforge colours) stay per player.
+- **Bigger backpacks (user, 2026-10-29: one more row on every level).** Set on the server in `BepInEx/config/vapok.mods.adventurebackpacks.cfg` (AdventureBackpacks syncs them to everyone). Each backpack has a section `[Backpack: <name>]` with `Backpack Size - Level 1` to `Level 4`, written as `{"x":3.0,"y":2.0}` (width, height). New values (AdventureBackpacks 2.4.6 defaults plus one row; widths unchanged):
+
+| Backpack | Level 1 | Level 2 | Level 3 | Level 4 |
+|---|---|---|---|---|
+| Satchel (Meadows) | 3×2 | 4×2 | 5×2 | 6×2 |
+| Rugged Backpack (Black Forest) | 3×3 | 4×3 | 5×3 | 6×3 |
+| Bloodbag Wetpack (Swamp) | 2×4 | 3×4 | 4×4 | 5×4 |
+| Arctic Sherpa Pack (Mountains) | 3×4 | 4×4 | 5×4 | 6×4 |
+| Lox Hide Knappsack (Plains) | 3×5 | 4×5 | 5×5 | 6×5 |
+| Explorers Wisppack (Mistlands) | 8×3 | 5×5 | 6×5 | 7×5 |
+| Cinderward Pack (Ashlands) | 6×5 | 7×5 | 8×5 | 9×5 |
+| Frostbound Haversack (Deep North) | 6×5 | 7×5 | 8×5 | 9×5 |
+
 - **Sharing a profile:** in r2modman, **Settings → Export profile as code** and send the code with the two DLLs. The code covers the Thunderstore mods and their config, not our DLLs.
 - **Building the DLLs:** a Debug build copies them to your `BepInEx/plugins` (see `README.MD`); those are the files to send.
