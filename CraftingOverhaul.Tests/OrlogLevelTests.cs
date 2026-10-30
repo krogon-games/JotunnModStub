@@ -143,44 +143,77 @@ namespace CraftingOverhaul.Tests
         }
 
         [Theory]
-        // Arreat Summit, "Experience", characters under level 25.
-        [InlineData(10, 10, 1f)]
-        [InlineData(10, 15, 1f)]
-        [InlineData(10, 16, 0.88f)]
-        [InlineData(10, 20, 0.02f)]
-        [InlineData(10, 30, 0.02f)]
-        [InlineData(10, 5, 1f)]
-        [InlineData(10, 4, 0.81f)]
-        [InlineData(20, 10, 0.05f)]
-        [InlineData(20, 1, 0.05f)]
-        // Level 25 and up: higher monsters give player level / monster level; lower ones use the same table.
-        [InlineData(30, 33, 30f / 33f)]
-        [InlineData(30, 60, 0.5f)]
-        [InlineData(30, 24, 0.81f)]
-        [InlineData(30, 25, 1f)]
-        public void LevelDifferenceIsDiablo2s(int player, int creature, float expected)
+        // Lower creatures, D2 (Arreat Summit, "Experience"): 5 levels or fewer below = 100%, then 81% down to 5%.
+        [InlineData(10, 10, 1)]
+        [InlineData(10, 5, 1)]
+        [InlineData(10, 4, 0.81)]
+        [InlineData(10, 1, 0.24)]
+        [InlineData(20, 10, 0.05)]
+        [InlineData(20, 1, 0.05)]
+        [InlineData(30, 24, 0.81)]
+        // At or above the player: no cut.
+        [InlineData(10, 20, 1)]
+        public void LowerCreaturesFollowDiablo2(int player, int creature, double expected)
         {
-            Assert.Equal(expected, ExperienceRules.LevelDifferenceFactor(player, creature), 4);
+            Assert.Equal(expected, ExperienceRules.LowerCreatureFactor(player, creature), 4);
+        }
+
+        [Theory]
+        // Higher creatures, classic WoW (vmangos Formulas.h): +5% per level above, at most +20%.
+        [InlineData(10, 10, 1.0)]
+        [InlineData(10, 11, 1.05)]
+        [InlineData(10, 13, 1.15)]
+        [InlineData(10, 14, 1.2)]
+        [InlineData(10, 40, 1.2)]
+        [InlineData(10, 5, 1.0)]
+        public void HigherCreaturesFollowClassicWow(int player, int creature, double expected)
+        {
+            Assert.Equal(expected, ExperienceRules.HigherCreatureBonus(player, creature), 4);
+        }
+
+        // A creature's XP by level for the share tests: 100 per level.
+        private static long Flat(int level) => 100L * level;
+
+        [Fact]
+        public void WorthUsesTheLowerOfTheTwoLevels()
+        {
+            // Higher creature: the player's own level's XP + WoW's bonus, not the creature's (much bigger) XP.
+            Assert.Equal(115, ExperienceRules.Worth(Flat, 1, 4), 6);
+            // Same level: the creature's XP.
+            Assert.Equal(1000, ExperienceRules.Worth(Flat, 10, 10), 6);
+            // Lower creature: its own XP, cut by D2's factor (6 below = 81%).
+            Assert.Equal(400 * 0.81, ExperienceRules.Worth(Flat, 10, 4), 6);
         }
 
         [Fact]
-        public void SoloPlayerGetsTheCreaturesXp()
+        public void PlayTestPaceIsFixed()
         {
-            Assert.Equal(new long[] { 100 }, ExperienceRules.Share(100, 10, new[] { 10 }, 0.35f));
-            Assert.Equal(new long[] { 81 }, ExperienceRules.Share(100, 4, new[] { 10 }, 0.35f));
+            // Play-test 2026-10-30: at level 1, three greydwarves (level 4 in the Meadows, 178 XP) reached level 2 (500 XP).
+            // Now a level-4 creature is worth level 1's XP (62) + 15%: 8 kills, close to classic WoW's 8 for level 2.
+            var xp = CreatureXp();
+            long greydwarf = ExperienceRules.Share(xp.For, 4, new[] { 1 }, 0.35f)[0];
+            Assert.Equal(71, greydwarf);
+            Assert.Equal(8, (int)Math.Ceiling(500.0 / greydwarf));
+        }
+
+        [Fact]
+        public void SoloPlayerGetsWhatTheKillIsWorth()
+        {
+            Assert.Equal(new long[] { 1000 }, ExperienceRules.Share(Flat, 10, new[] { 10 }, 0.35f));
+            Assert.Equal(new long[] { 324 }, ExperienceRules.Share(Flat, 4, new[] { 10 }, 0.35f));
+            Assert.Equal(new long[] { 1200 }, ExperienceRules.Share(Flat, 20, new[] { 10 }, 0.35f));
         }
 
         [Fact]
         public void PartyGetsTheBonusSplitByLevel()
         {
-            // Two level-10 players: 100 * 1.35, half each.
-            Assert.Equal(new long[] { 68, 68 }, ExperienceRules.Share(100, 10, new[] { 10, 10 }, 0.35f));
-            // Four level-10 players: 1000 * 2.05, a quarter each.
-            var shares = ExperienceRules.Share(1000, 10, new[] { 10, 10, 10, 10 }, 0.35f);
-            Assert.All(shares, s => Assert.Equal(513, s));
-            // A level-30 player beside a level-10 one, both on a level-10 creature: the level-30 gets a bigger share but
-            // only 5% of it (20 levels above the creature).
-            var mixed = ExperienceRules.Share(1000, 10, new[] { 10, 30 }, 0.35f);
+            // Two level-10 players on a level-10 creature: 1000 * 1.35, half each.
+            Assert.Equal(new long[] { 675, 675 }, ExperienceRules.Share(Flat, 10, new[] { 10, 10 }, 0.35f));
+            // Four: 1000 * 2.05, a quarter each.
+            Assert.All(ExperienceRules.Share(Flat, 10, new[] { 10, 10, 10, 10 }, 0.35f), s => Assert.Equal(513, s));
+            // A level-30 beside a level-10, on a level-10 creature: 1000 * 1.35 split 1:3; the level-30's share is cut to
+            // 5% (20 levels above the creature).
+            var mixed = ExperienceRules.Share(Flat, 10, new[] { 10, 30 }, 0.35f);
             Assert.Equal(338, mixed[0]);
             Assert.Equal(51, mixed[1]);
         }
@@ -189,15 +222,15 @@ namespace CraftingOverhaul.Tests
         public void HighLevelRatioAppliesWhenGiven()
         {
             var levels = Levels();
-            var shares = ExperienceRules.Share(1000, 80, new[] { 80 }, 0.35f, levels.HighLevelRatio);
-            Assert.Equal((long)Math.Round(1000 * levels.HighLevelRatio(80)), shares[0]);
+            var shares = ExperienceRules.Share(Flat, 80, new[] { 80 }, 0.35f, levels.HighLevelRatio);
+            Assert.Equal((long)Math.Round(8000 * levels.HighLevelRatio(80)), shares[0]);
         }
 
         [Fact]
         public void NoXpForNothing()
         {
-            Assert.Equal(new long[] { 0 }, ExperienceRules.Share(0, 10, new[] { 10 }, 0.35f));
-            Assert.Empty(ExperienceRules.Share(100, 10, new int[0], 0.35f));
+            Assert.Equal(new long[] { 0 }, ExperienceRules.Share(level => 0, 10, new[] { 10 }, 0.35f));
+            Assert.Empty(ExperienceRules.Share(Flat, 10, new int[0], 0.35f));
         }
 
         [Fact]

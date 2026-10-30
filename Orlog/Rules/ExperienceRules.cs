@@ -3,54 +3,62 @@ using System;
 namespace Orlog.Rules
 {
     /// <summary>
-    ///     How much XP each player gets for a kill: Diablo 2's rules (Arreat Summit, "Experience"), applied to the XP the
-    ///     creature is worth. No game dependencies, so it is unit-tested.
+    ///     How much XP each player gets for a kill. Creatures at or below the player's level follow Diablo 2 (Arreat
+    ///     Summit, "Experience"); creatures above follow classic WoW (vmangos <c>Formulas.h</c>), because D2 pays a higher
+    ///     creature's full XP and that made levelling 2-3x faster than the pace (play-test 2026-10-30, user chose this).
+    ///     No game dependencies, so it is unit-tested.
     /// </summary>
     internal static class ExperienceRules
     {
-        // D2, characters below level 25: % of the monster's XP by (monster level - character level), for +6..+10 and -6..-10.
-        // 5 levels or less either way = 100%; more than 10 above = 2%; 10 or more below = 5%.
-        private static readonly int[] AboveUnder25 = { 88, 68, 36, 15, 2 };
+        // D2: % of a lower monster's XP for 6..10 levels below the character; 10 or more below = 5%, 5 or fewer = 100%.
         private static readonly int[] Below = { 81, 62, 43, 24, 5 };
 
-        /// <summary>D2's % of a creature's XP for its level compared with the player's (0-1).</summary>
-        public static float LevelDifferenceFactor(int playerLevel, int creatureLevel)
+        /// <summary>D2's % of a lower creature's XP (0-1); 1 for a creature at or above the player's level.</summary>
+        public static double LowerCreatureFactor(int playerLevel, int creatureLevel)
         {
-            int diff = creatureLevel - playerLevel;
-            if (diff > 0 && playerLevel >= 25)
-            {
-                // D2, level 25 and up: any higher monster gives XP * (player level / monster level).
-                return (float)playerLevel / creatureLevel;
-            }
-            if (diff >= -5 && diff <= 5)
-            {
-                return 1f;
-            }
-            if (diff < -5)
-            {
-                return Below[Math.Min(-diff, 10) - 6] / 100f;
-            }
-            return diff > 10 ? 0.02f : AboveUnder25[diff - 6] / 100f;
+            int below = playerLevel - creatureLevel;
+            return below <= 5 ? 1.0 : Below[Math.Min(below, 10) - 6] / 100.0;
+        }
+
+        /// <summary>Classic WoW's bonus for a higher creature: +5% per level above the player, at most +20%.</summary>
+        public static double HigherCreatureBonus(int playerLevel, int creatureLevel)
+        {
+            return 1.0 + 0.05 * Math.Max(0, Math.Min(creatureLevel - playerLevel, 4));
         }
 
         /// <summary>
-        ///     Each player's XP from a kill worth <paramref name="creatureXp" />. D2's party rule: with more than one player,
-        ///     the total grows by <paramref name="bonusPerExtraPlayer" /> per extra player and is split by level (a player's
-        ///     share = their level / the sum of levels); then each share gets the level difference factor and, when
-        ///     <paramref name="highLevelRatios" /> is given, D2's high-level ratio for that player's level. Rounded (halves up); never
-        ///     below 1 while the factor is above 0.
+        ///     What a kill is worth to one player before sharing. At or below the player's level: the creature's own XP
+        ///     (<paramref name="xpAt" /> of its level) times D2's lower-creature factor. Above: the XP of a creature of the
+        ///     player's own level times WoW's higher-creature bonus.
         /// </summary>
-        public static long[] Share(long creatureXp, int creatureLevel, int[] playerLevels, float bonusPerExtraPlayer,
+        public static double Worth(Func<int, long> xpAt, int playerLevel, int creatureLevel)
+        {
+            playerLevel = Math.Max(1, playerLevel);
+            creatureLevel = Math.Max(1, creatureLevel);
+            return creatureLevel > playerLevel
+                ? xpAt(playerLevel) * HigherCreatureBonus(playerLevel, creatureLevel)
+                : xpAt(creatureLevel) * LowerCreatureFactor(playerLevel, creatureLevel);
+        }
+
+        /// <summary>
+        ///     Each player's XP from a kill. <paramref name="xpAt" /> gives a creature's XP by level (already including stars
+        ///     and the XP multiplier). D2's party rule: with more than one player, the total grows by
+        ///     <paramref name="bonusPerExtraPlayer" /> per extra player and is split by level (a player's share = their level
+        ///     / the sum of levels), each share taken of what the kill is worth to that player (<see cref="Worth" />); then
+        ///     D2's high-level ratio when <paramref name="highLevelRatios" /> is given. Rounded (halves up); never below 1
+        ///     while the kill is worth anything.
+        /// </summary>
+        public static long[] Share(Func<int, long> xpAt, int creatureLevel, int[] playerLevels, float bonusPerExtraPlayer,
             Func<int, float> highLevelRatios = null)
         {
             var result = new long[playerLevels.Length];
-            if (creatureXp <= 0 || playerLevels.Length == 0)
+            if (playerLevels.Length == 0)
             {
                 return result;
             }
             // Through decimal so a float setting like 0.35 is exactly 0.35.
             double bonus = (double)(decimal)Math.Max(0f, bonusPerExtraPlayer);
-            double total = creatureXp * (1.0 + bonus * (playerLevels.Length - 1));
+            double pool = 1.0 + bonus * (playerLevels.Length - 1);
             double levelSum = 0;
             foreach (int level in playerLevels)
             {
@@ -59,12 +67,12 @@ namespace Orlog.Rules
             for (int i = 0; i < playerLevels.Length; i++)
             {
                 int level = Math.Max(1, playerLevels[i]);
-                double factor = LevelDifferenceFactor(level, creatureLevel) * (highLevelRatios != null ? highLevelRatios(level) : 1f);
-                if (factor <= 0)
+                double xp = Worth(xpAt, level, creatureLevel) * pool * level / levelSum *
+                            (highLevelRatios != null ? highLevelRatios(level) : 1f);
+                if (xp <= 0)
                 {
                     continue;
                 }
-                double xp = total * level / levelSum * factor;
                 result[i] = Math.Max(1, (long)Math.Round(xp, MidpointRounding.AwayFromZero));
             }
             return result;

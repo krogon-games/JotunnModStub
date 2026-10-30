@@ -17,6 +17,7 @@ namespace Orlog.Content
     ///             counts as the players' average level.
     ///         </item>
     ///         <item>A starred creature gives its game level times the XP (it has that many times the health).</item>
+    ///         <item>A creature above a player's level is worth that player's own level's XP plus WoW's bonus; at or below, its own XP with D2's cut (<see cref="ExperienceRules.Worth" />).</item>
     ///     </list>
     /// </summary>
     internal static class KillXp
@@ -76,9 +77,9 @@ namespace Orlog.Content
             {
                 creatureLevel = Mathf.Max(1, Mathf.RoundToInt((float)levelSum / Nearby.Count));
             }
-            double worth = Progress.CreatureXp.For(creatureLevel) * Mathf.Max(1, creature.GetLevel()) * OrlogConfig.XpMultiplier.Value;
-            var shares = ExperienceRules.Share((long)System.Math.Round(worth), creatureLevel, levels, OrlogConfig.PartyBonusPerPlayer.Value,
-                OrlogConfig.HighLevelPenalty.Value ? (System.Func<int, float>)Progress.Levels.HighLevelRatio : null);
+            double perLevel = Mathf.Max(1, creature.GetLevel()) * OrlogConfig.XpMultiplier.Value;
+            var shares = ExperienceRules.Share(level => (long)System.Math.Round(Progress.CreatureXp.For(level) * perLevel), creatureLevel, levels,
+                OrlogConfig.PartyBonusPerPlayer.Value, OrlogConfig.HighLevelPenalty.Value ? (System.Func<int, float>)Progress.Levels.HighLevelRatio : null);
 
             for (int i = 0; i < Nearby.Count; i++)
             {

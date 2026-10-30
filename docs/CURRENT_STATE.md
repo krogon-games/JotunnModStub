@@ -36,7 +36,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
 | Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
-| Orlog levels and XP: XP per kill, stars, level-up, level-difference cut, saved with the character | Orlog | 2026-10-30 play-test (pace too fast, being fixed) |
+| Orlog levels and XP: XP per kill, stars, level-up, level-difference cut, saved with the character | Orlog | 2026-10-30 play-test (pace too fast; fixed, re-test pending) |
 
 ### Built, not verified
 
@@ -48,7 +48,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
-| Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Orlog levels, step 8 (everything else passed 2026-10-30; pace too fast, fix being decided) |
+| Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Orlog levels, step 8 (everything else passed 2026-10-30; pace was too fast, fixed the same day: re-test step 7) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
@@ -92,7 +92,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
 6. **Classes UI** (UI overhaul session, after its current merge): merge `master`, then build [`classes-ui-brief.md`](classes-ui-brief.md), HUD bars first.
-7. **Classes** (`claude/class-skills`): levels and XP built (2026-10-30, Orlog), waiting for a play-test, the user's view on the pace and how much XP bosses should give. Next: attributes and the class eitr pool, then the Orlog stone and class choice, then the tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)).
+7. **Classes** (`claude/class-skills`): levels and XP built (2026-10-30, Orlog), play-tested 2026-10-30; pace fix (higher creatures, WoW's bonus) to re-test; open: how much XP bosses should give. Next: attributes and the class eitr pool, then the Orlog stone and class choice, then the tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)).
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 
