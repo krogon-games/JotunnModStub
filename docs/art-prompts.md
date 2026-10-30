@@ -187,7 +187,9 @@ The mod's corruption look so far: the deep red of the corruption shard and the r
 
 *First three takes (void-cracked, crystal antlers, bound offering) rejected by the user 2026-10-29: "way too over the top. The new icon needs to look a lot closer to the original. Mostly recolouring and very small tweaks."*
 
-**Chosen 2026-10-29:** the user's own edit of the vanilla Deer trophy icon (`docs/images/offering_TrophyDeer.jpg`), made with the prompt below. The other offerings use the same prompt with only the item's parts swapped in.
+**Chosen 2026-10-29:** the user's own edit of the vanilla Deer trophy icon, made with the prompt below. The other offerings use the same prompt with only the item's parts swapped in.
+
+**All eight renders received 2026-10-30** (`docs/images/offerings/<Item>.jpg`) and cut into icons by `tools/make_offering_icons.py` (preview `docs/images/offering_icons_preview.png`). They came back on black, white or grey backgrounds; the script handles each.
 
 **How to use:** attach only the vanilla icon of the offering (a screenshot of it in the inventory, cropped to the one slot) and run its prompt.
 
