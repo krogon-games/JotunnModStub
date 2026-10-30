@@ -1,0 +1,9 @@
+biome,min_level,max_level,health_min,health_max,boss_level,bosses
+Meadows,1,4,5,20,5,Eikthyr
+BlackForest,5,10,10,600,11,gd_king
+Swamp,11,19,50,800,20,Bonemass
+Mountain,20,34,80,800,35,Dragon
+Plains,35,49,10,1200,50,GoblinKing
+Mistlands,50,61,10,1500,62,SeekerQueen
+AshLands,62,75,200,1600,76,Fader
+DeepNorth,76,89,100,2200,90,FrozenKing;FrozenKing_p2;FrozenKing_p3

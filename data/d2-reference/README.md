@@ -7,6 +7,7 @@ Design reference for [`docs/class-design.md`](../../docs/class-design.md). Colle
 | File | Contents |
 |---|---|
 | `classes.csv` | Starting attributes, starting life/stamina/mana, gains per level and per point of Vitality/Energy (charstats values ÷ 4, matching Arreat's class pages) |
+| `experience.csv` | XP needed to reach each level 1–99 and the high-level XP ratio (out of 1024; 976 = 95.31% at level 70). From D2R's `experience.txt` (d2data `experience.json`), checked against Arreat's "Experience Levels" page. Used by `tools/make_orlog_tables.py` |
 | `barbarian.csv`, `amazon.csv`, `paladin.csv` | All 30 skills per class: tab, tree position (`row` 1–6 = level tiers 1/6/12/18/24/30, `col` 1–3), required level, direct prerequisites (`+` = both), type, mana at level 1 and per level, synergies (bonus per hard point in the named skill), one-line description |
 
 Mana cost formula: `(mana + lvlmana*(slvl-1)) * 2^manashift / 256` (checked against Arreat: Whirlwind 12.5 / 13 / 13.5).
@@ -33,8 +34,16 @@ Mana cost formula: `(mana + lvlmana*(slvl-1)) * 2^manashift / 256` (checked agai
 - Amazon: classic synergies differed (Power/Charged/Lightning Strike +10%/+8% from each lightning skill; Multiple Shot, Guided Arrow and Strafe had none). Valkyrie takes the Amazon's hard levels in Critical Strike, Dodge, Avoid and Evade.
 - Paladin: classic Holy Bolt synergies Blessed Hammer/FoH +50%, Prayer +15%; Holy Fire Resist Fire +18%, Salvation +6%. Sanctuary's mana value of 1 in the data is read as 0 (auras cost no mana; unverified).
 
+## Experience rules (Arreat Summit, "Experience")
+
+- Below character level 25, a monster's XP by (monster level − character level): ±5 levels 100%; +6 88%, +7 68%, +8 36%, +9 15%, +10 2%, more than 10 above 2%; −6 81%, −7 62%, −8 43%, −9 24%, −10 or lower 5%.
+- From level 25: any higher monster gives XP × (character level ÷ monster level); lower monsters as above.
+- From level 70 the XP is cut by the ratio in `experience.csv` (95.31% at 70 down to 0.49% at 99).
+- Party: the total XP grows by 35% when a party member of the killer is in the same area, is shared by level (your level ÷ the sum of levels), then each share gets the level-difference factor. Only members within 2 screens get any.
+- Only the killing blow's player gets XP when not in a party. Hirelings' and minions' kills count for their owner.
+
 ## Sources
 
 - D2R tables: https://github.com/blizzhackers/d2data (`json/skills.json`, `skilldesc.json`, `charstats.json`, `allstrings-eng.json`)
-- Arreat Summit: https://classic.battle.net/diablo2exp/ (class pages, skill tab pages, `skills/basics.shtml`, `quests/rewards.shtml`, `basics/characters.shtml`, `basics/levels.shtml`)
+- Arreat Summit: https://classic.battle.net/diablo2exp/ (class pages, skill tab pages, `skills/basics.shtml`, `quests/rewards.shtml`, `basics/characters.shtml`, `basics/levels.shtml`, `basics/experience.shtml`)
 - D2R 2.4 patch notes: https://maxroll.gg/d2/news/d2r-patch-2-4-final-patch-notes

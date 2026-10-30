@@ -43,7 +43,7 @@ Reference: `docs/images/hud_reference_skills.jpg` (four boxes in a cross). At th
 
 - Level number, XP into the current level and XP needed for the next. Placement is the UI session's call (suggestion: a thin bar right under the three bars, as WoW's XP bar runs along the bottom).
 - A visible hint when there are **unspent points** (D2 shows a "level up" button).
-- Hidden when the player has no class.
+- Shown whenever Orlog is installed: levels and XP don't need a class (built 2026-10-30; `GetCharacterJson` already answers with real level and XP, `class` stays `""` until classes are built).
 
 ### 2.4 Skills panel
 

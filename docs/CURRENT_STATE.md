@@ -1,13 +1,14 @@
 # Current state
 
-**Last updated:** 2026-10-29 (character sheet tested and merged into `master`) · **Branch:** `claude/ui-overhaul` (UI work; other sessions on their own branches, see `CLAUDE.md`) · **Game:** Valheim 1.0.20
+**Last updated:** 2026-10-30 (Orlog levels and XP built on `claude/class-skills`; character sheet merged 2026-10-29) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.20
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **129 passed, 0 failed** (2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- Orlog (the classes plugin, new 2026-10-30) compiles the same way.
+- `dotnet test CraftingOverhaul.Tests`: **155 passed, 0 failed** (2026-10-30, with Orlog's level tables and XP rules; 129 on 2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -35,6 +36,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
 | Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
+| Orlog levels and XP: XP per kill, stars, level-up, level-difference cut, saved with the character | Orlog | 2026-10-30 play-test; pace fix re-tested the same day ("pace feels better") |
 
 ### Built, not verified
 
@@ -46,6 +48,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
+| Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Orlog levels, step 8 (everything else passed 2026-10-30, including the pace fix) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
@@ -89,7 +92,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
 6. **Classes UI** (UI overhaul session, after its current merge): merge `master`, then build [`classes-ui-brief.md`](classes-ui-brief.md), HUD bars first.
-7. **Classes** (`claude/class-skills`): build step 1 (levels, XP, attributes; rules decided 2026-10-30, XP per creature still open) from [`class-design.md`](class-design.md#8-build-order-proposed).
+7. **Classes** (`claude/class-skills`): levels and XP built (2026-10-30, Orlog), play-tested 2026-10-30 including the pace fix; PR into `master` opened. Open: how much XP bosses should give; sharing with a friend. Next: attributes and the class eitr pool, then the Orlog stone and class choice, then the tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)).
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 
