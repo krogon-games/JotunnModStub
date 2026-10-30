@@ -1,0 +1,31 @@
+tab,row,col,name,req_level,prerequisites,type,mana_base,mana_per_lvl,synergies,description
+Combat Skills,1,2,Bash,1,none,active,2,0,Stun +5% dmg; Concentrate +5% AR,Powerful blow with bonus damage and knockback
+Combat Skills,2,1,Leap,6,none,active,2,0,none,Jump to a spot and knock back enemies on landing
+Combat Skills,2,3,Double Swing,6,Bash,active,1,-0.125,Bash +10% dmg,Two weapons hit two targets or one target twice
+Combat Skills,3,2,Stun,12,Bash,active,2,0,Bash +8% dmg; Concentrate +5% AR; War Cry +5% duration,Hit stuns target briefly; bonus attack rating
+Combat Skills,3,3,Double Throw,12,Double Swing,active,1,0,Double Swing +8% dmg,Throw two throwing weapons at once
+Combat Skills,4,1,Leap Attack,18,Leap,active,10,0,Leap +10% dmg,Leap to target and attack; splash damage on landing (2.4)
+Combat Skills,4,2,Concentrate,18,Stun,active,2,0,Bash +5% dmg; Battle Orders +10% dmg; Berserk +1% magic dmg,Uninterruptible attack with bonus attack rating and defense
+Combat Skills,5,3,Frenzy,24,Double Throw,active,1.5,0,Double Swing +8% dmg; Taunt +8% dmg; Increased Stamina +0.4 s duration; Berserk +1% magic dmg,Dual-wield attack; each hit raises attack and move speed
+Combat Skills,6,1,Whirlwind,30,Leap Attack+Concentrate,active,12.5,0.5,none,Spin through enemies hitting everything along the path
+Combat Skills,6,2,Berserk,30,Concentrate,active,4,0,Howl +10% magic dmg; Battle Orders +10% magic dmg,Magic-damage attack with big AR; defense drops to zero briefly
+Combat Masteries,1,1,Blade Mastery,1,none,passive,0,0,none,Swords and daggers: +damage +AR +crit chance
+Combat Masteries,1,2,Axe Mastery,1,none,passive,0,0,none,Axes: +damage +AR +crit chance
+Combat Masteries,1,3,Mace Mastery,1,none,passive,0,0,none,Maces/hammers/clubs: +damage +AR +crit chance
+Combat Masteries,2,1,Polearm Mastery,6,none,passive,0,0,none,Polearms: +damage +AR +crit chance
+Combat Masteries,2,2,Throwing Mastery,6,none,passive,0,0,none,Throwing weapons: +damage +AR +crit; ammo-saving (2.4)
+Combat Masteries,2,3,Spear Mastery,6,none,passive,0,0,none,Spears: +damage +AR +crit chance
+Combat Masteries,3,1,Increased Stamina,12,none,passive,0,0,none,Increases maximum stamina
+Combat Masteries,4,3,Iron Skin,18,none,passive,0,0,none,Increases defense
+Combat Masteries,5,1,Increased Speed,24,Increased Stamina,passive,0,0,none,Increases walk and run speed
+Combat Masteries,6,3,Natural Resistance,30,Iron Skin,passive,0,0,none,Increases fire/cold/lightning/poison resistance
+Warcries,1,1,Howl,1,none,warcry,4,0,none,Nearby monsters flee in fear
+Warcries,1,3,Find Potion,1,none,active,2,0,none,Use on corpse for chance to find a potion
+Warcries,2,1,Taunt,6,Howl,warcry,3,0,none,Enrage a monster into melee; lowers its damage and AR
+Warcries,2,2,Shout,6,Howl,warcry,6,0,Battle Orders +5 s; Battle Command +5 s,Raises defense of you and party
+Warcries,3,3,Find Item,12,Find Potion,active,7,0,Find Potion +1% chance,Use on corpse for chance to find an item
+Warcries,4,1,Battle Cry,18,Taunt,warcry,5,0,none,Lowers nearby enemies' defense and damage
+Warcries,5,2,Battle Orders,24,Shout,warcry,7,0,Shout +5 s; Battle Command +5 s,Raises max life/mana/stamina of you and party
+Warcries,5,3,Grim Ward,24,Find Item,active,4,0,Find Potion +5% damage taken,Corpse becomes totem that scares/slows enemies; they take more damage
+Warcries,6,1,War Cry,30,Battle Cry+Battle Orders,warcry,10,0.75,Howl +6% dmg; Taunt +6% dmg; Battle Cry +6% dmg,Damages and stuns all nearby enemies
+Warcries,6,2,Battle Command,30,Battle Orders,warcry,11,0,Shout +5 s; Battle Orders +5 s,+skill levels to all current skills of you and party

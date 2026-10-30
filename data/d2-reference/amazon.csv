@@ -1,0 +1,31 @@
+tab,row,col,name,req_level,prerequisites,type,mana_base,mana_per_lvl,synergies,description
+Bow and Crossbow,1,2,Magic Arrow,1,none,active,1.5,-0.125,none,Creates a magic arrow from mana; no ammo used
+Bow and Crossbow,1,3,Fire Arrow,1,none,active,3,0,Exploding Arrow +12% fire dmg,Adds fire damage to an arrow
+Bow and Crossbow,2,1,Cold Arrow,6,none,active,3.5,0.125,Ice Arrow +12% cold dmg,Adds cold damage that slows the target
+Bow and Crossbow,2,2,Multiple Shot,6,Magic Arrow,active,4,1,Guided Arrow +12% dmg,Splits one arrow into several
+Bow and Crossbow,3,3,Exploding Arrow,12,Fire Arrow+Multiple Shot,active,5,0.25,Fire Arrow +14% fire dmg,Arrow explodes for area fire damage
+Bow and Crossbow,4,1,Ice Arrow,18,Cold Arrow,active,4,0.25,Cold Arrow +8% cold dmg; Freezing Arrow +5% freeze length,Cold arrow that freezes the target
+Bow and Crossbow,4,2,Guided Arrow,18,Cold Arrow+Multiple Shot,active,8,-0.25,Multiple Shot +12% dmg,Arrow homes in on target and always hits
+Bow and Crossbow,5,2,Strafe,24,Guided Arrow,active,11,0,Multiple Shot +5% dmg; Guided Arrow +10% dmg,Volley of arrows at multiple nearby targets
+Bow and Crossbow,5,3,Immolation Arrow,24,Exploding Arrow,active,6,0.25,Fire Arrow +5% avg fire dmg/s; Exploding Arrow +10% fire dmg,Exploding arrow leaves a burning patch on ground
+Bow and Crossbow,6,1,Freezing Arrow,30,Ice Arrow,active,9,0.25,Cold Arrow +12% cold dmg; Ice Arrow +5% freeze length,Arrow freezes all enemies in an area
+Passive and Magic,1,1,Inner Sight,1,none,active,5,0,none,Lights up nearby enemies and lowers their defense
+Passive and Magic,1,3,Critical Strike,1,none,passive,0,0,none,Chance to deal double physical damage
+Passive and Magic,2,2,Dodge,6,none,passive,0,0,none,Chance to dodge melee attacks while standing/attacking
+Passive and Magic,3,1,Slow Missiles,12,Inner Sight,active,5,0,none,Slows enemy projectiles in an area
+Passive and Magic,3,2,Avoid,12,Dodge,passive,0,0,none,Chance to dodge missiles while standing/attacking
+Passive and Magic,4,3,Penetrate,18,Critical Strike,passive,0,0,none,Increases attack rating
+Passive and Magic,5,1,Decoy,24,Slow Missiles,active,19,-0.75,none,Creates a decoy copy that distracts enemies
+Passive and Magic,5,2,Evade,24,Avoid,passive,0,0,none,Chance to dodge melee/missiles while moving
+Passive and Magic,6,1,Valkyrie,30,Decoy+Evade,active,25,1,Decoy +20% life; Penetrate +40 AR (flat); inherits Critical Strike/Dodge/Avoid/Evade hard levels,Summons a Valkyrie warrior to fight for you
+Passive and Magic,6,3,Pierce,30,Penetrate,passive,0,0,none,Chance for missiles to pass through enemies
+Javelin and Spear,1,1,Jab,1,none,active,2,0.25,none,Rapid series of spear/javelin thrusts
+Javelin and Spear,2,2,Power Strike,6,Jab,active,2,0.25,Lightning Bolt +14% light dmg; Charged Strike +14%; Lightning Strike +14%,Adds lightning damage to a melee thrust
+Javelin and Spear,2,3,Poison Javelin,6,none,active,4,0.25,Plague Javelin +12% poison dmg,Thrown javelin leaves a trail of poison clouds
+Javelin and Spear,3,1,Impale,12,Jab,active,3,0,none,Powerful thrust; uses extra weapon durability
+Javelin and Spear,3,3,Lightning Bolt,12,Poison Javelin,active,6,0.25,Power Strike +3% light dmg; Charged Strike +3%; Lightning Strike +3%; Lightning Fury +3%,Javelin turns into a lightning bolt
+Javelin and Spear,4,2,Charged Strike,18,Power Strike+Lightning Bolt,active,4,0.25,Power Strike +14% light dmg; Lightning Bolt +14%; Lightning Strike +14%,Melee hit releases charged bolts
+Javelin and Spear,4,3,Plague Javelin,18,Lightning Bolt,active,7,0.5,Poison Javelin +14% poison dmg,Javelin bursts into an expanding poison cloud
+Javelin and Spear,5,1,Fend,24,Impale,active,5,0,none,Rapidly attacks several nearby targets
+Javelin and Spear,6,2,Lightning Strike,30,Charged Strike,active,9,0,Power Strike +11% light dmg; Lightning Bolt +11%; Charged Strike +11%,Melee hit releases chain lightning
+Javelin and Spear,6,3,Lightning Fury,30,Plague Javelin,active,10,0.5,Power Strike +1% light dmg; Lightning Bolt +1%; Charged Strike +1%; Lightning Strike +1%,Javelin bursts into many lightning bolts on impact

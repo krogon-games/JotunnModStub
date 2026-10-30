@@ -25,6 +25,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Planned | — | — | 2026-10-27 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
+| [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
 There are two plugins: **CraftingOverhaul** (quality of life; works when only some players have it) and **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg` and `com.krogongames.corruption.cfg`.
 
@@ -727,9 +728,21 @@ The technical review is in `docs/corruption-design-review.md`. It suggests build
 
 The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses) without new attacks or animations. These combat ideas remain a separate track.
 
+## Classes, levels and skill trees
+
+**Status:** Planned. Design only, no code (branch `claude/class-skills`).
+
+Diablo 2-style classes in a separate plugin: the Barbarian first, then the Amazon, maybe the Paladin. Character levels from XP, with stat points (D2's Strength, Dexterity, Vitality, Energy) and skill points each level, spent in D2's three-tab trees. Only the skills that work in Valheim; the rest are reworked or dropped. Vanilla skills keep levelling by use. EpicMMOSystem was compared and is not used as a base. Design, open questions and build order: `docs/class-design.md`; D2 reference data: `data/d2-reference/`.
+
+**Harmony patch targets:** none yet.
+
 ---
 
 ## Changelog
+
+### 2026-10-30
+- **Classes, levels and skill trees planned** (design only): `docs/class-design.md`, D2 reference tables in `data/d2-reference/`. EpicMMOSystem researched; own levels recommended. No mod code changed.
+- **New animations allowed where necessary** (user): the v1 "no new animations" rule is lifted; vanilla animations and emotes still come first.
 
 ### 2026-10-29
 - **Character sheet, last single-player checks passed:** the close button, dragging the sheet, and the layout with a chest and the AdventureBackpacks backpack open. Only multiplayer is left (`PLAYTEST.md` → Session 2).

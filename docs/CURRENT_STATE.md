@@ -50,7 +50,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 ## Not built (proposed)
 
-Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Barbarian first, then Amazon, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -71,6 +71,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Waiting on the user
 
+- **Classes and levels (2026-10-30):** the open questions in [`class-design.md`](class-design.md#9-open-questions-for-the-user): own levels instead of EpicMMOSystem (recommended), skill resource, numbers, how to pick a class, casting, names, vanilla skills, death penalty.
 - **Run `co_dump` once in a world (2026-10-28) and send the new files** (`item_details.csv`, `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them, phase 6 its altar offerings, and the gear affixes their remaining ranges, instead of guessing.
 
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
@@ -87,6 +88,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
+6. **Classes** (`claude/class-skills`): once the user answers the open questions, build step 1 (levels, XP, attributes) from [`class-design.md`](class-design.md#8-build-order-proposed).
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 

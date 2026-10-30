@@ -303,6 +303,7 @@ These came from the original brainstorm. They're worth doing but are not part of
 - Replace use-to-level with player levels and spendable stat points.
 - Most invasive change in the list: vanilla reads skill values across combat, crafting and movement. Do it last, and consider shipping it as a separate optional module.
 - Compare against EpicMMOSystem before building; it covers much of this ground.
+- *Changed 2026-10-30:* now part of the Diablo 2-style classes, levels and skill trees, a separate plugin: [`class-design.md`](class-design.md) (EpicMMOSystem compared there).
 
 ## Loot and uniques
 
