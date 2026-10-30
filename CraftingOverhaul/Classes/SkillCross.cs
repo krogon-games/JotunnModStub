@@ -70,8 +70,9 @@ namespace CraftingOverhaul.Classes
             for (int i = 0; i < SlotViews.Length; i++)
             {
                 var view = new Slot();
-                view.Highlight = UiKit.Image("Highlight" + i, _root, null);
-                view.Highlight.color = new Color(1f, 0.78f, 0.3f, 0.95f);
+                // The slot on the skill button glows eitr-blue round its bronze rim (mock-up D, user 2026-10-30).
+                view.Highlight = UiKit.Image("Highlight" + i, _root, SheetArt.GlowBox, Image.Type.Sliced);
+                view.Highlight.color = SheetArt.GlowBox ? UiKit.Rune : new Color(1f, 0.78f, 0.3f, 0.95f);
                 var frame = UiKit.Image("Slot" + i, _root, SheetArt.Tile, Image.Type.Sliced);
                 if (!frame.sprite)
                 {
@@ -80,12 +81,13 @@ namespace CraftingOverhaul.Classes
                 view.Root = frame.rectTransform;
                 Vector2 cell = Cells[i] * (Tile + Gap);
                 UiKit.Place(view.Root, Vector2.zero, Vector2.zero, cell, new Vector2(Tile, Tile));
-                UiKit.Place(view.Highlight.rectTransform, Vector2.zero, Vector2.zero, cell - new Vector2(4f, 4f), new Vector2(Tile + 8f, Tile + 8f));
+                float glow = SheetArt.GlowBox ? SheetArt.GlowBoxInset : 4f;
+                UiKit.Place(view.Highlight.rectTransform, Vector2.zero, Vector2.zero, cell - new Vector2(glow, glow), new Vector2(Tile + 2f * glow, Tile + 2f * glow));
 
                 view.Icon = UiKit.Image("Icon", view.Root, null);
                 view.Icon.enabled = false;
                 view.Icon.preserveAspect = true;
-                UiKit.Stretch(view.Icon.rectTransform, 9f);
+                UiKit.Stretch(view.Icon.rectTransform, 10f);
 
                 view.Cooldown = UiKit.Image("Cooldown", view.Root, SheetArt.BarFill);
                 view.Cooldown.color = new Color(0f, 0f, 0f, 0.65f);

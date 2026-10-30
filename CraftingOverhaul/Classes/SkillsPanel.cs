@@ -20,7 +20,9 @@ namespace CraftingOverhaul.Classes
         private const float Margin = 22f;
         private const float HeaderHeight = 56f;
         private const float TabHeight = 34f;
-        private const float AttributesWidth = 230f;
+        /// <summary>Wider than first built so the attributes aren't cramped (user, 2026-10-30).</summary>
+        private const float AttributesWidth = 290f;
+        private const float AttributesHeight = 350f;
         private const float SlotsHeight = 96f;
         private const float SlotTile = 58f;
         private const float MessageHeight = 24f;
@@ -41,6 +43,8 @@ namespace CraftingOverhaul.Classes
         private static readonly Text[] TabLabels = new Text[3];
         private static readonly Image[] TabBacks = new Image[3];
         private static readonly Text[] AttributeTexts = new Text[4];
+        private static readonly Text[] AttributeValues = new Text[4];
+        private static Image _xpFill;
         private static readonly Text[] AttributeEffects = new Text[4];
         private static readonly GameObject[] AttributeButtons = new GameObject[4];
         private static readonly SlotTileView[] Slots = new SlotTileView[DemoClasses.Slots];
@@ -122,7 +126,7 @@ namespace CraftingOverhaul.Classes
             _root = UiKit.Panel("CraftingOverhaul_SkillsPanel", GUIManager.CustomGUIFront.transform, new Vector2(PanelWidth, PanelHeight));
             UiKit.Place(_root, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(PanelWidth, PanelHeight));
 
-            _title = UiKit.Text("Title", _root, 26, UiKit.Gold, TextAnchor.MiddleCenter);
+            _title = UiKit.Text("Title", _root, 30, UiKit.Gold, TextAnchor.MiddleCenter, true, GUIManager.Instance.NorseBold);
             PlaceTopLeft(_title.rectTransform, 0f, 10f, PanelWidth, 40f);
 
             var close = UiKit.Button("X", _root, new Vector2(36f, 36f), Close);
@@ -132,8 +136,9 @@ namespace CraftingOverhaul.Classes
             BuildTabs();
 
             float treeLeft = Margin + AttributesWidth + Margin;
-            _skillPoints = UiKit.Text("SkillPoints", _root, 16, UiKit.Gold, TextAnchor.MiddleRight);
-            PlaceTopLeft(_skillPoints.rectTransform, treeLeft, HeaderHeight - 14f, TreeWidth, 20f);
+            // In the header, left of the close button.
+            _skillPoints = UiKit.Text("SkillPoints", _root, 17, UiKit.Gold, TextAnchor.MiddleRight);
+            PlaceTopLeft(_skillPoints.rectTransform, PanelWidth - Margin - 36f - 12f - 220f, 12f, 220f, 36f);
 
             _grid = UiKit.Rect("Tree", _root);
             PlaceTopLeft(_grid, treeLeft + TreePad, TreeTop, SkillTreeLayout.GridWidth, SkillTreeLayout.GridHeight);
@@ -145,7 +150,7 @@ namespace CraftingOverhaul.Classes
             for (int row = 1; row <= SkillTreeLayout.Rows; row++)
             {
                 SkillTreeLayout.TilePosition(row, 1, out _, out float y);
-                var label = UiKit.Text("Tier" + row, _grid, 15, new Color(1f, 1f, 1f, 0.6f), TextAnchor.MiddleLeft);
+                var label = UiKit.Text("Tier" + row, _grid, 15, UiKit.LightDim, TextAnchor.MiddleLeft);
                 UiKit.SetText(label, "Lv " + SkillTreeLayout.TierLevels[row - 1]);
                 PlaceTopLeft(label.rectTransform, 0f, y, SkillTreeLayout.LabelWidth, SkillTreeLayout.Tile);
             }
@@ -175,29 +180,35 @@ namespace CraftingOverhaul.Classes
         private static void BuildAttributes()
         {
             float top = HeaderHeight + 4f;
-            var parchment = UiKit.Image("Attributes", _root, SheetArt.Parchment);
-            if (!parchment.sprite)
-            {
-                parchment.color = new Color(0.84f, 0.75f, 0.59f);
-            }
-            PlaceTopLeft(parchment.rectTransform, Margin, top, AttributesWidth, 330f);
-            var box = parchment.rectTransform;
+            var inset = UiKit.Inset("Attributes", _root);
+            PlaceTopLeft(inset.rectTransform, Margin, top, AttributesWidth, AttributesHeight);
+            var box = inset.rectTransform;
+            float inner = AttributesWidth - 36f;
 
-            _level = UiKit.Text("Level", box, 17, UiKit.Ink, TextAnchor.UpperLeft, false);
-            PlaceTopLeft(_level.rectTransform, 16f, 14f, AttributesWidth - 32f, 44f);
-            _statPoints = UiKit.Text("StatPoints", box, 15, UiKit.Ink, TextAnchor.UpperLeft, false);
-            PlaceTopLeft(_statPoints.rectTransform, 16f, 62f, AttributesWidth - 32f, 20f);
+            _level = UiKit.Text("Level", box, 24, UiKit.Gold, TextAnchor.UpperLeft);
+            PlaceTopLeft(_level.rectTransform, 18f, 12f, inner, 30f);
+            var xpFrame = UiKit.Image("Xp", box, SheetArt.Bar, Image.Type.Sliced);
+            PlaceTopLeft(xpFrame.rectTransform, 18f, 46f, inner, 10f);
+            _xpFill = UiKit.Image("Fill", xpFrame.rectTransform, SheetArt.BarFill);
+            _xpFill.color = UiKit.Xp;
+            _xpFill.type = Image.Type.Filled;
+            _xpFill.fillMethod = Image.FillMethod.Horizontal;
+            UiKit.Stretch(_xpFill.rectTransform, 2f);
+            _statPoints = UiKit.Text("StatPoints", box, 15, UiKit.LightDim, TextAnchor.UpperLeft);
+            PlaceTopLeft(_statPoints.rectTransform, 18f, 62f, inner, 44f);
 
             for (int i = 0; i < Attributes.Length; i++)
             {
-                float y = 96f + i * 56f;
-                AttributeTexts[i] = UiKit.Text("Attribute" + i, box, 16, UiKit.Ink, TextAnchor.MiddleLeft, false);
-                PlaceTopLeft(AttributeTexts[i].rectTransform, 16f, y, AttributesWidth - 70f, 22f);
-                AttributeEffects[i] = UiKit.Text("Effect" + i, box, 13, new Color(0.35f, 0.25f, 0.15f), TextAnchor.MiddleLeft, false);
-                PlaceTopLeft(AttributeEffects[i].rectTransform, 16f, y + 22f, AttributesWidth - 70f, 18f);
+                float y = 118f + i * 56f;
+                AttributeTexts[i] = UiKit.Text("Attribute" + i, box, 18, UiKit.Light, TextAnchor.MiddleLeft);
+                PlaceTopLeft(AttributeTexts[i].rectTransform, 18f, y, inner - 100f, 24f);
+                AttributeValues[i] = UiKit.Text("Value" + i, box, 18, UiKit.Light, TextAnchor.MiddleRight);
+                PlaceTopLeft(AttributeValues[i].rectTransform, AttributesWidth - 18f - 34f - 12f - 60f, y, 60f, 24f);
+                AttributeEffects[i] = UiKit.Text("Effect" + i, box, 14, UiKit.LightDim, TextAnchor.MiddleLeft);
+                PlaceTopLeft(AttributeEffects[i].rectTransform, 18f, y + 24f, inner - 40f, 20f);
                 string attribute = Attributes[i];
                 var plus = UiKit.Button("+", box, new Vector2(34f, 34f), () => SpendStat(attribute));
-                PlaceTopLeft((RectTransform)plus.transform, AttributesWidth - 16f - 34f, y + 4f, 34f, 34f);
+                PlaceTopLeft((RectTransform)plus.transform, AttributesWidth - 18f - 34f, y - 4f, 34f, 34f);
                 AttributeButtons[i] = plus.gameObject;
             }
         }
@@ -209,30 +220,32 @@ namespace CraftingOverhaul.Classes
             for (int i = 0; i < TabLabels.Length; i++)
             {
                 int tab = i;
-                var back = UiKit.Image("Tab" + i, _root, SheetArt.Tile, Image.Type.Sliced, true);
-                if (!back.sprite)
-                {
-                    back.color = new Color(0.1f, 0.08f, 0.06f, 0.9f);
-                }
-                PlaceTopLeft(back.rectTransform, left + i * (width + 6f), HeaderHeight + 8f, width, TabHeight);
-                back.gameObject.AddComponent<Button>().onClick.AddListener(() =>
+                // The game's own button, as the inventory's and Corruption's bag tabs use.
+                var button = UiKit.Button("", _root, new Vector2(width, TabHeight), () =>
                 {
                     _tab = tab;
                     _lastCounter = -1;
                 });
-                TabBacks[i] = back;
-                TabLabels[i] = UiKit.Text("Label", back.rectTransform, 15, UiKit.Gold, TextAnchor.MiddleCenter);
-                FitText(TabLabels[i], 11, 15);
-                UiKit.Stretch(TabLabels[i].rectTransform, 5f);
+                PlaceTopLeft((RectTransform)button.transform, left + i * (width + 6f), HeaderHeight + 8f, width, TabHeight);
+                TabBacks[i] = button.image;
+                TabLabels[i] = button.GetComponentInChildren<Text>();
+                if (TabLabels[i])
+                {
+                    FitText(TabLabels[i], 11, 15);
+                }
             }
         }
 
         private static void BuildSlots(float treeLeft)
         {
             float top = TreeTop + SkillTreeLayout.GridHeight + 16f;
-            var label = UiKit.Text("SlotsLabel", _root, 15, UiKit.Gold, TextAnchor.MiddleLeft);
-            UiKit.SetText(label, "Skill slots: drag skills here");
-            PlaceTopLeft(label.rectTransform, Margin, top + 18f, AttributesWidth, 24f);
+            var label = UiKit.Text("SlotsLabel", _root, 20, UiKit.Gold, TextAnchor.MiddleLeft);
+            UiKit.SetText(label, "Skill slots");
+            PlaceTopLeft(label.rectTransform, Margin + 8f, top + 4f, AttributesWidth, 26f);
+            var hint = UiKit.Text("SlotsHint", _root, 14, UiKit.LightDim, TextAnchor.MiddleLeft);
+            UiKit.SetText(hint, "Drag a skill onto a slot; drag it off, or right-click, to empty it");
+            hint.horizontalOverflow = HorizontalWrapMode.Wrap;
+            PlaceTopLeft(hint.rectTransform, Margin + 8f, top + 30f, AttributesWidth - 8f, 40f);
             float rowWidth = Slots.Length * SlotTile + (Slots.Length - 1) * 14f;
             float left = treeLeft + (TreeWidth - rowWidth) / 2f;
             for (int i = 0; i < Slots.Length; i++)
@@ -250,7 +263,7 @@ namespace CraftingOverhaul.Classes
                 UiKit.Stretch(view.Icon.rectTransform, 9f);
                 view.Key = UiKit.Text("Key", frame.rectTransform, 13, Color.white, TextAnchor.UpperLeft);
                 UiKit.Place(view.Key.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(7f, -4f), new Vector2(30f, 16f));
-                view.Kind = UiKit.Text("Kind", frame.rectTransform, 12, UiKit.Gold, TextAnchor.UpperCenter);
+                view.Kind = UiKit.Text("Kind", frame.rectTransform, 13, UiKit.Light, TextAnchor.UpperCenter);
                 UiKit.Place(view.Kind.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -2f), new Vector2(SlotTile + 30f, 16f));
                 Slots[i] = view;
             }
@@ -278,21 +291,32 @@ namespace CraftingOverhaul.Classes
             for (int i = 0; i < TabLabels.Length; i++)
             {
                 UiKit.SetText(TabLabels[i], FlatJson.Get(classInfo, "tab" + i) ?? "");
-                TabBacks[i].color = i == _tab ? Color.white : new Color(0.55f, 0.55f, 0.55f, 1f);
-                TabLabels[i].color = i == _tab ? UiKit.Gold : UiKit.Dim;
+                if (TabBacks[i])
+                {
+                    TabBacks[i].color = i == _tab ? Color.white : new Color(0.62f, 0.6f, 0.58f, 1f);
+                }
+                if (TabLabels[i])
+                {
+                    TabLabels[i].color = i == _tab ? UiKit.Gold : UiKit.LightDim;
+                }
             }
 
             int skillPoints = FlatJson.GetInt(character, "skillPoints", 0);
             int statPoints = FlatJson.GetInt(character, "statPoints", 0);
             UiKit.SetText(_skillPoints, "Skill points: " + skillPoints);
             long xp = FlatJson.GetLong(character, "xp", 0);
+            long start = FlatJson.GetLong(character, "xpLevelStart", 0);
             long next = FlatJson.GetLong(character, "xpNextLevel", 0);
-            UiKit.SetText(_level, "Level " + FlatJson.GetInt(character, "level", 1) + "\nXP " + xp + (next > 0 ? " / " + next : ""));
-            UiKit.SetText(_statPoints, "Stat points: " + statPoints);
+            UiKit.SetText(_level, "Level " + FlatJson.GetInt(character, "level", 1));
+            bool max = next <= start;
+            _xpFill.fillAmount = max ? 1f : Mathf.Clamp01((float)(xp - start) / (next - start));
+            UiKit.SetText(_statPoints, (max ? "Highest level" : (xp - start) + " / " + (next - start) + " XP") + "\n" +
+                                       (statPoints > 0 ? "<color=#8FD97A>Stat points: " + statPoints + "</color>" : "Stat points: 0"));
             for (int i = 0; i < Attributes.Length; i++)
             {
                 string info = ClassesSource.AttributeInfo(Attributes[i]);
-                UiKit.SetText(AttributeTexts[i], (FlatJson.Get(info, "name") ?? Attributes[i]) + ": " + FlatJson.GetInt(info, "value", 0));
+                UiKit.SetText(AttributeTexts[i], FlatJson.Get(info, "name") ?? Attributes[i]);
+                UiKit.SetText(AttributeValues[i], FlatJson.GetInt(info, "value", 0).ToString());
                 UiKit.SetText(AttributeEffects[i], FlatJson.Get(info, "effect") ?? "");
                 AttributeButtons[i].SetActive(statPoints > 0);
             }
@@ -336,16 +360,19 @@ namespace CraftingOverhaul.Classes
             var shown = SkillTreeLayout.Visible(Skills, _tab);
             foreach (var line in SkillTreeLayout.Lines(shown))
             {
-                var image = UiKit.Image("Line", _linesRoot, null);
+                // A learned prerequisite's path glows eitr-blue, like a rune (mock-up D); others are a dim groove.
                 bool learned = ById.TryGetValue(line.From, out var from) && from.Points > 0;
-                image.color = learned ? UiKit.Gold : new Color(0.5f, 0.45f, 0.4f, 0.6f);
-                var rt = image.rectTransform;
-                rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.sizeDelta = new Vector2(line.Length, 3f);
-                rt.anchoredPosition = new Vector2((line.X1 + line.X2) / 2f, -(line.Y1 + line.Y2) / 2f);
-                rt.localRotation = Quaternion.Euler(0f, 0f, line.AngleDegrees);
-                TreeObjects.Add(image.gameObject);
+                if (learned)
+                {
+                    var glow = UiKit.Image("LineGlow", _linesRoot, SheetArt.GlowLine);
+                    glow.color = new Color(UiKit.Rune.r, UiKit.Rune.g, UiKit.Rune.b, 0.85f);
+                    PlaceLine(glow.rectTransform, line, 16f);
+                    TreeObjects.Add(glow.gameObject);
+                }
+                var core = UiKit.Image("Line", _linesRoot, null);
+                core.color = learned ? new Color(0.85f, 0.95f, 1f) : new Color(0.42f, 0.33f, 0.24f, 0.85f);
+                PlaceLine(core.rectTransform, line, learned ? 2f : 2.5f);
+                TreeObjects.Add(core.gameObject);
             }
             foreach (var skill in shown)
             {
@@ -353,47 +380,72 @@ namespace CraftingOverhaul.Classes
             }
         }
 
+        private static void PlaceLine(RectTransform rt, TreeLine line, float thickness)
+        {
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(line.Length, thickness);
+            rt.anchoredPosition = new Vector2((line.X1 + line.X2) / 2f, -(line.Y1 + line.Y2) / 2f);
+            rt.localRotation = Quaternion.Euler(0f, 0f, line.AngleDegrees);
+        }
+
+        /// <summary>
+        ///     A skill as a round bronze medallion (user's choice from mock-up D, 2026-10-30): an eitr-blue glow when it
+        ///     has points (gold when maxed), green when a point can be spent; greyed when locked, darker when it comes later.
+        /// </summary>
         private static GameObject BuildTile(SkillView skill)
         {
             SkillTreeLayout.TilePosition(skill.Row, skill.Col, out float x, out float y);
             float size = SkillTreeLayout.Tile;
-            var frame = UiKit.Image("Skill_" + skill.Id, _tilesRoot, SheetArt.Tile, Image.Type.Sliced, true);
-            if (!frame.sprite)
-            {
-                frame.color = new Color(0.08f, 0.07f, 0.06f, 0.9f);
-            }
-            PlaceTopLeft(frame.rectTransform, x, y, size, size);
+            var root = UiKit.Rect("Skill_" + skill.Id, _tilesRoot);
+            PlaceTopLeft(root, x, y, size, size);
             bool locked = skill.Later || (skill.Points == 0 && !skill.CanSpend);
-            if (skill.Maxed)
+
+            if (!skill.Later && (skill.Points > 0 || skill.CanSpend))
             {
-                frame.color = UiKit.Gold;
+                var glow = UiKit.Image("Glow", root, SheetArt.GlowRing);
+                Color c = skill.Maxed ? UiKit.Gold : skill.Points > 0 ? UiKit.Rune : UiKit.CanSpend;
+                glow.color = new Color(c.r, c.g, c.b, 0.9f);
+                float glowSize = size * SheetArt.GlowRingScale;
+                UiKit.Place(glow.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(glowSize, glowSize));
             }
 
-            var icon = UiKit.Image("Icon", frame.rectTransform, ClassesSource.SkillIcon(skill.Id));
+            var medallion = UiKit.Image("Medallion", root, SheetArt.Medallion, Image.Type.Simple, true);
+            if (!medallion.sprite)
+            {
+                medallion.color = new Color(0.08f, 0.07f, 0.06f, 0.9f);
+            }
+            else
+            {
+                medallion.color = skill.Later ? new Color(0.45f, 0.43f, 0.41f) : locked ? new Color(0.72f, 0.7f, 0.68f) : Color.white;
+            }
+            UiKit.Stretch(medallion.rectTransform);
+
+            var icon = UiKit.Image("Icon", medallion.rectTransform, ClassesSource.SkillIcon(skill.Id));
             icon.preserveAspect = true;
             icon.enabled = icon.sprite;
-            icon.color = skill.Later ? new Color(0.45f, 0.45f, 0.45f, 0.8f) : locked ? new Color(0.65f, 0.65f, 0.65f, 1f) : Color.white;
-            UiKit.Stretch(icon.rectTransform, 8f);
+            icon.color = skill.Later ? new Color(0.45f, 0.45f, 0.45f, 0.8f) : locked ? new Color(0.68f, 0.68f, 0.68f, 1f) : Color.white;
+            UiKit.Stretch(icon.rectTransform, 12f);
 
-            var points = UiKit.Text("Points", frame.rectTransform, 16, skill.CanSpend ? new Color(0.6f, 1f, 0.5f) : Color.white, TextAnchor.LowerRight);
-            UiKit.Place(points.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-6f, 3f), new Vector2(40f, 20f));
+            var points = UiKit.Text("Points", medallion.rectTransform, 16, skill.CanSpend ? UiKit.CanSpend : Color.white, TextAnchor.LowerRight);
+            UiKit.Place(points.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, -1f), new Vector2(40f, 20f));
             UiKit.SetText(points, skill.Later ? "<size=12>later</size>" : skill.Points.ToString());
 
-            var name = UiKit.Text("Name", frame.rectTransform, 13, skill.Later ? new Color(0.7f, 0.66f, 0.6f) : UiKit.Gold, TextAnchor.UpperCenter);
+            var name = UiKit.Text("Name", root, 13, skill.Later ? UiKit.LightDim : UiKit.Light, TextAnchor.UpperCenter);
             FitText(name, 10, 13);
             UiKit.Place(name.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -1f), new Vector2(size + SkillTreeLayout.ColGap - 4f, SkillTreeLayout.NameHeight));
             UiKit.SetText(name, skill.Name);
 
             if (skill.CanSpend)
             {
-                var plus = UiKit.Text("Plus", frame.rectTransform, 18, new Color(0.6f, 1f, 0.5f), TextAnchor.UpperRight);
-                UiKit.Place(plus.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-5f, -1f), new Vector2(20f, 20f));
+                var plus = UiKit.Text("Plus", medallion.rectTransform, 18, UiKit.CanSpend, TextAnchor.UpperRight);
+                UiKit.Place(plus.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(2f, 2f), new Vector2(20f, 20f));
                 UiKit.SetText(plus, "+");
             }
 
-            var view = frame.gameObject.AddComponent<SkillTileView>();
+            var view = medallion.gameObject.AddComponent<SkillTileView>();
             view.SkillId = skill.Id;
-            return frame.gameObject;
+            return root.gameObject;
         }
 
         // ------------------------------------------------------------ actions

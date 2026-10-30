@@ -67,20 +67,30 @@ namespace CraftingOverhaul.Classes
             rt.offsetMax = new Vector2(-inset, -inset);
         }
 
-        /// <summary>The sheet's wood panel with its iron frame, for a window.</summary>
+        /// <summary>A window on the game's own panel background (see <see cref="SheetArt.StyleAsGamePanel" />).</summary>
         public static RectTransform Panel(string name, Transform parent, Vector2 size)
         {
-            var wood = Image(name, parent, SheetArt.Wood, UnityEngine.UI.Image.Type.Tiled, true);
-            if (!wood.sprite)
-            {
-                wood.color = new Color(0.22f, 0.14f, 0.09f);
-            }
-            var rt = wood.rectTransform;
+            var back = Image(name, parent, null, UnityEngine.UI.Image.Type.Simple, true);
+            SheetArt.StyleAsGamePanel(back);
+            var rt = back.rectTransform;
             rt.sizeDelta = size;
-            var frame = Image("Frame", rt, SheetArt.Frame, UnityEngine.UI.Image.Type.Sliced);
-            Stretch(frame.rectTransform);
             return rt;
         }
+
+        /// <summary>A darker box on a panel, for groups such as the attributes.</summary>
+        public static Image Inset(string name, Transform parent, bool raycast = false)
+        {
+            var box = Image(name, parent, null, UnityEngine.UI.Image.Type.Simple, raycast);
+            SheetArt.StyleAsGamePanel(box, true);
+            return box;
+        }
+
+        /// <summary>Text on the game's panels: warm off-white, as the game's own.</summary>
+        public static readonly Color Light = new Color(0.93f, 0.89f, 0.81f);
+        public static readonly Color LightDim = new Color(0.78f, 0.72f, 0.63f);
+        /// <summary>Learned skills, their paths and the selected slot glow eitr-blue, like runes (mock-up D).</summary>
+        public static readonly Color Rune = new Color(0.43f, 0.78f, 1f);
+        public static readonly Color CanSpend = new Color(0.55f, 0.94f, 0.43f);
 
         public static Button Button(string label, Transform parent, Vector2 size, System.Action onClick)
         {

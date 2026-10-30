@@ -24,7 +24,7 @@ namespace CraftingOverhaul.Classes
         private static Text _message;
         private static GameObject _confirm;
         private static readonly List<GameObject> Rows = new List<GameObject>();
-        private static readonly List<Image> RowBacks = new List<Image>();
+        private static readonly List<Image> RowGlows = new List<Image>();
         private static string[] _classIds = new string[0];
         private static string _selected = "";
         private static int _lastRequest = int.MinValue;
@@ -87,16 +87,12 @@ namespace CraftingOverhaul.Classes
                 UnityEngine.Object.Destroy(row);
             }
             Rows.Clear();
-            RowBacks.Clear();
+            RowGlows.Clear();
             for (int i = 0; i < _classIds.Length; i++)
             {
                 string id = _classIds[i];
                 string info = ClassesSource.ClassInfo(id);
-                var back = UiKit.Image("Class_" + id, _list, SheetArt.Parchment, Image.Type.Simple, true);
-                if (!back.sprite)
-                {
-                    back.color = new Color(0.84f, 0.75f, 0.59f);
-                }
+                var back = UiKit.Inset("Class_" + id, _list, true);
                 UiKit.Place(back.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -i * (RowHeight + 8f)),
                     new Vector2(Width - 2f * Margin, RowHeight));
                 back.gameObject.AddComponent<Button>().onClick.AddListener(() => Select(id));
@@ -105,15 +101,20 @@ namespace CraftingOverhaul.Classes
                 icon.preserveAspect = true;
                 icon.enabled = icon.sprite;
                 UiKit.Place(icon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(68f, 68f));
-                var name = UiKit.Text("Name", back.rectTransform, 20, UiKit.Ink, TextAnchor.UpperLeft, false);
+                // The chosen class glows eitr-blue round its box, like the selected skill slot.
+                var glow = UiKit.Image("Selected", back.rectTransform, SheetArt.GlowBox, Image.Type.Sliced);
+                glow.color = UiKit.Rune;
+                UiKit.Stretch(glow.rectTransform, -SheetArt.GlowBoxInset);
+                glow.enabled = false;
+                RowGlows.Add(glow);
+                var name = UiKit.Text("Name", back.rectTransform, 20, UiKit.Gold, TextAnchor.UpperLeft);
                 UiKit.SetText(name, FlatJson.Get(info, "name") ?? id);
                 UiKit.Place(name.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(96f, -10f), new Vector2(Width - 2f * Margin - 110f, 26f));
-                var description = UiKit.Text("Description", back.rectTransform, 14, UiKit.Ink, TextAnchor.UpperLeft, false);
+                var description = UiKit.Text("Description", back.rectTransform, 14, UiKit.Light, TextAnchor.UpperLeft);
                 description.horizontalOverflow = HorizontalWrapMode.Wrap;
                 UiKit.SetText(description, FlatJson.Get(info, "description") ?? "");
                 UiKit.Place(description.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(96f, -38f), new Vector2(Width - 2f * Margin - 110f, RowHeight - 44f));
                 Rows.Add(back.gameObject);
-                RowBacks.Add(back);
             }
             Select(_classIds.Length == 1 ? _classIds[0] : "");
         }
@@ -121,9 +122,9 @@ namespace CraftingOverhaul.Classes
         private static void Select(string id)
         {
             _selected = id;
-            for (int i = 0; i < RowBacks.Count; i++)
+            for (int i = 0; i < RowGlows.Count; i++)
             {
-                RowBacks[i].color = _classIds[i] == id ? Color.white : new Color(0.65f, 0.6f, 0.55f);
+                RowGlows[i].enabled = RowGlows[i].sprite && _classIds[i] == id;
             }
             _confirm.GetComponent<Button>().interactable = id.Length > 0;
         }
@@ -208,7 +209,7 @@ namespace CraftingOverhaul.Classes
                 }
                 _root = null;
                 Rows.Clear();
-                RowBacks.Clear();
+                RowGlows.Clear();
                 _lastRequest = int.MinValue;
             }
         }

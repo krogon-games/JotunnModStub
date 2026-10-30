@@ -51,13 +51,14 @@ namespace CraftingOverhaul.CharacterSheet
         // Colours: labels and title in the game's parchment-gold, ink on the parchment, values in the game's own
         // meanings (health red, stamina yellow, eitr blue).
         private static readonly Color Gold = new Color(0.91f, 0.80f, 0.59f);
-        private static readonly Color Ink = new Color(0.23f, 0.16f, 0.10f);
-        private const string Good = "#2F6B1F";
-        private const string Bad = "#9A1F1F";
-        private const string Amber = "#7A5200";
-        private const string HealthColour = "#A0261E";
-        private const string StaminaColour = "#7A5E00";
-        private const string EitrColour = "#2A4F9A";
+        // Light text on the game's dark panel (2026-10-30 restyle; was dark ink on parchment).
+        private static readonly Color Ink = new Color(0.93f, 0.89f, 0.81f);
+        private const string Good = "#8FD97A";
+        private const string Bad = "#FF7A6B";
+        private const string Amber = "#F2C14E";
+        private const string HealthColour = "#F0645A";
+        private const string StaminaColour = "#F2CC4A";
+        private const string EitrColour = "#7FB2FF";
         private static readonly Color SilhouetteTint = new Color(0.78f, 0.70f, 0.56f, 0.4f);
 
         private static bool _lookedUp;
@@ -414,18 +415,13 @@ namespace CraftingOverhaul.CharacterSheet
             var gm = GUIManager.Instance;
             _panel = NewRect("CraftingOverhaul_CharacterSheet", slotRoot);
             _panel.SetAsFirstSibling();
-            var wood = _panel.gameObject.AddComponent<Image>();
-            wood.sprite = SheetArt.Wood;
-            wood.type = Image.Type.Tiled;
-            wood.color = wood.sprite ? Color.white : new Color(0.22f, 0.14f, 0.09f);
-            wood.raycastTarget = true;
+            // The game's own panel background, like the inventory next to it (user, 2026-10-30).
+            var background = _panel.gameObject.AddComponent<Image>();
+            SheetArt.StyleAsGamePanel(background);
+            background.raycastTarget = true;
             _drag = _panel.gameObject.AddComponent<SheetDragHandle>();
 
-            var frame = NewImage("Frame", _panel, SheetArt.Frame, Image.Type.Sliced);
-            Stretch(frame.rectTransform);
-
-            var title = NewImage("Title", _panel, SheetArt.Title, Image.Type.Simple);
-            _title = title.rectTransform;
+            _title = NewRect("Title", _panel);
             _titleText = NewText("Text", _title, gm.NorseBold, TitleFontSize, Gold, true, TextAnchor.MiddleCenter);
             _titleText.text = "CHARACTER";
             Stretch(_titleText.rectTransform);
@@ -479,12 +475,10 @@ namespace CraftingOverhaul.CharacterSheet
 
         private static void BuildStats(GUIManager gm)
         {
-            var parchment = NewImage("Stats", _panel, SheetArt.Parchment, Image.Type.Simple);
-            if (!parchment.sprite)
-            {
-                parchment.color = new Color(0.84f, 0.75f, 0.59f);
-            }
-            _parchment = parchment.rectTransform;
+            // A darker box on the panel (was a parchment until the 2026-10-30 restyle; the field keeps its name).
+            var box = NewImage("Stats", _panel, null, Image.Type.Simple);
+            SheetArt.StyleAsGamePanel(box, true);
+            _parchment = box.rectTransform;
 
             _statRows = new Text[StatsRows];
             _effectRows = new Text[StatsRows];
@@ -505,15 +499,10 @@ namespace CraftingOverhaul.CharacterSheet
                 Place(_effectRows[i].rectTransform, new SheetRect(half + 10f + EffectIconSize, y, half - 16f - EffectIconSize - StatsPadding, StatsRowHeight));
             }
 
-            // The ribbon goes after the parchment so it lies across its top edge.
-            var ribbon = NewImage("Ribbon", _panel, SheetArt.Ribbon, Image.Type.Simple);
-            if (!ribbon.sprite)
-            {
-                ribbon.color = new Color(0.25f, 0.16f, 0.1f);
-            }
-            _ribbon = ribbon.rectTransform;
-            _name = NewText("Name", _ribbon, gm.AveriaSerifBold, NameFontSize, Gold, true, TextAnchor.MiddleCenter);
-            Stretch(_name.rectTransform);
+            // The name heads the stats box (the ribbon it sat on went in the 2026-10-30 restyle; its rect is kept empty).
+            _ribbon = NewRect("Ribbon", _panel);
+            _name = NewText("Name", _parchment, gm.AveriaSerifBold, NameFontSize, Gold, true, TextAnchor.MiddleCenter);
+            Place(_name.rectTransform, new SheetRect(0f, 4f, SheetLayout.Width - 2 * SheetLayout.Margin, StatsTop - 6f));
         }
 
         /// <summary>Sizes the panel and its parts to the current plan and rebuilds the slot tiles.</summary>
@@ -547,7 +536,7 @@ namespace CraftingOverhaul.CharacterSheet
                 }
                 Place(frame.rectTransform, p.Tile);
                 // Tiles sit under the picture and stats in the panel's order, but never overlap them.
-                frame.rectTransform.SetSiblingIndex(1);
+                frame.rectTransform.SetSiblingIndex(0);
                 var view = new TileView { Root = frame.rectTransform };
                 if (p.Labelled)
                 {

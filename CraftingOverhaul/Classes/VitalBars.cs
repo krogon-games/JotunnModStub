@@ -26,7 +26,7 @@ namespace CraftingOverhaul.Classes
         private const float XpHeight = 8f;
         /// <summary>The XP bar sits this far below the bars' base line (user, play-test 2026-10-30: "drop it down a little bit lower").</summary>
         private const float XpDrop = 14f;
-        private const float FoodSize = 30f;
+        private const float FoodSize = 34f;
         private const float FoodGap = 6f;
         private const float BuildOrShipHeight = 320f;
         private const int ValueFontSize = 12;
@@ -62,10 +62,10 @@ namespace CraftingOverhaul.Classes
             _root.gameObject.AddComponent<LateHider>();
             UiKit.Place(_root, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), Vector2.zero, new Vector2(10f, 10f));
 
-            _health = NewBar("Health", UiKit.Health);
-            _eitr = NewBar("Eitr", UiKit.Eitr);
-            _stamina = NewBar("Stamina", UiKit.Stamina);
-            _xp = NewBar("Xp", UiKit.Xp);
+            _health = NewBar("Health", UiKit.Health, true);
+            _eitr = NewBar("Eitr", UiKit.Eitr, true);
+            _stamina = NewBar("Stamina", UiKit.Stamina, true);
+            _xp = NewBar("Xp", UiKit.Xp, false);
             _xp.Value.fontSize = 10;
 
             _level = UiKit.Text("Level", _root, 13, UiKit.Gold, TextAnchor.MiddleRight);
@@ -75,11 +75,15 @@ namespace CraftingOverhaul.Classes
             _foodTimes = new Text[3];
             for (int i = 0; i < 3; i++)
             {
-                var slot = UiKit.Image("Food" + i, _root, SheetArt.Tile, Image.Type.Sliced);
-                slot.color = new Color(1f, 1f, 1f, 0.85f);
+                // Round bronze slots, like the skill medallions (mock-up D, user 2026-10-30).
+                var slot = UiKit.Image("Food" + i, _root, SheetArt.Medallion);
+                if (!slot.sprite)
+                {
+                    slot.color = new Color(0.08f, 0.07f, 0.06f, 0.85f);
+                }
                 UiKit.Place(slot.rectTransform, new Vector2(0.5f, 0f), new Vector2(1f, 0f), Vector2.zero, new Vector2(FoodSize, FoodSize));
                 _foodIcons[i] = UiKit.Image("Icon", slot.rectTransform, null);
-                UiKit.Stretch(_foodIcons[i].rectTransform, 3f);
+                UiKit.Stretch(_foodIcons[i].rectTransform, 6f);
                 _foodIcons[i].preserveAspect = true;
                 _foodTimes[i] = UiKit.Text("Time", slot.rectTransform, 10, Color.white, TextAnchor.LowerCenter);
                 UiKit.Place(_foodTimes[i].rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -1f), new Vector2(FoodSize, 12f));
@@ -87,7 +91,7 @@ namespace CraftingOverhaul.Classes
             Jotunn.Logger.LogInfo("Health, eitr and stamina bars added.");
         }
 
-        private static Bar NewBar(string name, Color colour)
+        private static Bar NewBar(string name, Color colour, bool vital)
         {
             var frame = UiKit.Image(name, _root, SheetArt.Bar, Image.Type.Sliced);
             if (!frame.sprite)
@@ -106,9 +110,28 @@ namespace CraftingOverhaul.Classes
                 image.fillOrigin = (int)Image.OriginHorizontal.Left;
                 UiKit.Stretch(image.rectTransform, 3f);
             }
-            bar.Value = UiKit.Text("Value", bar.Root, ValueFontSize, Color.white, TextAnchor.MiddleRight);
-            UiKit.Stretch(bar.Value.rectTransform);
-            bar.Value.rectTransform.offsetMax = new Vector2(-6f, 0f);
+            if (!vital)
+            {
+                // The XP bar: its numbers inside, as the level and points hint sit at its ends.
+                bar.Value = UiKit.Text("Value", bar.Root, ValueFontSize, Color.white, TextAnchor.MiddleRight);
+                UiKit.Stretch(bar.Value.rectTransform);
+                bar.Value.rectTransform.offsetMax = new Vector2(-6f, 0f);
+                return bar;
+            }
+            // Bronze knot points at both ends and the numbers just past the right one (mock-up D, user 2026-10-30).
+            for (int side = 0; side < 2; side++)
+            {
+                var cap = UiKit.Image(side == 0 ? "CapLeft" : "CapRight", bar.Root, SheetArt.BarCap);
+                cap.enabled = cap.sprite;
+                var rt = cap.rectTransform;
+                rt.anchorMin = rt.anchorMax = new Vector2(side, 0.5f);
+                rt.pivot = new Vector2(0f, 0.5f);
+                rt.sizeDelta = new Vector2(10f, 20f);
+                rt.anchoredPosition = new Vector2(side == 0 ? 3f : -3f, 0f);
+                rt.localScale = side == 0 ? new Vector3(-1f, 1f, 1f) : Vector3.one;
+            }
+            bar.Value = UiKit.Text("Value", bar.Root, ValueFontSize, UiKit.Light, TextAnchor.MiddleLeft);
+            UiKit.Place(bar.Value.rectTransform, new Vector2(1f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(90f, 16f));
             return bar;
         }
 

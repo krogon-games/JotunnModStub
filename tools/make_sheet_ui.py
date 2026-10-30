@@ -1,7 +1,9 @@
 """
-Generates the character sheet's UI art (CraftingOverhaul), after the user's concept image (2026-10-29): dark wood
-with an iron frame, a rope-knot title band, recessed iron-rimmed slot tiles, an arched portrait frame on a stone
-pedestal, a parchment stats box with a name ribbon, and a close button. Also a mock-up of the whole sheet.
+Generates the UI art of the character sheet and the class screens (CraftingOverhaul). Look: the user's mix of the
+classes UI mock-ups (2026-10-30, docs/images/classes_ui_mockup.png): bronze riveted slot tiles, round bronze skill
+medallions, soft glows (tinted eitr-blue in game), bronze bar frames with knot caps, a bronze arched portrait frame on a
+stone pedestal and a close button. Panels use the game's own background in game; 'panel' and 'inset' here are only
+look-alikes for when it can't be found. Also a mock-up of the whole sheet.
 
     python tools/make_sheet_ui.py            (needs numpy and Pillow)
 
@@ -10,10 +12,10 @@ Writes, into CraftingOverhaul/Assets/Sheet/:
     <name>.rgba    the same pixels raw, which the mod loads (8-byte header, rows bottom to top; see write_raw)
 and docs/images/sheet_preview.png, a mock-up of the sheet with the default slots (not shipped).
 
-Sizes match CraftingOverhaul/CharacterSheet/SheetLayout.cs (panel width, tile, portrait, parchment and ribbon);
-change both together. Pieces whose size varies in game are 9-sliced there: the frame and tiles stretch along their
-edges, the portrait frame only along its straight sides. Everything comes from fixed seeds, so reruns give the
-same files.
+Sizes match CraftingOverhaul/CharacterSheet/SheetLayout.cs (panel width, tile, portrait and stats box);
+change both together. Pieces whose size varies in game are 9-sliced there: tiles, bars and glows stretch along their
+edges, the portrait frame only along its straight sides. SheetArt.cs holds the 9-slice borders and the glow sizes.
+Everything comes from fixed seeds, so reruns give the same files.
 """
 import math
 import os
@@ -27,25 +29,24 @@ PREVIEW = os.path.join(ROOT, "docs", "images", "sheet_preview.png")
 
 # Mirrors SheetLayout.cs.
 PANEL_WIDTH = 502
-TITLE_WIDTH = PANEL_WIDTH - 20
 TITLE_HEIGHT = 56
 TILE = 64            # 9-sliced; tiles are 84 x 96 (labelled) or 70 x 70 (quick slots) in game
 TILE_BORDER = 18
-FRAME = 160          # 9-sliced panel frame
-FRAME_BORDER = 56
 ARCH_WIDTH = 270
 ARCH_TOP = ARCH_WIDTH // 2 + 12      # 9-slice top border: the whole arch
 ARCH_BOTTOM = 72                     # 9-slice bottom border: the pedestal
 FEET_LINE = 46                       # the character's feet, above the arch's bottom (CharacterPortrait.FeetAboveBottom)
 ARCH_HEIGHT = ARCH_TOP + ARCH_BOTTOM + 4
-PARCHMENT_WIDTH = PANEL_WIDTH - 36
 PARCHMENT_HEIGHT = 160
-RIBBON_WIDTH = 300
-RIBBON_HEIGHT = 40
 CLOSE = 36
 BAR_W = 64           # 9-sliced; the bars are 14 px tall in game (the XP bar 8)
 BAR_H = 14
 BAR_BORDER = 6
+BAR_CAP_W, BAR_CAP_H = 10, 20
+MEDALLION = 96        # skills are drawn 64 px across in game
+GLOW_RING = 128
+GLOW_BOX_BORDER = 24
+GLOW_BOX_INSET = 14     # the glow hugs a slot when drawn this much bigger than it on every side
 
 IRON = np.array([62, 60, 58], float)
 IRON_LIGHT = np.array([122, 118, 112], float)
@@ -142,152 +143,116 @@ def save(image, name):
 
 # ---------------------------------------------------------------- pieces
 
-def make_wood(size=256, planks=4, seed=11, dark=1.0):
-    """Seamless dark planks running top to bottom, like the concept's panel."""
-    x, y = grid(size, size)
-    pw = size / planks
-    plank = np.floor(x / pw)
-    local = (x % pw) / pw
-    rng = np.random.default_rng(seed)
-    tone = rng.uniform(0.85, 1.12, planks)[plank.astype(int)]
-    offset = rng.uniform(0, 100, planks)[plank.astype(int)]
-    warp = tileable_noise(size, size, seed + 1, 6, 2) * 6 + tileable_noise(size, size, seed + 2, 20, 6) * 1.5
-    grain = np.sin((local * pw * 0.9 + warp + offset) * 0.9)
-    streak = tileable_noise(size, size, seed + 3, size / 1.5, 3)
-    fine = tileable_noise(size, size, seed + 4, size, 64)
-    v = 0.55 + 0.12 * grain + 0.18 * streak + 0.08 * fine
-    v = v * tone
-    # Knots: one per plank, away from the plank edges.
-    for p in range(planks):
-        kx = (p + rng.uniform(0.35, 0.65)) * pw
-        ky = rng.uniform(0, size)
-        for dy in (-size, 0, size):
-            d = np.hypot((x - kx) / 5.0, (y - ky - dy) / 9.0)
-            v = v - 0.25 * smoothstep(1.6, 0.0, d) + 0.06 * np.sin(d * 3.0) * smoothstep(4, 1.5, d)
-    base = np.array([66, 43, 27], float)
-    hi = np.array([104, 72, 46], float)
-    rgb = lerp(base * 0.55, hi, np.clip(v, 0, 1.2) / 1.2) * dark
-    # Grooves between planks: dark seam with a lit edge on its right.
-    seam = np.minimum(local, 1 - local) * pw
-    rgb = rgb * (1 - 0.65 * smoothstep(2.2, 0.0, seam))[..., None]
-    lit = smoothstep(3.5, 2.0, local * pw) * smoothstep(1.0, 2.0, local * pw)
-    rgb = rgb + lit[..., None] * 14
-    return to_image(rgb)
-
-
-def make_frame():
-    """9-sliced iron frame: rounded iron band, bronze inlay, inner shadow and riveted corner brackets."""
-    s, b = FRAME, FRAME_BORDER
-    x, y = grid(s, s)
-    d_edge = np.minimum.reduce([x, y, s - x, s - y])
-    lit = np.where(np.minimum(x, y) <= np.minimum(s - x, s - y), 1.0, -1.0)
-    rgb = np.zeros((s, s, 3))
-    alpha = np.zeros((s, s))
-
-    band = d_edge < 9
-    col = bevel_band(d_edge, 0, 9, IRON, IRON_LIGHT, IRON_DARK, lit)
-    rgb[band] = col[band]
-    alpha[band] = 1
-    inlay = (d_edge >= 10.5) & (d_edge < 13)
-    rgb[inlay] = lerp(BRONZE_DARK, BRONZE_LIGHT, np.clip(0.5 + 0.4 * lit, 0, 1))[inlay]
-    alpha[inlay] = 1
-    gap = (d_edge >= 9) & (d_edge < 10.5)
-    rgb[gap] = IRON_DARK
-    alpha[gap] = 1
-    shadow = (d_edge >= 13)
-    sh = smoothstep(b - 6, 13, d_edge) * 0.6
-    rgb[shadow] = 0
-    alpha[shadow] = sh[shadow]
-
-    # Corner brackets: an L of iron along both edges, with three rivets.
-    for cx, cy in ((0, 0), (s, 0), (0, s), (s, s)):
-        ux = np.abs(x - cx)
-        uy = np.abs(y - cy)
-        arm = ((ux < 44) & (uy < 22)) | ((ux < 22) & (uy < 44))
-        bevel = np.minimum.reduce([np.where(ux < 22, 22 - ux, 44 - ux), np.where(uy < 22, 22 - uy, 44 - uy), ux, uy])
-        col = lerp(IRON_DARK, IRON_LIGHT, np.clip(0.35 + 0.08 * bevel, 0, 0.75))
-        n = noise(s, s, 5, 12)
-        col = col * (0.9 + 0.1 * n)[..., None]
-        rgb[arm] = col[arm]
-        alpha[arm] = 1
-        sx = 1 if cx == 0 else -1
-        sy = 1 if cy == 0 else -1
-        for rx, ry in ((11, 11), (34, 11), (11, 34)):
-            rivet(rgb, alpha, cx + sx * rx, cy + sy * ry, 4.2)
-    return to_image(rgb, alpha)
-
-
-def rope(rgb, alpha, x0, x1, cy, amp, period, width, strands=3):
-    """A twisted rope of `strands` strands along y = cy, as seen from the front (a helix: the strand nearest the
-    viewer is drawn on top and lit)."""
-    h, w = alpha.shape
-    x, y = grid(w, h)
-    inside = (x >= x0) & (x <= x1)
-    fade = smoothstep(x0, x0 + 6, x) * smoothstep(x1, x1 - 6, x)
-    best_z = np.full((h, w), -9.0)
-    for k in range(strands):
-        phase = 2 * math.pi * k / strands
-        a = 2 * math.pi * x / period + phase
-        sy = cy + amp * np.sin(a)
-        z = np.cos(a)
-        slope = amp * 2 * math.pi / period * np.cos(a)
-        dist = np.abs(y - sy) / np.sqrt(1 + slope ** 2)
-        cover = smoothstep(width / 2 + 0.8, width / 2 - 0.4, dist) * fade * inside
-        top = (z > best_z) & (cover > 0.02)
-        across = np.clip(dist / (width / 2), 0, 1)
-        shade = np.clip(0.55 + 0.35 * z - 0.45 * across ** 2, 0, 1)
-        col = lerp(BRONZE_DARK, BRONZE_LIGHT, shade)
-        m = (cover * top)[..., None]
-        rgb[:] = rgb * (1 - m) + col * m
-        alpha[:] = np.maximum(alpha, cover * top)
-        best_z = np.where(top, z, best_z)
-
-
-def make_title():
-    """Dark wood band for the title with iron edges and rope knots either side of the text."""
-    w, h = TITLE_WIDTH, TITLE_HEIGHT
-    wood = np.asarray(make_wood(256, 4, seed=23, dark=0.62).convert("RGB"), float)
-    reps = (h // 256 + 1, w // 256 + 1, 1)
-    rgb = np.tile(wood, reps)[:h, :w].copy()
-    alpha = np.ones((h, w))
-    x, y = grid(w, h)
-    for edge_y, lit in ((0, 1.0), (h, -1.0)):
-        d = np.abs(y - edge_y)
-        band = d < 5
-        col = bevel_band(d, 0, 5, IRON, IRON_LIGHT, IRON_DARK, np.full((h, w), lit))
-        rgb[band] = col[band]
-    # Two ropes either side, leaving the middle third for the title text.
-    text_half = 120
-    for x0, x1 in ((22, w / 2 - text_half), (w / 2 + text_half, w - 22)):
-        rope(rgb, alpha, x0, x1, h / 2, 7, 22, 7)
-        for cx in (x0 - 8, x1 + 8):
-            rivet(rgb, alpha, cx, h / 2, 4.5, BRONZE, BRONZE_LIGHT, BRONZE_DARK)
-    return to_image(rgb, alpha)
+def rounded_sdf(x, y, w, h, inset, radius):
+    """Signed distance to a rounded rectangle inset from the image edge (negative inside)."""
+    hx, hy = w / 2 - inset - radius, h / 2 - inset - radius
+    qx = np.abs(x - w / 2) - hx
+    qy = np.abs(y - h / 2) - hy
+    outside = np.hypot(np.maximum(qx, 0), np.maximum(qy, 0))
+    inside = np.minimum(np.maximum(qx, qy), 0)
+    return outside + inside - radius
 
 
 def make_tile():
-    """9-sliced slot tile: a recessed dark well with an iron rim, a bronze inner line and corner rivets."""
+    """9-sliced slot (user's choice 2026-10-30, from mock-up D): a dark well in a rounded bronze rim with corner rivets.
+    Used by the character sheet's slots, the skill slots and the HUD's skill cross."""
     s = TILE
     x, y = grid(s, s)
-    d_edge = np.minimum.reduce([x, y, s - x, s - y])
-    lit = np.where(np.minimum(x, y) <= np.minimum(s - x, s - y), 1.0, -1.0)
+    d = rounded_sdf(x, y, s, s, 0.5, 9)
     n = noise(s, s, 31, 10)
-    well = lerp(np.array([14, 12, 11], float), np.array([34, 29, 25], float), np.clip(0.5 + 0.25 * n, 0, 1))
-    # Recessed: darker under the top-left rim.
-    inner = np.minimum(x, y) - 6
-    well = well * (0.55 + 0.45 * smoothstep(0, 10, inner))[..., None]
+    well = lerp(np.array([16, 12, 10], float), np.array([34, 27, 21], float), np.clip(0.5 + 0.25 * n, 0, 1))
+    well = well * (0.6 + 0.4 * smoothstep(-6, -14, d))[..., None]      # recessed under the rim
     rgb = well.copy()
-    alpha = np.ones((s, s))
-    rim = d_edge < 6
-    col = bevel_band(d_edge, 0, 6, IRON, IRON_LIGHT, IRON_DARK, lit)
-    rgb[rim] = col[rim]
-    line = (d_edge >= 6) & (d_edge < 7.5)
-    rgb[line] = lerp(BRONZE_DARK, BRONZE, 0.6)
-    alpha *= smoothstep(0, 1.2, d_edge)
-    for cx, cy in ((7.5, 7.5), (s - 7.5, 7.5), (7.5, s - 7.5), (s - 7.5, s - 7.5)):
-        rivet(rgb, alpha, cx, cy, 2.6)
+    alpha = np.full((s, s), 0.93)
+    rim = d > -5
+    lit = np.where((x + y) < s, 1.0, -1.0)
+    rgb[rim] = bevel_band(-d, 0, 5, BRONZE, BRONZE_LIGHT, BRONZE_DARK, lit)[rim]
+    alpha[rim] = 1
+    inner = (d <= -5) & (d > -6.5)
+    rgb[inner] = BRONZE_DARK * 0.6
+    alpha *= smoothstep(0.8, -0.6, d)
+    for cx, cy in ((9.5, 9.5), (s - 9.5, 9.5), (9.5, s - 9.5), (s - 9.5, s - 9.5)):
+        rivet(rgb, alpha, cx, cy, 2.4, BRONZE, BRONZE_LIGHT, BRONZE_DARK)
     return to_image(rgb, alpha)
 
+
+def make_medallion():
+    """A skill: a round bronze medallion with rivets round the rim and a dark face for the icon (mock-up D).
+    Tinted grey in game for locked skills and darker for skills that come later. Also the food slots' ring."""
+    s = MEDALLION
+    x, y = grid(s, s)
+    c = s / 2
+    r = np.hypot(x - c, y - c)
+    outer = c - 2
+    rim_w = 8
+    face = lerp(np.array([40, 33, 28], float), np.array([12, 10, 9], float), np.clip(r / (outer - rim_w), 0, 1))
+    rgb = face.copy()
+    alpha = smoothstep(outer + 0.8, outer - 0.6, r)
+    band = r > outer - rim_w
+    # Lit from the top left: brighter where the rim faces up-left.
+    facing = -((x - c) + (y - c)) / (np.maximum(r, 1e-6) * math.sqrt(2))
+    t = np.clip((r - (outer - rim_w)) / rim_w, 0, 1)
+    profile = np.cos((t - 0.5) * math.pi)
+    shade = np.clip(0.45 + 0.35 * facing * (2 * t - 1) * -1 + 0.25 * profile + 0.15 * facing, 0, 1)
+    rgb[band] = lerp(BRONZE_DARK, BRONZE_LIGHT, shade)[band]
+    line = (r > outer - rim_w - 1.5) & (r <= outer - rim_w)
+    rgb[line] = BRONZE_DARK * 0.5
+    for i in range(8):
+        a = i * math.pi / 4 + math.pi / 8
+        rivet(rgb, alpha, c + (outer - rim_w / 2) * math.cos(a), c + (outer - rim_w / 2) * math.sin(a), 1.9,
+              BRONZE, BRONZE_LIGHT, BRONZE_DARK)
+    return to_image(rgb, alpha)
+
+
+def make_glow_ring():
+    """A soft white ring, tinted eitr-blue (learned) or green (a point can be spent) behind a medallion. Its ring sits
+    at the medallion's rim when drawn at GLOW_RING / MEDALLION times the medallion's size."""
+    s = GLOW_RING
+    x, y = grid(s, s)
+    r = np.hypot(x - s / 2, y - s / 2)
+    ring = (MEDALLION / 2 - 2) * 1.0
+    a = np.exp(-((r - ring) / 7.0) ** 2) * 0.95
+    return to_image(np.full((s, s, 3), 255.0), a)
+
+
+def make_glow_line():
+    """A soft white strip for the glowing prerequisite lines (stretched along the line, tinted eitr-blue)."""
+    w, h = 4, 32
+    x, y = grid(w, h)
+    a = np.exp(-((y - h / 2) / 6.0) ** 2)
+    return to_image(np.full((h, w, 3), 255.0), a)
+
+
+def make_glow_box():
+    """9-sliced soft glow round a slot, tinted eitr-blue on the slot that is on the skill button."""
+    s = 64
+    x, y = grid(s, s)
+    d = rounded_sdf(x, y, s, s, GLOW_BOX_INSET, 9)
+    a = np.exp(-(np.maximum(d, -2) / 5.0) ** 2) * smoothstep(-8, -2, d)
+    return to_image(np.full((s, s, 3), 255.0), a)
+
+
+def make_panel():
+    """Stand-in for the game's own panel background (the inventory's 'Bkg', used in game when it can be found):
+    translucent warm brown with a soft darker edge."""
+    s = 64
+    x, y = grid(s, s)
+    d = rounded_sdf(x, y, s, s, 0.5, 10)
+    n = noise(s, s, 51, 12)
+    rgb = lerp(np.array([52, 38, 26], float), np.array([62, 46, 32], float), np.clip(0.5 + 0.3 * n, 0, 1))
+    rgb = rgb * (0.7 + 0.3 * smoothstep(0, -8, d))[..., None]
+    alpha = 0.9 * smoothstep(0.8, -0.8, d)
+    return to_image(rgb, alpha)
+
+
+def make_inset():
+    """A darker translucent box on a panel, for the attributes and the stats (in place of the parchment)."""
+    s = 32
+    x, y = grid(s, s)
+    d = rounded_sdf(x, y, s, s, 0.5, 7)
+    rgb = np.full((s, s, 3), 1.0) * np.array([22, 15, 10], float)
+    alpha = 0.72 * smoothstep(0.8, -0.8, d)
+    return to_image(rgb, alpha)
 
 def arch_distance(x, y, w, h, margin):
     """Signed distance to the arch outline (negative inside): straight sides, a round top, a flat bottom."""
@@ -309,7 +274,7 @@ def make_arch_back():
 
 
 def make_arch_rim():
-    """Drawn over the portrait: the iron arch with a bronze inlay, an inner shadow, rivets and a stone pedestal."""
+    """Drawn over the portrait: the bronze arch with a dark inlay, an inner shadow, rivets and a stone pedestal."""
     w, h = ARCH_WIDTH, ARCH_HEIGHT
     x, y = grid(w, h)
     d = arch_distance(x, y, w, h, 8)
@@ -323,18 +288,18 @@ def make_arch_rim():
     band = (d >= -3) & (d < 9)
     t = (d + 3) / 12
     lit = np.where(y < h / 2, 1.0, -1.0) * np.where(x < w / 2, 1.0, 0.6)
-    col = lerp(IRON_DARK, IRON_LIGHT, np.clip(0.5 + 0.3 * np.cos((t - 0.5) * math.pi) * lit, 0.1, 0.9))
+    col = lerp(BRONZE_DARK, BRONZE_LIGHT, np.clip(0.5 + 0.3 * np.cos((t - 0.5) * math.pi) * lit, 0.1, 0.9))
     rgb[band] = col[band]
     alpha[band] = 1
     inlay = (d >= -6) & (d < -3)
-    rgb[inlay] = lerp(BRONZE_DARK, BRONZE_LIGHT, 0.55)
+    rgb[inlay] = BRONZE_DARK * 0.55
     alpha[inlay] = 1
     alpha *= smoothstep(10, 8.5, d)
     # Rivets round the arch top and along the bottom (fixed parts of the 9-slice).
     r = w / 2 - 8
     for i in range(7):
         a = math.pi * (0.08 + 0.84 * i / 6)
-        rivet(rgb, alpha, w / 2 - (r + 3) * math.cos(a), 8 + r - (r + 3) * math.sin(a), 3.4)
+        rivet(rgb, alpha, w / 2 - (r + 3) * math.cos(a), 8 + r - (r + 3) * math.sin(a), 3.4, BRONZE, BRONZE_LIGHT, BRONZE_DARK)
     # Stone pedestal: a flat round stone the character stands on, in front of the feet.
     # The character's feet stand on the stone's centre line, so only the stone's front half (and its side) is drawn.
     # FEET_LINE must match CharacterPortrait.FeetAboveBottom.
@@ -362,79 +327,52 @@ def make_arch_rim():
     return to_image(rgb, alpha)
 
 
-def make_parchment():
-    """The stats box: aged parchment with burnt, uneven edges."""
-    w, h = PARCHMENT_WIDTH, PARCHMENT_HEIGHT
-    x, y = grid(w, h)
-    d_edge = np.minimum.reduce([x, y, w - x, h - y])
-    rough = tileable_noise(w, h, 51, 9) * 4 + tileable_noise(w, h, 52, 40) * 1.5
-    d = d_edge + rough
-    n = tileable_noise(w, h, 53, 18)
-    blot = tileable_noise(w, h, 54, 5)
-    paper = lerp(np.array([196, 166, 118], float), np.array([232, 211, 168], float), np.clip(0.55 + 0.3 * n, 0, 1))
-    paper = paper * (1 - 0.12 * smoothstep(0.3, 0.9, blot))[..., None]
-    burn = smoothstep(16, 3, d)
-    rgb = lerp(paper, np.array([70, 40, 18], float), burn * 0.85)
-    alpha = smoothstep(1.5, 3.5, d)
-    return to_image(rgb, alpha)
-
-
-def make_ribbon():
-    """The name banner: a dark leather plaque with notched tails and a bronze edge."""
-    w, h = RIBBON_WIDTH, RIBBON_HEIGHT
-    x, y = grid(w, h)
-    tail = 26
-    # Body inset by the tails; tails are notched (a V cut into their outer ends).
-    body = (x > tail) & (x < w - tail) & (y > 4) & (y < h - 4)
-    ex = np.minimum(x, w - x)
-    notch = np.abs(y - h / 2) * 0.9
-    tails = (ex <= tail + 1) & (y > 9) & (y < h - 1) & (ex > notch * 0.8)
-    shape = body | tails
-    n = noise(w, h, 61, 6)
-    leather = lerp(np.array([44, 28, 18], float), np.array([82, 54, 34], float), np.clip(0.5 + 0.3 * n, 0, 1))
-    leather[tails & ~body] *= 0.7
-    rgb = leather.copy()
-    alpha = shape.astype(float)
-    edge = body & ((y < 7) | (y > h - 7))
-    rgb[edge] = lerp(BRONZE_DARK, BRONZE_LIGHT, np.where(y < h / 2, 0.75, 0.35))[edge]
-    return to_image(rgb, alpha)
-
-
 def make_close():
-    """The close button: an iron boss with an X."""
+    """The close button: a bronze-rimmed boss with an X."""
     s = CLOSE
     x, y = grid(s, s)
     d_edge = np.minimum.reduce([x, y, s - x, s - y])
     lit = np.where(np.minimum(x, y) <= np.minimum(s - x, s - y), 1.0, -1.0)
     rgb = lerp(np.array([30, 27, 25], float), np.array([52, 47, 43], float), smoothstep(0, s, y))
     rim = d_edge < 4
-    rgb[rim] = bevel_band(d_edge, 0, 4, IRON, IRON_LIGHT, IRON_DARK, lit)[rim]
+    rgb[rim] = bevel_band(d_edge, 0, 4, BRONZE, BRONZE_LIGHT, BRONZE_DARK, lit)[rim]
     alpha = smoothstep(0, 1.0, d_edge)
     for sx in (1, -1):
         dist = np.abs((x - s / 2) - sx * (y - s / 2)) / math.sqrt(2)
         inside = (np.abs(x - s / 2) < s * 0.24) & (np.abs(y - s / 2) < s * 0.24)
         cover = smoothstep(2.6, 1.4, dist) * inside
-        rgb = rgb * (1 - cover[..., None]) + lerp(BRONZE, BRONZE_LIGHT, 0.6) * cover[..., None]
+        rgb = rgb * (1 - cover[..., None]) + np.array([240, 225, 190], float) * cover[..., None]
     return to_image(rgb, alpha)
 
 
 def make_bar():
-    """9-sliced frame for the health, eitr, stamina and XP bars: a dark inset with a thin bronze rim and iron end caps."""
+    """9-sliced frame for the health, eitr, stamina and XP bars: a dark inset in a thin rounded bronze rim (mock-up D).
+    The knot caps at the ends are separate (bar_cap)."""
     w, h = BAR_W, BAR_H
     x, y = grid(w, h)
-    d_edge = np.minimum.reduce([x, y, w - x, h - y])
-    rgb = lerp(np.array([10, 9, 8], float), np.array([26, 22, 19], float), smoothstep(0, h, y))
+    d = rounded_sdf(x, y, w, h, 0.5, 3.5)
+    rgb = lerp(np.array([12, 10, 9], float), np.array([28, 22, 18], float), smoothstep(0, h, y))
     alpha = np.full((h, w), 0.92)
-    rim = d_edge < 2.2
-    lit = np.where(y < h / 2, 0.75, 0.35)
+    rim = d > -2.2
+    lit = np.where(y < h / 2, 0.8, 0.35)
     rgb[rim] = lerp(BRONZE_DARK, BRONZE_LIGHT, lit)[rim]
     alpha[rim] = 1
-    # Iron end caps, in the fixed corners of the 9-slice.
-    for cx in (0, w):
-        cap = np.abs(x - cx) < BAR_BORDER - 1
-        rgb[cap] = lerp(IRON_DARK, IRON_LIGHT, np.clip(0.3 + 0.4 * (1 - y / h), 0, 1))[cap]
-        alpha[cap] = 1
-    alpha *= smoothstep(0, 1.0, d_edge)
+    alpha *= smoothstep(0.8, -0.6, d)
+    return to_image(rgb, alpha)
+
+
+def make_bar_cap():
+    """A bronze knot point at the end of a bar (pointing right; mirrored for the left end)."""
+    w, h = BAR_CAP_W, BAR_CAP_H
+    x, y = grid(w, h)
+    # Inside a triangle from (0, 1) to (w - 1, h / 2) to (0, h - 1), as a distance for a soft edge.
+    slope = (h / 2 - 1) / (w - 1)
+    d = np.abs(y - h / 2) - (h / 2 - 1 - slope * x)
+    lit = np.where(y < h / 2, 0.85, 0.35)
+    rgb = lerp(BRONZE_DARK, BRONZE_LIGHT, lit)
+    edge = d > -1.6
+    rgb[edge] = BRONZE_DARK * 0.7
+    alpha = smoothstep(0.8, -0.6, d) * (x < w - 0.2)
     return to_image(rgb, alpha)
 
 
@@ -479,23 +417,18 @@ def font(size):
 
 
 def preview(pieces):
-    """A mock-up with the default slots, laid out as SheetLayout.cs does, for checking the look outside the game."""
+    """A mock-up with the default slots, laid out as SheetLayout.cs does, for checking the look outside the game.
+    In game the panel and the stats box use the game's own panel art; here the stand-ins (panel, inset)."""
     tile_w, tile_h, pitch, cell = 84, 96, 102, 64
     margin, gap, top = 18, 14, 72
     rows = 5
     col_h = rows * pitch - (pitch - tile_h)
-    stats_y = top + col_h + gap + 14   # the ribbon rises 14 px above the parchment
+    stats_y = top + col_h + gap + 14
     quick_y = stats_y + PARCHMENT_HEIGHT + gap
     height = quick_y + 70 + margin
-    sheet = Image.new("RGBA", (PANEL_WIDTH, height))
-    wood = pieces["wood"]
-    for ty in range(0, height, wood.size[1]):
-        for tx in range(0, PANEL_WIDTH, wood.size[0]):
-            sheet.alpha_composite(wood, (tx, ty))
-    sheet.alpha_composite(nine_slice(pieces["frame"], PANEL_WIDTH, height, (FRAME_BORDER,) * 4))
-    sheet.alpha_composite(pieces["title"], (10, 8))
+    sheet = nine_slice(pieces["panel"], PANEL_WIDTH, height, (20, 20, 20, 20))
     draw = ImageDraw.Draw(sheet)
-    draw.text((PANEL_WIDTH / 2, 8 + TITLE_HEIGHT / 2), "CHARACTER", font=font(26), fill=(232, 205, 150),
+    draw.text((PANEL_WIDTH / 2, 8 + TITLE_HEIGHT / 2), "CHARACTER", font=font(26), fill=(240, 200, 110),
               anchor="mm", stroke_width=2, stroke_fill=(0, 0, 0))
     left = ["HEAD", "CHEST", "LEGS", "CAPE", "UTILITY"]
     right = ["TRINKET", "TALISMAN", "TALISMAN"]
@@ -505,14 +438,13 @@ def preview(pieces):
             ty = top + i * pitch
             sheet.alpha_composite(nine_slice(tile, tile_w, tile_h, (TILE_BORDER,) * 4), (column, ty))
             cx = column + (tile_w - cell) // 2
-            draw.rectangle((cx, ty + 6, cx + cell, ty + 6 + cell), outline=(70, 62, 54))
-            draw.text((column + tile_w / 2, ty + tile_h - 13), label, font=font(12), fill=(220, 200, 160),
+            draw.rectangle((cx, ty + 6, cx + cell, ty + 6 + cell), outline=(70, 56, 40))
+            draw.text((column + tile_w / 2, ty + tile_h - 13), label, font=font(12), fill=(240, 220, 170),
                       anchor="mm", stroke_width=1, stroke_fill=(0, 0, 0))
     px = margin + tile_w + gap
     back = nine_slice(pieces["arch_back"], ARCH_WIDTH, col_h, (ARCH_WIDTH // 2 - 1, ARCH_BOTTOM, ARCH_WIDTH // 2 - 1, ARCH_TOP))
     rim = nine_slice(pieces["arch_rim"], ARCH_WIDTH, col_h, (ARCH_WIDTH // 2 - 1, ARCH_BOTTOM, ARCH_WIDTH // 2 - 1, ARCH_TOP))
     sheet.alpha_composite(back, (px, top))
-    # A stand-in figure where the live render goes.
     fig = Image.new("RGBA", (ARCH_WIDTH, col_h))
     fd = ImageDraw.Draw(fig)
     cxf, feet = ARCH_WIDTH / 2, col_h - FEET_LINE
@@ -522,27 +454,25 @@ def preview(pieces):
     fd.rectangle((cxf + 8, feet - 140, cxf + 38, feet), fill=(70, 60, 52, 255))
     sheet.alpha_composite(fig, (px, top))
     sheet.alpha_composite(rim, (px, top))
-    sheet.alpha_composite(pieces["parchment"], (margin, stats_y))
-    rx = (PANEL_WIDTH - RIBBON_WIDTH) // 2
-    sheet.alpha_composite(pieces["ribbon"], (rx, stats_y - 14))
-    draw.text((PANEL_WIDTH / 2, stats_y - 14 + RIBBON_HEIGHT / 2), "Krogon", font=font(18), fill=(232, 205, 150), anchor="mm")
-    ink = (59, 42, 26)
-    lines = [("Armor:", "20", (47, 107, 31)), ("Weight:", "43/310", (138, 90, 0)), ("Health:", "25", (47, 107, 31)),
-             ("Stamina:", "50", (47, 107, 31)), ("Speed from gear:", "-15%", (154, 31, 31))]
+    sheet.alpha_composite(nine_slice(pieces["inset"], PANEL_WIDTH - 2 * margin, PARCHMENT_HEIGHT, (10, 10, 10, 10)), (margin, stats_y))
+    draw.text((PANEL_WIDTH / 2, stats_y + 14), "Krogon", font=font(18), fill=(240, 200, 110), anchor="mm",
+              stroke_width=1, stroke_fill=(0, 0, 0))
+    text_col = (236, 226, 206)
+    lines = [("Armor:", "20", (143, 217, 122)), ("Weight:", "43/310", (242, 193, 78)), ("Health:", "25", (240, 100, 90)),
+             ("Stamina:", "50", (242, 204, 74)), ("Speed from gear:", "-15%", (255, 122, 107))]
     for i, (label, value, colour) in enumerate(lines):
         yy = stats_y + 34 + i * 22
-        draw.text((margin + 22, yy), label, font=font(14), fill=ink)
+        draw.text((margin + 22, yy), label, font=font(14), fill=text_col)
         draw.text((margin + 22 + draw.textlength(label, font=font(14)) + 6, yy), value, font=font(14), fill=colour)
-    for i, (label, colour) in enumerate((("Cold Immunity", (31, 79, 138)), ("Rugged Backpack", (47, 107, 31)))):
-        draw.text((PANEL_WIDTH / 2 + 30, stats_y + 34 + i * 22), label, font=font(14), fill=colour)
+    for i, label in enumerate(("Cold Immunity", "Rugged Backpack")):
+        draw.text((PANEL_WIDTH / 2 + 30, stats_y + 34 + i * 22), label, font=font(14), fill=text_col)
     for i, key in enumerate("ZVB"):
         qx = (PANEL_WIDTH - (3 * 70 + 2 * 8)) // 2 + i * 78
         sheet.alpha_composite(nine_slice(tile, 70, 70, (TILE_BORDER,) * 4), (qx, quick_y))
-        draw.text((qx + 9, quick_y + 6), key, font=font(13), fill=(230, 230, 230))
+        draw.text((qx + 11, quick_y + 8), key, font=font(13), fill=(230, 230, 230))
     sheet.alpha_composite(pieces["close"], (PANEL_WIDTH - 10 - CLOSE - 10, 8 + (TITLE_HEIGHT - CLOSE) // 2))
 
-    # Show it on a darkened game-ish background.
-    bg = Image.new("RGBA", (PANEL_WIDTH + 80, height + 80), (40, 60, 50, 255))
+    bg = Image.new("RGBA", (PANEL_WIDTH + 80, height + 80), (70, 96, 70, 255))
     bg.alpha_composite(sheet, (40, 40))
     bg.convert("RGB").save(PREVIEW)
 
@@ -550,20 +480,27 @@ def preview(pieces):
 def main():
     os.makedirs(OUT, exist_ok=True)
     pieces = {
-        "wood": make_wood(),
-        "frame": make_frame(),
-        "title": make_title(),
+        "panel": make_panel(),
+        "inset": make_inset(),
         "tile": make_tile(),
+        "medallion": make_medallion(),
+        "glow_ring": make_glow_ring(),
+        "glow_line": make_glow_line(),
+        "glow_box": make_glow_box(),
         "arch_back": make_arch_back(),
         "arch_rim": make_arch_rim(),
-        "parchment": make_parchment(),
-        "ribbon": make_ribbon(),
         "close": make_close(),
         "bar": make_bar(),
+        "bar_cap": make_bar_cap(),
         "bar_fill": make_bar_fill(),
     }
     for name, image in pieces.items():
         save(image, name)
+    for old in ("wood", "frame", "title", "parchment", "ribbon"):
+        for ext in (".png", ".rgba"):
+            path = os.path.join(OUT, old + ext)
+            if os.path.exists(path):
+                os.remove(path)
     preview(pieces)
     print("Wrote", ", ".join(sorted(pieces)), "and", os.path.relpath(PREVIEW, ROOT))
 
