@@ -140,9 +140,11 @@ namespace Corruption.Content
             {
                 var item = __instance.m_itemData;
                 string name = Loot.ColoredName(item);
-                if (name != null && result.StartsWith(item.m_shared.m_name))
+                // The game localizes the hover text before returning it, so it starts with the translated base name.
+                string baseName = Localization.instance.Localize(item.m_shared.m_name);
+                if (name != null && result.StartsWith(baseName))
                 {
-                    result = name + result.Substring(item.m_shared.m_name.Length);
+                    result = name + result.Substring(baseName.Length);
                 }
             });
             __result = result;

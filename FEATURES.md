@@ -721,6 +721,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 **Known issues:**
 - Untested in-game (146 tests pass; both plugins compile against the stand-in game assemblies).
 - **First look 2026-10-29 (user's screenshots):** `co_loot` Rares work: "Night Ward" (Rare Leather Trousers: +15% armour, armour 2 → 2.3) and "Skull Song" (Rare Bronze Sword: +37% damage, slash 35 → 48), yellow titles, affix lines with ranges, inactive lines grey. Magic items work too: "Shieldwall Bronze Atgeir", "Seismic Antler Pickaxe" (gathering affix on a pickaxe), "Crackling Club" (+19% of physical as lightning: blunt 12 adds lightning 2), blue names. Still to check: ground hover names, durability, block, repair, upgrade, natural drops, combat affixes.
+- **Play-test 2026-10-29 (phone log):** build check, natural drops from kills, combat affixes (no errors), a resonant line and no errors all passed. **Ground hover name failed** (showed the base name): the game localizes the hover text before our patch sees it, so the patch looked for the untranslated name. **Fixed 2026-10-30**, to re-test. Upgrade, durability/repair and bigger backpacks not tried yet.
 - Gear ranges: 16 set from the game data and approved (2026-10-29); max health, stamina, eitr and life steal are drafts by choice; the 5 resistance rows wait for a new `co_dump`. No caps on stacking carry weight, regen or max health/stamina/eitr (user, for now).
 - Personal loot is only the separate rolls: dropped items aren't locked to a player yet (the 60 s owner lock and loot beams come later).
 - The tables are compiled in; the design wants the server's copy to be the one everybody uses (later step).
@@ -761,6 +762,9 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 ---
 
 ## Changelog
+
+### 2026-10-30
+- **Fix: loot names on the ground** showed the base item name: the game localizes the hover text before our patch, which looked for the untranslated name. To re-test. Play-test results for loot step 1 recorded (drops, combat affixes, resonant lines, no errors passed).
 
 ### 2026-10-29
 - **Gear affix ranges from the game data** (loot; approved by the user): enhanced damage 4–19%, armour 10–50%, durability 11–55%, block 4–18%, backstab, knockback and parry 20–100%, attack stamina 4–20%, health regen 6–30%, stamina regen 8–40%, carry weight 10–50 (user cut it from 30–150), weapon skill 4–20; max health/stamina/eitr and life steal keep their drafts; no stacking caps for now, under the user's rules (gear-only sources; a full forge upgrade where vanilla has no +% source). **`co_dump` now writes resistances** (item `m_damageModifiers`, status effect `m_mods`) for the resistance affixes.

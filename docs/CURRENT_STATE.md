@@ -44,7 +44,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 |---|---|
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
-| **Loot system step 1** (2026-10-29, branch `claude/affixes-loot`) | First look passed (screenshots 2026-10-29): Rare and Magic names, tooltip lines with ranges, armour, damage and lightning affixes change the numbers. Still: hover names, durability, block, repair, upgrade, natural drops, combat affixes; `PLAYTEST.md` → Session 3 |
+| **Loot system step 1** (2026-10-29, branch `claude/affixes-loot`) | Passed 2026-10-29: Rare and Magic names, tooltip lines with ranges, armour/damage/lightning numbers, natural drops, combat affixes, resonant line, no errors. Ground hover name failed, fixed 2026-10-30 (re-test). Still: hover names (re-test), durability, block, repair, upgrade, natural drops, combat affixes; `PLAYTEST.md` → Session 3 |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
