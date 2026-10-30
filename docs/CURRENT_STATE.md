@@ -71,7 +71,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Waiting on the user
 
-- **Classes and levels (2026-10-30):** the open questions in [`class-design.md`](class-design.md#9-open-questions-for-the-user): own levels instead of EpicMMOSystem (recommended), skill resource, numbers, how to pick a class, casting, names, vanilla skills, death penalty.
+- **Classes and levels (2026-10-30):** own levels, D2 rules in config and no XP loss on death are decided (2026-10-30); still open in [`class-design.md`](class-design.md#10-open-questions-for-the-user): tree layout (D2 tabs or D4 single tree), skill resource, XP per creature, how to pick a class, casting, names, vanilla skills. The XP bar and skills panel go to the UI overhaul session.
 - **Run `co_dump` once in a world (2026-10-28) and send the new files** (`item_details.csv`, `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them, phase 6 its altar offerings, and the gear affixes their remaining ranges, instead of guessing.
 
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
@@ -88,7 +88,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
-6. **Classes** (`claude/class-skills`): once the user answers the open questions, build step 1 (levels, XP, attributes) from [`class-design.md`](class-design.md#8-build-order-proposed).
+6. **Classes** (`claude/class-skills`): build step 1 (levels, XP, attributes; rules decided 2026-10-30, XP per creature still open) from [`class-design.md`](class-design.md#8-build-order-proposed).
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 

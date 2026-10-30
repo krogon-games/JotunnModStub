@@ -18,7 +18,7 @@ Researched 2026-10-30 from its Thunderstore page and source (https://github.com/
 - It patches many of the methods we patch or will patch (`Character.Damage`, `Character.RPC_Damage`, `InventoryGui.Awake/Show/Hide`, item tooltips, `CharacterDrop.GenerateDropList`, the enemy HUD) and replaces the HUD bars our character sheet reads from.
 - Its creature-level, level-gap damage and loot-removal rules overlap Corruption's own scaling (stars, rips, corrupted bosses).
 
-**Recommendation (Proposed):** build our own levels, XP and D2 attributes, and don't run EpicMMOSystem alongside them. Take its proven pieces as reference: a geometric XP curve, XP per creature in a server-synced table, group sharing by distance, a respec item. Its per-creature XP values are a possible source for our XP numbers (an alternative is deriving XP from creature health in `data/game-dump-1.0.20/creatures.csv`).
+**Decided (user, 2026-10-30):** build our own levels, XP and D2 attributes, and don't run EpicMMOSystem alongside them. Take its proven pieces as reference: a geometric XP curve, XP per creature in a server-synced table, group sharing by distance, a respec item. Its per-creature XP values are a possible source for our XP numbers (an alternative is deriving XP from creature health in `data/game-dump-1.0.20/creatures.csv`).
 
 **Other class mods looked at** (none to depend on): Valheim Legends (12 classes, 3 abilities each; deprecated, no licence), CaptainSkillTree (weapon trees with Berserker and Paladin jobs, Whirlwind), AlmanacClasses (talent tree, custom animations; deprecated, no licence), Ways of the Gods (deprecated, no source), TalentTree, MagicHeim. Ideas worth copying: cooldowns as status effects (they show in the vanilla HUD), one ability bar that greys out skills the equipped weapon can't use, warcries cast as emotes (emotes already sync to other players), cost messages in the top-left.
 
@@ -34,10 +34,13 @@ Researched 2026-10-30 from its Thunderstore page and source (https://github.com/
 
 D2 base rules (reference): max level 99; 5 stat points and 1 skill point per level; extra points from quests (12 skill points, 15 stat points across three difficulties); at most 20 points per skill; a skill takes one more point per level past its required level; respec once per difficulty or with a Token of Absolution.
 
-Proposed Valheim version (structure only; every number still to set, §9):
+**Decided (user, 2026-10-30): follow D2's rules, with every rule in admin config** (server-synced) so it can be changed: max level (default 99), stat points per level (5), skill points per level (1), bonus points from bosses, the 20-point cap per skill, the one-point-per-level pace. The XP needed per level is a table, D2's experience table by default, in the plugin's `Data/` folder, with a config multiplier. Still open: how much XP each creature gives (§10).
+
+Valheim version:
 - **XP from kills**, more for starred creatures, bosses and corrupted creatures. Players near the kill share it, as in a D2 party (Valheim has no parties). D2's quest points → **each boss's first kill** gives bonus skill points (and maybe stat points).
 - **Per level:** stat points for the D2 attributes, 1 skill point.
 - **Vanilla skills stay** and keep levelling by use (they set how well you use a weapon). The class adds to them; it doesn't replace them. This is less invasive than the original "skill rework" idea of replacing use-to-level.
+- **Death:** no XP or level loss (user, 2026-10-30). Valheim's own skill loss applies as now. From the game code: each skill drops by `Skills.m_DeathLowerFactor` × the world's skill reduction rate (`Game.m_skillReductionRate`, the "Death penalty" world modifier, 1 by default). The factor's code default is 0.25, but the player prefab may set its own value, so the real percentage (the user remembers 10%) is unverified until `co_dump` reads it.
 - **Respec:** an item, as in D2. With Corruption, crafted from boss essences.
 - **Saved** in the player's custom data (`Player.m_customData`, already used by the corrupted wishbone), so it stays with the character. Level shown to others through the player's ZDO. XP is decided by the creature owner's game and sent to the players who share it. That trusts clients, which is fine for four friends.
 
@@ -125,13 +128,23 @@ Each step is play-tested before the next.
 
 Before step 1: check `docs/mod-compatibility.md` for every game method we'll patch (`Character.Damage` and `Character.RPC_Damage` are already patched by Corruption).
 
-## 9. Open questions (for the user)
+## 9. UI split (user, 2026-10-30)
 
-1. **Own levels vs EpicMMOSystem:** confirm building our own (recommended, §1).
+The **XP bar and the skills panel** are built in the UI overhaul session (`claude/ui-overhaul`, CraftingOverhaul). This plugin owns the rules and the data and gives the UI what it needs through a small public API read by reflection (the same pattern as the character sheet reading EquipmentAndQuickSlots' JSON API), so CraftingOverhaul has no hard dependency:
+- **Read:** class, level, XP and XP for the next level, unspent stat and skill points, attribute values, the skill table (tab, row, column, name, icon, required level, prerequisites, max points, status), each skill's hard points and effective level (with +skills and synergies).
+- **Do:** spend a stat point, spend a skill point (refused with a reason when the rules say no), respec.
+- **Events:** level-up and points-changed, so the panel can refresh without polling.
+
+The exact API is written here before either side builds it.
+
+## 10. Open questions (for the user)
+
+1. ~~Own levels vs EpicMMOSystem~~ **Answered 2026-10-30:** our own.
 2. **Skill resource:** stamina (the Valheim warrior's resource), eitr (Valheim's mana, but only magic food gives it), or a new bar (e.g. rage)?
-3. **Numbers:** follow D2's progressions (per-level values, XP curve shape, 5 + 1 points per level), scaled to Valheim stats from the game dump? Max level 99 or lower? XP per creature from EpicMMOSystem's tables or derived from creature health?
+3. **Numbers:** ~~D2 rules or not~~ **answered 2026-10-30:** D2's rules, all changeable in config. Still open: XP per creature (EpicMMOSystem's tables, or derived from creature health in the game dump), and how attribute and skill values scale from D2 to Valheim stats.
 4. **Choosing a class:** at a station or altar, with an item (Valheim Legends uses Eikthyr's altar), or with a console command for now? Can a character change class?
 5. **Casting:** hotkeys only, or can a combat skill replace the weapon's secondary attack?
 6. **Names:** keep D2 class and skill names (as the orbs keep PoE names, because the group knows them), with a Norse plugin name? "Berserkir" is taken by vanilla axes; "Úlfheðnar" (wolf-warriors) is free. The Amazon could be a Valkyrie or Shieldmaiden (*skjaldmær*).
 7. **Vanilla skills:** keep levelling by use alongside class levels (recommended), or replace use-to-level as in the original skill rework idea?
-8. **Death penalty:** lose XP on death (D2 Nightmare/Hell, EpicMMOSystem), or rely on Valheim's own skill loss?
+8. ~~Death penalty~~ **Answered 2026-10-30:** Valheim's own skill loss only; no XP loss.
+9. **Tree layout:** D2's three tabs or one Diablo 4-style tree? (Recommendation in the chat of 2026-10-30: D2's three tabs, keeping D2's point economy, with level tiers instead of prerequisites where a dropped skill would break a chain.)
