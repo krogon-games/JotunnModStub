@@ -66,6 +66,21 @@ namespace CraftingOverhaul.CharacterSheet
             return value != null && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result) ? result : fallback;
         }
 
+        /// <summary>For numbers past an int's range (Diablo 2's XP reaches about 3.5 billion at level 99).</summary>
+        public static long GetLong(string json, string key, long fallback)
+        {
+            string value = Get(json, key);
+            long result;
+            return value != null && long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result) ? result : fallback;
+        }
+
+        public static float GetFloat(string json, string key, float fallback)
+        {
+            string value = Get(json, key);
+            float result;
+            return value != null && float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out result) ? result : fallback;
+        }
+
         /// <summary>The strings of a JSON array of strings, e.g. <c>["Helmet","Chest"]</c>. Anything else gives an empty array.</summary>
         public static string[] Strings(string json)
         {

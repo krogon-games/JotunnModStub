@@ -56,6 +56,24 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 8. With a friend (Session 2): both within 70 m of a kill each get XP; the lower-level player gets the bigger share of a low creature.
 9. No red errors in the console.
 
+## Classes UI (branch `claude/ui-overhaul`, about 15 minutes)
+
+Build `CraftingOverhaul` from **`claude/ui-overhaul`**. In `BepInEx/config/com.krogongames.craftingoverhaul.cfg` set `[5 - Classes UI]` → `Demo = true` (sample Amazon at level 12; works with or without Orlog installed). The log says `Skill cross added.` once you're in the world.
+
+1. **Bars:** health (red, top), eitr (blue, middle, only once you have eitr: eat Yggdrasil porridge or another eitr food), stamina (yellow, bottom) together at the bottom centre with "current / max" at their ends. The game's own round health display, stamina bar, eitr bar and food icons are gone. Take a hit: a pale trail shows what you lost and catches up. Sprint: stamina drains.
+2. **Food:** eat 1–3 foods: they appear in slots left of the bars with minutes left; the bars get longer as your maximum rises. A food about to run out pulses.
+3. **Building and sailing:** equip the hammer, then sit at a ship's helm: the bars move up out of the way, as the game's did. Ride a lox if you can: its stamina still shows.
+4. **XP bar:** a thin purple bar under the bars with "Level 12" on the left and a pulsing "5 stat, 1 skill point (K)" on the right.
+5. **Skill cross:** bottom left, four slots in a cross: top Multiple Shot (gold outline: on the skill button), left Inner Sight with a dark cooldown sweep every 8 seconds, right empty, bottom Fire Arrow greyed with "Weapon". Keys 1–4 in the corners; "Skill button: Right mouse" under it. Check it doesn't overlap EquipmentAndQuickSlots' quick slots or the Forsaken power icon.
+6. **Skills panel:** press **K** (and also try the **Skills** button above the top right of the inventory). The Amazon's three tabs; the Bow and Crossbow tab shows 10 skills in rows Lv 1–30 with lines between linked skills (gold from skills with points). Hover a skill: tooltip with points, required level, eitr cost, now and next level. Skills marked "(later)" are grey.
+7. **Spend:** click Magic Arrow (green +): its points go up and "Skill points: 0". Click another: "No skill points" shows at the bottom. Click a skill from a higher row (Lv 18 or more): "Needs level 18" (or its level).
+8. **Attributes:** on the left, Strength, Dexterity, Vitality, Energy with values and what they give. Press + on Dexterity: the value goes up and the stat points go down (the XP bar hint follows); at 0 points the + buttons disappear.
+9. **Slots:** drag Cold Arrow (it has a point) onto the panel's empty third slot: it appears there and on the HUD cross. Drag a skill straight onto the HUD cross too. Drag a slot onto another to move it; drag one off the slots (or right-click it) to empty it. Try dragging Critical Strike (a passive, in the middle tab): "Passive skills don't take a slot". A skill with no points: "Learn it first".
+10. **Close:** K, Escape and the X close the panel; Escape doesn't open the game menu as well. While it's open you can't move or swing the camera.
+11. **Class choice:** open the console (F5) and type `co_classes_stone`: the cross disappears and a "Choose your class" window lists the Amazon with its icon and description. Confirm: "You are now an Amazon", the window closes and the cross comes back. K before confirming says "Choose a class at the Orlog stone first".
+12. **Without the demo:** set `Demo = false` (the config reloads on save): the cross, XP bar and panel go; the bars stay. Set `[4 - HUD]` → `Bars = false`: the game's own displays come back.
+13. No red errors in the console or `LogOutput.log`.
+
 ## Session 2: with a friend
 
 Needs a second player (host a world or use the dedicated server, everyone on the same build).

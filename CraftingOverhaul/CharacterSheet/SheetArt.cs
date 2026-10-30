@@ -24,6 +24,8 @@ namespace CraftingOverhaul.CharacterSheet
         public static Sprite Parchment => Get("parchment", Vector4.zero);
         public static Sprite Ribbon => Get("ribbon", Vector4.zero);
         public static Sprite Close => Get("close", Vector4.zero);
+        public static Sprite Bar => Get("bar", new Vector4(6, 4, 6, 4));
+        public static Sprite BarFill => Get("bar_fill", Vector4.zero);
 
         /// <summary>The arch pieces stretch only along their straight sides: the arch on top and the pedestal stay fixed.</summary>
         public static readonly Vector4 ArchBorder = new Vector4(134, 72, 134, 147);

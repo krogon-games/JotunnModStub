@@ -12,6 +12,8 @@ namespace CraftingOverhaul
     [BepInDependency(Jotunn.Main.ModGuid)]
     // The character sheet rearranges EquipmentAndQuickSlots' slots; load after it when it's installed.
     [BepInDependency(CharacterSheet.CharacterSheetPanel.EaqsGuid, BepInDependency.DependencyFlags.SoftDependency)]
+    // The class screens read the Orlog plugin's API; load after it when it's installed.
+    [BepInDependency(Classes.ClassesSource.OrlogGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.VersionCheckOnly, VersionStrictness.Minor)]
     internal class CraftingOverhaul : BaseUnityPlugin
     {
@@ -32,6 +34,7 @@ namespace CraftingOverhaul
 
             CommandManager.Instance.AddConsoleCommand(new DumpCommand());
             CommandManager.Instance.AddConsoleCommand(new BiomeCommand());
+            CommandManager.Instance.AddConsoleCommand(new Classes.ClassesStoneCommand());
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
         }

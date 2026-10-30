@@ -43,6 +43,9 @@ PARCHMENT_HEIGHT = 160
 RIBBON_WIDTH = 300
 RIBBON_HEIGHT = 40
 CLOSE = 36
+BAR_W = 64           # 9-sliced; the bars are 14 px tall in game (the XP bar 8)
+BAR_H = 14
+BAR_BORDER = 6
 
 IRON = np.array([62, 60, 58], float)
 IRON_LIGHT = np.array([122, 118, 112], float)
@@ -415,6 +418,37 @@ def make_close():
     return to_image(rgb, alpha)
 
 
+def make_bar():
+    """9-sliced frame for the health, eitr, stamina and XP bars: a dark inset with a thin bronze rim and iron end caps."""
+    w, h = BAR_W, BAR_H
+    x, y = grid(w, h)
+    d_edge = np.minimum.reduce([x, y, w - x, h - y])
+    rgb = lerp(np.array([10, 9, 8], float), np.array([26, 22, 19], float), smoothstep(0, h, y))
+    alpha = np.full((h, w), 0.92)
+    rim = d_edge < 2.2
+    lit = np.where(y < h / 2, 0.75, 0.35)
+    rgb[rim] = lerp(BRONZE_DARK, BRONZE_LIGHT, lit)[rim]
+    alpha[rim] = 1
+    # Iron end caps, in the fixed corners of the 9-slice.
+    for cx in (0, w):
+        cap = np.abs(x - cx) < BAR_BORDER - 1
+        rgb[cap] = lerp(IRON_DARK, IRON_LIGHT, np.clip(0.3 + 0.4 * (1 - y / h), 0, 1))[cap]
+        alpha[cap] = 1
+    alpha *= smoothstep(0, 1.0, d_edge)
+    return to_image(rgb, alpha)
+
+
+def make_bar_fill():
+    """The bars' fill: white with a soft top light and a darker bottom, tinted per bar in game."""
+    w, h = 8, BAR_H - 6
+    x, y = grid(w, h)
+    t = y / h
+    v = 0.78 + 0.22 * np.cos(t * math.pi * 0.9) - 0.25 * smoothstep(0.55, 1.0, t)
+    v = v + 0.18 * smoothstep(0.32, 0.0, t)
+    rgb = np.dstack([v, v, v]) * 255
+    return to_image(rgb)
+
+
 # ---------------------------------------------------------------- preview
 
 def nine_slice(img, w, h, border):
@@ -525,6 +559,8 @@ def main():
         "parchment": make_parchment(),
         "ribbon": make_ribbon(),
         "close": make_close(),
+        "bar": make_bar(),
+        "bar_fill": make_bar_fill(),
     }
     for name, image in pieces.items():
         save(image, name)

@@ -24,6 +24,8 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
 | [Corrupted offerings](#corrupted-offerings) | Combat | Tested in-game (single player) | — (table `Corruption/Data/offerings.csv`) | `Corruption/Content/CorruptedOfferings.cs`, `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/OfferingTable.cs`, `Corruption/Data/offerings.csv`, `Corruption/Assets/offering_icon_*.rgba`, `tools/make_offering_icons.py`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/OfferingTableTests.cs` | 2026-10-30 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
+| [Health, eitr and stamina bars](#health-eitr-and-stamina-bars) | UI | Built, untested | `4 - HUD` → `Bars`, `BarScale`, `BarMinLength`, `BarMaxLength`, `BarsHeight` | `Classes/VitalBars.cs`, `Classes/UiKit.cs`, `Classes/ClassesSource.cs`, `CharacterSheet/SheetArt.cs`, `Assets/Sheet/bar*`, `tools/make_sheet_ui.py`, `ModConfig.cs` | 2026-10-30 |
+| [Classes UI](#classes-ui) | UI | Built, untested (with demo data; Orlog's API is still a stub) | `5 - Classes UI` → `SkillsPanelKey`, `SkillCrossPosition`, `Demo`; console `co_classes_stone` | `Classes/*`, `CharacterSheet/FlatJson.cs`, `CraftingOverhaul.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/ClassesUiTests.cs`, `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` | 2026-10-30 |
 | [Currency and Maps tabs](#currency-and-maps-tabs) | UI | Tested in-game (single player) | Corruption: `9 - Inventory Tabs` → `Enabled` | `Corruption/Content/InventoryTabs.cs`, `Corruption/Content/InventoryTabsUi.cs`, `Corruption/Rules/TabRules.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/Texts.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TabRulesTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Tested in-game (single player; step 1: drops, tooltips, item stats) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs` | 2026-10-29 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
@@ -343,6 +345,73 @@ Not a patch, but worth knowing for other mods: the picture subscribes to Unity's
 Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJson`, API version 2); no patches on that mod. Finds its objects by name (`EaqsSlotRoot`, `EaqsEquipmentBkg`, `EaqsQuickSlotBkg`, `EaqsCustomSlotBkg`, its `PanelDragHandle` script, the cells' `binding` label), checked against EAQS 3.1.3.
 
 **Conflicts:** anything else that repositions EAQS's slot cells (Auga does; the sheet switches itself off when Auga is installed). AdventureBackpacks' backpack panel opens as a container on the left, under the inventory grid, so it shouldn't overlap; check in-game. Mods that also film the player with their own camera (photo modes) might see the player missing for one frame if they render in the middle of ours; none of the group's mods do.
+
+---
+
+## Health, eitr and stamina bars
+
+*CraftingOverhaul; per player. Works without Orlog.* Brief: [`docs/classes-ui-brief.md`](docs/classes-ui-brief.md) §2.1, §2.3; reference `docs/images/hud_reference_bars.jpg`.
+
+**What it does:** replaces the game's health, stamina, eitr and food displays with three long bars together at the bottom centre (user, 2026-10-30, after Elden Ring): **health on top, eitr in the middle** (only once you have eitr), **stamina at the bottom**, in the game's colours.
+- Each bar grows with its maximum (`BarScale` pixels per point, between `BarMinLength` and `BarMaxLength`), all starting at the same left edge, with the value as "current / max" at its end. A pale trail behind the fill shows what you just lost and catches up after a moment.
+- **Food:** your three food slots sit to the left of the bars, with the time left under each (minutes, then seconds, as the game shows it); a slot pulses when that food can be eaten again.
+- **XP bar** (only with Orlog or the classes demo): a thin purple bar under the bars, with "Level N" on its left and, when points wait to be spent, a pulsing "N stat, M skill points (K)" on its right (the key only once you have a class).
+- Like the game's bars, they move up while building or sailing (to 320 px, the game's own height for that).
+- Values come straight from the game (`GetHealth`, `GetMaxHealth`, `GetStamina`, `GetEitr` and their maxima), so food, gear and Orlog's eitr pool all show.
+
+**Config settings** (per player, `4 - HUD`):
+
+| Setting | Default | Description |
+|---|---|---|
+| `Bars` | `true` | Use the new bars. Off: the game's own displays come back |
+| `BarScale` | `2.56` | Pixels per point. The game's own bars use 1.28 (32 px per 25 points, `Hud.UpdateHealth`); proposed default twice that |
+| `BarMinLength` | `120` | Shortest bar, in pixels (proposed) |
+| `BarMaxLength` | `600` | Longest bar, in pixels (proposed) |
+| `BarsHeight` | `96` | Height of the bars above the bottom of the screen (proposed) |
+
+**How it works:** our bars live under the HUD's root (`Hud.m_rootObject`), so they hide with the HUD. The game's displays (`m_healthPanel`, `m_staminaBar2Root`, `m_eitrBarRoot`, `m_foodBarRoot`, the food icons and times) are scaled to zero in a `LateUpdate` (the game's animators set them after `Hud.Update`), and scaled back when `Bars` is turned off.
+
+**Known issues:** untested. To check: nothing else the game shows lives under `m_healthPanel` (if something vanishes from the HUD, tell Claude); the mount's stamina panel still shows when riding.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Hud.Update` | Postfix | Creates and updates the bars, food slots and XP bar |
+| `Hud.OnDestroy` | Postfix | Forgets the bars (the HUD is rebuilt per world) |
+
+---
+
+## Classes UI
+
+*CraftingOverhaul; per player. Needs the Orlog plugin's API (`Orlog.Api`, version 1), or the `Demo` setting.* Brief: [`docs/classes-ui-brief.md`](docs/classes-ui-brief.md); design: `docs/class-design.md`.
+
+**What it does:** everything on screen for the classes (Orlog does the rules). Until Orlog's API is filled in, try it with `5 - Classes UI` → `Demo` = `true`: an Amazon at level 12 with 5 stat points and 1 skill point, her 30 skills from `data/d2-reference/amazon.csv` with the statuses in `class-design.md` §5, vanilla item icons as placeholders. Spending and filling slots change the sample only.
+- **Skill cross** (HUD, bottom left, reference `docs/images/hud_reference_skills.jpg`): four slots in a cross (top, left, right, bottom = slots 1–4), each with the skill's icon and its key; the slot on the skill button has a gold outline; a dark sweep shows the cooldown; a slot that can't be used is greyed with "Weapon" or "Eitr". Under it, which button uses the selected skill. Hidden without a class.
+- **Skills panel** (`K`, or the **Skills** button above the top right of the inventory): the class's three skill tabs, each a 6 × 3 grid by level tier (Lv 1, 6, 12, 18, 24, 30) with lines from each prerequisite (gold once it has points). Each skill shows its icon, hard points, a green "+" when a point can be spent, grey when locked, gold frame when maxed, "(later)" for skills not built yet; dropped skills aren't shown. Click a skill to spend a point; the reason shows at the bottom when refused. Hover for the tooltip (points, kind, required level, eitr cost, description now and next level, why it's locked). **Drag a skill onto one of the panel's four skill slots or onto the HUD cross** to put it there; drag a slot onto another to move it, or off the slots (or right-click it) to empty it. Passives can't be dragged.
+- **Attribute points**, on a parchment down the left of the skills panel: level and XP, unspent stat points, and Strength, Dexterity, Vitality and Energy with their value, what they give (text from Orlog) and a + button while points are unspent.
+- **Class choice window**: opens when the player uses the Orlog stone (Orlog's `GetClassStoneRequest` goes up) and has no class. Lists the classes (icon, name, description); Confirm chooses, or shows the reason it was refused. With the demo, the console command `co_classes_stone` does what the stone will do (removes the sample class and opens the window).
+- Escape or the X closes the panel and the window; the game's input is blocked (cursor shown) while either is open.
+
+**How it works:** `ClassesSource` finds `Orlog.Api` through BepInEx's plugin list (`com.krogongames.orlog`, soft dependency) and binds its static methods by reflection, checking `GetApiVersion() == 1`; answers are flat JSON read with `FlatJson`. It re-reads when `GetChangeCounter()` changes (the HUD also every 60 frames as a fallback), and the cross polls `GetSlotStateJson` each frame. `Demo` on overrides Orlog. The sample data (`DemoClasses`), the tree layout (`SkillTreeLayout`) and the JSON writer (`JsonOut`) are pure and tested (`ClassesUiTests`, 13 tests). Windows go on Jötunn's `CustomGUIFront` canvas.
+
+**Config settings** (per player, `5 - Classes UI`):
+
+| Setting | Default | Description |
+|---|---|---|
+| `SkillsPanelKey` | `K` | Opens and closes the skills panel. K is free in Valheim's defaults and the group's mods (EAQS Z/V/B, AdventureBackpacks I) |
+| `SkillCrossPosition` | `24, 180` | Bottom-left corner of the cross, in pixels from the bottom left of the screen (proposed) |
+| `Demo` | `false` | Development: sample data instead of Orlog's. **Off before release** |
+
+**Known issues:** untested. With Orlog installed (and `Demo` off) nothing class-related shows yet: its API only answers the character so far, with no class. To check: the cross next to EAQS's quick slots (EAQS puts them at 216, 150 from the bottom left by default; the cross ends at x 210); the panel (about 644 × 794) fits the screen.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Hud.Update` | Postfix (×3: cross, panel, choice window) | Updates the cross; the panel key and the inventory's Skills button; opens the class choice window on a stone request |
+| `Hud.OnDestroy` | Postfix (×3) | Forgets the cross and closes and destroys the windows |
+| `Menu.Update` | Prefix | Only on the frame Escape is pressed while a class window is open: closes it and skips the menu's update, so the game menu doesn't open as well |
 
 ---
 
@@ -936,6 +1005,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-10-30
+- **Classes UI built** (untested, from `docs/classes-ui-brief.md`): new health/eitr/stamina bars at the bottom centre with food beside them and an XP bar; the skill cross; the skills panel with the three skill tabs, prerequisite lines, spending, tooltips, drag-to-slot and the attribute points; the class choice window for the Orlog stone. Reads Orlog's API by reflection; a `Demo` setting serves a sample Amazon until Orlog's API is filled in (207 tests).
 - **Currency and Maps tabs tested in-game** (single player): every step passed after the drag fix.
 - **Currency and Maps tabs, second re-test:** death and gravestone, relogging and full-bag pickup pass. The drag fix guarded the wrong method (`UpdateInventory`); the cancel is in `UpdateContainer`. Fixed; re-test.
 - **Currency and Maps tabs, re-test:** grids, crafting from the tabs, maps from the Maps tab, chests and full-bag pickup pass. Fixed: left-click couldn't pick up a tab item unless a container was open (the game cancels drags from non-bag inventories then); a tab drag is now kept.

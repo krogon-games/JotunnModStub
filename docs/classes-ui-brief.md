@@ -1,7 +1,7 @@
 # Classes UI brief (for the UI overhaul session)
 
 **From:** the classes session (`claude/class-skills`), 2026-10-30. **For:** the UI overhaul session (`claude/ui-overhaul`, CraftingOverhaul).
-**Status:** agreed with the user; nothing built yet on either side.
+**Status:** agreed with the user. UI side built 2026-10-30 on `claude/ui-overhaul` (all of §2, with the §4 demo), untested; see `FEATURES.md` → Classes UI.
 
 Everything the classes system needs on screen, and the contract between the two plugins, so both sessions build at the same time without waiting for each other. Design and reasons: [`class-design.md`](class-design.md). Decisions: [`DECISIONS.md`](DECISIONS.md) (2026-10-30 rows).
 
