@@ -35,7 +35,9 @@ Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
 
 Build the whole solution from `claude/ui-overhaul` for this one (the tabs are in Corruption; the branch includes everything merged into `master` up to 2026-10-30). Have some maps in your bag from before, and `spawn CorruptionShard 20` and an essence ready (`spawn CorruptionEssence_eikthyr 3`).
 
-1. Open the inventory: **Bag | Currency | Maps** buttons on top of the inventory panel. Within a second, the maps that were in your bag move to the Maps tab. Click each button: the grid switches; the character sheet stays put. Close and reopen: back on Bag.
+**First test 2026-10-30:** step 1 passed; the tab grids broke after the first item (fixed). Re-test steps 2–8. For step 4 use a world with unexplored Meadows (`resetmap` if the map was revealed with `exploremap`).
+
+1. ~~Open the inventory: **Bag | Currency | Maps** buttons on top of the inventory panel. Within a second, the maps that were in your bag move to the Maps tab. Click each button: the grid switches; the character sheet stays put. Close and reopen: back on Bag.~~ (passed 2026-10-30)
 2. Drop some shards and pick them up: they go to Currency, not the bag (the pickup message still shows). Fill your bag with junk and pick up shards again: they still go in. Your weight number doesn't change when shards are picked up.
 3. At the Riftforge, craft a map using shards and an essence that are only in the Currency tab: the recipe shows enough, crafting takes them from the tab, and the new map lands in the Maps tab.
 4. Right-click a map in the Maps tab: it opens a rip as before, and the map is used up.

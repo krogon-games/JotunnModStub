@@ -55,8 +55,17 @@ namespace Corruption.Content
             _grid.m_elements.Clear();
             _grid.m_width = 0;
             _grid.m_height = 0;
+            // Every callback the game gives its own grids (InventoryGui.Awake), except moving the gamepad cursor
+            // between grids. Drawing calls CanDropDragOntoItem unconditionally; without it the grid stopped after the
+            // first item (play-test 2026-10-30), and without m_onReleased nothing could be dragged out.
             _grid.m_onSelected = gui.OnSelectedItem;
+            _grid.m_onReleased = gui.OnReleasedItem;
             _grid.m_onRightClick = gui.OnRightClickItem;
+            _grid.m_onEnter = gui.OnEnterElement;
+            _grid.OnSetTouchSelection = gui.SetTouchSelection;
+            _grid.CanDropDragOntoItem = gui.CanDropDragOntoItem;
+            _grid.OnMoveToUpperInventoryGrid = null;
+            _grid.OnMoveToLowerInventoryGrid = null;
             go.SetActive(false);
 
             _bagGroup = source.GetComponent<CanvasGroup>();

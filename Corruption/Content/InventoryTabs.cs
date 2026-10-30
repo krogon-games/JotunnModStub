@@ -286,6 +286,22 @@ namespace Corruption.Content
             }
         }
 
+        /// <summary>
+        ///     The game puts materials in the bottom row first (the bag keeps tools at the top); a tab fills from the
+        ///     top-left instead, like a list.
+        /// </summary>
+        [HarmonyPatch(typeof(Inventory), nameof(Inventory.TopFirst))]
+        private static class TopFirst_Patch
+        {
+            private static void Postfix(Inventory __instance, ref bool __result)
+            {
+                if (!__result && IsTab(__instance))
+                {
+                    __result = true;
+                }
+            }
+        }
+
         /// <summary>Twice a second, moves currency and maps that landed in the bag (crafted, dragged in, old saves) to their tab.</summary>
         [HarmonyPatch(typeof(Player), nameof(Player.Update))]
         private static class Sweep_Patch
