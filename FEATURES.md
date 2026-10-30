@@ -732,7 +732,7 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 
 **Status:** Planned. Design only, no code (branch `claude/class-skills`).
 
-Diablo 2-style classes in a separate plugin: the Barbarian first, then the Amazon, maybe the Paladin. Character levels from XP, with stat points (D2's Strength, Dexterity, Vitality, Energy) and skill points each level, spent in D2's three-tab trees. Only the skills that work in Valheim; the rest are reworked or dropped. Vanilla skills keep levelling by use. EpicMMOSystem was compared and is not used as a base. Design, open questions and build order: `docs/class-design.md`; D2 reference data: `data/d2-reference/`.
+Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-10-30), then the Barbarian, maybe the Paladin. Character levels from XP, with stat points (D2's Strength, Dexterity, Vitality, Energy) and skill points each level, spent in D2's three-tab trees (skills open by level; prerequisites only where both skills are built). Only the skills that work in Valheim; the rest are reworked or dropped. Vanilla skills keep levelling by use. EpicMMOSystem was compared and is not used as a base. Design, open questions and build order: `docs/class-design.md`; D2 reference data: `data/d2-reference/`.
 
 **Harmony patch targets:** none yet.
 
@@ -741,6 +741,7 @@ Diablo 2-style classes in a separate plugin: the Barbarian first, then the Amazo
 ## Changelog
 
 ### 2026-10-30
+- **Classes: the Amazon comes first** (group vote), with 19 of her 30 skills planned for v1 and the rest later. Tree layout decided: D2's three tabs, level tiers instead of broken prerequisite chains, upgrade choices on big skills later. Levels follow D2's rules, all in admin config; no XP loss on death. Design only.
 - **Classes, levels and skill trees planned** (design only): `docs/class-design.md`, D2 reference tables in `data/d2-reference/`. EpicMMOSystem researched; own levels recommended. No mod code changed.
 - **New animations allowed where necessary** (user): the v1 "no new animations" rule is lifted; vanilla animations and emotes still come first.
 

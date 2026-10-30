@@ -2,7 +2,7 @@
 
 **Status:** Proposed, design only. No code. Branch `claude/class-skills`.
 
-**User brief (2026-10-30):** add Diablo 2 class skill trees as a separate part of our mods. The **Barbarian** first, because it fits Valheim best; expand to the **Amazon** and maybe the **Paladin**. Don't implement everything about a class, only as much as works without breaking the game. Add **character levels**, with points to spend on **stats and skills** each level. **New animations are now allowed where necessary.** Look at EpicMMOSystem first.
+**User brief (2026-10-30):** add Diablo 2 class skill trees as a separate part of our mods. ~~The Barbarian first~~ **The Amazon first** (the group voted for her, 2026-10-30), then the **Barbarian**, maybe the **Paladin**. Don't implement everything about a class, only as much as works without breaking the game. Add **character levels**, with points to spend on **stats and skills** each level. **New animations are now allowed where necessary.** Look at EpicMMOSystem first.
 
 D2 reference data (skill trees, prerequisites, synergies, class stats, general rules, sources): [`data/d2-reference/`](../data/d2-reference/README.md). Numbers for our version will go in data tables in the plugin's `Data/` folder, as in Corruption; none are set yet.
 
@@ -28,7 +28,7 @@ Researched 2026-10-30 from its Thunderstore page and source (https://github.com/
 - Network rule `EveryoneMustHaveMod`: warcries and auras touch other players and creatures, and new animations must play on every client.
 - Works without Corruption. With Corruption installed, its gear can roll "+N to <class> skills" and "+N to <skill>" affixes, and rings (already planned to raise skills) can raise class skills. Corruption's boss essences could craft the respec token (D2's Token of Absolution is made from boss essences too).
 - The character sheet (CraftingOverhaul) can show level, XP and attributes by reading them from the player, without a hard dependency.
-- Name: Norse; to choose (§9).
+- Name: Norse; to choose (§10).
 
 ## 3. Levels and points
 
@@ -51,16 +51,19 @@ Valheim version:
 | Strength | Melee damage, item requirements | Physical damage %, carry weight |
 | Dexterity | Bow damage, attack rating, block | Bow and throwing damage %; Valheim has no attack rating |
 | Vitality | Life and stamina (per class: Barbarian 4 life/point, Amazon and Paladin 3) | Max health and stamina |
-| Energy | Mana | Max eitr (if skills use eitr, §9) |
+| Energy | Mana | Max eitr (if skills use eitr, §10) |
 
 D2's item stat requirements are left out: Valheim gates gear by biome materials already.
 
 ## 4. How skills work in Valheim
 
-- **Tree:** D2's three tabs of 10 per class, with D2's tiers (levels 1/6/12/18/24/30), prerequisites, 20-point cap and synergies, read from a data table. Rules (can I put a point here, the effective level with +skills, synergy bonus) in pure, tested code.
+- **Tree (decided, user 2026-10-30):** D2's three tabs of 10 per class, with D2's 20-point cap and synergies, read from a data table. Rules (can I put a point here, the effective level with +skills, synergy bonus) in pure, tested code. Two ideas taken from Diablo 4:
+  1. **Level tiers instead of prerequisite chains.** A skill opens at its D2 level (1/6/12/18/24/30). Its D2 prerequisites only count when they are built (status `v1` or `reworked`); a prerequisite that is `later` or `dropped` is skipped, so the dependent opens by level alone and no chain breaks. A dropped skill leaves an empty slot that a Valheim-flavoured skill can fill later.
+  2. **Upgrade choices on the big skills, later:** at set point counts (for example 10 and 20) a signature skill offers one of two variants. That is where reworked skills get their Valheim twists without changing D2's layout.
+- **Why not one Diablo 4 tree:** our point economy is D2's (about 110 skill points by level 99, 20 per skill), which fits 30 skills in three themed tabs; D4's tree is built for about 60 points and skills capped at 5, so most of it would get filled and every character would end up alike.
 - **Skills we can't do well are left out or reworked**, not forced in (user: "as much as we can without breaking the game"). Each skill has a status in the table: `v1`, `later`, `reworked`, `dropped`.
-- **Casting:** hotkeys on an ability bar (Jötunn `ButtonConfig`, with gamepad), cooldowns as status effects. Whether a selected combat skill replaces the weapon's secondary attack (closer to D2's right-click skill) is open (§9).
-- **Cost:** D2 uses mana; open (§9).
+- **Casting:** hotkeys on an ability bar (Jötunn `ButtonConfig`, with gamepad), cooldowns as status effects. Whether a selected combat skill replaces the weapon's secondary attack (closer to D2's right-click skill) is open (§10).
+- **Cost:** D2 uses mana; open (§10).
 - **Damage types:** D2 magic and holy damage → Valheim **spirit** (strong against undead, as holy is in D2); fire, cold → frost, lightning and poison map directly. Valheim has no attack rating or critical hits; crits would be a new mechanic (Amazon Critical Strike, Barbarian masteries).
 - **Weapon skills:** Valheim's `m_skillType` decides which mastery applies (Swords and Knives → Blade, Axes, Clubs → Mace, Polearms, Spears).
 - **Multiplayer:** your own game runs your attacks and movement. Buffs on other players go to their games. Effects on creatures go to the creature owner's game (the talisman pattern). Players in range stand in for a D2 party.
@@ -72,7 +75,58 @@ In order of preference:
 2. **Looping or re-timing a vanilla animation**, e.g. Whirlwind as the atgeir spin replayed while the key is held, with movement allowed (the approach of sighsorry's SecondaryAttacks mod; it's GPL-3, so we write our own). `Animator.Play` and speed changes don't sync, so other players need our own message.
 3. **New clips** from an asset bundle, swapped in with an `AnimatorOverrideController` (the standard method, KG's `AnimationReplaceManager`, BSD-3). Jötunn has no animation helper. Risks: the clip swap fights other mods that replace the player's animator (none in the group's current mod list); every player needs the mod; our `JotunnModUnity` project is Unity 2020.3, while Valheim has used Unity 2022.3 since 0.217.46, so the project needs an upgrade before it can build bundles (Valheim 1.0's exact Unity version to check on the user's PC).
 
-## 5. Barbarian (first class)
+## 5. Amazon (first class)
+
+Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are vanilla weapon lines in almost every biome (bows from the Meadows to the Deep North; spears from the Meadows, except the Plains; crossbows from the Mistlands), and the game already has what several of her skills need (from `data/game-dump-1.0.20/`):
+- Fire, frost, poison and silver (spirit) arrows: their damage and effects for Fire, Cold and Magic Arrow.
+- Status effects `Burning`, `Frost` (slow), `Poison`, `Lightning`, `Immobilized` (speed −1000, 5 s: a freeze) and `Tared` (speed −50%).
+- Staffs that fire several projectiles (`StaffIceShards`), explode (`StaffClusterbomb`) or throw lightning (`StaffLightning`): effects to reuse for Multiple Shot, Exploding Arrow and the lightning javelins.
+- A summon system with a friendly creature (`Skeleton_Friendly`, faction Players) for Decoy and Valkyrie.
+
+**How her skills are used (proposed):** D2 puts the chosen skill on the right mouse button; Valheim's bow has no secondary attack and the spear throws on its secondary. So:
+- **Bow skills are arrow modes.** Pick one on the ability bar; every shot of the bow or crossbow uses it and pays its cost. No mode = a normal shot.
+- **Spear skills ride the spear's own attacks:** thrust skills (Jab, Power Strike, Impale, Charged and Lightning Strike, Fend) on the primary attack, javelin skills (Poison, Plague, Lightning Bolt, Lightning Fury) on the throw.
+- **Javelin skills throw a spectral copy** of the spear, so the real spear stays in hand (a vanilla throw leaves it on the ground to pick up, which doesn't suit casting). To confirm (§10).
+- **Passives** (Critical Strike, Dodge, Avoid, Evade, Pierce) need no casting.
+
+| Tab | Skill | Valheim version | Status |
+|---|---|---|---|
+| Bow and Crossbow | Magic Arrow | Shoots without using an arrow, for the skill's cost; the damage turns into spirit damage as it levels | v1 |
+| | Fire Arrow | Adds fire damage to the shot (fire arrow effects) | v1 |
+| | Cold Arrow | Adds frost damage; the target is slowed (`Frost`) | v1 |
+| | Multiple Shot | One shot splits into several arrows in a fan; uses one arrow | v1 |
+| | Exploding Arrow | Fire damage in an area on impact | v1 |
+| | Ice Arrow | Frost damage and a short freeze (`Immobilized`); bosses only slowed | v1 |
+| | Freezing Arrow | Ice Arrow's freeze in an area | v1 |
+| | Guided Arrow | The arrow homes in on the target (our own steering of the projectile) | later |
+| | Strafe | A volley of arrows at several nearby targets | later |
+| | Immolation Arrow | Exploding Arrow plus a burning patch on the ground | later |
+| Passive and Magic | Critical Strike | Chance to deal double physical damage (crits are a new mechanic; the Barbarian's masteries reuse it) | v1 |
+| | Dodge | Chance to avoid a melee hit while standing or attacking | v1 |
+| | Avoid | Chance to avoid a projectile while standing or attacking | v1 |
+| | Evade | Chance to avoid any hit while moving | v1 |
+| | Inner Sight | Cast: nearby enemies glow and take more damage for a while | v1 |
+| | Penetrate | D2: attack rating, which Valheim lacks. Needs a rework (to choose, §10) | reworked |
+| | Pierce | Chance for an arrow or javelin to pass through and hit the next enemy | later |
+| | Slow Missiles | Enemy projectiles near you slow down (they belong to their shooter's game, so it needs messages) | later |
+| | Decoy | A copy of you that creatures attack instead; needs a look (§10) | later |
+| | Valkyrie | Summons a warrior to fight for you (the summon system works; she needs a look and fighting AI, §10) | later |
+| Javelin and Spear | Jab | A fast series of thrusts | v1 |
+| | Power Strike | Adds lightning damage to the thrust | v1 |
+| | Impale | One heavy thrust; wears the spear down faster | v1 |
+| | Poison Javelin | The javelin leaves poison clouds along its path | v1 |
+| | Lightning Bolt | The javelin turns into lightning: all its damage becomes lightning | v1 |
+| | Plague Javelin | A spreading poison cloud where the javelin lands | v1 |
+| | Charged Strike | The thrust releases small lightning bolts around the target | later |
+| | Fend | Thrusts at several nearby enemies in turn | later |
+| | Lightning Strike | The thrust releases chain lightning to nearby enemies | later |
+| | Lightning Fury | The javelin bursts into lightning bolts on impact | later |
+
+19 skills in v1, 10 later, none dropped. With the tree rule in §4, a skill built before its prerequisite (for example Strafe before Guided Arrow) opens by level alone.
+
+Animations: thrusts, throws, bow shots and the cast all exist in vanilla (`spear_poke`, `spear_throw`, the bow's own draw and shot, `gpower` or an emote for Inner Sight). Jab needs the thrust replayed faster; the speed change doesn't sync, so it needs our own message, as for Whirlwind (§4).
+
+## 6. Barbarian (later)
 
 | Tab | Skill | Valheim version | Animation | Status |
 |---|---|---|---|---|
@@ -101,16 +155,6 @@ In order of preference:
 | | Double Swing, Frenzy | Need two weapons. Valheim has no dual wielding, but Berserkir axes and Skoll and Hati are dual items: limit both skills to them. Frenzy: each hit raises attack and movement speed for a while | Their own attacks | later |
 | | Double Throw | Throw two spears | `spear_throw` | later |
 
-## 6. Amazon (second class)
-
-Fits Valheim well: bows and spears are both strong vanilla weapon lines, and Valheim already has fire, frost and poison arrows to borrow effects from.
-
-| Tab | Valheim version | Hard parts |
-|---|---|---|
-| Bow and Crossbow | Elemental arrows add fire/frost to any arrow; Magic Arrow shoots without ammo for the resource; Multiple Shot and Strafe fire several projectiles; Exploding/Immolation reuse fire and bomb effects; Guided Arrow homes in; Ice/Freezing Arrow freeze (beyond vanilla's frost slow) | Homing projectiles, freezing in place |
-| Javelin and Spear | Uses Valheim's spear thrusts and throws (Spears skill). Jab, Fend: rapid or multi-target thrusts. Power/Charged/Lightning Strike: lightning on melee hits. Poison/Plague Javelin: poison clouds. Lightning Bolt/Fury: the thrown spear becomes lightning | Chain lightning, cloud trails |
-| Passive and Magic | Dodge, Avoid, Evade: chance to avoid hits. Critical Strike: needs crits (new mechanic). Pierce: arrows pass through. Inner Sight: enemies highlighted and take more damage. Slow Missiles. Decoy and Valkyrie: summons (Valheim has summoning staffs; a fighting Valkyrie needs a model and AI, so it may come last or be dropped). Penetrate: attack rating, so reworked or dropped | Decoy, Valkyrie |
-
 ## 7. Paladin (maybe, third)
 
 - **Auras** (one active at a time, as in D2): a status effect in a radius. Buffs for players (Might, Defiance, Prayer, Vigor, Meditation, the resist auras, Salvation) are straightforward; pulses on enemies (Holy Fire, Holy Freeze, Holy Shock, Sanctuary, Conviction) reuse elemental damage and effects.
@@ -120,11 +164,11 @@ Fits Valheim well: bows and spears are both strong vanilla weapon lines, and Val
 ## 8. Build order (proposed)
 
 Each step is play-tested before the next.
-1. **Levels:** XP from kills, sharing, level-up, D2 attributes with their effects, a level/XP bar and spending window, respec item. Shown on the character sheet.
-2. **Class choice and the skill tree panel**, with the rules in tested pure code, and the Barbarian's **Combat Masteries** (passives only: no casting, animations or networking).
-3. **Warcries:** ability bar, cost and cooldowns, emotes, buffs on players in range, debuffs through creature owners.
-4. **Barbarian combat skills:** Bash, Stun, Concentrate, Berserk, then Leap, Leap Attack and Whirlwind (first the vanilla-animation versions, then new clips where they look wrong).
-5. **Amazon.** 6. **Paladin** (if wanted).
+1. **Levels:** XP from kills, sharing, level-up, D2 attributes with their effects, respec item. The XP bar and spending window come from the UI session (§9).
+2. **Class choice, the tree rules and the Amazon's passives:** Critical Strike, Dodge, Avoid, Evade (no casting, animations or networking).
+3. **Arrow modes:** the ability bar, cost and cooldowns, and the v1 bow skills; Inner Sight.
+4. **Spear skills:** Jab, Power Strike, Impale, then the javelins (Poison, Lightning Bolt, Plague).
+5. **The Amazon's `later` skills**, one by one. 6. **Barbarian.** 7. **Paladin** (if wanted).
 
 Before step 1: check `docs/mod-compatibility.md` for every game method we'll patch (`Character.Damage` and `Character.RPC_Damage` are already patched by Corruption).
 
@@ -147,4 +191,8 @@ The exact API is written here before either side builds it.
 6. **Names:** keep D2 class and skill names (as the orbs keep PoE names, because the group knows them), with a Norse plugin name? "Berserkir" is taken by vanilla axes; "Úlfheðnar" (wolf-warriors) is free. The Amazon could be a Valkyrie or Shieldmaiden (*skjaldmær*).
 7. **Vanilla skills:** keep levelling by use alongside class levels (recommended), or replace use-to-level as in the original skill rework idea?
 8. ~~Death penalty~~ **Answered 2026-10-30:** Valheim's own skill loss only; no XP loss.
-9. **Tree layout:** D2's three tabs or one Diablo 4-style tree? (Recommendation in the chat of 2026-10-30: D2's three tabs, keeping D2's point economy, with level tiers instead of prerequisites where a dropped skill would break a chain.)
+9. ~~Tree layout~~ **Answered 2026-10-30:** D2's three tabs, with level tiers instead of broken prerequisite chains and upgrade choices later (§4).
+10. **Javelins:** do javelin skills throw a spectral copy (the spear stays in hand; proposed) or the real spear, as vanilla does?
+11. **Penetrate:** what should replace attack rating? For example, a chance to ignore a creature's resistance to the hit's damage type.
+12. **Decoy and Valkyrie looks:** a tinted clone of an existing creature (for example a Dvergr), or a new model (only where you ask)?
+13. **Arrow modes:** happy with bow skills as a mode chosen on the ability bar, used by every shot (§5)?

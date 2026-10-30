@@ -50,7 +50,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 ## Not built (proposed)
 
-Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Barbarian first, then Amazon, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -71,7 +71,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Waiting on the user
 
-- **Classes and levels (2026-10-30):** own levels, D2 rules in config and no XP loss on death are decided (2026-10-30); still open in [`class-design.md`](class-design.md#10-open-questions-for-the-user): tree layout (D2 tabs or D4 single tree), skill resource, XP per creature, how to pick a class, casting, names, vanilla skills. The XP bar and skills panel go to the UI overhaul session.
+- **Classes and levels (2026-10-30):** own levels, D2 rules in config and no XP loss on death are decided (2026-10-30); tree layout decided (D2 tabs with level tiers); the Amazon comes first (group vote). Still open in [`class-design.md`](class-design.md#10-open-questions-for-the-user): skill resource, javelins (spectral copy or real spear), Penetrate's rework, Decoy/Valkyrie looks, arrow modes, XP per creature, how to pick a class, casting, names, vanilla skills. The XP bar and skills panel go to the UI overhaul session.
 - **Run `co_dump` once in a world (2026-10-28) and send the new files** (`item_details.csv`, `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them, phase 6 its altar offerings, and the gear affixes their remaining ranges, instead of guessing.
 
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).

@@ -11,7 +11,7 @@ Entry point to the design. It summarises what has been agreed and where each sys
 | [`corruption-design.md`](corruption-design.md) | Corruption endgame: shards, essences, Riftforge, maps, rips, scars, corrupted bosses, exploration events, talismans, loot, uniques, orbs, build order | User (converted from PDF), with dated changes |
 | [`corruption-design-review.md`](corruption-design-review.md) | Where the design and Valheim's code disagree, simplifications, build-vs-depend options | Technical review, 2026-10-15 |
 | [`AFFIX_RULES.md`](AFFIX_RULES.md) | Gear prefixes/suffixes, tiers, twin resonance, range display | Draft, awaiting review |
-| [`class-design.md`](class-design.md) | Diablo 2-style classes (Barbarian, then Amazon, maybe Paladin), character levels, stat and skill points, EpicMMOSystem comparison | User brief + Claude's proposal, 2026-10-30 |
+| [`class-design.md`](class-design.md) | Diablo 2-style classes (Amazon first, then Barbarian, maybe Paladin), character levels, stat and skill points, EpicMMOSystem comparison | User brief + Claude's proposal, 2026-10-30 |
 | [`storage-quests-design.md`](storage-quests-design.md) | Chest tiers, quest-unlocked super chest, Mistlands bank/vault | User brief + notes |
 | [`art-prompts.md`](art-prompts.md) | Image-model prompts for concept renders (boss essences, currency orbs) | Draft |
 | [`ideas.md`](ideas.md) | Original idea backlog, each linked to its design section | — |
@@ -36,7 +36,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28). The slots are shown in a WoW-style **character sheet** (CraftingOverhaul, built 2026-10-29, untested); the Currency and Maps tabs are still to come | design doc, `mod-compatibility.md`, `FEATURES.md` → Character sheet |
 | Phase 10: skill rework (optional module) | — | Proposed; now part of classes and levels (2026-10-30) | design doc |
-| Classes, levels and skill trees (D2 Barbarian first) | New plugin (proposed) | Proposed, design only | `class-design.md`, `data/d2-reference/` |
+| Classes, levels and skill trees (D2 Amazon first) | New plugin (proposed) | Proposed, design only | `class-design.md`, `data/d2-reference/` |
 | Storage and quests | Undecided plugin | Proposed, saved for later | `storage-quests-design.md` |
 | Combat mechanics (parry, posture, combos) | — | Ideas only | `FEATURES.md` → Combat mechanics |
 
