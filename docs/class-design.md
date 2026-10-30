@@ -37,9 +37,10 @@ D2 base rules (reference): max level 99; 5 stat points and 1 skill point per lev
 **Decided (user, 2026-10-30): follow D2's rules, with every rule in admin config** (server-synced) so it can be changed: max level (default 99), stat points per level (5), skill points per level (1), bonus points from bosses, the 20-point cap per skill, the one-point-per-level pace. The XP needed per level is a table, D2's experience table by default, in the plugin's `Data/` folder, with a config multiplier. Still open: how much XP each creature gives (§10).
 
 Valheim version:
+- **Pace (user, 2026-10-30): slow, like classic World of Warcraft.** Proposed way to get there from game data, WoW-style: each creature gets a **level from its biome** (as WoW's zones have level ranges) plus its stars; XP per kill follows WoW's classic formula for a creature of your level (level × 5 + 45), more for higher creatures and nothing for creatures far below you ("grey" mobs), so staying in an old biome stops paying and players move on, as in WoW. The XP needed per level stays D2's table, scaled by the config multiplier. Still needed from the user: the target pace (§10).
 - **XP from kills**, more for starred creatures, bosses and corrupted creatures. Players near the kill share it, as in a D2 party (Valheim has no parties). D2's quest points → **each boss's first kill** gives bonus skill points (and maybe stat points).
 - **Per level:** stat points for the D2 attributes, 1 skill point.
-- **Vanilla skills stay** and keep levelling by use (they set how well you use a weapon). The class adds to them; it doesn't replace them. This is less invasive than the original "skill rework" idea of replacing use-to-level.
+- **Vanilla skills stay** (decided, user 2026-10-30) and keep levelling by use (they set how well you use a weapon). The class adds to them; it doesn't replace them. This is less invasive than the original "skill rework" idea of replacing use-to-level.
 - **Death:** no XP or level loss (user, 2026-10-30). Valheim's own skill loss applies as now. From the game code: each skill drops by `Skills.m_DeathLowerFactor` × the world's skill reduction rate (`Game.m_skillReductionRate`, the "Death penalty" world modifier, 1 by default). The factor's code default is 0.25, but the player prefab may set its own value, so the real percentage (the user remembers 10%) is unverified until `co_dump` reads it.
 - **Respec:** an item, as in D2. With Corruption, crafted from boss essences.
 - **Saved** in the player's custom data (`Player.m_customData`, already used by the corrupted wishbone), so it stays with the character. Level shown to others through the player's ZDO. XP is decided by the creature owner's game and sent to the players who share it. That trusts clients, which is fine for four friends.
@@ -69,7 +70,15 @@ D2's item stat requirements are left out: Valheim gates gear by biome materials 
   - Proposed details: the chosen skill is remembered per weapon kind (the last bow skill comes back when you take the bow out again); a slot greys out when the weapon in hand can't use it, or when you can't pay its cost; cost and cooldown show on the slot.
   - Default slot hotkeys are picked from keys that neither Valheim nor the group's mods (EquipmentAndQuickSlots, AdventureBackpacks, PlantEasily) bind by default, read from their code and config before building.
   - Technical: drawing a bow on a button other than the attack button needs a patch to the player's input; prove it in the first prototype.
-- **Cost:** D2 uses mana; open (§10).
+- **Cost (decided, user 2026-10-30): skills that cost mana in D2 cost eitr.** Skills without a mana cost (passives, Paladin auras) stay free.
+
+### Eitr: making it usable for classes
+
+Today eitr is punishing for anyone who isn't a late-game mage (game dump): a character has **no eitr at all** until eitr food, and almost all eitr food and both eitr meads come from the Mistlands or later (Magecap 25, Yggdrasil porridge 80, Seeker aspic 85; Minor eitr mead +125 eitr over 10 s, Lingering eitr mead eitr regen ×1.25 for 5 minutes). An Amazon in the Meadows couldn't cast once. Proposed redesign (user asked for it; numbers still to set):
+- **A base eitr pool from the class**, from D2's rules: the Amazon's starting mana (15), mana per level (1.5) and per Energy point (1.5) in `data/d2-reference/classes.csv`, scaled to Valheim. Eitr food adds on top, as today. Without a class nothing changes.
+- **Eitr regeneration** that works without eitr food (vanilla regen only fills the pool food gives).
+- **Eitr potions from the early biomes**, like D2's mana potions: craftable with early materials, modelled on the vanilla minor eitr mead (instant or over a few seconds) and lingering mead (regen). Players can carry them in the EquipmentAndQuickSlots quick slots.
+- Vanilla staffs use the same eitr, so the class pool also makes a mage build easier. That's intended for classes; a character without a class keeps vanilla eitr.
 - **Damage types:** D2 magic and holy damage → Valheim **spirit** (strong against undead, as holy is in D2); fire, cold → frost, lightning and poison map directly. Valheim has no attack rating or critical hits; crits would be a new mechanic (Amazon Critical Strike, Barbarian masteries).
 - **Weapon skills:** Valheim's `m_skillType` decides which mastery applies (Swords and Knives → Blade, Axes, Clubs → Mace, Polearms, Spears).
 - **Multiplayer:** your own game runs your attacks and movement. Buffs on other players go to their games. Effects on creatures go to the creature owner's game (the talisman pattern). Players in range stand in for a D2 party.
@@ -134,6 +143,13 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 
 Animations: thrusts, throws, bow shots and the cast all exist in vanilla (`spear_poke`, `spear_throw`, the bow's own draw and shot, `gpower` or an emote for Inner Sight). Jab needs the thrust replayed faster; the speed change doesn't sync, so it needs our own message, as for Whirlwind (§4).
 
+## 5a. Choosing a class: the class stone
+
+Decided (user, 2026-10-30): **a class is chosen at the spawn area** (the `StartTemple` location in the Meadows, where the boss trophies go), at **a new stone structure that blends in** with the area's standing stones.
+- Proposed build: cloned from the start area's own stone prefabs (same mesh and material, no new model), placed once per world beside the trophy stones by the server (the start temple's position comes from the world's location list; the stone is a persistent object like the rip heart).
+- Interact (E) to open the class choice (UI from the UI session); a character without a class gets a raven hint the first time it spawns, as the Riftforge's raven does.
+- Open: can a character change class later, and at what cost (§10)?
+
 ## 6. Barbarian (later)
 
 | Tab | Skill | Valheim version | Animation | Status |
@@ -193,12 +209,12 @@ The exact API is written here before either side builds it.
 ## 10. Open questions (for the user)
 
 1. ~~Own levels vs EpicMMOSystem~~ **Answered 2026-10-30:** our own.
-2. **Skill resource:** stamina (the Valheim warrior's resource), eitr (Valheim's mana, but only magic food gives it), or a new bar (e.g. rage)?
-3. **Numbers:** ~~D2 rules or not~~ **answered 2026-10-30:** D2's rules, all changeable in config. Still open: XP per creature (EpicMMOSystem's tables, or derived from creature health in the game dump), and how attribute and skill values scale from D2 to Valheim stats.
-4. **Choosing a class:** at a station or altar, with an item (Valheim Legends uses Eikthyr's altar), or with a console command for now? Can a character change class?
+2. ~~Skill resource~~ **Answered 2026-10-30:** eitr for every skill that costs mana in D2, with the eitr redesign in §4. Open: its numbers.
+3. **Numbers:** ~~D2 rules or not~~ **answered 2026-10-30:** D2's rules, all changeable in config. XP per creature: slow, like classic WoW (§3). Still open: the target pace (for example, which level at each boss, or hours to the level cap), and how attribute and skill values scale from D2 to Valheim stats.
+4. ~~Choosing a class~~ **Answered 2026-10-30:** at a new stone at the spawn area (§5a). Open: can a character change class, and at what cost?
 5. ~~Casting~~ **Answered 2026-10-30:** D2 layout, a 4-slot skill bar with its own hotkeys; right click fires the skill for every weapon; block and parry move to a rebindable key; the skill button is rebindable too (§4).
 6. **Names:** keep D2 class and skill names (as the orbs keep PoE names, because the group knows them), with a Norse plugin name? "Berserkir" is taken by vanilla axes; "Úlfheðnar" (wolf-warriors) is free. The Amazon could be a Valkyrie or Shieldmaiden (*skjaldmær*).
-7. **Vanilla skills:** keep levelling by use alongside class levels (recommended), or replace use-to-level as in the original skill rework idea?
+7. ~~Vanilla skills~~ **Answered 2026-10-30:** keep levelling by use.
 8. ~~Death penalty~~ **Answered 2026-10-30:** Valheim's own skill loss only; no XP loss.
 9. ~~Tree layout~~ **Answered 2026-10-30:** D2's three tabs, with level tiers instead of broken prerequisite chains and upgrade choices later (§4).
 10. ~~Javelins~~ **Answered 2026-10-30:** spectral copy.

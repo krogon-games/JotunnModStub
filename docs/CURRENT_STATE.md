@@ -71,7 +71,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Waiting on the user
 
-- **Classes and levels (2026-10-30):** own levels, D2 rules in config and no XP loss on death are decided (2026-10-30); tree layout decided (D2 tabs with level tiers); the Amazon comes first (group vote). Still open in [`class-design.md`](class-design.md#10-open-questions-for-the-user): skill resource, XP per creature, how to pick a class, names, vanilla skills. The XP bar, skills panel and the new 4-slot skill bar go to the UI overhaul session.
+- **Classes and levels (2026-10-30):** own levels, D2 rules in config and no XP loss on death are decided (2026-10-30); tree layout decided (D2 tabs with level tiers); the Amazon comes first (group vote). Also decided: eitr for skills (with an eitr redesign), slow WoW-like levelling, a class stone at the spawn area, vanilla skills keep levelling. Still open in [`class-design.md`](class-design.md#10-open-questions-for-the-user): the levelling pace target, eitr numbers, changing class, names. The XP bar, skills panel and the new 4-slot skill bar go to the UI overhaul session.
 - **Run `co_dump` once in a world (2026-10-28) and send the new files** (`item_details.csv`, `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them, phase 6 its altar offerings, and the gear affixes their remaining ranges, instead of guessing.
 
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
