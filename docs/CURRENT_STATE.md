@@ -1,13 +1,14 @@
 # Current state
 
-**Last updated:** 2026-10-29 (character sheet tested and merged into `master`) · **Branch:** `claude/ui-overhaul` (UI work; other sessions on their own branches, see `CLAUDE.md`) · **Game:** Valheim 1.0.20
+**Last updated:** 2026-10-30 (Orlog levels and XP built on `claude/class-skills`; character sheet merged 2026-10-29) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.20
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
 ## Build health (checked 2026-10-28)
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
-- `dotnet test CraftingOverhaul.Tests`: **146 passed, 0 failed** (2026-10-29) (biome solver, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, loot base, loot rule, roller and loot item, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- Orlog (the classes plugin, new 2026-10-30) compiles the same way.
+- `dotnet test CraftingOverhaul.Tests`: **178 passed, 0 failed** (2026-10-30, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -35,6 +36,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
 | Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
+| Orlog levels and XP: XP per kill, stars, level-up, level-difference cut, saved with the character | Orlog | 2026-10-30 play-test; pace fix re-tested the same day ("pace feels better") |
 
 ### Built, not verified
 
@@ -47,11 +49,12 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | **Loot system step 1** (2026-10-29, branch `claude/affixes-loot`) | Passed 2026-10-29: Rare and Magic names, tooltip lines with ranges, armour/damage/lightning numbers, natural drops, combat affixes, resonant line, no errors. Ground names (fixed), upgrading, durability and repair passed 2026-10-30: **every single-player step passed**. Still: multiplayer (each player's own roll); bigger backpacks after the server setting |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
+| Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Orlog levels, step 8 (everything else passed 2026-10-30, including the pace fix) |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
 
-Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics. Loot system: step 1 built (drops, tooltips, item-stat affixes); orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Loot system: step 1 tested in single player (drops, tooltips, item-stat affixes); orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -72,6 +75,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Waiting on the user
 
+- **Classes and levels (2026-10-30):** own levels, D2 rules in config and no XP loss on death are decided (2026-10-30); tree layout decided (D2 tabs with level tiers); the Amazon comes first (group vote). Also decided: eitr for skills (with an eitr redesign), slow WoW-like levelling, a class stone at the spawn area, vanilla skills keep levelling. Levelling guide per boss and the class eitr pool decided (2026-10-30); changing class deferred. Still open in [`class-design.md`](class-design.md#10-open-questions-for-the-user): how D2 values scale to Valheim, eitr regen rate. Names decided (D2's; Orlog stone). New HUD layout for the UI session: bars together at the bottom centre, skill cross at the bottom left (`class-design.md` → HUD layout). The XP bar, skills panel and the new 4-slot skill bar go to the UI overhaul session.
 - **Run `co_dump` once in a world (2026-10-28) and send the new files** (`item_details.csv`, `spawns.csv`, `events.csv`, `event_spawns.csv`, `status_effects.csv`, `containers.csv`, `destructibles.csv`, `altars.csv`). Phase 4 step B takes its wave, maddened and loot numbers from them, phase 6 its altar offerings, and the gear affixes their remaining ranges, instead of guessing.
 
 - **General gear affixes:** the range rule is decided (2026-10-28); the remaining ranges are computed from the next `co_dump` ([`AFFIX_RULES.md`](AFFIX_RULES.md#general-gear-pool-draft)).
@@ -83,12 +87,14 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Next actionable tasks
 
-0. **Map icons** merged (PR #5). **Rip waves at least 1 star** (`MinStars`, 2026-10-29): tested, "definitely more challenging"; PR into `master`.
+0. **Corrupted offerings** (phase 6): Eikthyr, Moder, the Queen and Kall's phases passed 2026-10-30; swapped seed/blood icons fixed (re-check); PR into `master`. Map icons merged (PR #5). **Rip waves at least 1 star** (`MinStars`, 2026-10-29): tested, "definitely more challenging"; PR into `master`.
 1. **Rips step B and the heart search passed in single player (2026-10-29)**; merged into `master` (PR #4). Ping colour re-checked (more red, stops when the heart dies); multiplayer tests with the group. Still open from the design: checking the landing area once loaded (locations, water).
 2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
+6. **Classes UI** (UI overhaul session, after its current merge): merge `master`, then build [`classes-ui-brief.md`](classes-ui-brief.md), HUD bars first.
+7. **Classes** (`claude/class-skills`): levels and XP built (2026-10-30, Orlog), play-tested 2026-10-30 including the pace fix; PR into `master` opened. Open: how much XP bosses should give; sharing with a friend. Next: attributes and the class eitr pool, then the Orlog stone and class choice, then the tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)).
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 

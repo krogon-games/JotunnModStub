@@ -43,9 +43,18 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 | Corrupted bosses (`Character.Awake` postfix, `Character.RPC_Damage` prefix) | None of the three patch these | Verified in code |
 | Rip waves: maddened (`Character.Awake` postfix, `BaseAI.IsEnemy` postfix at last priority) | None of the three patch these; our own talisman postfix on `IsEnemy` runs first, so maddened creatures ignore charms. The maddened effect is added with `SEMan.AddStatusEffect`, which AdventureBackpacks prefixes (for its backpack effects on players) | Verified in code; to test |
 | Maps (`Humanoid.UseItem` prefix) | AB's quick transfer also prefixes `UseItem` (higher priority): with the backpack open, right-clicking moves the item. Our prefix steps aside when another skipped the original, so a map gets moved, not used. EAQS quick slots call `UseItem` normally, so maps work from quick slots | Verified in code; to test |
+| Corrupted offerings (`OfferingBowl.UseItem`, `.Interact`, `.RPC_RemoveBossSpawnInventoryItems` prefixes, `.DelayedSpawnBoss` postfix; `ItemStand.IsSupported` postfix, `ItemStand.Interact` prefix; `Door.Interact`, `Door.UseItem` prefixes; `Character.OnDeath` prefix) | AB postfixes `Door.HaveKey` so a normal key in the backpack opens doors, and prefixes `ItemStand.UseItem`/`UpdateAttach` (move protection only). Ours look for corrupted items in the **main inventory only**: a corrupted Sealbreaker or egg in the backpack isn't used. EAQS patches `Player.OnDeath` and `Character.CheckDeath` for players only. No overlap otherwise | Verified in code (decompiled AB and EAQS); to test |
 | Rips (`Player.UpdateTeleport` postfix, `Game.Start` postfix) | None of the three patch these. AB patches `Inventory.IsTeleportable` (backpack contents count), which our rip check uses, so ores in a backpack block rips like portals | Verified in code |
 | Loot step 1 (2026-10-29): `CharacterDrop.OnDeath`, `InventoryGrid.CreateItemTooltip`, `ItemDrop.GetHoverText`, `ItemData.GetDamage`/`GetArmor`/`GetMaxDurability`/`GetBaseBlockPower`, `Attack.GetAttackStamina`, `Character.Damage`, `SEMan.ModifyTimedBlockBonus` | None of the three patch these (AB patches `Player.OnDeath`, PlantEasily `Beehive`/`Pickable.GetHoverText`, not these). Our character sheet moves EAQS's cells in `InventoryGrid.UpdateGui`, not the tooltip | Verified in code (2026-10-29) |
 | Affix tooltips (`ItemData.GetTooltip` postfix) | AB also postfixes it (priority 200): for backpacks it inserts an armour line after the quality or weight line. We append our lines at the end; both work | Verified in code (2026-10-29) |
+
+## Orlog (built)
+
+| Our feature | Overlap | Status |
+|---|---|---|
+| Kill XP (`Character.OnDeath` prefix) | EAQS patches `Character.CheckDeath` and `Player.OnDeath` (not `Character.OnDeath`). Our prefix only reads the creature and sends messages; it skips players | No overlap known; to test |
+| Level on the player ZDO (`Player.OnSpawned` postfix), `Orlog_Xp` message (`Game.Start` postfix) | Corruption also has postfixes on both; postfixes don't block each other | No overlap known |
+| **EpicMMOSystem** (not in the group's list) | Also gives levels and XP, patches `Character.Damage`, HUD bars and more. Don't run both (decided 2026-10-30) | — |
 
 ## Corruption (planned): keep in mind when building
 

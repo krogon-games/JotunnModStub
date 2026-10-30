@@ -19,7 +19,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft map
 ### Build constraints
 
 - BepInEx plugin, likely with Jötunn for items, recipes and pieces; Harmony patches for behaviour changes.
-- No new animations or attack types in v1. No new 3D models; tints and reused particles only. *Exception (user, 2026-10-28): the corruption shard has its own crystal model and texture.*
+- ~~No new animations or attack types in v1.~~ *Changed 2026-10-30 (user): new animations and attacks are allowed where necessary; a vanilla animation or emote still comes first.* No new 3D models; tints and reused particles only. *Exception (user, 2026-10-28): the corruption shard has its own crystal model and texture.*
 - Vanilla recipe-unlock rules: a recipe appears only once the player has picked up every ingredient.
 - Must work in multiplayer (dedicated server). Decisions below note where that matters.
 
@@ -191,7 +191,7 @@ Affixes are the Path of Exile part: spend extra shards at the bench to roll modi
 
 A corrupted boss is the vanilla boss with its numbers turned up and its summons turned on. No new attacks or animations. The visual is a tint and reused particles.
 
-**Summoning:** offer a corrupted version of the boss's normal offering, e.g. a Corrupted deer trophy for Eikthyr. One item, same altar, same ritual, harder fight. Corrupted offerings are crafted at the Riftforge from the normal offering plus 1 Corruption shard. *Clarified 2026-10-28: the recipe takes the full normal offering (the altar's item and count, e.g. both deer trophies) plus 1 shard; the one corrupted item then summons the boss. The Queen, who has no altar, is corrupted with a corrupted Sealbreaker (Sealbreaker + 1 shard) used on her door.*
+**Summoning:** offer a corrupted version of the boss's normal offering, e.g. a Corrupted deer trophy for Eikthyr. One item, same altar, same ritual, harder fight. Corrupted offerings are crafted at the Riftforge from the normal offering plus 1 Corruption shard. *Clarified 2026-10-28: the recipe takes the full normal offering (the altar's item and count, e.g. both deer trophies) plus 1 shard; the one corrupted item then summons the boss. The Queen, who has no altar, is corrupted with a corrupted Sealbreaker (Sealbreaker + 1 shard) used on her door.* *Decided 2026-10-30 (user): at altars filled through item stands (Moder 3 egg cups, Yagluth 5 totem stands, Fader 3 bell holders), **every** stand needs a corrupted item, each made from 1 item + 1 shard; a mix of corrupted and normal is refused. Built: `FEATURES.md` → Corrupted offerings; recipes in `Corruption/Data/offerings.csv`.*
 
 ### Changes over the vanilla boss
 
@@ -303,6 +303,7 @@ These came from the original brainstorm. They're worth doing but are not part of
 - Replace use-to-level with player levels and spendable stat points.
 - Most invasive change in the list: vanilla reads skill values across combat, crafting and movement. Do it last, and consider shipping it as a separate optional module.
 - Compare against EpicMMOSystem before building; it covers much of this ground.
+- *Changed 2026-10-30:* now part of the Diablo 2-style classes, levels and skill trees, a separate plugin: [`class-design.md`](class-design.md) (EpicMMOSystem compared there).
 
 ## Loot and uniques
 

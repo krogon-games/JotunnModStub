@@ -24,6 +24,10 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 5. Try one later biome, e.g. `spawn CorruptionMap_Swamp` (draugr and skeletons) or `CorruptionMap_Plains` (fulings).
 6. No red errors in the console.
 
+### 1f. Corrupted offerings
+Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
+1. **Icons re-check:** the Corrupted ancient seed is the red three-pointed seed, the Corrupted malicious blood the red blob (they were swapped).
+
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
@@ -43,6 +47,13 @@ Build from branch **`claude/affixes-loot`** (the log line says `build: claude/af
 8. **Combat:** hit something with a knockback or backstab item and parry with a parry item: no errors (the effect is subtle).
 9. No red errors in the console or `LogOutput.log`.
 10. **Bigger backpacks** (after setting the sizes in `PLAYER_SETUP.md` → For the server admin): the satchel opens with 2 rows (6 slots); items already in a backpack are kept; a 5-row backpack (`spawn BackpackPlains`) fits on screen.
+## Orlog levels and XP (branch `claude/class-skills`, about 15 minutes)
+
+New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and check `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)`.
+1–6, 9. ~~`orlog_info`, XP per kill, 1-star ×2, level-up, low creatures give little, kept after relogging, no errors~~ (passed 2026-10-30).
+7. ~~Pace~~: too fast at first; fixed and re-tested 2026-10-30 ("pace feels better"). `XpMultiplier` in `com.krogongames.orlog.cfg` tunes it later (reloads on save).
+8. With a friend (Session 2): both within 70 m of a kill each get XP; the lower-level player gets the bigger share of a low creature.
+9. No red errors in the console.
 
 ## Session 2: with a friend
 

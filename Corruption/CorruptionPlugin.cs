@@ -71,6 +71,7 @@ namespace Corruption
             Safe.Run("register maps", MapItems.Register);
             Safe.Run("register rips", RipPrefabs.Register);
             Safe.Run("register the corrupted wishbone", CorruptedWishbone.Register);
+            Safe.Run("register corrupted offerings", CorruptedOfferings.Register);
             Safe.Run("register the maddened effect", Maddened.RegisterEffect);
             Safe.Run("read the rip loot table", RipLoot.Load);
         }

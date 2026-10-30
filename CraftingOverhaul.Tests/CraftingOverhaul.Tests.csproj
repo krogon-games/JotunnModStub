@@ -23,6 +23,7 @@
     <Compile Include="..\Corruption\Rules\TalismanSlotRules.cs" Link="Linked\TalismanSlotRules.cs" />
     <Compile Include="..\Corruption\Rules\ObjMesh.cs" Link="Linked\ObjMesh.cs" />
     <Compile Include="..\Corruption\Rules\EssenceTable.cs" Link="Linked\EssenceTable.cs" />
+    <Compile Include="..\Corruption\Rules\OfferingTable.cs" Link="Linked\OfferingTable.cs" />
     <Compile Include="..\Corruption\Rules\MapList.cs" Link="Linked\MapList.cs" />
     <Compile Include="..\Corruption\Rules\RipRules.cs" Link="Linked\RipRules.cs" />
     <Compile Include="..\Corruption\Rules\RipLootTable.cs" Link="Linked\RipLootTable.cs" />
@@ -33,6 +34,8 @@
     <Compile Include="..\Corruption\Rules\LootItem.cs" Link="Linked\LootItem.cs" />
     <Compile Include="..\Corruption\Rules\AffixRoller.cs" Link="Linked\AffixRoller.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
+    <Compile Include="..\Orlog\Rules\LevelTables.cs" Link="Linked\Orlog\LevelTables.cs" />
+    <Compile Include="..\Orlog\Rules\ExperienceRules.cs" Link="Linked\Orlog\ExperienceRules.cs" />
   </ItemGroup>
 
   <ItemGroup>

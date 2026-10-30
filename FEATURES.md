@@ -22,11 +22,14 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Rip waves and loot (step B)](#rip-waves-and-loot-step-b) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `MinStars`, `MaxStars`, `WaveMultiplier`, `ChestShardsMin`, `ChestShardsMax`, `KillShardMultiplier`; table `Corruption/Data/rip_loot.csv` | `Corruption/Content/RipWaves.cs`, `Corruption/Content/Maddened.cs`, `Corruption/Content/RipLoot.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Rules/RipLootTable.cs`, `Corruption/Data/rip_loot.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone) | Corruption | Tested in-game (single player) | — (heart distance from the game data and the user; recipe in code) | `Corruption/Content/CorruptedWishbone.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/CorruptionPlugin.cs`, `CraftingOverhaul.Tests/MapListTests.cs`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
+| [Corrupted offerings](#corrupted-offerings) | Combat | Tested in-game (single player) | — (table `Corruption/Data/offerings.csv`) | `Corruption/Content/CorruptedOfferings.cs`, `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/OfferingTable.cs`, `Corruption/Data/offerings.csv`, `Corruption/Assets/offering_icon_*.rgba`, `tools/make_offering_icons.py`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/OfferingTableTests.cs` | 2026-10-30 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Loot system](#loot-system) | Loot | Tested in-game (single player; step 1: drops, tooltips, item stats) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs` | 2026-10-29 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
+| [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
+| [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
-There are two plugins: **CraftingOverhaul** (quality of life; works when only some players have it) and **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg` and `com.krogongames.corruption.cfg`.
+There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
 
 ---
 
@@ -657,6 +660,57 @@ New item `CorruptedWishbone` (cloned from `Wishbone`, tinted). New status effect
 
 ---
 
+## Corrupted offerings
+
+*Corruption plugin, design phase 6: summoning corrupted bosses. Which item each boss takes and how many come from the game data (`altars.csv`); the rules from the user (2026-10-28 and 2026-10-30).*
+
+**What it does in-game:** each boss's vanilla offering has a corrupted version, crafted at the **Riftforge** and shown with its own icon (the vanilla icon recoloured dark red with a glowing crack, from the user's renders). How it's used follows the boss's own summoning:
+
+| Boss | Corrupted item | Recipe | How |
+|---|---|---|---|
+| Eikthyr | Corrupted deer trophy | 2 Deer trophies + 1 shard | Offer it at the altar like the trophies: the one item is the whole offering |
+| The Elder | Corrupted ancient seed | 3 Ancient seeds + 1 shard | Same |
+| Bonemass | Corrupted withered bone | 10 Withered bones + 1 shard | Same |
+| Moder | Corrupted dragon egg | 1 Dragon egg + 1 shard | Put one in **every** egg cup (3), then use the altar |
+| Yagluth | Corrupted fuling totem | 1 Fuling totem + 1 shard | One on **every** totem stand (5) |
+| The Queen | Corrupted sealbreaker | 1 Sealbreaker + 1 shard | Open her door with it: bosses in that location turn corrupted, now or when they appear |
+| Fader | Corrupted bell | 1 Bell + 1 shard | One in **every** bell holder (3) |
+| Kall Fimbulbringer | Corrupted malicious blood | 3 Malicious blood + 1 shard | Offer it at his altar; his later phases stay corrupted |
+
+- At a stand altar, a **mix** of corrupted and normal items is refused ("Every offering here must be corrupted, or none."), so no corrupted item is used up on a normal fight.
+- Pressing Use on an empty stand, or on the Queen's door, uses a **corrupted** item first if you carry one. Carry only normal ones for a normal fight.
+- A corrupted item offered at the wrong altar gets the game's own "wrong offering" message.
+- Corrupted items are only found in your **main inventory**, not in an AdventureBackpacks backpack (unlike normal keys, which AB lets you use from the backpack).
+
+**How to test:** `devcommands`, then `spawn CorruptedTrophyDeer` (or `CorruptedAncientSeed`, `CorruptedWitheredBone`, `CorruptedDragonEgg`, `CorruptedGoblinTotem`, `CorruptedDvergrKey`, `CorruptedBell`, `CorruptedHatefulBlood`), go to the boss's altar (`goto` or the map) and offer it. The boss arrives red and corrupted; the log says `Corrupted offering: Eikthyr summoned corrupted.`
+
+**Data table:** [`Corruption/Data/offerings.csv`](Corruption/Data/offerings.csv): boss, vanilla item, how it's used (`altar`, `stand`, `door`), vanilla items per corrupted item, name and description. Compiled into the DLL. `dotnet test` checks every row against the game's altars (item, count, stand altars) and that each has its icon.
+
+**Known issues:**
+- **Play-test 2026-10-30 (single player):** Eikthyr (one corrupted trophy summons him corrupted), Moder (all egg cups corrupted; a mix refused) and the Queen (her door with the corrupted Sealbreaker) passed. **Bug, fixed:** the Ancient seed and Malicious blood icons were swapped (the renders were matched to the wrong items when saved). **Kall's phases stay corrupted** (tested 2026-10-30 with `spawn FrozenKing`, `co_corrupt`, `killall`: phases 2 and 3 came up red).
+- Kall's phases: the next phase is corrupted when a corrupted phase dies and a boss named like its next phase (`FrozenKing_p2`, `_p3`) appears on the same game.
+- The fixed seed and blood icons are still to be seen in game.
+- The Queen: assumes she is in the same game location as her door (checked with the game's own location lookup). The log says how many bosses were corrupted when the door opened.
+- The corrupted bosses' summons (maddened adds) and extra particles come later.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `OfferingBowl.UseItem` | Prefix | A corrupted offering at its altar summons the boss with the one item |
+| `OfferingBowl.RPC_RemoveBossSpawnInventoryItems` | Prefix | Takes the one corrupted item instead of the full offering's count |
+| `OfferingBowl.Interact` | Prefix | Stand altars: all stands corrupted = corrupted summon; a mix is refused |
+| `OfferingBowl.DelayedSpawnBoss` | Postfix | Corrupts the boss just summoned |
+| `ItemStand.IsSupported` | Postfix | Stands that take an offering take its corrupted version |
+| `ItemStand.Interact` | Prefix | Use on an empty offering stand places a carried corrupted item first |
+| `Door.Interact`, `Door.UseItem` | Prefix | A corrupted key opens the door and marks it |
+| `Character.OnDeath` | Prefix | Remembers that a corrupted boss died, for its next phase |
+| `Character.Awake` | Postfix | Corrupts a corrupted boss's next phase, and bosses behind a corrupted door |
+
+New items `Corrupted<Item>` (cloned from the vanilla item, tinted red). Door data key `corruption_corrupted_door`.
+
+---
+
 ## Corrupted bosses (core)
 
 *Corruption plugin, design phase 6, the parts the design fully specifies. Corrupted offerings at the altars (and the corrupted Sealbreaker for the Queen) follow once `altars.csv` from the next `co_dump` shows each altar's real offering; the summons follow phase 4 step B's maddened creatures.*
@@ -680,7 +734,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 | `CorruptedBossTintStrength` (Look) | `0.6` | Per player. The Riftforge's tint strength, which was tested in-game |
 
 **Known issues:**
-- **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. The only way to make a corrupted boss for now is `co_corrupt`.
+- **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. Since 2026-10-30, corrupted offerings summon them too (see [Corrupted offerings](#corrupted-offerings)).
 - The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet: which particle prefab to reuse comes from the game data with the summons.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
@@ -719,7 +773,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 **Data tables** (compiled into the DLL; rebuild after editing): `affixes.csv`, `loot_bases.csv` (rerun `tools/make_loot_bases.py` after a new game dump), `loot_rules.csv` (previous-biome chance, drop level, affix-count weights), `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`. `dotnet test` checks all of them, and that `loot_bases.csv` matches the dump.
 
 **Known issues:**
-- Tested in single player 2026-10-29/30 (146 tests pass); not yet with several players.
+- Tested in single player 2026-10-29/30 (178 tests pass after merging master); not yet with several players.
 - **First look 2026-10-29 (user's screenshots):** `co_loot` Rares work: "Night Ward" (Rare Leather Trousers: +15% armour, armour 2 → 2.3) and "Skull Song" (Rare Bronze Sword: +37% damage, slash 35 → 48), yellow titles, affix lines with ranges, inactive lines grey. Magic items work too: "Shieldwall Bronze Atgeir", "Seismic Antler Pickaxe" (gathering affix on a pickaxe), "Crackling Club" (+19% of physical as lightning: blunt 12 adds lightning 2), blue names. Still to check: ground hover names, durability, block, repair, upgrade, natural drops, combat affixes.
 - **Play-test 2026-10-29 (phone log):** build check, natural drops from kills, combat affixes (no errors), a resonant line and no errors all passed. **Ground hover name failed** (showed the base name): the game localizes the hover text before our patch sees it, so the patch looked for the untranslated name. **Fixed 2026-10-30; re-test passed.** **Upgrading passed 2026-10-30:** a Rare Bronze Sword taken to level 4 kept its name and affixes; its numbers follow the level (slash 53 = 35 + 3×6; spirit 23 = 43% of 53; durability 623 = 350 × 1.78). **Durability and repair passed 2026-10-30.** Every Session 3 step has passed; multiplayer (personal rolls for each player) not tested yet.
 - Gear ranges: 16 set from the game data and approved (2026-10-29); max health, stamina, eitr and life steal are drafts by choice; resistances settled 2026-10-30 (fire, frost, poison, lightning 10–50%; all resistances 2–10%). No caps on stacking carry weight, regen or max health/stamina/eitr (user, for now).
@@ -755,9 +809,65 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 **Ideas so far:**
 - Perfect-parry timing windows, combos, a posture/stagger bar, dodge i-frames and weapon special moves.
 - Likely patch points: `Humanoid`, `Attack`, `Character.Damage`.
-- New animations would need asset-bundle work in the `JotunnModUnity` project.
+- New animations need asset-bundle work in the `JotunnModUnity` project. They are allowed where necessary (user, 2026-10-30).
 
-The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses), but adds no new attacks or animations in v1. These combat ideas remain a separate track.
+The Corruption mod design (`docs/corruption-design.md`) makes fights harder (maddened creatures, corrupted bosses) without new attacks or animations. These combat ideas remain a separate track.
+
+## Levels and XP
+
+*Orlog (new plugin, `com.krogongames.orlog`). The server and every player need it.*
+
+**What it does:** characters gain XP from kills and level up to 99, Diablo 2 style. Built 2026-10-30; not yet tested in-game.
+- **XP needed per level:** Diablo 2's experience table (500 for level 2, 7,875 for level 5 … 3.5 billion for 99), `Orlog/Data/levels.csv`.
+- **Creature levels:** bosses have the user's levelling guide level (Eikthyr 5, The Elder 11, Bonemass 20, Moder 35, Yagluth 50, The Queen 62, Fader 76, Kall Fimbulbringer 90, all three phases). Any other creature takes the level range of the **biome it dies in** (Meadows 1–4, Black Forest 5–10, Swamp 11–19, Mountains 20–34, Plains 35–49, Mistlands 50–61, Ashlands 62–75, Deep North 76–89) and is placed in it by its base health on a log scale between the biome's weakest and strongest creature (from the game dump's spawn lists). A draugr is a strong Meadows creature but a weak Swamp one. The ocean has no range: its creatures count as the players' average level.
+- **XP per kill:** `Orlog/Data/creature_xp.csv` at the creature's level: D2's XP to the next level divided by **classic WoW's kills per level** (WoW's XP table ÷ level×5+45), so a player needs about as many same-level kills per level as in classic WoW without quests (8 at level 1, about 60 at level 11, 290 at 51, 617 from level 89). At the default pace that is about 60 same-level kills to reach Eikthyr's level, 320 to the Elder's, 1,050 to Bonemass's, 3,200 to Moder's, 6,600 to Yagluth's, 10,600 to the Queen's, 16,800 to Fader's and 24,600 to Kall's (from the tables; real play mixes in weaker and starred creatures). `XpMultiplier` changes the pace.
+- **Stars:** a 1-star creature gives ×2, a 2-star ×3 (its health is base × its game level, from the game code).
+- **Level difference:** a creature **at or below** your level gives its own XP, cut by Diablo 2's rule when it's far below (within 5 levels full XP; 6–10 below 81% down to 5%). A creature **above** your level gives the XP of a creature of *your* level plus classic WoW's bonus, +5% per level above, at most +20% (changed 2026-10-30 after the play-test, user's choice: D2 paid a higher creature's full XP, which made early levels 2–3× too fast). Level 2 now takes about 8 Meadows greydwarves (was 3), Eikthyr's level about 60 kills of the Meadows' toughest creatures.
+- **Sharing:** every player within `ShareRange` (70 m) of the kill shares it, D2 party style: +35% per extra player, split by level, each share taken of what the kill is worth to that player (level difference above). Only kills by a player or a creature on the players' side (tamed, summoned) give XP; tamed creatures and the training dummy give none.
+- XP is kept with the character (custom data `orlog_xp`), like vanilla skills, so it carries across worlds. Vanilla skills keep levelling by use. No XP loss on death (user).
+- On each kill "+N XP" in the top-left (per-player setting); on a new level "Level N" in the centre with the vanilla skill level-up effect.
+- Stat and skill points are counted (5 and 1 per level by default) for the UI, but can't be spent yet (attributes and skills come next).
+
+**How it works:** the creature's owner (the game that ran the fight) works out the XP in a prefix on `Character.OnDeath` and sends each player's share in the routed message `Orlog_Xp` to that player's game. Every game publishes its player's level on the player's ZDO (`orlog_level`) so the owner can split by level and apply the level difference. The UI reads level and XP through `Orlog.Api` (`docs/classes-ui-brief.md`).
+
+**Config settings** (`1 - Levels` admin-only, server-synced; `2 - Display` per player):
+
+| Setting | Default | Description |
+|---|---|---|
+| `MaxLevel` | `99` | Highest level (D2) |
+| `StatPointsPerLevel` | `5` | Attribute points per level (D2) |
+| `SkillPointsPerLevel` | `1` | Skill points per level (D2) |
+| `XpMultiplier` | `1` | Multiplies all kill XP; 1 = classic WoW's pace without quests |
+| `ShareRange` | `70` | Metres within which players share a kill (EpicMMOSystem's group range) |
+| `PartyBonusPerPlayer` | `0.35` | Extra XP per additional sharing player (D2) |
+| `HighLevelPenalty` | `false` | D2's XP cut from level 70; off because it would put level 90 by Kall out of reach |
+| `ShowXpGains` | `true` | "+N XP" per kill |
+
+Console commands: `orlog_info` (level, XP, the biome's creature levels), `orlog_xp <amount>` and `orlog_level <level>` (cheats, need `devcommands`).
+
+The tables, the level difference and party rules are unit-tested (`OrlogLevelTests`: 28 tests).
+
+**Known issues / not yet:**
+- **Play-test 2026-10-30 (user, single player):** `orlog_info`, "+N XP" per kill, ×2 XP from a 1-star, level-up message and effect, 6 XP for a boar at level 20 (far below), level and XP kept after relogging, no console errors: all work. Not yet tested: sharing with a friend.
+- **Pace too fast (user, 2026-10-30):** 3 greydwarves and 1–2 necks reached level 2. Why: the pace assumed same-level kills, but most Meadows enemies (greylings, greydwarves, skeletons, 20+ health) sit at the top of the Meadows range, level 4 (178 XP), and D2 pays a higher creature's full XP within 5 levels; a neck (level 1) gives 62. **Fixed the same day** (user chose option B): higher creatures now give your own level's XP + WoW's up to +20%; a greydwarf at level 1 gives 71. **Re-tested 2026-10-30: "pace feels better" (user).** `XpMultiplier` stays for fine-tuning.
+- D2's party bonus is read as +35% per extra player (Arreat: "+35% when a party member is in the area").
+- A kill only counts when the last hit came from a player or a creature on their side; a creature finished by fall damage or another creature gives nothing.
+- Modded creatures work (level from the biome they die in); modded bosses aren't in the boss list and count as their biome's creatures.
+- **Bosses give the XP of one creature of their level** (Eikthyr ≈ a level-5 creature). D2's act bosses give 9–65× a normal monster (`monstats` Exp%: Andariel 916%, Baal 6460%, a zombie 111%); how much more ours should give is open (asked the user).
+- Kall Fimbulbringer's three phases (`FrozenKing`, `_p2`, `_p3`) each count as a level-90 kill.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+- `Character.OnDeath` (prefix): works out and sends the kill's XP (owner only; reads `m_lastHit`, `m_health`, the star level).
+- `Player.OnSpawned` (postfix): publishes the local player's level on its ZDO.
+- `Game.Start` (postfix): registers the `Orlog_Xp` routed message.
+
+## Classes, levels and skill trees
+
+**Status:** Planned. Design only, no code (branch `claude/class-skills`).
+
+Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-10-30), then the Barbarian, maybe the Paladin. Character levels from XP, with stat points (D2's Strength, Dexterity, Vitality, Energy) and skill points each level, spent in D2's three-tab trees (skills open by level; prerequisites only where both skills are built). Only the skills that work in Valheim; the rest are reworked or dropped. Vanilla skills keep levelling by use. EpicMMOSystem was compared and is not used as a base. Design, open questions and build order: `docs/class-design.md`; D2 reference data: `data/d2-reference/`.
+
+**Harmony patch targets:** none yet.
 
 ---
 
@@ -767,6 +877,15 @@ The Corruption mod design (`docs/corruption-design.md`) makes fights harder (mad
 - **Resistance ranges settled** (user): fire, frost, poison and lightning 10–50%, all resistances 2–10%. Every gear affix now has its range.
 - **Loot: ground names and upgrading tested in-game.** Fire, frost and poison resistance ranges 10–50% from the new `co_dump` (gear that makes you Resistant; proposed); lightning and all resistances have no gear source (asked). Dump files `item_details.csv` and `status_effects.csv` refreshed with resistances.
 - **Fix: loot names on the ground** showed the base item name: the game localizes the hover text before our patch, which looked for the untranslated name. To re-test. Play-test results for loot step 1 recorded (drops, combat affixes, resonant lines, no errors passed).
+- **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons.
+- **Corrupted offerings (new, untested):** every boss's offering has a corrupted version, crafted at the Riftforge (the full offering + 1 shard at altars, 1 item + 1 shard per stand at Moder's, Yagluth's and Fader's altars, Sealbreaker + 1 shard for the Queen's door), with icons from the user's renders. They summon the boss corrupted; Kall's later phases stay corrupted.
+- **Levels: pace fix re-tested** (single player): "pace feels better". Only sharing with a friend is left to test.
+- **Levels: slower early levels** (after the play-test, user's choice): a creature above your level now gives your own level's XP + classic WoW's bonus (+5% per level, max +20%) instead of its full XP (D2). Level 2 takes about 8 greydwarves instead of 3. Lower creatures keep D2's cut. Untested in-game (158 tests).
+- **Levels and XP play-tested** (single player): XP per kill, stars, level-up, the level-difference cut and saving all work. Levelling felt too fast (level 2 after 3 greydwarves and 1–2 necks); cause found (most Meadows enemies are level 4 and D2 pays their full XP); fix being decided with the user.
+- **Levels and XP built** (new plugin Orlog, branch `claude/class-skills`): XP from kills up to level 99 with D2's level table, level difference and party rules; creature levels from the user's levelling guide and the biome they die in; classic WoW's kills per level for the pace; XP shared within 70 m; level published for other players; `Orlog.Api` level and XP calls for the UI; console commands `orlog_info`, `orlog_xp`, `orlog_level`. Untested in-game (155 tests).
+- **Classes: the Amazon comes first** (group vote), with 19 of her 30 skills planned for v1 and the rest later. Tree layout decided: D2's three tabs, level tiers instead of broken prerequisite chains, upgrade choices on big skills later. Levels follow D2's rules, all in admin config; no XP loss on death. Design only.
+- **Classes, levels and skill trees planned** (design only): `docs/class-design.md`, D2 reference tables in `data/d2-reference/`. EpicMMOSystem researched; own levels recommended. No mod code changed.
+- **New animations allowed where necessary** (user): the v1 "no new animations" rule is lifted; vanilla animations and emotes still come first.
 
 ### 2026-10-29
 - **Gear affix ranges from the game data** (loot; approved by the user): enhanced damage 4–19%, armour 10–50%, durability 11–55%, block 4–18%, backstab, knockback and parry 20–100%, attack stamina 4–20%, health regen 6–30%, stamina regen 8–40%, carry weight 10–50 (user cut it from 30–150), weapon skill 4–20; max health/stamina/eitr and life steal keep their drafts; no stacking caps for now, under the user's rules (gear-only sources; a full forge upgrade where vanilla has no +% source). **`co_dump` now writes resistances** (item `m_damageModifiers`, status effect `m_mods`) for the resistance affixes.
