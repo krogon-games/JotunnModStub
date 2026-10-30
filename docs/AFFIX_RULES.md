@@ -304,13 +304,13 @@ Every affix line ends with its possible range in brackets. Twin lines show the r
 ```
 Grim Fang                                  (rare, yellow)
 Bronze Sword
-+24% damage [5–40]
++24% damage (+14) [5–40]
 +12% damage as fire [5–20]
 +27 max health [10–50] ◆ resonant
 -12% attack stamina [5–25]
 ```
 
-- **Bracket:** the affix's range, the same on every item, so it answers "how good is this roll?". Percentage lines can also show the resulting value (e.g. "+24% damage (+14)") so the base item's role is visible.
+- **Bracket:** the affix's range, the same on every item, so it answers "how good is this roll?". Item-stat lines also show the bonus they give this item at its current upgrade level, before the bracket: "+24% damage (+14) [5–40]" (user, 2026-10-30, after a play-test where the unchanging bracket read like a damage range). Player-stat lines show their value only.
 - **Twin lines:** shown merged, as Diablo 2 does. Hovering with a modifier key (e.g. Shift) could show the two halves separately.
 - **Uniques:** they show their own fixed ranges the same way.
 

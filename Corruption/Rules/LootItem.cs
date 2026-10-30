@@ -155,10 +155,10 @@ namespace Corruption.Rules
         }
 
         /// <summary>
-        ///     One tooltip line: the affix text with its value, then its range in brackets; resonant lines are marked
-        ///     (AFFIX_RULES → Showing ranges).
+        ///     One tooltip line: the affix text with its value, the bonus it gives this item when known (e.g. "(+23)"),
+        ///     then its roll range in brackets; resonant lines are marked (AFFIX_RULES → Showing ranges).
         /// </summary>
-        public static string LineText(Line line, IDictionary<string, AffixTable.Affix> affixes)
+        public static string LineText(Line line, IDictionary<string, AffixTable.Affix> affixes, string bonus = null)
         {
             if (!affixes.TryGetValue(line.Ids[0], out var affix))
             {
@@ -166,6 +166,10 @@ namespace Corruption.Rules
             }
             Range(line, affixes, out int min, out int max);
             var text = new StringBuilder(affix.Text.Replace("{0}", line.Value.ToString(CultureInfo.InvariantCulture)));
+            if (!string.IsNullOrEmpty(bonus))
+            {
+                text.Append(" (").Append(bonus).Append(')');
+            }
             text.Append(" [").Append(min.ToString(CultureInfo.InvariantCulture)).Append('–')
                 .Append(max.ToString(CultureInfo.InvariantCulture)).Append(']');
             if (line.Resonant)
@@ -173,6 +177,21 @@ namespace Corruption.Rules
                 text.Append(" ◆ resonant");
             }
             return text.ToString();
+        }
+
+        /// <summary>
+        ///     A bonus amount as the tooltip shows it: signed, whole above 10, one decimal below (armour 2 → "+0.3"),
+        ///     with an optional unit ("x" for multipliers). Null when it rounds to nothing.
+        /// </summary>
+        public static string BonusText(float amount, string unit = "")
+        {
+            float shown = Math.Abs(amount) >= 10f ? (float)Math.Round(amount) : (float)Math.Round(amount, 1);
+            if (shown == 0f)
+            {
+                return null;
+            }
+            string number = Math.Abs(shown).ToString(Math.Abs(shown) >= 10f ? "0" : "0.#", CultureInfo.InvariantCulture);
+            return (shown > 0f ? "+" : "−") + number + unit;
         }
 
         /// <summary>The total of one effect over the item's lines (e.g. every <c>fire_damage_percent</c> line).</summary>

@@ -77,7 +77,7 @@ namespace Corruption.Content
     {
         private const string InactiveColor = "#808080";
 
-        private static void Postfix(ItemDrop.ItemData item, ref string __result)
+        private static void Postfix(ItemDrop.ItemData item, int qualityLevel, float worldLevel, ref string __result)
         {
             var loot = Loot.Of(item);
             if (loot == null)
@@ -98,8 +98,9 @@ namespace Corruption.Content
                 foreach (var line in loot.Lines)
                 {
                     bool active = Loot.Affixes.TryGetValue(line.Ids[0], out var affix) && Loot.ActiveEffects.Contains(affix.Effect);
+                    string bonus = active ? Bonus(item, loot, line, affix.Effect, qualityLevel, worldLevel) : null;
                     text.Append("\n<color=").Append(active ? color : InactiveColor).Append('>')
-                        .Append(LootItem.LineText(line, Loot.Affixes));
+                        .Append(LootItem.LineText(line, Loot.Affixes, bonus));
                     if (!active)
                     {
                         text.Append(" (not active yet)");
@@ -109,6 +110,59 @@ namespace Corruption.Content
                 result = text.ToString();
             });
             __result = result;
+        }
+
+        /// <summary>
+        ///     What one affix line adds to this item at the tooltip's upgrade level (user, 2026-10-30: show the actual
+        ///     bonus next to the percentage), worked out from the item's vanilla numbers. Null if it can't be shown.
+        /// </summary>
+        private static string Bonus(ItemDrop.ItemData item, LootItem loot, LootItem.Line line, string effect, int quality, float worldLevel)
+        {
+            float share = line.Value / 100f;
+            var shared = item.m_shared;
+            Loot.Bypass = true;
+            try
+            {
+                switch (effect)
+                {
+                    case "weapon_damage":
+                    {
+                        var d = item.GetDamage(quality, worldLevel);
+                        return LootItem.BonusText((d.m_blunt + d.m_slash + d.m_pierce + d.m_fire + d.m_frost + d.m_lightning + d.m_poison + d.m_spirit) * share);
+                    }
+                    case "fire_damage_percent":
+                    case "frost_damage_percent":
+                    case "lightning_damage_percent":
+                    case "poison_damage_percent":
+                    case "spirit_damage_percent":
+                    {
+                        // Same order as the damage patch: a share of the physical damage after enhanced damage.
+                        var d = item.GetDamage(quality, worldLevel);
+                        float enhanced = 1f + loot.Total("weapon_damage", Loot.Affixes) / 100f;
+                        return LootItem.BonusText((d.m_blunt + d.m_slash + d.m_pierce) * enhanced * share);
+                    }
+                    case "armour_percent":
+                        return LootItem.BonusText(item.GetArmor(quality, worldLevel) * share);
+                    case "max_durability":
+                        return LootItem.BonusText(item.GetMaxDurability(quality) * share);
+                    case "block_percent":
+                        return LootItem.BonusText(item.GetBaseBlockPower(quality) * share);
+                    case "knockback_percent":
+                        return LootItem.BonusText(shared.m_attackForce * share);
+                    case "backstab_percent":
+                        return LootItem.BonusText(shared.m_backstabBonus * share, "x");
+                    case "parry_percent":
+                        return LootItem.BonusText(shared.m_timedBlockBonus * share, "x");
+                    case "attack_stamina_reduction":
+                        return shared.m_attack != null ? LootItem.BonusText(-shared.m_attack.m_attackStamina * share) : null;
+                    default:
+                        return null;
+                }
+            }
+            finally
+            {
+                Loot.Bypass = false;
+            }
         }
     }
 
@@ -162,7 +216,7 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(ItemDrop.ItemData), nameof(ItemDrop.ItemData.GetDamage), typeof(int), typeof(float))]
         private static void Damage(ItemDrop.ItemData __instance, ref HitData.DamageTypes __result)
         {
-            var loot = Loot.Of(__instance);
+            var loot = Loot.Bypass ? null : Loot.Of(__instance);
             if (loot == null)
             {
                 return;

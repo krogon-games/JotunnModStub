@@ -40,6 +40,9 @@ namespace Corruption.Content
         // Stat getters run often (every tooltip, every hit), so each item's parsed affixes are kept until its data changes.
         private static readonly ConditionalWeakTable<ItemDrop.ItemData, Cached> Cache = new ConditionalWeakTable<ItemDrop.ItemData, Cached>();
 
+        /// <summary>While true, the stat patches return vanilla numbers (used to work out an affix's bonus for tooltips).</summary>
+        [System.ThreadStatic] public static bool Bypass;
+
         public static bool Loaded => Bases != null && Rules != null && Drops != null && Affixes.Count > 0;
 
         /// <summary>Reads the tables. Problems are logged and switch loot off rather than rolling from broken data.</summary>
@@ -78,10 +81,10 @@ namespace Corruption.Content
             return cached.Item;
         }
 
-        /// <summary>Total of one affix effect on the item (0 for Normal items).</summary>
+        /// <summary>Total of one affix effect on the item (0 for Normal items, or while <see cref="Bypass" /> is on).</summary>
         public static int Total(ItemDrop.ItemData item, string effect)
         {
-            var loot = Of(item);
+            var loot = Bypass ? null : Of(item);
             return loot == null ? 0 : loot.Total(effect, Affixes);
         }
 

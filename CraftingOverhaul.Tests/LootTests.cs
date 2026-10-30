@@ -322,6 +322,18 @@ namespace CraftingOverhaul.Tests
             var table = new[] { Affix("dmg", "prefix", "dmg", 5, 40) };
             var line = new LootItem.Line { Ids = new[] { "dmg" }, Value = 24 };
             Assert.Equal("+24 dmg [5–40]", LootItem.LineText(line, table.ToDictionary(a => a.Id)));
+            Assert.Equal("+24 dmg (+14) [5–40]", LootItem.LineText(line, table.ToDictionary(a => a.Id), "+14"));
+        }
+
+        [Fact]
+        public void BonusTextRoundsLikeTheTooltip()
+        {
+            Assert.Equal("+23", LootItem.BonusText(22.79f));
+            Assert.Equal("+0.3", LootItem.BonusText(0.3f));
+            Assert.Equal("+273", LootItem.BonusText(273.4f));
+            Assert.Equal("+0.6x", LootItem.BonusText(0.6f, "x"));
+            Assert.Equal("−1.6", LootItem.BonusText(-1.6f));
+            Assert.Null(LootItem.BonusText(0.01f));
         }
     }
 }
