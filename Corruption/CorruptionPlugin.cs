@@ -65,6 +65,7 @@ namespace Corruption
             PrefabManager.OnVanillaPrefabsAvailable -= RegisterContent;
             Safe.Run("unlock the Odin (beta) items", BetaItems.Unlock);
             Safe.Run("register the corruption shard", ShardItem.Register);
+            Safe.Run("find the stumps for the gathering affixes", LootGathering.CollectStumps);
             Safe.Run("register the Riftforge", Riftforge.Register);
             Safe.Run("register talismans", Talismans.Register);
             Safe.Run("register boss essences", EssenceItems.Register);

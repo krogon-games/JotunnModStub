@@ -32,7 +32,13 @@ namespace Corruption.Content
             // Player stats (2026-10-30): summed over everything the local player has equipped.
             "max_health", "max_stamina", "max_eitr", "health_regen_percent", "stamina_regen_percent", "movement_speed",
             "held_movement_speed", "carry_weight", "fire_resistance", "frost_resistance", "lightning_resistance",
-            "poison_resistance", "all_resistances", "weapon_skill_levels", "life_steal"
+            "poison_resistance", "all_resistances", "weapon_skill_levels", "life_steal",
+            // Gathering tools, striker side (2026-11-01). Odin's Grace works on rock and ore; trees come with the
+            // on-harvest effects.
+            "pickaxe_damage_deposits", "every_fifth_hit_damage", "deposit_area_hit", "harvest_instantly", "terrain_dig",
+            "chop_damage_trees", "chop_damage_logs", "chop_damage_stumps", "chop_splash", "stamina_save_chance",
+            "durability_save_chance", "hit_noise_reduction", "item_weight_reduction", "pickup_range", "pickup_radius_set",
+            "attack_speed", "gathering_skill_xp"
         };
 
         public static AffixCaps Caps;

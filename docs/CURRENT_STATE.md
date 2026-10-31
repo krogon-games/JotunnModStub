@@ -49,6 +49,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 |---|---|
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
+| **Loot step 3: gathering tools, striker side** (2026-11-01, branch `claude/affixes-loot`) | `PLAYTEST.md` → Session 3c |
 | **Odin items unlocked** (2026-10-31, branch `claude/affixes-loot`) | Equip and unlock passed 2026-10-31; crafting one not tried |
 | **Loot step 2: player-stat affixes** (2026-10-30, branch `claude/affixes-loot`) | Passed 2026-10-31 (single player): max health/stamina/eitr, carry weight, movement, regen, resistances. Not tried: weapon skill, life steal; multiplayer |
 | **Loot system step 1** (2026-10-29, merged in PR #11) | Passed 2026-10-29: Rare and Magic names, tooltip lines with ranges, armour/damage/lightning numbers, natural drops, combat affixes, resonant line, no errors. Ground names (fixed), upgrading, durability and repair passed 2026-10-30: **every single-player step passed**. Still: multiplayer (each player's own roll); bigger backpacks after the server setting |

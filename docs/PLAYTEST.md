@@ -42,6 +42,25 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 2. Their recipes show at the workbench once you've picked up the materials, and crafting works.
 3. The log lists `Unlocked CapeOdin (was tagged DLC "beta")` and the other two.
 
+## Session 3c: gathering-tool affixes (loot step 3, about 20 minutes)
+
+Build from **`claude/affixes-loot`**. Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…). These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) still are.
+
+1. **Prospector's** on a pickaxe: rocks and copper/tin take more hits off per swing than with a plain pickaxe of the same kind (watch the damage numbers).
+2. **Veinbreaker's:** every 5th swing at rock or ore shows a bigger damage number.
+3. **Seismic:** now and then a swing at a copper or tin deposit knocks off the chunks next to the one you hit too.
+4. **Odin's Grace:** now and then a swing breaks the chunk you hit and every chunk touching it at once; a single rock breaks in one hit. Iron (tier) still needs the right pickaxe.
+5. **Excavator's:** digging the ground with the pickaxe makes a deeper, wider hole than a plain one.
+6. **Lumberjack's / Timberfall / Rootbreaker** on an axe: standing trees / fallen logs / stumps take more damage per chop.
+7. **Splintering:** now and then a chop also damages the nearest other tree or log right next to you.
+8. **Fit:** now and then a swing costs no stamina (the bar doesn't drop). **Careful:** now and then a hit costs no durability.
+9. **Hushed:** creatures notice your chopping later (hard to see; just check nothing breaks).
+10. **Light:** the tool's weight in the tooltip is lower than a plain one's.
+11. **Keen-eyed / Magnetic:** with the tool in hand, items on the ground fly to you from further away (Magnetic: 3–6 m; vanilla 2 m).
+12. **Swift:** the swing animation is visibly faster.
+13. **Scholar's:** Woodcutting or Pickaxes skill rises faster (Skills tab).
+14. No red errors in the console.
+
 ## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
 
 ~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill) and 7 (life steal).
