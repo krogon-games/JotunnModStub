@@ -42,6 +42,7 @@
     <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />
     <Compile Include="..\Corruption\Rules\GatheringRules.cs" Link="Linked\GatheringRules.cs" />
     <Compile Include="..\Corruption\Rules\HarvestRules.cs" Link="Linked\HarvestRules.cs" />
+    <Compile Include="..\Corruption\Rules\ProcRules.cs" Link="Linked\ProcRules.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
     <Compile Include="..\Orlog\Rules\LevelTables.cs" Link="Linked\Orlog\LevelTables.cs" />
     <Compile Include="..\Orlog\Rules\ExperienceRules.cs" Link="Linked\Orlog\ExperienceRules.cs" />
