@@ -120,7 +120,7 @@ namespace CraftingOverhaul.Classes
             view.Icon = UiKit.Image("Icon", view.Root, null);
             view.Icon.enabled = false;
             view.Icon.preserveAspect = true;
-            UiKit.Stretch(view.Icon.rectTransform, round ? 11f : 10f);
+            UiKit.Stretch(view.Icon.rectTransform, round ? 11f : 5f);
 
             // A dark pie over the part of the cooldown still to wait, shrinking clockwise from the top (round on the power).
             view.Sweep = UiKit.Image("Sweep", view.Root, round && SheetArt.Disc ? SheetArt.Disc : SheetArt.BarFill);

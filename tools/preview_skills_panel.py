@@ -126,7 +126,7 @@ def medallion(canvas, x, y, size, icon, state, selected=False):
     tint = {"later": (115, 110, 105), "locked": (184, 178, 173)}.get(state, (255, 255, 255))
     paste(canvas, tinted(sized(med, size, size), tint), x, y)
     if icon is not None:
-        inset = size * 0.16
+        inset = size * 0.06
         icon_tint = {"later": (95, 95, 95), "locked": (165, 165, 165)}.get(state, (255, 255, 255))
         paste(canvas, tinted(sized(icon, size - 2 * inset, size - 2 * inset), icon_tint), x + inset, y + inset)
 
@@ -259,7 +259,7 @@ def render(layout, tab, out, hovered="ExplodingArrow"):
         paste(canvas, sliced(art("tile"), w, h, 18), x, y)
         icon = art(sid, ICONS) if sid else None
         if icon is not None:
-            paste(canvas, sized(icon, w - 16, h - 16), x + 8, y + 8)
+            paste(canvas, sized(icon, w - 8, h - 8), x + 4, y + 4)
         d = ImageDraw.Draw(canvas)
         text(d, (x + 7, y + 4), str(i + 1), 14, (255, 255, 255), "la")
     canvas = canvas.resize((canvas.size[0] // S, canvas.size[1] // S), Image.LANCZOS)

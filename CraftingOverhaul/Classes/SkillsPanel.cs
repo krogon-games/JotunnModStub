@@ -27,6 +27,9 @@ namespace CraftingOverhaul.Classes
     {
         private static readonly string[] Attributes = { "strength", "dexterity", "vitality", "energy" };
 
+        /// <summary>Icon inset on a medallion, as a share of its size: the icons carry their own margin (make_skill_icons.py).</summary>
+        private const float IconInset = 0.06f;
+
         // Path colours (mirrored in tools/preview_skills_panel.py).
         private static readonly Color Groove = new Color(0f, 0f, 0f, 0.55f);
         private static readonly Color PathDim = new Color(0.47f, 0.36f, 0.24f, 0.9f);
@@ -222,7 +225,7 @@ namespace CraftingOverhaul.Classes
             Place(_detailsMedallion.rectTransform, icon);
             _detailsIcon = UiKit.Image("Icon", _detailsMedallion.rectTransform, null);
             _detailsIcon.preserveAspect = true;
-            UiKit.Stretch(_detailsIcon.rectTransform, icon.Width * 0.16f);
+            UiKit.Stretch(_detailsIcon.rectTransform, icon.Width * IconInset);
 
             _detailsName = UiKit.Text("Name", box, 22, UiKit.Gold, TextAnchor.MiddleLeft);
             FitText(_detailsName, 14, 22);
@@ -329,7 +332,7 @@ namespace CraftingOverhaul.Classes
                 view.Icon = UiKit.Image("Icon", frame.rectTransform, null);
                 view.Icon.preserveAspect = true;
                 view.Icon.enabled = false;
-                UiKit.Stretch(view.Icon.rectTransform, 9f);
+                UiKit.Stretch(view.Icon.rectTransform, 4f);
                 view.Key = UiKit.Text("Key", frame.rectTransform, 14, Color.white, TextAnchor.UpperLeft);
                 UiKit.Place(view.Key.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(7f, -4f), new Vector2(30f, 16f));
                 Slots[i] = view;
@@ -517,7 +520,7 @@ namespace CraftingOverhaul.Classes
             icon.preserveAspect = true;
             icon.enabled = icon.sprite;
             icon.color = skill.Later ? new Color(0.37f, 0.37f, 0.37f, 1f) : locked ? new Color(0.65f, 0.65f, 0.65f, 1f) : Color.white;
-            UiKit.Stretch(icon.rectTransform, size * 0.16f);
+            UiKit.Stretch(icon.rectTransform, size * IconInset);
 
             if (!skill.Later)
             {
