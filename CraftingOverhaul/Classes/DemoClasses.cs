@@ -263,11 +263,23 @@ namespace CraftingOverhaul.Classes
                 .Add("skillButton", "Right mouse").Add("selected", Selected).ToString();
         }
 
+        /// <summary>The weapon a skill needs, for the slot state's <c>needs</c>: bow skills a bow, javelin and spear skills a spear.</summary>
+        public static string NeededWeapon(Skill skill)
+        {
+            if (skill == null)
+            {
+                return "";
+            }
+            return skill.Tab == 0 ? "bow" : skill.Tab == 2 ? "spear" : "";
+        }
+
         /// <summary>
-        ///     Each slot shows one state, so every look can be seen: slot 1 cycles through a 3 s cooldown every 8 s,
-        ///     slot 2 lacks eitr, slot 3 needs another weapon, slot 0 is ready. <paramref name="time" /> in seconds.
+        ///     A slot's state as the player would really see it (user, 2026-10-31: fixed "Weapon" and "Eitr" states were
+        ///     confusing): blocked when the held weapon (<paramref name="held" />: "bow", "spear" or anything else) isn't
+        ///     the one the skill needs, or when <paramref name="eitr" /> is below its cost. Slot 1 also runs a 3 s cooldown
+        ///     every 8 s so the cooldown look can be seen. <paramref name="time" /> in seconds.
         /// </summary>
-        public string GetSlotStateJson(int slot, float time)
+        public string GetSlotStateJson(int slot, float time, string held, float eitr)
         {
             if (slot < 0 || slot >= Slots || _slots[slot].Length == 0)
             {
@@ -276,22 +288,27 @@ namespace CraftingOverhaul.Classes
             var skill = Find(_slots[slot]);
             float cooldown = 0f;
             string blocked = "";
+            string needs = NeededWeapon(skill);
+            float cost = skill != null ? skill.EitrCost : 0f;
             if (slot == 1)
             {
                 float phase = time % 8f;
                 cooldown = phase < 3f ? 3f - phase : 0f;
-                blocked = cooldown > 0f ? "cooldown" : "";
             }
-            else if (slot == 2)
+            if (cooldown > 0f)
             {
-                blocked = "eitr";
+                blocked = "cooldown";
             }
-            else if (slot == 3)
+            else if (needs.Length > 0 && held != needs)
             {
                 blocked = "weapon";
             }
-            return new JsonOut().Add("usable", blocked.Length == 0).Add("blocked", blocked)
-                .Add("cooldown", cooldown).Add("cooldownTotal", 3f).Add("eitrCost", skill != null ? skill.EitrCost : 0f).ToString();
+            else if (eitr < cost)
+            {
+                blocked = "eitr";
+            }
+            return new JsonOut().Add("usable", blocked.Length == 0).Add("blocked", blocked).Add("needs", needs)
+                .Add("cooldown", cooldown).Add("cooldownTotal", 3f).Add("eitrCost", cost).ToString();
         }
 
         // ------------------------------------------------------------ actions ("" = done, else the reason)

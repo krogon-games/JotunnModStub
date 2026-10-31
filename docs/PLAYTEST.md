@@ -88,6 +88,7 @@ Build `CraftingOverhaul` from **`claude/ui-overhaul`** with `[5 - Classes UI]` �
 1. **Quick slots under the cross:** EquipmentAndQuickSlots' Z, V, B slots sit centred just under the skill cross. After `co_classes_stone` (no class, cross hidden) they go back where that mod puts them.
 2. **Details pane:** point at Ice Arrow: the line under its rank ("Attack · level 18 · 4 eitr") fits inside the box; the Learn button reads "Needs level 18" in red. At 0 skill points it reads "No skill points".
 3. **Build box:** with the hammer out, the box at the bottom right sits clear of the "5 stat, 1 skill point (K)" hint.
+3a. **Blocked labels:** hold your bow: the bow skills in the cross are ready (full colour). Hold a spear, club or nothing: they turn red with "Need bow". With no eitr (no eitr food), Inner Sight shows "Low eitr"; eat an eitr food and it clears. Slot 2 still cools down 3 s every 8 s.
 4. **Adrenaline** (not tried yet): with your trinket on, block or parry, or use a power: an orange bar appears above health in the same style; nothing shows under the bars.
 5. **Off switches** (not tried yet): `Demo = false`: cross, XP bar and panel go, the bars stay. `[4 - HUD]` → `Bars = false`: the game's own displays come back, and the build box and ship display go back to the bottom centre.
 6. No red errors in the console or `LogOutput.log`.

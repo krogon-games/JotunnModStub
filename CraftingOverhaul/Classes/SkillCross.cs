@@ -188,7 +188,11 @@ namespace CraftingOverhaul.Classes
                 string blocked = FlatJson.Get(state, "blocked") ?? "";
                 float remaining = FlatJson.GetFloat(state, "cooldown", 0f);
                 float total = FlatJson.GetFloat(state, "cooldownTotal", 0f);
-                string reason = usable || blocked == "cooldown" ? "" : blocked == "weapon" ? "Weapon" : blocked == "eitr" ? "Eitr" : "";
+                // Say what's wrong in words the player can act on (user, 2026-10-31: "Weapon" and "Eitr" were confusing).
+                string needs = FlatJson.Get(state, "needs") ?? "";
+                string reason = usable || blocked == "cooldown" ? ""
+                    : blocked == "weapon" ? (needs.Length > 0 ? "Need " + needs : "Wrong weapon")
+                    : blocked == "eitr" ? "Low eitr" : "";
                 ShowState(view, id.Length > 0, remaining, total, reason);
             }
             UpdatePower(Player.m_localPlayer);

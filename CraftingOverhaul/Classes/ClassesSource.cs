@@ -127,7 +127,17 @@ namespace CraftingOverhaul.Classes
         public static string SkillIds(string classId) => Demo ? DemoData.GetSkillIdsJson(classId) : Call(_skillIds, classId);
         public static string SkillInfo(string skillId) => Demo ? DemoData.GetSkillInfoJson(skillId) : Call(_skillInfo, skillId);
         public static string SkillBar() => Demo ? DemoData.GetSkillBarJson() : _skillBar != null ? _skillBar() ?? "" : "";
-        public static string SlotState(int slot) => Demo ? DemoData.GetSlotStateJson(slot, Time.time) : _slotState != null ? _slotState(slot) ?? "" : "";
+        public static string SlotState(int slot) =>
+            Demo ? DemoData.GetSlotStateJson(slot, Time.time, HeldWeapon(), Player.m_localPlayer ? Player.m_localPlayer.GetEitr() : 0f)
+            : _slotState != null ? _slotState(slot) ?? "" : "";
+
+        /// <summary>For the demo's slot states: "bow" for a bow or crossbow in hand, "spear" for a spear, else "".</summary>
+        private static string HeldWeapon()
+        {
+            var weapon = Player.m_localPlayer ? Player.m_localPlayer.GetCurrentWeapon() : null;
+            var type = weapon?.m_shared?.m_skillType ?? Skills.SkillType.None;
+            return type == Skills.SkillType.Bows || type == Skills.SkillType.Crossbows ? "bow" : type == Skills.SkillType.Spears ? "spear" : "";
+        }
         public static string SpendStatPoint(string attribute) => Demo ? DemoData.SpendStatPoint(attribute) : Act(_spendStat, attribute);
         public static string SpendSkillPoint(string skillId) => Demo ? DemoData.SpendSkillPoint(skillId) : Act(_spendSkill, skillId);
         public static string ChooseClass(string classId) => Demo ? DemoData.ChooseClass(classId) : Act(_chooseClass, classId);

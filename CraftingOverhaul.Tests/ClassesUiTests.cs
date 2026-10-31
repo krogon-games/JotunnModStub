@@ -136,16 +136,22 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void SlotStatesShowEveryLook()
+        public void SlotStatesFollowTheWeaponAndEitr()
         {
             var demo = new DemoClasses();
-            Assert.True(FlatJson.GetBool(demo.GetSlotStateJson(0, 0f), "usable", false));
-            var cooling = demo.GetSlotStateJson(1, 1f);
+            // Slots: Multiple Shot (bow), Inner Sight (cast, no weapon), empty, Fire Arrow (bow).
+            Assert.True(FlatJson.GetBool(demo.GetSlotStateJson(0, 0f, "bow", 50f), "usable", false));
+            var noBow = demo.GetSlotStateJson(0, 0f, "spear", 50f);
+            Assert.Equal("weapon", FlatJson.Get(noBow, "blocked"));
+            Assert.Equal("bow", FlatJson.Get(noBow, "needs"));
+            Assert.Equal("eitr", FlatJson.Get(demo.GetSlotStateJson(3, 0f, "bow", 1f), "blocked"));
+            // Inner Sight needs no weapon; its cooldown shows on slot 1 for 3 s of every 8.
+            var cooling = demo.GetSlotStateJson(1, 1f, "", 50f);
             Assert.Equal("cooldown", FlatJson.Get(cooling, "blocked"));
             Assert.Equal(2f, FlatJson.GetFloat(cooling, "cooldown", 0f), 3);
-            Assert.True(FlatJson.GetBool(demo.GetSlotStateJson(1, 5f), "usable", false));
-            Assert.Equal("", demo.GetSlotStateJson(2, 0f)); // empty slot
-            Assert.Equal("weapon", FlatJson.Get(demo.GetSlotStateJson(3, 0f), "blocked"));
+            Assert.True(FlatJson.GetBool(demo.GetSlotStateJson(1, 5f, "", 50f), "usable", false));
+            Assert.Equal("", FlatJson.Get(demo.GetSlotStateJson(1, 5f, "", 50f), "needs"));
+            Assert.Equal("", demo.GetSlotStateJson(2, 0f, "bow", 50f)); // empty slot
         }
 
         [Fact]
