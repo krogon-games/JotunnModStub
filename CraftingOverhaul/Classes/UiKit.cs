@@ -17,6 +17,8 @@ namespace CraftingOverhaul.Classes
         public static readonly Color Eitr = new Color(0.27f, 0.48f, 0.90f);
         public static readonly Color Stamina = new Color(0.95f, 0.76f, 0.18f);
         public static readonly Color Xp = new Color(0.62f, 0.40f, 0.85f);
+        /// <summary>The game's orange for adrenaline.</summary>
+        public static readonly Color Adrenaline = new Color(0.98f, 0.55f, 0.12f);
 
         public static RectTransform Rect(string name, Transform parent)
         {

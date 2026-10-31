@@ -35,6 +35,7 @@ namespace CraftingOverhaul.Classes
         private static RectTransform _root;
         private static Bar _health;
         private static Bar _eitr;
+        private static Bar _adrenaline;
         private static Bar _stamina;
         private static Bar _xp;
         private static Text _level;
@@ -65,6 +66,7 @@ namespace CraftingOverhaul.Classes
 
             _health = NewBar("Health", UiKit.Health, true);
             _eitr = NewBar("Eitr", UiKit.Eitr, true);
+            _adrenaline = NewBar("Adrenaline", UiKit.Adrenaline, true);
             _stamina = NewBar("Stamina", UiKit.Stamina, true);
             _xp = NewBar("Xp", UiKit.Xp, false);
             _xp.Value.fontSize = 10;
@@ -177,6 +179,17 @@ namespace CraftingOverhaul.Classes
             float healthY = 2f * rowStep;
             Layout(_health, left, healthY, player.GetHealth(), player.GetMaxHealth());
             Layout(_stamina, left, staminaY, player.GetStamina(), player.GetMaxStamina());
+            // Adrenaline (Valheim 1.0: fills from blocking and parrying with a trinket that uses it) sits above health
+            // while it isn't empty, as the game shows its own; above, so it never moves the other bars (play-test
+            // 2026-10-31: the game's orange bar showed under ours).
+            float adrenaline = player.GetAdrenaline();
+            float maxAdrenaline = player.GetMaxAdrenaline();
+            bool showAdrenaline = adrenaline > 0f && maxAdrenaline > 0f;
+            SetActive(_adrenaline, showAdrenaline);
+            if (showAdrenaline)
+            {
+                Layout(_adrenaline, left, healthY + rowStep, adrenaline, maxAdrenaline);
+            }
             SetActive(_eitr, eitr);
             if (eitr)
             {
@@ -310,7 +323,7 @@ namespace CraftingOverhaul.Classes
             }
             _vanillaHidden = !visible;
             Vector3 scale = visible ? Vector3.one : Vector3.zero;
-            foreach (var t in new Transform[] { hud.m_healthPanel, hud.m_staminaBar2Root, hud.m_eitrBarRoot, hud.m_foodBarRoot })
+            foreach (var t in new Transform[] { hud.m_healthPanel, hud.m_staminaBar2Root, hud.m_eitrBarRoot, hud.m_adrenalineBarRoot, hud.m_foodBarRoot })
             {
                 if (t)
                 {

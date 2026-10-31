@@ -355,6 +355,7 @@ Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJso
 
 **What it does:** replaces the game's health, stamina, eitr and food displays with three long bars together at the bottom centre (user, 2026-10-30, after Elden Ring): **health on top, stamina in the middle, eitr at the bottom** (only once you have eitr; order changed by the user 2026-10-31 so gaining eitr doesn't push stamina down), in the game's colours.
 - Each bar grows with its maximum (`BarScale` pixels per point, between `BarMinLength` and `BarMaxLength`), all starting at the same left edge, in a thin bronze rim with knot points at both ends and the value as "current / max" just past its end. A pale trail behind the fill shows what you just lost and catches up after a moment.
+- **Adrenaline** (Valheim 1.0; fills from blocking and parrying when a trinket gives you adrenaline): an orange bar of the same kind **above health**, shown while it isn't empty as the game shows its own, so it never moves the other bars (added 2026-10-31 after the play-test showed the game's own orange bar under ours).
 - **Food:** your three food slots (round bronze, like the skill medallions) sit to the left of the bars, with the time left under each (minutes, then seconds, as the game shows it); a slot pulses when that food can be eaten again.
 - **XP bar** (only with Orlog or the classes demo): a thin purple bar under the bars, with "Level N" on its left and, when points wait to be spent, a pulsing "N stat, M skill points (K)" on its right (the key only once you have a class).
 - **They stay put while building or sailing** (user, 2026-10-31). Instead the game's **selected-piece box** (the "Repair" box with the piece's name, description and cost, while a hammer, hoe or cultivator is out) and its **ship display** (sail and rudder) move to the **bottom right**, above the key hints. Each is moved as a whole, by the distance between what it draws and that corner, every frame it shows; the build menu itself stays where the game puts it. Turning `Bars` off puts both back.
@@ -370,7 +371,7 @@ Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJso
 | `BarMaxLength` | `600` | Longest bar, in pixels (proposed) |
 | `BarsHeight` | `96` | Height of the bars above the bottom of the screen (proposed) |
 
-**How it works:** our bars live under the HUD's root (`Hud.m_rootObject`), so they hide with the HUD. The game's displays (`m_healthPanel`, `m_staminaBar2Root`, `m_eitrBarRoot`, `m_foodBarRoot`, the food icons and times) are scaled to zero in a `LateUpdate` (the game's animators set them after `Hud.Update`), and scaled back when `Bars` is turned off.
+**How it works:** our bars live under the HUD's root (`Hud.m_rootObject`), so they hide with the HUD. The game's displays (`m_healthPanel`, `m_staminaBar2Root`, `m_eitrBarRoot`, `m_adrenalineBarRoot`, `m_foodBarRoot`, the food icons and times) are scaled to zero in a `LateUpdate` (the game's animators set them after `Hud.Update`), and scaled back when `Bars` is turned off.
 
 **Known issues:**
 - **Play-test 2026-10-30 (first look, single player, with the demo):** bars, food slots and the XP bar show and work; the game's displays are gone. The user wanted the XP bar "a little bit lower": lowered.
@@ -1037,6 +1038,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-10-31
+- **Fix: the game's adrenaline bar** showed under our bars after using a power (play-test): it's hidden now and adrenaline shows as our own orange bar above health while it isn't empty. Untested.
 - **Skill cross redesigned** (user, untested): slots spread out with the Forsaken power in the middle as a medallion (the game's power display with the boss name and "Ready" hidden); cooldowns unmistakable (dark icon, sweep and seconds while waiting; full colour and a flash once ready); "Skill button: Right mouse" removed.
 - **Classes UI play-tested** (single player, demo): bars, food, XP bar, skill cross, skills panel, attributes, slots, closing and the class choice window pass; the new look passes. Changed after it (user): bar order is now health, stamina, eitr; the bars stay put while building or sailing and the game's selected-piece box and ship display move to the bottom right instead; the skill paths branch like a tree with the names on plaques. Re-check pending.
 - **Play-test 2026-10-31 (single player):** player-stat affixes (max health/stamina/eitr, carry weight, movement, regen, resistances), the bonus shown next to item-stat lines and the Odin unlock passed, no errors in the log. Weapon skill, life steal and crafting an Odin item not tried yet.
