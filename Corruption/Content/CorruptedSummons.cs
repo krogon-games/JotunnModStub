@@ -9,7 +9,8 @@ namespace Corruption.Content
     ///     seconds while players are within the army raid's range (96 m), 2-3 creatures of the boss's own army raid
     ///     (the same as its biome's rip waves; user, 2026-10-30) arrive like a raid, 40-80 m from a player. They are
     ///     maddened and have 1-2 stars (user: at least 1). At most <c>SummonsPerPlayer</c> are alive per player present
-    ///     (user: 4). Every boss gets this component; it does nothing unless the boss is corrupted.
+    ///     (user: 4). Summons fight players only (<see cref="Maddened.IsSummon" />). Every boss gets this component; it
+    ///     does nothing unless the boss is corrupted.
     /// </summary>
     internal class CorruptedSummons : MonoBehaviour
     {

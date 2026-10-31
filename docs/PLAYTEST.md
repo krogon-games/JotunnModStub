@@ -27,11 +27,9 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 ### 1f. Corrupted offerings
 ~~Eikthyr, Moder (and a mix refused), the Queen, Kall's phases, the fixed seed and blood icons~~ (passed 2026-10-30).
 
-### 1g. Corrupted boss summons (new)
-1. `spawn Eikthyr`, `co_corrupt`, stay within 96 m (no `god` if you want a real fight). About every 30 s, 2–3 red boars and necks come running from 40–80 m away, each with 1 or 2 stars. Log: `Corrupted boss Eikthyr: summons from army_eikthyr (…)` and `summoned 2 (… alive, limit 4)`.
-2. Don't kill them: with you alone, no more than 4 are alive at once.
-3. Kill Eikthyr: the summons stop.
-4. One later boss, e.g. `spawn Bonemass` + `co_corrupt` (draugr and skeletons). Is the fight tough enough?
+### 1g. Corrupted boss summons
+Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the boss dies.
+1. **Re-check after the fix:** `spawn Eikthyr`, `co_corrupt`, then walk away (out of their reach) and watch: the summons and Eikthyr don't attack each other, and the summons ignore other creatures. They still come for you.
 
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
