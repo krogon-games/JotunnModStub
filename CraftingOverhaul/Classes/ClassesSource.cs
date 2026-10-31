@@ -143,20 +143,24 @@ namespace CraftingOverhaul.Classes
 
         public static Sprite ClassIcon(string classId)
         {
-            if (Demo)
-            {
-                return ItemIcon("BowHuntsman");
-            }
-            return _classIcon != null ? _classIcon(classId) : null;
+            var icon = !Demo && _classIcon != null ? _classIcon(classId) : null;
+            return icon ? icon : SheetArt.SkillIcon(classId) ?? (Demo ? ItemIcon("BowHuntsman") : null);
         }
 
         public static Sprite SkillIcon(string skillId)
         {
-            if (Demo)
+            // Orlog's icon first; else our placeholder set (tools/make_skill_icons.py); else, in the demo, a vanilla item.
+            var icon = !Demo && _skillIcon != null ? _skillIcon(skillId) : null;
+            if (icon)
             {
-                return DemoSkillIcons.TryGetValue(skillId ?? "", out string prefab) ? ItemIcon(prefab) : null;
+                return icon;
             }
-            return _skillIcon != null ? _skillIcon(skillId) : null;
+            icon = SheetArt.SkillIcon(skillId);
+            if (icon)
+            {
+                return icon;
+            }
+            return Demo && DemoSkillIcons.TryGetValue(skillId ?? "", out string prefab) ? ItemIcon(prefab) : null;
         }
 
         private static string Call(Func<string, string> f, string arg) => f != null ? f(arg) ?? "" : "";

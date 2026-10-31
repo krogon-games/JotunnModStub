@@ -65,34 +65,24 @@ namespace CraftingOverhaul.Classes
         }
     }
 
-    /// <summary>One straight piece of a path, in panel pixels (y down): always vertical or horizontal.</summary>
-    internal struct TreeSegment
-    {
-        public float X1;
-        public float Y1;
-        public float X2;
-        public float Y2;
-
-        public bool Horizontal => Y1 == Y2;
-        public float Length => Math.Abs(X2 - X1) + Math.Abs(Y2 - Y1);
-    }
-
     /// <summary>
-    ///     The path from a prerequisite down to its skill, branching like a tree (user, play-test 2026-10-31: the first,
-    ///     slanted lines looked bad): straight down from the bottom of the prerequisite, across in the gap just above the
-    ///     skill's row, then down into the top of the skill. One vertical segment when both are in the same column.
-    ///     Paths that share a start run on top of each other, so they look like one trunk that branches.
+    ///     The path from a prerequisite to its skill: one straight line from the edge of the prerequisite's medallion to
+    ///     the edge of the skill's, aimed at its centre, in tree pixels (y down). With names moved to the details pane
+    ///     (redesign 2026-10-31) nothing sits between the medallions, so short straight paths read cleanly, as in
+    ///     Diablo 2's trees.
     /// </summary>
     internal sealed class TreeLine
     {
         public string From;
         public string To;
-        public readonly List<TreeSegment> Segments = new List<TreeSegment>();
+        public float X1;
+        public float Y1;
+        public float X2;
+        public float Y2;
 
-        public float X1 => Segments[0].X1;
-        public float Y1 => Segments[0].Y1;
-        public float X2 => Segments[Segments.Count - 1].X2;
-        public float Y2 => Segments[Segments.Count - 1].Y2;
+        public float Length => (float)Math.Sqrt((X2 - X1) * (X2 - X1) + (Y2 - Y1) * (Y2 - Y1));
+        /// <summary>Angle in degrees, counter-clockwise from +x on screen (y up), for rotating a horizontal image.</summary>
+        public float AngleDegrees => (float)(Math.Atan2(-(Y2 - Y1), X2 - X1) * 180.0 / Math.PI);
     }
 
     /// <summary>
@@ -104,29 +94,40 @@ namespace CraftingOverhaul.Classes
     {
         public const int Rows = 6;
         public const int Cols = 3;
-        public const float Tile = 64f;
-        public const float ColGap = 56f;
-        public const float RowGap = 40f;
-        /// <summary>The skill's name under its tile, on a small plaque that the paths run behind.</summary>
-        public const float NameHeight = 16f;
-        /// <summary>How far above a skill's row a bending path runs across: the middle of the gap below the names.</summary>
-        public static float ElbowAbove => (RowGap - NameHeight) / 2f;
-        /// <summary>Room left of the grid for the level tier labels.</summary>
-        public const float LabelWidth = 44f;
+        /// <summary>A skill's medallion, in pixels.</summary>
+        public const float Tile = 56f;
+        /// <summary>Distance between column centres and between row centres.</summary>
+        public const float ColPitch = 176f;
+        public const float RowPitch = 76f;
+        /// <summary>Room left of the columns for the level tier labels.</summary>
+        public const float LabelWidth = 56f;
+        /// <summary>Gap between a medallion's rim and the start or end of a path.</summary>
+        public const float PathGap = 3f;
 
         public static readonly int[] TierLevels = { 1, 6, 12, 18, 24, 30 };
 
-        public static float GridWidth => LabelWidth + Cols * Tile + (Cols - 1) * ColGap;
-        public static float GridHeight => Rows * Tile + (Rows - 1) * RowGap;
+        public static float GridWidth => LabelWidth + Cols * ColPitch;
+        public static float GridHeight => Rows * RowPitch;
 
-        /// <summary>Top-left of the tile for a skill at (row, col), both 1-based, in grid pixels.</summary>
+        /// <summary>Top-left of the medallion for a skill at (row, col), both 1-based, in tree pixels.</summary>
         public static void TilePosition(int row, int col, out float x, out float y)
+        {
+            CentrePosition(row, col, out float cx, out float cy);
+            x = cx - Tile / 2f;
+            y = cy - Tile / 2f;
+        }
+
+        /// <summary>Centre of the medallion for a skill at (row, col), both 1-based, in tree pixels.</summary>
+        public static void CentrePosition(int row, int col, out float x, out float y)
         {
             row = Math.Max(1, Math.Min(Rows, row));
             col = Math.Max(1, Math.Min(Cols, col));
-            x = LabelWidth + (col - 1) * (Tile + ColGap);
-            y = (row - 1) * (Tile + RowGap);
+            x = LabelWidth + (col - 0.5f) * ColPitch;
+            y = (row - 0.5f) * RowPitch;
         }
+
+        /// <summary>Centre line of a tier row, for its label and divider.</summary>
+        public static float RowCentre(int row) => (row - 0.5f) * RowPitch;
 
         /// <summary>The skills of one tab that are shown (not dropped).</summary>
         public static List<SkillView> Visible(IEnumerable<SkillView> skills, int tab)
@@ -143,8 +144,8 @@ namespace CraftingOverhaul.Classes
         }
 
         /// <summary>
-        ///     Paths for the prerequisites of the shown skills (see <see cref="TreeLine" />): from the bottom of the
-        ///     prerequisite's tile to the top of the skill's. Prerequisites in another tab or not shown get none.
+        ///     Paths for the prerequisites of the shown skills (see <see cref="TreeLine" />): from the edge of the
+        ///     prerequisite's medallion to the edge of the skill's. Prerequisites in another tab or not shown get none.
         /// </summary>
         public static List<TreeLine> Lines(IList<SkillView> shown)
         {
@@ -162,23 +163,25 @@ namespace CraftingOverhaul.Classes
                     {
                         continue;
                     }
-                    TilePosition(prereq.Row, prereq.Col, out float px, out float py);
-                    TilePosition(skill.Row, skill.Col, out float sx, out float sy);
-                    float x1 = px + Tile / 2f, y1 = py + Tile;
-                    float x2 = sx + Tile / 2f, y2 = sy;
-                    var line = new TreeLine { From = prereq.Id, To = skill.Id };
-                    if (x1 == x2)
+                    CentrePosition(prereq.Row, prereq.Col, out float px, out float py);
+                    CentrePosition(skill.Row, skill.Col, out float sx, out float sy);
+                    float dx = sx - px, dy = sy - py;
+                    float length = (float)Math.Sqrt(dx * dx + dy * dy);
+                    if (length <= Tile)
                     {
-                        line.Segments.Add(new TreeSegment { X1 = x1, Y1 = y1, X2 = x2, Y2 = y2 });
+                        continue;
                     }
-                    else
+                    float ux = dx / length, uy = dy / length;
+                    float edge = Tile / 2f + PathGap;
+                    lines.Add(new TreeLine
                     {
-                        float elbow = y2 - ElbowAbove;
-                        line.Segments.Add(new TreeSegment { X1 = x1, Y1 = y1, X2 = x1, Y2 = elbow });
-                        line.Segments.Add(new TreeSegment { X1 = x1, Y1 = elbow, X2 = x2, Y2 = elbow });
-                        line.Segments.Add(new TreeSegment { X1 = x2, Y1 = elbow, X2 = x2, Y2 = y2 });
-                    }
-                    lines.Add(line);
+                        From = prereq.Id,
+                        To = skill.Id,
+                        X1 = px + ux * edge,
+                        Y1 = py + uy * edge,
+                        X2 = sx - ux * edge,
+                        Y2 = sy - uy * edge
+                    });
                 }
             }
             return lines;

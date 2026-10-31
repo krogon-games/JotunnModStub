@@ -71,16 +71,29 @@ namespace CraftingOverhaul.CharacterSheet
         public static Sprite ArchBack => Get("arch_back", ArchBorder);
         public static Sprite ArchRim => Get("arch_rim", ArchBorder);
 
-        private static Sprite Get(string name, Vector4 border, bool repeat = false)
+        /// <summary>
+        ///     A placeholder skill or class icon by id (<c>Assets/Skills/&lt;id&gt;.rgba</c>, made by
+        ///     <c>tools/make_skill_icons.py</c>), or null when there is none. Used by the classes demo and when the Orlog
+        ///     plugin gives no icon.
+        /// </summary>
+        public static Sprite SkillIcon(string id)
         {
-            if (Cache.TryGetValue(name, out var cached))
+            return string.IsNullOrEmpty(id) ? null : Get(id, Vector4.zero, false, SkillsPrefix, false);
+        }
+
+        private const string SkillsPrefix = "CraftingOverhaul.Assets.Skills.";
+
+        private static Sprite Get(string name, Vector4 border, bool repeat = false, string prefix = ResourcePrefix, bool warnMissing = true)
+        {
+            string key = prefix + name;
+            if (Cache.TryGetValue(key, out var cached))
             {
                 return cached;
             }
             Sprite sprite = null;
             try
             {
-                var texture = Load(name, repeat);
+                var texture = Load(prefix + name + ".rgba", name, repeat, warnMissing);
                 if (texture)
                 {
                     // 100 pixels per unit, as the game's canvas: one texel is one UI unit.
@@ -93,18 +106,21 @@ namespace CraftingOverhaul.CharacterSheet
             {
                 Jotunn.Logger.LogWarning($"Could not load the character sheet's '{name}' art: {ex.Message}");
             }
-            Cache[name] = sprite;
+            Cache[key] = sprite;
             return sprite;
         }
 
-        private static Texture2D Load(string name, bool repeat)
+        private static Texture2D Load(string resource, string name, bool repeat, bool warnMissing)
         {
             byte[] bytes;
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ResourcePrefix + name + ".rgba"))
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
             {
                 if (stream == null)
                 {
-                    Jotunn.Logger.LogWarning($"Character sheet art '{name}' is missing from the DLL.");
+                    if (warnMissing)
+                    {
+                        Jotunn.Logger.LogWarning($"Character sheet art '{name}' is missing from the DLL.");
+                    }
                     return null;
                 }
                 using (var memory = new MemoryStream())

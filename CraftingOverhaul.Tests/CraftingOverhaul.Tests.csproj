@@ -18,6 +18,7 @@
     <Compile Include="..\CraftingOverhaul\Classes\DemoClasses.cs" Link="Linked\DemoClasses.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\SkillTreeLayout.cs" Link="Linked\SkillTreeLayout.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\CooldownDisplay.cs" Link="Linked\CooldownDisplay.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\SkillsPanelLayout.cs" Link="Linked\SkillsPanelLayout.cs" />
     <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />
     <Compile Include="..\Corruption\Rules\TalismanFamilies.cs" Link="Linked\TalismanFamilies.cs" />
     <Compile Include="..\Corruption\Rules\AffixTable.cs" Link="Linked\AffixTable.cs" />

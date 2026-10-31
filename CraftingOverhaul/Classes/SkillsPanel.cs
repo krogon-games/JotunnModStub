@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using CraftingOverhaul.CharacterSheet;
 using HarmonyLib;
 using Jotunn.Managers;
@@ -10,55 +12,68 @@ using UnityEngine.UI;
 namespace CraftingOverhaul.Classes
 {
     /// <summary>
-    ///     The skills panel (brief §2.4, §2.5): the class's three skill trees as tabs, each a 6×3 grid by level tier with
-    ///     the prerequisite lines; the four skill slots, filled by dragging skills onto them (or onto the HUD's skill
-    ///     cross); and the attribute points down the left. Opened with <see cref="ModConfig.SkillsPanelKey" /> or the
-    ///     Skills button on the inventory. Everything shown and every action goes through <see cref="ClassesSource" />.
+    ///     The skills panel (brief §2.4, §2.5), redesigned 2026-10-31 after the user found the first versions "not
+    ///     acceptable": Diablo 2's layout on the game's own panel. Left: the character box (level, XP, stat points and the
+    ///     four attributes with + buttons) and the skill details pane (the hovered or selected skill: name, rank, kind,
+    ///     cost, what it does now and next, why it's locked, a Learn button). Right: the class's three tabs, the tree on a
+    ///     bronze-rimmed tablet (medallions with a points badge, no names; tier rows; short straight paths, glowing
+    ///     eitr-blue once learned), and the four skill slots. Click a skill to select it, double-click or Learn to spend a
+    ///     point, drag it onto a slot here or on the HUD's skill cross. Every position comes from
+    ///     <see cref="SkillsPanelLayout" />, which <c>tools/preview_skills_panel.py</c> also draws from.
+    ///     Opened with <see cref="ModConfig.SkillsPanelKey" /> or the Skills button on the inventory; everything shown and
+    ///     every action goes through <see cref="ClassesSource" />.
     /// </summary>
     internal static class SkillsPanel
     {
-        private const float Margin = 22f;
-        private const float HeaderHeight = 56f;
-        private const float TabHeight = 34f;
-        /// <summary>Wider than first built so the attributes aren't cramped (user, 2026-10-30).</summary>
-        private const float AttributesWidth = 290f;
-        private const float AttributesHeight = 350f;
-        private const float SlotsHeight = 96f;
-        private const float SlotTile = 58f;
-        private const float MessageHeight = 24f;
-        /// <summary>Room each side of the tree for skill names wider than their tile (play-test 2026-10-30: they ran off the panel).</summary>
-        private const float TreePad = 30f;
-
         private static readonly string[] Attributes = { "strength", "dexterity", "vitality", "energy" };
 
+        // Path colours (mirrored in tools/preview_skills_panel.py).
+        private static readonly Color Groove = new Color(0f, 0f, 0f, 0.55f);
+        private static readonly Color PathDim = new Color(0.47f, 0.36f, 0.24f, 0.9f);
+        private static readonly Color PathLit = new Color(0.85f, 0.95f, 1f);
+        private static readonly Color Divider = new Color(0.66f, 0.47f, 0.24f, 0.24f);
+        private static readonly Color SelectedRing = new Color(1f, 0.94f, 0.78f, 1f);
+
         private static RectTransform _root;
-        private static RectTransform _grid;
         private static RectTransform _linesRoot;
         private static RectTransform _tilesRoot;
         private static Text _title;
         private static Text _skillPoints;
         private static Text _message;
         private static Text _level;
+        private static Text _xpText;
+        private static Image _xpFill;
         private static Text _statPoints;
         private static readonly Text[] TabLabels = new Text[3];
-        private static readonly Image[] TabBacks = new Image[3];
-        private static readonly Text[] AttributeTexts = new Text[4];
+        private static readonly Image[] TabImages = new Image[3];
+        private static readonly Text[] AttributeNames = new Text[4];
         private static readonly Text[] AttributeValues = new Text[4];
-        private static Image _xpFill;
         private static readonly Text[] AttributeEffects = new Text[4];
         private static readonly GameObject[] AttributeButtons = new GameObject[4];
         private static readonly SlotTileView[] Slots = new SlotTileView[DemoClasses.Slots];
-        private static RectTransform _tooltip;
-        private static Text _tooltipText;
         private static Image _dragGhost;
         private static GameObject _inventoryButton;
+
+        // Details pane.
+        private static Image _detailsGlow;
+        private static Image _detailsMedallion;
+        private static Image _detailsIcon;
+        private static Text _detailsName;
+        private static Text _detailsRank;
+        private static Text _detailsKind;
+        private static Text _detailsText;
+        private static Button _learn;
+        private static Text _learnLabel;
 
         private static int _tab;
         private static int _lastCounter = -1;
         private static string _classId = "";
         private static string[] _skillIds = new string[0];
+        private static string _selected = "";
+        private static string _hovered = "";
         private static readonly List<SkillView> Skills = new List<SkillView>();
         private static readonly Dictionary<string, SkillView> ById = new Dictionary<string, SkillView>(StringComparer.Ordinal);
+        private static readonly Dictionary<string, Image> SelectionRings = new Dictionary<string, Image>(StringComparer.Ordinal);
         private static readonly List<GameObject> TreeObjects = new List<GameObject>();
         private static float _messageUntil;
 
@@ -95,13 +110,13 @@ namespace CraftingOverhaul.Classes
             _root.gameObject.SetActive(true);
             _root.SetAsLastSibling();
             _lastCounter = -1;
+            _hovered = "";
             ShowMessage("");
             ClassWindows.SetOpen(ClassWindows.Skills, true);
         }
 
         public static void Close()
         {
-            HideTooltip();
             EndDrag();
             if (_root)
             {
@@ -112,64 +127,33 @@ namespace CraftingOverhaul.Classes
 
         // ------------------------------------------------------------ building
 
-        private static float TreeWidth => SkillTreeLayout.GridWidth + 2f * TreePad;
-        private static float PanelWidth => Margin + AttributesWidth + Margin + TreeWidth + Margin;
-        private static float TreeTop => HeaderHeight + TabHeight + 12f;
-        private static float PanelHeight => TreeTop + SkillTreeLayout.GridHeight + 16f + SlotsHeight + MessageHeight + Margin;
-
         private static void EnsureCreated()
         {
             if (_root)
             {
                 return;
             }
-            _root = UiKit.Panel("CraftingOverhaul_SkillsPanel", GUIManager.CustomGUIFront.transform, new Vector2(PanelWidth, PanelHeight));
-            UiKit.Place(_root, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(PanelWidth, PanelHeight));
+            float width = SkillsPanelLayout.Width, height = SkillsPanelLayout.Height;
+            _root = UiKit.Panel("CraftingOverhaul_SkillsPanel", GUIManager.CustomGUIFront.transform, new Vector2(width, height));
+            UiKit.Place(_root, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(width, height));
 
-            _title = UiKit.Text("Title", _root, 30, UiKit.Gold, TextAnchor.MiddleCenter, true, GUIManager.Instance.NorseBold);
-            PlaceTopLeft(_title.rectTransform, 0f, 10f, PanelWidth, 40f);
+            _title = UiKit.Text("Title", _root, 32, new Color(0.94f, 0.78f, 0.43f), TextAnchor.MiddleCenter, true, GUIManager.Instance.NorseBold);
+            Place(_title.rectTransform, SkillsPanelLayout.Title);
+            BuildClose();
+            _skillPoints = UiKit.Text("SkillPoints", _root, 18, UiKit.Gold, TextAnchor.MiddleRight);
+            Place(_skillPoints.rectTransform, SkillsPanelLayout.SkillPoints);
 
-            var close = UiKit.Button("X", _root, new Vector2(36f, 36f), Close);
-            PlaceTopLeft((RectTransform)close.transform, PanelWidth - Margin - 36f, 12f, 36f, 36f);
-
-            BuildAttributes();
+            BuildCharacter();
+            BuildDetails();
             BuildTabs();
-
-            float treeLeft = Margin + AttributesWidth + Margin;
-            // In the header, left of the close button.
-            _skillPoints = UiKit.Text("SkillPoints", _root, 17, UiKit.Gold, TextAnchor.MiddleRight);
-            PlaceTopLeft(_skillPoints.rectTransform, PanelWidth - Margin - 36f - 12f - 220f, 12f, 220f, 36f);
-
-            _grid = UiKit.Rect("Tree", _root);
-            PlaceTopLeft(_grid, treeLeft + TreePad, TreeTop, SkillTreeLayout.GridWidth, SkillTreeLayout.GridHeight);
-            // Lines first so the tiles cover their ends.
-            _linesRoot = UiKit.Rect("Lines", _grid);
-            UiKit.Stretch(_linesRoot);
-            _tilesRoot = UiKit.Rect("Tiles", _grid);
-            UiKit.Stretch(_tilesRoot);
-            for (int row = 1; row <= SkillTreeLayout.Rows; row++)
-            {
-                SkillTreeLayout.TilePosition(row, 1, out _, out float y);
-                var label = UiKit.Text("Tier" + row, _grid, 15, UiKit.LightDim, TextAnchor.MiddleLeft);
-                UiKit.SetText(label, "Lv " + SkillTreeLayout.TierLevels[row - 1]);
-                PlaceTopLeft(label.rectTransform, 0f, y, SkillTreeLayout.LabelWidth, SkillTreeLayout.Tile);
-            }
-
-            BuildSlots(treeLeft);
+            BuildTree();
+            BuildSlots();
 
             _message = UiKit.Text("Message", _root, 15, new Color(1f, 0.6f, 0.5f), TextAnchor.MiddleCenter);
-            PlaceTopLeft(_message.rectTransform, 0f, PanelHeight - Margin - MessageHeight, PanelWidth, MessageHeight);
-
-            _tooltip = UiKit.Panel("Tooltip", _root, new Vector2(300f, 160f));
-            _tooltip.pivot = new Vector2(0f, 1f);
-            _tooltip.GetComponent<Image>().raycastTarget = false;
-            _tooltipText = UiKit.Text("Text", _tooltip, 15, Color.white, TextAnchor.UpperLeft);
-            _tooltipText.horizontalOverflow = HorizontalWrapMode.Wrap;
-            UiKit.Stretch(_tooltipText.rectTransform, 14f);
-            _tooltip.gameObject.SetActive(false);
+            Place(_message.rectTransform, SkillsPanelLayout.Message);
 
             _dragGhost = UiKit.Image("DragGhost", _root, null);
-            _dragGhost.rectTransform.sizeDelta = new Vector2(SlotTile, SlotTile);
+            _dragGhost.rectTransform.sizeDelta = new Vector2(SkillsPanelLayout.SlotSize, SkillsPanelLayout.SlotSize);
             _dragGhost.preserveAspect = true;
             _dragGhost.gameObject.SetActive(false);
 
@@ -177,77 +161,161 @@ namespace CraftingOverhaul.Classes
             Jotunn.Logger.LogInfo("Skills panel added.");
         }
 
-        private static void BuildAttributes()
+        private static void BuildClose()
         {
-            float top = HeaderHeight + 4f;
-            var inset = UiKit.Inset("Attributes", _root);
-            PlaceTopLeft(inset.rectTransform, Margin, top, AttributesWidth, AttributesHeight);
-            var box = inset.rectTransform;
-            float inner = AttributesWidth - 36f;
+            var close = UiKit.Image("Close", _root, SheetArt.Close, Image.Type.Simple, true);
+            if (!close.sprite)
+            {
+                close.color = new Color(0.2f, 0.18f, 0.16f);
+            }
+            Place(close.rectTransform, SkillsPanelLayout.Close);
+            var button = close.gameObject.AddComponent<Button>();
+            button.targetGraphic = close;
+            button.onClick.AddListener(Close);
+        }
 
-            _level = UiKit.Text("Level", box, 24, UiKit.Gold, TextAnchor.UpperLeft);
-            PlaceTopLeft(_level.rectTransform, 18f, 12f, inner, 30f);
+        private static void BuildCharacter()
+        {
+            var box = UiKit.Inset("Character", _root).rectTransform;
+            Place(box, SkillsPanelLayout.Character);
+
+            _level = UiKit.Text("Level", box, 26, UiKit.Gold, TextAnchor.MiddleLeft);
+            Place(_level.rectTransform, SkillsPanelLayout.Level);
             var xpFrame = UiKit.Image("Xp", box, SheetArt.Bar, Image.Type.Sliced);
-            PlaceTopLeft(xpFrame.rectTransform, 18f, 46f, inner, 10f);
+            Place(xpFrame.rectTransform, SkillsPanelLayout.XpBar);
             _xpFill = UiKit.Image("Fill", xpFrame.rectTransform, SheetArt.BarFill);
             _xpFill.color = UiKit.Xp;
             _xpFill.type = Image.Type.Filled;
             _xpFill.fillMethod = Image.FillMethod.Horizontal;
             UiKit.Stretch(_xpFill.rectTransform, 2f);
-            _statPoints = UiKit.Text("StatPoints", box, 15, UiKit.LightDim, TextAnchor.UpperLeft);
-            PlaceTopLeft(_statPoints.rectTransform, 18f, 62f, inner, 44f);
+            _xpText = UiKit.Text("XpText", box, 14, UiKit.LightDim, TextAnchor.MiddleLeft);
+            Place(_xpText.rectTransform, SkillsPanelLayout.XpText);
+            _statPoints = UiKit.Text("StatPoints", box, 16, UiKit.LightDim, TextAnchor.MiddleLeft);
+            Place(_statPoints.rectTransform, SkillsPanelLayout.StatPoints);
 
             for (int i = 0; i < Attributes.Length; i++)
             {
-                float y = 118f + i * 56f;
-                AttributeTexts[i] = UiKit.Text("Attribute" + i, box, 18, UiKit.Light, TextAnchor.MiddleLeft);
-                PlaceTopLeft(AttributeTexts[i].rectTransform, 18f, y, inner - 100f, 24f);
+                AttributeNames[i] = UiKit.Text("Attribute" + i, box, 18, UiKit.Light, TextAnchor.MiddleLeft);
+                Place(AttributeNames[i].rectTransform, SkillsPanelLayout.AttributeName(i));
                 AttributeValues[i] = UiKit.Text("Value" + i, box, 18, UiKit.Light, TextAnchor.MiddleRight);
-                PlaceTopLeft(AttributeValues[i].rectTransform, AttributesWidth - 18f - 34f - 12f - 60f, y, 60f, 24f);
+                Place(AttributeValues[i].rectTransform, SkillsPanelLayout.AttributeValue(i));
                 AttributeEffects[i] = UiKit.Text("Effect" + i, box, 14, UiKit.LightDim, TextAnchor.MiddleLeft);
-                PlaceTopLeft(AttributeEffects[i].rectTransform, 18f, y + 24f, inner - 40f, 20f);
+                Place(AttributeEffects[i].rectTransform, SkillsPanelLayout.AttributeEffect(i));
                 string attribute = Attributes[i];
-                var plus = UiKit.Button("+", box, new Vector2(34f, 34f), () => SpendStat(attribute));
-                PlaceTopLeft((RectTransform)plus.transform, AttributesWidth - 18f - 34f, y - 4f, 34f, 34f);
+                var size = new Vector2(SkillsPanelLayout.PlusSize, SkillsPanelLayout.PlusSize);
+                var plus = UiKit.Button("+", box, size, () => SpendStat(attribute));
+                Place((RectTransform)plus.transform, SkillsPanelLayout.AttributePlus(i));
                 AttributeButtons[i] = plus.gameObject;
             }
         }
 
+        private static void BuildDetails()
+        {
+            var box = UiKit.Inset("Details", _root).rectTransform;
+            Place(box, SkillsPanelLayout.Details);
+
+            var icon = SkillsPanelLayout.DetailsIcon;
+            _detailsGlow = UiKit.Image("Glow", box, SheetArt.GlowRing);
+            float glow = icon.Width * SheetArt.GlowRingScale;
+            Place(_detailsGlow.rectTransform, new SheetRect(icon.X + icon.Width / 2f - glow / 2f, icon.Y + icon.Height / 2f - glow / 2f, glow, glow));
+            _detailsMedallion = UiKit.Image("Medallion", box, SheetArt.Medallion);
+            Place(_detailsMedallion.rectTransform, icon);
+            _detailsIcon = UiKit.Image("Icon", _detailsMedallion.rectTransform, null);
+            _detailsIcon.preserveAspect = true;
+            UiKit.Stretch(_detailsIcon.rectTransform, icon.Width * 0.16f);
+
+            _detailsName = UiKit.Text("Name", box, 22, UiKit.Gold, TextAnchor.MiddleLeft);
+            FitText(_detailsName, 14, 22);
+            Place(_detailsName.rectTransform, SkillsPanelLayout.DetailsName);
+            _detailsRank = UiKit.Text("Rank", box, 16, UiKit.Light, TextAnchor.MiddleLeft);
+            Place(_detailsRank.rectTransform, SkillsPanelLayout.DetailsRank);
+            _detailsKind = UiKit.Text("Kind", box, 14, UiKit.LightDim, TextAnchor.MiddleLeft);
+            Place(_detailsKind.rectTransform, SkillsPanelLayout.DetailsKind);
+            _detailsText = UiKit.Text("Text", box, 16, UiKit.Light, TextAnchor.UpperLeft);
+            _detailsText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            _detailsText.verticalOverflow = VerticalWrapMode.Truncate;
+            _detailsText.lineSpacing = 1.05f;
+            Place(_detailsText.rectTransform, SkillsPanelLayout.DetailsText);
+
+            var learn = SkillsPanelLayout.Learn;
+            _learn = UiKit.Button("Learn", box, new Vector2(learn.Width, learn.Height), () =>
+            {
+                string id = DetailsSkill();
+                if (id.Length > 0)
+                {
+                    SpendSkill(id);
+                }
+            });
+            Place((RectTransform)_learn.transform, learn);
+            _learnLabel = _learn.GetComponentInChildren<Text>();
+        }
+
         private static void BuildTabs()
         {
-            float left = Margin + AttributesWidth + Margin;
-            float width = (TreeWidth - 2f * 6f) / 3f;
             for (int i = 0; i < TabLabels.Length; i++)
             {
                 int tab = i;
+                var rect = SkillsPanelLayout.Tab(i);
                 // The game's own button, as the inventory's and Corruption's bag tabs use.
-                var button = UiKit.Button("", _root, new Vector2(width, TabHeight), () =>
+                var button = UiKit.Button("", _root, new Vector2(rect.Width, rect.Height), () =>
                 {
                     _tab = tab;
+                    _selected = "";
                     _lastCounter = -1;
                 });
-                PlaceTopLeft((RectTransform)button.transform, left + i * (width + 6f), HeaderHeight + 8f, width, TabHeight);
-                TabBacks[i] = button.image;
+                Place((RectTransform)button.transform, rect);
+                TabImages[i] = button.image;
                 TabLabels[i] = button.GetComponentInChildren<Text>();
                 if (TabLabels[i])
                 {
-                    FitText(TabLabels[i], 11, 15);
+                    FitText(TabLabels[i], 11, 16);
                 }
             }
         }
 
-        private static void BuildSlots(float treeLeft)
+        private static void BuildTree()
         {
-            float top = TreeTop + SkillTreeLayout.GridHeight + 16f;
+            // The tablet: a dark well in a bronze, riveted rim, like the slots.
+            var tablet = UiKit.Image("Tablet", _root, SheetArt.Tile, Image.Type.Sliced);
+            if (!tablet.sprite)
+            {
+                tablet.color = new Color(0.08f, 0.07f, 0.06f, 0.9f);
+            }
+            Place(tablet.rectTransform, SkillsPanelLayout.Tablet);
+
+            var tree = UiKit.Rect("Tree", _root);
+            Place(tree, SkillsPanelLayout.Tree);
+            for (int row = 1; row <= SkillTreeLayout.Rows; row++)
+            {
+                float centre = SkillTreeLayout.RowCentre(row);
+                var label = UiKit.Text("Tier" + row, tree, 14, UiKit.LightDim, TextAnchor.MiddleCenter);
+                UiKit.SetText(label, "Lv " + SkillTreeLayout.TierLevels[row - 1]);
+                Place(label.rectTransform, new SheetRect(0f, centre - 10f, SkillTreeLayout.LabelWidth - 8f, 20f));
+                if (row > 1)
+                {
+                    var divider = UiKit.Image("Divider" + row, tree, null);
+                    divider.color = Divider;
+                    float y = centre - SkillTreeLayout.RowPitch / 2f;
+                    Place(divider.rectTransform, new SheetRect(SkillTreeLayout.LabelWidth, y, SkillTreeLayout.GridWidth - SkillTreeLayout.LabelWidth - 8f, 1f));
+                }
+            }
+            // Paths under the medallions.
+            _linesRoot = UiKit.Rect("Paths", tree);
+            UiKit.Stretch(_linesRoot);
+            _tilesRoot = UiKit.Rect("Skills", tree);
+            UiKit.Stretch(_tilesRoot);
+        }
+
+        private static void BuildSlots()
+        {
+            var labelRect = SkillsPanelLayout.SlotsLabel;
             var label = UiKit.Text("SlotsLabel", _root, 20, UiKit.Gold, TextAnchor.MiddleLeft);
             UiKit.SetText(label, "Skill slots");
-            PlaceTopLeft(label.rectTransform, Margin + 8f, top + 4f, AttributesWidth, 26f);
+            Place(label.rectTransform, new SheetRect(labelRect.X, labelRect.Y + labelRect.Height / 2f - 22f, labelRect.Width, 24f));
             var hint = UiKit.Text("SlotsHint", _root, 14, UiKit.LightDim, TextAnchor.MiddleLeft);
-            UiKit.SetText(hint, "Drag a skill onto a slot; drag it off, or right-click, to empty it");
-            hint.horizontalOverflow = HorizontalWrapMode.Wrap;
-            PlaceTopLeft(hint.rectTransform, Margin + 8f, top + 30f, AttributesWidth - 8f, 40f);
-            float rowWidth = Slots.Length * SlotTile + (Slots.Length - 1) * 14f;
-            float left = treeLeft + (TreeWidth - rowWidth) / 2f;
+            UiKit.SetText(hint, "drag skills here");
+            Place(hint.rectTransform, new SheetRect(labelRect.X, labelRect.Y + labelRect.Height / 2f + 2f, labelRect.Width, 20f));
+
             for (int i = 0; i < Slots.Length; i++)
             {
                 var frame = UiKit.Image("Slot" + i, _root, SheetArt.Tile, Image.Type.Sliced, true);
@@ -255,16 +323,15 @@ namespace CraftingOverhaul.Classes
                 {
                     frame.color = new Color(0.08f, 0.07f, 0.06f, 0.9f);
                 }
-                PlaceTopLeft(frame.rectTransform, left + i * (SlotTile + 14f), top, SlotTile, SlotTile);
+                Place(frame.rectTransform, SkillsPanelLayout.Slot(i));
                 var view = frame.gameObject.AddComponent<SlotTileView>();
                 view.Index = i;
                 view.Icon = UiKit.Image("Icon", frame.rectTransform, null);
                 view.Icon.preserveAspect = true;
+                view.Icon.enabled = false;
                 UiKit.Stretch(view.Icon.rectTransform, 9f);
-                view.Key = UiKit.Text("Key", frame.rectTransform, 13, Color.white, TextAnchor.UpperLeft);
+                view.Key = UiKit.Text("Key", frame.rectTransform, 14, Color.white, TextAnchor.UpperLeft);
                 UiKit.Place(view.Key.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(7f, -4f), new Vector2(30f, 16f));
-                view.Kind = UiKit.Text("Kind", frame.rectTransform, 13, UiKit.Light, TextAnchor.UpperCenter);
-                UiKit.Place(view.Kind.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -2f), new Vector2(SlotTile + 30f, 16f));
                 Slots[i] = view;
             }
         }
@@ -285,15 +352,16 @@ namespace CraftingOverhaul.Classes
                 _classId = classId;
                 _skillIds = FlatJson.Strings(ClassesSource.SkillIds(classId));
                 _tab = 0;
+                _selected = "";
             }
             string classInfo = ClassesSource.ClassInfo(classId);
-            UiKit.SetText(_title, FlatJson.Get(classInfo, "name") ?? classId);
+            UiKit.SetText(_title, (FlatJson.Get(classInfo, "name") ?? classId).ToUpperInvariant());
             for (int i = 0; i < TabLabels.Length; i++)
             {
                 UiKit.SetText(TabLabels[i], FlatJson.Get(classInfo, "tab" + i) ?? "");
-                if (TabBacks[i])
+                if (TabImages[i])
                 {
-                    TabBacks[i].color = i == _tab ? Color.white : new Color(0.62f, 0.6f, 0.58f, 1f);
+                    TabImages[i].color = i == _tab ? Color.white : new Color(0.62f, 0.6f, 0.58f, 1f);
                 }
                 if (TabLabels[i])
                 {
@@ -303,19 +371,19 @@ namespace CraftingOverhaul.Classes
 
             int skillPoints = FlatJson.GetInt(character, "skillPoints", 0);
             int statPoints = FlatJson.GetInt(character, "statPoints", 0);
-            UiKit.SetText(_skillPoints, "Skill points: " + skillPoints);
+            UiKit.SetText(_skillPoints, skillPoints > 0 ? "<color=#8FD97A>Skill points: " + skillPoints + "</color>" : "Skill points: 0");
             long xp = FlatJson.GetLong(character, "xp", 0);
             long start = FlatJson.GetLong(character, "xpLevelStart", 0);
             long next = FlatJson.GetLong(character, "xpNextLevel", 0);
-            UiKit.SetText(_level, "Level " + FlatJson.GetInt(character, "level", 1));
             bool max = next <= start;
+            UiKit.SetText(_level, "Level " + FlatJson.GetInt(character, "level", 1));
             _xpFill.fillAmount = max ? 1f : Mathf.Clamp01((float)(xp - start) / (next - start));
-            UiKit.SetText(_statPoints, (max ? "Highest level" : (xp - start) + " / " + (next - start) + " XP") + "\n" +
-                                       (statPoints > 0 ? "<color=#8FD97A>Stat points: " + statPoints + "</color>" : "Stat points: 0"));
+            UiKit.SetText(_xpText, max ? "Highest level" : (xp - start) + " / " + (next - start) + " XP");
+            UiKit.SetText(_statPoints, statPoints > 0 ? "<color=#8FD97A>Stat points: " + statPoints + "</color>" : "Stat points: 0");
             for (int i = 0; i < Attributes.Length; i++)
             {
                 string info = ClassesSource.AttributeInfo(Attributes[i]);
-                UiKit.SetText(AttributeTexts[i], FlatJson.Get(info, "name") ?? Attributes[i]);
+                UiKit.SetText(AttributeNames[i], FlatJson.Get(info, "name") ?? Attributes[i]);
                 UiKit.SetText(AttributeValues[i], FlatJson.GetInt(info, "value", 0).ToString());
                 UiKit.SetText(AttributeEffects[i], FlatJson.Get(info, "effect") ?? "");
                 AttributeButtons[i].SetActive(statPoints > 0);
@@ -332,7 +400,20 @@ namespace CraftingOverhaul.Classes
                     ById[skill.Id] = skill;
                 }
             }
-            BuildTree();
+            var shown = SkillTreeLayout.Visible(Skills, _tab);
+            if (!ById.TryGetValue(_selected, out var current) || current.Tab != _tab)
+            {
+                // Start on the first skill a point can go into, else the first of the tab.
+                _selected = "";
+                foreach (var skill in shown)
+                {
+                    if (_selected.Length == 0 || (skill.CanSpend && !ById[_selected].CanSpend))
+                    {
+                        _selected = skill.Id;
+                    }
+                }
+            }
+            RebuildTree(shown);
 
             string bar = ClassesSource.SkillBar();
             for (int i = 0; i < Slots.Length; i++)
@@ -344,23 +425,26 @@ namespace CraftingOverhaul.Classes
                 view.Icon.sprite = icon;
                 view.Icon.enabled = icon;
                 UiKit.SetText(view.Key, FlatJson.Get(bar, "key" + i) ?? "");
-                UiKit.SetText(view.Kind, id.Length > 0 && ById.TryGetValue(id, out var skill) ? skill.Name : "");
             }
+            ShowDetails();
         }
 
-        /// <summary>Rebuilds the shown tab's tiles and lines (a few dozen objects, only when something changed).</summary>
-        private static void BuildTree()
+        /// <summary>Rebuilds the shown tab's medallions and paths (a few dozen objects, only when something changed).</summary>
+        private static void RebuildTree(List<SkillView> shown)
         {
             foreach (var go in TreeObjects)
             {
                 UnityEngine.Object.Destroy(go);
             }
             TreeObjects.Clear();
+            SelectionRings.Clear();
 
-            var shown = SkillTreeLayout.Visible(Skills, _tab);
-            // Paths from a learned prerequisite glow eitr-blue, like runes (mock-up D); others are a dim groove. The dim
-            // ones go first so a shared trunk shows lit when any path along it is.
+            // Paths: a dark groove; a learned prerequisite's path carries an eitr-blue light, like a rune (mock-up D).
             var lines = SkillTreeLayout.Lines(shown);
+            foreach (var line in lines)
+            {
+                AddPath(line, null, Groove, 6f);
+            }
             for (int pass = 0; pass < 2; pass++)
             {
                 foreach (var line in lines)
@@ -370,109 +454,182 @@ namespace CraftingOverhaul.Classes
                     {
                         continue;
                     }
-                    foreach (var segment in line.Segments)
+                    if (learned)
                     {
-                        if (learned)
-                        {
-                            var glow = UiKit.Image("PathGlow", _linesRoot, SheetArt.GlowLine);
-                            glow.color = new Color(UiKit.Rune.r, UiKit.Rune.g, UiKit.Rune.b, 0.8f);
-                            PlaceSegment(glow.rectTransform, segment, 16f);
-                            TreeObjects.Add(glow.gameObject);
-                        }
-                        var core = UiKit.Image("Path", _linesRoot, null);
-                        core.color = learned ? new Color(0.85f, 0.95f, 1f) : new Color(0.42f, 0.33f, 0.24f, 0.9f);
-                        PlaceSegment(core.rectTransform, segment, learned ? 2f : 3f);
-                        TreeObjects.Add(core.gameObject);
+                        AddPath(line, SheetArt.GlowLine, new Color(UiKit.Rune.r, UiKit.Rune.g, UiKit.Rune.b, 0.55f), 12f);
                     }
+                    AddPath(line, null, learned ? PathLit : PathDim, 2f);
                 }
             }
             foreach (var skill in shown)
             {
-                TreeObjects.Add(BuildTile(skill));
+                TreeObjects.Add(BuildSkill(skill));
             }
+            UpdateSelection();
         }
 
-        /// <summary>
-        ///     A straight piece of a path. The glow sprite fades across its thickness, so a horizontal piece uses it as is
-        ///     and a vertical one turned a quarter; each piece runs half its thickness past both ends so corners close.
-        /// </summary>
-        private static void PlaceSegment(RectTransform rt, TreeSegment segment, float thickness)
+        private static void AddPath(TreeLine line, Sprite sprite, Color colour, float thickness)
         {
+            var image = UiKit.Image("Path", _linesRoot, sprite);
+            image.color = colour;
+            var rt = image.rectTransform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = new Vector2((segment.X1 + segment.X2) / 2f, -(segment.Y1 + segment.Y2) / 2f);
-            float length = segment.Length + thickness;
-            rt.sizeDelta = new Vector2(length, thickness);
-            rt.localRotation = segment.Horizontal ? Quaternion.identity : Quaternion.Euler(0f, 0f, 90f);
+            rt.sizeDelta = new Vector2(line.Length, thickness);
+            rt.anchoredPosition = new Vector2((line.X1 + line.X2) / 2f, -(line.Y1 + line.Y2) / 2f);
+            rt.localRotation = Quaternion.Euler(0f, 0f, line.AngleDegrees);
+            TreeObjects.Add(image.gameObject);
         }
 
         /// <summary>
-        ///     A skill as a round bronze medallion (user's choice from mock-up D, 2026-10-30): an eitr-blue glow when it
-        ///     has points (gold when maxed), green when a point can be spent; greyed when locked, darker when it comes later.
+        ///     A skill as a round bronze medallion (mock-up D): an eitr-blue glow once it has points (gold when maxed), green
+        ///     when a point can be spent; greyed when locked, darker when it comes later; its points in a badge.
         /// </summary>
-        private static GameObject BuildTile(SkillView skill)
+        private static GameObject BuildSkill(SkillView skill)
         {
             SkillTreeLayout.TilePosition(skill.Row, skill.Col, out float x, out float y);
             float size = SkillTreeLayout.Tile;
             var root = UiKit.Rect("Skill_" + skill.Id, _tilesRoot);
-            PlaceTopLeft(root, x, y, size, size);
+            Place(root, new SheetRect(x, y, size, size));
             bool locked = skill.Later || (skill.Points == 0 && !skill.CanSpend);
+            float glowSize = size * SheetArt.GlowRingScale;
+
+            var ring = UiKit.Image("Selected", root, SheetArt.GlowRing);
+            ring.color = SelectedRing;
+            UiKit.Place(ring.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(glowSize * 1.12f, glowSize * 1.12f));
+            ring.enabled = false;
+            SelectionRings[skill.Id] = ring;
 
             if (!skill.Later && (skill.Points > 0 || skill.CanSpend))
             {
                 var glow = UiKit.Image("Glow", root, SheetArt.GlowRing);
                 Color c = skill.Maxed ? UiKit.Gold : skill.Points > 0 ? UiKit.Rune : UiKit.CanSpend;
-                glow.color = new Color(c.r, c.g, c.b, 0.9f);
-                float glowSize = size * SheetArt.GlowRingScale;
+                glow.color = new Color(c.r, c.g, c.b, 0.75f);
                 UiKit.Place(glow.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(glowSize, glowSize));
             }
 
             var medallion = UiKit.Image("Medallion", root, SheetArt.Medallion, Image.Type.Simple, true);
-            if (!medallion.sprite)
-            {
-                medallion.color = new Color(0.08f, 0.07f, 0.06f, 0.9f);
-            }
-            else
-            {
-                medallion.color = skill.Later ? new Color(0.45f, 0.43f, 0.41f) : locked ? new Color(0.72f, 0.7f, 0.68f) : Color.white;
-            }
+            medallion.color = !medallion.sprite ? new Color(0.08f, 0.07f, 0.06f, 0.9f)
+                : skill.Later ? new Color(0.45f, 0.43f, 0.41f) : locked ? new Color(0.72f, 0.7f, 0.68f) : Color.white;
             UiKit.Stretch(medallion.rectTransform);
 
             var icon = UiKit.Image("Icon", medallion.rectTransform, ClassesSource.SkillIcon(skill.Id));
             icon.preserveAspect = true;
             icon.enabled = icon.sprite;
-            icon.color = skill.Later ? new Color(0.45f, 0.45f, 0.45f, 0.8f) : locked ? new Color(0.68f, 0.68f, 0.68f, 1f) : Color.white;
-            UiKit.Stretch(icon.rectTransform, 12f);
+            icon.color = skill.Later ? new Color(0.37f, 0.37f, 0.37f, 1f) : locked ? new Color(0.65f, 0.65f, 0.65f, 1f) : Color.white;
+            UiKit.Stretch(icon.rectTransform, size * 0.16f);
 
-            var points = UiKit.Text("Points", medallion.rectTransform, 16, skill.CanSpend ? UiKit.CanSpend : Color.white, TextAnchor.LowerRight);
-            UiKit.Place(points.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, -1f), new Vector2(40f, 20f));
-            UiKit.SetText(points, skill.Later ? "<size=12>later</size>" : skill.Points.ToString());
-
-            // The name on a small dark plaque that the paths run behind (play-test 2026-10-31).
-            float labelWidth = size + SkillTreeLayout.ColGap - 4f;
-            var plaque = UiKit.Image("Plaque", root, SheetArt.Inset, Image.Type.Sliced);
-            plaque.pixelsPerUnitMultiplier = 2f;
-            if (!plaque.sprite)
+            if (!skill.Later)
             {
-                plaque.color = new Color(0.09f, 0.06f, 0.04f, 0.8f);
-            }
-            var name = UiKit.Text("Name", root, 13, skill.Later ? UiKit.LightDim : UiKit.Light, TextAnchor.MiddleCenter);
-            FitText(name, 10, 13);
-            UiKit.Place(name.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, 0f), new Vector2(labelWidth, SkillTreeLayout.NameHeight));
-            UiKit.SetText(name, skill.Name);
-            float plaqueWidth = Mathf.Min(labelWidth, name.preferredWidth + 12f);
-            UiKit.Place(plaque.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, 0f), new Vector2(plaqueWidth, SkillTreeLayout.NameHeight));
-
-            if (skill.CanSpend)
-            {
-                var plus = UiKit.Text("Plus", medallion.rectTransform, 18, UiKit.CanSpend, TextAnchor.UpperRight);
-                UiKit.Place(plus.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(2f, 2f), new Vector2(20f, 20f));
-                UiKit.SetText(plus, "+");
+                // Points badge at the bottom right: a dark disc in a bronze ring.
+                var rim = UiKit.Image("BadgeRim", root, SheetArt.Disc);
+                rim.color = new Color(0.66f, 0.47f, 0.24f);
+                UiKit.Place(rim.rectTransform, new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(-6f, 6f), new Vector2(24f, 24f));
+                var badge = UiKit.Image("Badge", rim.rectTransform, SheetArt.Disc);
+                badge.color = new Color(0.06f, 0.05f, 0.04f, 0.96f);
+                UiKit.Stretch(badge.rectTransform, 2f);
+                var points = UiKit.Text("Points", badge.rectTransform, 13, skill.CanSpend ? UiKit.CanSpend : UiKit.Light, TextAnchor.MiddleCenter, false);
+                UiKit.Stretch(points.rectTransform);
+                UiKit.SetText(points, skill.Points.ToString());
             }
 
             var view = medallion.gameObject.AddComponent<SkillTileView>();
             view.SkillId = skill.Id;
             return root.gameObject;
+        }
+
+        private static void UpdateSelection()
+        {
+            foreach (var pair in SelectionRings)
+            {
+                if (pair.Value)
+                {
+                    pair.Value.enabled = pair.Value.sprite && pair.Key == _selected;
+                }
+            }
+        }
+
+        // ------------------------------------------------------------ details pane
+
+        /// <summary>The hovered skill, else the selected one.</summary>
+        private static string DetailsSkill() => _hovered.Length > 0 ? _hovered : _selected;
+
+        private static void ShowDetails()
+        {
+            if (!_detailsName)
+            {
+                return;
+            }
+            if (!ById.TryGetValue(DetailsSkill(), out var skill))
+            {
+                UiKit.SetText(_detailsName, "");
+                UiKit.SetText(_detailsRank, "");
+                UiKit.SetText(_detailsKind, "");
+                UiKit.SetText(_detailsText, "Point at a skill to see what it does.");
+                _detailsIcon.enabled = false;
+                _detailsGlow.enabled = false;
+                _learn.interactable = false;
+                return;
+            }
+            bool locked = skill.Later || (skill.Points == 0 && !skill.CanSpend);
+            _detailsIcon.sprite = ClassesSource.SkillIcon(skill.Id);
+            _detailsIcon.enabled = _detailsIcon.sprite;
+            _detailsIcon.color = skill.Later ? new Color(0.37f, 0.37f, 0.37f) : locked ? new Color(0.65f, 0.65f, 0.65f) : Color.white;
+            _detailsMedallion.color = skill.Later ? new Color(0.45f, 0.43f, 0.41f) : locked ? new Color(0.72f, 0.7f, 0.68f) : Color.white;
+            Color glow = skill.Maxed ? UiKit.Gold : skill.Points > 0 ? UiKit.Rune : UiKit.CanSpend;
+            _detailsGlow.enabled = _detailsGlow.sprite && !skill.Later && (skill.Points > 0 || skill.CanSpend);
+            _detailsGlow.color = new Color(glow.r, glow.g, glow.b, 0.75f);
+
+            UiKit.SetText(_detailsName, skill.Name);
+            string rank = skill.Later ? "Coming later" : "Rank " + skill.Points + " / " + skill.MaxPoints +
+                                                         (skill.Level != skill.Points ? "  (level " + skill.Level + ")" : "");
+            UiKit.SetText(_detailsRank, rank);
+            var kind = new StringBuilder(KindLabel(skill.Kind)).Append("  ·  needs level ").Append(skill.ReqLevel);
+            if (skill.EitrCost > 0f)
+            {
+                kind.Append("  ·  ").Append(skill.EitrCost.ToString("0.#", CultureInfo.InvariantCulture)).Append(" eitr");
+            }
+            UiKit.SetText(_detailsKind, kind.ToString());
+
+            var text = new StringBuilder();
+            if (!string.IsNullOrEmpty(skill.Description))
+            {
+                text.Append(skill.Description).Append("\n\n");
+            }
+            if (!skill.Later && !skill.Maxed && !string.IsNullOrEmpty(skill.NextDescription))
+            {
+                text.Append("<color=#8FD97A>Next rank: ").Append(skill.NextDescription).Append("</color>\n\n");
+            }
+            if (!skill.Later && !string.IsNullOrEmpty(skill.SpendBlocked))
+            {
+                text.Append("<color=#FF9A80>").Append(skill.SpendBlocked).Append("</color>\n\n");
+            }
+            if (skill.Later)
+            {
+                text.Append("<color=#C7B8A1>Not in the game yet.</color>");
+            }
+            else if (skill.Passive)
+            {
+                text.Append("<color=#C7B8A1>Passive: always on once learned.</color>");
+            }
+            else
+            {
+                text.Append("<color=#C7B8A1>Drag it onto a skill slot to use it.</color>");
+            }
+            UiKit.SetText(_detailsText, text.ToString().TrimEnd('\n'));
+
+            _learn.interactable = skill.CanSpend;
+            UiKit.SetText(_learnLabel, skill.CanSpend ? "Learn  (+1 rank)" : skill.Maxed ? "Mastered" : "Learn");
+        }
+
+        private static string KindLabel(string kind)
+        {
+            switch (kind)
+            {
+                case "passive": return "Passive";
+                case "cast": return "Cast on its key";
+                default: return "Attack on the skill button";
+            }
         }
 
         // ------------------------------------------------------------ actions
@@ -487,7 +644,6 @@ namespace CraftingOverhaul.Classes
         {
             ShowMessage(ClassesSource.SpendSkillPoint(skillId));
             _lastCounter = -1;
-            HideTooltip();
         }
 
         private static void SetSlot(int slot, string skillId)
@@ -502,87 +658,17 @@ namespace CraftingOverhaul.Classes
             _messageUntil = Time.unscaledTime + 4f;
         }
 
-        // ------------------------------------------------------------ tooltip
-
-        private static void ShowTooltip(string skillId, RectTransform tile)
+        private static void Select(string skillId)
         {
-            if (!ById.TryGetValue(skillId, out var skill) || _dragGhost.gameObject.activeSelf)
-            {
-                return;
-            }
-            var sb = new System.Text.StringBuilder();
-            sb.Append("<size=18><color=#E8CC96>").Append(skill.Name).Append("</color></size>\n");
-            if (skill.Later)
-            {
-                sb.Append("<color=#999999>Coming later</color>\n");
-            }
-            else
-            {
-                sb.Append("Points: ").Append(skill.Points).Append(" / ").Append(skill.MaxPoints);
-                if (skill.Level != skill.Points)
-                {
-                    sb.Append("   Level: ").Append(skill.Level);
-                }
-                sb.Append('\n');
-            }
-            sb.Append("<color=#BBBBBB>").Append(KindLabel(skill.Kind)).Append(", needs level ").Append(skill.ReqLevel);
-            if (skill.EitrCost > 0f)
-            {
-                sb.Append(", ").Append(skill.EitrCost.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)).Append(" eitr");
-            }
-            sb.Append("</color>\n");
-            if (!string.IsNullOrEmpty(skill.Description))
-            {
-                sb.Append('\n').Append(skill.Points > 0 ? "Now: " : "").Append(skill.Description).Append('\n');
-            }
-            if (!string.IsNullOrEmpty(skill.NextDescription) && !skill.Maxed && !skill.Later)
-            {
-                sb.Append("\n<color=#B0E89A>Next level: ").Append(skill.NextDescription).Append("</color>\n");
-            }
-            if (!skill.Later && !string.IsNullOrEmpty(skill.SpendBlocked))
-            {
-                sb.Append("\n<color=#FF9A80>").Append(skill.SpendBlocked).Append("</color>");
-            }
-            else if (skill.CanSpend)
-            {
-                sb.Append("\n<color=#B0E89A>Click to spend a point</color>");
-            }
-            if (!skill.Passive && !skill.Later)
-            {
-                sb.Append("\n<color=#BBBBBB>Drag onto a skill slot to use it</color>");
-            }
-            UiKit.SetText(_tooltipText, sb.ToString().TrimEnd('\n'));
-
-            float height = _tooltipText.preferredHeight + 28f;
-            _tooltip.sizeDelta = new Vector2(300f, height);
-            // Beside the tile, in panel space (top-left anchored), kept inside the panel.
-            Vector3 corner = _root.InverseTransformPoint(tile.TransformPoint(new Vector3(tile.rect.xMax, tile.rect.yMax, 0f)));
-            float x = corner.x + PanelWidth / 2f + 8f;
-            float y = corner.y - PanelHeight / 2f;
-            x = Mathf.Min(x, PanelWidth - 300f - 8f);
-            y = Mathf.Max(y, -PanelHeight + height + 8f);
-            _tooltip.anchorMin = _tooltip.anchorMax = new Vector2(0f, 1f);
-            _tooltip.anchoredPosition = new Vector2(x, y);
-            _tooltip.gameObject.SetActive(true);
-            _tooltip.SetAsLastSibling();
+            _selected = skillId;
+            UpdateSelection();
+            ShowDetails();
         }
 
-        private static string KindLabel(string kind)
+        private static void Hover(string skillId)
         {
-            switch (kind)
-            {
-                case "passive": return "Passive";
-                case "cast": return "Cast on its key";
-                default: return "Attack on the skill button";
-            }
-        }
-
-        private static void HideTooltip()
-        {
-            if (_tooltip)
-            {
-                _tooltip.gameObject.SetActive(false);
-            }
+            _hovered = skillId ?? "";
+            ShowDetails();
         }
 
         // ------------------------------------------------------------ dragging
@@ -592,12 +678,11 @@ namespace CraftingOverhaul.Classes
 
         private static void BeginDrag(string skillId, int fromSlot, PointerEventData data)
         {
-            HideTooltip();
             var icon = ClassesSource.SkillIcon(skillId);
             _dragSkill = skillId;
             _dragFromSlot = fromSlot;
             _dragGhost.sprite = icon;
-            _dragGhost.color = icon ? new Color(1f, 1f, 1f, 0.8f) : new Color(1f, 0.8f, 0.4f, 0.6f);
+            _dragGhost.color = icon ? new Color(1f, 1f, 1f, 0.85f) : new Color(1f, 0.8f, 0.4f, 0.6f);
             _dragGhost.gameObject.SetActive(true);
             _dragGhost.transform.SetAsLastSibling();
             MoveGhost(data);
@@ -668,15 +753,21 @@ namespace CraftingOverhaul.Classes
 
             public void OnPointerClick(PointerEventData data)
             {
-                if (data.button == PointerEventData.InputButton.Left && !data.dragging)
+                if (data.button != PointerEventData.InputButton.Left || data.dragging)
+                {
+                    return;
+                }
+                Select(SkillId);
+                // Double-click learns, as a shortcut for the Learn button.
+                if (data.clickCount >= 2)
                 {
                     SpendSkill(SkillId);
                 }
             }
 
-            public void OnPointerEnter(PointerEventData data) => ShowTooltip(SkillId, (RectTransform)transform);
+            public void OnPointerEnter(PointerEventData data) => Hover(SkillId);
 
-            public void OnPointerExit(PointerEventData data) => HideTooltip();
+            public void OnPointerExit(PointerEventData data) => Hover("");
 
             public void OnBeginDrag(PointerEventData data)
             {
@@ -697,13 +788,13 @@ namespace CraftingOverhaul.Classes
             public void OnEndDrag(PointerEventData data) => Drop(data);
         }
 
-        private sealed class SlotTileView : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+        private sealed class SlotTileView : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
+            IBeginDragHandler, IDragHandler, IEndDragHandler
         {
             public int Index;
             public string SkillId = "";
             public Image Icon;
             public Text Key;
-            public Text Kind;
 
             public void OnPointerClick(PointerEventData data)
             {
@@ -713,6 +804,11 @@ namespace CraftingOverhaul.Classes
                     SetSlot(Index, "");
                 }
             }
+
+            // The slot's skill shows in the details pane, since the slots have no names.
+            public void OnPointerEnter(PointerEventData data) => Hover(SkillId);
+
+            public void OnPointerExit(PointerEventData data) => Hover("");
 
             public void OnBeginDrag(PointerEventData data)
             {
@@ -825,8 +921,11 @@ namespace CraftingOverhaul.Classes
                 _root = null;
                 _inventoryButton = null;
                 _classId = "";
+                _selected = "";
+                _hovered = "";
                 _skillIds = new string[0];
                 TreeObjects.Clear();
+                SelectionRings.Clear();
             }
         }
 
@@ -840,9 +939,10 @@ namespace CraftingOverhaul.Classes
             text.resizeTextMaxSize = max;
         }
 
-        private static void PlaceTopLeft(RectTransform rt, float x, float y, float width, float height)
+        /// <summary>Places a rect at a layout rectangle (top-left, y down) inside its parent.</summary>
+        private static void Place(RectTransform rt, SheetRect r)
         {
-            UiKit.Place(rt, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(x, -y), new Vector2(width, height));
+            UiKit.Place(rt, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(r.X, -r.Y), new Vector2(r.Width, r.Height));
         }
     }
 }

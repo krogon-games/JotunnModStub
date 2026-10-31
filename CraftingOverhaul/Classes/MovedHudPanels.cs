@@ -28,8 +28,9 @@ namespace CraftingOverhaul.Classes
         private static readonly Vector3[] Corners = new Vector3[4];
 
         /// <summary>
-        ///     The selected-piece box: the highest parent of the piece name, under the build display, that holds neither
-        ///     the build menu nor the snapping icon (which sit elsewhere on screen).
+        ///     The selected-piece box: the smallest parent holding the piece's name, description, icon and cost slots,
+        ///     then up to the highest parent under the build display that doesn't hold the build menu, so its background
+        ///     comes along. (Play-test 2026-10-31: the first version took only the name's parent; the rest stayed behind.)
         /// </summary>
         private static RectTransform FindBuildInfo(Hud hud)
         {
@@ -38,19 +39,54 @@ namespace CraftingOverhaul.Classes
                 return null;
             }
             Transform buildHud = hud.m_buildHud.transform;
-            Transform found = null;
-            for (Transform t = hud.m_buildSelection.transform; t && t != buildHud; t = t.parent)
+            Transform common = hud.m_buildSelection.transform;
+            foreach (var part in new Component[] { hud.m_pieceDescription, hud.m_buildIcon })
             {
-                bool holdsMenu = hud.m_pieceSelectionWindow && hud.m_pieceSelectionWindow.transform.IsChildOf(t);
-                bool holdsSnapping = hud.m_snappingIcon && hud.m_snappingIcon.transform.IsChildOf(t);
-                if (holdsMenu || holdsSnapping)
+                common = CommonParent(common, part ? part.transform : null);
+            }
+            if (hud.m_requirementItems != null && hud.m_requirementItems.Length > 0 && hud.m_requirementItems[0])
+            {
+                common = CommonParent(common, hud.m_requirementItems[0].transform);
+            }
+            if (!common || common == buildHud || !common.IsChildOf(buildHud))
+            {
+                return null;
+            }
+            Transform found = common;
+            for (Transform t = common.parent; t && t != buildHud; t = t.parent)
+            {
+                if (hud.m_pieceSelectionWindow && hud.m_pieceSelectionWindow.transform.IsChildOf(t))
                 {
                     break;
                 }
                 found = t;
             }
+            if (hud.m_pieceSelectionWindow && hud.m_pieceSelectionWindow.transform.IsChildOf(found))
+            {
+                return null;
+            }
+            _skipInBounds = hud.m_snappingIcon ? hud.m_snappingIcon.transform : null;
             return found as RectTransform;
         }
+
+        private static Transform CommonParent(Transform a, Transform b)
+        {
+            if (!a || !b)
+            {
+                return a;
+            }
+            for (Transform t = a; t; t = t.parent)
+            {
+                if (b.IsChildOf(t))
+                {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>The snapping icon may sit in the box's tree but elsewhere on screen; it doesn't count for placement.</summary>
+        private static Transform _skipInBounds;
 
         private static void Update(Hud hud)
         {
@@ -109,7 +145,7 @@ namespace CraftingOverhaul.Classes
             panel.GetComponentsInChildren(false, Graphics);
             foreach (var graphic in Graphics)
             {
-                if (!graphic.enabled || graphic.color.a <= 0.01f)
+                if (!graphic.enabled || graphic.color.a <= 0.01f || (_skipInBounds && graphic.transform.IsChildOf(_skipInBounds)))
                 {
                     continue;
                 }
@@ -154,6 +190,7 @@ namespace CraftingOverhaul.Classes
             private static void Postfix()
             {
                 _buildInfo = null;
+                _skipInBounds = null;
                 Original.Clear();
             }
         }

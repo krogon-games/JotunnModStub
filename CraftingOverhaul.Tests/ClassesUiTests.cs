@@ -177,10 +177,12 @@ namespace CraftingOverhaul.Tests
             }
             SkillTreeLayout.TilePosition(1, 1, out float x0, out float y0);
             SkillTreeLayout.TilePosition(6, 3, out float x1, out float y1);
-            Assert.Equal(SkillTreeLayout.LabelWidth, x0);
-            Assert.Equal(0f, y0);
-            Assert.Equal(SkillTreeLayout.GridWidth - SkillTreeLayout.Tile, x1, 3);
-            Assert.Equal(SkillTreeLayout.GridHeight - SkillTreeLayout.Tile, y1, 3);
+            // Medallions are centred in their cells, clear of the tier labels and inside the grid.
+            float margin = (SkillTreeLayout.ColPitch - SkillTreeLayout.Tile) / 2f;
+            Assert.Equal(SkillTreeLayout.LabelWidth + margin, x0, 3);
+            Assert.Equal((SkillTreeLayout.RowPitch - SkillTreeLayout.Tile) / 2f, y0, 3);
+            Assert.Equal(SkillTreeLayout.GridWidth - margin - SkillTreeLayout.Tile, x1, 3);
+            Assert.Equal(SkillTreeLayout.GridHeight - (SkillTreeLayout.RowPitch - SkillTreeLayout.Tile) / 2f - SkillTreeLayout.Tile, y1, 3);
         }
 
         [Fact]
@@ -193,26 +195,24 @@ namespace CraftingOverhaul.Tests
             // Strafe←Guided; Immolation←Exploding; Freezing←Ice: 9 lines.
             Assert.Equal(9, lines.Count);
             Assert.All(lines, l => Assert.True(l.Y2 > l.Y1));
-            // Same column: one straight drop from the bottom of one tile to the top of the next.
+            // Same column: straight down from the rim of one medallion to the rim of the next.
             var straight = lines.Single(l => l.From == "MagicArrow" && l.To == "MultipleShot");
-            Assert.Single(straight.Segments);
-            Assert.Equal(straight.X1, straight.X2);
-            Assert.Equal(SkillTreeLayout.RowGap, straight.Segments[0].Length, 3);
-            // Another column: down, across just above the skill's row (below the names), down into the skill.
-            var bent = lines.Single(l => l.From == "MultipleShot" && l.To == "ExplodingArrow");
-            Assert.Equal(3, bent.Segments.Count);
-            Assert.False(bent.Segments[0].Horizontal);
-            Assert.True(bent.Segments[1].Horizontal);
-            Assert.False(bent.Segments[2].Horizontal);
-            SkillTreeLayout.TilePosition(3, 3, out float tx, out float ty);
-            Assert.Equal(ty - SkillTreeLayout.ElbowAbove, bent.Segments[1].Y1, 3);
-            Assert.True(bent.Segments[1].Y1 > ty - SkillTreeLayout.RowGap + SkillTreeLayout.NameHeight);
-            Assert.Equal(tx + SkillTreeLayout.Tile / 2f, bent.X2, 3);
-            Assert.Equal(ty, bent.Y2, 3);
-            // Paths from one skill share their first stretch, so they branch from one trunk.
-            var fromMultiple = lines.Where(l => l.From == "MultipleShot").ToList();
-            Assert.Equal(2, fromMultiple.Count);
-            Assert.Equal(fromMultiple[0].X1, fromMultiple[1].X1);
+            Assert.Equal(straight.X1, straight.X2, 3);
+            Assert.Equal(-90f, straight.AngleDegrees, 3);
+            Assert.Equal(SkillTreeLayout.RowPitch - SkillTreeLayout.Tile - 2f * SkillTreeLayout.PathGap, straight.Length, 3);
+            // Another column: aimed from centre to centre, starting and ending just outside the rims.
+            var slanted = lines.Single(l => l.From == "MultipleShot" && l.To == "ExplodingArrow");
+            SkillTreeLayout.CentrePosition(2, 2, out float ax, out float ay);
+            SkillTreeLayout.CentrePosition(3, 3, out float bx, out float by);
+            float rim = SkillTreeLayout.Tile / 2f + SkillTreeLayout.PathGap;
+            Assert.Equal(rim, Distance(ax, ay, slanted.X1, slanted.Y1), 3);
+            Assert.Equal(rim, Distance(bx, by, slanted.X2, slanted.Y2), 3);
+            Assert.True(slanted.X2 > slanted.X1 && slanted.Y2 > slanted.Y1);
+        }
+
+        private static float Distance(float x1, float y1, float x2, float y2)
+        {
+            return (float)System.Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
         }
 
         [Fact]
