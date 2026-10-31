@@ -37,6 +37,7 @@
     <Compile Include="..\Corruption\Rules\LootRules.cs" Link="Linked\LootRules.cs" />
     <Compile Include="..\Corruption\Rules\LootItem.cs" Link="Linked\LootItem.cs" />
     <Compile Include="..\Corruption\Rules\AffixRoller.cs" Link="Linked\AffixRoller.cs" />
+    <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
     <Compile Include="..\Orlog\Rules\LevelTables.cs" Link="Linked\Orlog\LevelTables.cs" />
     <Compile Include="..\Orlog\Rules\ExperienceRules.cs" Link="Linked\Orlog\ExperienceRules.cs" />

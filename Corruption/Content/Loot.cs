@@ -28,8 +28,14 @@ namespace Corruption.Content
         {
             "weapon_damage", "fire_damage_percent", "frost_damage_percent", "lightning_damage_percent", "poison_damage_percent",
             "spirit_damage_percent", "armour_percent", "max_durability", "block_percent", "attack_stamina_reduction",
-            "knockback_percent", "backstab_percent", "parry_percent"
+            "knockback_percent", "backstab_percent", "parry_percent",
+            // Player stats (2026-10-30): summed over everything the local player has equipped.
+            "max_health", "max_stamina", "max_eitr", "health_regen_percent", "stamina_regen_percent", "movement_speed",
+            "held_movement_speed", "carry_weight", "fire_resistance", "frost_resistance", "lightning_resistance",
+            "poison_resistance", "all_resistances", "weapon_skill_levels", "life_steal"
         };
+
+        public static AffixCaps Caps;
 
         private sealed class Cached
         {
@@ -53,6 +59,7 @@ namespace Corruption.Content
             var bases = LootBases.Parse(DataFiles.Read("loot_bases.csv"), errors);
             var rules = LootRules.Parse(DataFiles.Read("loot_rules.csv"), DataFiles.Read("rare_names.csv"), errors);
             var drops = Corruption.Rules.DropTable.Parse(DataFiles.Read("drop_chances.csv"), DataFiles.Read("drop_modifiers.csv"), errors);
+            var caps = AffixCaps.Parse(DataFiles.Read("affix_caps.csv"), errors);
             if (errors.Count > 0)
             {
                 Jotunn.Logger.LogError("Loot tables have problems, so loot is off:\n" + string.Join("\n", errors));
@@ -62,6 +69,7 @@ namespace Corruption.Content
             Bases = bases;
             Rules = rules;
             Drops = drops;
+            Caps = caps;
             Jotunn.Logger.LogInfo($"Loot: {Affixes.Count} affixes, {Bases.Bases.Count} base items.");
         }
 
@@ -79,6 +87,49 @@ namespace Corruption.Content
                 cached.Item = LootItem.Read(item.m_customData);
             }
             return cached.Item;
+        }
+
+        private static readonly List<LootItem> EquippedCache = new List<LootItem>();
+        private static int _equippedFrame = -1;
+
+        /// <summary>
+        ///     The rolled affixes of everything the local player has equipped (weapons in hand, armour, cape or backpack,
+        ///     utility, trinket; sheathed weapons don't count). Worked out once per frame: stat getters run often.
+        /// </summary>
+        public static List<LootItem> Equipped(Player player)
+        {
+            if (!player || player != Player.m_localPlayer)
+            {
+                return new List<LootItem>();
+            }
+            if (_equippedFrame != Time.frameCount)
+            {
+                _equippedFrame = Time.frameCount;
+                EquippedCache.Clear();
+                var seen = new HashSet<ItemDrop.ItemData>();
+                foreach (var item in new[]
+                         {
+                             player.m_rightItem, player.m_leftItem, player.m_helmetItem, player.m_chestItem, player.m_legItem,
+                             player.m_shoulderItem, player.m_utilityItem, player.m_trinketItem
+                         })
+                {
+                    if (item != null && seen.Add(item))
+                    {
+                        var loot = Of(item);
+                        if (loot != null)
+                        {
+                            EquippedCache.Add(loot);
+                        }
+                    }
+                }
+            }
+            return EquippedCache;
+        }
+
+        /// <summary>Total of one affix effect over the local player's equipped items (0 for anyone else).</summary>
+        public static int EquippedTotal(Player player, string effect)
+        {
+            return AffixTotals.Sum(Equipped(player), effect, Affixes);
         }
 
         /// <summary>Total of one affix effect on the item (0 for Normal items, or while <see cref="Bypass" /> is on).</summary>

@@ -27,7 +27,8 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Health, eitr and stamina bars](#health-eitr-and-stamina-bars) | UI | Tested in-game (single player, demo); bar order and fixed bars changed 2026-10-31, re-check | `4 - HUD` → `Bars`, `BarScale`, `BarMinLength`, `BarMaxLength`, `BarsHeight` | `Classes/VitalBars.cs`, `Classes/MovedHudPanels.cs`, `Classes/UiKit.cs`, `Classes/ClassesSource.cs`, `CharacterSheet/SheetArt.cs`, `Assets/Sheet/bar*`, `tools/make_sheet_ui.py`, `ModConfig.cs` | 2026-10-31 |
 | [Classes UI](#classes-ui) | UI | Tested in-game (single player, demo data; Orlog's API is still a stub); skill paths reworked 2026-10-31, re-check | `5 - Classes UI` → `SkillsPanelKey`, `SkillCrossPosition`, `Demo`; console `co_classes_stone` | `Classes/*`, `CharacterSheet/FlatJson.cs`, `CraftingOverhaul.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/ClassesUiTests.cs`, `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` | 2026-10-31 |
 | [Currency and Maps tabs](#currency-and-maps-tabs) | UI | Tested in-game (single player) | Corruption: `9 - Inventory Tabs` → `Enabled` | `Corruption/Content/InventoryTabs.cs`, `Corruption/Content/InventoryTabsUi.cs`, `Corruption/Rules/TabRules.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/Texts.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TabRulesTests.cs` | 2026-10-29 |
-| [Loot system](#loot-system) | Loot | Tested in-game (single player; step 1: drops, tooltips, item stats) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs` | 2026-10-29 |
+| [Odin items unlocked](#odin-items-unlocked) | Crafting | Tested in-game (single player) | — (always on) | `Corruption/Content/BetaItems.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-31 |
+| [Loot system](#loot-system) | Loot | Tested in-game (single player): step 1 and step 2 (player stats; weapon skill and life steal not tried yet) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs`, `Corruption/Content/LootPlayerStats.cs`, `Corruption/Rules/AffixTotals.cs`, `CraftingOverhaul.Tests/AffixTotalsTests.cs` | 2026-10-30 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
@@ -887,6 +888,20 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 
 ---
 
+## Odin items unlocked
+
+*Corruption plugin. User, 2026-10-31.*
+
+**What it does:** the game gates the Odin cape, the Odin helmet and the Odin tankard behind a Steam entitlement (`SharedData.m_dlc` = `"beta"`, the only such tag in 1.0.20). Without it the game refuses to equip them, hides their recipes and won't craft them, and their tooltip says "DLC item". Corruption clears the tag on every item at startup, so they work like any other item for everyone: equip, craft at the workbench, and roll as loot (they're in `loot_bases.csv`). The log lists each item it unlocked.
+
+**Why:** a play-test rolled a Rare Odin cape ("DLC required"); the user chose to unlock them fully rather than leave them out of the loot.
+
+**Known issues:** tested 2026-10-31: the items equip, the log lists all three as unlocked and the game announces their recipes as new; crafting one not tried yet. Needs Corruption on every machine (already required).
+
+**Vanilla behaviour overridden:** no Harmony patch; the items' shared data is changed once at startup (`PrefabManager.OnVanillaPrefabsAvailable`).
+
+---
+
 ## Loot system
 
 *Corruption plugin, design phase 7, step 1 of several: drops, tooltips and item-stat affixes. Orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects come in later steps.*
@@ -899,6 +914,7 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 - **Rolling** (`AffixRoller`): each affix is picked by its `weight` among every affix that fits the item's classes and mechanics (`requires`), one per family per side; values are whole numbers anywhere in the range (every range in the table is whole). Both halves of a twin merge into one **resonant** line rolled from the resonant range (+25% on the combined top). **Every affix in `affixes.csv` rolls, including rows still marked `draft`** (user, 2026-10-29: test with the draft numbers while the ranges are settled).
 - **Names:** Magic items take their affixes' names around the base name, the roll deciding which of a family's names (e.g. *Sharp/Fine/Cruel/Merciless*): "Cruel Bronze Sword of Embers". Rare items get a two-word name from `rare_names.csv` ("Grim Fang"). Names are blue (Magic, `#8888FF`) or yellow (Rare, `#FFFF77`), the Path of Exile colours, in inventory tooltips and when hovering over the item on the ground.
 - **Tooltips:** after vanilla's lines, the rarity (and for Rares the base item), then one line per affix: its value, the bonus it gives this item at its current level (item-stat affixes, e.g. `(+14)`), and its roll range in brackets, e.g. `+24% damage (+14) [5–40]`; resonant lines end in `◆ resonant`. Affixes this step doesn't apply yet are grey and say "(not active yet)".
+- **Player-stat affixes (step 2, 2026-10-30; tested 2026-10-31 except weapon skill and life steal):** summed over everything the local player has equipped (weapons in hand, armour, cape or backpack, utility, trinket; sheathed weapons don't count): max health, stamina and eitr (added to the food values), health and stamina regen (+X% adds X/100 to the regen multiplier, as vanilla's bonuses do), movement speed worn and held (Fleet) under the 35% cap (added to the gear movement modifier, like the Crown of Valheim), carry weight (scaled by the world's carry setting), fire/frost/lightning/poison resistance plus all resistances (each element capped at 75%, applied on top of vanilla resistances to hits the player takes), weapon skill levels for the weapon in hand, life steal (capped at 10%, from the hit's damage before the target's armour). No caps on carry weight, regen or max health/stamina/eitr (user).
 - **Affixes that work in this step** (through the game's own stat getters, so vanilla tooltips, combat and repairs see them): enhanced damage (every combat damage type, not chop or pickaxe damage), fire/frost/lightning/poison/spirit damage (a % of the enhanced physical damage), armour, durability, block power, attack stamina (also the tools' "per swing" version), knockback and backstab (raised on the attacker's game when the hit is made), parry bonus.
 - **Storage:** `ItemData.m_customData` keys `corruption.rarity`, `corruption.name` (Rares) and `corruption.affixes` (`id=value;prefix+suffix=value`), saved and synced with the item by the game.
 
@@ -935,8 +951,15 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 | `ItemDrop.ItemData.GetMaxDurability(int)` | Postfix | Durability |
 | `ItemDrop.ItemData.GetBaseBlockPower(int)` | Postfix | Block power |
 | `Attack.GetAttackStamina` | Postfix | Less stamina per attack |
-| `Character.Damage(HitData)` | Prefix | Knockback and backstab on the local player's hits |
+| `Character.Damage(HitData)` | Prefix | Knockback, backstab and life steal on the local player's hits |
 | `SEMan.ModifyTimedBlockBonus` | Postfix | Parry bonus |
+| `Player.GetTotalFoodValue` | Postfix | Max health, stamina and eitr affixes |
+| `SEMan.ModifyHealthRegen` | Postfix | Health regen affixes |
+| `SEMan.ModifyStaminaRegen` | Postfix | Stamina regen affixes |
+| `Player.GetEquipmentMovementModifier` | Postfix | Movement speed affixes (worn and held, capped) |
+| `Player.GetMaxCarryWeight` | Postfix | Carry weight affixes |
+| `SEMan.ModifySkillLevel` | Postfix | Weapon skill levels for the weapon in hand |
+| `Character.RPC_Damage` | Prefix | Resistance affixes on hits the local player takes (a second prefix next to the corrupted-boss one) |
 
 **Orb art (2026-10-28):** models and textures for the nine currency orbs exist (`tools/make_orbs.py`, `Corruption/Assets/Orbs/`, preview `docs/images/orbs_preview.png`), after the user's concept render (`docs/images/orbs_reference.jpg`). They are not in the mod yet: they get embedded and registered as items when the orbs are built. The orbs keep their Path of Exile names (user, 2026-10-28).
 
@@ -1015,11 +1038,14 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 
 ### 2026-10-31
 - **Classes UI play-tested** (single player, demo): bars, food, XP bar, skill cross, skills panel, attributes, slots, closing and the class choice window pass; the new look passes. Changed after it (user): bar order is now health, stamina, eitr; the bars stay put while building or sailing and the game's selected-piece box and ship display move to the bottom right instead; the skill paths branch like a tree with the names on plaques. Re-check pending.
+- **Play-test 2026-10-31 (single player):** player-stat affixes (max health/stamina/eitr, carry weight, movement, regen, resistances), the bonus shown next to item-stat lines and the Odin unlock passed, no errors in the log. Weapon skill, life steal and crafting an Odin item not tried yet.
+- **Odin items unlocked (new, untested):** the Odin cape, helmet and tankard were gated behind a Steam entitlement (tag "beta"); Corruption clears the tag, so everyone can equip, craft and loot them (user). The earlier change that left them out of the loot was reverted.
 
 ### 2026-10-30
 - **New look for the classes UI and the character sheet** (user's mix of four mock-ups): mock-up D's bronze medallion skills, eitr-blue rune paths, bronze riveted slots, bars and cross, on the game's own panel background (copied from the inventory) instead of dark wood and parchment; the character sheet restyled to match; skills panel wider. Untested in-game.
 - **Classes UI, first look** (screenshots): panel, tabs, spending, attributes and drag-to-slot work; food and XP bar pass. Fixed: white empty cross slot, overlapping tab and skill names, lines through names, too-dark locked icons, faint selected outline and points hint, cross label over the Forsaken power; XP bar lowered (user). A polish pass for the look is to be agreed.
 - **Classes UI built** (untested, from `docs/classes-ui-brief.md`): new health/eitr/stamina bars at the bottom centre with food beside them and an XP bar; the skill cross; the skills panel with the three skill tabs, prerequisite lines, spending, tooltips, drag-to-slot and the attribute points; the class choice window for the Orlog stone. Reads Orlog's API by reflection; a `Demo` setting serves a sample Amazon until Orlog's API is filled in (207 tests).
+- **Loot step 2: player-stat affixes work** (untested): max health/stamina/eitr, health and stamina regen, movement speed (worn and held, capped at 35%), carry weight, the four resistances and all resistances (75% per element), weapon skill levels, life steal (capped at 10%). Caps read from `affix_caps.csv` (now compiled in).
 - **Currency and Maps tabs tested in-game** (single player): every step passed after the drag fix.
 - **Currency and Maps tabs, second re-test:** death and gravestone, relogging and full-bag pickup pass. The drag fix guarded the wrong method (`UpdateInventory`); the cancel is in `UpdateContainer`. Fixed; re-test.
 - **Currency and Maps tabs, re-test:** grids, crafting from the tabs, maps from the Maps tab, chests and full-bag pickup pass. Fixed: left-click couldn't pick up a tab item unless a container was open (the game cancels drags from non-bag inventories then); a tab drag is now kept.

@@ -36,9 +36,9 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 - `CorruptionPlugin.cs`: registers content in `PrefabManager.OnVanillaPrefabsAvailable`, each step inside `Safe.Run`.
 - `CorruptionConfig.cs`: gameplay sections admin-only; `2 - Look` per player. `CorruptionDefaults.cs` holds defaults shared with tests.
-- `Rules/` (pure, tested): `ShardRules`, `TalismanFamilies`, `AffixTable`, `AffixCaps`, `DropTable`, `CorruptionOutcomes`, `ShatterRules`, `LootBases`, `LootRules` (read and validate the data tables; `DropTable.Chance` combines base chance and modifiers), `AffixRoller` and `LootItem` (roll a Magic/Rare item; its `m_customData` format, names and tooltip lines), `Csv` (shared reader).
+- `Rules/` (pure, tested): `ShardRules`, `TalismanFamilies`, `AffixTable`, `AffixCaps`, `DropTable`, `CorruptionOutcomes`, `ShatterRules`, `LootBases`, `LootRules` (read and validate the data tables; `DropTable.Chance` combines base chance and modifiers), `AffixRoller`, `AffixTotals` (player-stat totals and caps) and `LootItem` (roll a Magic/Rare item; its `m_customData` format, names and tooltip lines), `Csv` (shared reader).
 - `Data/`: tunable data tables kept as CSV, one row per entry, so they open in any spreadsheet and diff cleanly in git: `affixes.csv`, `affix_caps.csv`, `drop_chances.csv`, `drop_modifiers.csv`, `corruption_outcomes.csv`, `shattering.csv` (guide: `Corruption/Data/README.md`). Each table has a pure reader with validation, and a test that checks the real file.
-- `Content/`: `ShardItem`, `Riftforge`, `ShardDrops`, `Talismans`, `TalismanRepel`, `Corrupted` (tint + icon rendering), `Texts` (localisation tokens, raven lore), `Loot` (loot tables, item creation, `co_loot`) and `LootPatches` (drops, tooltips, item-stat affixes).
+- `Content/`: `ShardItem`, `Riftforge`, `ShardDrops`, `Talismans`, `TalismanRepel`, `Corrupted` (tint + icon rendering), `Texts` (localisation tokens, raven lore), `BetaItems` (clears the Steam-entitlement tag on the Odin items), `Loot` (loot tables, item creation, `co_loot`) `LootPatches` (drops, tooltips, item-stat affixes) and `LootPlayerStats` (player-stat affixes over the local player's equipped items).
 
 ### Orlog
 
