@@ -31,6 +31,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Loot system](#loot-system) | Loot | Tested in-game (single player): step 1 and step 2 (player stats; weapon skill and life steal not tried yet) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs`, `Corruption/Content/LootPlayerStats.cs`, `Corruption/Rules/AffixTotals.cs`, `CraftingOverhaul.Tests/AffixTotalsTests.cs` | 2026-10-30 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
+| [Attributes and class eitr](#attributes-and-class-eitr) | Combat | Tested in-game (single player) | Orlog: `3 - Attributes` → `HealthPerD2Life`, `StaminaPerD2Stamina`, `EitrStart`, `EitrPerLevel`, `EitrPerEnergy`, `DamagePerStrength`, `DamagePerDexterity`; table `Orlog/Data/classes.csv`; console `orlog_class`, `orlog_stat`, `orlog_respec` | `Orlog/Content/Attributes.cs`, `Orlog/Rules/AttributeRules.cs`, `Orlog/Data/classes.csv`, `Orlog/Content/Commands.cs`, `Orlog/Content/Progress.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogAttributeTests.cs` | 2026-10-30 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
 There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
@@ -1033,6 +1034,48 @@ The tables, the level difference and party rules are unit-tested (`OrlogLevelTes
 - `Player.OnSpawned` (postfix): publishes the local player's level on its ZDO.
 - `Game.Start` (postfix): registers the `Orlog_Xp` routed message.
 
+## Attributes and class eitr
+
+*Orlog. Built 2026-10-30; tested in-game 2026-10-31 (single player).*
+
+**What it does:** a character with a class spends its stat points (5 per level) on Diablo 2's four attributes, and the class adds health, stamina and an **eitr pool that needs no eitr food**.
+- **Class:** only the Amazon is playable (`Orlog/Data/classes.csv`, D2's numbers; Barbarian and Paladin listed as `later`). Until the Orlog stone exists, set it with `orlog_class Amazon` (cheat). No class = vanilla, and points can't be spent.
+- **Starting point = vanilla:** a level-1 Amazon with nothing spent has vanilla health, stamina and damage, plus the starting eitr. The D2 starting attributes (Str 20, Dex 25, Vit 20, Energy 15) are shown but their effect is already in Valheim's base values.
+- **Every level:** +1 health (D2's +2 life × 0.5), +0.89 stamina (+1 × 0.89), +1.5 eitr.
+- **Strength:** +1% physical damage (blunt, slash, pierce) with melee weapons, thrown spears and unarmed, per point (D2: 1% per point).
+- **Dexterity:** +1% physical damage with bows and crossbows per point (D2).
+- **Vitality:** +1.5 health (D2 Amazon +3 life × 0.5) and +0.89 stamina (+1 × 0.89) per point.
+- **Energy:** +1.5 eitr per point (user).
+- **Eitr pool (user, 2026-10-30):** 15 at the start, +1.5 per level, +1.5 per Energy point; eitr food adds on top. Vanilla eitr regeneration (5 per second after 1 second without using any, from the game code) refills it, so a class has eitr and regen without eitr food.
+- **Scale (proposed, to confirm):** D2 life and stamina are turned into Valheim's by the ratio of the starting values: health 25 / D2 life 50 = 0.5; stamina 75 / D2 stamina 84 = 0.89 (Valheim's starting health and stamina from the game code's player defaults; D2's Amazon). Eitr uses the user's numbers 1:1. Examples: a level-50 Amazon with every point in Vitality has +49 + 367 = +416 health; with every point in Strength, +245% melee damage.
+- **Respec:** `orlog_respec` (cheat) for now; the respec item comes later (D2's Token of Absolution, from boss essences with Corruption).
+
+**How to use:** `orlog_class Amazon`, gain levels, then `orlog_stat vitality 5` (or `str`, `dex`, `vit`, `ene`; not a cheat: it stands in for the UI's + buttons). `orlog_info` lists class, attributes, unspent points and every bonus. The UI reads them through `Orlog.Api` (`GetCharacterJson`, `GetAttributeInfoJson`, `SpendStatPoint`).
+
+**Config settings** (`3 - Attributes`, admin-only, server-synced; changes apply at once):
+
+| Setting | Default | Description |
+|---|---|---|
+| `HealthPerD2Life` | `0.5` | Valheim health per D2 life point |
+| `StaminaPerD2Stamina` | `0.89` | Valheim stamina per D2 stamina point |
+| `EitrStart` | `15` | Eitr every class starts with |
+| `EitrPerLevel` | `1.5` | Eitr per level |
+| `EitrPerEnergy` | `1.5` | Eitr per Energy point |
+| `DamagePerStrength` | `1` | % physical damage per Strength point (melee, thrown) |
+| `DamagePerDexterity` | `1` | % physical damage per Dexterity point (bows, crossbows) |
+
+Unit-tested (`OrlogAttributeTests`: 7 tests).
+
+**Known issues / not yet:**
+- **Play-test 2026-10-31 (user, single player, build `claude/class-skills a50272c`, Valheim 1.0.21), all passed:** eitr bar with 15 eitr from the class alone, level and Vitality health/stamina, Energy eitr that refills without eitr food, about 20% more club and bow damage from 20 Strength/Dexterity, respec and `orlog_class none`, class and points kept after relogging, the classes UI showing real values and spending points with its + buttons, no console errors. Noted (UI side): double click sounds when spending points, especially the first click.
+- Valheim's starting stamina is read from the game code's default (75); if the player prefab sets another value, the stamina scale changes with it.
+- D2's other Dexterity effects (attack rating, defence, block chance) and Strength's item requirements have no Valheim counterpart and are left out. The earlier idea of carry weight from Strength is dropped (not D2).
+- The skill points are counted but have nothing to spend on until the skill trees.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+- `Player.GetTotalFoodValue` (postfix, local player only): adds the class's health, stamina and eitr to the base-plus-food totals the game turns into max health, stamina and eitr.
+- `SEMan.ModifyAttack` (postfix, local player's attacks only): multiplies blunt, slash and pierce damage by the Strength or Dexterity bonus.
+
 ## Classes, levels and skill trees
 
 **Status:** Planned. Design only, no code (branch `claude/class-skills`).
@@ -1046,6 +1089,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-10-31
+- **Attributes and class eitr tested in-game** (single player): every step passed, including the classes UI with real data. Noted for the UI: double click sounds when spending points.
 - **Classes UI and HUD bars tested in-game** (single player, demo; user: "everything looks really good now"): quick slots under the cross, details pane, build box, blocked labels and both off switches pass. Only the adrenaline bar is still untried.
 - **Skill cross: clearer blocked labels** (user: "confused why one box says weapon and the other says eitr"): "Need bow", "Need spear" or "Low eitr"; the demo now blocks a slot only when your weapon or eitr really would (it showed fixed sample states). API: optional `needs` in `GetSlotStateJson`.
 - **Classes UI re-tested** (screenshots and phone log: "this ui is looking soooo much better"): bar order, fixed bars, the build box at the bottom right, the redesigned skills panel and the skill cross pass. Changed after it: the quick slots (EquipmentAndQuickSlots) sit centred under the skill cross (user); the details pane's type line shrinks to fit and the lock reason shows on the Learn button (it was cut off); the build box sits a little higher, clear of the XP hint. Adrenaline not tried yet.
@@ -1059,6 +1103,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 - **Odin items unlocked (new, untested):** the Odin cape, helmet and tankard were gated behind a Steam entitlement (tag "beta"); Corruption clears the tag, so everyone can equip, craft and loot them (user). The earlier change that left them out of the loot was reverted.
 
 ### 2026-10-30
+- **Attributes and class eitr built** (Orlog): D2's Strength, Dexterity, Vitality and Energy with the stat points from levels; health and stamina per level and Vitality (D2's numbers scaled by Valheim's starting values), +1% damage per Strength (melee, thrown) and Dexterity (bows), and the class eitr pool (15, +1.5 per level and per Energy) that vanilla regen refills without eitr food. Class set with `orlog_class` until the Orlog stone; `orlog_stat`, `orlog_respec`. Untested in-game.
 - **New look for the classes UI and the character sheet** (user's mix of four mock-ups): mock-up D's bronze medallion skills, eitr-blue rune paths, bronze riveted slots, bars and cross, on the game's own panel background (copied from the inventory) instead of dark wood and parchment; the character sheet restyled to match; skills panel wider. Untested in-game.
 - **Classes UI, first look** (screenshots): panel, tabs, spending, attributes and drag-to-slot work; food and XP bar pass. Fixed: white empty cross slot, overlapping tab and skill names, lines through names, too-dark locked icons, faint selected outline and points hint, cross label over the Forsaken power; XP bar lowered (user). A polish pass for the look is to be agreed.
 - **Classes UI built** (untested, from `docs/classes-ui-brief.md`): new health/eitr/stamina bars at the bottom centre with food beside them and an XP bar; the skill cross; the skills panel with the three skill tabs, prerequisite lines, spending, tooltips, drag-to-slot and the attribute points; the class choice window for the Orlog stone. Reads Orlog's API by reflection; a `Demo` setting serves a sample Amazon until Orlog's API is filled in (207 tests).

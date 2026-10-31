@@ -38,6 +38,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), stats box, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
 | Orlog levels and XP: XP per kill, stars, level-up, level-difference cut, saved with the character | Orlog | 2026-10-30 play-test; pace fix re-tested the same day ("pace feels better") |
+| Orlog attributes and class eitr: health, stamina and eitr per level and point, eitr without food, Strength/Dexterity damage, respec, saving, the classes UI with real data | Orlog | 2026-10-31 play-test log, every step passed |
 | HUD bars (health, stamina, eitr; food; XP bar; fixed while building and sailing, the game's build box and ship display at the bottom right), skill cross (power in the middle, cooldowns, blocked labels, quick slots under it), skills panel (redesigned), class choice window, new look, character sheet restyle, both off switches | CraftingOverhaul | 2026-10-31, with the demo data, after several rounds ("everything looks really good now") |
 
 ### Built, not verified
@@ -99,9 +100,11 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
 6. **Classes UI** (UI overhaul session): built 2026-10-30 from [`classes-ui-brief.md`](classes-ui-brief.md), untested; play-test with the `Demo` setting (`PLAYTEST.md` → Classes UI).
-7. **Classes** (`claude/class-skills`): levels and XP built (2026-10-30, Orlog), play-tested 2026-10-30 including the pace fix; PR into `master` opened. Open: how much XP bosses should give; sharing with a friend. Next: attributes and the class eitr pool, then the Orlog stone and class choice, then the tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)).
+7. **Classes** (`claude/class-skills`): levels and XP merged (PR #9, play-tested). Attributes and the class eitr pool built and play-tested (2026-10-31); PR into `master`. Next: the Orlog stone and class choice, then the skill tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)). Open: how much XP bosses should give.
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
+
+**From the Orlog attributes play-test (user, 2026-10-31), for the UI session:** spending points with the classes UI's + buttons plays double click sounds, especially on the first click.
 
 The user wants the inventory screen to look like an RPG character screen (concept image, 2026-10-29). Done and to do, in order:
 

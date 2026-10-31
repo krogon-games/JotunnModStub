@@ -13,6 +13,8 @@ Outputs:
   with WoW's levels 1-59 spread over our levels 1-89 (our level 90 = Kall Fimbulbringer = WoW's cap of 60). Levels
   90-98 keep WoW's last value. So a player needs as many same-level kills per level as classic WoW without quests.
   The XP never drops from one level to the next (it would at levels 8 and 10, by 1-6 XP).
+- Orlog/Data/classes.csv: each Diablo 2 class's per-level and per-point gains (data/d2-reference/classes.csv, unchanged)
+  and whether it is playable yet (the Amazon first, user 2026-10-30).
 - Orlog/Data/biome_levels.csv: each biome's creature level range (from the guide) and the health span of the creatures
   the world spawns there without a boss key (from the dump). Creatures get their level inside the range by health.
 
@@ -39,6 +41,8 @@ GUIDE = [
     ("DeepNorth", ["FrozenKing", "FrozenKing_p2", "FrozenKing_p3"], 90),
 ]
 MAX_LEVEL = 99
+# Playable classes (user, 2026-10-30: the Amazon first; the Barbarian and maybe the Paladin later).
+PLAYABLE = {"Amazon"}
 # Our level that matches WoW's level-60 cap (Kall Fimbulbringer).
 WOW_CAP_LEVEL_OURS = 90
 
@@ -119,7 +123,14 @@ def main():
             # Creatures fill the range up to one below the boss; the next biome starts at the boss's level.
             w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses)])
             previous = boss_level
-    print("Wrote levels.csv, creature_xp.csv and biome_levels.csv to", OUT)
+    classes = read_csv(os.path.join(ROOT, "data", "d2-reference", "classes.csv"))
+    with open(os.path.join(OUT, "classes.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        columns = ["str", "dex", "vit", "energy", "life_per_lvl", "stamina_per_lvl", "life_per_vit", "stamina_per_vit"]
+        w.writerow(["class", "status"] + columns)
+        for c in classes:
+            w.writerow([c["class"], "playable" if c["class"] in PLAYABLE else "later"] + [c[k] for k in columns])
+    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv and classes.csv to", OUT)
 
 
 if __name__ == "__main__":

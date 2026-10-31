@@ -46,7 +46,7 @@ Valheim version:
 - **Respec:** an item, as in D2. With Corruption, crafted from boss essences.
 - **Saved** in the player's custom data (`Player.m_customData`, already used by the corrupted wishbone), so it stays with the character. Level shown to others through the player's ZDO. XP is decided by the creature owner's game and sent to the players who share it. That trusts clients, which is fine for four friends.
 
-**Attributes.** D2's four, mapped onto Valheim stats (proposed mapping; values to set):
+**Attributes.** D2's four, mapped onto Valheim stats. **Built 2026-10-30** (`FEATURES.md` → Attributes and class eitr): Strength +1% physical damage per point (melee, thrown), Dexterity +1% (bows), Vitality and levels give D2's life and stamina scaled by Valheim's starting values (×0.5, ×0.89), Energy +1.5 eitr; the starting attributes count as vanilla. Carry weight from Strength dropped (not D2). Original proposal:
 
 | D2 | D2 effect | Valheim effect |
 |---|---|---|
@@ -76,7 +76,7 @@ D2's item stat requirements are left out: Valheim gates gear by biome materials 
 ### Eitr: making it usable for classes
 
 Today eitr is punishing for anyone who isn't a late-game mage (game dump): a character has **no eitr at all** until eitr food, and almost all eitr food and both eitr meads come from the Mistlands or later (Magecap 25, Yggdrasil porridge 80, Seeker aspic 85; Minor eitr mead +125 eitr over 10 s, Lingering eitr mead eitr regen ×1.25 for 5 minutes). An Amazon in the Meadows couldn't cast once. Proposed redesign (user asked for it; numbers still to set):
-- **A base eitr pool from the class** (decided, user 2026-10-30): every class starts with **15 eitr** and gains **1.5 per level** and **1.5 per Energy point** (D2's Amazon and Paladin values, `data/d2-reference/classes.csv`), scaled to Valheim. Eitr food adds on top. Without a class nothing changes. Note for the scale: at 1:1 a level-90 character has about 149 eitr before Energy, and late eitr foods give 80–110 each, so 1:1 may already fit (to confirm when building).
+- **A base eitr pool from the class** (decided, user 2026-10-30; **built 2026-10-30**, vanilla regen at 5/s refills it): every class starts with **15 eitr** and gains **1.5 per level** and **1.5 per Energy point** (D2's Amazon and Paladin values, `data/d2-reference/classes.csv`), scaled to Valheim. Eitr food adds on top. Without a class nothing changes. Note for the scale: at 1:1 a level-90 character has about 149 eitr before Energy, and late eitr foods give 80–110 each, so 1:1 may already fit (to confirm when building).
 - **Eitr regeneration that works without eitr food** (decided, user 2026-10-30; rate to set). Vanilla regen only refills the pool that food gives.
 - **Eitr affixes on loot** (user, 2026-10-30): the Magic and Rare affixes being designed in the loot work add max eitr (already a twin family in `AFFIX_RULES.md`) and eitr regeneration on top of the class pool.
 - **Eitr potions from the early biomes**, like D2's mana potions: craftable with early materials, modelled on the vanilla minor eitr mead (instant or over a few seconds) and lingering mead (regen). Players can carry them in the EquipmentAndQuickSlots quick slots.
@@ -90,7 +90,7 @@ Today eitr is punishing for anyone who isn't a late-game mage (game dump): a cha
 In order of preference:
 1. **Vanilla animation triggers**, as Valheim Legends does: `ZSyncAnimation.SetTrigger` syncs to other players. Known triggers include `axe_secondary`, `sword_secondary`, `mace_secondary`, `atgeir_secondary` (the 360° spin), `battleaxe_secondary`, `greatsword_secondary`, `spear_throw`, `spear_poke`, `knife_secondary`, `dual_knives`, `dualaxes`, `throw_bomb`, `kick`, `gpower`. This list comes from a third-party mod's source; check it by adding `m_attackAnimation` to `co_dump` first. Warcries use the vanilla emotes (`Roar`, `Challenge`, `Flex`, `Cheer` exist in the game code); emotes sync to other players.
 2. **Looping or re-timing a vanilla animation**, e.g. Whirlwind as the atgeir spin replayed while the key is held, with movement allowed (the approach of sighsorry's SecondaryAttacks mod; it's GPL-3, so we write our own). `Animator.Play` and speed changes don't sync, so other players need our own message.
-3. **New clips** from an asset bundle, swapped in with an `AnimatorOverrideController` (the standard method, KG's `AnimationReplaceManager`, BSD-3). Jötunn has no animation helper. Risks: the clip swap fights other mods that replace the player's animator (none in the group's current mod list); every player needs the mod; our `JotunnModUnity` project is Unity 2020.3, while Valheim has used Unity 2022.3 since 0.217.46, so the project needs an upgrade before it can build bundles (Valheim 1.0's exact Unity version to check on the user's PC).
+3. **New clips** from an asset bundle, swapped in with an `AnimatorOverrideController` (the standard method, KG's `AnimationReplaceManager`, BSD-3). Jötunn has no animation helper. Risks: the clip swap fights other mods that replace the player's animator (none in the group's current mod list); every player needs the mod; our `JotunnModUnity` project is Unity 2020.3, while Valheim 1.0.21 runs **Unity 6000.0.75** (Unity 6; from the user's `LogOutput.log`, 2026-11-01), so the project needs an upgrade to Unity 6 before it can build bundles.
 
 ## 5. Amazon (first class)
 
