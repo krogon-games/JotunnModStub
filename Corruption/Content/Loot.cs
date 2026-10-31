@@ -38,7 +38,10 @@ namespace Corruption.Content
             "pickaxe_damage_deposits", "every_fifth_hit_damage", "deposit_area_hit", "harvest_instantly", "terrain_dig",
             "chop_damage_trees", "chop_damage_logs", "chop_damage_stumps", "chop_splash", "stamina_save_chance",
             "durability_save_chance", "hit_noise_reduction", "item_weight_reduction", "pickup_range", "pickup_radius_set",
-            "attack_speed", "gathering_skill_xp"
+            "attack_speed", "gathering_skill_xp",
+            // Proc and utility affixes (2026-11-01, LootProcs).
+            "parry_buff_armour", "parry_buff_next_hit", "parry_buff_attack_speed", "parry_restore_stamina", "parry_lightning",
+            "combo_shockwave", "frost_stacking", "attack_speed_on_kill", "heal_on_kill", "cheat_death", "forage_speed_boost"
         };
 
         public static AffixCaps Caps;

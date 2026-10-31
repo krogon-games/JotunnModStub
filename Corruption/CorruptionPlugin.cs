@@ -36,6 +36,7 @@ namespace Corruption
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
             Safe.Run("read the loot tables", Loot.Load);
             Safe.Run("add the co_loot command", Loot.Register);
+            Safe.Run("add the co_affix command", LootProcs.RegisterCommand);
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
         }
@@ -75,6 +76,8 @@ namespace Corruption
             Safe.Run("register the corrupted wishbone", CorruptedWishbone.Register);
             Safe.Run("register corrupted offerings", CorruptedOfferings.Register);
             Safe.Run("register the maddened effect", Maddened.RegisterEffect);
+            Safe.Run("register the proc affix effects", LootProcs.RegisterEffects);
+            Safe.Run("find the wild plants for Foraging", LootProcs.CollectWildPlants);
             Safe.Run("read the rip loot table", RipLoot.Load);
         }
 

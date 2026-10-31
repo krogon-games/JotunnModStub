@@ -574,7 +574,9 @@ namespace Corruption.Content
                 {
                     return 1f;
                 }
-                float percent = AffixTotals.Cap(Loot.Total(Player.m_localPlayer.GetCurrentWeapon(), "attack_speed"), "attack_speed", Loot.Caps);
+                // Skald's and Fenrir (parry and kill buffs, LootProcs) share the cap with Swift.
+                float percent = AffixTotals.Cap(Loot.Total(Player.m_localPlayer.GetCurrentWeapon(), "attack_speed") +
+                                                LootProcs.BuffAttackSpeedPercent(Player.m_localPlayer), "attack_speed", Loot.Caps);
                 return 1f + percent / 100f;
             }
 

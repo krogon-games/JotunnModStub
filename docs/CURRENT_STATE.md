@@ -49,6 +49,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 |---|---|
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
+| **Loot step 4: proc and utility affixes** (2026-11-01, branch `claude/affixes-loot`) | `PLAYTEST.md` → Session 3e (single player, then step 12 with a friend) |
 | **Loot step 3: gathering tools, striker side** (2026-11-01, branch `claude/affixes-loot`) | `PLAYTEST.md` → Session 3c |
 | **Odin items unlocked** (2026-10-31, branch `claude/affixes-loot`) | Equip and unlock passed 2026-10-31; crafting one not tried |
 | **Loot step 2: player-stat affixes** (2026-10-30, branch `claude/affixes-loot`) | Passed 2026-10-31 (single player): max health/stamina/eitr, carry weight, movement, regen, resistances. Not tried: weapon skill, life steal; multiplayer |
@@ -79,6 +80,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 - The Queen has no summoning altar (game knowledge).
 - NetworkPerformanceSystem works on a crossplay server and alongside craft-from-chests (reading of its README; untested).
 - Location prefabs load safely through soft references outside world generation (worked in the dumps; not stress-tested).
+- Foraging's "wild plant" test (pickables that grow back, minus crops) leaves out flint, stones and branches because they don't grow back (game knowledge; the startup log lists what counts). The Reprisal and Wrath visuals come from Dundr's bolt hit and Stagbreaker's slam effect lists (read from the code's field names, not seen in-game).
 
 ## Waiting on the user
 
