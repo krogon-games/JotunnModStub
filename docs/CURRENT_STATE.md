@@ -1,6 +1,6 @@
 # Current state
 
-**Last updated:** 2026-10-30 (classes UI built on `claude/ui-overhaul`; Orlog levels and XP built on `claude/class-skills`; character sheet merged 2026-10-29) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.20
+**Last updated:** 2026-11-01 (every session's branch merged into `master`, PRs #1–#16; the next stretch planned in [`ROADMAP.md`](ROADMAP.md)) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.21 (data dump from 1.0.20)
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
@@ -8,8 +8,8 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - Orlog (the classes plugin, new 2026-10-30) compiles the same way.
-- `dotnet test CraftingOverhaul.Tests`: **218 passed, 0 failed** (2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
-- Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
+- `dotnet test CraftingOverhaul.Tests`: **225 passed, 0 failed** (2026-11-01, `master` after PR #16; 218 on 2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- Last play-test: 2026-10-31, single player (Orlog attributes, the classes UI, loot step 2, corrupted summons); the first full session was 2026-10-28 with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded.
 
 ## Implemented
 
@@ -60,7 +60,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 ## Not built (proposed)
 
-Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Loot system: step 1 tested in single player and merged (drops, tooltips, item-stat affixes); step 2 (player-stat affixes) tested in single player apart from weapon skill and life steal; orbs, uniques, personal-loot locks, loot beams, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; levels, XP and attributes are built and tested, the stone and the skills are not; branch `claude/class-skills`, [`class-design.md`](class-design.md)). Loot system: step 1 tested in single player and merged (drops, tooltips, item-stat affixes); step 2 (player-stat affixes) tested in single player apart from weapon skill and life steal; orbs, uniques, personal-loot locks, loot beams, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
@@ -89,18 +89,22 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 - Rename the Corruption plugin to a Norse name? (offered, undecided)
 - **Gear affix ranges (2026-10-29):** 16 of the 28 draft rows now have ranges from the game data under the user's rules, approved (carry weight cut to 10–50); max health, stamina, eitr and life steal keep their drafts; no stacking caps for now (all user, sources in `AFFIX_RULES.md`). The resistance rows are settled too (2026-10-30): every gear affix has its range.
 - Play-test results for everything under "Built, not verified".
-- **Pull request:** nothing since PR #1 (merged 2026-09-29); `master` lacks everything Corruption. The user wants to revisit this after the first play-test session (2026-10-28): open a PR from the branch into `master` then.
+- ~~**Pull request:** nothing since PR #1~~ Superseded: PRs #2–#16 merged every session's work into `master` by 2026-11-01.
 
 ## Next actionable tasks
 
-0. **Corrupted boss summons** tested 2026-10-31; fixed so summons fight players only (re-check, `PLAYTEST.md` → 1g). Corrupted offerings merged (PR #10). Map icons merged (PR #5). **Rip waves at least 1 star** (`MinStars`, 2026-10-29): tested, "definitely more challenging"; PR into `master`.
-1. **Rips step B and the heart search passed in single player (2026-10-29)**; merged into `master` (PR #4). Ping colour re-checked (more red, stops when the heart dies); multiplayer tests with the group. Still open from the design: checking the landing area once loaded (locations, water).
-2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
-3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
-4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
-5. Then open a PR into `master` (user, after the play-test).
-6. **Classes UI** (UI overhaul session): built 2026-10-30 from [`classes-ui-brief.md`](classes-ui-brief.md), untested; play-test with the `Demo` setting (`PLAYTEST.md` → Classes UI).
-7. **Classes** (`claude/class-skills`): levels and XP merged (PR #9, play-tested). Attributes and the class eitr pool built and play-tested (2026-10-31); PR into `master`. Next: the Orlog stone and class choice, then the skill tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)). Open: how much XP bosses should give.
+**The plan for the next stretch is [`ROADMAP.md`](ROADMAP.md)** (2026-11-01): the goal is "playable together", four sessions on the same branches as before, each with its tasks in order, the questions to ask the user first, and where the sessions meet. In one line each:
+
+| Session | Branch | Start with | Then |
+|---|---|---|---|
+| Classes | `claude/class-skills` | Orlog stone and class choice | Skill tree rules and data, the Amazon's passives, boss bonus points and the respec item, the skill button and bow skills, spear skills |
+| Loot | `claude/affixes-loot` | The 33 gathering affix effects | Proc affixes, orbs, Riftforge crafting rules and the window brief, uniques and the ring slot, loot locks and beams |
+| Rips | `claude/rips-bosses` | Map tiers and affixes (phase 5) | 3-star creatures, elite packs (design with the user first), dedicated-server review, landing check and boss particles, phase 8 |
+| UI | `claude/ui-overhaul` | Play-test fixes (double click sound, adrenaline bar) | Real Orlog data instead of the demo, the Riftforge window (in Corruption, from the loot session's brief), the recipe list redesign (ask first) |
+
+Housekeeping for any session (`ROADMAP.md` §6): `PLAYER_SETUP.md` lacks Orlog; the status tables here and in `GAME_DESIGN.md` lag behind the play-tests; one multiplayer script for the group in `PLAYTEST.md` → Session 2.
+
+The list that stood here before 2026-11-01 is folded into the roadmap; what it recorded as done is in *Verified in-game* above.
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
 
