@@ -71,7 +71,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 
 ### Build stamp
 
-`Corruption.csproj` writes the git branch and short commit into the DLL (`AssemblyMetadata("GitBuild", …)`, target `StampGitCommit`); the plugin logs it on load. When a play-test result looks like "nothing happened", check that line first.
+`Corruption.csproj`, `Orlog.csproj` and (since 2026-11-01) `CraftingOverhaul.csproj` write the git branch and short commit into the DLL (`AssemblyMetadata("GitBuild", …)`, target `StampGitCommit`); the plugin logs it on load. When a play-test result looks like "nothing happened", check that line first.
 
 ## Code patterns (follow these)
 

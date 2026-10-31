@@ -376,7 +376,7 @@ Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJso
 
 **Known issues:**
 - **Play-test 2026-10-30 (first look, single player, with the demo):** bars, food slots and the XP bar show and work; the game's displays are gone. The user wanted the XP bar "a little bit lower": lowered.
-- **Play-test 2026-10-31 (new look):** bars, food and XP bar pass ("looks really good"). Changed after it, to re-check: eitr and stamina swapped (eitr was pushing stamina down when it appeared); the bars no longer move up while building or sailing ("not good design"), the game's selected-piece box and ship display move to the bottom right instead (the user asked for the box; the ship display follows the same rule, Claude's choice).
+- **Play-test 2026-10-31 (new look):** bars, food and XP bar pass ("looks really good"). Changed after it, and **re-tested the same day (passed)**: eitr and stamina swapped (eitr was pushing stamina down when it appeared); the bars no longer move up while building or sailing ("not good design"), the game's selected-piece box and ship display move to the bottom right instead (the user asked for the box; the ship display follows the same rule, Claude's choice).
 - To check: nothing else the game shows lives under `m_healthPanel` (if something vanishes from the HUD, tell Claude); the mount's stamina panel still shows when riding.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
@@ -1090,6 +1090,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 
 ### 2026-11-01
 - **Fix: buttons clicked twice** (play-test 2026-10-31): Jötunn's buttons played the game's "select" sound on mouse down as well as the click; our buttons (skills panel, + buttons, tabs, Skills, recipe grouping, Corruption's Bag/Currency/Maps) now play one click. Untested.
+- **CraftingOverhaul build stamp:** its load line now reads `CraftingOverhaul 0.1.0 loaded (build: <branch> <commit>)`, as Corruption's and Orlog's do, so the group's build check covers all three DLLs.
+- **Housekeeping for the multiplayer evening** (ROADMAP §6): `PLAYTEST.md` → Session 2 is one evening's script for the four of us on the server; Orlog added to `PLAYER_SETUP.md`; status tables in `GAME_DESIGN.md` and `CURRENT_STATE.md` brought in line with this file.
+- **Riftforge window mock-ups** (ROADMAP U3, for the user to choose): its own window or a tab in the crafting panel; `docs/images/riftforge_window_orb.png`, `riftforge_window_shard.png`, `riftforge_tab.png`, from `tools/mockup_riftforge.py`.
 
 ### 2026-10-31
 - **Attributes and class eitr tested in-game** (single player): every step passed, including the classes UI with real data. Noted for the UI: double click sounds when spending points.
