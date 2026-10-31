@@ -233,8 +233,9 @@ namespace CraftingOverhaul.Classes
             _detailsRank = UiKit.Text("Rank", box, 16, UiKit.Light, TextAnchor.MiddleLeft);
             Place(_detailsRank.rectTransform, SkillsPanelLayout.DetailsRank);
             _detailsKind = UiKit.Text("Kind", box, 14, UiKit.LightDim, TextAnchor.MiddleLeft);
+            FitText(_detailsKind, 10, 14);
             Place(_detailsKind.rectTransform, SkillsPanelLayout.DetailsKind);
-            _detailsText = UiKit.Text("Text", box, 16, UiKit.Light, TextAnchor.UpperLeft);
+            _detailsText = UiKit.Text("Text", box, 15, UiKit.Light, TextAnchor.UpperLeft);
             _detailsText.horizontalOverflow = HorizontalWrapMode.Wrap;
             _detailsText.verticalOverflow = VerticalWrapMode.Truncate;
             _detailsText.lineSpacing = 1.05f;
@@ -587,7 +588,7 @@ namespace CraftingOverhaul.Classes
             string rank = skill.Later ? "Coming later" : "Rank " + skill.Points + " / " + skill.MaxPoints +
                                                          (skill.Level != skill.Points ? "  (level " + skill.Level + ")" : "");
             UiKit.SetText(_detailsRank, rank);
-            var kind = new StringBuilder(KindLabel(skill.Kind)).Append("  ·  needs level ").Append(skill.ReqLevel);
+            var kind = new StringBuilder(KindLabel(skill.Kind)).Append("  ·  level ").Append(skill.ReqLevel);
             if (skill.EitrCost > 0f)
             {
                 kind.Append("  ·  ").Append(skill.EitrCost.ToString("0.#", CultureInfo.InvariantCulture)).Append(" eitr");
@@ -603,10 +604,6 @@ namespace CraftingOverhaul.Classes
             {
                 text.Append("<color=#8FD97A>Next rank: ").Append(skill.NextDescription).Append("</color>\n\n");
             }
-            if (!skill.Later && !string.IsNullOrEmpty(skill.SpendBlocked))
-            {
-                text.Append("<color=#FF9A80>").Append(skill.SpendBlocked).Append("</color>\n\n");
-            }
             if (skill.Later)
             {
                 text.Append("<color=#C7B8A1>Not in the game yet.</color>");
@@ -621,8 +618,15 @@ namespace CraftingOverhaul.Classes
             }
             UiKit.SetText(_detailsText, text.ToString().TrimEnd('\n'));
 
+            // The button says why a point can't go in (play-test 2026-10-31: the reason was cut off at the bottom of the text).
             _learn.interactable = skill.CanSpend;
-            UiKit.SetText(_learnLabel, skill.CanSpend ? "Learn  (+1 rank)" : skill.Maxed ? "Mastered" : "Learn");
+            string label = skill.CanSpend ? "Learn  (+1 rank)" : skill.Maxed ? "Mastered" : skill.Later ? "Coming later"
+                : !string.IsNullOrEmpty(skill.SpendBlocked) ? "<color=#FF9A80>" + skill.SpendBlocked + "</color>" : "Learn";
+            UiKit.SetText(_learnLabel, label);
+            if (_learnLabel)
+            {
+                _learnLabel.supportRichText = true;
+            }
         }
 
         private static string KindLabel(string kind)
@@ -630,8 +634,8 @@ namespace CraftingOverhaul.Classes
             switch (kind)
             {
                 case "passive": return "Passive";
-                case "cast": return "Cast on its key";
-                default: return "Attack on the skill button";
+                case "cast": return "Cast";
+                default: return "Attack";
             }
         }
 

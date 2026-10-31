@@ -305,6 +305,43 @@ namespace CraftingOverhaul.Classes
                 {
                     _gameGpRoot.localScale = Vector3.zero;
                 }
+                try
+                {
+                    PlaceQuickSlots();
+                }
+                catch (Exception ex)
+                {
+                    Safe.Report("place the quick slots under the skill cross", ex);
+                }
+            }
+        }
+
+        private const float QuickSlotsGap = 10f;
+
+        /// <summary>
+        ///     EquipmentAndQuickSlots' quick-slot bar (its <c>QuickSlotsHotkeyBar</c>) goes centred under the cross while
+        ///     the cross shows (user, 2026-10-31). That mod puts the bar back at its configured place in every Update, so
+        ///     this runs after, in LateUpdate; when the cross hides, its own placement simply takes over again.
+        /// </summary>
+        private static void PlaceQuickSlots()
+        {
+            var hud = Hud.instance;
+            if (!hud || !hud.m_rootObject || !_root)
+            {
+                return;
+            }
+            var root = hud.m_rootObject.transform as RectTransform;
+            var bar = hud.m_rootObject.transform.Find("QuickSlotsHotkeyBar") as RectTransform;
+            if (!root || !bar || !bar.gameObject.activeInHierarchy || !MovedHudPanels.Bounds(root, bar, out Rect drawn))
+            {
+                return;
+            }
+            Rect cross = _root.rect;
+            Vector3 bottomCentre = root.InverseTransformPoint(_root.TransformPoint(new Vector3(cross.center.x, cross.yMin, 0f)));
+            var offset = new Vector2(bottomCentre.x - drawn.center.x, bottomCentre.y - QuickSlotsGap - drawn.yMax);
+            if (offset.sqrMagnitude > 0.25f)
+            {
+                bar.position += root.TransformVector(offset);
             }
         }
 

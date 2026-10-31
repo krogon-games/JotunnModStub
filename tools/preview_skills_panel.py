@@ -234,7 +234,7 @@ def render(layout, tab, out, hovered="ExplodingArrow"):
     x, y, w, h = r("detailsRank")
     text(d, (x, y + h / 2), "Rank %d / 20" % sk["points"], 16, LIGHT, "lm")
     x, y, w, h = r("detailsKind")
-    text(d, (x, y + h / 2), "Attack · Lv 12 · 5 eitr", 14, LIGHT_DIM, "lm")
+    text(d, (x, y + h / 2), "Attack  ·  level 12  ·  5 eitr", 14, LIGHT_DIM, "lm")
     x, y, w, h = r("detailsText")
     yy = y
     for chunk, colour in (("Arrow explodes for area fire damage (8–12).", LIGHT), ("", None),

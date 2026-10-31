@@ -19,8 +19,8 @@ namespace CraftingOverhaul.Classes
     internal static class MovedHudPanels
     {
         private const float RightMargin = 24f;
-        /// <summary>Above the row of key hints along the bottom of the screen.</summary>
-        private const float BottomMargin = 84f;
+        /// <summary>Above the row of key hints and the XP bar's points hint (play-test 2026-10-31: 84 touched the hint).</summary>
+        private const float BottomMargin = 106f;
 
         private static RectTransform _buildInfo;
         private static readonly Dictionary<RectTransform, Vector3> Original = new Dictionary<RectTransform, Vector3>();
@@ -137,7 +137,7 @@ namespace CraftingOverhaul.Classes
         }
 
         /// <summary>What the panel draws (its visible images and texts), in the HUD root's space.</summary>
-        private static bool Bounds(RectTransform root, RectTransform panel, out Rect drawn)
+        internal static bool Bounds(RectTransform root, RectTransform panel, out Rect drawn)
         {
             drawn = default;
             bool any = false;
