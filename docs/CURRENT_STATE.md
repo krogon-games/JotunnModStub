@@ -1,6 +1,6 @@
 # Current state
 
-**Last updated:** 2026-10-30 (Orlog levels and XP built on `claude/class-skills`; character sheet merged 2026-10-29) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.20
+**Last updated:** 2026-10-30 (classes UI built on `claude/ui-overhaul`; Orlog levels and XP built on `claude/class-skills`; character sheet merged 2026-10-29) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.20
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
@@ -8,7 +8,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - Orlog (the classes plugin, new 2026-10-30) compiles the same way.
-- `dotnet test CraftingOverhaul.Tests`: **198 passed, 0 failed** (2026-10-30, after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **218 passed, 0 failed** (2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -35,9 +35,10 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 | Craft from chests with AdventureBackpacks: backpack alone, backpack + chest, no double charge | CraftingOverhaul | 2026-10-28 play-test log |
 | Category headers line up; config reload on save | CraftingOverhaul, both | 2026-10-28 play-test log |
 | Currency and Maps tabs: Bag / Currency / Maps on the inventory; pickup straight to the tab (full bag too), weightless, pays for recipes, maps open rips from the tab, chests, drag and drop, gravestone on death, kept after relogging | Corruption | 2026-10-30, three play-test rounds (two bugs found and fixed) |
-| Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), parchment stats, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
+| Character sheet: EquipmentAndQuickSlots' slots in a WoW-style sheet with labelled tiles, silhouettes, live character picture (drag to turn), stats box, close button, drag to move, fits with a chest and the backpack open | CraftingOverhaul | 2026-10-29, three play-tests with screenshots ("looking much better"), then the remaining checks |
 | `co_dump` with the seven new files | CraftingOverhaul | 2026-10-28 dump, now in `data/game-dump-1.0.20/` |
 | Orlog levels and XP: XP per kill, stars, level-up, level-difference cut, saved with the character | Orlog | 2026-10-30 play-test; pace fix re-tested the same day ("pace feels better") |
+| HUD bars (health, stamina, eitr; food; XP bar; fixed while building and sailing, the game's build box and ship display at the bottom right), skill cross (power in the middle, cooldowns, blocked labels, quick slots under it), skills panel (redesigned), class choice window, new look, character sheet restyle, both off switches | CraftingOverhaul | 2026-10-31, with the demo data, after several rounds ("everything looks really good now") |
 
 ### Built, not verified
 
@@ -53,6 +54,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
 | Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Orlog levels, step 8 (everything else passed 2026-10-30, including the pace fix) |
+| Classes UI: the adrenaline bar (2026-10-31) | `PLAYTEST.md` → Classes UI |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2: craft from chests (`docs/multiplayer-test.md`), talismans, rips, essences |
 
 ## Not built (proposed)
@@ -96,7 +98,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.
 4. Play-test the rest of `PLAYTEST.md` (PlantEasily, Session 2 with a friend).
 5. Then open a PR into `master` (user, after the play-test).
-6. **Classes UI** (UI overhaul session, after its current merge): merge `master`, then build [`classes-ui-brief.md`](classes-ui-brief.md), HUD bars first.
+6. **Classes UI** (UI overhaul session): built 2026-10-30 from [`classes-ui-brief.md`](classes-ui-brief.md), untested; play-test with the `Demo` setting (`PLAYTEST.md` → Classes UI).
 7. **Classes** (`claude/class-skills`): levels and XP built (2026-10-30, Orlog), play-tested 2026-10-30 including the pace fix; PR into `master` opened. Open: how much XP bosses should give; sharing with a friend. Next: attributes and the class eitr pool, then the Orlog stone and class choice, then the tree rules ([`class-design.md`](class-design.md#8-build-order-proposed)).
 
 ## UI overhaul (branch `claude/ui-overhaul`, started 2026-10-29)
@@ -104,14 +106,16 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 The user wants the inventory screen to look like an RPG character screen (concept image, 2026-10-29). Done and to do, in order:
 
 1. **Character sheet**: built; first play-test 2026-10-29 worked (slots, stats) but looked too plain. Reworked the same day: generated art (`tools/make_sheet_ui.py`, mock-up `docs/images/sheet_preview.png`), labelled tiles with silhouettes, and the **live character picture** (brought forward from step 2). Decisions in `DECISIONS.md` (2026-10-29): keep EquipmentAndQuickSlots, no hand or feet slots, no tabs. Second play-test (2026-10-29): the look matches the mock-up and the live picture works (turning it by dragging works); the feet stood above a thin stone and a talisman kept the blue backing, fixed the same day. Third play-test: "looking much better" (user). **Merged into `master` 2026-10-29.**
-2. **Revisit later (user, 2026-10-29): make the sheet's look consistent with the rest of the game's UI.** Its darker wood, iron frame and parchment stand out next to the vanilla panels (inventory grid, crafting). Not now; ask the user what to change when picking it up. Tweak the numbers in `tools/make_sheet_ui.py` and `SheetLayout.cs`, rerun the script, and check the mock-up before asking for a test.
+2. ~~Revisit later: make the sheet's look consistent with the game's UI.~~ **Done 2026-10-30** with the classes UI look (user's mix: the game's own panel background, bronze riveted tiles; `DECISIONS.md`). Untested in-game.
 3. **Currency and Maps tabs**: built 2026-10-29, tested in single player 2026-10-30; the user's choices in `DECISIONS.md`. Affix Splinters, orbs and runes go in the Currency tab when the loot system makes them (their prefab names must be added to `TabRules.TabFor`).
-4. The recipe list redesign and the crafting screen with AdventureBackpacks' backpack panel open (user's to-do, 2026-10-28): ask what they want changed before starting.
+4. **Classes UI** (from [`classes-ui-brief.md`](classes-ui-brief.md)): built 2026-10-30, untested. HUD bars (health, eitr, stamina) with food beside them and the XP bar; skill cross; skills panel (tabs, tree, spending, tooltips, drag to slots) with the attribute points; class choice window. Tried with the `Demo` setting until Orlog's API is filled in. Layout numbers are proposals (`DECISIONS.md`, 2026-10-30). First look 2026-10-30: works (panel, tabs, spending, attributes, drag to slots, food, XP bar); layout bugs fixed the same day. **New look chosen and built the same day** (user's mix of four mock-ups, `docs/images/classes_ui_mockup.png`), sheet restyled to match. **Play-tested 2026-10-31 (single player, demo): everything passes**; three changes asked for and made (bar order health/stamina/eitr; bars stay put, the game's build box and ship display go to the bottom right; tree-like skill paths), to re-check, plus the off switches. Then the skill cross redesigned (user, 2026-10-31): the Forsaken power in its middle, unmistakable cooldowns, no "Skill button" text; the game's adrenaline bar replaced by ours; the build box fix; and the **skills panel redesigned** after "not acceptable" (Diablo 2 layout, details pane, tablet, placeholder icon set, preview drawn from the real layout). **Re-tested 2026-10-31: all pass** ("this ui is looking soooo much better"), then the last fixes (quick slots under the cross, details pane, build box, blocked labels) and the off switches pass too ("everything looks really good now"). Only the adrenaline bar is untried. **PR into `master` opened 2026-10-31.** Next: the rest of the user's play-test and the polish pass; then switch to Orlog's real answers as the classes session fills `Orlog.Api`.
+5. The recipe list redesign and the crafting screen with AdventureBackpacks' backpack panel open (user's to-do, 2026-10-28): ask what they want changed before starting.
 
 ## Before release
 
 Development aids to switch off or remove before sharing a public release:
 - **Config reload on save** (`Shared/ConfigWatcher.cs`, added 2026-10-28): set `ReloadConfigOnFileChange` to default `false`, or remove the watcher from both plugins. Cost is negligible on Windows; on a Linux dedicated server Mono's file watcher may fall back to polling the config folder.
+- **Classes UI demo** (`5 - Classes UI` → `Demo`, CraftingOverhaul, added 2026-10-30): already off by default; remove `DemoClasses.cs`, the demo branches in `ClassesSource.cs` and the `co_classes_stone` command once Orlog serves the real data.
 - The `co_dump` / `co_biome` console commands stay (useful for admins), but `data/game-dump-*` must never ship.
 
 ## Update routine

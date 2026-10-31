@@ -20,6 +20,8 @@ namespace CraftingOverhaul
         private const string RecipeListSection = "1 - Recipe List";
         private const string ContainerSection = "2 - Nearby Containers";
         private const string SheetSection = "3 - Character Sheet";
+        private const string HudSection = "4 - HUD";
+        private const string ClassesSection = "5 - Classes UI";
 
         public static ConfigEntry<GroupingMode> Grouping;
         public static ConfigEntry<bool> StartCollapsed;
@@ -39,6 +41,16 @@ namespace CraftingOverhaul
         public static ConfigEntry<bool> SheetStats;
         public static ConfigEntry<bool> SheetQuickSlots;
         public static ConfigEntry<bool> SheetPortrait;
+
+        public static ConfigEntry<bool> HudBars;
+        public static ConfigEntry<float> HudBarScale;
+        public static ConfigEntry<float> HudBarMinLength;
+        public static ConfigEntry<float> HudBarMaxLength;
+        public static ConfigEntry<float> HudBarsHeight;
+
+        public static ConfigEntry<KeyboardShortcut> SkillsPanelKey;
+        public static ConfigEntry<UnityEngine.Vector2> SkillCrossPosition;
+        public static ConfigEntry<bool> ClassesDemo;
 
         public static void Bind(ConfigFile config)
         {
@@ -81,6 +93,28 @@ namespace CraftingOverhaul
                 "Put EquipmentAndQuickSlots' quick slots in a row at the bottom of the sheet. Off: that mod places them.");
             SheetPortrait = config.Bind(SheetSection, "ShowCharacter", true,
                 "Show a live picture of your character, with its gear, in the sheet's arch. Drag it sideways to turn it.");
+
+            HudBars = config.Bind(HudSection, "Bars", true,
+                "Health, eitr and stamina as three bars at the bottom centre (health on top), with your food beside them, " +
+                "replacing the game's own displays. Off: the game's displays come back.");
+            HudBarScale = config.Bind(HudSection, "BarScale", 2.56f,
+                new ConfigDescription("Bar length in pixels per point of health, eitr or stamina. The game's own bars use 1.28; " +
+                                      "the default is twice that.", new AcceptableValueRange<float>(0.5f, 10f)));
+            HudBarMinLength = config.Bind(HudSection, "BarMinLength", 120f,
+                new ConfigDescription("Shortest a bar gets, in pixels.", new AcceptableValueRange<float>(20f, 800f)));
+            HudBarMaxLength = config.Bind(HudSection, "BarMaxLength", 600f,
+                new ConfigDescription("Longest a bar gets, in pixels (the bars grow with your maximum up to this).", new AcceptableValueRange<float>(100f, 1600f)));
+            HudBarsHeight = config.Bind(HudSection, "BarsHeight", 96f,
+                new ConfigDescription("How far above the bottom of the screen the bars sit, in pixels. While building or sailing they " +
+                                      "move up out of the way, as the game's own bars do.", new AcceptableValueRange<float>(0f, 1000f)));
+
+            SkillsPanelKey = config.Bind(ClassesSection, "SkillsPanelKey", new KeyboardShortcut(UnityEngine.KeyCode.K),
+                "Opens and closes the skills panel (needs the Orlog plugin, or the demo). K is free in Valheim's default keys.");
+            SkillCrossPosition = config.Bind(ClassesSection, "SkillCrossPosition", new UnityEngine.Vector2(24f, 180f),
+                "Bottom-left corner of the skill cross, in pixels from the bottom-left of the screen.");
+            ClassesDemo = config.Bind(ClassesSection, "Demo", false,
+                "Development: show the class screens with built-in sample data (an Amazon at level 12) instead of Orlog's, so " +
+                "they can be tried before classes exist. Spending points and filling slots change the sample only.");
 
             BiomeMaterialOverrides.SettingChanged += (_, __) =>
             {

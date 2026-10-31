@@ -1,7 +1,7 @@
 # Classes UI brief (for the UI overhaul session)
 
 **From:** the classes session (`claude/class-skills`), 2026-10-30. **For:** the UI overhaul session (`claude/ui-overhaul`, CraftingOverhaul).
-**Status:** agreed with the user; nothing built yet on either side.
+**Status:** agreed with the user. UI side built 2026-10-30 on `claude/ui-overhaul` (all of §2, with the §4 demo), untested; see `FEATURES.md` → Classes UI.
 
 Everything the classes system needs on screen, and the contract between the two plugins, so both sessions build at the same time without waiting for each other. Design and reasons: [`class-design.md`](class-design.md). Decisions: [`DECISIONS.md`](DECISIONS.md) (2026-10-30 rows).
 
@@ -27,7 +27,7 @@ Without the Orlog plugin, CraftingOverhaul shows the new health/eitr/stamina bar
 ### 2.1 Health, eitr and stamina bars (user, 2026-10-30)
 
 Reference: `docs/images/hud_reference_bars.jpg` (Elden Ring).
-- Three horizontal bars together at the **bottom centre**: **health on top, eitr in the middle, stamina at the bottom**, in Valheim's colours (health red, eitr blue, stamina yellow). Replaces vanilla's separate health, stamina and eitr displays.
+- Three horizontal bars together at the **bottom centre**: **health on top, eitr in the middle, stamina at the bottom** (*changed by the user 2026-10-31 after the play-test: health, stamina, eitr, so gaining eitr doesn't move stamina*), in Valheim's colours (health red, eitr blue, stamina yellow). Replaces vanilla's separate health, stamina and eitr displays.
 - Values come from vanilla: `Player.GetHealth`/`GetMaxHealth`, `GetStamina`/`GetMaxStamina`, `GetEitr`/`GetMaxEitr`. The classes plugin adds its eitr pool through the game's own max-eitr calculation, so these already include it.
 - To settle in the UI session: bar length grows with the maximum, up to a cap (as in the reference); the eitr bar shows only when max eitr > 0 (always, for a character with a class); a new place for the food icons that sit beside vanilla's health display; check what vanilla already shows near the bottom centre (sailing controls, a mount's stamina) and where EquipmentAndQuickSlots draws its quick slots (players will keep eitr potions there).
 
@@ -85,7 +85,7 @@ A static class `Orlog.Api` in the Orlog assembly, found through `Chainloader.Plu
 | `string GetSkillInfoJson(string skillId)` | `{"id":"MultipleShot","name":"Multiple Shot","tab":0,"row":2,"col":2,"reqLevel":6,"prereqs":"MagicArrow","kind":"attack","status":"v1","maxPoints":20,"points":3,"level":5,"canSpend":true,"spendBlocked":"","description":"Fires 4 arrows in a fan","nextDescription":"Fires 5 arrows in a fan","eitrCost":5}`. `prereqs`: skill ids joined by `+`, `""` for none. `kind`: `attack` (goes on the skill button), `cast` (casts on its hotkey) or `passive` (no slot). `status`: `v1`, `reworked`, `later`, `dropped`. `points`: hard points; `level`: effective level with +skills and synergies. `spendBlocked`: why a point can't be spent, `""` if it can |
 | `Sprite GetSkillIcon(string skillId)` | The skill icon, or null |
 | `string GetSkillBarJson()` | `{"slot0":"MultipleShot","slot1":"InnerSight","slot2":"","slot3":"FireArrow","key0":"1","key1":"2","key2":"3","key3":"4","skillButton":"Mouse 1","selected":0}`. `key*`: display labels of the slot hotkeys; `selected`: the slot on the skill button, `-1` for none |
-| `string GetSlotStateJson(int slot)` | `{"usable":false,"blocked":"weapon","cooldown":1.2,"cooldownTotal":3,"eitrCost":5}`. `blocked`: `""`, `weapon`, `eitr` or `cooldown` |
+| `string GetSlotStateJson(int slot)` | `{"usable":false,"blocked":"weapon","needs":"bow","cooldown":1.2,"cooldownTotal":3,"eitrCost":5}`. `blocked`: `""`, `weapon`, `eitr` or `cooldown`. `needs` (optional, added 2026-10-31 by the UI session, no version bump): the weapon the skill needs, in a word the UI shows as "Need bow"; without it the UI says "Wrong weapon" |
 
 Actions answer `""` on success, or a short reason the UI can show ("Needs level 12", "No skill points", "Passive skills don't take a slot"):
 

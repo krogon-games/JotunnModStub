@@ -82,6 +82,11 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 8. With a friend (Session 2): both within 70 m of a kill each get XP; the lower-level player gets the bigger share of a low creature.
 9. No red errors in the console.
 
+## Classes UI (branch `claude/ui-overhaul`, 2 minutes)
+
+Everything else passed 2026-10-31 ("everything looks really good now"). Left: with `[5 - Classes UI]` → `Demo = true`:
+1. **Adrenaline:** with a trinket on, block or parry, or use a power: an orange bar appears above health in the same style; nothing shows under the bars.
+
 ## Session 2: with a friend
 
 Needs a second player (host a world or use the dedicated server, everyone on the same build).

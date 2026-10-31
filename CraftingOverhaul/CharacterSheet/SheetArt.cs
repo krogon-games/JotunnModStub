@@ -7,7 +7,7 @@ using UnityEngine;
 namespace CraftingOverhaul.CharacterSheet
 {
     /// <summary>
-    ///     The character sheet's art, made by <c>tools/make_sheet_ui.py</c> and embedded in the DLL as raw pixels
+    ///     The art of the character sheet and the class screens, made by <c>tools/make_sheet_ui.py</c> and embedded in the DLL as raw pixels
     ///     (<c>Assets/Sheet/*.rgba</c>: 8-byte width/height header, rows bottom to top; Unity's image decoder can't be
     ///     used from a net462 build, see ARCHITECTURE.md). Loaded once, on first use. A missing piece gives null, and
     ///     the sheet then draws without it.
@@ -17,29 +17,83 @@ namespace CraftingOverhaul.CharacterSheet
         private const string ResourcePrefix = "CraftingOverhaul.Assets.Sheet.";
         private static readonly Dictionary<string, Sprite> Cache = new Dictionary<string, Sprite>();
 
-        public static Sprite Wood => Get("wood", Vector4.zero, true);
-        public static Sprite Frame => Get("frame", new Vector4(56, 56, 56, 56));
-        public static Sprite Title => Get("title", Vector4.zero);
         public static Sprite Tile => Get("tile", new Vector4(18, 18, 18, 18));
-        public static Sprite Parchment => Get("parchment", Vector4.zero);
-        public static Sprite Ribbon => Get("ribbon", Vector4.zero);
         public static Sprite Close => Get("close", Vector4.zero);
+        public static Sprite Bar => Get("bar", new Vector4(6, 4, 6, 4));
+        public static Sprite BarCap => Get("bar_cap", Vector4.zero);
+        public static Sprite BarFill => Get("bar_fill", Vector4.zero);
+        public static Sprite Panel => Get("panel", new Vector4(20, 20, 20, 20));
+        public static Sprite Inset => Get("inset", new Vector4(10, 10, 10, 10));
+        public static Sprite Medallion => Get("medallion", Vector4.zero);
+        public static Sprite GlowRing => Get("glow_ring", Vector4.zero);
+        public static Sprite GlowLine => Get("glow_line", Vector4.zero);
+        public static Sprite GlowBox => Get("glow_box", new Vector4(24, 24, 24, 24));
+        public static Sprite Disc => Get("disc", Vector4.zero);
+
+        /// <summary>The glow ring's ring sits on a medallion's rim when drawn this many times the medallion's size.</summary>
+        public const float GlowRingScale = 128f / 96f;
+
+        /// <summary>The slot glow hugs a slot when drawn this much bigger on every side (make_sheet_ui.py GLOW_BOX_INSET).</summary>
+        public const float GlowBoxInset = 14f;
+
+        /// <summary>
+        ///     Gives an image the game's own panel background: the inventory's <c>Bkg</c> (the object EquipmentAndQuickSlots
+        ///     also copies), with its sprite, material and colour (user, 2026-10-30: "use Valheim's own UI" for panels). A
+        ///     darker copy for boxes on a panel (<paramref name="inset" />). Our look-alike art when the game's can't be found.
+        /// </summary>
+        public static void StyleAsGamePanel(UnityEngine.UI.Image image, bool inset = false)
+        {
+            UnityEngine.UI.Image source = null;
+            var gui = InventoryGui.instance;
+            if (gui && gui.m_player)
+            {
+                var bkg = gui.m_player.Find("Bkg");
+                source = bkg ? bkg.GetComponent<UnityEngine.UI.Image>() : null;
+            }
+            if (source && source.sprite)
+            {
+                image.sprite = source.sprite;
+                image.type = source.type;
+                image.material = source.material;
+                image.pixelsPerUnitMultiplier = source.pixelsPerUnitMultiplier;
+                var c = source.color;
+                image.color = inset ? new Color(c.r * 0.45f, c.g * 0.42f, c.b * 0.4f, Mathf.Min(1f, c.a * 1.1f)) : c;
+                return;
+            }
+            image.sprite = inset ? Inset : Panel;
+            image.type = UnityEngine.UI.Image.Type.Sliced;
+            image.material = null;
+            image.color = image.sprite ? Color.white : inset ? new Color(0.09f, 0.06f, 0.04f, 0.72f) : new Color(0.2f, 0.15f, 0.1f, 0.9f);
+        }
 
         /// <summary>The arch pieces stretch only along their straight sides: the arch on top and the pedestal stay fixed.</summary>
         public static readonly Vector4 ArchBorder = new Vector4(134, 72, 134, 147);
         public static Sprite ArchBack => Get("arch_back", ArchBorder);
         public static Sprite ArchRim => Get("arch_rim", ArchBorder);
 
-        private static Sprite Get(string name, Vector4 border, bool repeat = false)
+        /// <summary>
+        ///     A placeholder skill or class icon by id (<c>Assets/Skills/&lt;id&gt;.rgba</c>, made by
+        ///     <c>tools/make_skill_icons.py</c>), or null when there is none. Used by the classes demo and when the Orlog
+        ///     plugin gives no icon.
+        /// </summary>
+        public static Sprite SkillIcon(string id)
         {
-            if (Cache.TryGetValue(name, out var cached))
+            return string.IsNullOrEmpty(id) ? null : Get(id, Vector4.zero, false, SkillsPrefix, false);
+        }
+
+        private const string SkillsPrefix = "CraftingOverhaul.Assets.Skills.";
+
+        private static Sprite Get(string name, Vector4 border, bool repeat = false, string prefix = ResourcePrefix, bool warnMissing = true)
+        {
+            string key = prefix + name;
+            if (Cache.TryGetValue(key, out var cached))
             {
                 return cached;
             }
             Sprite sprite = null;
             try
             {
-                var texture = Load(name, repeat);
+                var texture = Load(prefix + name + ".rgba", name, repeat, warnMissing);
                 if (texture)
                 {
                     // 100 pixels per unit, as the game's canvas: one texel is one UI unit.
@@ -52,18 +106,21 @@ namespace CraftingOverhaul.CharacterSheet
             {
                 Jotunn.Logger.LogWarning($"Could not load the character sheet's '{name}' art: {ex.Message}");
             }
-            Cache[name] = sprite;
+            Cache[key] = sprite;
             return sprite;
         }
 
-        private static Texture2D Load(string name, bool repeat)
+        private static Texture2D Load(string resource, string name, bool repeat, bool warnMissing)
         {
             byte[] bytes;
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ResourcePrefix + name + ".rgba"))
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
             {
                 if (stream == null)
                 {
-                    Jotunn.Logger.LogWarning($"Character sheet art '{name}' is missing from the DLL.");
+                    if (warnMissing)
+                    {
+                        Jotunn.Logger.LogWarning($"Character sheet art '{name}' is missing from the DLL.");
+                    }
                     return null;
                 }
                 using (var memory = new MemoryStream())
