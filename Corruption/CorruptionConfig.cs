@@ -41,6 +41,12 @@ namespace Corruption
         public static ConfigEntry<int> CorruptedEssencesMax;
         public static ConfigEntry<int> CorruptedShardsMin;
         public static ConfigEntry<int> CorruptedShardsMax;
+        public static ConfigEntry<float> SummonInterval;
+        public static ConfigEntry<int> SummonCountMin;
+        public static ConfigEntry<int> SummonCountMax;
+        public static ConfigEntry<int> SummonsPerPlayer;
+        public static ConfigEntry<int> SummonMinStars;
+        public static ConfigEntry<int> SummonMaxStars;
         public static ConfigEntry<float> CorruptedTintStrength;
         public static ConfigEntry<int> TalismanSlots;
         public static ConfigEntry<float> ProvokeSeconds;
@@ -125,6 +131,19 @@ namespace Corruption
                 AdminOnly("Fewest corruption shards a corrupted boss drops (every kill).", new AcceptableValueRange<int>(0, 50)));
             CorruptedShardsMax = config.Bind(CorruptedSection, "ShardsMax", 5,
                 AdminOnly("Most corruption shards a corrupted boss drops.", new AcceptableValueRange<int>(0, 50)));
+            // Summons: the boss's army raid creatures (user), arriving like a raid; interval and count from the design doc.
+            SummonInterval = config.Bind(CorruptedSection, "SummonInterval", 30f,
+                AdminOnly("Seconds between a corrupted boss's summons (design: every 30 s). 0 = no summons.", new AcceptableValueRange<float>(0f, 600f)));
+            SummonCountMin = config.Bind(CorruptedSection, "SummonCountMin", 2,
+                AdminOnly("Fewest creatures per summon (design: 2-3).", new AcceptableValueRange<int>(0, 20)));
+            SummonCountMax = config.Bind(CorruptedSection, "SummonCountMax", 3,
+                AdminOnly("Most creatures per summon.", new AcceptableValueRange<int>(0, 20)));
+            SummonsPerPlayer = config.Bind(CorruptedSection, "SummonsPerPlayer", 4,
+                AdminOnly("Most summons alive at once, per player near the boss (user, 2026-10-30: 4 per player).", new AcceptableValueRange<int>(1, 50)));
+            SummonMinStars = config.Bind(CorruptedSection, "SummonMinStars", 1,
+                AdminOnly("Fewest stars a summon has (user, 2026-10-30: at least 1).", new AcceptableValueRange<int>(0, 5)));
+            SummonMaxStars = config.Bind(CorruptedSection, "SummonMaxStars", 2,
+                AdminOnly("Most stars a summon can roll. Above 2 stars is for elite and champion packs (user, later).", new AcceptableValueRange<int>(0, 5)));
 
             LootEnabled = config.Bind(LootSection, "Enabled", true,
                 AdminOnly("Creatures drop Magic and Rare items with rolled affixes (chances: Corruption/Data/drop_chances.csv and " +

@@ -9,7 +9,7 @@ namespace Corruption.Content
     ///     Corrupted bosses (design phase 6), the parts the design fully specifies: a corrupted boss hits harder,
     ///     takes less damage, drops more essences and guaranteed shards, and is tinted red. The flag lives on the
     ///     boss's ZDO, so every player's game agrees. Corrupted offerings (<see cref="CorruptedOfferings" />) summon
-    ///     them; <c>co_corrupt</c> corrupts the nearest boss for testing. The summons come later.
+    ///     them; <c>co_corrupt</c> corrupts the nearest boss for testing. Their summons: <see cref="CorruptedSummons" />.
     /// </summary>
     internal static class CorruptedBosses
     {
@@ -42,7 +42,7 @@ namespace Corruption.Content
             CommandManager.Instance.AddConsoleCommand(new CorruptCommand());
         }
 
-        /// <summary>Every boss gets a small watcher that tints it once it's corrupted, on every player's game.</summary>
+        /// <summary>Every boss gets a small watcher that tints it once it's corrupted, on every player's game, and the summoner.</summary>
         [HarmonyPatch(typeof(Character), nameof(Character.Awake))]
         private static class AddLook
         {
@@ -53,6 +53,10 @@ namespace Corruption.Content
                     if (__instance.IsBoss() && !__instance.GetComponent<CorruptedLook>())
                     {
                         __instance.gameObject.AddComponent<CorruptedLook>();
+                    }
+                    if (__instance.IsBoss() && !__instance.GetComponent<CorruptedSummons>())
+                    {
+                        __instance.gameObject.AddComponent<CorruptedSummons>();
                     }
                 });
             }

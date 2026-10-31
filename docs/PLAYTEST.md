@@ -25,8 +25,11 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 6. No red errors in the console.
 
 ### 1f. Corrupted offerings
-Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
-1. **Icons re-check:** the Corrupted ancient seed is the red three-pointed seed, the Corrupted malicious blood the red blob (they were swapped).
+~~Eikthyr, Moder (and a mix refused), the Queen, Kall's phases, the fixed seed and blood icons~~ (passed 2026-10-30).
+
+### 1g. Corrupted boss summons
+Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the boss dies.
+1. **Re-check after the fix:** `spawn Eikthyr`, `co_corrupt`, then walk away (out of their reach) and watch: the summons and Eikthyr don't attack each other, and the summons ignore other creatures. They still come for you.
 
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.

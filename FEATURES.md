@@ -21,7 +21,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs`, `Corruption/Assets/map_icon_*.rgba`, `tools/make_map_icons.py` | 2026-10-29 |
 | [Rip waves and loot (step B)](#rip-waves-and-loot-step-b) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `MinStars`, `MaxStars`, `WaveMultiplier`, `ChestShardsMin`, `ChestShardsMax`, `KillShardMultiplier`; table `Corruption/Data/rip_loot.csv` | `Corruption/Content/RipWaves.cs`, `Corruption/Content/Maddened.cs`, `Corruption/Content/RipLoot.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Rules/RipLootTable.cs`, `Corruption/Data/rip_loot.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone) | Corruption | Tested in-game (single player) | — (heart distance from the game data and the user; recipe in code) | `Corruption/Content/CorruptedWishbone.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/CorruptionPlugin.cs`, `CraftingOverhaul.Tests/MapListTests.cs`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
-| [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
+| [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`, `SummonInterval`, `SummonCountMin`, `SummonCountMax`, `SummonsPerPlayer`, `SummonMinStars`, `SummonMaxStars`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/CorruptedSummons.cs`, `Corruption/Content/BossArmies.cs`, `Corruption/Content/Maddened.cs` | 2026-10-31 |
 | [Corrupted offerings](#corrupted-offerings) | Combat | Tested in-game (single player) | — (table `Corruption/Data/offerings.csv`) | `Corruption/Content/CorruptedOfferings.cs`, `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/OfferingTable.cs`, `Corruption/Data/offerings.csv`, `Corruption/Assets/offering_icon_*.rgba`, `tools/make_offering_icons.py`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/OfferingTableTests.cs` | 2026-10-30 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Currency and Maps tabs](#currency-and-maps-tabs) | UI | Tested in-game (single player) | Corruption: `9 - Inventory Tabs` → `Enabled` | `Corruption/Content/InventoryTabs.cs`, `Corruption/Content/InventoryTabsUi.cs`, `Corruption/Rules/TabRules.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/Texts.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TabRulesTests.cs` | 2026-10-29 |
@@ -624,7 +624,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 | Target | Patch | Purpose |
 |---|---|---|
 | `Character.Awake` | Postfix | Restores maddened behaviour on creatures loaded with the flag |
-| `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them |
+| `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them. Corrupted boss summons are enemies of players only |
 | `CharacterDrop.GenerateDropList` | Postfix (the existing shard one) | Double starred shard chances for rip creatures |
 
 New status effect `SE_CorruptionMaddened` (built from `SE_Dvergr_buff` and `Potion_hasty` at startup). The rip heart gets a wave spawner; the chest is the vanilla chest prefab itself.
@@ -691,7 +691,7 @@ New item `CorruptedWishbone` (cloned from `Wishbone`, tinted). New status effect
 **Known issues:**
 - **Play-test 2026-10-30 (single player):** Eikthyr (one corrupted trophy summons him corrupted), Moder (all egg cups corrupted; a mix refused) and the Queen (her door with the corrupted Sealbreaker) passed. **Bug, fixed:** the Ancient seed and Malicious blood icons were swapped (the renders were matched to the wrong items when saved). **Kall's phases stay corrupted** (tested 2026-10-30 with `spawn FrozenKing`, `co_corrupt`, `killall`: phases 2 and 3 came up red).
 - Kall's phases: the next phase is corrupted when a corrupted phase dies and a boss named like its next phase (`FrozenKing_p2`, `_p3`) appears on the same game.
-- The fixed seed and blood icons are still to be seen in game.
+- The fixed seed and blood icons were re-checked in game 2026-10-30: correct.
 - The Queen: assumes she is in the same game location as her door (checked with the game's own location lookup). The log says how many bosses were corrupted when the door opened.
 - The corrupted bosses' summons (maddened adds) and extra particles come later.
 
@@ -719,6 +719,7 @@ New items `Corrupted<Item>` (cloned from the vanilla item, tinted red). Door dat
 
 **What it does in-game:** a corrupted boss is the vanilla boss, tinted red, that:
 - deals 1.5× damage and takes 0.7× damage (health unchanged), as the design's starting values;
+- **summons** (2026-10-30): every 30 s while players are within 96 m (the army raid's range), 2–3 creatures of the boss's own **army raid** (the same as its biome's rip waves) arrive like a raid, 40–80 m from a player. They're maddened and have **1–2 stars** (user: at least 1; above 2 is for elite packs, later). At most **4 alive per player** near the boss (user). Kall's phases share their summons. Summons are the boss's allies: they go for **players only**, never their boss, each other or other creatures, and can't damage them (user, 2026-10-31). The log names the army and each summon;
 - drops 2–3 of its essence instead of 1, and 3–5 corruption shards on every kill, plus its normal vanilla drops.
 
 The flag is stored on the boss itself, so every player sees the same corrupted boss.
@@ -733,11 +734,16 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 | `DamageTaken` | `0.7` | Damage multiplier on hits the boss takes |
 | `EssencesMin` / `EssencesMax` | `2` / `3` | Essences per corrupted kill (replaces the normal amount) |
 | `ShardsMin` / `ShardsMax` | `3` / `5` | Shards per corrupted kill, every kill |
+| `SummonInterval` | `30` | Seconds between summons (design). 0 = no summons |
+| `SummonCountMin` / `SummonCountMax` | `2` / `3` | Creatures per summon (design) |
+| `SummonsPerPlayer` | `4` | Most summons alive per player near the boss (user) |
+| `SummonMinStars` / `SummonMaxStars` | `1` / `2` | Summons' stars (user: at least 1; above 2 is for elite packs later) |
 | `CorruptedBossTintStrength` (Look) | `0.6` | Per player. The Riftforge's tint strength, which was tested in-game |
 
 **Known issues:**
 - **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. Since 2026-10-30, corrupted offerings summon them too (see [Corrupted offerings](#corrupted-offerings)).
-- The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet: which particle prefab to reuse comes from the game data with the summons.
+- **Play-test 2026-10-31 (single player, Eikthyr and Bonemass): passed.** Summons arrive every 30 s from the army, 2–3 at a time, up to 4 alive alone, and stop when the boss dies. **Fixed after the test:** summons attacked Eikthyr when the player was away and he attacked them (maddened creatures treat everything as an enemy); now summons and their boss are allies and summons target players only. To re-check. The Ashlands army's charred spawner stones aren't summoned (only creatures count towards the limit).
+- The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 
@@ -959,10 +965,12 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-10-31
+- **Corrupted boss summons tested in-game; summons fight players only:** summons and their boss no longer target or damage each other (user); they also leave other creatures alone.
 - **Play-test 2026-10-31 (single player):** player-stat affixes (max health/stamina/eitr, carry weight, movement, regen, resistances), the bonus shown next to item-stat lines and the Odin unlock passed, no errors in the log. Weapon skill, life steal and crafting an Odin item not tried yet.
 - **Odin items unlocked (new, untested):** the Odin cape, helmet and tankard were gated behind a Steam entitlement (tag "beta"); Corruption clears the tag, so everyone can equip, craft and loot them (user). The earlier change that left them out of the loot was reverted.
 
 ### 2026-10-30
+- **Corrupted boss summons (new, untested):** every 30 s a corrupted boss calls 2–3 creatures of its army raid, arriving like a raid; maddened, 1–2 stars, at most 4 alive per player near it. Rip waves and summons now share their spawning code (`BossArmies`).
 - **Loot step 2: player-stat affixes work** (untested): max health/stamina/eitr, health and stamina regen, movement speed (worn and held, capped at 35%), carry weight, the four resistances and all resistances (75% per element), weapon skill levels, life steal (capped at 10%). Caps read from `affix_caps.csv` (now compiled in).
 - **Currency and Maps tabs tested in-game** (single player): every step passed after the drag fix.
 - **Currency and Maps tabs, second re-test:** death and gravestone, relogging and full-bag pickup pass. The drag fix guarded the wrong method (`UpdateInventory`); the cancel is in `UpdateContainer`. Fixed; re-test.
@@ -972,7 +980,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 - **Resistance ranges settled** (user): fire, frost, poison and lightning 10–50%, all resistances 2–10%. Every gear affix now has its range.
 - **Loot: ground names and upgrading tested in-game.** Fire, frost and poison resistance ranges 10–50% from the new `co_dump` (gear that makes you Resistant; proposed); lightning and all resistances have no gear source (asked). Dump files `item_details.csv` and `status_effects.csv` refreshed with resistances.
 - **Fix: loot names on the ground** showed the base item name: the game localizes the hover text before our patch, which looked for the untranslated name. To re-test. Play-test results for loot step 1 recorded (drops, combat affixes, resonant lines, no errors passed).
-- **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons.
+- **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons (re-checked in game).
 - **Corrupted offerings (new, untested):** every boss's offering has a corrupted version, crafted at the Riftforge (the full offering + 1 shard at altars, 1 item + 1 shard per stand at Moder's, Yagluth's and Fader's altars, Sealbreaker + 1 shard for the Queen's door), with icons from the user's renders. They summon the boss corrupted; Kall's later phases stay corrupted.
 - **Levels: pace fix re-tested** (single player): "pace feels better". Only sharing with a friend is left to test.
 - **Levels: slower early levels** (after the play-test, user's choice): a creature above your level now gives your own level's XP + classic WoW's bonus (+5% per level, max +20%) instead of its full XP (D2). Level 2 takes about 8 greydwarves instead of 3. Lower creatures keep D2's cut. Untested in-game (158 tests).
