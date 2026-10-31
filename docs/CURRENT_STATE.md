@@ -47,8 +47,8 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 |---|---|
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red (re-check). Still to test: a second player sees the pings |
 | Rip waves pacing (2026-10-29) | Passed 2026-10-29: busier waves feel right; maddened creatures fight each other |
-| **Odin items unlocked** (2026-10-31, branch `claude/affixes-loot`) | `PLAYTEST.md` → Odin items: equip, craft, no "DLC required" |
-| **Loot step 2: player-stat affixes** (2026-10-30, branch `claude/affixes-loot`) | `PLAYTEST.md` → Session 3b: max health/stamina/eitr, carry weight, movement, regen, resistances, weapon skill, life steal |
+| **Odin items unlocked** (2026-10-31, branch `claude/affixes-loot`) | Equip and unlock passed 2026-10-31; crafting one not tried |
+| **Loot step 2: player-stat affixes** (2026-10-30, branch `claude/affixes-loot`) | Passed 2026-10-31 (single player): max health/stamina/eitr, carry weight, movement, regen, resistances. Not tried: weapon skill, life steal; multiplayer |
 | **Loot system step 1** (2026-10-29, merged in PR #11) | Passed 2026-10-29: Rare and Magic names, tooltip lines with ranges, armour/damage/lightning numbers, natural drops, combat affixes, resonant line, no errors. Ground names (fixed), upgrading, durability and repair passed 2026-10-30: **every single-player step passed**. Still: multiplayer (each player's own roll); bigger backpacks after the server setting |
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, step 5 (everything else verified 2026-10-29) |
@@ -57,7 +57,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 ## Not built (proposed)
 
-Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Loot system: step 1 tested in single player and merged (drops, tooltips, item-stat affixes); step 2 (player-stat affixes) built, untested; orbs, uniques, personal-loot locks, loot beams, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
+Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted bosses, loot/affixes/orbs/uniques, scars and world events, power wheel and inventory, skill rework), storage and quests, combat mechanics, **classes, levels and skill trees** (D2 Amazon first by group vote, then Barbarian, maybe Paladin; design only, branch `claude/class-skills`, [`class-design.md`](class-design.md)). Loot system: step 1 tested in single player and merged (drops, tooltips, item-stat affixes); step 2 (player-stat affixes) tested in single player apart from weapon skill and life steal; orbs, uniques, personal-loot locks, loot beams, gathering and proc effects still to build. Status per system: [`GAME_DESIGN.md`](GAME_DESIGN.md#tracks-and-status). Affixes ([`AFFIX_RULES.md`](AFFIX_RULES.md)): gathering tool pools specified by the user, general gear pool still a draft; both are built with the loot system (phase 7).
 
 ## Outstanding bugs and open issues
 
