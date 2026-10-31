@@ -169,6 +169,8 @@ Affixes are the Path of Exile part: spend extra shards at the bench to roll modi
 | 3 | 2 extra shards | 3-star creatures appear (above vanilla cap) |
 | 4 | 3 extra shards + a boss trophy | 3-star packs, a maddened mini-boss, best loot |
 
+**Elite and champion packs** *(user, 2026-10-30; to design when stars go above 2)*: every creature above 2 stars is an elite or a champion, as in Diablo and Path of Exile (packs with their own modifiers). Until then rip waves and boss summons stop at 2 stars. Details (pack sizes, modifiers, names, loot) are still to be agreed.
+
 ### Affix pool (roll 1–3)
 
 | Affix | Vanilla effect reused | Danger | Reward |
@@ -199,11 +201,13 @@ A corrupted boss is the vanilla boss with its numbers turned up and its summons 
 |---|---|---|
 | Hits harder | Damage multiplier on all attacks | 1.5x |
 | Takes less damage | Armour or damage-taken multiplier | 0.7x damage taken |
-| Summons | Periodic spawn of the boss's own biome creatures, maddened | Every 30 s, 2–3 creatures |
+| Summons | Periodic spawn of the boss's own biome creatures, maddened | Every 30 s, 2–3 creatures. *Decided 2026-10-30 (user): the creatures are the boss's army raid (the same as its biome's rip waves); they arrive like a raid, 40–80 m from a player; at least 1 star (at most 2, see elite packs); at most 4 alive per player within the raid's range of the boss. Built: `FEATURES.md` → Corrupted bosses.* |
 | Look | Red tint via material colour (the shard's red; was purple, changed 2026-10-28), plus Bonemass poison cloud or Ashlands ember particles | — |
 | Health | Unchanged in v1; damage reduction already lengthens the fight | 1.0x |
 
 ### Summons by boss (all already in the game)
+
+*Superseded 2026-10-30 (user): each boss summons its army raid instead (Eikthyr: boars, necks; the Elder: greydwarfs, greylings, shamans, brutes; Bonemass: draugr, skeletons; Moder: drakes; Yagluth: fulings, brutes, shamans; the Queen: gjall, ticks, seekers, broods, soldiers; Fader: the Charred and twitchers; Kall: elakingar and Jötnar). The original list:*
 
 - Eikthyr: boars, necks
 - The Elder: greydwarfs, greydwarf brutes

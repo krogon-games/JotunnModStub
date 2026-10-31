@@ -8,7 +8,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - Orlog (the classes plugin, new 2026-10-30) compiles the same way.
-- `dotnet test CraftingOverhaul.Tests`: **211 passed, 0 failed** (2026-10-31, after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **218 passed, 0 failed** (2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-28, single player, with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded (talismans working as intended after two charm fixes).
 
 ## Implemented
@@ -92,7 +92,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 
 ## Next actionable tasks
 
-0. **Corrupted offerings** (phase 6): Eikthyr, Moder, the Queen and Kall's phases passed 2026-10-30; swapped seed/blood icons fixed (re-check); PR into `master`. Map icons merged (PR #5). **Rip waves at least 1 star** (`MinStars`, 2026-10-29): tested, "definitely more challenging"; PR into `master`.
+0. **Corrupted boss summons** tested 2026-10-31; fixed so summons fight players only (re-check, `PLAYTEST.md` → 1g). Corrupted offerings merged (PR #10). Map icons merged (PR #5). **Rip waves at least 1 star** (`MinStars`, 2026-10-29): tested, "definitely more challenging"; PR into `master`.
 1. **Rips step B and the heart search passed in single player (2026-10-29)**; merged into `master` (PR #4). Ping colour re-checked (more red, stops when the heart dies); multiplayer tests with the group. Still open from the design: checking the landing area once loaded (locations, water).
 2. **Gear affix ranges** for the remaining families, with the user's rule, from `status_effects.csv` and `item_details.csv`.
 3. **Corrupted offerings** (phase 6) from `altars.csv`, and the corrupted Sealbreaker.

@@ -23,6 +23,7 @@ namespace Corruption.Content
 
         private static readonly Color Red = new Color(0.7f, 0.09f, 0.05f);
         private static readonly HashSet<Character> Active = new HashSet<Character>();
+        private static readonly HashSet<Character> Summons = new HashSet<Character>();
         private static int s_effectHash;
         private static SE_Stats s_effect;
         private static bool s_sourcesCopied;
@@ -30,6 +31,12 @@ namespace Corruption.Content
         public static bool IsMaddened(Character character)
         {
             return character && Active.Contains(character);
+        }
+
+        /// <summary>A corrupted boss's summon (its ZDO names the boss that called it).</summary>
+        public static bool IsSummon(Character character)
+        {
+            return character && Summons.Contains(character);
         }
 
         /// <summary>Makes a creature maddened. Takes ownership first: only the owner may change its data.</summary>
@@ -117,7 +124,9 @@ namespace Corruption.Content
 
         /// <summary>
         ///     Maddened creatures are everyone's enemy and everyone is theirs. Runs after the talisman patch, so a
-        ///     talisman can't make a maddened creature ignore its wearer.
+        ///     talisman can't make a maddened creature ignore its wearer. Except a corrupted boss's summons: they fight
+        ///     players only, never their boss, each other or other creatures (user, 2026-10-31). The game uses this
+        ///     check both for targeting and for who melee, area and projectile hits can damage.
         /// </summary>
         [HarmonyPatch(typeof(BaseAI), nameof(BaseAI.IsEnemy), typeof(Character), typeof(Character))]
         private static class Enemies
@@ -125,7 +134,18 @@ namespace Corruption.Content
             [HarmonyPriority(Priority.Last)]
             private static void Postfix(Character a, Character b, ref bool __result)
             {
-                if (__result || a == b || !a || !b)
+                if (a == b || !a || !b)
+                {
+                    return;
+                }
+                bool summonA = IsSummon(a);
+                bool summonB = IsSummon(b);
+                if (summonA || summonB)
+                {
+                    __result = summonA ? b.IsPlayer() && !summonB : a.IsPlayer();
+                    return;
+                }
+                if (__result)
                 {
                     return;
                 }
@@ -144,6 +164,11 @@ namespace Corruption.Content
             {
                 m_character = GetComponent<Character>();
                 Active.Add(m_character);
+                var zdo = m_character && m_character.m_nview ? m_character.m_nview.GetZDO() : null;
+                if (zdo != null && zdo.GetString(CorruptedSummons.KeySummonedBy, "").Length > 0)
+                {
+                    Summons.Add(m_character);
+                }
                 Safe.Run("make a creature maddened", () =>
                 {
                     Corrupted.Tint(gameObject, Red, CorruptionConfig.CorruptedTintStrength.Value);
@@ -162,6 +187,7 @@ namespace Corruption.Content
             private void OnDestroy()
             {
                 Active.Remove(m_character);
+                Summons.Remove(m_character);
             }
 
             /// <summary>The owner (who simulates the creature) keeps the effect on, also after ownership changes.</summary>
