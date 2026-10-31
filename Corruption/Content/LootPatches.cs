@@ -282,7 +282,7 @@ namespace Corruption.Content
     }
 
     /// <summary>
-    ///     Knockback and backstab affixes. A hit's push force and backstab bonus come from the weapon's shared data, so
+    ///     Knockback, backstab and life steal affixes. A hit's push force and backstab bonus come from the weapon's shared data, so
     ///     they are raised on the attacker's game, where the hit is made, before it is sent to the target's owner.
     /// </summary>
     [HarmonyPatch(typeof(Character), nameof(Character.Damage))]
@@ -299,6 +299,16 @@ namespace Corruption.Content
                 var weapon = Player.m_localPlayer.GetCurrentWeapon();
                 hit.m_pushForce *= 1f + Loot.Total(weapon, "knockback_percent") / 100f;
                 hit.m_backstabBonus *= 1f + Loot.Total(weapon, "backstab_percent") / 100f;
+
+                // Life steal: a share of the hit's combat damage comes back as health, capped (affix_caps.csv). Worked
+                // out on the attacker's game, before the target's armour and resistances, which only its owner knows.
+                float steal = AffixTotals.Cap(Loot.Total(weapon, "life_steal"), "life_steal", Loot.Caps) / 100f;
+                if (steal > 0f && hit.GetAttacker() != null)
+                {
+                    var d = hit.m_damage;
+                    float damage = d.m_blunt + d.m_slash + d.m_pierce + d.m_fire + d.m_frost + d.m_lightning + d.m_poison + d.m_spirit;
+                    Player.m_localPlayer.Heal(damage * steal);
+                }
             });
         }
     }
