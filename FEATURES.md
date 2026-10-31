@@ -1088,9 +1088,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 
 ## Changelog
 
-
 ### 2026-11-01
 - **Fix: buttons clicked twice** (play-test 2026-10-31): Jötunn's buttons played the game's "select" sound on mouse down as well as the click; our buttons (skills panel, + buttons, tabs, Skills, recipe grouping, Corruption's Bag/Currency/Maps) now play one click. Untested.
+
 ### 2026-10-31
 - **Attributes and class eitr tested in-game** (single player): every step passed, including the classes UI with real data. Noted for the UI: double click sounds when spending points.
 - **Classes UI and HUD bars tested in-game** (single player, demo; user: "everything looks really good now"): quick slots under the cross, details pane, build box, blocked labels and both off switches pass. Only the adrenaline bar is still untried.
