@@ -139,7 +139,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | | Lightning Strike | The thrust releases chain lightning to nearby enemies | later |
 | | Lightning Fury | The javelin bursts into lightning bolts on impact | later |
 
-19 skills in v1, 10 later, none dropped. With the tree rule in §4, a skill built before its prerequisite (for example Strafe before Guided Arrow) opens by level alone.
+19 skills built in the first version (18 `v1` and Penetrate `reworked`), 11 later, none dropped (corrected 2026-11-01: the earlier "10 later" was a miscount). With the tree rule in §4, a skill built before its prerequisite (for example Strafe before Guided Arrow) opens by level alone.
 
 **Decoy and Valkyrie look (user, 2026-10-30): a tinted clone of the player character.** Proposed approach, to prove in a prototype: clone the player prefab without the `Player` part, as a creature on the players' side (like `Skeleton_Friendly`) with monster AI; its equipment visuals (`VisEquipment`, synced through the object's ZDO) copy the caster's body, hair and gear, and a tint marks it (`Corrupted.Tint`'s method). The player model already plays every humanoid attack, so the Valkyrie can fight with the vanilla attacks of the weapon she holds. Risk: parts of the player prefab may expect the `Player` component; other mods have built human NPCs on the player model (unverified which and how).
 

@@ -95,13 +95,14 @@ namespace Orlog.Content
             return "";
         }
 
-        /// <summary>Gives back every spent point (D2's respec).</summary>
+        /// <summary>Gives back every spent stat and skill point (D2's respec).</summary>
         public static void Respec(Player player)
         {
             foreach (var key in SpentKeys)
             {
                 player.m_customData.Remove(key);
             }
+            SkillPoints.Respec(player);
             Changed();
         }
 

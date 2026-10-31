@@ -100,6 +100,19 @@ Build the whole solution from `claude/class-skills`; in `[5 - Classes UI]` set `
 8. `co_classes_stone` isn't needed any more for the window (it's the demo's).
 9. No red errors in the console.
 
+## Orlog skill tree and skill points (branch `claude/class-skills`, about 10 minutes)
+
+Same build; `Demo = false`. The skills don't act yet: this checks the tree and spending.
+1. `orlog_class Amazon` (or use the stone), then `orlog_level 12`. `orlog_info`: 11 skill points to spend.
+2. Open the skills panel: the Amazon's real tree in three tabs; the 11 later skills (Guided Arrow, Strafe, Decoy, Valkyrie, …) greyed as coming later.
+3. Try Multiple Shot first: refused, "Needs Magic Arrow". Spend on Magic Arrow, then Multiple Shot works.
+4. Spend on Dodge (level 6) until refused: it holds 7 at level 12 ("Needs level 13" for the 8th).
+5. A later skill: "Coming later". Exploding Arrow (level 12, needs Fire Arrow and Multiple Shot): refused until both have a point.
+6. Hover a skill: its description, next level and eitr cost (Multiple Shot: 4 at level 1).
+7. `orlog_respec`: skill points back (11). Log out and in: spent points kept.
+8. `orlog_skill MagicArrow 2` spends from the console too.
+9. No red errors in the console.
+
 ## Classes UI (merged into `master`, 2 minutes)
 
 Everything else passed 2026-10-31 ("everything looks really good now"). Left: with `[5 - Classes UI]` → `Demo = true`:

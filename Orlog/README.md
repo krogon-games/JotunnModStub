@@ -12,7 +12,7 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - "+N XP" in the top-left corner for each kill (can be turned off); "Level N" and the skill level-up effect on a new level.
 - **Attributes** (with a class; only the Amazon so far): spend 5 stat points per level on Strength (+1% melee and thrown damage each), Dexterity (+1% bow damage), Vitality (+1.5 health, +0.89 stamina) and Energy (+1.5 eitr). Each level also gives +1 health, +0.89 stamina and +1.5 eitr.
 - **Eitr without eitr food:** a class starts with 15 eitr, which vanilla regeneration refills.
-- Skill points are counted (1 per level) but can't be spent yet.
+- **Skill tree:** the Amazon's 30 skills in Diablo 2's three tabs; spend 1 skill point per level on the 19 built ones (D2's rules: tiers, prerequisites, 20 points, one more per level past the requirement). The skills don't act yet; their effects come one by one.
 
 - **The Orlog stone** in the spawn area, among the boss trophy stones: use it to choose your class (only the Amazon so far). With CraftingOverhaul a window opens; without it, use the stone twice.
 
@@ -42,4 +42,5 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - `orlog_level <level>`: set your level.
 - `orlog_class Amazon` (or `none`): set the class directly (a cheat; players use the Orlog stone).
 - `orlog_stat <strength|dexterity|vitality|energy> [points]`: spend stat points, until the UI exists (no `devcommands` needed).
-- `orlog_respec`: take back all spent stat points.
+- `orlog_skill <skill id> [points]`: spend skill points (no `devcommands` needed).
+- `orlog_respec`: take back all spent stat and skill points.

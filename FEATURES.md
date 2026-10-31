@@ -33,6 +33,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
 | [Attributes and class eitr](#attributes-and-class-eitr) | Combat | Tested in-game (single player) | Orlog: `3 - Attributes` → `HealthPerD2Life`, `StaminaPerD2Stamina`, `EitrStart`, `EitrPerLevel`, `EitrPerEnergy`, `DamagePerStrength`, `DamagePerDexterity`; table `Orlog/Data/classes.csv`; console `orlog_class`, `orlog_stat`, `orlog_respec` | `Orlog/Content/Attributes.cs`, `Orlog/Rules/AttributeRules.cs`, `Orlog/Data/classes.csv`, `Orlog/Content/Commands.cs`, `Orlog/Content/Progress.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogAttributeTests.cs` | 2026-10-30 |
 | [Orlog stone and class choice](#orlog-stone-and-class-choice) | Combat | Built, untested | — (the stone is placed by itself; `orlog_class` stays as a cheat) | `Orlog/Content/OrlogStone.cs`, `Orlog/Rules/StonePlacement.cs`, `Orlog/Content/Texts.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Api.cs`, `Orlog/Safe.cs`, `CraftingOverhaul.Tests/OrlogStoneTests.cs` | 2026-11-01 |
+| [Skill tree and skill points](#skill-tree-and-skill-points) | Combat | Built, untested | Orlog: `1 - Levels` → `SkillPointsPerLevel`, `MaxSkillPoints`, `SkillPace`; table `Orlog/Data/amazon_skills.csv`; console `orlog_skill` | `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Data/amazon_skills.csv`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Content/Attributes.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/amazon_levels.csv`, `CraftingOverhaul.Tests/OrlogSkillTests.cs` | 2026-11-01 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
 There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
@@ -1102,6 +1103,26 @@ Unit-tested (`OrlogStoneTests`: 4 tests: widest gap, wrap-around, average radius
 - `Game.Start` (postfix): registers the stone's two server messages and resets the placement check for the new world.
 - No other patch: the stone is our own object (`Hoverable`, `Interactable`).
 
+## Skill tree and skill points
+
+*Orlog. Built 2026-11-01; not yet tested in-game. Roadmap task C2. The skills don't do anything yet: their effects come one by one (C3 onwards).*
+
+**What it does:** the Amazon's real tree in the classes UI's skills panel, and spending skill points on it, Diablo 2 style.
+- **The tree:** `Orlog/Data/amazon_skills.csv`, made by `tools/make_orlog_tables.py` from D2's tree (`data/d2-reference/amazon.csv`: tab, row, column, required level, prerequisites, mana) and our statuses, kinds, weapons and Valheim descriptions (`class-design.md` §5): 19 built (18 `v1` and Penetrate `reworked`), 11 `later`.
+- **Points:** 1 per level (from level 2, D2), at most 20 per skill (`MaxSkillPoints`). D2's pace (`SkillPace`): a skill holds at most one more point per level past its required level (Dodge, level 6: 1 point at level 6, 2 at level 7). A skill opens at its tier's level (1/6/12/18/24/30). A **built** prerequisite needs a point first; a `later` one is skipped (`class-design.md` §4). Later skills can't take points ("Coming later"). Refusals give their reason ("Needs level 12", "Needs Magic Arrow", "Maxed", "No skill points").
+- **Eitr cost** shown per skill: D2's mana at the skill's level (Multiple Shot 4, +1 per level; Magic Arrow 1.5, free from level 13). The class eitr pool is D2's mana 1:1, so D2's costs keep D2's balance.
+- Saved with the character (custom data `orlog_skills`). `orlog_respec` returns skill points with the stat points. `orlog_skill <id> [points]` spends from the console.
+- `Orlog.Api` now answers `GetSkillIdsJson`, `GetSkillInfoJson` (every brief field; description and next level text; the effective level is the hard points until +skills exist) and `SpendSkillPoint`; `GetCharacterJson`'s `skillPoints` is the unspent count.
+- New reference data for the next steps: `data/d2-reference/amazon_levels.csv`, every Amazon skill's values per level 1–20 (Arreat Summit and D2R, differences noted in its README).
+
+Unit-tested (`OrlogSkillTests`: 10 tests: the real table, kinds and weapons, D2's prerequisites, the later-prerequisite rule, tiers and pace, cap and points, eitr costs, saving, bad tables).
+
+**Known issues / not yet:**
+- Untested in-game. Points go into skills that don't act yet; each skill's effect (and its Valheim numbers, to agree with the user) comes with roadmap C3–C7.
+- No +skills from items yet (the loot session's affixes), so the effective level equals the points.
+
+**Vanilla behaviour overridden (Harmony patch targets):** none (data, rules and the API only).
+
 ## Classes, levels and skill trees
 
 **Status:** Planned. Design only, no code (branch `claude/class-skills`).
@@ -1115,6 +1136,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-01
+- **Skill tree and skill points built** (roadmap C2): the Amazon's real tree from D2's data with our statuses; D2's spending rules (tiers, built prerequisites, 20 points, one more point per level past the requirement); eitr costs from D2's mana; `GetSkillIdsJson`, `GetSkillInfoJson`, `SpendSkillPoint`; `orlog_skill`; respec returns skill points. Per-level D2 values for every Amazon skill saved in `data/d2-reference/amazon_levels.csv` for C3 onwards. Untested in-game (239 tests).
 - **Orlog stone and class choice built** (roadmap C1): a clone of the game's trophy stone glowing rune blue, placed once per world in the widest gap of the spawn area's ring of trophy stones (server-confirmed); using it opens the classes UI's class choice window (real data, no demo); a raven explains it once; `GetClassStoneRequest` and `ChooseClass` answer for real. `PLAYER_SETUP.md` now covers Orlog. Untested in-game (229 tests).
 
 ### 2026-10-31

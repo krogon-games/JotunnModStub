@@ -48,7 +48,7 @@ namespace Orlog.Content
             }
         }
 
-        private static string ReadData(string file)
+        public static string ReadData(string file)
         {
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ResourcePrefix + file))
             {

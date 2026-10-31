@@ -9,7 +9,8 @@ namespace Orlog
     /// <summary>
     ///     The contract with CraftingOverhaul's UI (<c>docs/classes-ui-brief.md</c>, version 1), read by reflection. Works on
     ///     the local player; JSON answers are flat objects or string arrays; "" means no data. Levels, XP, attributes,
-    ///     the class and the Orlog stone are built; skills answer "no data" until they are.
+    ///     the class, the Orlog stone and the skill tree (spending) are built; the skill bar answers "no data" until the
+    ///     skills work (roadmap C5).
     /// </summary>
     public static class Api
     {
@@ -50,7 +51,7 @@ namespace Orlog
             Field(json, "xpLevelStart", start);
             Field(json, "xpNextLevel", next);
             Field(json, "statPoints", cls != null ? Attributes.Unspent(player) : 0);
-            Field(json, "skillPoints", cls != null ? AttributeRules.Earned(level, OrlogConfig.SkillPointsPerLevel.Value) : 0);
+            Field(json, "skillPoints", cls != null ? SkillPoints.Unspent(player) : 0);
             Field(json, "strength", Attributes.Value(player, Attribute.Strength));
             Field(json, "dexterity", Attributes.Value(player, Attribute.Dexterity));
             Field(json, "vitality", Attributes.Value(player, Attribute.Vitality));
@@ -132,12 +133,56 @@ namespace Orlog
 
         public static string GetSkillIdsJson(string classId)
         {
-            return "[]";
+            var table = Progress.Ready ? SkillPoints.TableFor(Progress.Classes.Find(classId)) : null;
+            if (table == null)
+            {
+                return "[]";
+            }
+            var json = new StringBuilder("[");
+            foreach (var skill in table.Skills)
+            {
+                json.Append('"').Append(skill.Id).Append("\",");
+            }
+            if (json.Length > 1)
+            {
+                json.Length--;
+            }
+            return json.Append(']').ToString();
         }
 
         public static string GetSkillInfoJson(string skillId)
         {
-            return "";
+            var player = Player.m_localPlayer;
+            var table = player && Progress.Ready ? SkillPoints.TableOf(player) : null;
+            var skill = table?.Find(skillId);
+            if (skill == null)
+            {
+                return "";
+            }
+            int points = SkillRules.PointsIn(SkillPoints.Points(player), skill.Id);
+            int max = OrlogConfig.MaxSkillPoints.Value;
+            string blocked = SkillPoints.SpendBlocked(player, table, skill);
+            var json = new StringBuilder("{");
+            Field(json, "id", skill.Id);
+            Field(json, "name", skill.Name);
+            Field(json, "tab", skill.Tab);
+            Field(json, "row", skill.Row);
+            Field(json, "col", skill.Col);
+            Field(json, "reqLevel", skill.ReqLevel);
+            Field(json, "prereqs", string.Join("+", skill.Prereqs));
+            Field(json, "kind", skill.Kind);
+            Field(json, "status", skill.Status);
+            Field(json, "maxPoints", max);
+            Field(json, "points", points);
+            // No +skills yet (items, Battle Command): the effective level is the hard points.
+            Field(json, "level", points);
+            Field(json, "canSpend", blocked.Length == 0);
+            Field(json, "spendBlocked", blocked);
+            Field(json, "description", (points > 0 ? "" : "Not learned yet. ") + skill.Description);
+            Field(json, "nextDescription", points < max ? "Level " + (points + 1).ToString(CultureInfo.InvariantCulture) + ": " + skill.Description : "");
+            Field(json, "eitrCost", SkillRules.EitrCost(skill, points));
+            json.Length--;
+            return json.Append('}').ToString();
         }
 
         public static Sprite GetSkillIcon(string skillId)
@@ -167,7 +212,12 @@ namespace Orlog
 
         public static string SpendSkillPoint(string skillId)
         {
-            return NotYet;
+            var player = Player.m_localPlayer;
+            if (!player || !Progress.Ready)
+            {
+                return "No character";
+            }
+            return Safe.Try("spend a skill point", () => SkillPoints.Spend(player, skillId), "Something went wrong");
         }
 
         public static string SetSkillSlot(int slot, string skillId)
@@ -183,6 +233,16 @@ namespace Orlog
         private static void Field(StringBuilder json, string name, string value)
         {
             json.Append('"').Append(name).Append("\":\"").Append(value.Replace("\\", "\\\\").Replace("\"", "\\\"")).Append("\",");
+        }
+
+        private static void Field(StringBuilder json, string name, bool value)
+        {
+            json.Append('"').Append(name).Append("\":").Append(value ? "true" : "false").Append(',');
+        }
+
+        private static void Field(StringBuilder json, string name, float value)
+        {
+            json.Append('"').Append(name).Append("\":").Append(value.ToString("0.###", CultureInfo.InvariantCulture)).Append(',');
         }
 
         private static void Field(StringBuilder json, string name, long value)

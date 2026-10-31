@@ -16,6 +16,8 @@ namespace Orlog
         public static ConfigEntry<float> ShareRange;
         public static ConfigEntry<float> PartyBonusPerPlayer;
         public static ConfigEntry<bool> HighLevelPenalty;
+        public static ConfigEntry<int> MaxSkillPoints;
+        public static ConfigEntry<bool> SkillPace;
 
         public static ConfigEntry<bool> ShowXpGains;
 
@@ -48,6 +50,11 @@ namespace Orlog
             HighLevelPenalty = config.Bind(LevelSection, "HighLevelPenalty", false,
                 AdminOnly("Diablo 2's XP cut from level 70 (95% at 70, down to 0.5% at 99). Off by default: with it, level 90 by " +
                           "Kall Fimbulbringer (the levelling guide) is out of reach."));
+
+            MaxSkillPoints = config.Bind(LevelSection, "MaxSkillPoints", 20,
+                AdminOnly("Most points one skill can take (Diablo 2: 20).", new AcceptableValueRange<int>(1, 99)));
+            SkillPace = config.Bind(LevelSection, "SkillPace", true,
+                AdminOnly("Diablo 2's pace: a skill takes one more point per character level past its required level."));
 
             // Diablo 2's gains per level and per point (Orlog/Data/classes.csv) turned into Valheim numbers.
             HealthPerD2Life = config.Bind(AttributeSection, "HealthPerD2Life", 0.5f,
