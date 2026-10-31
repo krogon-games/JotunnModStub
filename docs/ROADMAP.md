@@ -26,7 +26,7 @@ Everything so far was built and checked alone. The next stretch makes the mods s
 3. **Make the Amazon playable.** The group voted for her. The stone, the tree, her passives, then the skill button and the bow skills.
 4. **Deepen rips.** Map tiers and affixes are the shard sink on the map side, and the step where 3-star creatures and elite packs arrive.
 
-**Deferred past this stretch:** phase 8 (scars, terror zones, roaming elites, Svartalfheim), the Barbarian and Paladin, storage and quests, combat mechanics, the wheel of powers, changing class at the stone, server-synced data tables, Norse renaming.
+**Deferred past this stretch:** phase 8 (scars, terror zones, roaming elites, Svartalfheim), storage and quests, combat mechanics, the wheel of powers, changing class at the stone, server-synced data tables, Norse renaming. **Other classes are extra content after everything above** (§8).
 
 ## 3. Sessions
 
@@ -59,7 +59,7 @@ Follows `class-design.md` §8 (build order). Step 1 (levels, attributes) is done
 | C4 | **Boss bonus points and the respec item** | A boss's first kill gives the configured points; a craftable item resets points | Decided rules (D2's quest points → each boss's first kill) with no numbers yet: ask the user. Respec item: with Corruption, from boss essences (D2's Token); without, a plain recipe |
 | C5 | **Skill button, slots and the bow skills** (`class-design.md` §4) | Right click fires the chosen skill with any weapon, block has moved to a free rebindable key, the four slots have hotkeys and show cost, cooldown and "need bow"; Magic Arrow shoots without an arrow; then Fire, Cold, Multiple, Exploding, Ice and Freezing Arrow and Inner Sight | Prototype the input first (drawing a bow on a non-attack button). Default keys read from the game's and the group's mods' bindings. Fill `GetSkillBarJson`, `GetSlotStateJson`, `SetSkillSlot`. Cooldowns as status effects. Costs in eitr |
 | C6 | **Spear and javelin skills** | Jab, Power Strike, Impale; Poison Javelin, Lightning Bolt, Plague Javelin | Javelins throw a spectral copy (decided) |
-| C7 | Later: the `later` skills, the Barbarian, the Paladin | | The Barbarian's Whirlwind and Leap need new clips: `JotunnModUnity` must first move to Unity 6 (user's PC) |
+| C7 | Later: the Amazon's `later` skills (Guided Arrow, Strafe, Immolation Arrow, Pierce, Slow Missiles, Decoy, Valkyrie, Charged Strike, Fend, Lightning Strike, Lightning Fury) | Each one play-tested on its own | Decoy and Valkyrie need the player-clone prototype (`class-design.md` §5). Only the Amazon is worked on in this stretch; other classes are extra content (§8) |
 
 **Ask the user before C3–C5:** how D2 skill values scale to Valheim (propose per skill from the data, as the attributes were); boss XP (today a boss counts as one creature of its level; D2 gives 9–65×); eitr regen without eitr food (vanilla's 5 per second today: keep or set); bonus points per boss first kill; whether Penetrate also breaks immunity; eitr potions for the early biomes (materials, and that they belong to Orlog).
 
@@ -127,5 +127,17 @@ Follows `class-design.md` §8 (build order). Step 1 (levels, attributes) is done
 
 - **The multiplayer play-test with a friend** (`PLAYTEST.md` → Session 2). The biggest unknown.
 - The open questions listed per session above (§4.1–§4.4): answer them at each session's start.
-- **Unity 6 upgrade** of `JotunnModUnity/` (Valheim 1.0.21 runs Unity 6000.0.75) on the user's PC, before any new animation clip is needed (the Barbarian; maybe the Amazon's `later` skills).
+- **Unity 6 upgrade** of `JotunnModUnity/` (Valheim 1.0.21 runs Unity 6000.0.75) on the user's PC, before any new animation clip is needed (maybe the Amazon's `later` skills; the Barbarian's Whirlwind and Leap, §8).
 - Art when wanted: class and skill icons, uniques, map affixes, the Riftforge window's look.
+
+## 8. Extra content: other classes (after everything above)
+
+**Only the Amazon is being worked on** (user, 2026-11-01). The other classes come after this stretch, as extra content, once the Amazon is complete and play-tested by the group. Nothing here is started, briefed or asked about until the user says so.
+
+| Class | Order | What's known | Before it can start |
+|---|---|---|---|
+| Barbarian | Second (group vote 2026-10-30) | Skill list and statuses in `class-design.md` §6 (masteries, warcries as emotes, Whirlwind as a looped atgeir spin first, Leap); D2 data in `data/d2-reference/barbarian.csv` | The Amazon done; `JotunnModUnity/` on Unity 6 for Whirlwind's and Leap's clips if the vanilla animations look wrong |
+| Paladin | Maybe, third | Notes in `class-design.md` §7 (one aura at a time, holy = spirit, Smite needs a new animation, Conversion through taming, Redemption reworked or dropped); D2 data in `data/d2-reference/paladin.csv` | The Barbarian done, and the user's decision to build it at all |
+
+The tree rules, the skill button and slots, cooldowns, costs and the class choice window are built once for the Amazon and reused; a new class is its data table, its skills and its icons.
+
