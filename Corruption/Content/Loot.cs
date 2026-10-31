@@ -127,13 +127,13 @@ namespace Corruption.Content
         }
 
         /// <summary>Total of one affix effect over the local player's equipped items (0 for anyone else).</summary>
-        public static int EquippedTotal(Player player, string effect)
+        public static float EquippedTotal(Player player, string effect)
         {
             return AffixTotals.Sum(Equipped(player), effect, Affixes);
         }
 
         /// <summary>Total of one affix effect on the item (0 for Normal items, or while <see cref="Bypass" /> is on).</summary>
-        public static int Total(ItemDrop.ItemData item, string effect)
+        public static float Total(ItemDrop.ItemData item, string effect)
         {
             var loot = Bypass ? null : Of(item);
             return loot == null ? 0 : loot.Total(effect, Affixes);

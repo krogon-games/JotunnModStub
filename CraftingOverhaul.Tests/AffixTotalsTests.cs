@@ -48,9 +48,9 @@ namespace CraftingOverhaul.Tests
         {
             var affixes = Affixes();
             var items = new[] { Item("carry_weight", 30), Item("carry_weight", 45), null, Item("max_health_prefix", 10) };
-            Assert.Equal(75, AffixTotals.Sum(items, "carry_weight", affixes));
-            Assert.Equal(10, AffixTotals.Sum(items, "max_health", affixes));
-            Assert.Equal(0, AffixTotals.Sum(items, "max_stamina", affixes));
+            Assert.Equal(75f, AffixTotals.Sum(items, "carry_weight", affixes));
+            Assert.Equal(10f, AffixTotals.Sum(items, "max_health", affixes));
+            Assert.Equal(0f, AffixTotals.Sum(items, "max_stamina", affixes));
         }
 
         [Fact]

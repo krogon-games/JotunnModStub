@@ -1088,6 +1088,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 
 ## Changelog
 
+### 2026-11-01
+- **Fix: affix values keep their decimals.** Values rolled as whole numbers, so Keen-eyed (0.5–2 m) could only roll 0, 1 or 2. Each affix now rolls with as many decimals as its range is written with in `affixes.csv` (Keen-eyed in tenths, the rest unchanged); stored and shown the same way.
+
 ### 2026-10-31
 - **Attributes and class eitr tested in-game** (single player): every step passed, including the classes UI with real data. Noted for the UI: double click sounds when spending points.
 - **Classes UI and HUD bars tested in-game** (single player, demo; user: "everything looks really good now"): quick slots under the cross, details pane, build box, blocked labels and both off switches pass. Only the adrenaline bar is still untried.

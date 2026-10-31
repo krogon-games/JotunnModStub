@@ -13,7 +13,7 @@ namespace Corruption.Rules
         public static readonly string[] Elements = { "fire", "frost", "lightning", "poison" };
 
         /// <summary>The total of one affix effect over several items (e.g. every equipped item's <c>carry_weight</c>).</summary>
-        public static int Sum(IEnumerable<LootItem> items, string effect, IDictionary<string, AffixTable.Affix> affixes)
+        public static float Sum(IEnumerable<LootItem> items, string effect, IDictionary<string, AffixTable.Affix> affixes)
         {
             return items.Where(i => i != null).Sum(i => i.Total(effect, affixes));
         }
