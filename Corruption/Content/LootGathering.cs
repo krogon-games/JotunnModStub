@@ -9,7 +9,7 @@ namespace Corruption.Content
     /// <summary>
     ///     Gathering-tool affixes that change a strike on the striker's own game, before the hit is sent to the
     ///     object's owner (AFFIX_RULES.md → Gathering tool affixes → Multiplayer). On-harvest effects (Bountiful,
-    ///     Artisan, Odin's Grace on trees…) need a message from the owner and come in a later step.
+    ///     Artisan, Odin's Grace on trees…) are applied by the object's owner: <see cref="LootHarvest" />.
     /// </summary>
     internal static class LootGathering
     {
@@ -57,6 +57,12 @@ namespace Corruption.Content
 
         private static float Total(string effect) => Loot.Total(Swing.Tool, effect);
 
+        /// <summary>The tool of the local player's melee swing in progress, or null (read by <see cref="LootHarvest" />).</summary>
+        internal static ItemDrop.ItemData SwingTool => Swing.Active ? Swing.Tool : null;
+
+        /// <summary>Counts the local player's melee swings, so once-per-swing rolls elsewhere know when a new one starts.</summary>
+        internal static int SwingNumber { get; private set; }
+
         /// <summary>True the first time this hit is seen during the local player's swing; marks it as handled.</summary>
         private static bool Take(HitData hit)
         {
@@ -75,6 +81,7 @@ namespace Corruption.Content
                     return;
                 }
                 Swing.Active = true;
+                SwingNumber++;
                 Swing.Tool = __instance.m_weapon;
                 Swing.Processed.Clear();
                 Swing.DepositRolled = Swing.Fifth = Swing.Seismic = Swing.OdinsGrace = Swing.SplashRolled = false;

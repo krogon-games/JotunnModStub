@@ -42,9 +42,24 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 2. Their recipes show at the workbench once you've picked up the materials, and crafting works.
 3. The log lists `Unlocked CapeOdin (was tagged DLC "beta")` and the other two.
 
+## Session 3d: on-harvest gathering affixes (loot step 3, second half, about 20 minutes)
+
+Build from **`claude/affixes-loot`**. Roll tools until they carry the affix (`co_loot rare PickaxeBronze`, `co_loot rare AxeBronze`…); its tooltip line is no longer grey. Chances are low (5–25%), so give each one a dozen trees or rock chunks. With a second player, repeat 1, 3 and 9 while the **other** player stands nearest the tree or rock (they own it).
+
+1. **Bountiful** (*of Bounty*): now and then a tree, log, stump, rock or deposit chunk drops everything twice.
+2. **Bountiful** (*of Plenty*, axe): now and then a log drops its wood twice; with both Bountifuls, sometimes three times.
+3. **Determined:** the stamina bar jumps up each time something breaks and drops.
+4. **Artisan:** now and then a copper or tin chunk drops one more ore.
+5. **Gemseeker's:** now and then a rock or chunk drops Amber or Amber pearl (Meadows), also Ruby (Black Forest and later).
+6. **Stonecutter's:** now and then a rock or chunk drops one more stone (also tin, which drops no stone itself).
+7. **Resinous:** now and then a tree, log or stump drops one more resin. **Forester's:** now and then a standing tree drops its seed (beech seeds, pine cone, birch seeds, fir cone, acorn).
+8. **Charring:** now and then wood drops as coal instead.
+9. **Odin's Grace** on an axe: now and then one chop at a standing tree drops all its wood, resin and seeds at once, with no log or stump left. Fell a tree normally, then a lucky chop at its log or stump harvests the log, its pieces and the stump together. A tree you can't chop yet (tool tier) still says "too hard".
+10. The log lists `Harvest affixes: wood …; seeds …; ores …` at startup: wood should be the wood types, seeds the seeds, ores the ores and scrap. No red errors in the console.
+
 ## Session 3c: gathering-tool affixes (loot step 3, about 20 minutes)
 
-Build from **`claude/affixes-loot`**. Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…). These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) still are.
+Build from **`claude/affixes-loot`**. Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…). These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) are tested in Session 3d.
 
 1. **Prospector's** on a pickaxe: rocks and copper/tin take more hits off per swing than with a plain pickaxe of the same kind (watch the damage numbers).
 2. **Veinbreaker's:** every 5th swing at rock or ore shows a bigger damage number.

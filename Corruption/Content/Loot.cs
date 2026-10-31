@@ -33,12 +33,14 @@ namespace Corruption.Content
             "max_health", "max_stamina", "max_eitr", "health_regen_percent", "stamina_regen_percent", "movement_speed",
             "held_movement_speed", "carry_weight", "fire_resistance", "frost_resistance", "lightning_resistance",
             "poison_resistance", "all_resistances", "weapon_skill_levels", "life_steal",
-            // Gathering tools, striker side (2026-11-01). Odin's Grace works on rock and ore; trees come with the
-            // on-harvest effects.
+            // Gathering tools, striker side (2026-11-01). Odin's Grace: rock and ore here, trees in LootHarvest.
             "pickaxe_damage_deposits", "every_fifth_hit_damage", "deposit_area_hit", "harvest_instantly", "terrain_dig",
             "chop_damage_trees", "chop_damage_logs", "chop_damage_stumps", "chop_splash", "stamina_save_chance",
             "durability_save_chance", "hit_noise_reduction", "item_weight_reduction", "pickup_range", "pickup_radius_set",
-            "attack_speed", "gathering_skill_xp"
+            "attack_speed", "gathering_skill_xp",
+            // Gathering tools, on harvest (2026-11-01): applied by the object's owner (LootHarvest), incl. Odin's Grace on trees.
+            "harvest_double_chance", "wood_double_chance", "stamina_percent_on_harvest", "extra_ore", "gem_find", "extra_stone",
+            "extra_resin", "tree_seed_drop", "wood_to_coal"
         };
 
         public static AffixCaps Caps;
