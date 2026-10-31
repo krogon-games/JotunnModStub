@@ -14,6 +14,11 @@
     <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\SheetLayout.cs" Link="Linked\SheetLayout.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\FlatJson.cs" Link="Linked\FlatJson.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\JsonOut.cs" Link="Linked\JsonOut.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\DemoClasses.cs" Link="Linked\DemoClasses.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\SkillTreeLayout.cs" Link="Linked\SkillTreeLayout.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\CooldownDisplay.cs" Link="Linked\CooldownDisplay.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\SkillsPanelLayout.cs" Link="Linked\SkillsPanelLayout.cs" />
     <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />
     <Compile Include="..\Corruption\Rules\TalismanFamilies.cs" Link="Linked\TalismanFamilies.cs" />
     <Compile Include="..\Corruption\Rules\AffixTable.cs" Link="Linked\AffixTable.cs" />
@@ -34,6 +39,7 @@
     <Compile Include="..\Corruption\Rules\LootRules.cs" Link="Linked\LootRules.cs" />
     <Compile Include="..\Corruption\Rules\LootItem.cs" Link="Linked\LootItem.cs" />
     <Compile Include="..\Corruption\Rules\AffixRoller.cs" Link="Linked\AffixRoller.cs" />
+    <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
     <Compile Include="..\Orlog\Rules\LevelTables.cs" Link="Linked\Orlog\LevelTables.cs" />
     <Compile Include="..\Orlog\Rules\ExperienceRules.cs" Link="Linked\Orlog\ExperienceRules.cs" />

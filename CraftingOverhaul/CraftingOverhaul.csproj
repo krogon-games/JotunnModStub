@@ -43,6 +43,8 @@
   <ItemGroup>
     <!-- Character sheet art (tools/make_sheet_ui.py), loaded by CharacterSheet/SheetArt.cs. -->
     <EmbeddedResource Include="Assets\Sheet\*.rgba" LogicalName="CraftingOverhaul.Assets.Sheet.%(Filename)%(Extension)" />
+    <!-- Placeholder skill and class icons (tools/make_skill_icons.py), loaded by SheetArt.SkillIcon. -->
+    <EmbeddedResource Include="Assets\Skills\*.rgba" LogicalName="CraftingOverhaul.Assets.Skills.%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Package\manifest.json" />

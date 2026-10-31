@@ -25,11 +25,37 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 6. No red errors in the console.
 
 ### 1f. Corrupted offerings
-Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
-1. **Icons re-check:** the Corrupted ancient seed is the red three-pointed seed, the Corrupted malicious blood the red blob (they were swapped).
+~~Eikthyr, Moder (and a mix refused), the Queen, Kall's phases, the fixed seed and blood icons~~ (passed 2026-10-30).
+
+### 1g. Corrupted boss summons
+Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the boss dies.
+1. **Re-check after the fix:** `spawn Eikthyr`, `co_corrupt`, then walk away (out of their reach) and watch: the summons and Eikthyr don't attack each other, and the summons ignore other creatures. They still come for you.
 
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
+
+## Odin items (2 minutes)
+
+~~Equip and log check~~ passed 2026-10-31 (the log also shows the recipes unlocked). Left: craft one.
+
+1. `co_loot rare CapeOdin` (or `spawn CapeOdin`, `HelmetOdin`, `TankardOdin`): the tooltip no longer says "DLC item", and you can equip them; the character picture shows no "DLC required".
+2. Their recipes show at the workbench once you've picked up the materials, and crafting works.
+3. The log lists `Unlocked CapeOdin (was tagged DLC "beta")` and the other two.
+
+## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
+
+~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill) and 7 (life steal).
+
+Build from **`claude/affixes-loot`**. Roll items until you have the affix (`co_loot rare ArmorLeatherChest`, `co_loot rare CapeDeerHide`, `co_loot rare SwordBronze`…); these lines are no longer grey.
+
+1. **Max health / stamina / eitr:** equip an item with "+N max health" (or stamina, eitr): the health/stamina bar and the character sheet go up by N; unequip: back down.
+2. **Carry weight:** "+N carry weight": the weight limit (inventory and character sheet) rises by N.
+3. **Movement speed:** "+N% movement speed" (legs, cape, trinket) or Fleet "while held" (weapon or shield in hand): "Speed from gear" on the character sheet rises by N%; you run faster. Fleet stops counting when you sheathe.
+4. **Regen:** "+N% health regen" / "+N% stamina regen": regen is visibly faster (compare with the item off).
+5. **Resistances:** "N% less fire damage taken" (or frost, lightning, poison, all resistances): stand in a fire (`spawn Surtling` or a campfire) with and without the item: less damage with it.
+6. **Weapon skill:** "+N to the weapon's skill" on a weapon: with it in hand, the skill in the Skills tab shows +N; sheathed: back to normal.
+7. **Life steal:** "N% of damage dealt returned as health": take some damage, hit creatures: small green heals.
+8. No red errors in the console.
 
 ## Session 3: loot system step 1 (about 15 minutes)
 
@@ -37,7 +63,7 @@ Build from branch **`claude/affixes-loot`** (the log line says `build: claude/af
 
 1. ~~Rares from `co_loot`: names, tooltip lines with ranges, grey inactive lines; armour and damage numbers rise~~ (passed 2026-10-29, screenshots; Magic items and lightning damage too). Still to check below: hover names, durability, block, repair, upgrade, drops, combat.
 1b. ~~Build check, natural drops, combat affixes, a resonant line, no errors~~ (passed 2026-10-29). ~~Re-test step 2 (ground names) and step 6 (upgrade)~~ (passed 2026-10-30). ~~Step 5 (durability and repair)~~ passed 2026-10-30. Only step 10 (bigger backpacks, after the server setting) is left.
-1c. **New (2026-10-30): the actual bonus** next to item-stat lines, e.g. `+43% of physical damage as spirit (+23) [10–50]`. It matches the vanilla number above (Spirit 23), and goes up when you upgrade the item; the bracket stays the same.
+1c. ~~The actual bonus~~ passed 2026-10-30. **New (2026-10-30): the actual bonus** next to item-stat lines, e.g. `+43% of physical damage as spirit (+23) [10–50]`. It matches the vanilla number above (Spirit 23), and goes up when you upgrade the item; the bracket stays the same.
 1a. **Spawn loot:** `co_loot magic` and `co_loot rare SwordBronze`. Each drops an item in front of you; the console names it in blue (Magic) or yellow (Rare).
 2. **Names:** hover over the item on the ground: its name is coloured (Magic: e.g. "Cruel Bronze Sword of Embers"; Rare: two words, e.g. "Grim Fang"). Pick it up: the inventory tooltip title has the same coloured name.
 3. **Tooltip:** at the bottom, "Magic" or "Rare Bronze Sword", then one line per affix with its range, e.g. `+24% damage (+14) [5–40]`. Lines the game doesn't apply yet are grey with "(not active yet)". Look out for a `◆ resonant` line (both halves of a twin).
@@ -66,7 +92,13 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 6. With a bow: `orlog_stat dexterity 20`, about 20% more arrow damage.
 7. `orlog_respec`: everything back to the level's bonuses; 50 points to spend again. `orlog_class none`: vanilla values.
 8. Log out and in: class and spent points kept. Your feel: are the health and damage numbers sensible?
+8a. With the classes UI's `Demo` setting **off** (real data from Orlog): the XP bar, level, attributes and unspent points show your real values, and the attribute + buttons spend points like `orlog_stat`.
 9. No red errors in the console.
+
+## Classes UI (branch `claude/ui-overhaul`, 2 minutes)
+
+Everything else passed 2026-10-31 ("everything looks really good now"). Left: with `[5 - Classes UI]` → `Demo = true`:
+1. **Adrenaline:** with a trinket on, block or parry, or use a power: an orange bar appears above health in the same style; nothing shows under the bars.
 
 ## Session 2: with a friend
 

@@ -21,11 +21,14 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Maps and rips (step A)](#maps-and-rips-step-a) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `Enabled`, `OpenDays`, `BaseDistance`, `HeartHealth`; table `Corruption/Data/maps.csv` | `Corruption/Content/MapItems.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/DataFiles.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/MapList.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Data/maps.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/MapListTests.cs`, `Corruption/Assets/map_icon_*.rgba`, `tools/make_map_icons.py` | 2026-10-29 |
 | [Rip waves and loot (step B)](#rip-waves-and-loot-step-b) | Corruption | Tested in-game (single player) | Corruption: `5 - Rips` → `MinStars`, `MaxStars`, `WaveMultiplier`, `ChestShardsMin`, `ChestShardsMax`, `KillShardMultiplier`; table `Corruption/Data/rip_loot.csv` | `Corruption/Content/RipWaves.cs`, `Corruption/Content/Maddened.cs`, `Corruption/Content/RipLoot.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipPrefabs.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/Rules/RipLootTable.cs`, `Corruption/Data/rip_loot.csv`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
 | [Rip heart search and corrupted wishbone](#rip-heart-search-and-corrupted-wishbone) | Corruption | Tested in-game (single player) | — (heart distance from the game data and the user; recipe in code) | `Corruption/Content/CorruptedWishbone.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/RipObjects.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/RipRules.cs`, `Corruption/CorruptionPlugin.cs`, `CraftingOverhaul.Tests/MapListTests.cs`, `CraftingOverhaul.Tests/RipWaveTests.cs` | 2026-10-29 |
-| [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-28 |
+| [Corrupted bosses (core)](#corrupted-bosses-core) | Combat | Tested in-game (single player) | Corruption: `6 - Corrupted Bosses` → `DamageDealt`, `DamageTaken`, `EssencesMin`, `EssencesMax`, `ShardsMin`, `ShardsMax`, `SummonInterval`, `SummonCountMin`, `SummonCountMax`, `SummonsPerPlayer`, `SummonMinStars`, `SummonMaxStars`; `2 - Look` → `CorruptedBossTintStrength`; console `co_corrupt` | `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/EssenceDrops.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/CorruptedSummons.cs`, `Corruption/Content/BossArmies.cs`, `Corruption/Content/Maddened.cs` | 2026-10-31 |
 | [Corrupted offerings](#corrupted-offerings) | Combat | Tested in-game (single player) | — (table `Corruption/Data/offerings.csv`) | `Corruption/Content/CorruptedOfferings.cs`, `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/OfferingTable.cs`, `Corruption/Data/offerings.csv`, `Corruption/Assets/offering_icon_*.rgba`, `tools/make_offering_icons.py`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/OfferingTableTests.cs` | 2026-10-30 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
+| [Health, eitr and stamina bars](#health-eitr-and-stamina-bars) | UI | Tested in-game (single player, 2026-10-31); adrenaline bar not tried yet | `4 - HUD` → `Bars`, `BarScale`, `BarMinLength`, `BarMaxLength`, `BarsHeight` | `Classes/VitalBars.cs`, `Classes/MovedHudPanels.cs`, `Classes/UiKit.cs`, `Classes/ClassesSource.cs`, `CharacterSheet/SheetArt.cs`, `Assets/Sheet/bar*`, `tools/make_sheet_ui.py`, `ModConfig.cs` | 2026-10-31 |
+| [Classes UI](#classes-ui) | UI | Tested in-game (single player, demo data, 2026-10-31; Orlog's API is still a stub) | `5 - Classes UI` → `SkillsPanelKey`, `SkillCrossPosition`, `Demo`; console `co_classes_stone` | `Classes/*`, `CharacterSheet/FlatJson.cs`, `CraftingOverhaul.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/ClassesUiTests.cs`, `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` | 2026-10-31 |
 | [Currency and Maps tabs](#currency-and-maps-tabs) | UI | Tested in-game (single player) | Corruption: `9 - Inventory Tabs` → `Enabled` | `Corruption/Content/InventoryTabs.cs`, `Corruption/Content/InventoryTabsUi.cs`, `Corruption/Rules/TabRules.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/Texts.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TabRulesTests.cs` | 2026-10-29 |
-| [Loot system](#loot-system) | Loot | Tested in-game (single player; step 1: drops, tooltips, item stats) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs` | 2026-10-29 |
+| [Odin items unlocked](#odin-items-unlocked) | Crafting | Tested in-game (single player) | — (always on) | `Corruption/Content/BetaItems.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-31 |
+| [Loot system](#loot-system) | Loot | Tested in-game (single player): step 1 and step 2 (player stats; weapon skill and life steal not tried yet) | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs`, `Corruption/Content/LootPlayerStats.cs`, `Corruption/Rules/AffixTotals.cs`, `CraftingOverhaul.Tests/AffixTotalsTests.cs` | 2026-10-30 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
 | [Attributes and class eitr](#attributes-and-class-eitr) | Combat | Built, untested | Orlog: `3 - Attributes` → `HealthPerD2Life`, `StaminaPerD2Stamina`, `EitrStart`, `EitrPerLevel`, `EitrPerEnergy`, `DamagePerStrength`, `DamagePerDexterity`; table `Orlog/Data/classes.csv`; console `orlog_class`, `orlog_stat`, `orlog_respec` | `Orlog/Content/Attributes.cs`, `Orlog/Rules/AttributeRules.cs`, `Orlog/Data/classes.csv`, `Orlog/Content/Commands.cs`, `Orlog/Content/Progress.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogAttributeTests.cs` | 2026-10-30 |
@@ -296,12 +299,12 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 
 **What it does:** turns EquipmentAndQuickSlots' equipment panel into a World of Warcraft style character sheet in the inventory screen, modelled on the user's concept image (2026-10-29). Mock-up: `docs/images/sheet_preview.png`.
 
-- **Look:** dark wood planks in an iron frame with riveted corners; a title band with rope knots and "CHARACTER" in the game's Norse font; a close button (closes the inventory). The art is generated by `tools/make_sheet_ui.py` and embedded in the DLL.
+- **Look (restyled 2026-10-30, user's mix of the classes UI mock-ups):** the game's own panel background (the inventory's, copied at runtime), "CHARACTER" in the game's Norse font, a bronze close button (closes the inventory). The slot tiles, the arch and the close button are bronze with rivets, matching the skill slots. The art is generated by `tools/make_sheet_ui.py` and embedded in the DLL. *(First look, 2026-10-29: dark wood planks, iron frame, rope-knot title band, parchment and ribbon.)*
 - **Left column**, top to bottom: HEAD, CHEST, LEGS, CAPE (the shoulder slot: cape or AdventureBackpacks backpack), UTILITY, then EAQS's extra utility slots if its utility count is raised.
 - **Right column**: TRINKET, then every slot other mods add through EAQS's API in the order they were added: our TALISMAN slots (2 by default), and later the Ring slot. Unknown slots keep their mod's name.
-- Each slot is a recessed, iron-rimmed tile with its label underneath. An empty slot shows a faint picture of what goes there (the icon of a vanilla item: Bronze helmet, Bronze plate tunic and leggings, Deer hide cape, Megingjord, Bronze pendant, and the deer trophy for talismans). EAQS's own labels and the blue "equipped" backing are hidden in these slots.
+- Each slot is a recessed tile in a bronze, riveted rim with its label underneath. An empty slot shows a faint picture of what goes there (the icon of a vanilla item: Bronze helmet, Bronze plate tunic and leggings, Deer hide cape, Megingjord, Bronze pendant, and the deer trophy for talismans). EAQS's own labels and the blue "equipped" backing are hidden in these slots.
 - **Middle: a live picture of your character** in an arch, standing on a stone pedestal: your real model, gear and idle animation, filmed from the front by a camera of our own. **Drag it sideways to turn the view** round the character. Lit by a light of our own as well as the world's, so it shows at night.
-- **Stats** on a parchment under the columns, with your name on a ribbon: armor, weight (red when over), max health, stamina and eitr (eitr only once you have some; values in the game's health/stamina/eitr colours), movement speed from gear (sum of your equipment's movement modifiers, as the game applies it), and on the right your active status effects with their icons (up to 6; "+N more" beyond). Refreshed four times a second.
+- **Stats** in a darker box under the columns, headed by your name (light text; values in brighter health/stamina/eitr colours): armor, weight (red when over), max health, stamina and eitr (eitr only once you have some; values in the game's health/stamina/eitr colours), movement speed from gear (sum of your equipment's movement modifiers, as the game applies it), and on the right your active status effects with their icons (up to 6; "+N more" beyond). Refreshed four times a second.
 - **Quick slots** in a centred row of tiles at the bottom (EAQS's, 0–6 as it is configured), with their hotkeys.
 - The sheet sits next to the inventory grid where EAQS's panel was; drag it by its wood to move it (saved to `Position`). EAQS's own backgrounds and paperdoll are hidden while the sheet is on.
 - Not in the sheet (decided 2026-10-29): hands (Valheim has no weapon slots; weapons are swapped from the hotbar), feet (no boots in Valheim), tabs (the Skills, Trophies and Compendium buttons stay where vanilla puts them).
@@ -316,7 +319,7 @@ Also shares the `InventoryGui.Awake` postfix from the categories feature to rese
 |---|---|---|
 | `Enabled` | `true` | Show the sheet. Off: EAQS's own panel comes back |
 | `Position` | `655, 28` | Top-left corner of the sheet, relative to the inventory grid. Set by dragging. *(Was `615, 28`, which covered the inventory's weight number; a config file from the first test keeps its old value until you drag the sheet or delete the line.)* |
-| `ShowStats` | `true` | Show the parchment stats box |
+| `ShowStats` | `true` | Show the stats box |
 | `ShowQuickSlots` | `true` | Put the quick slots in the row at the bottom. Off: EAQS places them where it always did |
 | `ShowCharacter` | `true` | Show the live picture of your character. Off: the arch shows an empty night-blue backdrop |
 
@@ -326,7 +329,7 @@ The layout, labels and silhouettes are unit-tested (`SheetLayoutTests`, `FlatJso
 - Play-test 2026-10-29 (first version, single player, with EAQS, AdventureBackpacks and PlantEasily): the sheet appeared with every slot in place and the stats right, but looked too plain next to the concept image, the character frame was empty, and at `615, 28` the sheet covered the inventory's weight number. **Reworked the same day** (art, labels, silhouettes, live picture, new default position); awaiting re-test.
 - **Play-test 2026-10-29 (second version):** the look matches the mock-up (frame, title, labelled tiles, silhouettes, parchment, ribbon) and the live picture works, (the side-on view in the screenshot was the user turning it by dragging, which works). Its feet stood a little above a stone that was too thin, and a talisman kept the blue backing. **Fixed the same day** (awaiting re-test): the picture starts from the front each time the inventory opens; the character is a little smaller with a bigger, lighter stone under its feet; the light is brighter and comes from one side; no blue backing in any labelled slot.
 - **Play-test 2026-10-29 (third version): "looking much better" (user).** The character faces front, whole body in view, feet on the stone, lit at night; slots, labels, silhouettes and stats as designed.
-- **To revisit later (user, 2026-10-29):** the sheet's look is a bit inconsistent with the rest of the game's UI (its darker wood, iron and parchment next to the vanilla panels). Not changed for now.
+- ~~To revisit later (user, 2026-10-29): the sheet's look is a bit inconsistent with the rest of the game's UI.~~ **Restyled 2026-10-30** with the classes UI (user: "Let's use Valheim's own UI for that part. Make the character panel match"): the game's own panel and a darker stats box instead of the wood, frame, parchment and ribbon; bronze riveted tiles and arch. Untested in-game.
 - Play-test 2026-10-29 (user): the X button closes the inventory, dragging the sheet works, and the layout works with a chest and the AdventureBackpacks backpack open. Not yet checked: multiplayer (other players never appear in the picture). Things to watch: the character too small/large or off the pedestal, too dark or too bright, or not appearing at all (then `ShowCharacter = false` and tell Claude what the log says).
 - Panel size is about 500×860 UI units with 3 quick slots; on small screens drag it, or turn off `ShowQuickSlots`.
 - The picture camera has none of the game's post-processing, so colours may look a little flatter than in the world.
@@ -344,6 +347,85 @@ Not a patch, but worth knowing for other mods: the picture subscribes to Unity's
 Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJson`, API version 2); no patches on that mod. Finds its objects by name (`EaqsSlotRoot`, `EaqsEquipmentBkg`, `EaqsQuickSlotBkg`, `EaqsCustomSlotBkg`, its `PanelDragHandle` script, the cells' `binding` label), checked against EAQS 3.1.3.
 
 **Conflicts:** anything else that repositions EAQS's slot cells (Auga does; the sheet switches itself off when Auga is installed). AdventureBackpacks' backpack panel opens as a container on the left, under the inventory grid, so it shouldn't overlap; check in-game. Mods that also film the player with their own camera (photo modes) might see the player missing for one frame if they render in the middle of ours; none of the group's mods do.
+
+---
+
+## Health, eitr and stamina bars
+
+*CraftingOverhaul; per player. Works without Orlog.* Brief: [`docs/classes-ui-brief.md`](docs/classes-ui-brief.md) §2.1, §2.3; reference `docs/images/hud_reference_bars.jpg`.
+
+**What it does:** replaces the game's health, stamina, eitr and food displays with three long bars together at the bottom centre (user, 2026-10-30, after Elden Ring): **health on top, stamina in the middle, eitr at the bottom** (only once you have eitr; order changed by the user 2026-10-31 so gaining eitr doesn't push stamina down), in the game's colours.
+- Each bar grows with its maximum (`BarScale` pixels per point, between `BarMinLength` and `BarMaxLength`), all starting at the same left edge, in a thin bronze rim with knot points at both ends and the value as "current / max" just past its end. A pale trail behind the fill shows what you just lost and catches up after a moment.
+- **Adrenaline** (Valheim 1.0; fills from blocking and parrying when a trinket gives you adrenaline): an orange bar of the same kind **above health**, shown while it isn't empty as the game shows its own, so it never moves the other bars (added 2026-10-31 after the play-test showed the game's own orange bar under ours).
+- **Food:** your three food slots (round bronze, like the skill medallions) sit to the left of the bars, with the time left under each (minutes, then seconds, as the game shows it); a slot pulses when that food can be eaten again.
+- **XP bar** (only with Orlog or the classes demo): a thin purple bar under the bars, with "Level N" on its left and, when points wait to be spent, a pulsing "N stat, M skill points (K)" on its right (the key only once you have a class).
+- **They stay put while building or sailing** (user, 2026-10-31). Instead the game's **selected-piece box** (the "Repair" box with the piece's name, description and cost, while a hammer, hoe or cultivator is out) and its **ship display** (sail and rudder) move to the **bottom right**, above the key hints. Each is moved as a whole, by the distance between what it draws and that corner, every frame it shows; the build menu itself stays where the game puts it. Turning `Bars` off puts both back.
+- Values come straight from the game (`GetHealth`, `GetMaxHealth`, `GetStamina`, `GetEitr` and their maxima), so food, gear and Orlog's eitr pool all show.
+
+**Config settings** (per player, `4 - HUD`):
+
+| Setting | Default | Description |
+|---|---|---|
+| `Bars` | `true` | Use the new bars. Off: the game's own displays come back |
+| `BarScale` | `2.56` | Pixels per point. The game's own bars use 1.28 (32 px per 25 points, `Hud.UpdateHealth`); proposed default twice that |
+| `BarMinLength` | `120` | Shortest bar, in pixels (proposed) |
+| `BarMaxLength` | `600` | Longest bar, in pixels (proposed) |
+| `BarsHeight` | `96` | Height of the bars above the bottom of the screen (proposed) |
+
+**How it works:** our bars live under the HUD's root (`Hud.m_rootObject`), so they hide with the HUD. The game's displays (`m_healthPanel`, `m_staminaBar2Root`, `m_eitrBarRoot`, `m_adrenalineBarRoot`, `m_foodBarRoot`, the food icons and times) are scaled to zero in a `LateUpdate` (the game's animators set them after `Hud.Update`), and scaled back when `Bars` is turned off.
+
+**Known issues:**
+- **Play-test 2026-10-30 (first look, single player, with the demo):** bars, food slots and the XP bar show and work; the game's displays are gone. The user wanted the XP bar "a little bit lower": lowered.
+- **Play-test 2026-10-31 (new look):** bars, food and XP bar pass ("looks really good"). Changed after it, to re-check: eitr and stamina swapped (eitr was pushing stamina down when it appeared); the bars no longer move up while building or sailing ("not good design"), the game's selected-piece box and ship display move to the bottom right instead (the user asked for the box; the ship display follows the same rule, Claude's choice).
+- To check: nothing else the game shows lives under `m_healthPanel` (if something vanishes from the HUD, tell Claude); the mount's stamina panel still shows when riding.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Hud.Update` | Postfix | Creates and updates the bars, food slots and XP bar |
+| `Hud.OnDestroy` | Postfix | Forgets the bars (the HUD is rebuilt per world) |
+| `Hud.Update` | Postfix (`MovedHudPanels`) | While the bars are on, moves the game's selected-piece box (the highest parent of `Hud.m_buildSelection` under `m_buildHud` that holds neither `m_pieceSelectionWindow` nor `m_snappingIcon`) and `m_shipHudRoot` to the bottom right; puts them back when the bars are off |
+| `Hud.OnDestroy` | Postfix (`MovedHudPanels`) | Forgets them |
+
+---
+
+## Classes UI
+
+*CraftingOverhaul; per player. Needs the Orlog plugin's API (`Orlog.Api`, version 1), or the `Demo` setting.* Brief: [`docs/classes-ui-brief.md`](docs/classes-ui-brief.md); design: `docs/class-design.md`.
+
+**What it does:** everything on screen for the classes (Orlog does the rules). Until Orlog's API is filled in, try it with `5 - Classes UI` → `Demo` = `true`: an Amazon at level 12 with 5 stat points and 1 skill point, her 30 skills from `data/d2-reference/amazon.csv` with the statuses in `class-design.md` §5, vanilla item icons as placeholders. Spending and filling slots change the sample only.
+- **Skill cross** (HUD, bottom left, reference `docs/images/hud_reference_skills.jpg`; redesigned 2026-10-31, sketch `docs/images/skill_cross_preview.png`): four slots in a cross (top, left, right, bottom = slots 1–4), spread out with the **Forsaken power in the middle** as a round bronze medallion (its icon, cooldown and key; the game's own power display with the boss's name and "Ready" is hidden while the cross shows, and comes back without a class). Each slot shows the skill's icon and its key; the slot on the skill button glows eitr-blue. **Cooldowns can't be mistaken for ready** (user): while waiting, the icon and rim go dark, a dark sweep covers the time still to wait and the seconds left (m:ss from a minute) are written large across it; when ready, the icon is in full colour with nothing over it, and the slot flashes once as the cooldown ends. A skill blocked for another reason is tinted red with what to do about it: "Need bow" / "Need spear" (from the slot state's `needs`; "Wrong weapon" without it) or "Low eitr" (2026-10-31; the first labels "Weapon" and "Eitr" confused the user). In the demo these follow what you really hold and your real eitr. EquipmentAndQuickSlots' quick-slot bar sits centred under the cross while it shows (user, 2026-10-31; that mod's own position setting applies again without a class). Hidden without a class.
+- **Skills panel** (`K`, or the **Skills** button above the top right of the inventory; **redesigned 2026-10-31** after the user found the earlier versions "not acceptable"; preview `docs/images/skills_panel_preview.png`, drawn from the panel's own layout). Diablo 2's layout on the game's own panel, 1000 × 708:
+  - **Left:** the **character box** (level, XP bar, stat points, Strength, Dexterity, Vitality and Energy with their value, what they give and a + button while points are unspent) and under it the **skill details pane**: the skill you point at (or last clicked): its icon, name, rank (points / max), kind, required level and eitr cost, what it does, what the next rank adds, why it's locked (red), and a **Learn** button.
+  - **Right:** the three tabs; the **tree on a bronze-rimmed tablet**: tier rows (Lv 1, 6, 12, 18, 24, 30) with faint dividers, skills as round bronze medallions with their icon and a points badge, no names (they're in the details pane); short straight paths from medallion edge to medallion edge, a dark groove that carries an eitr-blue light once the prerequisite has points. Medallions glow eitr-blue once learned, green when a point can go in, gold when maxed; greyed when locked, darker for skills that come later; the selected one has a white-gold ring. Dropped skills aren't shown. Under the tablet, the **four skill slots**.
+  - **Use:** click a skill to select it; **Learn** (or double-click) spends a point. When a point can't go in, the button says why ("Needs level 18", "No skill points"); refusals also show along the bottom. **Drag a skill onto a slot here or onto the HUD's skill cross**; drag a slot onto another to move it, off the slots (or right-click) to empty it; pointing at a slot shows its skill in the details pane. Passives can't be dragged.
+  - **Icons:** placeholder emblems drawn by `tools/make_skill_icons.py` (one per skill, coloured by element; `Assets/Skills/`), used by the demo and whenever Orlog gives no icon; vanilla item icons only as a last resort. Sheet: `docs/images/skill_icons_preview.png`.
+- **Class choice window**: opens when the player uses the Orlog stone (Orlog's `GetClassStoneRequest` goes up) and has no class. Lists the classes (icon, name, description); Confirm chooses, or shows the reason it was refused. With the demo, the console command `co_classes_stone` does what the stone will do (removes the sample class and opens the window).
+- Escape or the X closes the panel and the window; the game's input is blocked (cursor shown) while either is open.
+
+**How it works:** `ClassesSource` finds `Orlog.Api` through BepInEx's plugin list (`com.krogongames.orlog`, soft dependency) and binds its static methods by reflection, checking `GetApiVersion() == 1`; answers are flat JSON read with `FlatJson`. It re-reads when `GetChangeCounter()` changes (the HUD also every 60 frames as a fallback), and the cross polls `GetSlotStateJson` each frame. `Demo` on overrides Orlog. The sample data (`DemoClasses`), the tree layout (`SkillTreeLayout`) and the JSON writer (`JsonOut`) are pure and tested (`ClassesUiTests`, 13 tests). Windows go on Jötunn's `CustomGUIFront` canvas.
+
+**Config settings** (per player, `5 - Classes UI`):
+
+| Setting | Default | Description |
+|---|---|---|
+| `SkillsPanelKey` | `K` | Opens and closes the skills panel. K is free in Valheim's defaults and the group's mods (EAQS Z/V/B, AdventureBackpacks I) |
+| `SkillCrossPosition` | `24, 180` | Bottom-left corner of the cross, in pixels from the bottom left of the screen (proposed) |
+| `Demo` | `false` | Development: sample data instead of Orlog's. **Off before release** |
+
+**Known issues:**
+- **Play-test 2026-10-30 (first look, screenshots, single player, with the demo):** the panel opens, the three tabs switch, spending skill and stat points works, and dragging skills onto the slots fills the panel row and the HUD cross. Broken in the screenshots, **fixed the same day** (re-check): an empty cross slot showed a white square; the tab names ran into each other; long skill names (and "(later)") overlapped or ran off the panel; prerequisite lines crossed the names; locked skills' icons were too dark to see; the selected slot's gold outline barely showed; "Skill button: Right mouse" overlapped the Forsaken power's name (now above the cross). The look was "very basic" (user): restyled the same day (see Look).
+- **Play-test 2026-10-31 (new look, screenshots and phone log, single player, demo):** passes: re-check of the first-look fixes, the new look, the cross, the panel's tabs, tooltips, spending, attributes, slots and dragging, closing (K, Escape, X), the class choice window, no errors. The off switches weren't tried. The learned paths "need adjusting how they connect and branch" (user): **reworked the same day** (re-check) to run like tree branches (down, across just above the next row, down), names on small plaques the paths run behind; sketch `docs/images/skill_paths_preview.png`.
+- With Orlog installed (and `Demo` off) nothing class-related shows yet: its API only answers the character so far, with no class. To check: the cross next to EAQS's quick slots (EAQS puts them at 216, 150 from the bottom left by default; the cross ends at x 210); the panel (about 644 × 794) fits the screen.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+
+| Target | Patch | Purpose |
+|---|---|---|
+| `Hud.Update` | Postfix (×3: cross, panel, choice window) | Updates the cross (including the Forsaken power from `Player.GetGuardianPowerHUD`; the game's `Hud.m_gpRoot` is scaled to nothing in a `LateUpdate` while the cross shows); the panel key and the inventory's Skills button; opens the class choice window on a stone request |
+| `Hud.OnDestroy` | Postfix (×3) | Forgets the cross and closes and destroys the windows |
+| `Menu.Update` | Prefix | Only on the frame Escape is pressed while a class window is open: closes it and skips the menu's update, so the game menu doesn't open as well |
 
 ---
 
@@ -624,7 +706,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 | Target | Patch | Purpose |
 |---|---|---|
 | `Character.Awake` | Postfix | Restores maddened behaviour on creatures loaded with the flag |
-| `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them |
+| `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them. Corrupted boss summons are enemies of players only |
 | `CharacterDrop.GenerateDropList` | Postfix (the existing shard one) | Double starred shard chances for rip creatures |
 
 New status effect `SE_CorruptionMaddened` (built from `SE_Dvergr_buff` and `Potion_hasty` at startup). The rip heart gets a wave spawner; the chest is the vanilla chest prefab itself.
@@ -691,7 +773,7 @@ New item `CorruptedWishbone` (cloned from `Wishbone`, tinted). New status effect
 **Known issues:**
 - **Play-test 2026-10-30 (single player):** Eikthyr (one corrupted trophy summons him corrupted), Moder (all egg cups corrupted; a mix refused) and the Queen (her door with the corrupted Sealbreaker) passed. **Bug, fixed:** the Ancient seed and Malicious blood icons were swapped (the renders were matched to the wrong items when saved). **Kall's phases stay corrupted** (tested 2026-10-30 with `spawn FrozenKing`, `co_corrupt`, `killall`: phases 2 and 3 came up red).
 - Kall's phases: the next phase is corrupted when a corrupted phase dies and a boss named like its next phase (`FrozenKing_p2`, `_p3`) appears on the same game.
-- The fixed seed and blood icons are still to be seen in game.
+- The fixed seed and blood icons were re-checked in game 2026-10-30: correct.
 - The Queen: assumes she is in the same game location as her door (checked with the game's own location lookup). The log says how many bosses were corrupted when the door opened.
 - The corrupted bosses' summons (maddened adds) and extra particles come later.
 
@@ -719,6 +801,7 @@ New items `Corrupted<Item>` (cloned from the vanilla item, tinted red). Door dat
 
 **What it does in-game:** a corrupted boss is the vanilla boss, tinted red, that:
 - deals 1.5× damage and takes 0.7× damage (health unchanged), as the design's starting values;
+- **summons** (2026-10-30): every 30 s while players are within 96 m (the army raid's range), 2–3 creatures of the boss's own **army raid** (the same as its biome's rip waves) arrive like a raid, 40–80 m from a player. They're maddened and have **1–2 stars** (user: at least 1; above 2 is for elite packs, later). At most **4 alive per player** near the boss (user). Kall's phases share their summons. Summons are the boss's allies: they go for **players only**, never their boss, each other or other creatures, and can't damage them (user, 2026-10-31). The log names the army and each summon;
 - drops 2–3 of its essence instead of 1, and 3–5 corruption shards on every kill, plus its normal vanilla drops.
 
 The flag is stored on the boss itself, so every player sees the same corrupted boss.
@@ -733,11 +816,16 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 | `DamageTaken` | `0.7` | Damage multiplier on hits the boss takes |
 | `EssencesMin` / `EssencesMax` | `2` / `3` | Essences per corrupted kill (replaces the normal amount) |
 | `ShardsMin` / `ShardsMax` | `3` / `5` | Shards per corrupted kill, every kill |
+| `SummonInterval` | `30` | Seconds between summons (design). 0 = no summons |
+| `SummonCountMin` / `SummonCountMax` | `2` / `3` | Creatures per summon (design) |
+| `SummonsPerPlayer` | `4` | Most summons alive per player near the boss (user) |
+| `SummonMinStars` / `SummonMaxStars` | `1` / `2` | Summons' stars (user: at least 1; above 2 is for elite packs later) |
 | `CorruptedBossTintStrength` (Look) | `0.6` | Per player. The Riftforge's tint strength, which was tested in-game |
 
 **Known issues:**
 - **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. Since 2026-10-30, corrupted offerings summon them too (see [Corrupted offerings](#corrupted-offerings)).
-- The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet: which particle prefab to reuse comes from the game data with the summons.
+- **Play-test 2026-10-31 (single player, Eikthyr and Bonemass): passed.** Summons arrive every 30 s from the army, 2–3 at a time, up to 4 alive alone, and stop when the boss dies. **Fixed after the test:** summons attacked Eikthyr when the player was away and he attacked them (maddened creatures treat everything as an enemy); now summons and their boss are allies and summons target players only. To re-check. The Ashlands army's charred spawner stones aren't summoned (only creatures count towards the limit).
+- The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 
@@ -810,6 +898,20 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 
 ---
 
+## Odin items unlocked
+
+*Corruption plugin. User, 2026-10-31.*
+
+**What it does:** the game gates the Odin cape, the Odin helmet and the Odin tankard behind a Steam entitlement (`SharedData.m_dlc` = `"beta"`, the only such tag in 1.0.20). Without it the game refuses to equip them, hides their recipes and won't craft them, and their tooltip says "DLC item". Corruption clears the tag on every item at startup, so they work like any other item for everyone: equip, craft at the workbench, and roll as loot (they're in `loot_bases.csv`). The log lists each item it unlocked.
+
+**Why:** a play-test rolled a Rare Odin cape ("DLC required"); the user chose to unlock them fully rather than leave them out of the loot.
+
+**Known issues:** tested 2026-10-31: the items equip, the log lists all three as unlocked and the game announces their recipes as new; crafting one not tried yet. Needs Corruption on every machine (already required).
+
+**Vanilla behaviour overridden:** no Harmony patch; the items' shared data is changed once at startup (`PrefabManager.OnVanillaPrefabsAvailable`).
+
+---
+
 ## Loot system
 
 *Corruption plugin, design phase 7, step 1 of several: drops, tooltips and item-stat affixes. Orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects come in later steps.*
@@ -822,6 +924,7 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 - **Rolling** (`AffixRoller`): each affix is picked by its `weight` among every affix that fits the item's classes and mechanics (`requires`), one per family per side; values are whole numbers anywhere in the range (every range in the table is whole). Both halves of a twin merge into one **resonant** line rolled from the resonant range (+25% on the combined top). **Every affix in `affixes.csv` rolls, including rows still marked `draft`** (user, 2026-10-29: test with the draft numbers while the ranges are settled).
 - **Names:** Magic items take their affixes' names around the base name, the roll deciding which of a family's names (e.g. *Sharp/Fine/Cruel/Merciless*): "Cruel Bronze Sword of Embers". Rare items get a two-word name from `rare_names.csv` ("Grim Fang"). Names are blue (Magic, `#8888FF`) or yellow (Rare, `#FFFF77`), the Path of Exile colours, in inventory tooltips and when hovering over the item on the ground.
 - **Tooltips:** after vanilla's lines, the rarity (and for Rares the base item), then one line per affix: its value, the bonus it gives this item at its current level (item-stat affixes, e.g. `(+14)`), and its roll range in brackets, e.g. `+24% damage (+14) [5–40]`; resonant lines end in `◆ resonant`. Affixes this step doesn't apply yet are grey and say "(not active yet)".
+- **Player-stat affixes (step 2, 2026-10-30; tested 2026-10-31 except weapon skill and life steal):** summed over everything the local player has equipped (weapons in hand, armour, cape or backpack, utility, trinket; sheathed weapons don't count): max health, stamina and eitr (added to the food values), health and stamina regen (+X% adds X/100 to the regen multiplier, as vanilla's bonuses do), movement speed worn and held (Fleet) under the 35% cap (added to the gear movement modifier, like the Crown of Valheim), carry weight (scaled by the world's carry setting), fire/frost/lightning/poison resistance plus all resistances (each element capped at 75%, applied on top of vanilla resistances to hits the player takes), weapon skill levels for the weapon in hand, life steal (capped at 10%, from the hit's damage before the target's armour). No caps on carry weight, regen or max health/stamina/eitr (user).
 - **Affixes that work in this step** (through the game's own stat getters, so vanilla tooltips, combat and repairs see them): enhanced damage (every combat damage type, not chop or pickaxe damage), fire/frost/lightning/poison/spirit damage (a % of the enhanced physical damage), armour, durability, block power, attack stamina (also the tools' "per swing" version), knockback and backstab (raised on the attacker's game when the hit is made), parry bonus.
 - **Storage:** `ItemData.m_customData` keys `corruption.rarity`, `corruption.name` (Rares) and `corruption.affixes` (`id=value;prefix+suffix=value`), saved and synced with the item by the game.
 
@@ -858,8 +961,15 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 | `ItemDrop.ItemData.GetMaxDurability(int)` | Postfix | Durability |
 | `ItemDrop.ItemData.GetBaseBlockPower(int)` | Postfix | Block power |
 | `Attack.GetAttackStamina` | Postfix | Less stamina per attack |
-| `Character.Damage(HitData)` | Prefix | Knockback and backstab on the local player's hits |
+| `Character.Damage(HitData)` | Prefix | Knockback, backstab and life steal on the local player's hits |
 | `SEMan.ModifyTimedBlockBonus` | Postfix | Parry bonus |
+| `Player.GetTotalFoodValue` | Postfix | Max health, stamina and eitr affixes |
+| `SEMan.ModifyHealthRegen` | Postfix | Health regen affixes |
+| `SEMan.ModifyStaminaRegen` | Postfix | Stamina regen affixes |
+| `Player.GetEquipmentMovementModifier` | Postfix | Movement speed affixes (worn and held, capped) |
+| `Player.GetMaxCarryWeight` | Postfix | Carry weight affixes |
+| `SEMan.ModifySkillLevel` | Postfix | Weapon skill levels for the weapon in hand |
+| `Character.RPC_Damage` | Prefix | Resistance affixes on hits the local player takes (a second prefix next to the corrupted-boss one) |
 
 **Orb art (2026-10-28):** models and textures for the nine currency orbs exist (`tools/make_orbs.py`, `Corruption/Assets/Orbs/`, preview `docs/images/orbs_preview.png`), after the user's concept render (`docs/images/orbs_reference.jpg`). They are not in the mod yet: they get embedded and registered as items when the orbs are built. The orbs keep their Path of Exile names (user, 2026-10-28).
 
@@ -977,8 +1087,26 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 
 ## Changelog
 
+### 2026-10-31
+- **Classes UI and HUD bars tested in-game** (single player, demo; user: "everything looks really good now"): quick slots under the cross, details pane, build box, blocked labels and both off switches pass. Only the adrenaline bar is still untried.
+- **Skill cross: clearer blocked labels** (user: "confused why one box says weapon and the other says eitr"): "Need bow", "Need spear" or "Low eitr"; the demo now blocks a slot only when your weapon or eitr really would (it showed fixed sample states). API: optional `needs` in `GetSlotStateJson`.
+- **Classes UI re-tested** (screenshots and phone log: "this ui is looking soooo much better"): bar order, fixed bars, the build box at the bottom right, the redesigned skills panel and the skill cross pass. Changed after it: the quick slots (EquipmentAndQuickSlots) sit centred under the skill cross (user); the details pane's type line shrinks to fit and the lock reason shows on the Learn button (it was cut off); the build box sits a little higher, clear of the XP hint. Adrenaline not tried yet.
+- **Skills panel redesigned** (user: "not acceptable", untested): Diablo 2 layout: character box and a skill details pane on the left (replacing the floating tooltip and the names under the skills), the tree on a bronze-rimmed tablet with icons and points badges only, short straight edge-to-edge paths, the slots under it. Placeholder icon set drawn per skill. Positions come from a tested layout class that also feeds a preview image, so previews match the game.
+- **Fix: build box** (play-test): only the piece name moved to the bottom right; now the whole box (name, description, icon, costs and background) moves.
+- **Fix: the game's adrenaline bar** showed under our bars after using a power (play-test): it's hidden now and adrenaline shows as our own orange bar above health while it isn't empty. Untested.
+- **Skill cross redesigned** (user, untested): slots spread out with the Forsaken power in the middle as a medallion (the game's power display with the boss name and "Ready" hidden); cooldowns unmistakable (dark icon, sweep and seconds while waiting; full colour and a flash once ready); "Skill button: Right mouse" removed.
+- **Classes UI play-tested** (single player, demo): bars, food, XP bar, skill cross, skills panel, attributes, slots, closing and the class choice window pass; the new look passes. Changed after it (user): bar order is now health, stamina, eitr; the bars stay put while building or sailing and the game's selected-piece box and ship display move to the bottom right instead; the skill paths branch like a tree with the names on plaques. Re-check pending.
+- **Corrupted boss summons tested in-game; summons fight players only:** summons and their boss no longer target or damage each other (user); they also leave other creatures alone.
+- **Play-test 2026-10-31 (single player):** player-stat affixes (max health/stamina/eitr, carry weight, movement, regen, resistances), the bonus shown next to item-stat lines and the Odin unlock passed, no errors in the log. Weapon skill, life steal and crafting an Odin item not tried yet.
+- **Odin items unlocked (new, untested):** the Odin cape, helmet and tankard were gated behind a Steam entitlement (tag "beta"); Corruption clears the tag, so everyone can equip, craft and loot them (user). The earlier change that left them out of the loot was reverted.
+
 ### 2026-10-30
 - **Attributes and class eitr built** (Orlog): D2's Strength, Dexterity, Vitality and Energy with the stat points from levels; health and stamina per level and Vitality (D2's numbers scaled by Valheim's starting values), +1% damage per Strength (melee, thrown) and Dexterity (bows), and the class eitr pool (15, +1.5 per level and per Energy) that vanilla regen refills without eitr food. Class set with `orlog_class` until the Orlog stone; `orlog_stat`, `orlog_respec`. Untested in-game.
+- **New look for the classes UI and the character sheet** (user's mix of four mock-ups): mock-up D's bronze medallion skills, eitr-blue rune paths, bronze riveted slots, bars and cross, on the game's own panel background (copied from the inventory) instead of dark wood and parchment; the character sheet restyled to match; skills panel wider. Untested in-game.
+- **Classes UI, first look** (screenshots): panel, tabs, spending, attributes and drag-to-slot work; food and XP bar pass. Fixed: white empty cross slot, overlapping tab and skill names, lines through names, too-dark locked icons, faint selected outline and points hint, cross label over the Forsaken power; XP bar lowered (user). A polish pass for the look is to be agreed.
+- **Classes UI built** (untested, from `docs/classes-ui-brief.md`): new health/eitr/stamina bars at the bottom centre with food beside them and an XP bar; the skill cross; the skills panel with the three skill tabs, prerequisite lines, spending, tooltips, drag-to-slot and the attribute points; the class choice window for the Orlog stone. Reads Orlog's API by reflection; a `Demo` setting serves a sample Amazon until Orlog's API is filled in (207 tests).
+- **Corrupted boss summons (new, untested):** every 30 s a corrupted boss calls 2–3 creatures of its army raid, arriving like a raid; maddened, 1–2 stars, at most 4 alive per player near it. Rip waves and summons now share their spawning code (`BossArmies`).
+- **Loot step 2: player-stat affixes work** (untested): max health/stamina/eitr, health and stamina regen, movement speed (worn and held, capped at 35%), carry weight, the four resistances and all resistances (75% per element), weapon skill levels, life steal (capped at 10%). Caps read from `affix_caps.csv` (now compiled in).
 - **Currency and Maps tabs tested in-game** (single player): every step passed after the drag fix.
 - **Currency and Maps tabs, second re-test:** death and gravestone, relogging and full-bag pickup pass. The drag fix guarded the wrong method (`UpdateInventory`); the cancel is in `UpdateContainer`. Fixed; re-test.
 - **Currency and Maps tabs, re-test:** grids, crafting from the tabs, maps from the Maps tab, chests and full-bag pickup pass. Fixed: left-click couldn't pick up a tab item unless a container was open (the game cancels drags from non-bag inventories then); a tab drag is now kept.
@@ -987,7 +1115,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 - **Resistance ranges settled** (user): fire, frost, poison and lightning 10–50%, all resistances 2–10%. Every gear affix now has its range.
 - **Loot: ground names and upgrading tested in-game.** Fire, frost and poison resistance ranges 10–50% from the new `co_dump` (gear that makes you Resistant; proposed); lightning and all resistances have no gear source (asked). Dump files `item_details.csv` and `status_effects.csv` refreshed with resistances.
 - **Fix: loot names on the ground** showed the base item name: the game localizes the hover text before our patch, which looked for the untranslated name. To re-test. Play-test results for loot step 1 recorded (drops, combat affixes, resonant lines, no errors passed).
-- **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons.
+- **Corrupted offerings play-tested:** Eikthyr, Moder, the Queen and Kall's phases work. Fixed the swapped Ancient seed and Malicious blood icons (re-checked in game).
 - **Corrupted offerings (new, untested):** every boss's offering has a corrupted version, crafted at the Riftforge (the full offering + 1 shard at altars, 1 item + 1 shard per stand at Moder's, Yagluth's and Fader's altars, Sealbreaker + 1 shard for the Queen's door), with icons from the user's renders. They summon the boss corrupted; Kall's later phases stay corrupted.
 - **Levels: pace fix re-tested** (single player): "pace feels better". Only sharing with a friend is left to test.
 - **Levels: slower early levels** (after the play-test, user's choice): a creature above your level now gives your own level's XP + classic WoW's bonus (+5% per level, max +20%) instead of its full XP (D2). Level 2 takes about 8 greydwarves instead of 3. Lower creatures keep D2's cut. Untested in-game (158 tests).
