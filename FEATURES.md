@@ -1110,6 +1110,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-01
+- **Fix (gathering, striker side):** when the striker also owned a rock that breaks into an ore deposit (e.g. `rock4_copper`), the deposit got the hit again as a copy and Prospector's / Veinbreaker's applied twice. Damage calls nested inside another target's damage (the owner's own code) are now left alone.
 - **Loot step 3, second half: on-harvest gathering affixes (new, untested):** both Bountifuls, Determined, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's and Charring now work, and Odin's Grace harvests whole trees. The striker sends its tool's chances to the object's owner, who changes the drops.
 - **Loot step 3: gathering-tool affixes, striker side (new, untested):** Prospector's, Veinbreaker's, Seismic, Odin's Grace on rock and ore, Excavator's, Lumberjack's, Timberfall, Rootbreaker, Splintering, Fit, Careful, Hushed, Light, Keen-eyed, Magnetic, Swift and Scholar's now work. On-harvest effects and Odin's Grace on trees come next.
 - **Fix: affix values keep their decimals.** Values rolled as whole numbers, so Keen-eyed (0.5–2 m) could only roll 0, 1 or 2. Each affix now rolls with as many decimals as its range is written with in `affixes.csv` (Keen-eyed in tenths, the rest unchanged); stored and shown the same way.

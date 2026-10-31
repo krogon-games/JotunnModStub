@@ -63,11 +63,26 @@ namespace Corruption.Content
         /// <summary>Counts the local player's melee swings, so once-per-swing rolls elsewhere know when a new one starts.</summary>
         internal static int SwingNumber { get; private set; }
 
-        /// <summary>True the first time this hit is seen during the local player's swing; marks it as handled.</summary>
+        /// <summary>
+        ///     How deep we are in the five targets' <c>Damage</c> calls. When the striker also owns the object, the
+        ///     owner's code runs inside the striker's call and can hit another object with a deserialized copy of the
+        ///     same hit (a rock breaking into a copper deposit, <c>Destructible.Destroy</c>): such nested calls are the
+        ///     owner's, already scaled, and are left alone.
+        /// </summary>
+        private static int _damageDepth;
+
+        /// <summary>
+        ///     True the first time this hit is seen during the local player's swing, outside any nested target
+        ///     <c>Damage</c> call; marks it as handled.
+        /// </summary>
         private static bool Take(HitData hit)
         {
-            return Swing.Active && hit != null && Swing.Tool != null && Swing.Processed.Add(hit);
+            return _damageDepth == 0 && Swing.Active && hit != null && Swing.Tool != null && Swing.Processed.Add(hit);
         }
+
+        private static void Enter() => _damageDepth++;
+
+        private static void Leave() => _damageDepth = System.Math.Max(0, _damageDepth - 1);
 
         // ---- The swing: who is striking, with what ----
 
@@ -81,6 +96,7 @@ namespace Corruption.Content
                     return;
                 }
                 Swing.Active = true;
+                _damageDepth = 0;
                 SwingNumber++;
                 Swing.Tool = __instance.m_weapon;
                 Swing.Processed.Clear();
@@ -177,11 +193,14 @@ namespace Corruption.Content
             private static void Prefix(HitData hit, out bool __state)
             {
                 __state = Take(hit);
+                Enter();
                 if (__state)
                 {
                     ScaleDepositHit(hit);
                 }
             }
+
+            private static void Finalizer() => Leave();
 
             /// <summary>Seismic and Odin's Grace: extra hits on the parts touching the one struck, sent after the original.</summary>
             private static void Postfix(MineRock5 __instance, HitData hit, bool __state)
@@ -239,11 +258,14 @@ namespace Corruption.Content
             private static void Prefix(HitData hit, out bool __state)
             {
                 __state = Take(hit);
+                Enter();
                 if (__state)
                 {
                     ScaleDepositHit(hit);
                 }
             }
+
+            private static void Finalizer() => Leave();
 
             private static void Postfix(MineRock __instance, HitData hit, bool __state)
             {
@@ -282,9 +304,13 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(Destructible), nameof(Destructible.Damage))]
         private static class DestructibleHit
         {
+            private static void Finalizer() => Leave();
+
             private static void Prefix(Destructible __instance, HitData hit)
             {
-                if (!Take(hit))
+                bool take = Take(hit);
+                Enter();
+                if (!take)
                 {
                     return;
                 }
@@ -320,11 +346,14 @@ namespace Corruption.Content
             private static void Prefix(HitData hit, out bool __state)
             {
                 __state = Take(hit);
+                Enter();
                 if (__state)
                 {
                     hit.m_damage.m_chop *= 1f + Total("chop_damage_trees") / 100f;
                 }
             }
+
+            private static void Finalizer() => Leave();
 
             private static void Postfix(TreeBase __instance, HitData hit, bool __state)
             {
@@ -341,11 +370,14 @@ namespace Corruption.Content
             private static void Prefix(HitData hit, out bool __state)
             {
                 __state = Take(hit);
+                Enter();
                 if (__state)
                 {
                     hit.m_damage.m_chop *= 1f + Total("chop_damage_logs") / 100f;
                 }
             }
+
+            private static void Finalizer() => Leave();
 
             private static void Postfix(TreeLog __instance, HitData hit, bool __state)
             {
