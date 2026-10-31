@@ -232,6 +232,14 @@ def make_glow_box():
     return to_image(np.full((s, s, 3), 255.0), a)
 
 
+def make_disc():
+    """A plain white disc, for the round cooldown sweep over the power medallion's face (tinted dark in game)."""
+    s = 64
+    x, y = grid(s, s)
+    r = np.hypot(x - s / 2, y - s / 2)
+    return to_image(np.full((s, s, 3), 255.0), smoothstep(s / 2, s / 2 - 1.2, r))
+
+
 def make_panel():
     """Stand-in for the game's own panel background (the inventory's 'Bkg', used in game when it can be found):
     translucent warm brown with a soft darker edge."""
@@ -487,6 +495,7 @@ def main():
         "glow_ring": make_glow_ring(),
         "glow_line": make_glow_line(),
         "glow_box": make_glow_box(),
+        "disc": make_disc(),
         "arch_back": make_arch_back(),
         "arch_rim": make_arch_rim(),
         "close": make_close(),

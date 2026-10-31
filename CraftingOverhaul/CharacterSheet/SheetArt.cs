@@ -28,6 +28,7 @@ namespace CraftingOverhaul.CharacterSheet
         public static Sprite GlowRing => Get("glow_ring", Vector4.zero);
         public static Sprite GlowLine => Get("glow_line", Vector4.zero);
         public static Sprite GlowBox => Get("glow_box", new Vector4(24, 24, 24, 24));
+        public static Sprite Disc => Get("disc", Vector4.zero);
 
         /// <summary>The glow ring's ring sits on a medallion's rim when drawn this many times the medallion's size.</summary>
         public const float GlowRingScale = 128f / 96f;

@@ -236,5 +236,32 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(new[] { "x", "y\"z" }, FlatJson.Strings(JsonOut.Array(new[] { "x", "y\"z" })));
             Assert.Equal(3520485254L, FlatJson.GetLong("{\"xp\":3520485254}", "xp", 0));
         }
+    
+        [Fact]
+        public void CooldownShowsTimeLeftAndNothingWhenReady()
+        {
+            Assert.Equal("", CooldownDisplay.Label(0f));
+            Assert.Equal("1", CooldownDisplay.Label(0.2f));
+            Assert.Equal("3", CooldownDisplay.Label(2.01f));
+            Assert.Equal("59", CooldownDisplay.Label(59f));
+            Assert.Equal("1:05", CooldownDisplay.Label(64.5f));
+            Assert.Equal("20:00", CooldownDisplay.Label(1200f));
+            Assert.Equal(0f, CooldownDisplay.Sweep(0f, 8f));
+            Assert.Equal(0.5f, CooldownDisplay.Sweep(4f, 8f), 3);
+            Assert.Equal(1f, CooldownDisplay.Sweep(9f, 8f));
+            Assert.Equal(0f, CooldownDisplay.Sweep(3f, 0f));
+        }
+
+        [Fact]
+        public void ReadyFlashStartsWhenTheCooldownEndsAndFades()
+        {
+            Assert.True(CooldownDisplay.BecameReady(0.1f, 0f));
+            Assert.False(CooldownDisplay.BecameReady(0f, 0f));
+            Assert.False(CooldownDisplay.BecameReady(2f, 1.5f));
+            Assert.Equal(1f, CooldownDisplay.Flash(0f), 3);
+            Assert.True(CooldownDisplay.Flash(0.4f) < 1f && CooldownDisplay.Flash(0.4f) > 0f);
+            Assert.Equal(0f, CooldownDisplay.Flash(CooldownDisplay.FlashSeconds));
+            Assert.Equal(0f, CooldownDisplay.Flash(-1f));
+        }
     }
 }
