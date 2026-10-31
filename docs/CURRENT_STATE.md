@@ -99,7 +99,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 |---|---|---|---|
 | Classes | `claude/class-skills` | Orlog stone and class choice | Skill tree rules and data, the Amazon's passives, boss bonus points and the respec item, the skill button and bow skills, spear skills |
 | Loot | `claude/affixes-loot` | The Riftforge window brief (so the UI session can start), then the 33 gathering affix effects | Proc affixes, orbs, the Riftforge crafting rules, uniques and the ring slot, loot locks and beams |
-| Rips | `claude/rips-bosses` | Map tiers and affixes (phase 5) | 3-star creatures, elite packs (design with the user first), dedicated-server review, landing check and boss particles, phase 8 |
+| Rips | `claude/rips-bosses` | Dedicated-server review **done 2026-11-01** (two multiplayer fixes; `ARCHITECTURE.md` → Dedicated-server review; group steps in `PLAYTEST.md` → Session 2). Now: map tiers and affixes (phase 5); user answers recorded in `DECISIONS.md` (one map per group, shards per tier, 3-day scars; tier 5 to define) | 3-star creatures, elite packs (design with the user first), landing check and boss particles, phase 8 |
 | UI | `claude/ui-overhaul` | Play-test fixes (double click sound, adrenaline bar) | Real Orlog data instead of the demo, the Riftforge window (in Corruption, from the loot session's brief), the recipe list redesign (ask first) |
 
 Housekeeping for any session (`ROADMAP.md` §6): `PLAYER_SETUP.md` lacks Orlog; the status tables here and in `GAME_DESIGN.md` lag behind the play-tests; one multiplayer script for the group in `PLAYTEST.md` → Session 2.

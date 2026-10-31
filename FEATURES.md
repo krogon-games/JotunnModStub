@@ -696,6 +696,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 - **Fixed 2026-10-29:** maddened creatures got **no damage or speed bonus**: the vanilla effects they copy were read at startup, before the game makes them available (log: "SE_Dvergr_buff not found"). They're now read in the world, the first time a creature is maddened, and the log says what was copied (`Maddened: damage ×1.2 …`). To re-test.
 - **Play-test 2026-10-29 (build 65e6271): passed.** Maddened bonuses read correctly (log: `Maddened: damage ×1.2 (from SE_Dvergr_buff), speed +15% (from Potion_hasty)`); charms don't stop rip creatures; Meadows and Swamp rips each left a chest with shards. **Waves felt too slow** (Meadows: at most 4 alive, one every 20 s): rips now use `WaveMultiplier` 2 (user). Whether maddened creatures fight each other couldn't be judged yet. The user wants the heart moved away from the landing spot and found with a corrupted wishbone (to design).
 - A `Failed to find rpc method 327122920` warning when first opening the chest is the game's own: vanilla chests call `discovered` but register `RPC_Discovered`. Harmless, happens with every vanilla treasure chest.
+- **Multiplayer fixes 2026-11-01 (untested):** wave limits count creatures far from the heart's owner too; creatures maddened where they stand turn red for every player (message `Corruption_Maddened`).
 - Maddened creatures stay after the heart is destroyed (the waves stop; the ones alive keep fighting). Vanilla raid creatures despawn when the raid ends; rips have no such end yet.
 - **Play-test 2026-10-29:** the busier waves (`WaveMultiplier` 2) passed, and maddened creatures were seen fighting each other, as the design says.
 - **Play-test 2026-10-29, after the busier waves:** still not challenging enough (user: too few or too weak). Wave creatures now have at least 1 star (`MinStars` 1). **Re-tested 2026-10-29: "definitely more challenging"** (user). With every creature starred, 1-star shard drops (4% in rips) apply to all of them, so rips give more shards, and 2 stars come one level-up roll sooner (10% instead of about 1%).
@@ -706,6 +707,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 | Target | Patch | Purpose |
 |---|---|---|
 | `Character.Awake` | Postfix | Restores maddened behaviour on creatures loaded with the flag |
+| `Game.Start` | Postfix | Registers `Corruption_Maddened`: tells every game to show a creature maddened in place |
 | `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them. Corrupted boss summons are enemies of players only |
 | `CharacterDrop.GenerateDropList` | Postfix (the existing shard one) | Double starred shard chances for rip creatures |
 
@@ -824,6 +826,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 
 **Known issues:**
 - **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. Since 2026-10-30, corrupted offerings summon them too (see [Corrupted offerings](#corrupted-offerings)).
+- **Multiplayer fix 2026-11-01 (untested):** the limit now counts summons this game spawned even when they're far from it, so it holds with players spread out.
 - **Play-test 2026-10-31 (single player, Eikthyr and Bonemass): passed.** Summons arrive every 30 s from the army, 2–3 at a time, up to 4 alive alone, and stop when the boss dies. **Fixed after the test:** summons attacked Eikthyr when the player was away and he attacked them (maddened creatures treat everything as an enemy); now summons and their boss are allies and summons target players only. To re-check. The Ashlands army's charred spawner stones aren't summoned (only creatures count towards the limit).
 - The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet.
 
@@ -1087,6 +1090,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-11-01
+- **Multiplayer fixes from the dedicated-server review** (untested): wave and summon limits now count creatures this game spawned even when they're far from it (with players spread out, more could spawn than the limit); creatures maddened where they stand when waves start now turn red for every player, not only the one whose game maddened them. Review in `docs/ARCHITECTURE.md` → Dedicated-server review.
 
 ### 2026-10-31
 - **Attributes and class eitr tested in-game** (single player): every step passed, including the classes UI with real data. Noted for the UI: double click sounds when spending points.

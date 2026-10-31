@@ -100,3 +100,7 @@ Needs a second player (host a world or use the dedicated server, everyone on the
 3. **Rips:** you open a rip, your friend follows you through, you both come home through the exit rip. Your friend sees and hears your corrupted wishbone's pings. If a rip ever lands near anyone's base, tell Claude (the server should prevent that).
 4. **Essences:** kill a boss together: it drops 1 essence.
 5. **Character sheet:** with your friend standing next to you, open your inventory: only you appear in the character picture, never them.
+6. **Rips together** (best on the dedicated server): one opens the rip, both go through. Both see the heart, the waves, red maddened creatures (also the ones already standing there when the waves start) and the end chest. Split up 100 m or more around the heart: the waves don't pile up beyond their limit near either of you.
+7. **Corrupted boss together:** `spawn Eikthyr` + `co_corrupt` (or an offering). With two players near him the summon limit is 8; both see the summons red and both are targeted. The boss and his summons never fight each other.
+8. **Offerings:** your friend offers a corrupted item: the boss arrives corrupted for both of you.
+9. **Log:** after the session, send `LogOutput.log` from both PCs (and the server's, if you can): Claude looks for `Corrupted boss … summoned` lines and red errors.
