@@ -193,10 +193,26 @@ namespace CraftingOverhaul.Tests
             // Strafe←Guided; Immolation←Exploding; Freezing←Ice: 9 lines.
             Assert.Equal(9, lines.Count);
             Assert.All(lines, l => Assert.True(l.Y2 > l.Y1));
+            // Same column: one straight drop from the bottom of one tile to the top of the next.
             var straight = lines.Single(l => l.From == "MagicArrow" && l.To == "MultipleShot");
+            Assert.Single(straight.Segments);
             Assert.Equal(straight.X1, straight.X2);
-            Assert.Equal(-90f, straight.AngleDegrees, 3);
-            Assert.Equal(SkillTreeLayout.RowGap - SkillTreeLayout.NameHeight, straight.Length, 3);
+            Assert.Equal(SkillTreeLayout.RowGap, straight.Segments[0].Length, 3);
+            // Another column: down, across just above the skill's row (below the names), down into the skill.
+            var bent = lines.Single(l => l.From == "MultipleShot" && l.To == "ExplodingArrow");
+            Assert.Equal(3, bent.Segments.Count);
+            Assert.False(bent.Segments[0].Horizontal);
+            Assert.True(bent.Segments[1].Horizontal);
+            Assert.False(bent.Segments[2].Horizontal);
+            SkillTreeLayout.TilePosition(3, 3, out float tx, out float ty);
+            Assert.Equal(ty - SkillTreeLayout.ElbowAbove, bent.Segments[1].Y1, 3);
+            Assert.True(bent.Segments[1].Y1 > ty - SkillTreeLayout.RowGap + SkillTreeLayout.NameHeight);
+            Assert.Equal(tx + SkillTreeLayout.Tile / 2f, bent.X2, 3);
+            Assert.Equal(ty, bent.Y2, 3);
+            // Paths from one skill share their first stretch, so they branch from one trunk.
+            var fromMultiple = lines.Where(l => l.From == "MultipleShot").ToList();
+            Assert.Equal(2, fromMultiple.Count);
+            Assert.Equal(fromMultiple[0].X1, fromMultiple[1].X1);
         }
 
         [Fact]

@@ -27,7 +27,7 @@ Without the Orlog plugin, CraftingOverhaul shows the new health/eitr/stamina bar
 ### 2.1 Health, eitr and stamina bars (user, 2026-10-30)
 
 Reference: `docs/images/hud_reference_bars.jpg` (Elden Ring).
-- Three horizontal bars together at the **bottom centre**: **health on top, eitr in the middle, stamina at the bottom**, in Valheim's colours (health red, eitr blue, stamina yellow). Replaces vanilla's separate health, stamina and eitr displays.
+- Three horizontal bars together at the **bottom centre**: **health on top, eitr in the middle, stamina at the bottom** (*changed by the user 2026-10-31 after the play-test: health, stamina, eitr, so gaining eitr doesn't move stamina*), in Valheim's colours (health red, eitr blue, stamina yellow). Replaces vanilla's separate health, stamina and eitr displays.
 - Values come from vanilla: `Player.GetHealth`/`GetMaxHealth`, `GetStamina`/`GetMaxStamina`, `GetEitr`/`GetMaxEitr`. The classes plugin adds its eitr pool through the game's own max-eitr calculation, so these already include it.
 - To settle in the UI session: bar length grows with the maximum, up to a cap (as in the reference); the eitr bar shows only when max eitr > 0 (always, for a character with a class); a new place for the food icons that sit beside vanilla's health display; check what vanilla already shows near the bottom centre (sailing controls, a mount's stamina) and where EquipmentAndQuickSlots draws its quick slots (players will keep eitr potions there).
 

@@ -358,21 +358,33 @@ namespace CraftingOverhaul.Classes
             TreeObjects.Clear();
 
             var shown = SkillTreeLayout.Visible(Skills, _tab);
-            foreach (var line in SkillTreeLayout.Lines(shown))
+            // Paths from a learned prerequisite glow eitr-blue, like runes (mock-up D); others are a dim groove. The dim
+            // ones go first so a shared trunk shows lit when any path along it is.
+            var lines = SkillTreeLayout.Lines(shown);
+            for (int pass = 0; pass < 2; pass++)
             {
-                // A learned prerequisite's path glows eitr-blue, like a rune (mock-up D); others are a dim groove.
-                bool learned = ById.TryGetValue(line.From, out var from) && from.Points > 0;
-                if (learned)
+                foreach (var line in lines)
                 {
-                    var glow = UiKit.Image("LineGlow", _linesRoot, SheetArt.GlowLine);
-                    glow.color = new Color(UiKit.Rune.r, UiKit.Rune.g, UiKit.Rune.b, 0.85f);
-                    PlaceLine(glow.rectTransform, line, 16f);
-                    TreeObjects.Add(glow.gameObject);
+                    bool learned = ById.TryGetValue(line.From, out var from) && from.Points > 0;
+                    if (learned != (pass == 1))
+                    {
+                        continue;
+                    }
+                    foreach (var segment in line.Segments)
+                    {
+                        if (learned)
+                        {
+                            var glow = UiKit.Image("PathGlow", _linesRoot, SheetArt.GlowLine);
+                            glow.color = new Color(UiKit.Rune.r, UiKit.Rune.g, UiKit.Rune.b, 0.8f);
+                            PlaceSegment(glow.rectTransform, segment, 16f);
+                            TreeObjects.Add(glow.gameObject);
+                        }
+                        var core = UiKit.Image("Path", _linesRoot, null);
+                        core.color = learned ? new Color(0.85f, 0.95f, 1f) : new Color(0.42f, 0.33f, 0.24f, 0.9f);
+                        PlaceSegment(core.rectTransform, segment, learned ? 2f : 3f);
+                        TreeObjects.Add(core.gameObject);
+                    }
                 }
-                var core = UiKit.Image("Line", _linesRoot, null);
-                core.color = learned ? new Color(0.85f, 0.95f, 1f) : new Color(0.42f, 0.33f, 0.24f, 0.85f);
-                PlaceLine(core.rectTransform, line, learned ? 2f : 2.5f);
-                TreeObjects.Add(core.gameObject);
             }
             foreach (var skill in shown)
             {
@@ -380,13 +392,18 @@ namespace CraftingOverhaul.Classes
             }
         }
 
-        private static void PlaceLine(RectTransform rt, TreeLine line, float thickness)
+        /// <summary>
+        ///     A straight piece of a path. The glow sprite fades across its thickness, so a horizontal piece uses it as is
+        ///     and a vertical one turned a quarter; each piece runs half its thickness past both ends so corners close.
+        /// </summary>
+        private static void PlaceSegment(RectTransform rt, TreeSegment segment, float thickness)
         {
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = new Vector2(line.Length, thickness);
-            rt.anchoredPosition = new Vector2((line.X1 + line.X2) / 2f, -(line.Y1 + line.Y2) / 2f);
-            rt.localRotation = Quaternion.Euler(0f, 0f, line.AngleDegrees);
+            rt.anchoredPosition = new Vector2((segment.X1 + segment.X2) / 2f, -(segment.Y1 + segment.Y2) / 2f);
+            float length = segment.Length + thickness;
+            rt.sizeDelta = new Vector2(length, thickness);
+            rt.localRotation = segment.Horizontal ? Quaternion.identity : Quaternion.Euler(0f, 0f, 90f);
         }
 
         /// <summary>
@@ -431,10 +448,20 @@ namespace CraftingOverhaul.Classes
             UiKit.Place(points.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(0f, -1f), new Vector2(40f, 20f));
             UiKit.SetText(points, skill.Later ? "<size=12>later</size>" : skill.Points.ToString());
 
-            var name = UiKit.Text("Name", root, 13, skill.Later ? UiKit.LightDim : UiKit.Light, TextAnchor.UpperCenter);
+            // The name on a small dark plaque that the paths run behind (play-test 2026-10-31).
+            float labelWidth = size + SkillTreeLayout.ColGap - 4f;
+            var plaque = UiKit.Image("Plaque", root, SheetArt.Inset, Image.Type.Sliced);
+            plaque.pixelsPerUnitMultiplier = 2f;
+            if (!plaque.sprite)
+            {
+                plaque.color = new Color(0.09f, 0.06f, 0.04f, 0.8f);
+            }
+            var name = UiKit.Text("Name", root, 13, skill.Later ? UiKit.LightDim : UiKit.Light, TextAnchor.MiddleCenter);
             FitText(name, 10, 13);
-            UiKit.Place(name.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, -1f), new Vector2(size + SkillTreeLayout.ColGap - 4f, SkillTreeLayout.NameHeight));
+            UiKit.Place(name.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, 0f), new Vector2(labelWidth, SkillTreeLayout.NameHeight));
             UiKit.SetText(name, skill.Name);
+            float plaqueWidth = Mathf.Min(labelWidth, name.preferredWidth + 12f);
+            UiKit.Place(plaque.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0f, 0f), new Vector2(plaqueWidth, SkillTreeLayout.NameHeight));
 
             if (skill.CanSpend)
             {

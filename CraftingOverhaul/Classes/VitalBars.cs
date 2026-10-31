@@ -9,26 +9,27 @@ using UnityEngine.UI;
 namespace CraftingOverhaul.Classes
 {
     /// <summary>
-    ///     Health, eitr and stamina as three long bars together at the bottom centre (user, 2026-10-30, after Elden Ring:
-    ///     <c>docs/images/hud_reference_bars.jpg</c>): health on top, eitr in the middle (only once you have any), stamina
-    ///     at the bottom, in the game's colours. They grow with the maximum up to a cap, have a fading "damage taken" trail
-    ///     and the numbers at their end. Your food sits in three slots to their left (time left under each), and with
-    ///     Orlog (or the classes demo) a thin XP bar runs under them, with the level and a hint when points wait to be
-    ///     spent. The game's own health, stamina, eitr and food displays are hidden while they're on.
+    ///     Health, stamina and eitr as three long bars together at the bottom centre (user, 2026-10-30, after Elden Ring:
+    ///     <c>docs/images/hud_reference_bars.jpg</c>): health on top, stamina under it, eitr at the bottom (only once you
+    ///     have any; order changed by the user 2026-10-31 so gaining eitr doesn't move stamina), in the game's colours.
+    ///     They grow with the maximum up to a cap, have a fading "damage taken" trail and the numbers past their end. Your
+    ///     food sits in three round slots to their left (time left under each), and with Orlog (or the classes demo) a
+    ///     thin XP bar runs under them, with the level and a hint when points wait to be spent. The game's own health,
+    ///     stamina, eitr and food displays are hidden while they're on.
     ///
     ///     Values come straight from the game (<c>Player.GetHealth</c>, <c>GetMaxHealth</c> and so on), so anything that
-    ///     raises a maximum (food, Orlog's eitr pool) shows up. Like the game's bars they move up while building or sailing.
+    ///     raises a maximum (food, Orlog's eitr pool) shows up. Unlike the game's bars they stay put while building or
+    ///     sailing; <see cref="MovedHudPanels" /> moves the game's build and ship displays out of their way instead.
     /// </summary>
     internal static class VitalBars
     {
         private const float BarHeight = 14f;
         private const float BarGap = 4f;
         private const float XpHeight = 8f;
-        /// <summary>The XP bar sits this far below the bars' base line (user, play-test 2026-10-30: "drop it down a little bit lower").</summary>
-        private const float XpDrop = 14f;
+        /// <summary>Space between the lowest bar and the XP bar (user, play-test 2026-10-30: "drop it down a little bit lower").</summary>
+        private const float XpGap = 20f;
         private const float FoodSize = 34f;
         private const float FoodGap = 6f;
-        private const float BuildOrShipHeight = 320f;
         private const int ValueFontSize = 12;
 
         private static RectTransform _root;
@@ -158,8 +159,9 @@ namespace CraftingOverhaul.Classes
                 return;
             }
             _root.gameObject.SetActive(true);
-            bool raised = (hud.m_buildHud && hud.m_buildHud.activeSelf) || (hud.m_shipHudRoot && hud.m_shipHudRoot.activeSelf);
-            _root.anchoredPosition = new Vector2(0f, raised ? BuildOrShipHeight : ModConfig.HudBarsHeight.Value);
+            // The bars stay put while building or sailing (user, 2026-10-31); the game's build and ship displays move
+            // out of their way instead (MovedHudPanels).
+            _root.anchoredPosition = new Vector2(0f, ModConfig.HudBarsHeight.Value);
 
             float maxLength = ModConfig.HudBarMaxLength.Value;
             float left = -maxLength / 2f;
@@ -167,30 +169,28 @@ namespace CraftingOverhaul.Classes
             bool eitr = maxEitr > 0f;
             bool xp = ClassesSource.Available;
 
-            // Stacked upwards from the root: XP (if any), stamina, eitr (if any), health.
-            float y = 0f;
+            // Health on top, stamina under it, eitr at the bottom (user, 2026-10-31: gaining eitr must not push stamina
+            // down). Health and stamina never move; the XP bar sits under the lowest bar.
+            float rowStep = BarHeight + BarGap;
+            float eitrY = 0f;
+            float staminaY = rowStep;
+            float healthY = 2f * rowStep;
+            Layout(_health, left, healthY, player.GetHealth(), player.GetMaxHealth());
+            Layout(_stamina, left, staminaY, player.GetStamina(), player.GetMaxStamina());
+            SetActive(_eitr, eitr);
+            if (eitr)
+            {
+                Layout(_eitr, left, eitrY, player.GetEitr(), maxEitr);
+            }
             if (xp)
             {
-                UpdateXp(left, maxLength, y - XpDrop);
-                y += XpHeight + BarGap + 2f;
+                UpdateXp(left, maxLength, (eitr ? eitrY : staminaY) - XpGap - XpHeight);
             }
             SetActive(_xp, xp);
             _level.gameObject.SetActive(xp);
             _points.gameObject.SetActive(xp);
 
-            Layout(_stamina, left, y, player.GetStamina(), player.GetMaxStamina());
-            float barsBottom = y;
-            y += BarHeight + BarGap;
-            SetActive(_eitr, eitr);
-            if (eitr)
-            {
-                Layout(_eitr, left, y, player.GetEitr(), maxEitr);
-                y += BarHeight + BarGap;
-            }
-            Layout(_health, left, y, player.GetHealth(), player.GetMaxHealth());
-            float barsTop = y + BarHeight;
-
-            UpdateFood(player, left, barsBottom, barsTop);
+            UpdateFood(player, left, staminaY, healthY + BarHeight);
         }
 
         private static void SetActive(Bar bar, bool active)
