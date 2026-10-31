@@ -27,10 +27,12 @@ AxeBronze,Bronze Axe,BlackForest,weapon;axe_1h
 AxeEarly,Early Axes,BlackForest,weapon
 BackpackBlackForest,Rugged Backpack,BlackForest,cape
 BowFineWood,Finewood Bow,BlackForest,weapon
+CapeOdin,Cape of Oden,BlackForest,cape
 CapeTrollHide,Troll Hide Cape,BlackForest,cape
 FistBjornClaw,Paws of the Bear,BlackForest,weapon
 HelmetBronze,Bronze Helmet,BlackForest,helmet
 HelmetCelebration,Celebratory Cap,BlackForest,helmet
+HelmetOdin,Hood of Oden,BlackForest,helmet
 HelmetTrollLeather,Troll Leather Hood,BlackForest,helmet
 KnifeButcher,Butcher Knife,BlackForest,weapon
 KnifeCopper,Copper Knife,BlackForest,weapon
@@ -42,6 +44,7 @@ SpearBronze,Bronze Spear,BlackForest,weapon
 SwordBronze,Bronze Sword,BlackForest,weapon
 SwordWood,Wooden Sword,BlackForest,weapon
 Tankard,Tankard,BlackForest,weapon
+TankardOdin,Mead Horn of Oden,BlackForest,weapon
 TrinketBronzeHealth,Heart of the Forest,BlackForest,jewellery
 TrinketBronzeStamina,Bronze Pendant,BlackForest,jewellery
 ArmorIronChest,Iron Scale Mail,Swamp,chest
