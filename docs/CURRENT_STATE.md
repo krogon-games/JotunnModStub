@@ -98,7 +98,7 @@ Phase 5, phase 6 offerings and summons, phases 7–10 ( map affixes, corrupted b
 | Session | Branch | Start with | Then |
 |---|---|---|---|
 | Classes | `claude/class-skills` | Orlog stone and class choice | Skill tree rules and data, the Amazon's passives, boss bonus points and the respec item, the skill button and bow skills, spear skills |
-| Loot | `claude/affixes-loot` | The 33 gathering affix effects | Proc affixes, orbs, Riftforge crafting rules and the window brief, uniques and the ring slot, loot locks and beams |
+| Loot | `claude/affixes-loot` | The Riftforge window brief (so the UI session can start), then the 33 gathering affix effects | Proc affixes, orbs, the Riftforge crafting rules, uniques and the ring slot, loot locks and beams |
 | Rips | `claude/rips-bosses` | Map tiers and affixes (phase 5) | 3-star creatures, elite packs (design with the user first), dedicated-server review, landing check and boss particles, phase 8 |
 | UI | `claude/ui-overhaul` | Play-test fixes (double click sound, adrenaline bar) | Real Orlog data instead of the demo, the Riftforge window (in Corruption, from the loot session's brief), the recipe list redesign (ask first) |
 
