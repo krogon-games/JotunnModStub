@@ -1,7 +1,8 @@
 """Builds Corruption/Data/loot_bases.csv: the items monsters can drop as Magic or Rare loot.
 
-Reads the game dump (data/game-dump-1.0.20/items.csv and recipes.csv) and keeps every player-craftable item
-(an enabled recipe) that belongs to an affix item class. The class rules match LootBases.Classify in
+Reads the game dump (data/game-dump-1.0.20/items.csv, recipes.csv and item_details.csv) and keeps every
+player-craftable item (an enabled recipe) that belongs to an affix item class and needs no DLC (m_dlc empty;
+the Odin items are tagged "beta" and can't be used without it). The class rules match LootBases.Classify in
 Corruption/Rules/LootBases.cs; a unit test checks the two agree on every dumped item.
 
 Run from the repository root:  python3 tools/make_loot_bases.py
@@ -39,11 +40,13 @@ def main():
         items = {r["prefab"]: r for r in csv.DictReader(f)}
     with open(os.path.join(DUMP, "recipes.csv"), encoding="utf-8-sig") as f:
         craftable = {r["output"] for r in csv.DictReader(f) if r["enabled"] == "True"}
+    with open(os.path.join(DUMP, "item_details.csv"), encoding="utf-8-sig") as f:
+        dlc = {r["prefab"] for r in csv.DictReader(f) if r["m_dlc"]}
 
     rows = []
     for prefab in craftable:
         item = items.get(prefab)
-        if not item:
+        if not item or prefab in dlc:
             continue
         classes = classify(item["type"], item["skill"], int(item["max_stack"]))
         if not classes or item["biome"] not in BIOMES:

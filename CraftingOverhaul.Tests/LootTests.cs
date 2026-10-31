@@ -69,6 +69,9 @@ namespace CraftingOverhaul.Tests
             var bases = RealBases();
             var items = DumpRows("items.csv").ToDictionary(r => r["prefab"]);
             var craftable = new HashSet<string>(DumpRows("recipes.csv").Where(r => r["enabled"] == "True").Select(r => r["output"]));
+            // DLC items (m_dlc set, e.g. the Odin "beta" items) can't be used without the DLC, so they never drop.
+            var dlc = new HashSet<string>(DumpRows("item_details.csv").Where(r => r["m_dlc"].Length > 0).Select(r => r["prefab"]));
+            Assert.NotEmpty(dlc);
 
             foreach (var item in bases.Bases)
             {
@@ -83,7 +86,7 @@ namespace CraftingOverhaul.Tests
             {
                 var row = items[prefab];
                 var classes = LootBases.Classify(row["type"], row["skill"], int.Parse(row["max_stack"]));
-                if (classes.Count == 0 || !LootBases.Biomes.Contains(row["biome"]))
+                if (classes.Count == 0 || !LootBases.Biomes.Contains(row["biome"]) || dlc.Contains(prefab))
                 {
                     Assert.False(byPrefab.ContainsKey(prefab), $"{prefab} shouldn't be a loot base.");
                     continue;

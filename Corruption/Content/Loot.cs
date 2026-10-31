@@ -177,7 +177,7 @@ namespace Corruption.Content
             }
             else
             {
-                var pick = Bases.Pick(biome, Rules.PreviousBiomePercent, p => ObjectDB.instance.GetItemPrefab(p), () => Random.value * 0.99999f);
+                var pick = Bases.Pick(biome, Rules.PreviousBiomePercent, IsDroppable, () => Random.value * 0.99999f);
                 if (pick == null)
                 {
                     return null;
@@ -213,6 +213,17 @@ namespace Corruption.Content
             loot.Write(item.m_customData);
             item.m_durability = item.GetMaxDurability();
             return item;
+        }
+
+        /// <summary>
+        ///     Whether the game has this base item and it needs no DLC (the table already leaves DLC items out; this also
+        ///     covers a game update that tags more items).
+        /// </summary>
+        private static bool IsDroppable(string prefabName)
+        {
+            var prefab = ObjectDB.instance.GetItemPrefab(prefabName);
+            var drop = prefab ? prefab.GetComponent<ItemDrop>() : null;
+            return drop && string.IsNullOrEmpty(drop.m_itemData.m_shared.m_dlc);
         }
 
         /// <summary>Drops a new loot item at a position, like a creature drop.</summary>

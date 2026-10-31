@@ -815,7 +815,7 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 
 **What it does in-game:**
 - **Magic and Rare drops.** Every creature kill (not tamed creatures or players) rolls for loot, once **per player within the game's nearby-players range** (`Game.m_difficultyScaleRange`, the range the game counts players in to scale creature difficulty; 100 m in the 1.0 code). Chances come from `drop_chances.csv` (Magic 1 in 50, Rare 1 in 100) times `drop_modifiers.csv`: stars (`star_1`–`star_3`), rip creatures (`rip_tier_1`; maps have no tiers yet), corrupted bosses (uniques only). If Magic and Rare both succeed, only the Rare drops (`DropTable.Roll`). Unique rolls are ignored until uniques exist.
-- **Which item:** a random player-craftable weapon, shield, armour piece, cape (backpacks included), trinket or pickaxe **from the biome the creature died in**; with **20%** chance one from the biome just before it (user, 2026-10-29). Meadows always gives Meadows items; the Ocean gives none. The list is `loot_bases.csv`, built from the game dump by `tools/make_loot_bases.py` (248 items; the biome is the item's own from the dump, e.g. gem-socketed Ashlands weapons count as Deep North because their recipe needs a Deep North material).
+- **Which item:** a random player-craftable weapon, shield, armour piece, cape (backpacks included), trinket or pickaxe **from the biome the creature died in**; with **20%** chance one from the biome just before it (user, 2026-10-29). Meadows always gives Meadows items; the Ocean gives none. The list is `loot_bases.csv`, built from the game dump by `tools/make_loot_bases.py` (245 items; the biome is the item's own from the dump, e.g. gem-socketed Ashlands weapons count as Deep North because their recipe needs a Deep North material).
 - **Upgrade level 1**, full durability, like a freshly crafted item (user). Upgrading at the workbench or forge keeps the affixes.
 - **Affix count:** Magic 1 or 2 (1 twice as often), Rare 3 or 4 (3 twice as often) (user: fewer is likelier). Magic holds at most 1 prefix + 1 suffix, Rare 2 + 2.
 - **Rolling** (`AffixRoller`): each affix is picked by its `weight` among every affix that fits the item's classes and mechanics (`requires`), one per family per side; values are whole numbers anywhere in the range (every range in the table is whole). Both halves of a twin merge into one **resonant** line rolled from the resonant range (+25% on the combined top). **Every affix in `affixes.csv` rolls, including rows still marked `draft`** (user, 2026-10-29: test with the draft numbers while the ranges are settled).
@@ -942,6 +942,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-10-31
+- **Fix: DLC items no longer drop as loot.** The Odin cape, helmet and tankard (tagged DLC "beta") were in the base-item list and showed "DLC required" (user's play-test). `tools/make_loot_bases.py` now leaves out items with `m_dlc` set (245 base items), and the game skips any DLC-tagged base item too.
 
 ### 2026-10-30
 - **Loot step 2: player-stat affixes work** (untested): max health/stamina/eitr, health and stamina regen, movement speed (worn and held, capped at 35%), carry weight, the four resistances and all resistances (75% per element), weapon skill levels, life steal (capped at 10%). Caps read from `affix_caps.csv` (now compiled in).

@@ -89,7 +89,7 @@ Rules: [`docs/corruption-design.md` → Affix Splinters and shattering](../../do
 | `biome` | The item's biome from the game dump: `Meadows`, `BlackForest`, `Swamp`, `Mountain`, `Plains`, `Mistlands`, `Ashlands`, `DeepNorth` |
 | `classes` | Affix item classes (columns of `affixes.csv`), separated by `;` |
 
-Built by `python3 tools/make_loot_bases.py` from `data/game-dump-1.0.20/items.csv` and `recipes.csv`: every item with an enabled recipe whose type and skill make it a weapon, shield, armour piece, cape, trinket or pickaxe (tools, bombs, torches and ammo are left out). The test checks it matches the dump.
+Built by `python3 tools/make_loot_bases.py` from `data/game-dump-1.0.20/items.csv` and `recipes.csv`: every item with an enabled recipe and no DLC tag (`m_dlc`, from `item_details.csv`) whose type and skill make it a weapon, shield, armour piece, cape, trinket or pickaxe (tools, bombs, torches and ammo are left out). The test checks it matches the dump.
 
 ## loot_rules.csv
 
