@@ -63,7 +63,7 @@ EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and
 |---|---|---|
 | Kill XP (`Character.OnDeath` prefix) | EAQS patches `Character.CheckDeath` and `Player.OnDeath` (not `Character.OnDeath`). Our prefix only reads the creature and sends messages; it skips players | No overlap known; to test |
 | Level on the player ZDO (`Player.OnSpawned` postfix), `Orlog_Xp` message (`Game.Start` postfix) | Corruption also has postfixes on both; postfixes don't block each other | No overlap known |
-| Class health, stamina, eitr (`Player.GetTotalFoodValue` postfix) and Strength/Dexterity damage (`SEMan.ModifyAttack` postfix) | Not in the overlap lists recorded for EAQS, AdventureBackpacks or PlantEasily. Corruption's loot patches `ItemDrop.ItemData.GetDamage` (enhanced damage): both multiply, so they stack | No overlap known; to test |
+| Class health, stamina, eitr (`Player.GetTotalFoodValue` postfix) and Strength/Dexterity damage (`SEMan.ModifyAttack` postfix) | Not in the overlap lists recorded for EAQS, AdventureBackpacks or PlantEasily. Corruption's loot also postfixes `Player.GetTotalFoodValue` (max health/stamina/eitr affixes) and patches `ItemDrop.ItemData.GetDamage` (enhanced damage): both add or multiply, so they stack | No overlap known; to test |
 | **EpicMMOSystem** (not in the group's list) | Also gives levels and XP, patches `Character.Damage`, HUD bars and more. Don't run both (decided 2026-10-30) | — |
 
 ## Corruption (planned): keep in mind when building
