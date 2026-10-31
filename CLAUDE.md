@@ -10,6 +10,7 @@ Valheim 1.0 mods (BepInEx + Jötunn + Harmony) for a group of four friends on a 
 | File | Use it for |
 |---|---|
 | [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) | What's verified, built, broken, waiting on the user, and the next tasks |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | The plan for the current stretch: each session's tasks in order, the questions to ask the user first, where sessions meet. **Read your session's part before starting** |
 | [`docs/PLAYTEST.md`](docs/PLAYTEST.md) | Everything waiting for the user's play-test, as a step-by-step session. Add new features to it; remove them once tested |
 | [`FEATURES.md`](FEATURES.md) | Every feature: behaviour, config, known issues, exact Harmony patch targets |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Code layout, patterns to follow, game limits the code relies on |

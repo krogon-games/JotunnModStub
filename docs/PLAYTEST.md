@@ -6,7 +6,7 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 **Results so far:** the first session (2026-10-28) passed boss essences, corrupted bosses, talismans, craft from chests with AdventureBackpacks, category headers, `co_biome` and config reload; maps and rips worked apart from two bugs, fixed and confirmed in a re-test. Details: `FEATURES.md`.
 
-**Before you start:** switch your copy of the code to the branch the checks below are for (now `claude/rips-bosses`), rebuild both mods (`CraftingOverhaul.sln`), start the game with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily installed (the group's setup), load a test world, open the console (F5) and type `devcommands`. `god` and `fly` help.
+**Before you start:** since 2026-11-01 every branch is merged, so build from `master` (a session's new work: from its branch, it will say so); rebuild all three mods (`CraftingOverhaul.sln`), start the game with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily installed (the group's setup), load a test world, open the console (F5) and type `devcommands`. `god` and `fly` help.
 
 ## Session 1c: solo (about 20 minutes)
 
@@ -46,7 +46,7 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 
 ~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill) and 7 (life steal).
 
-Build from **`claude/affixes-loot`**. Roll items until you have the affix (`co_loot rare ArmorLeatherChest`, `co_loot rare CapeDeerHide`, `co_loot rare SwordBronze`…); these lines are no longer grey.
+Build from `master` (merged 2026-10-31). Roll items until you have the affix (`co_loot rare ArmorLeatherChest`, `co_loot rare CapeDeerHide`, `co_loot rare SwordBronze`…); these lines are no longer grey.
 
 1. **Max health / stamina / eitr:** equip an item with "+N max health" (or stamina, eitr): the health/stamina bar and the character sheet go up by N; unequip: back down.
 2. **Carry weight:** "+N carry weight": the weight limit (inventory and character sheet) rises by N.
@@ -59,7 +59,7 @@ Build from **`claude/affixes-loot`**. Roll items until you have the affix (`co_l
 
 ## Session 3: loot system step 1 (about 15 minutes)
 
-Build from branch **`claude/affixes-loot`** (the log line says `build: claude/affixes-loot …`). The log should also say `Loot: 84 affixes, 248 base items.`
+Build from `master` (merged 2026-10-31; the log line names the branch and commit). The log should also say `Loot: 84 affixes, 248 base items.`
 
 1. ~~Rares from `co_loot`: names, tooltip lines with ranges, grey inactive lines; armour and damage numbers rise~~ (passed 2026-10-29, screenshots; Magic items and lightning damage too). Still to check below: hover names, durability, block, repair, upgrade, drops, combat.
 1b. ~~Build check, natural drops, combat affixes, a resonant line, no errors~~ (passed 2026-10-29). ~~Re-test step 2 (ground names) and step 6 (upgrade)~~ (passed 2026-10-30). ~~Step 5 (durability and repair)~~ passed 2026-10-30. Only step 10 (bigger backpacks, after the server setting) is left.
@@ -74,7 +74,7 @@ Build from branch **`claude/affixes-loot`** (the log line says `build: claude/af
 8. **Combat:** hit something with a knockback or backstab item and parry with a parry item: no errors (the effect is subtle).
 9. No red errors in the console or `LogOutput.log`.
 10. **Bigger backpacks** (after setting the sizes in `PLAYER_SETUP.md` → For the server admin): the satchel opens with 2 rows (6 slots); items already in a backpack are kept; a 5-row backpack (`spawn BackpackPlains`) fits on screen.
-## Orlog levels and XP (branch `claude/class-skills`, about 15 minutes)
+## Orlog levels and XP (merged into `master`, about 15 minutes)
 
 New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and check `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)`.
 1–6, 9. ~~`orlog_info`, XP per kill, 1-star ×2, level-up, low creatures give little, kept after relogging, no errors~~ (passed 2026-10-30).
@@ -86,7 +86,7 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 All passed 2026-10-31 (single player). Left: nothing (sharing XP is in Session 2).
 
-## Classes UI (branch `claude/ui-overhaul`, 2 minutes)
+## Classes UI (merged into `master`, 2 minutes)
 
 Everything else passed 2026-10-31 ("everything looks really good now"). Left: with `[5 - Classes UI]` → `Demo = true`:
 1. **Adrenaline:** with a trinket on, block or parry, or use a power: an orange bar appears above health in the same style; nothing shows under the bars.
