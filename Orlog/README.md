@@ -2,7 +2,7 @@
 
 Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the repository.
 
-**Status: levels, XP and attributes.** The class stone and skills come next. Every player and the server need the mod.
+**Status: levels, XP, attributes and the Orlog stone.** Skills come next. Every player and the server need the mod.
 
 ## Features so far
 
@@ -13,6 +13,8 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - **Attributes** (with a class; only the Amazon so far): spend 5 stat points per level on Strength (+1% melee and thrown damage each), Dexterity (+1% bow damage), Vitality (+1.5 health, +0.89 stamina) and Energy (+1.5 eitr). Each level also gives +1 health, +0.89 stamina and +1.5 eitr.
 - **Eitr without eitr food:** a class starts with 15 eitr, which vanilla regeneration refills.
 - Skill points are counted (1 per level) but can't be spent yet.
+
+- **The Orlog stone** in the spawn area, among the boss trophy stones: use it to choose your class (only the Amazon so far). With CraftingOverhaul a window opens; without it, use the stone twice.
 
 ## Configuration
 
@@ -38,6 +40,6 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - `orlog_info`: your level and XP, and the creature levels in the biome you're in.
 - `orlog_xp <amount>`: add XP.
 - `orlog_level <level>`: set your level.
-- `orlog_class Amazon` (or `none`): choose a class, until the Orlog stone exists.
+- `orlog_class Amazon` (or `none`): set the class directly (a cheat; players use the Orlog stone).
 - `orlog_stat <strength|dexterity|vitality|energy> [points]`: spend stat points, until the UI exists (no `devcommands` needed).
 - `orlog_respec`: take back all spent stat points.

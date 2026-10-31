@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using BepInEx;
 using HarmonyLib;
+using Jotunn.Managers;
 using Jotunn.Utils;
 using Orlog.Content;
 
@@ -27,6 +28,7 @@ namespace Orlog
             Texts.Register();
             Safe.Run("read the levelling tables", Progress.LoadTables);
             Safe.Run("add the console commands", Commands.Register);
+            PrefabManager.OnVanillaPrefabsAvailable += RegisterContent;
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
@@ -45,6 +47,14 @@ namespace Orlog
         private void Update()
         {
             _configWatcher?.Tick();
+            OrlogStone.Tick();
+        }
+
+        /// <summary>The Orlog stone is cloned from a vanilla prefab, which only exists once the game has loaded them.</summary>
+        private static void RegisterContent()
+        {
+            PrefabManager.OnVanillaPrefabsAvailable -= RegisterContent;
+            Safe.Run("register the Orlog stone", OrlogStone.Register);
         }
 
         private void OnDestroy()

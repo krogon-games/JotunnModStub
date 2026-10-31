@@ -75,7 +75,7 @@ A static class `Orlog.Api` in the Orlog assembly, found through `Chainloader.Plu
 |---|---|
 | `int GetApiVersion()` | `1`. Check it first; turn the class UI off if it's missing or newer than you know |
 | `int GetChangeCounter()` | See above |
-| `int GetClassStoneRequest()` | Goes up by one each time the local player uses the Orlog stone: open the class choice window |
+| `int GetClassStoneRequest()` | Goes up by one each time the local player uses the Orlog stone: open the class choice window. **Real since 2026-11-01** (the stone exists; `co_classes_stone` is only needed for the demo) |
 | `string GetCharacterJson()` | `{"class":"Amazon","level":12,"maxLevel":99,"xp":4410,"xpLevelStart":3720,"xpNextLevel":4925,"statPoints":5,"skillPoints":1,"strength":20,"dexterity":40,"vitality":25,"energy":15}`. `class` is `""` without a class |
 | `string GetAttributeInfoJson(string attribute)` | `attribute` is `strength`, `dexterity`, `vitality` or `energy`: `{"name":"Dexterity","value":40,"effect":"+12% bow damage"}` |
 | `string GetClassIdsJson()` | `["Amazon"]` |

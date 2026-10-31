@@ -149,6 +149,7 @@ Animations: thrusts, throws, bow shots and the cast all exist in vanilla (`spear
 
 Decided (user, 2026-10-30): **a class is chosen at the spawn area** (the `StartTemple` location in the Meadows, where the boss trophies go), at **a new stone structure that blends in** with the area's standing stones.
 - Name (user, 2026-10-30): the **Orlog stone** (*örlög*, fate).
+- **Built 2026-11-01** (`FEATURES.md` → Orlog stone and class choice): the game's trophy stone cloned without its stand, rune-blue glow, in the widest gap of the trophy stone ring, server-confirmed once per world; without the classes UI, using it twice chooses the only class.
 - Proposed build: cloned from the start area's own stone prefabs (same mesh and material, no new model), placed once per world beside the trophy stones by the server (the start temple's position comes from the world's location list; the stone is a persistent object like the rip heart).
 - Interact (E) to open the class choice (UI from the UI session); a character without a class gets a raven hint the first time it spawns, as the Riftforge's raven does.
 - **Changing class** (user, 2026-10-30): possible at the Orlog stone, for a cost. Details later; not part of the first build.

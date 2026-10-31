@@ -8,8 +8,8 @@ namespace Orlog
 {
     /// <summary>
     ///     The contract with CraftingOverhaul's UI (<c>docs/classes-ui-brief.md</c>, version 1), read by reflection. Works on
-    ///     the local player; JSON answers are flat objects or string arrays; "" means no data. Levels, XP, attributes and
-    ///     the class (set with <c>orlog_class</c> until the Orlog stone exists) are built; skills answer "no data" until they are.
+    ///     the local player; JSON answers are flat objects or string arrays; "" means no data. Levels, XP, attributes,
+    ///     the class and the Orlog stone are built; skills answer "no data" until they are.
     /// </summary>
     public static class Api
     {
@@ -27,7 +27,7 @@ namespace Orlog
 
         public static int GetClassStoneRequest()
         {
-            return 0;
+            return OrlogStone.Requests;
         }
 
         public static string GetCharacterJson()
@@ -177,7 +177,7 @@ namespace Orlog
 
         public static string ChooseClass(string classId)
         {
-            return NotYet;
+            return Safe.Try("choose a class", () => OrlogStone.Choose(classId), "Something went wrong");
         }
 
         private static void Field(StringBuilder json, string name, string value)

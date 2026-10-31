@@ -23,6 +23,20 @@ namespace Orlog
             }
         }
 
+        /// <summary>Runs <paramref name="body" /> and returns its answer, or <paramref name="fallback" /> after an error.</summary>
+        public static T Try<T>(string action, Func<T> body, T fallback)
+        {
+            try
+            {
+                return body();
+            }
+            catch (Exception ex)
+            {
+                Report(action, ex);
+                return fallback;
+            }
+        }
+
         public static void Report(string action, Exception ex)
         {
             if (Reported.Add(action))

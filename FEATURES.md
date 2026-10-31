@@ -32,6 +32,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
 | [Attributes and class eitr](#attributes-and-class-eitr) | Combat | Tested in-game (single player) | Orlog: `3 - Attributes` → `HealthPerD2Life`, `StaminaPerD2Stamina`, `EitrStart`, `EitrPerLevel`, `EitrPerEnergy`, `DamagePerStrength`, `DamagePerDexterity`; table `Orlog/Data/classes.csv`; console `orlog_class`, `orlog_stat`, `orlog_respec` | `Orlog/Content/Attributes.cs`, `Orlog/Rules/AttributeRules.cs`, `Orlog/Data/classes.csv`, `Orlog/Content/Commands.cs`, `Orlog/Content/Progress.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogAttributeTests.cs` | 2026-10-30 |
+| [Orlog stone and class choice](#orlog-stone-and-class-choice) | Combat | Built, untested | — (the stone is placed by itself; `orlog_class` stays as a cheat) | `Orlog/Content/OrlogStone.cs`, `Orlog/Rules/StonePlacement.cs`, `Orlog/Content/Texts.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Api.cs`, `Orlog/Safe.cs`, `CraftingOverhaul.Tests/OrlogStoneTests.cs` | 2026-11-01 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
 There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
@@ -1076,6 +1077,31 @@ Unit-tested (`OrlogAttributeTests`: 7 tests).
 - `Player.GetTotalFoodValue` (postfix, local player only): adds the class's health, stamina and eitr to the base-plus-food totals the game turns into max health, stamina and eitr.
 - `SEMan.ModifyAttack` (postfix, local player's attacks only): multiplies blunt, slash and pierce damage by the Strength or Dexterity bonus.
 
+## Orlog stone and class choice
+
+*Orlog. Built 2026-11-01; not yet tested in-game. Roadmap task C1.*
+
+**What it does:** a character chooses its class at the **Orlog stone** in the spawn area (`class-design.md` §5a; user, 2026-10-30).
+- **Look:** a clone of the game's boss trophy stone (the start area's own stones: the first prefab with the game's `BossStone` component, logged at startup), without its trophy stand or "boss defeated" effects, glowing in the classes UI's rune blue as brightly as a trophy stone glows once its boss is beaten. No new model.
+- **Where:** placed once per world, by itself, the first time a player is in the spawn area: in the widest gap of the ring of trophy stones, at their distance from the centre and on their floor height, facing the centre, so it reads as one more stone of the ring. The player's game works out the spot from the loaded trophy stones; the server confirms no stone exists yet (it holds every object) before that game places it. A persistent object like the rip heart: it stays for everyone.
+- **Use (E) without a class:** opens the class choice window of the classes UI (CraftingOverhaul); choosing the Amazon and confirming gives the class ("You walk the path of the Amazon", the level-up effect). The choice only works after using the stone and staying near it (twice the game's interaction reach). Without CraftingOverhaul, using the stone twice within 10 s chooses the only playable class.
+- **Use with a class:** says which path you walk. Changing class at the stone comes later (user).
+- **Raven:** the first time a player comes near, a raven explains the stone ("The Norns weave a fate for every warrior…"), once per player like vanilla ravens.
+- `orlog_class` stays as a cheat for testing.
+
+**How it works:** `OrlogStone.Tick` (from the plugin's `Update`, every 2 s) finds the start location's centre (`ZoneSystem.GetLocationIcon` of `Game.m_StartLocation`, known to every game for spawning), the loaded `BossStone` objects within 50 m and any Orlog stone; with none, it asks the server (`Orlog_PlaceStone`), which checks every object for an `orlog_stone` and answers (`Orlog_PlaceStoneReply`); the asking game instantiates the stone. Placement maths in the pure, tested `StonePlacement`. `Orlog.Api.GetClassStoneRequest` and `ChooseClass` now answer for real, so the classes UI's window opens from the stone without its demo.
+
+Unit-tested (`OrlogStoneTests`: 4 tests: widest gap, wrap-around, average radius and real centre, too few stones).
+
+**Known issues / not yet:**
+- Untested in-game. The trophy stone prefab, the raven, and the floor height of the spot are read from the game at runtime; check the stone stands right in the ring and doesn't sink or float.
+- In a fresh world two players arriving at the same moment both ask the server; the server lets only the first place the stone.
+- The raven shows once per player, also for a character that already has a class (set with `orlog_class`).
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+- `Game.Start` (postfix): registers the stone's two server messages and resets the placement check for the new world.
+- No other patch: the stone is our own object (`Hoverable`, `Interactable`).
+
 ## Classes, levels and skill trees
 
 **Status:** Planned. Design only, no code (branch `claude/class-skills`).
@@ -1087,6 +1113,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-11-01
+- **Orlog stone and class choice built** (roadmap C1): a clone of the game's trophy stone glowing rune blue, placed once per world in the widest gap of the spawn area's ring of trophy stones (server-confirmed); using it opens the classes UI's class choice window (real data, no demo); a raven explains it once; `GetClassStoneRequest` and `ChooseClass` answer for real. `PLAYER_SETUP.md` now covers Orlog. Untested in-game (229 tests).
 
 ### 2026-10-31
 - **Attributes and class eitr tested in-game** (single player): every step passed, including the classes UI with real data. Noted for the UI: double click sounds when spending points.

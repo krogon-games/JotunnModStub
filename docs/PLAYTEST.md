@@ -86,6 +86,20 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 All passed 2026-10-31 (single player). Left: nothing (sharing XP is in Session 2).
 
+## Orlog stone and class choice (branch `claude/class-skills`, about 10 minutes)
+
+Build the whole solution from `claude/class-skills`; in `[5 - Classes UI]` set `Demo = false` (real data from Orlog).
+0. `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)` and `Orlog stone made from <a stone prefab>`.
+1. `orlog_class none` (no class). Go to the spawn area with the ring of boss trophy stones (walk, `fly`, or `goto <x> <z>`).
+2. A new stone glowing light blue stands in the ring, in its widest gap, facing the centre, on the same floor as the others (not sunk, not floating). The log says `Orlog stone placed at …`.
+3. A raven lands on or near it with the Orlog stone's lore (the first time only).
+4. Hover: "Orlog stone" and "[E] Choose your path".
+5. Press E: the class choice window opens. Choose the Amazon and confirm: "You walk the path of the Amazon", the level-up effect, the eitr bar appears.
+6. Press E again: "You walk the path of the Amazon" (no window).
+7. Log out and back in, go back: still one stone (not two), and you're still an Amazon.
+8. `co_classes_stone` isn't needed any more for the window (it's the demo's).
+9. No red errors in the console.
+
 ## Classes UI (merged into `master`, 2 minutes)
 
 Everything else passed 2026-10-31 ("everything looks really good now"). Left: with `[5 - Classes UI]` → `Demo = true`:
