@@ -851,6 +851,7 @@ namespace CraftingOverhaul.Classes
                 _inventoryButton = GUIManager.Instance.CreateButton("Skills", gui.m_player, new Vector2(1f, 1f), new Vector2(1f, 1f),
                     Vector2.zero, 112f, 30f);
                 _inventoryButton.name = "CraftingOverhaul_SkillsButton";
+                UiKit.OneClickSound(_inventoryButton);
                 var rt = (RectTransform)_inventoryButton.transform;
                 rt.pivot = new Vector2(1f, 0f);
                 rt.anchoredPosition = new Vector2(-14f, 2f);

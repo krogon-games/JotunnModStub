@@ -99,7 +99,21 @@ namespace CraftingOverhaul.Classes
             var go = GUIManager.Instance.CreateButton(label, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, size.x, size.y);
             var button = go.GetComponent<Button>();
             button.onClick.AddListener(() => onClick());
+            OneClickSound(go);
             return button;
+        }
+
+        /// <summary>
+        ///     Jötunn's buttons play the game's "select" sound on mouse down as well as the click on release, so every
+        ///     click sounded twice (play-test 2026-10-31). The select sound is for gamepad navigation; keep only the click.
+        /// </summary>
+        public static void OneClickSound(GameObject button)
+        {
+            var sfx = button ? button.GetComponent<ButtonSfx>() : null;
+            if (sfx)
+            {
+                sfx.m_selectSfxPrefab = null;
+            }
         }
 
         public static void SetText(Text text, string value)
