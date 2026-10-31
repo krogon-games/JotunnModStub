@@ -25,6 +25,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Corrupted offerings](#corrupted-offerings) | Combat | Tested in-game (single player) | — (table `Corruption/Data/offerings.csv`) | `Corruption/Content/CorruptedOfferings.cs`, `Corruption/Content/CorruptedBosses.cs`, `Corruption/Content/Texts.cs`, `Corruption/Rules/OfferingTable.cs`, `Corruption/Data/offerings.csv`, `Corruption/Assets/offering_icon_*.rgba`, `tools/make_offering_icons.py`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/OfferingTableTests.cs` | 2026-10-30 |
 | [Character sheet](#character-sheet) | UI | Tested in-game (single player) | `3 - Character Sheet` → `Enabled`, `Position`, `ShowStats`, `ShowQuickSlots`, `ShowCharacter` | `CharacterSheet/CharacterSheetPanel.cs`, `CharacterSheet/CharacterPortrait.cs`, `CharacterSheet/SheetArt.cs`, `CharacterSheet/SheetLayout.cs`, `CharacterSheet/FlatJson.cs`, `Assets/Sheet/*`, `CraftingOverhaul.csproj`, `ModConfig.cs`, `CraftingOverhaul.cs`, `tools/make_sheet_ui.py`, `CraftingOverhaul.Tests/SheetLayoutTests.cs` | 2026-10-29 |
 | [Currency and Maps tabs](#currency-and-maps-tabs) | UI | Tested in-game (single player) | Corruption: `9 - Inventory Tabs` → `Enabled` | `Corruption/Content/InventoryTabs.cs`, `Corruption/Content/InventoryTabsUi.cs`, `Corruption/Rules/TabRules.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/Content/Rips.cs`, `Corruption/Content/Texts.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/TabRulesTests.cs` | 2026-10-29 |
+| [Odin items unlocked](#odin-items-unlocked) | Crafting | Built, untested | — (always on) | `Corruption/Content/BetaItems.cs`, `Corruption/CorruptionPlugin.cs` | 2026-10-31 |
 | [Loot system](#loot-system) | Loot | Tested in-game (single player) for step 1; step 2 (player stats) built, untested | Corruption: `7 - Loot` → `Enabled`; console `co_loot`; tables `Corruption/Data/affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv` | `Corruption/Content/Loot.cs`, `Corruption/Content/LootPatches.cs`, `Corruption/Rules/LootBases.cs`, `Corruption/Rules/LootRules.cs`, `Corruption/Rules/LootItem.cs`, `Corruption/Rules/AffixRoller.cs`, `Corruption/Data/loot_bases.csv`, `Corruption/Data/loot_rules.csv`, `Corruption/Data/rare_names.csv`, `tools/make_loot_bases.py`, `Corruption/CorruptionConfig.cs`, `Corruption/CorruptionPlugin.cs`, `Corruption/Corruption.csproj`, `CraftingOverhaul.Tests/LootTests.cs`, `Corruption/Content/LootPlayerStats.cs`, `Corruption/Rules/AffixTotals.cs`, `CraftingOverhaul.Tests/AffixTotalsTests.cs` | 2026-10-30 |
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
@@ -809,6 +810,20 @@ Also changed: using a map (`Humanoid.UseItem` prefix in `Rips.cs`) accepts maps 
 
 ---
 
+## Odin items unlocked
+
+*Corruption plugin. User, 2026-10-31.*
+
+**What it does:** the game gates the Odin cape, the Odin helmet and the Odin tankard behind a Steam entitlement (`SharedData.m_dlc` = `"beta"`, the only such tag in 1.0.20). Without it the game refuses to equip them, hides their recipes and won't craft them, and their tooltip says "DLC item". Corruption clears the tag on every item at startup, so they work like any other item for everyone: equip, craft at the workbench, and roll as loot (they're in `loot_bases.csv`). The log lists each item it unlocked.
+
+**Why:** a play-test rolled a Rare Odin cape ("DLC required"); the user chose to unlock them fully rather than leave them out of the loot.
+
+**Known issues:** untested in-game. Needs Corruption on every machine (already required).
+
+**Vanilla behaviour overridden:** no Harmony patch; the items' shared data is changed once at startup (`PrefabManager.OnVanillaPrefabsAvailable`).
+
+---
+
 ## Loot system
 
 *Corruption plugin, design phase 7, step 1 of several: drops, tooltips and item-stat affixes. Orbs, uniques, personal-loot locks, loot beams, player-stat, gathering and proc effects come in later steps.*
@@ -942,6 +957,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-10-31
+- **Odin items unlocked (new, untested):** the Odin cape, helmet and tankard were gated behind a Steam entitlement (tag "beta"); Corruption clears the tag, so everyone can equip, craft and loot them (user). The earlier change that left them out of the loot was reverted.
 
 ### 2026-10-30
 - **Loot step 2: player-stat affixes work** (untested): max health/stamina/eitr, health and stamina regen, movement speed (worn and held, capped at 35%), carry weight, the four resistances and all resistances (75% per element), weapon skill levels, life steal (capped at 10%). Caps read from `affix_caps.csv` (now compiled in).

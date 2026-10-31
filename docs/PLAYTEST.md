@@ -31,6 +31,12 @@ Passed 2026-10-30: Eikthyr, Moder (and a mix refused), the Queen, Kall's phases.
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
+## Odin items (2 minutes)
+
+1. `co_loot rare CapeOdin` (or `spawn CapeOdin`, `HelmetOdin`, `TankardOdin`): the tooltip no longer says "DLC item", and you can equip them; the character picture shows no "DLC required".
+2. Their recipes show at the workbench once you've picked up the materials, and crafting works.
+3. The log lists `Unlocked CapeOdin (was tagged DLC "beta")` and the other two.
+
 ## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
 
 Build from **`claude/affixes-loot`**. Roll items until you have the affix (`co_loot rare ArmorLeatherChest`, `co_loot rare CapeDeerHide`, `co_loot rare SwordBronze`…); these lines are no longer grey.
