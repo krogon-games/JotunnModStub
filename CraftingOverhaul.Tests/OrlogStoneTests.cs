@@ -36,15 +36,5 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(6.2f, StonePlacement.Distance(1.2f, 2f, 3f), 3);
             Assert.Equal(3f, StonePlacement.Distance(-1f, 0f, 3f), 3);
         }
-
-        [Fact]
-        public void ScaleMakesItTwiceAsTall()
-        {
-            // User, 2026-11-02: twice a trophy stone. A 6 m model beside a 3 m trophy stone keeps its size.
-            Assert.Equal(1f, StonePlacement.Scale(6f, 3f, 2f), 3);
-            Assert.Equal(4f, StonePlacement.Scale(1.5f, 3f, 2f), 3);
-            // Unknown heights: just the factor.
-            Assert.Equal(2f, StonePlacement.Scale(0f, 3f, 2f), 3);
-        }
     }
 }

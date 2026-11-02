@@ -124,7 +124,7 @@ The dedicated server needs, in its own BepInEx install:
 | `3 - Attributes` | `EitrPerEnergy` | 1.5 | Eitr per Energy point |
 | `3 - Attributes` | `DamagePerStrength` | 1 | % more physical damage per Strength point, melee and thrown |
 | `3 - Attributes` | `DamagePerDexterity` | 1 | % more physical damage per Dexterity point, bows and crossbows |
-| `4 - Orlog Stone` | `StoneSize` | 2 | The Orlog stone's height in boss trophy stones (restart to apply) |
+| `4 - Orlog Stone` | `StoneSize` | 1.7 | The Orlog stone's size in times the Vegvisir it copies; 1.7 ≈ twice a trophy stone (restart to apply) |
 | `4 - Orlog Stone` | `StoneGap` | 3 | Metres between the Eikthyr trophy stone and the Orlog stone behind it |
 | `4 - Orlog Stone` | `StoneTurn` | 0 | Degrees to turn the stone if it faces the wrong way |
 

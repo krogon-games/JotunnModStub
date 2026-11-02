@@ -40,11 +40,5 @@ namespace Orlog.Rules
         {
             return Math.Max(0f, stoneRadius) + Math.Max(0f, orlogRadius) + Math.Max(0f, gap);
         }
-
-        /// <summary>The scale that makes a model of <paramref name="height" /> stand <paramref name="times" /> as tall as <paramref name="referenceHeight" />.</summary>
-        public static float Scale(float height, float referenceHeight, float times)
-        {
-            return height > 0f && referenceHeight > 0f ? times * referenceHeight / height : times;
-        }
     }
 }

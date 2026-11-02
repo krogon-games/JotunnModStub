@@ -8,7 +8,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - Orlog (the classes plugin, new 2026-10-30) compiles the same way.
-- `dotnet test CraftingOverhaul.Tests`: **239 passed, 0 failed** (2026-11-01, `claude/class-skills` with the Orlog stone and skill rule tests: 239; 229 with the stone alone; 225 on `master` after PR #16; 218 on 2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **262 passed, 0 failed** (2026-11-02, `claude/class-skills` with `master` merged and the stone's scale test removed; 239 on 2026-11-01 with the Orlog stone and skill rule tests; 229 with the stone alone; 225 on `master` after PR #16; 218 on 2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-31, single player (Orlog attributes, the classes UI, loot step 2, corrupted summons); the first full session was 2026-10-28 with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded.
 
 ## Implemented
@@ -65,7 +65,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 | PlantEasily bulk planting with seeds from a chest | `docs/mod-compatibility.md` → How to test, step 3 |
 | Character sheet in multiplayer: other players never appear in the picture | `PLAYTEST.md` → Session 2, Part 2b (everything else verified 2026-10-29) |
 | Orlog levels and XP: sharing with a friend | `PLAYTEST.md` → Session 2, Part 2d (everything else passed 2026-10-30, including the pace fix) |
-| Orlog stone and class choice (roadmap C1): failed its first play-test 2026-11-02, reworked the same day (Vegvisir copy behind the Eikthyr stone) | `PLAYTEST.md` → Orlog stone: re-test |
+| Orlog stone and class choice (roadmap C1): works (third play-test 2026-11-02); only the size change is untested; look to be redesigned later (user) | `PLAYTEST.md` → Orlog stone and class choice |
 | Classes UI: the adrenaline bar (2026-10-31) | `PLAYTEST.md` → Classes UI |
 | Corrupted boss summons: re-check after the fix (2026-10-31) that makes them the boss's allies, going for players only | `PLAYTEST.md` → Session 1c, 1g, step 1 |
 | Anything in multiplayer | `PLAYTEST.md` → Session 2, one evening's script for the group: build check, craft from chests (`docs/multiplayer-test.md`), character sheet, HUD and tabs per player, talismans, loot looks and rolls, XP sharing, a rip run (pings, waves), a boss (essences, corrupted boss and summons) |
@@ -110,7 +110,7 @@ Phase 5 (map affixes and tiers, 3-star creatures), phase 6's boss particles, the
 
 | Session | Branch | Start with | Then |
 |---|---|---|---|
-| Classes | `claude/class-skills` | Orlog stone (C1) and skill tree (C2) built 2026-11-01, to play-test; then C3 (the Amazon's passives) after the user's answers on skill values | Skill tree rules and data, the Amazon's passives, boss bonus points and the respec item, the skill button and bow skills, spear skills |
+| Classes | `claude/class-skills` | Orlog stone (C1) works and skill tree (C2) passed (2026-11-02), PR into `master`; then C3 (the Amazon's passives) after the user's answers on skill values | Skill tree rules and data, the Amazon's passives, boss bonus points and the respec item, the skill button and bow skills, spear skills |
 | Loot | `claude/affixes-loot` | The Riftforge window brief (so the UI session can start), then the 33 gathering affix effects | Proc affixes, orbs, the Riftforge crafting rules, uniques and the ring slot, loot locks and beams |
 | Rips | `claude/rips-bosses` | Map tiers and affixes (phase 5) | 3-star creatures, elite packs (design with the user first), dedicated-server review, landing check and boss particles, phase 8 |
 | UI | `claude/ui-overhaul` | Play-test fixes (double click sound, adrenaline bar) | Real Orlog data instead of the demo, the Riftforge window (in Corruption, from the loot session's brief), the recipe list redesign (ask first) |

@@ -80,8 +80,11 @@ namespace Orlog
                 AdminOnly("% more physical damage per Dexterity point, bows and crossbows (Diablo 2: 1%).", new AcceptableValueRange<float>(0f, 10f)));
 
             // The Orlog stone (user, 2026-11-02): behind the Eikthyr trophy stone, twice as tall, 3 m between them.
-            StoneSize = config.Bind(StoneSection, "StoneSize", 2f,
-                AdminOnly("The Orlog stone's height in boss trophy stones (2 = twice as tall). Restart the game to apply.",
+            // 1.7: the Vegvisir is 1.85 m; at 15.5 m the user saw about 10 trophy stones, so one reads as about 1.55 m,
+            // and twice that is 3.1 m = 1.7 x 1.85 m (play-test 2026-11-02).
+            StoneSize = config.Bind(StoneSection, "StoneSize", 1.7f,
+                AdminOnly("The Orlog stone's size, in times the Vegvisir it copies (1.85 m tall). 1.7 = about twice a boss trophy " +
+                          "stone. Restart the game to apply.",
                     new AcceptableValueRange<float>(0.5f, 6f)));
             StoneGap = config.Bind(StoneSection, "StoneGap", 3f,
                 AdminOnly("Metres between the Eikthyr trophy stone and the Orlog stone behind it. The stone moves the next time a player " +

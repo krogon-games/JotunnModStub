@@ -137,15 +137,9 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 All passed 2026-10-31 (single player). Left: nothing (sharing XP is in Session 2).
 
-## Orlog stone and class choice: third round (branch `claude/class-skills`, about 10 minutes)
+## Orlog stone and class choice (1 minute)
 
-Second round (2026-11-02): spot, raven, hover and choosing the Amazon passed; the stone was about 10× a trophy stone, had no mist, and the game froze on pressing E a second time. Size and mist are fixed; the freeze isn't found yet, so this round collects the log. Rebuild from `claude/class-skills`; `Demo = false`.
-0. `LogOutput.log` has `Orlog stone: model … m, trophy stone … m, scaled x…` and `Orlog stone: mist copied from …`.
-1. `orlog_class none`, go to the spawn area. The stone is behind the Eikthyr stone, **about twice a trophy stone's height** (not ten times), runes blue.
-2. **Blue mist** drifts round its base.
-3. Press E: the window opens; choose the Amazon. The log gets `Orlog stone used (class: none)`, `asked the classes UI …` and `choosing Amazon`.
-4. **Press E again** (the step that froze). If it says "You walk the path of the Amazon", fine. **If it freezes:** close the game, then **before starting it again** copy `BepInEx/LogOutput.log` from the profile folder (it's overwritten at launch) and `Player.log` from `%USERPROFILE%/AppData/LocalLow/IronGate/Valheim/`, and send both. Also note whether you were looking at the stone or at the raven when you pressed E.
-5. Log out and in: one stone, same place, still an Amazon. No red errors.
+Works (third round 2026-11-02); the look will be redesigned later. Left: after the size change, the stone behind the Eikthyr stone is **about twice a trophy stone's height** (`StoneSize` 1.7: your `com.krogongames.orlog.cfg` still says 2 from before, so set it to 1.7, then restart the game).
 
 ## Orlog skill tree and skill points
 

@@ -1,6 +1,6 @@
 # Handoff: `claude/class-skills`
 
-**Written:** 2026-11-02, from the real branch state. **Updated the same day** after two playtests: the skill tree passed. The Orlog stone failed and was reworked to your choices. Its re-test passed the spot, raven, hover and class choice, but found it 10× too big with no mist and a freeze on the second E; size and mist are fixed, and the freeze is being logged (below). `git status` was clean before this file. The branch was 3 commits ahead of `master` (`dd93cb8`) and 16 behind. `master` (`68a63e0`: loot steps 3–4, the Riftforge window brief, the UI session's click fix and housekeeping, PRs #18–#19) is now merged in with no lost work. Conflicts in `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md` and `docs/PLAYER_SETUP.md` were resolved by keeping both sides; in `PLAYER_SETUP.md` the two sessions' Orlog lines were combined, and the new skill settings were added to master's settings table. After the merge all three plugins build against stand-in game assemblies and **262 tests pass**. Earlier work from this branch is already in `master` (PRs #8, #9, #16).
+**Written:** 2026-11-02, from the real branch state. **Updated the same day** after three playtests: the skill tree passed, and the Orlog stone works (its look will be redesigned later, your call). C1 and C2 go to `master` in a PR. `git status` was clean before this file. The branch was 3 commits ahead of `master` (`dd93cb8`) and 16 behind. `master` (`68a63e0`: loot steps 3–4, the Riftforge window brief, the UI session's click fix and housekeeping, PRs #18–#19) is now merged in with no lost work. Conflicts in `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md` and `docs/PLAYER_SETUP.md` were resolved by keeping both sides; in `PLAYER_SETUP.md` the two sessions' Orlog lines were combined, and the new skill settings were added to master's settings table. After the merge all three plugins build against stand-in game assemblies and **262 tests pass**. Earlier work from this branch is already in `master` (PRs #8, #9, #16).
 
 Detail lives elsewhere; this file points to it:
 - `FEATURES.md`: Levels and XP, Attributes and class eitr, Orlog stone and class choice, Skill tree and skill points.
@@ -16,7 +16,7 @@ The classes session's branch: **Orlog**, the Diablo 2-style classes plugin. It c
 
 ## Stage
 
-**Waiting for your playtest** (third round) of the Orlog stone (C1), which needs a log if it freezes again. The skill tree (C2) passed. **Asking you questions** before C3 (the Amazon's passives).
+**C1 and C2 done**, PR into `master`. The Orlog stone works; its size setting changed after the last playtest (check it's about twice a trophy stone). **Asking you questions** before C3 (the Amazon's passives).
 
 ## Done (built and tested in-game by you, single player)
 
@@ -43,7 +43,7 @@ All in `master`:
 ## Half-done
 
 - **Roadmap C1, the Orlog stone:** failed its first playtest 2026-11-02 and was reworked the same day. Not re-tested yet.
-  - **Look (your choices):** a copy of the game's Vegvisir, with every vanilla behaviour stripped. Twice as tall as a trophy stone, with glowing blue runes and blue mist.
+  - **Look (your choices):** a copy of the game's Vegvisir, with every vanilla behaviour stripped. About twice a trophy stone's height (`StoneSize` 1.7 × the Vegvisir), with glowing blue runes. No mist (removed; for the redesign).
   - **Placement:** 3 m behind the Eikthyr trophy stone, turned like it. A stone from the first version moves there.
   - **Raven:** on the ground beside the stone.
   - **Settings:** `StoneSize`, `StoneGap` and `StoneTurn`.
@@ -59,7 +59,7 @@ All in `master`:
 
 - **Untested in-game:**
   - **C1:** the trophy stone prefab, the stone's floor height and spot in the ring, the raven, and the server confirmation.
-  - **C1 rework:** the Vegvisir copy (found inside the game's location prefabs at load), its size, glow, mist, which way it faces, the move from the old spot, and whether E still crashes. The first crash's cause isn't known (no log); it came from the vanilla lore-stone behaviour, now removed.
+  - **C1:** the size after the last change (`StoneSize` 1.7). The look is wrong but works; it will be redesigned. The first round's crash and the second round's freeze weren't seen again; their causes aren't known.
 - **Untested anywhere: multiplayer.** XP sharing with a friend, the stone placed through a dedicated server, levels seen by other players. These are in `PLAYTEST.md` → Session 2.
 - **Known limits:**
   - A boss counts as one creature of its level for XP.
@@ -144,6 +144,7 @@ Everything you decided in this session; the reasons are as you gave them.
   - **About 10× too big:** heights are now measured on each stone's main mesh. Fixed.
   - **No blue mist:** it now copies a vanilla smoke effect. Fixed.
   - **Froze on the second E:** each step is now logged, and I asked you for `LogOutput.log` and `Player.log` before restarting the game.
+- **Third round (2026-11-02):** works: the window, choosing the Amazon, relogging, no errors, no freeze. Still 15.5 m (the trophy stone measured 7.4 m), and no mist (the copy was an indoor dust effect). You: "still not correct but it at least works. I think we will redesign this in the future". So `StoneSize` is now a plain multiple of the Vegvisir (1.7), and the mist is removed.
 
 ## Open questions
 
@@ -165,15 +166,15 @@ From the roadmap (§4.1):
 
 ## Next steps
 
-1. **Your third round on the Orlog stone:** `PLAYTEST.md` → "Orlog stone and class choice: third round", also in the phone log. If it freezes, send `LogOutput.log` and `Player.log` before restarting the game. Then find and fix the freeze from the log.
-2. **Open a PR** into `master` for C1 + C2 once the stone passes; the skill tree already has.
+1. **PR into `master`** for C1 + C2 (opened 2026-11-02). Quick check after it: the stone is about twice a trophy stone (`PLAYTEST.md`).
+2. **Later:** redesign the stone's look (your call, 2026-11-02).
 3. **C3, the Amazon's passives** (Critical Strike, Dodge, Avoid, Evade, Penetrate), once questions 1–4 are answered. Before patching, agree the `Character.Damage` / `RPC_Damage` order with Corruption's prefixes in `mod-compatibility.md`.
 4. **C4, boss bonus points and the respec item,** once question 6 is answered. The respec item is crafted from boss essences when Corruption is installed.
 5. **C5, the skill button, slots and bow skills.** Prototype the input first (drawing a bow on a non-attack button, block moved to its own key).
 
 ## Merge notes
 
-- **Not ready to merge yet:** C2 passed its playtest, but C1 (the stone) failed and was reworked; merge after the stone's re-test, through a PR. 263 tests pass.
+- **Ready to merge:** C1 works and C2 passed; PR into `master`. 262 tests pass.
 - **No other session's code is touched.** Orlog's own files are `Orlog/`, `tools/make_orlog_tables.py`, `data/d2-reference/` and the `CraftingOverhaul.Tests/Orlog*Tests.cs` files.
 - **Shared docs** (add only, keep both sides in conflicts): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/PLAYER_SETUP.md`, `docs/ARCHITECTURE.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, and `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj`, where each session adds its linked files.
 - **Contract with the UI session** (`docs/classes-ui-brief.md` §3): `GetClassStoneRequest`, `ChooseClass`, `GetSkillIdsJson`, `GetSkillInfoJson` and `SpendSkillPoint` are now real. The UI's demo code and `co_classes_stone` can go once Orlog serves everything (C5 fills the skill bar calls).

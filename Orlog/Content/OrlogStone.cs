@@ -15,8 +15,7 @@ namespace Orlog.Content
     ///     <list type="bullet">
     ///         <item>
     ///             Look (user, 2026-11-02): a copy of the game's Vegvisir standing stone with every vanilla interaction
-    ///             removed, twice as tall as a boss trophy stone, its runes glowing in the classes UI's rune blue, with blue
-    ///             mist drifting round its base. If no Vegvisir is found, the trophy stone is the fallback.
+    ///             removed, enlarged (StoneSize), its runes glowing in the classes UI's rune blue. If no Vegvisir is found, the trophy stone is the fallback.
     ///         </item>
     ///         <item>
     ///             Placed once per world (user, 2026-11-02): behind the Eikthyr trophy stone, on the line from the spawn
@@ -91,21 +90,16 @@ namespace Orlog.Content
             var nview = prefab.GetComponent<ZNetView>() ?? prefab.AddComponent<ZNetView>();
             nview.m_persistent = true;
 
-            // Twice as tall as a trophy stone (user, 2026-11-02; StoneSize).
-            // Heights from each model's main stone mesh only: the trophy stone's prefab also holds its stand and effects,
-            // which made the first rework about 10x a trophy stone instead of 2x (play-test 2026-11-02).
-            float height = MainMeshHeight(prefab);
-            float trophyHeight = TrophyStoneHeight(bossStone);
-            float scale = StonePlacement.Scale(height, trophyHeight, OrlogConfig.StoneSize.Value);
+            // StoneSize times the Vegvisir's own size. Matching it to the trophy stone's measured height failed twice
+            // (the trophy stone's mesh measures 7.4 m, so the stone came out 15.5 m; play-tests 2026-11-02).
+            float scale = OrlogConfig.StoneSize.Value;
             prefab.transform.localScale *= scale;
             var bounds = Bounds(prefab);
             s_footprint = Mathf.Max(bounds.extents.x, bounds.extents.z);
-            Jotunn.Logger.LogInfo($"Orlog stone: model {height:0.00} m, trophy stone {trophyHeight:0.00} m, scaled x{scale:0.00}.");
 
             Glow(prefab, bounds);
             prefab.AddComponent<OrlogStoneObject>();
             float footprintUnscaled = s_footprint / Mathf.Max(0.01f, scale);
-            AddMist(prefab, footprintUnscaled);
             AddRaven(prefab, footprintUnscaled + 1f / Mathf.Max(0.01f, scale));
 
             PrefabManager.Instance.AddPrefab(new CustomPrefab(prefab, true));
@@ -189,57 +183,6 @@ namespace Orlog.Content
                     Object.DestroyImmediate(nview);
                 }
             }
-        }
-
-        /// <summary>The trophy stone's height in metres: its own stone mesh (<c>BossStone.m_mesh</c>), not its stand or effects.</summary>
-        private static float TrophyStoneHeight(GameObject bossStone)
-        {
-            var boss = bossStone ? bossStone.GetComponent<BossStone>() : null;
-            var filter = boss && boss.m_mesh ? boss.m_mesh.GetComponent<MeshFilter>() : null;
-            if (!filter || !filter.sharedMesh)
-            {
-                return 0f;
-            }
-            return filter.sharedMesh.bounds.size.y * Mathf.Abs(filter.transform.lossyScale.y);
-        }
-
-        /// <summary>The height in metres of the model's biggest visible mesh (the stone itself, not small parts or hidden ones).</summary>
-        private static float MainMeshHeight(GameObject root)
-        {
-            float bestVolume = 0f, height = 0f;
-            foreach (var renderer in root.GetComponentsInChildren<MeshRenderer>(true))
-            {
-                var filter = renderer.GetComponent<MeshFilter>();
-                if (!renderer.enabled || !filter || !filter.sharedMesh || !ActiveUnder(renderer.transform, root.transform))
-                {
-                    continue;
-                }
-                var size = Vector3.Scale(filter.sharedMesh.bounds.size, Abs(renderer.transform.lossyScale));
-                float volume = size.x * size.y * size.z;
-                if (volume > bestVolume)
-                {
-                    bestVolume = volume;
-                    height = size.y;
-                }
-            }
-            return height;
-        }
-
-        private static bool ActiveUnder(Transform t, Transform root)
-        {
-            for (; t && t != root; t = t.parent)
-            {
-                if (!t.gameObject.activeSelf)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static Vector3 Abs(Vector3 v)
-        {
-            return new Vector3(Mathf.Abs(v.x), Mathf.Abs(v.y), Mathf.Abs(v.z));
         }
 
         /// <summary>The model's bounds from its meshes, in metres, relative to its root (any scale on the root included).</summary>
@@ -329,58 +272,6 @@ namespace Orlog.Content
             glow.intensity = 1f;
             glow.range = Mathf.Max(2f, bounds.size.y);
             Jotunn.Logger.LogInfo($"Orlog stone: {glowing} glowing material(s) turned rune blue.");
-        }
-
-        /// <summary>
-        ///     Blue mist drifting round the base: a copy of one of the game's own looping smoke effects (all its settings,
-        ///     so it renders as in vanilla), tinted rune blue and spread over the stone's footprint. A particle system made
-        ///     from scratch with only the smoke material didn't show (play-test 2026-11-02).
-        /// </summary>
-        private static void AddMist(GameObject prefab, float footprintUnscaled)
-        {
-            var source = PrefabManager.Cache.GetPrefabs(typeof(GameObject)).Values.OfType<GameObject>()
-                .Where(p => p)
-                .SelectMany(p => p.GetComponentsInChildren<ParticleSystem>(true))
-                .Where(ps => ps && ps.main.loop && ps.GetComponent<ParticleSystemRenderer>() is ParticleSystemRenderer r && r.sharedMaterial &&
-                             r.sharedMaterial.name.ToLowerInvariant().Contains("smoke"))
-                .OrderBy(ps => ps.transform.root.name).ThenBy(ps => ps.name).FirstOrDefault();
-            if (!source)
-            {
-                Jotunn.Logger.LogWarning("Orlog stone: no looping smoke effect found in the game; the stone has no mist.");
-                return;
-            }
-            var mist = Object.Instantiate(source.gameObject, prefab.transform, false);
-            mist.name = "OrlogMist";
-            mist.SetActive(true);
-            mist.transform.localPosition = Vector3.zero;
-            mist.transform.localRotation = Quaternion.identity;
-            // Only the smoke itself: no scripts (a timed destruction would remove it, a light flicker throws without its
-            // light), lights or sounds of the original.
-            foreach (var script in mist.GetComponentsInChildren<MonoBehaviour>(true))
-            {
-                Object.DestroyImmediate(script);
-            }
-            foreach (var extra in mist.GetComponentsInChildren<Component>(true))
-            {
-                if (extra is Light || extra is AudioSource)
-                {
-                    Object.DestroyImmediate(extra);
-                }
-            }
-            foreach (var particles in mist.GetComponentsInChildren<ParticleSystem>(true))
-            {
-                var main = particles.main;
-                main.loop = true;
-                main.playOnAwake = true;
-                var color = main.startColor.color;
-                main.startColor = new Color(Rune.r, Rune.g, Rune.b, Mathf.Max(color.a, 0.35f));
-                var shape = particles.shape;
-                if (shape.enabled)
-                {
-                    shape.radius = Mathf.Max(shape.radius, footprintUnscaled);
-                }
-            }
-            Jotunn.Logger.LogInfo($"Orlog stone: mist copied from the game's {source.transform.root.name}/{source.name}.");
         }
 
         /// <summary>A raven guide point on the ground beside the stone (user: reachable), with the vanilla raven.</summary>
