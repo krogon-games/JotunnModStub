@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Orlog.Rules
 {
     /// <summary>
-    ///     Where the Orlog stone goes in the spawn area: in the widest gap of the ring of boss trophy stones, at their
-    ///     average distance from the centre, facing the centre, so it reads as one more stone of the ring. Works on the
-    ///     ground plane (x, z). No game dependencies, so it is unit-tested.
+    ///     Where the Orlog stone goes in the spawn area (user, 2026-11-02): behind the Eikthyr trophy stone, on the line
+    ///     from the start location's centre through that stone, a set distance further out. Works on the ground plane
+    ///     (x, z). No game dependencies, so it is unit-tested.
     /// </summary>
     internal static class StonePlacement
     {
@@ -15,53 +13,38 @@ namespace Orlog.Rules
         {
             public float X;
             public float Z;
-            /// <summary>Rotation about the vertical axis in degrees (Unity: 0 = facing +z, clockwise seen from above).</summary>
-            public float Yaw;
         }
 
         /// <summary>
-        ///     The spot, or null with fewer than two stones (no ring to read). <paramref name="stonesX" /> and
-        ///     <paramref name="stonesZ" /> are the trophy stones' positions, <paramref name="centerX" /> and
-        ///     <paramref name="centerZ" /> the start location's centre.
+        ///     The spot <paramref name="distance" /> metres beyond the stone at (<paramref name="stoneX" />,
+        ///     <paramref name="stoneZ" />), away from the centre (<paramref name="centerX" />, <paramref name="centerZ" />).
+        ///     Null when the stone stands on the centre (no direction to go).
         /// </summary>
-        public static Spot? Place(float centerX, float centerZ, IList<float> stonesX, IList<float> stonesZ)
+        public static Spot? Behind(float centerX, float centerZ, float stoneX, float stoneZ, float distance)
         {
-            int count = Math.Min(stonesX.Count, stonesZ.Count);
-            if (count < 2)
+            double dx = stoneX - centerX;
+            double dz = stoneZ - centerZ;
+            double length = Math.Sqrt(dx * dx + dz * dz);
+            if (length < 1e-3)
             {
                 return null;
             }
-            var angles = new List<double>();
-            double radius = 0;
-            for (int i = 0; i < count; i++)
-            {
-                double dx = stonesX[i] - centerX;
-                double dz = stonesZ[i] - centerZ;
-                angles.Add(Math.Atan2(dz, dx));
-                radius += Math.Sqrt(dx * dx + dz * dz);
-            }
-            radius /= count;
-            angles.Sort();
+            return new Spot { X = (float)(stoneX + dx / length * distance), Z = (float)(stoneZ + dz / length * distance) };
+        }
 
-            // The widest gap between neighbouring stones, going round the circle (the last gap wraps to the first).
-            double bestGap = -1, bestMiddle = 0;
-            for (int i = 0; i < angles.Count; i++)
-            {
-                double from = angles[i];
-                double to = i + 1 < angles.Count ? angles[i + 1] : angles[0] + 2 * Math.PI;
-                double gap = to - from;
-                if (gap > bestGap + 1e-9)
-                {
-                    bestGap = gap;
-                    bestMiddle = from + gap / 2;
-                }
-            }
+        /// <summary>
+        ///     How far behind the stone's centre the Orlog stone's centre goes so that <paramref name="gap" /> metres stay
+        ///     between them: both stones' footprint radii plus the gap.
+        /// </summary>
+        public static float Distance(float stoneRadius, float orlogRadius, float gap)
+        {
+            return Math.Max(0f, stoneRadius) + Math.Max(0f, orlogRadius) + Math.Max(0f, gap);
+        }
 
-            double x = centerX + radius * Math.Cos(bestMiddle);
-            double z = centerZ + radius * Math.Sin(bestMiddle);
-            // Face the centre: Unity's yaw is measured from +z towards +x.
-            double yaw = Math.Atan2(centerX - x, centerZ - z) * 180.0 / Math.PI;
-            return new Spot { X = (float)x, Z = (float)z, Yaw = (float)((yaw + 360.0) % 360.0) };
+        /// <summary>The scale that makes a model of <paramref name="height" /> stand <paramref name="times" /> as tall as <paramref name="referenceHeight" />.</summary>
+        public static float Scale(float height, float referenceHeight, float times)
+        {
+            return height > 0f && referenceHeight > 0f ? times * referenceHeight / height : times;
         }
     }
 }

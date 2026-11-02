@@ -32,8 +32,8 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Combat mechanics](#combat-mechanics) | Combat | Planned | — | — | 2026-10-15 |
 | [Levels and XP](#levels-and-xp) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `MaxLevel`, `StatPointsPerLevel`, `SkillPointsPerLevel`, `XpMultiplier`, `ShareRange`, `PartyBonusPerPlayer`, `HighLevelPenalty`; `2 - Display` → `ShowXpGains`; tables `Orlog/Data/*.csv`; console `orlog_info`, `orlog_xp`, `orlog_level` | `Orlog/OrlogPlugin.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `Orlog/Content/Progress.cs`, `Orlog/Content/KillXp.cs`, `Orlog/Content/Commands.cs`, `Orlog/Content/Texts.cs`, `Orlog/Rules/LevelTables.cs`, `Orlog/Rules/ExperienceRules.cs`, `Orlog/Data/*.csv`, `Orlog/Orlog.csproj`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogLevelTests.cs` | 2026-10-30 |
 | [Attributes and class eitr](#attributes-and-class-eitr) | Combat | Tested in-game (single player) | Orlog: `3 - Attributes` → `HealthPerD2Life`, `StaminaPerD2Stamina`, `EitrStart`, `EitrPerLevel`, `EitrPerEnergy`, `DamagePerStrength`, `DamagePerDexterity`; table `Orlog/Data/classes.csv`; console `orlog_class`, `orlog_stat`, `orlog_respec` | `Orlog/Content/Attributes.cs`, `Orlog/Rules/AttributeRules.cs`, `Orlog/Data/classes.csv`, `Orlog/Content/Commands.cs`, `Orlog/Content/Progress.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogAttributeTests.cs` | 2026-10-30 |
-| [Orlog stone and class choice](#orlog-stone-and-class-choice) | Combat | Built, untested | — (the stone is placed by itself; `orlog_class` stays as a cheat) | `Orlog/Content/OrlogStone.cs`, `Orlog/Rules/StonePlacement.cs`, `Orlog/Content/Texts.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Api.cs`, `Orlog/Safe.cs`, `CraftingOverhaul.Tests/OrlogStoneTests.cs` | 2026-11-01 |
-| [Skill tree and skill points](#skill-tree-and-skill-points) | Combat | Built, untested | Orlog: `1 - Levels` → `SkillPointsPerLevel`, `MaxSkillPoints`, `SkillPace`; table `Orlog/Data/amazon_skills.csv`; console `orlog_skill` | `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Data/amazon_skills.csv`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Content/Attributes.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/amazon_levels.csv`, `CraftingOverhaul.Tests/OrlogSkillTests.cs` | 2026-11-01 |
+| [Orlog stone and class choice](#orlog-stone-and-class-choice) | Combat | Broken in the first play-test; reworked, to re-test | Orlog: `4 - Orlog Stone` → `StoneSize`, `StoneGap`, `StoneTurn` (`orlog_class` stays as a cheat) | `Orlog/Content/OrlogStone.cs`, `Orlog/Rules/StonePlacement.cs`, `Orlog/Content/Texts.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Api.cs`, `Orlog/Safe.cs`, `CraftingOverhaul.Tests/OrlogStoneTests.cs` | 2026-11-01 |
+| [Skill tree and skill points](#skill-tree-and-skill-points) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `SkillPointsPerLevel`, `MaxSkillPoints`, `SkillPace`; table `Orlog/Data/amazon_skills.csv`; console `orlog_skill` | `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Data/amazon_skills.csv`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Content/Attributes.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/amazon_levels.csv`, `CraftingOverhaul.Tests/OrlogSkillTests.cs` | 2026-11-01 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
 There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
@@ -1122,24 +1122,37 @@ Unit-tested (`OrlogAttributeTests`: 7 tests).
 
 ## Orlog stone and class choice
 
-*Orlog. Built 2026-11-01; not yet tested in-game. Roadmap task C1.*
+*Orlog. Built 2026-11-01; first play-test 2026-11-02 failed (below); reworked the same day to the user's choices, not yet re-tested. Roadmap task C1.*
 
 **What it does:** a character chooses its class at the **Orlog stone** in the spawn area (`class-design.md` §5a; user, 2026-10-30).
-- **Look:** a clone of the game's boss trophy stone (the start area's own stones: the first prefab with the game's `BossStone` component, logged at startup), without its trophy stand or "boss defeated" effects, glowing in the classes UI's rune blue as brightly as a trophy stone glows once its boss is beaten. No new model.
-- **Where:** placed once per world, by itself, the first time a player is in the spawn area: in the widest gap of the ring of trophy stones, at their distance from the centre and on their floor height, facing the centre, so it reads as one more stone of the ring. The player's game works out the spot from the loaded trophy stones; the server confirms no stone exists yet (it holds every object) before that game places it. A persistent object like the rip heart: it stays for everyone.
+- **Look (user, 2026-11-02):** a copy of the game's **Vegvisir** standing stone with every vanilla behaviour removed (hover, use, lore, trophy stands, ravens). **Twice as tall as a boss trophy stone** (`StoneSize`, measured from both models' meshes). Its runes glow in the classes UI's rune blue (every glowing material turned blue at its own brightness, plus a soft blue light), and **blue mist** drifts round its base (the game's own smoke material, tinted blue). The Vegvisir only exists inside location prefabs, so they're searched once when the world's locations load (the first, by name, that has one; logged). If none has one, the trophy stone is the fallback (logged as a warning).
+- **Where (user, 2026-11-02):** **behind the Eikthyr trophy stone**, on the line from the spawn area's centre through it, with **3 m between the two stones** (`StoneGap`, edge to edge from both footprints), on the ground there, turned the way the Eikthyr stone is (`StoneTurn` adds degrees if it faces the wrong way). The Eikthyr stone is the trophy stone whose stand takes the levelling guide's first boss's trophy. The player's game works out the spot; the server confirms no stone exists yet before it's placed; a stone already in the world (from the first version) is moved to the spot.
 - **Use (E) without a class:** opens the class choice window of the classes UI (CraftingOverhaul); choosing the Amazon and confirming gives the class ("You walk the path of the Amazon", the level-up effect). The choice only works after using the stone and staying near it (twice the game's interaction reach). Without CraftingOverhaul, using the stone twice within 10 s chooses the only playable class.
 - **Use with a class:** says which path you walk. Changing class at the stone comes later (user).
-- **Raven:** the first time a player comes near, a raven explains the stone ("The Norns weave a fate for every warrior…"), once per player like vanilla ravens.
+- **Raven (user, 2026-11-02):** on the ground beside the stone, reachable; the first time a player comes near it explains the stone ("The Norns weave a fate for every warrior…"), once per player.
 - `orlog_class` stays as a cheat for testing.
 
-**How it works:** `OrlogStone.Tick` (from the plugin's `Update`, every 2 s) finds the start location's centre (`ZoneSystem.GetLocationIcon` of `Game.m_StartLocation`, known to every game for spawning), the loaded `BossStone` objects within 50 m and any Orlog stone; with none, it asks the server (`Orlog_PlaceStone`), which checks every object for an `orlog_stone` and answers (`Orlog_PlaceStoneReply`); the asking game instantiates the stone. Placement maths in the pure, tested `StonePlacement`. `Orlog.Api.GetClassStoneRequest` and `ChooseClass` now answer for real, so the classes UI's window opens from the stone without its demo.
+**Config settings** (`4 - Orlog Stone`, admin-only, server-synced):
 
-Unit-tested (`OrlogStoneTests`: 4 tests: widest gap, wrap-around, average radius and real centre, too few stones).
+| Setting | Default | Description |
+|---|---|---|
+| `StoneSize` | `2` | The stone's height in boss trophy stones (user). Restart to apply |
+| `StoneGap` | `3` | Metres between the Eikthyr stone and the Orlog stone (user). Moves it next time a player comes |
+| `StoneTurn` | `0` | Degrees added to the stone's turn; 180 if it faces the wrong way |
+
+**How it works:** `OrlogStone.Build` runs on Jötunn's `ZoneManager.OnVanillaLocationsAvailable` (once per game run) and registers the prefab late (`RegisterToZNetScene`). `OrlogStone.Tick` (from the plugin's `Update`, every 2 s) finds the start location's centre (`ZoneSystem.GetLocationIcon` of `Game.m_StartLocation`), the loaded Eikthyr trophy stone and any Orlog stone; with none, it asks the server (`Orlog_PlaceStone`), which checks every object for an `orlog_stone` and answers (`Orlog_PlaceStoneReply`); the asking game instantiates it. Spot maths in the pure, tested `StonePlacement` (behind, distance from footprints, scale). `Orlog.Api.GetClassStoneRequest` and `ChooseClass` answer for real.
+
+Unit-tested (`OrlogStoneTests`: 5 tests: straight behind, any angle, on-centre, gap from footprints, twice as tall).
 
 **Known issues / not yet:**
-- Untested in-game. The trophy stone prefab, the raven, and the floor height of the spot are read from the game at runtime; check the stone stands right in the ring and doesn't sink or float.
+- **Play-test 2026-11-02 (user, first version), failed, all fixed the same day, to re-test:**
+  - **Wrong look and spot:** the trophy stone copy showed the Bonemass carving, touched the Bonemass stone and faced out of the circle. Now: the Vegvisir copy, behind the Eikthyr stone, larger, with blue mist and runes (user's choices).
+  - **Wrong hover and lore:** it read "Sacrificial Stone / [E] Read" with the vanilla lore. The copied stone carried the game's lore-stone behaviour, which took the hover and use before ours. Now every vanilla hover/use behaviour is stripped.
+  - **Crash:** pressing E once crashed the game. The cause isn't known (no log sent); it was the vanilla lore stone's use, now removed. If it happens again, send `Player-prev.log` (`%USERPROFILE%/AppData/LocalLow/IronGate/Valheim/`).
+  - **Raven out of reach:** it sat out of reach on top. Now it's on the ground beside the stone.
+- The Vegvisir's front side and the mist's look are untested; `StoneTurn` turns it without a rebuild.
 - In a fresh world two players arriving at the same moment both ask the server; the server lets only the first place the stone.
-- The raven shows once per player, also for a character that already has a class (set with `orlog_class`).
+- The raven shows once per player, also for a character that already has a class.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 - `Game.Start` (postfix): registers the stone's two server messages and resets the placement check for the new world.
@@ -1147,7 +1160,7 @@ Unit-tested (`OrlogStoneTests`: 4 tests: widest gap, wrap-around, average radius
 
 ## Skill tree and skill points
 
-*Orlog. Built 2026-11-01; not yet tested in-game. Roadmap task C2. The skills don't do anything yet: their effects come one by one (C3 onwards).*
+*Orlog. Built 2026-11-01; tested in-game 2026-11-02 (single player, all 9 steps passed). Roadmap task C2. The skills don't do anything yet: their effects come one by one (C3 onwards).*
 
 **What it does:** the Amazon's real tree in the classes UI's skills panel, and spending skill points on it, Diablo 2 style.
 - **The tree:** `Orlog/Data/amazon_skills.csv`, made by `tools/make_orlog_tables.py` from D2's tree (`data/d2-reference/amazon.csv`: tab, row, column, required level, prerequisites, mana) and our statuses, kinds, weapons and Valheim descriptions (`class-design.md` §5): 19 built (18 `v1` and Penetrate `reworked`), 11 `later`.
@@ -1160,7 +1173,8 @@ Unit-tested (`OrlogStoneTests`: 4 tests: widest gap, wrap-around, average radius
 Unit-tested (`OrlogSkillTests`: 10 tests: the real table, kinds and weapons, D2's prerequisites, the later-prerequisite rule, tiers and pace, cap and points, eitr costs, saving, bad tables).
 
 **Known issues / not yet:**
-- Untested in-game. Points go into skills that don't act yet; each skill's effect (and its Valheim numbers, to agree with the user) comes with roadmap C3–C7.
+- **Play-test 2026-11-02 (user): every step passed**: the real tree in three tabs, later skills greyed, "Needs Magic Arrow", Dodge holding 7 at level 12, Exploding Arrow's two prerequisites, tooltips with eitr cost, respec, saving, `orlog_skill`, no errors.
+- Points go into skills that don't act yet; each skill's effect (and its Valheim numbers, to agree with the user) comes with roadmap C3–C7.
 - No +skills from items yet (the loot session's affixes), so the effective level equals the points.
 
 **Vanilla behaviour overridden (Harmony patch targets):** none (data, rules and the API only).
@@ -1176,6 +1190,10 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-11-02
+- **Skill tree and skill points tested in-game** (single player): all 9 steps passed.
+- **Orlog stone reworked after its play-test** (it showed the Bonemass carving, read "Sacrificial Stone / [E] Read", crashed once on E, touched the Bonemass stone facing outwards, raven out of reach): now a copy of the game's Vegvisir with every vanilla behaviour stripped, twice a trophy stone's height, glowing blue runes and blue mist, placed 3 m behind the Eikthyr trophy stone and turned like it, raven on the ground beside it; a stone from the first version moves to the new spot. New settings `StoneSize`, `StoneGap`, `StoneTurn`. Untested in-game (263 tests).
 
 ### 2026-11-01
 - **Skill tree and skill points built** (roadmap C2): the Amazon's real tree from D2's data with our statuses; D2's spending rules (tiers, built prerequisites, 20 points, one more point per level past the requirement); eitr costs from D2's mana; `GetSkillIdsJson`, `GetSkillInfoJson`, `SpendSkillPoint`; `orlog_skill`; respec returns skill points. Per-level D2 values for every Amazon skill saved in `data/d2-reference/amazon_levels.csv` for C3 onwards. Untested in-game (239 tests).

@@ -8,6 +8,7 @@ namespace Orlog
         private const string LevelSection = "1 - Levels";
         private const string DisplaySection = "2 - Display";
         private const string AttributeSection = "3 - Attributes";
+        private const string StoneSection = "4 - Orlog Stone";
 
         public static ConfigEntry<int> MaxLevel;
         public static ConfigEntry<int> StatPointsPerLevel;
@@ -28,6 +29,10 @@ namespace Orlog
         public static ConfigEntry<float> EitrPerEnergy;
         public static ConfigEntry<float> DamagePerStrength;
         public static ConfigEntry<float> DamagePerDexterity;
+
+        public static ConfigEntry<float> StoneSize;
+        public static ConfigEntry<float> StoneGap;
+        public static ConfigEntry<float> StoneTurn;
 
         public static void Bind(ConfigFile config)
         {
@@ -73,6 +78,17 @@ namespace Orlog
                 AdminOnly("% more physical damage per Strength point, melee and thrown (Diablo 2: 1%).", new AcceptableValueRange<float>(0f, 10f)));
             DamagePerDexterity = config.Bind(AttributeSection, "DamagePerDexterity", 1f,
                 AdminOnly("% more physical damage per Dexterity point, bows and crossbows (Diablo 2: 1%).", new AcceptableValueRange<float>(0f, 10f)));
+
+            // The Orlog stone (user, 2026-11-02): behind the Eikthyr trophy stone, twice as tall, 3 m between them.
+            StoneSize = config.Bind(StoneSection, "StoneSize", 2f,
+                AdminOnly("The Orlog stone's height in boss trophy stones (2 = twice as tall). Restart the game to apply.",
+                    new AcceptableValueRange<float>(0.5f, 6f)));
+            StoneGap = config.Bind(StoneSection, "StoneGap", 3f,
+                AdminOnly("Metres between the Eikthyr trophy stone and the Orlog stone behind it. The stone moves the next time a player " +
+                          "comes to the spawn area.", new AcceptableValueRange<float>(0f, 30f)));
+            StoneTurn = config.Bind(StoneSection, "StoneTurn", 0f,
+                AdminOnly("Degrees added to the stone's turn (it copies the Eikthyr stone's turn). 180 turns it round if it faces the wrong way.",
+                    new AcceptableValueRange<float>(-180f, 180f)));
 
             // Any change (a synced value, a reload on save) refreshes the bonuses.
             config.SettingChanged += (sender, args) => Content.Progress.NotifyChanged();

@@ -137,32 +137,23 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 All passed 2026-10-31 (single player). Left: nothing (sharing XP is in Session 2).
 
-## Orlog stone and class choice (branch `claude/class-skills`, about 10 minutes)
+## Orlog stone and class choice: re-test (branch `claude/class-skills`, about 10 minutes)
 
-Build the whole solution from `claude/class-skills`; in `[5 - Classes UI]` set `Demo = false` (real data from Orlog).
-0. `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)` and `Orlog stone made from <a stone prefab>`.
-1. `orlog_class none` (no class). Go to the spawn area with the ring of boss trophy stones (walk, `fly`, or `goto <x> <z>`).
-2. A new stone glowing light blue stands in the ring, in its widest gap, facing the centre, on the same floor as the others (not sunk, not floating). The log says `Orlog stone placed at …`.
-3. A raven lands on or near it with the Orlog stone's lore (the first time only).
-4. Hover: "Orlog stone" and "[E] Choose your path".
-5. Press E: the class choice window opens. Choose the Amazon and confirm: "You walk the path of the Amazon", the level-up effect, the eitr bar appears.
-6. Press E again: "You walk the path of the Amazon" (no window).
-7. Log out and back in, go back: still one stone (not two), and you're still an Amazon.
-8. `co_classes_stone` isn't needed any more for the window (it's the demo's).
-9. No red errors in the console.
+The first version failed (2026-11-02); this is the rework to your choices. Build the whole solution from `claude/class-skills`; `[5 - Classes UI]` → `Demo = false`.
+0. `BepInEx/LogOutput.log` has `Orlog stone made from <a Vegvisir> … tall (x…)`, a line about glowing materials and `mist made with …`. (If it says "using the trophy stone instead", tell Claude.)
+1. `orlog_class none`. Go to the spawn area.
+2. **Spot:** the stone stands behind the Eikthyr trophy stone (as seen from the centre), with about 3 m between them, on the ground. If your world still had the old stone, it has moved there (log: `Orlog stone moved to …`). It's turned the same way as the Eikthyr stone; if it faces away, set `StoneTurn = 180` in `com.krogongames.orlog.cfg` and save.
+3. **Look:** a Vegvisir about twice as tall as a trophy stone, runes glowing blue, blue mist drifting round its base, a soft blue light. No boss carving.
+4. **Raven:** on the ground beside the stone, reachable, with the Orlog stone's lore (first time only).
+5. **Hover:** "Orlog stone" and "[E] Choose your path" (not "Sacrificial Stone").
+6. **Press E:** no crash; the class choice window opens. Choose the Amazon and confirm: "You walk the path of the Amazon", the level-up effect, the eitr bar appears.
+7. Press E again: "You walk the path of the Amazon".
+8. Log out and in, go back: still one stone, same place, still an Amazon.
+9. No red errors in the console. If the game crashes, send `Player-prev.log` from `%USERPROFILE%/AppData/LocalLow/IronGate/Valheim/`.
 
-## Orlog skill tree and skill points (branch `claude/class-skills`, about 10 minutes)
+## Orlog skill tree and skill points
 
-Same build; `Demo = false`. The skills don't act yet: this checks the tree and spending.
-1. `orlog_class Amazon` (or use the stone), then `orlog_level 12`. `orlog_info`: 11 skill points to spend.
-2. Open the skills panel: the Amazon's real tree in three tabs; the 11 later skills (Guided Arrow, Strafe, Decoy, Valkyrie, …) greyed as coming later.
-3. Try Multiple Shot first: refused, "Needs Magic Arrow". Spend on Magic Arrow, then Multiple Shot works.
-4. Spend on Dodge (level 6) until refused: it holds 7 at level 12 ("Needs level 13" for the 8th).
-5. A later skill: "Coming later". Exploding Arrow (level 12, needs Fire Arrow and Multiple Shot): refused until both have a point.
-6. Hover a skill: its description, next level and eitr cost (Multiple Shot: 4 at level 1).
-7. `orlog_respec`: skill points back (11). Log out and in: spent points kept.
-8. `orlog_skill MagicArrow 2` spends from the console too.
-9. No red errors in the console.
+All passed 2026-11-02 (single player).
 
 ## Classes UI (merged into `master`, 2 minutes)
 
