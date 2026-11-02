@@ -1,6 +1,6 @@
 # Handoff: `claude/class-skills`
 
-**Written:** 2026-11-02, from the real branch state. **Updated the same day** after your playtest of C1 and C2: the skill tree passed; the Orlog stone failed and was reworked to your choices (below). `git status` was clean before this file. The branch was 3 commits ahead of `master` (`dd93cb8`) and 16 behind. `master` (`68a63e0`: loot steps 3–4, the Riftforge window brief, the UI session's click fix and housekeeping, PRs #18–#19) is now merged in with no lost work. Conflicts in `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md` and `docs/PLAYER_SETUP.md` were resolved by keeping both sides; in `PLAYER_SETUP.md` the two sessions' Orlog lines were combined, and the new skill settings were added to master's settings table. After the merge all three plugins build against stand-in game assemblies and **262 tests pass**. Earlier work from this branch is already in `master` (PRs #8, #9, #16).
+**Written:** 2026-11-02, from the real branch state. **Updated the same day** after two playtests: the skill tree passed. The Orlog stone failed and was reworked to your choices. Its re-test passed the spot, raven, hover and class choice, but found it 10× too big with no mist and a freeze on the second E; size and mist are fixed, and the freeze is being logged (below). `git status` was clean before this file. The branch was 3 commits ahead of `master` (`dd93cb8`) and 16 behind. `master` (`68a63e0`: loot steps 3–4, the Riftforge window brief, the UI session's click fix and housekeeping, PRs #18–#19) is now merged in with no lost work. Conflicts in `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md` and `docs/PLAYER_SETUP.md` were resolved by keeping both sides; in `PLAYER_SETUP.md` the two sessions' Orlog lines were combined, and the new skill settings were added to master's settings table. After the merge all three plugins build against stand-in game assemblies and **262 tests pass**. Earlier work from this branch is already in `master` (PRs #8, #9, #16).
 
 Detail lives elsewhere; this file points to it:
 - `FEATURES.md`: Levels and XP, Attributes and class eitr, Orlog stone and class choice, Skill tree and skill points.
@@ -16,7 +16,7 @@ The classes session's branch: **Orlog**, the Diablo 2-style classes plugin. It c
 
 ## Stage
 
-**Waiting for your playtest** of the reworked Orlog stone (C1). The skill tree (C2) passed. **Asking you questions** before C3 (the Amazon's passives).
+**Waiting for your playtest** (third round) of the Orlog stone (C1), which needs a log if it freezes again. The skill tree (C2) passed. **Asking you questions** before C3 (the Amazon's passives).
 
 ## Done (built and tested in-game by you, single player)
 
@@ -140,6 +140,10 @@ Everything you decided in this session; the reasons are as you gave them.
   - **Hover read "Sacrificial Stone / [E] Read", with vanilla lore on E:** every vanilla hover and use behaviour is now stripped from the copy.
   - **Pressing E crashed the game once:** that came from the vanilla lore-stone behaviour, now removed. The cause is unconfirmed without a log.
   - **Raven unreachable on top:** it's now on the ground beside the stone.
+- **Orlog stone re-test (2026-11-02):** the spot, raven, hover and class choice passed. Three findings and what changed:
+  - **About 10× too big:** heights are now measured on each stone's main mesh. Fixed.
+  - **No blue mist:** it now copies a vanilla smoke effect. Fixed.
+  - **Froze on the second E:** each step is now logged, and I asked you for `LogOutput.log` and `Player.log` before restarting the game.
 
 ## Open questions
 
@@ -161,7 +165,7 @@ From the roadmap (§4.1):
 
 ## Next steps
 
-1. **Your re-test of the Orlog stone:** `PLAYTEST.md` → "Orlog stone and class choice: re-test", about 10 minutes, also in the phone log. If it crashes, send `Player-prev.log`.
+1. **Your third round on the Orlog stone:** `PLAYTEST.md` → "Orlog stone and class choice: third round", also in the phone log. If it freezes, send `LogOutput.log` and `Player.log` before restarting the game. Then find and fix the freeze from the log.
 2. **Open a PR** into `master` for C1 + C2 once the stone passes; the skill tree already has.
 3. **C3, the Amazon's passives** (Critical Strike, Dodge, Avoid, Evade, Penetrate), once questions 1–4 are answered. Before patching, agree the `Character.Damage` / `RPC_Damage` order with Corruption's prefixes in `mod-compatibility.md`.
 4. **C4, boss bonus points and the respec item,** once question 6 is answered. The respec item is crafted from boss essences when Corruption is installed.

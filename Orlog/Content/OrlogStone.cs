@@ -92,11 +92,15 @@ namespace Orlog.Content
             nview.m_persistent = true;
 
             // Twice as tall as a trophy stone (user, 2026-11-02; StoneSize).
-            float height = Bounds(prefab).size.y;
-            float scale = StonePlacement.Scale(height, bossStone ? Bounds(bossStone).size.y : 0f, OrlogConfig.StoneSize.Value);
+            // Heights from each model's main stone mesh only: the trophy stone's prefab also holds its stand and effects,
+            // which made the first rework about 10x a trophy stone instead of 2x (play-test 2026-11-02).
+            float height = MainMeshHeight(prefab);
+            float trophyHeight = TrophyStoneHeight(bossStone);
+            float scale = StonePlacement.Scale(height, trophyHeight, OrlogConfig.StoneSize.Value);
             prefab.transform.localScale *= scale;
             var bounds = Bounds(prefab);
             s_footprint = Mathf.Max(bounds.extents.x, bounds.extents.z);
+            Jotunn.Logger.LogInfo($"Orlog stone: model {height:0.00} m, trophy stone {trophyHeight:0.00} m, scaled x{scale:0.00}.");
 
             Glow(prefab, bounds);
             prefab.AddComponent<OrlogStoneObject>();
@@ -185,6 +189,57 @@ namespace Orlog.Content
                     Object.DestroyImmediate(nview);
                 }
             }
+        }
+
+        /// <summary>The trophy stone's height in metres: its own stone mesh (<c>BossStone.m_mesh</c>), not its stand or effects.</summary>
+        private static float TrophyStoneHeight(GameObject bossStone)
+        {
+            var boss = bossStone ? bossStone.GetComponent<BossStone>() : null;
+            var filter = boss && boss.m_mesh ? boss.m_mesh.GetComponent<MeshFilter>() : null;
+            if (!filter || !filter.sharedMesh)
+            {
+                return 0f;
+            }
+            return filter.sharedMesh.bounds.size.y * Mathf.Abs(filter.transform.lossyScale.y);
+        }
+
+        /// <summary>The height in metres of the model's biggest visible mesh (the stone itself, not small parts or hidden ones).</summary>
+        private static float MainMeshHeight(GameObject root)
+        {
+            float bestVolume = 0f, height = 0f;
+            foreach (var renderer in root.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                var filter = renderer.GetComponent<MeshFilter>();
+                if (!renderer.enabled || !filter || !filter.sharedMesh || !ActiveUnder(renderer.transform, root.transform))
+                {
+                    continue;
+                }
+                var size = Vector3.Scale(filter.sharedMesh.bounds.size, Abs(renderer.transform.lossyScale));
+                float volume = size.x * size.y * size.z;
+                if (volume > bestVolume)
+                {
+                    bestVolume = volume;
+                    height = size.y;
+                }
+            }
+            return height;
+        }
+
+        private static bool ActiveUnder(Transform t, Transform root)
+        {
+            for (; t && t != root; t = t.parent)
+            {
+                if (!t.gameObject.activeSelf)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static Vector3 Abs(Vector3 v)
+        {
+            return new Vector3(Mathf.Abs(v.x), Mathf.Abs(v.y), Mathf.Abs(v.z));
         }
 
         /// <summary>The model's bounds from its meshes, in metres, relative to its root (any scale on the root included).</summary>
@@ -276,46 +331,56 @@ namespace Orlog.Content
             Jotunn.Logger.LogInfo($"Orlog stone: {glowing} glowing material(s) turned rune blue.");
         }
 
-        /// <summary>Blue mist drifting round the base: the game's own smoke material, tinted rune blue.</summary>
+        /// <summary>
+        ///     Blue mist drifting round the base: a copy of one of the game's own looping smoke effects (all its settings,
+        ///     so it renders as in vanilla), tinted rune blue and spread over the stone's footprint. A particle system made
+        ///     from scratch with only the smoke material didn't show (play-test 2026-11-02).
+        /// </summary>
         private static void AddMist(GameObject prefab, float footprintUnscaled)
         {
-            var smoke = PrefabManager.Cache.GetPrefabs(typeof(ParticleSystemRenderer)).Values.OfType<ParticleSystemRenderer>()
-                .Select(r => r ? r.sharedMaterial : null).Where(m => m && m.name.ToLowerInvariant().Contains("smoke"))
-                .OrderBy(m => m.name).FirstOrDefault();
-            if (!smoke)
+            var source = PrefabManager.Cache.GetPrefabs(typeof(GameObject)).Values.OfType<GameObject>()
+                .Where(p => p)
+                .SelectMany(p => p.GetComponentsInChildren<ParticleSystem>(true))
+                .Where(ps => ps && ps.main.loop && ps.GetComponent<ParticleSystemRenderer>() is ParticleSystemRenderer r && r.sharedMaterial &&
+                             r.sharedMaterial.name.ToLowerInvariant().Contains("smoke"))
+                .OrderBy(ps => ps.transform.root.name).ThenBy(ps => ps.name).FirstOrDefault();
+            if (!source)
             {
-                Jotunn.Logger.LogWarning("Orlog stone: no smoke material found in the game; the stone has no mist.");
+                Jotunn.Logger.LogWarning("Orlog stone: no looping smoke effect found in the game; the stone has no mist.");
                 return;
             }
-            var mist = new GameObject("OrlogMist");
-            mist.transform.SetParent(prefab.transform, false);
-            var particles = mist.AddComponent<ParticleSystem>();
-            var main = particles.main;
-            main.loop = true;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(4f, 7f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.1f, 0.4f);
-            main.startSize = new ParticleSystem.MinMaxCurve(1.5f, 3f);
-            main.startColor = new Color(Rune.r, Rune.g, Rune.b, 0.3f);
-            main.maxParticles = 80;
-            main.simulationSpace = ParticleSystemSimulationSpace.World;
-            // The circle follows the stone's size; the puffs keep their own size.
-            main.scalingMode = ParticleSystemScalingMode.Shape;
-            main.gravityModifier = -0.01f;
-            var emission = particles.emission;
-            emission.rateOverTime = 8f;
-            var shape = particles.shape;
-            shape.shapeType = ParticleSystemShapeType.Circle;
-            shape.radius = footprintUnscaled;
-            // Lay the circle flat on the ground, puffs rising.
-            shape.rotation = new Vector3(-90f, 0f, 0f);
-            var fade = particles.colorOverLifetime;
-            fade.enabled = true;
-            var gradient = new Gradient();
-            gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-                new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.3f), new GradientAlphaKey(0f, 1f) });
-            fade.color = gradient;
-            mist.GetComponent<ParticleSystemRenderer>().sharedMaterial = smoke;
-            Jotunn.Logger.LogInfo($"Orlog stone: mist made with the game's {smoke.name}.");
+            var mist = Object.Instantiate(source.gameObject, prefab.transform, false);
+            mist.name = "OrlogMist";
+            mist.SetActive(true);
+            mist.transform.localPosition = Vector3.zero;
+            mist.transform.localRotation = Quaternion.identity;
+            // Only the smoke itself: no scripts (a timed destruction would remove it, a light flicker throws without its
+            // light), lights or sounds of the original.
+            foreach (var script in mist.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                Object.DestroyImmediate(script);
+            }
+            foreach (var extra in mist.GetComponentsInChildren<Component>(true))
+            {
+                if (extra is Light || extra is AudioSource)
+                {
+                    Object.DestroyImmediate(extra);
+                }
+            }
+            foreach (var particles in mist.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                var main = particles.main;
+                main.loop = true;
+                main.playOnAwake = true;
+                var color = main.startColor.color;
+                main.startColor = new Color(Rune.r, Rune.g, Rune.b, Mathf.Max(color.a, 0.35f));
+                var shape = particles.shape;
+                if (shape.enabled)
+                {
+                    shape.radius = Mathf.Max(shape.radius, footprintUnscaled);
+                }
+            }
+            Jotunn.Logger.LogInfo($"Orlog stone: mist copied from the game's {source.transform.root.name}/{source.name}.");
         }
 
         /// <summary>A raven guide point on the ground beside the stone (user: reachable), with the vanilla raven.</summary>
@@ -538,6 +603,8 @@ namespace Orlog.Content
         public static void Use(Player player, OrlogStoneObject stone)
         {
             var cls = Attributes.ClassOf(player);
+            // Logged step by step until the freeze on using it is found (play-test 2026-11-02).
+            Jotunn.Logger.LogInfo($"Orlog stone used (class: {(cls != null ? cls.Name : "none")}).");
             if (cls != null)
             {
                 player.Message(MessageHud.MessageType.Center, Localization.instance.Localize(Texts.StoneHasClass, cls.Name));
@@ -550,6 +617,7 @@ namespace Orlog.Content
                 // The classes UI opens its class choice window when this goes up.
                 Requests++;
                 Progress.NotifyChanged();
+                Jotunn.Logger.LogInfo($"Orlog stone: asked the classes UI to open the class choice (request {Requests}).");
                 return;
             }
             // Without the classes UI: with one playable class, using the stone twice chooses it.
@@ -593,6 +661,7 @@ namespace Orlog.Content
             {
                 return "Use the Orlog stone to choose a class";
             }
+            Jotunn.Logger.LogInfo($"Orlog stone: choosing {cls.Name}.");
             Attributes.SetClass(player, cls);
             s_used = false;
             player.Message(MessageHud.MessageType.Center, Localization.instance.Localize(Texts.ClassChosen, cls.Name));

@@ -137,19 +137,15 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 All passed 2026-10-31 (single player). Left: nothing (sharing XP is in Session 2).
 
-## Orlog stone and class choice: re-test (branch `claude/class-skills`, about 10 minutes)
+## Orlog stone and class choice: third round (branch `claude/class-skills`, about 10 minutes)
 
-The first version failed (2026-11-02); this is the rework to your choices. Build the whole solution from `claude/class-skills`; `[5 - Classes UI]` → `Demo = false`.
-0. `BepInEx/LogOutput.log` has `Orlog stone made from <a Vegvisir> … tall (x…)`, a line about glowing materials and `mist made with …`. (If it says "using the trophy stone instead", tell Claude.)
-1. `orlog_class none`. Go to the spawn area.
-2. **Spot:** the stone stands behind the Eikthyr trophy stone (as seen from the centre), with about 3 m between them, on the ground. If your world still had the old stone, it has moved there (log: `Orlog stone moved to …`). It's turned the same way as the Eikthyr stone; if it faces away, set `StoneTurn = 180` in `com.krogongames.orlog.cfg` and save.
-3. **Look:** a Vegvisir about twice as tall as a trophy stone, runes glowing blue, blue mist drifting round its base, a soft blue light. No boss carving.
-4. **Raven:** on the ground beside the stone, reachable, with the Orlog stone's lore (first time only).
-5. **Hover:** "Orlog stone" and "[E] Choose your path" (not "Sacrificial Stone").
-6. **Press E:** no crash; the class choice window opens. Choose the Amazon and confirm: "You walk the path of the Amazon", the level-up effect, the eitr bar appears.
-7. Press E again: "You walk the path of the Amazon".
-8. Log out and in, go back: still one stone, same place, still an Amazon.
-9. No red errors in the console. If the game crashes, send `Player-prev.log` from `%USERPROFILE%/AppData/LocalLow/IronGate/Valheim/`.
+Second round (2026-11-02): spot, raven, hover and choosing the Amazon passed; the stone was about 10× a trophy stone, had no mist, and the game froze on pressing E a second time. Size and mist are fixed; the freeze isn't found yet, so this round collects the log. Rebuild from `claude/class-skills`; `Demo = false`.
+0. `LogOutput.log` has `Orlog stone: model … m, trophy stone … m, scaled x…` and `Orlog stone: mist copied from …`.
+1. `orlog_class none`, go to the spawn area. The stone is behind the Eikthyr stone, **about twice a trophy stone's height** (not ten times), runes blue.
+2. **Blue mist** drifts round its base.
+3. Press E: the window opens; choose the Amazon. The log gets `Orlog stone used (class: none)`, `asked the classes UI …` and `choosing Amazon`.
+4. **Press E again** (the step that froze). If it says "You walk the path of the Amazon", fine. **If it freezes:** close the game, then **before starting it again** copy `BepInEx/LogOutput.log` from the profile folder (it's overwritten at launch) and `Player.log` from `%USERPROFILE%/AppData/LocalLow/IronGate/Valheim/`, and send both. Also note whether you were looking at the stone or at the raven when you pressed E.
+5. Log out and in: one stone, same place, still an Amazon. No red errors.
 
 ## Orlog skill tree and skill points
 

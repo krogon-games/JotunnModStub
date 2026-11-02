@@ -1122,7 +1122,7 @@ Unit-tested (`OrlogAttributeTests`: 7 tests).
 
 ## Orlog stone and class choice
 
-*Orlog. Built 2026-11-01; first play-test 2026-11-02 failed (below); reworked the same day to the user's choices, not yet re-tested. Roadmap task C1.*
+*Orlog. Built 2026-11-01; first play-test 2026-11-02 failed and was reworked to the user's choices; the re-test the same day passed the spot, raven, hover and class choice, and found three problems (below), fixed or instrumented, to re-test again. Roadmap task C1.*
 
 **What it does:** a character chooses its class at the **Orlog stone** in the spawn area (`class-design.md` §5a; user, 2026-10-30).
 - **Look (user, 2026-11-02):** a copy of the game's **Vegvisir** standing stone with every vanilla behaviour removed (hover, use, lore, trophy stands, ravens). **Twice as tall as a boss trophy stone** (`StoneSize`, measured from both models' meshes). Its runes glow in the classes UI's rune blue (every glowing material turned blue at its own brightness, plus a soft blue light), and **blue mist** drifts round its base (the game's own smoke material, tinted blue). The Vegvisir only exists inside location prefabs, so they're searched once when the world's locations load (the first, by name, that has one; logged). If none has one, the trophy stone is the fallback (logged as a warning).
@@ -1150,7 +1150,12 @@ Unit-tested (`OrlogStoneTests`: 5 tests: straight behind, any angle, on-centre, 
   - **Wrong hover and lore:** it read "Sacrificial Stone / [E] Read" with the vanilla lore. The copied stone carried the game's lore-stone behaviour, which took the hover and use before ours. Now every vanilla hover/use behaviour is stripped.
   - **Crash:** pressing E once crashed the game. The cause isn't known (no log sent); it was the vanilla lore stone's use, now removed. If it happens again, send `Player-prev.log` (`%USERPROFILE%/AppData/LocalLow/IronGate/Valheim/`).
   - **Raven out of reach:** it sat out of reach on top. Now it's on the ground beside the stone.
-- The Vegvisir's front side and the mist's look are untested; `StoneTurn` turns it without a rebuild.
+- **Re-test 2026-11-02 (user) of the rework:**
+  - **Passed:** the build check, the spot behind the Eikthyr stone, the raven on the ground, the hover text, and choosing the Amazon from the window.
+  - **About 10× a trophy stone instead of 2×:** the size was measured on the whole trophy stone prefab, its stand and effects included. **Fixed:** both heights now come from each stone's main mesh (the trophy stone's `BossStone.m_mesh`, the Vegvisir's biggest visible mesh), and the log prints both heights and the scale.
+  - **No blue mist:** a particle system built from scratch with only the smoke material didn't render. **Fixed:** a copy of one of the game's own looping smoke effects, with its scripts, lights and sounds removed, tinted blue and spread over the footprint (logged).
+  - **The game froze on pressing E a second time** (with a class; no crash log). The cause is not found: nothing in the stone's use, the class choice window or the raven loops. **Instrumented:** each step of using the stone is now logged, so the next `LogOutput.log` shows where it stops. Copy it before restarting the game, because BepInEx overwrites it at launch.
+- The mist's look is untested; `StoneTurn` turns the stone without a rebuild.
 - In a fresh world two players arriving at the same moment both ask the server; the server lets only the first place the stone.
 - The raven shows once per player, also for a character that already has a class.
 
@@ -1192,6 +1197,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-02
+- **Orlog stone, second round** (re-test): size fixed (2× measured on the stones' main meshes, not the trophy stone's whole prefab: it came out about 10×); mist now a copy of a vanilla looping smoke effect, tinted blue (the scratch-built one didn't show); using the stone is logged step by step to find a freeze on the second E. Untested in-game.
 - **Skill tree and skill points tested in-game** (single player): all 9 steps passed.
 - **Orlog stone reworked after its play-test** (it showed the Bonemass carving, read "Sacrificial Stone / [E] Read", crashed once on E, touched the Bonemass stone facing outwards, raven out of reach): now a copy of the game's Vegvisir with every vanilla behaviour stripped, twice a trophy stone's height, glowing blue runes and blue mist, placed 3 m behind the Eikthyr trophy stone and turned like it, raven on the ground beside it; a stone from the first version moves to the new spot. New settings `StoneSize`, `StoneGap`, `StoneTurn`. Untested in-game (263 tests).
 
