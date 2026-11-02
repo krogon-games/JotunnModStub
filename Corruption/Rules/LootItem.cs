@@ -25,7 +25,7 @@ namespace Corruption.Rules
             /// <summary>Affix ids from <c>affixes.csv</c>: one, or the prefix then the suffix of a resonant twin.</summary>
             public string[] Ids;
 
-            public int Value;
+            public float Value;
 
             public bool Resonant => Ids.Length == 2;
         }
@@ -50,7 +50,7 @@ namespace Corruption.Rules
                 customData.Remove(NameKey);
             }
             customData[AffixesKey] = string.Join(";",
-                Lines.Select(l => string.Join("+", l.Ids) + "=" + l.Value.ToString(CultureInfo.InvariantCulture)));
+                Lines.Select(l => string.Join("+", l.Ids) + "=" + Format(l.Value)));
         }
 
         /// <summary>The item's rolled affixes, or null for an item without them (Normal items, or unreadable data).</summary>
@@ -69,7 +69,7 @@ namespace Corruption.Rules
             foreach (var part in affixes.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 int equals = part.LastIndexOf('=');
-                if (equals <= 0 || !int.TryParse(part.Substring(equals + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+                if (equals <= 0 || !float.TryParse(part.Substring(equals + 1), NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
                 {
                     return null;
                 }
@@ -83,21 +83,63 @@ namespace Corruption.Rules
             return item;
         }
 
-        /// <summary>The range a line rolls in: the affix's own range, or the resonant range for a twin.</summary>
-        public static void Range(Line line, IDictionary<string, AffixTable.Affix> affixes, out int min, out int max)
+        /// <summary>
+        ///     How many decimals an affix rolls with: as many as its range is written with in the table (0.5–2 m rolls in
+        ///     tenths, 5–40% in whole numbers), at most 2.
+        /// </summary>
+        public static int Decimals(AffixTable.Affix affix)
         {
-            min = max = 0;
+            return Math.Max(Decimals(affix.Min), Decimals(affix.Max));
+        }
+
+        private static int Decimals(float value)
+        {
+            for (int d = 0; d < 2; d++)
+            {
+                double scaled = value * Math.Pow(10, d);
+                if (Math.Abs(scaled - Math.Round(scaled)) < 1e-4)
+                {
+                    return d;
+                }
+            }
+            return 2;
+        }
+
+        /// <summary>The decimals a line rolls with (a resonant line: the finer of its two halves).</summary>
+        public static int Decimals(Line line, IDictionary<string, AffixTable.Affix> affixes)
+        {
+            int decimals = 0;
             foreach (var id in line.Ids)
             {
                 if (affixes.TryGetValue(id, out var affix))
                 {
-                    min += (int)affix.Min;
-                    max += (int)affix.Max;
+                    decimals = Math.Max(decimals, Decimals(affix));
+                }
+            }
+            return decimals;
+        }
+
+        /// <summary>A value as stored and shown: invariant culture, no trailing zeros ("12", "1.5").</summary>
+        public static string Format(float value)
+        {
+            return value.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>The range a line rolls in: the affix's own range, or the resonant range for a twin.</summary>
+        public static void Range(Line line, IDictionary<string, AffixTable.Affix> affixes, out float min, out float max)
+        {
+            min = max = 0f;
+            foreach (var id in line.Ids)
+            {
+                if (affixes.TryGetValue(id, out var affix))
+                {
+                    min += affix.Min;
+                    max += affix.Max;
                 }
             }
             if (line.Resonant)
             {
-                max = (int)Math.Round(max * ResonanceBonus, MidpointRounding.AwayFromZero);
+                max = (float)Math.Round(max * ResonanceBonus, Decimals(line, affixes), MidpointRounding.AwayFromZero);
             }
         }
 
@@ -145,7 +187,7 @@ namespace Corruption.Rules
             {
                 return names.Length == 1 ? names[0] : affix.Name;
             }
-            Range(line, affixes, out int min, out int max);
+            Range(line, affixes, out float min, out float max);
             float position = max > min ? (float)(line.Value - min) / (max - min) : 1f;
             if (affix.LowerIsBetter)
             {
@@ -162,16 +204,15 @@ namespace Corruption.Rules
         {
             if (!affixes.TryGetValue(line.Ids[0], out var affix))
             {
-                return string.Join("+", line.Ids) + " " + line.Value.ToString(CultureInfo.InvariantCulture);
+                return string.Join("+", line.Ids) + " " + Format(line.Value);
             }
-            Range(line, affixes, out int min, out int max);
-            var text = new StringBuilder(affix.Text.Replace("{0}", line.Value.ToString(CultureInfo.InvariantCulture)));
+            Range(line, affixes, out float min, out float max);
+            var text = new StringBuilder(affix.Text.Replace("{0}", Format(line.Value)));
             if (!string.IsNullOrEmpty(bonus))
             {
                 text.Append(" (").Append(bonus).Append(')');
             }
-            text.Append(" [").Append(min.ToString(CultureInfo.InvariantCulture)).Append('–')
-                .Append(max.ToString(CultureInfo.InvariantCulture)).Append(']');
+            text.Append(" [").Append(Format(min)).Append('–').Append(Format(max)).Append(']');
             if (line.Resonant)
             {
                 text.Append(" ◆ resonant");
@@ -195,9 +236,9 @@ namespace Corruption.Rules
         }
 
         /// <summary>The total of one effect over the item's lines (e.g. every <c>fire_damage_percent</c> line).</summary>
-        public int Total(string effect, IDictionary<string, AffixTable.Affix> affixes)
+        public float Total(string effect, IDictionary<string, AffixTable.Affix> affixes)
         {
-            int total = 0;
+            float total = 0f;
             foreach (var line in Lines)
             {
                 if (affixes.TryGetValue(line.Ids[0], out var affix) && affix.Effect == effect)
