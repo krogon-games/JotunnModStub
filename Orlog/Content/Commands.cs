@@ -17,6 +17,7 @@ namespace Orlog.Content
             CommandManager.Instance.AddConsoleCommand(new ClassCommand());
             CommandManager.Instance.AddConsoleCommand(new StatCommand());
             CommandManager.Instance.AddConsoleCommand(new RespecCommand());
+            CommandManager.Instance.AddConsoleCommand(new SkillCommand());
         }
 
         private static Player LocalPlayer()
@@ -171,11 +172,45 @@ namespace Orlog.Content
             }
         }
 
+        private sealed class SkillCommand : ConsoleCommand
+        {
+            public override string Name => "orlog_skill";
+
+            public override string Help => "Orlog: spend skill points, e.g. orlog_skill MagicArrow 2 (the skills panel does the same)";
+
+            public override void Run(string[] args)
+            {
+                var player = LocalPlayer();
+                if (!player)
+                {
+                    return;
+                }
+                int count = 1;
+                if (args.Length < 1 || (args.Length > 1 && (!int.TryParse(args[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out count) || count < 1)))
+                {
+                    var table = SkillPoints.TableOf(player);
+                    Console.instance.Print("Usage: orlog_skill <skill id> [points]" +
+                                           (table != null ? ". Skills: " + string.Join(", ", table.Skills.Where(s => s.Built).Select(s => s.Id)) : ""));
+                    return;
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    string refused = SkillPoints.Spend(player, args[0]);
+                    if (refused.Length > 0)
+                    {
+                        Console.instance.Print(refused);
+                        break;
+                    }
+                }
+                Print(player);
+            }
+        }
+
         private sealed class RespecCommand : ConsoleCommand
         {
             public override string Name => "orlog_respec";
 
-            public override string Help => "Orlog: take back every spent stat point (until the respec item exists)";
+            public override string Help => "Orlog: take back every spent stat and skill point (until the respec item exists)";
 
             public override bool IsCheat => true;
 
@@ -210,6 +245,9 @@ namespace Orlog.Content
             Console.instance.Print($"{cls.Name}: Strength {Attributes.Value(player, Attribute.Strength)}, Dexterity {Attributes.Value(player, Attribute.Dexterity)}, " +
                                    $"Vitality {Attributes.Value(player, Attribute.Vitality)}, Energy {Attributes.Value(player, Attribute.Energy)}; " +
                                    $"{Attributes.Unspent(player)} stat points to spend.");
+            var skills = SkillPoints.Points(player);
+            Console.instance.Print($"Skills: {(skills.Count > 0 ? string.Join(", ", skills.Select(p => p.Key + " " + p.Value)) : "none yet")}; " +
+                                   $"{SkillPoints.Unspent(player)} skill points to spend.");
             Console.instance.Print($"From the class: +{bonuses.Health:0.#} health, +{bonuses.Stamina:0.#} stamina, +{bonuses.Eitr:0.#} eitr, " +
                                    $"+{bonuses.MeleeDamage * 100f:0.#}% melee and thrown damage, +{bonuses.RangedDamage * 100f:0.#}% bow damage.");
         }

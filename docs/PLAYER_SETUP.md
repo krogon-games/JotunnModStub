@@ -7,7 +7,7 @@ For everyone joining our Valheim server. Takes about 10 minutes. You only do thi
 | Mod | What it does | Where from |
 |---|---|---|
 | **Corruption** | Our endgame mod: corruption shards, the Riftforge, creature talismans | Krogon sends you `Corruption.dll` |
-| **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes (classes and skill trees still to come) | Krogon sends you `Orlog.dll` |
+| **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes, the class eitr pool; choose your class at the Orlog stone in the spawn area (what the skills do is still to come) | Krogon sends you `Orlog.dll` |
 | **CraftingOverhaul** | Our crafting mod: recipe search, collapsible categories, crafting and building from nearby chests | Krogon sends you `CraftingOverhaul.dll` |
 | [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) | Equipment slots and quick slots. **Talismans go in its slots**, so you need it | Thunderstore |
 | [AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) | Craftable backpacks | Thunderstore |
@@ -55,7 +55,7 @@ In r2modman, go to **Online**, search for each mod and click **Download** (accep
 2. Open `BepInEx`, then `plugins`.
 3. Create a folder called `Corruption` and put `Corruption.dll` in it.
 4. Create a folder called `Orlog` and put `Orlog.dll` in it.
-5. Create a folder called `CraftingOverhaul` and put `CraftingOverhaul.dll` in it.
+5. Create a folder called `CraftingOverhaul` and put `CraftingOverhaul.dll` in it. Its classes screens (health/eitr/stamina bars, skills panel, class choice) need it.
 
 ## 4. Play
 
@@ -97,7 +97,7 @@ The dedicated server needs, in its own BepInEx install:
 |---|---|
 | BepInExPack_Valheim, Jötunn | Yes (same minimum versions as the Dependencies table) |
 | Corruption | **Yes** (adds items; everyone must match) |
-| Orlog | **Yes** (everyone must match; its level and attribute settings come from the server) |
+| Orlog | **Yes** (everyone must match; its level and attribute settings come from the server, XP is shared between players' games and the Orlog stone is placed through the server) |
 | AdventureBackpacks (+ YamlDotNet) | **Yes** (adds items) |
 | CraftingOverhaul | Recommended: its chest settings then come from the server |
 | EquipmentAndQuickSlots | Optional: only syncs its own settings |
@@ -114,6 +114,8 @@ The dedicated server needs, in its own BepInEx install:
 | `1 - Levels` | `XpMultiplier` | 1 | Multiplies all XP from kills; 2 = levels twice as fast |
 | `1 - Levels` | `ShareRange` | 70 | Players within this many metres of a kill share its XP |
 | `1 - Levels` | `PartyBonusPerPlayer` | 0.35 | Extra XP per additional player sharing a kill, before it's split by level |
+| `1 - Levels` | `MaxSkillPoints` | 20 | Most points one skill can take |
+| `1 - Levels` | `SkillPace` | true | Diablo 2's pace: a skill takes one more point per level past its required level |
 | `1 - Levels` | `HighLevelPenalty` | false | Diablo 2's XP cut from level 70; off, as it would put level 90 by Kall Fimbulbringer out of reach |
 | `3 - Attributes` | `HealthPerD2Life` | 0.5 | Health per Diablo 2 life point (life per level and per Vitality point) |
 | `3 - Attributes` | `StaminaPerD2Stamina` | 0.89 | Stamina per Diablo 2 stamina point |
@@ -122,6 +124,9 @@ The dedicated server needs, in its own BepInEx install:
 | `3 - Attributes` | `EitrPerEnergy` | 1.5 | Eitr per Energy point |
 | `3 - Attributes` | `DamagePerStrength` | 1 | % more physical damage per Strength point, melee and thrown |
 | `3 - Attributes` | `DamagePerDexterity` | 1 | % more physical damage per Dexterity point, bows and crossbows |
+| `4 - Orlog Stone` | `StoneSize` | 1.7 | The Orlog stone's size in times the Vegvisir it copies; 1.7 ≈ twice a trophy stone (restart to apply) |
+| `4 - Orlog Stone` | `StoneGap` | 3 | Metres between the Eikthyr trophy stone and the Orlog stone behind it |
+| `4 - Orlog Stone` | `StoneTurn` | 0 | Degrees to turn the stone if it faces the wrong way |
 
 - **Bigger backpacks (user, 2026-10-29: one more row on every level).** Set on the server in `BepInEx/config/vapok.mods.adventurebackpacks.cfg` (AdventureBackpacks syncs them to everyone). Each backpack has a section `[Backpack: <name>]` with `Backpack Size - Level 1` to `Level 4`, written as `{"x":3.0,"y":2.0}` (width, height). New values (AdventureBackpacks 2.4.6 defaults plus one row; widths unchanged):
 

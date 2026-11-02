@@ -1,0 +1,31 @@
+id,name,tab,row,col,req_level,prereqs,status,kind,needs,eitr,eitr_per_level,description,d2_synergies
+MagicArrow,Magic Arrow,0,1,2,1,,v1,attack,bow,1.5,-0.125,Shoots without using an arrow; its damage turns into spirit damage as it levels,
+FireArrow,Fire Arrow,0,1,3,1,,v1,attack,bow,3,0,Adds fire damage to the shot,Exploding Arrow +12% fire dmg
+ColdArrow,Cold Arrow,0,2,1,6,,v1,attack,bow,3.5,0.125,Adds frost damage; the target is slowed,Ice Arrow +12% cold dmg
+MultipleShot,Multiple Shot,0,2,2,6,MagicArrow,v1,attack,bow,4,1,One shot splits into several arrows in a fan; uses one arrow,Guided Arrow +12% dmg
+ExplodingArrow,Exploding Arrow,0,3,3,12,FireArrow+MultipleShot,v1,attack,bow,5,0.25,Fire damage in an area on impact,Fire Arrow +14% fire dmg
+IceArrow,Ice Arrow,0,4,1,18,ColdArrow,v1,attack,bow,4,0.25,Frost damage and a short freeze; bosses are only slowed,Cold Arrow +8% cold dmg; Freezing Arrow +5% freeze length
+GuidedArrow,Guided Arrow,0,4,2,18,ColdArrow+MultipleShot,later,attack,bow,8,-0.25,The arrow homes in on the target,Multiple Shot +12% dmg
+Strafe,Strafe,0,5,2,24,GuidedArrow,later,attack,bow,11,0,A volley of arrows at several nearby targets,Multiple Shot +5% dmg; Guided Arrow +10% dmg
+ImmolationArrow,Immolation Arrow,0,5,3,24,ExplodingArrow,later,attack,bow,6,0.25,Exploding Arrow plus a burning patch on the ground,Fire Arrow +5% avg fire dmg/s; Exploding Arrow +10% fire dmg
+FreezingArrow,Freezing Arrow,0,6,1,30,IceArrow,v1,attack,bow,9,0.25,Ice Arrow's freeze in an area,Cold Arrow +12% cold dmg; Ice Arrow +5% freeze length
+InnerSight,Inner Sight,1,1,1,1,,v1,cast,,5,0,Nearby enemies glow and take more damage for a while,
+CriticalStrike,Critical Strike,1,1,3,1,,v1,passive,,0,0,Chance to deal double physical damage,
+Dodge,Dodge,1,2,2,6,,v1,passive,,0,0,Chance to avoid a melee hit while standing or attacking,
+SlowMissiles,Slow Missiles,1,3,1,12,InnerSight,later,cast,,5,0,Enemy projectiles near you slow down,
+Avoid,Avoid,1,3,2,12,Dodge,v1,passive,,0,0,Chance to avoid a projectile while standing or attacking,
+Penetrate,Penetrate,1,4,3,18,CriticalStrike,reworked,passive,,0,0,Chance for a hit to ignore the creature's resistance to its damage type,
+Decoy,Decoy,1,5,1,24,SlowMissiles,later,cast,,19,-0.75,"A tinted, standing copy of you that creatures attack instead",
+Evade,Evade,1,5,2,24,Avoid,v1,passive,,0,0,Chance to avoid any hit while moving,
+Valkyrie,Valkyrie,1,6,1,30,Decoy+Evade,later,cast,,25,1,A tinted copy of a player character that fights for you,Decoy +20% life; Penetrate +40 AR (flat); inherits Critical Strike/Dodge/Avoid/Evade hard levels
+Pierce,Pierce,1,6,3,30,Penetrate,later,passive,,0,0,Chance for an arrow or javelin to pass through and hit the next enemy,
+Jab,Jab,2,1,1,1,,v1,attack,spear,2,0.25,A fast series of thrusts,
+PowerStrike,Power Strike,2,2,2,6,Jab,v1,attack,spear,2,0.25,Adds lightning damage to the thrust,Lightning Bolt +14% light dmg; Charged Strike +14%; Lightning Strike +14%
+PoisonJavelin,Poison Javelin,2,2,3,6,,v1,attack,spear,4,0.25,The javelin (a spectral copy) leaves poison clouds along its path,Plague Javelin +12% poison dmg
+Impale,Impale,2,3,1,12,Jab,v1,attack,spear,3,0,One heavy thrust; wears the spear down faster,
+LightningBolt,Lightning Bolt,2,3,3,12,PoisonJavelin,v1,attack,spear,6,0.25,The javelin (a spectral copy) turns into lightning,Power Strike +3% light dmg; Charged Strike +3%; Lightning Strike +3%; Lightning Fury +3%
+ChargedStrike,Charged Strike,2,4,2,18,PowerStrike+LightningBolt,later,attack,spear,4,0.25,The thrust releases small lightning bolts around the target,Power Strike +14% light dmg; Lightning Bolt +14%; Lightning Strike +14%
+PlagueJavelin,Plague Javelin,2,4,3,18,LightningBolt,v1,attack,spear,7,0.5,A spreading poison cloud where the javelin (a spectral copy) lands,Poison Javelin +14% poison dmg
+Fend,Fend,2,5,1,24,Impale,later,attack,spear,5,0,Thrusts at several nearby enemies in turn,
+LightningStrike,Lightning Strike,2,6,2,30,ChargedStrike,later,attack,spear,9,0,The thrust releases chain lightning to nearby enemies,Power Strike +11% light dmg; Lightning Bolt +11%; Charged Strike +11%
+LightningFury,Lightning Fury,2,6,3,30,PlagueJavelin,later,attack,spear,10,0.5,The javelin (a spectral copy) bursts into lightning bolts on impact,Power Strike +1% light dmg; Lightning Bolt +1%; Charged Strike +1%; Lightning Strike +1%

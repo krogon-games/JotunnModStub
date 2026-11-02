@@ -137,6 +137,14 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 All passed 2026-10-31 (single player). Left: nothing (sharing XP is in Session 2).
 
+## Orlog stone and class choice
+
+All passed 2026-11-02 (single player), size included. A custom design comes later.
+
+## Orlog skill tree and skill points
+
+All passed 2026-11-02 (single player).
+
 ## Classes UI (merged into `master`, 2 minutes)
 
 Everything else passed 2026-10-31 ("everything looks really good now"). Left: with `[5 - Classes UI]` → `Demo = true`:
