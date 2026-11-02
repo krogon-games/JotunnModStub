@@ -93,6 +93,12 @@ namespace Corruption.Content
                     new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(i * (ButtonWidth + ButtonGap) + ButtonWidth / 2f, ButtonHeight / 2f),
                     ButtonWidth, ButtonHeight);
                 button.name = "Tab_" + tab;
+                // Jötunn's buttons also play the "select" sound on mouse down, so each click sounded twice; keep the click.
+                var sfx = button.GetComponent<ButtonSfx>();
+                if (sfx)
+                {
+                    sfx.m_selectSfxPrefab = null;
+                }
                 button.GetComponent<Button>().onClick.AddListener(() => Show(tab));
                 _buttonTexts[i] = button.GetComponentInChildren<Text>();
             }
