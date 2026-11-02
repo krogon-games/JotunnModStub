@@ -1,6 +1,6 @@
 # Handoff: `claude/ui-overhaul`
 
-**Written:** 2026-11-02, from the real branch state: `git status` clean before this file; the branch was 3 commits ahead of `master` (`dd93cb8`) and 9 behind; `master` (`e0a98b0`, loot steps 3–4 and the Riftforge window brief, PR #18) is now merged in with no lost work (conflicts in `FEATURES.md` and `docs/CURRENT_STATE.md` resolved by keeping both sides). After the merge all three plugins build against stand-in game assemblies and 248 tests pass. No pull request is open from this branch; everything earlier from it is already in `master` (PRs #3, #7, #12, #15).
+**Written:** 2026-11-02, from the real branch state: `git status` clean before this file; the branch was 3 commits ahead of `master` (`dd93cb8`) and 9 behind; `master` (`e0a98b0`, loot steps 3–4 and the Riftforge window brief, PR #18) is now merged in with no lost work (conflicts in `FEATURES.md` and `docs/CURRENT_STATE.md` resolved by keeping both sides). After the merge all three plugins build against stand-in game assemblies and 248 tests pass. **PR #19** is open from this branch into `master` (the click fix, build stamp, housekeeping docs, Riftforge mock-ups and this file); everything earlier from it is already in `master` (PRs #3, #7, #12, #15).
 
 Detail lives elsewhere; this file points to it: `FEATURES.md` (Character sheet, Currency and Maps tabs, Health/stamina/eitr bars, Classes UI), `docs/DECISIONS.md` (Features section, 2026-10-29 to 2026-11-01 rows), `docs/PLAYTEST.md`, `docs/ROADMAP.md` §4.4, `docs/classes-ui-brief.md`, `docs/riftforge-ui-brief.md`.
 
@@ -133,7 +133,7 @@ All are rows in `docs/DECISIONS.md`.
 
 ## Merge notes
 
-- **Ready to merge?** Yes, as a small PR: the click fix, the build stamp, the housekeeping docs and the mock-ups are self-contained; nothing is half-built in code. The Riftforge window itself isn't started in code.
+- **Ready to merge?** Yes, opened as **PR #19**: the click fix, the build stamp, the housekeeping docs and the mock-ups are self-contained; nothing is half-built in code. The Riftforge window itself isn't started in code.
 - **Files shared with other sessions** (merge carefully, keep both sides):
   - **Docs:** `FEATURES.md` (changelog), `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (Session 2 rewritten as the evening script), `docs/GAME_DESIGN.md` (status table), `docs/PLAYER_SETUP.md` (Orlog added), `docs/ARCHITECTURE.md` (build stamp line).
   - **Corruption code:** `Corruption/Content/InventoryTabsUi.cs` (click fix), which the loot session doesn't touch. The Riftforge window will add new files under `Corruption/Content/` and one hook in `CorruptionPlugin.cs`, the expected merge point.
