@@ -42,6 +42,57 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 2. Their recipes show at the workbench once you've picked up the materials, and crafting works.
 3. The log lists `Unlocked CapeOdin (was tagged DLC "beta")` and the other two.
 
+## Session 3d: on-harvest gathering affixes (loot step 3, second half, about 20 minutes)
+
+Build from **`claude/affixes-loot`**. Roll tools until they carry the affix (`co_loot rare PickaxeBronze`, `co_loot rare AxeBronze`…); its tooltip line is no longer grey. Chances are low (5–25%), so give each one a dozen trees or rock chunks. With a second player, repeat 1, 3 and 9 while the **other** player stands nearest the tree or rock (they own it).
+
+1. **Bountiful** (*of Bounty*): now and then a tree, log, stump, rock or deposit chunk drops everything twice.
+2. **Bountiful** (*of Plenty*, axe): now and then a log drops its wood twice; with both Bountifuls, sometimes three times.
+3. **Determined:** the stamina bar jumps up each time something breaks and drops.
+4. **Artisan:** now and then a copper or tin chunk drops one more ore.
+5. **Gemseeker's:** now and then a rock or chunk drops Amber or Amber pearl (Meadows), also Ruby (Black Forest and later).
+6. **Stonecutter's:** now and then a rock or chunk drops one more stone (also tin, which drops no stone itself).
+7. **Resinous:** now and then a tree, log or stump drops one more resin. **Forester's:** now and then a standing tree drops its seed (beech seeds, pine cone, birch seeds, fir cone, acorn).
+8. **Charring:** now and then wood drops as coal instead.
+9. **Odin's Grace** on an axe: now and then one chop at a standing tree drops all its wood, resin and seeds at once, with no log or stump left. Fell a tree normally, then a lucky chop at its log or stump harvests the log, its pieces and the stump together. A tree you can't chop yet (tool tier) still says "too hard".
+10. The log lists `Harvest affixes: wood …; seeds …; ores …` at startup: wood should be the wood types, seeds the seeds, ores the ores and scrap. No red errors in the console.
+## Session 3e: proc and utility affixes (loot step 4, about 25 minutes)
+
+Build from **`claude/affixes-loot`**. Give yourself the affix you want with `co_affix <id>` (best value; `co_affix deathless 10 chest` puts Deathless on your chest piece): ids `shieldwall`, `rallying`, `skalds`, `steadfast`, `reprisal` (on a shield or a weapon that blocks), `wrath` (a weapon with a combo, e.g. a sword), `skadi`, `fenrir`, `bloodforged` (weapons), `deathless`, `foraging` (armour: `helmet`, `chest`, `legs`, `cape`). Parry = raise the block just before the hit lands (the game's perfect-block effect plays). Check the startup log for the line "Foraging: N wild plants" and "Proc affixes: Reprisal shows …" (after the first Reprisal or Wrath).
+
+1. **Shieldwall:** parry: a buff icon appears for 10 s and the armour number in the inventory goes up by the %.
+2. **Rallying:** parry, then hit a creature: the first hit's damage number is clearly bigger; the icon goes after that hit (or after 10 s).
+3. **Skald's:** parry, then attack: the swing is visibly faster for 10 s.
+4. **Steadfast:** let the stamina bar drop, parry: it jumps up by the value.
+5. **Reprisal** (`co_affix reprisal 100` for a sure proc): parry: lightning strikes the attacker and it takes lightning damage.
+6. **Wrath:** with a sword, swing the full combo into a group of greylings: the last hit sends a shockwave that damages and pushes back everyone within about 3 m.
+7. **Skadi:** keep hitting one creature: the frost damage number grows over 5 hits; switch target or wait 3 s and it starts small again.
+8. **Fenrir:** kill three weak creatures quickly: the icon shows x2, x3 and the swing gets faster; it ends 10 s after the last kill.
+9. **Bloodforged:** get hurt, kill a creature: health jumps up by the % of max health.
+10. **Deathless:** `co_affix deathless 10 chest`, then die (fall from a cliff, or let a troll hit you at low health): you stay at 1 health with "Deathless! You cheat death." and a "Deathless spent" icon counting down 10 minutes. Die again during it: you really die. Relog during the cooldown: the icon comes back with the time left. With EquipmentAndQuickSlots' keep-on-death on, a real death still keeps your gear as before.
+11. **Foraging:** pick a mushroom, berries or thistle: an icon for 8 s and you run faster; picking flint, stones or branches, or your own crops, doesn't trigger it (tell Claude if it does). A PlantEasily bulk harvest of wild plants gives one 8 s boost, not a stack.
+12. **With a friend** (Session 2): your parry buffs (steps 1–4) also reach a friend standing within 10 m, shown on their screen; kills you make on creatures your friend's game controls still trigger Fenrir and Bloodforged.
+13. No red errors in the console.
+
+## Session 3c: gathering-tool affixes (loot step 3, about 20 minutes)
+
+Build from **`claude/affixes-loot`**. Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…). These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) are tested in Session 3d.
+
+1. **Prospector's** on a pickaxe: rocks and copper/tin take more hits off per swing than with a plain pickaxe of the same kind (watch the damage numbers).
+2. **Veinbreaker's:** every 5th swing at rock or ore shows a bigger damage number.
+3. **Seismic:** now and then a swing at a copper or tin deposit knocks off the chunks next to the one you hit too.
+4. **Odin's Grace:** now and then a swing breaks the chunk you hit and every chunk touching it at once; a single rock breaks in one hit. Iron (tier) still needs the right pickaxe.
+5. **Excavator's:** digging the ground with the pickaxe makes a deeper, wider hole than a plain one.
+6. **Lumberjack's / Timberfall / Rootbreaker** on an axe: standing trees / fallen logs / stumps take more damage per chop.
+7. **Splintering:** now and then a chop also damages the nearest other tree or log right next to you.
+8. **Fit:** now and then a swing costs no stamina (the bar doesn't drop). **Careful:** now and then a hit costs no durability.
+9. **Hushed:** creatures notice your chopping later (hard to see; just check nothing breaks).
+10. **Light:** the tool's weight in the tooltip is lower than a plain one's.
+11. **Keen-eyed / Magnetic:** with the tool in hand, items on the ground fly to you from further away (Magnetic: 3–6 m; vanilla 2 m).
+12. **Swift:** the swing animation is visibly faster.
+13. **Scholar's:** Woodcutting or Pickaxes skill rises faster (Skills tab).
+14. No red errors in the console.
+
 ## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
 
 ~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill) and 7 (life steal).
@@ -120,10 +171,79 @@ Everything else passed 2026-10-31 ("everything looks really good now"). Left: wi
 
 ## Session 2: with a friend
 
-Needs a second player (host a world or use the dedicated server, everyone on the same build).
+**One evening for the four of us on the dedicated server** (about 2½ hours). Nothing here has been tried with more than one player yet. Do the parts in order; each step says **who** does it, **what to do** and **what should happen**. Note ✅/❌ and what you saw for each step. Krogon = the admin (server files, `devcommands`); player A and player B = any two of you.
 
-1. **Craft and build from chests:** the 11 steps in [`multiplayer-test.md`](multiplayer-test.md).
-2. **Talismans:** your friend sees creatures ignore you when you wear a charm.
-3. **Rips:** you open a rip, your friend follows you through, you both come home through the exit rip. Your friend sees and hears your corrupted wishbone's pings. If a rip ever lands near anyone's base, tell Claude (the server should prevent that).
-4. **Essences:** kill a boss together: it drops 1 essence.
-5. **Character sheet:** with your friend standing next to you, open your inventory: only you appear in the character picture, never them.
+**Question for the user:** does `devcommands` (and so `spawn`, `co_corrupt`, `orlog_level`) work for you on the dedicated server? If not, Part 0 needs the real items (shards, an essence, a map, trophies) brought in from play.
+
+### Part 0: before the evening (Krogon)
+
+1. Build all three DLLs from `master` and send the same `Corruption.dll`, `Orlog.dll` and `CraftingOverhaul.dll` to everyone. Install them on the server too ([`PLAYER_SETUP.md`](PLAYER_SETUP.md) → For the server admin).
+2. Gameplay settings come from the server: leave its config files at the defaults unless a step below says otherwise.
+3. For the quick checks, put on the server or bring: 3 chests and a workbench at the base (Part 2a), 3 Greydwarf trophies, 1 Chain and 10 Leather scraps (or `spawn CorruptionTalisman_Greydwarf`), a few shards, a Corrupted wishbone and a `CorruptionMap_Meadows` (Part 3), and 2 Deer trophies (Part 4).
+
+### Part 1: setup and build check (everyone, 10 minutes)
+
+1. **Each player:** start with r2modman's **Start modded** and join the server. Expect: no "incompatible version" message.
+2. **Each player and Krogon (also the server's own log):** open `BepInEx/LogOutput.log` and find the three lines. Expect, the **same** on every machine:
+   - `Corruption 0.1.0 loaded (build: master <commit>)`
+   - `Orlog 0.1.0 loaded (build: master <commit>)`, the same commit
+   - `CraftingOverhaul 0.1.0 loaded (build: master <commit>)`, the same commit
+3. **Each player:** F5, no red errors.
+
+### Part 2: quick checks together at the base (about 45 minutes)
+
+**2a. Craft and build from chests** (the full table with notes is [`multiplayer-test.md`](multiplayer-test.md); these are its steps 1–9). Setup: a workbench and 3 chests within 20 m, with wood, stone and leather scraps only in the chests.
+
+1. **Player B:** craft something at the workbench from chest materials only. Expect: crafts; the materials leave the chests. **Player A:** open the chests. Expect: nothing missing or duplicated.
+2. **Player A:** the same the other way round. Expect: the same.
+3. **Player B:** build a wood piece with the hammer, wood only in a chest. Expect: builds; A sees the wood gone from the chest.
+4. **Player A:** open and keep open the only chest with wood. **Player B:** try a recipe that needs that wood. Expect: can't craft while A has it open; can once A closes it.
+5. **Player A:** put wood in a personal chest (`piece_chest_private`), empty the others. **Player B:** try to craft. Expect: B can't use A's private chest; A can.
+6. **Player A:** place and activate a ward by the bench without adding B. **Player B:** craft from chests inside it. Expect: B can't; after A adds B to the ward, B can.
+7. **Players A and B:** count down and craft from the same chest at the same moment, a few times. Expect: ideally nothing lost or doubled (known race: note how often it happens).
+8. **Player B:** go 30+ m away to a second workbench and craft. Expect: the far chests aren't used.
+9. **One player:** bulk-plant a PlantEasily grid with the seeds only in a nearby chest. Expect: it plants and takes the seeds from the chest (not yet tried even alone).
+
+**2b. Things only you should see** (each player)
+
+1. **Character sheet:** stand next to each other and open your inventory. Expect: only you in the character picture, never the others.
+2. **HUD bars and skills panel:** each player sees their own health, stamina and eitr (take a hit: only your bars move). `K` opens your own panel. These settings are per player: changing your `4 - HUD` settings changes only your screen.
+3. **Currency and Maps tabs:** **Player A** drops a shard on the ground; **player B** picks it up. Expect: it goes into B's Currency tab; A's tab has one fewer; nobody else's tabs change. Each player's tabs are still there after relogging.
+
+**2c. Things everyone should agree on**
+
+1. **Talismans:** **player A** wears a Greydwarf charm in a Talisman slot. Go to greydwarfs, with **player B** standing nearest them (B's game then runs them). Expect: they ignore A and attack B. A hits one: only that one fights A, for about 30 s.
+2. **Loot looks the same to everyone:** **one player** `co_loot rare SwordBronze`; another picks it up. Expect: the same coloured name and affix lines in both players' tooltips.
+3. **Each player's own loot roll:** all together, kill a pack of starred creatures (`spawn Boar 10 2`, several times). Each kill rolls loot once for every player within 100 m, so four players get about four times the Magic and Rare drops one player would. Drops aren't locked to anyone yet: anyone can pick them up. Expect: no errors; tell Claude roughly how many items dropped.
+
+**2d. Levels and XP**
+
+1. **Each player:** `orlog_info`, note your level. Make the levels different (e.g. **one player** `orlog_level 10`).
+2. **All within 70 m:** kill some creatures. Expect: everyone within 70 m of the kill gets "+N XP", whoever made the kill; the lower-level player gets the bigger share of a low creature. Also try a kill where the creature was run by another player's game (it was fighting someone else): XP still arrives.
+3. **One player** stays more than 70 m away. Expect: no XP for them.
+4. Other players' levels don't show anywhere on screen yet; they're only used for the split above.
+
+### Part 3: a rip run (about 45 minutes)
+
+On a dedicated server the rip request goes to the server and its answer comes back; alone this was all one game.
+
+1. **One player (the opener):** wear the Corrupted wishbone, use `CorruptionMap_Meadows` near the base. Expect: a red rip opens 4 m in front of them. If it says no spot was found, note the message. If a rip ever opens near anyone's bed, ward or portal, tell Claude (the server should prevent that).
+2. **Everyone:** go through. Expect: all land at the same spot, no heart in sight, no waves yet.
+3. **Everyone else:** watch and listen. Expect: you see and hear the opener's red pings (the log says how they reach other players: `shared with other players by …`).
+4. **Everyone:** walk towards the heart together. Expect: within 96 m the army message shows and waves come. Every player sees the creatures red; they attack everyone and each other; charms don't help.
+5. **Everyone:** destroy the heart. Expect: the exit rip opens and a chest with Meadows loot and 1–3 shards appears; the pings stop; the waves stop.
+6. **Everyone:** go home through the exit rip. Expect: everyone ends at the first rip.
+7. **Ask:** did anything differ between the opener and the others (the heart's place, the chest, the portal hover text)?
+
+### Part 4: a boss (about 30 minutes)
+
+1. **Everyone at Eikthyr:** summon and kill him normally. Expect: **1** essence in total (not one each), plus 1–3 shards if this is the world's first Eikthyr kill; everyone within 70 m gets XP.
+2. **One player:** craft a Corrupted deer trophy at the Riftforge (2 Deer trophies + 1 shard, or `spawn CorruptedTrophyDeer`) and offer it at the altar. Expect: Eikthyr arrives red **for everyone**.
+3. **Everyone near him:** fight. Expect: every 30 s 2–3 red creatures of his army arrive; at most 4 alive **per player** near him (16 with four of us); they go for players only, never Eikthyr or each other. Summons run by another player's game behave the same.
+4. **Kill him.** Expect: 2–3 essences and 3–5 shards in total; summons stop coming.
+
+### Part 5: before you log off
+
+1. Optional ([`multiplayer-test.md`](multiplayer-test.md) step 10): **Krogon** sets `[2 - Nearby Containers] Enabled = false` in the server's `com.krogongames.craftingoverhaul.cfg` and restarts it; **a player** tries crafting from a chest. Expect: they can't (the server's setting wins). Set it back.
+2. Optional (step 11): **one player** joins without `CraftingOverhaul.dll` while another crafts from chests. Expect: they play normally and see the chest contents update.
+3. **Everyone:** no red errors in F5. Copy your `BepInEx/LogOutput.log` right away (the next start overwrites it) and send it to Krogon, with the ✅/❌ notes.

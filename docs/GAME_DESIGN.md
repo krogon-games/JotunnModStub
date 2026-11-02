@@ -26,18 +26,18 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 |---|---|---|---|
 | Recipe search, collapsible categories, biome grouping | CraftingOverhaul | Verified (single player) | `FEATURES.md` |
 | Craft and build from nearby chests | CraftingOverhaul | Verified single player; multiplayer untested | `FEATURES.md`, `multiplayer-test.md` |
-| Phase 1: corruption shards | Corruption | Built (spawned item verified; drops untested) | `FEATURES.md` |
-| Phase 1: Riftforge station | Corruption | Verified (no recipes yet) | `FEATURES.md` |
-| Phase 2: talismans | Corruption | Built, untested | `FEATURES.md` |
-| Phase 3: boss essences | Corruption | Built, untested (8 bosses; Hive left out) | `FEATURES.md`, `Corruption/Data/essences.csv` |
-| Phase 4: maps and rips | Corruption | Step A tested in-game (single player); step B built, untested (waves, maddened, loot) | design doc + review 1, 2, 6 |
+| Phase 1: corruption shards | Corruption | Verified (spawned item, own model, drops from 1- and 2-star creatures and a boss's first kill) | `FEATURES.md` |
+| Phase 1: Riftforge station | Corruption | Verified, with its map recipes (2026-10-28); also makes corrupted offerings and the corrupted wishbone; orb and gear crafting to come | `FEATURES.md` |
+| Phase 2: talismans | Corruption | Verified (single player); multiplayer untested | `FEATURES.md` |
+| Phase 3: boss essences | Corruption | Verified (single player; 8 bosses; Hive left out); multiplayer untested | `FEATURES.md`, `Corruption/Data/essences.csv` |
+| Phase 4: maps and rips | Corruption | Steps A and B (waves, maddened, loot) and the heart search with the corrupted wishbone verified (single player); multiplayer untested | design doc + review 1, 2, 6 |
 | Phase 5: map affixes and tiers, 3-star | Corruption | Proposed | design doc + review 5 |
-| Phase 6: corrupted bosses | Corruption | Core tested (multipliers, loot, tint, `co_corrupt`); corrupted offerings tested 2026-10-30; summons built 2026-10-30, untested; particles to come | `FEATURES.md`, design doc + review 4 |
-| Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Step 1 tested in single player (Magic/Rare drops, rolled affixes, names, tooltips, item-stat affixes; branch `claude/affixes-loot`); every gear range settled; orbs, uniques, other effects to come (orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
+| Phase 6: corrupted bosses | Corruption | Core tested (multipliers, loot, tint, `co_corrupt`); corrupted offerings tested 2026-10-30; summons tested 2026-10-31 (single player; the fix making them the boss's allies to re-check); multiplayer untested; particles to come | `FEATURES.md`, design doc + review 4 |
+| Phase 7: loot, rarity, gear and gathering tool affixes, orbs, uniques | Corruption | Step 1 tested in single player (Magic/Rare drops, rolled affixes, names, tooltips, item-stat affixes); step 2 (player-stat affixes) tested in single player apart from weapon skill and life steal; multiplayer (each player's own roll) untested; every gear range settled; orbs, uniques, other effects to come (orb art made, PoE names kept) | design doc, `AFFIX_RULES.md` |
 | Phase 8: scars, terror zones, rare elites, Svartalfheim | Corruption | Proposed | design doc |
 | Phase 9: wheel of powers, inventory slots/tabs | Corruption | Proposed. Backpacks come from AdventureBackpacks and equipment slots from EquipmentAndQuickSlots (2026-10-28). The slots are shown in a WoW-style **character sheet** (CraftingOverhaul, tested 2026-10-29); **Currency and Maps tabs** (Corruption, tested 2026-10-30) | design doc, `mod-compatibility.md`, `FEATURES.md` → Character sheet, Currency and Maps tabs |
 | Phase 10: skill rework (optional module) | — | Proposed; now part of classes and levels (2026-10-30) | design doc |
-| Classes, levels and skill trees (D2 Amazon first) | Orlog | Levels and XP built, untested (2026-10-30); classes, attributes and skills proposed. Its UI (HUD bars, skill cross, skills panel, class choice) built in CraftingOverhaul with demo data, untested (2026-10-30) | `class-design.md`, `data/d2-reference/` |
+| Classes, levels and skill trees (D2 Amazon first) | Orlog | Levels and XP (2026-10-30) and attributes with the class eitr pool (2026-10-31) verified (single player; XP sharing untested); the Orlog stone, classes, skill trees and skills proposed. Its UI (HUD bars, skill cross, skills panel, class choice) in CraftingOverhaul verified with demo data (single player, 2026-10-31; the adrenaline bar not tried) | `class-design.md`, `data/d2-reference/` |
 | Storage and quests | Undecided plugin | Proposed, saved for later | `storage-quests-design.md` |
 | Combat mechanics (parry, posture, combos) | — | Ideas only | `FEATURES.md` → Combat mechanics |
 
@@ -81,7 +81,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 | Rip waves through the vanilla raid system | One raid at a time world-wide (review 1) | Decided 2026-10-28: own wave spawner |
 | Validate the landing spot after teleporting | Biome, height and explored state can be checked before (review 6) | Proposal |
 | Corrupted look is a purple tint | Shard and Riftforge use red `#B3170D` at the user's request | Decided 2026-10-28: everything corrupted is red |
-| Talismans in "one new slot"; stave icon with creature tint | Built on the vanilla Trinket slot (review 7) with the trophy as icon | Implemented; dedicated slot can come with phase 9 |
+| Talismans in "one new slot"; stave icon with creature tint | First built on the vanilla Trinket slot (review 7) with the trophy as icon; since 2026-10-28 in their own Talisman slots (2 by default) through EquipmentAndQuickSlots' slot API (`FEATURES.md` → Talismans) | Implemented |
 | Corrupted Queen via offering | The Queen has no altar (game knowledge, unverified) | Decided 2026-10-28: a corrupted Sealbreaker opens her door and makes her corrupted |
 
 ## Open design questions
