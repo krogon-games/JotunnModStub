@@ -42,6 +42,57 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 2. Their recipes show at the workbench once you've picked up the materials, and crafting works.
 3. The log lists `Unlocked CapeOdin (was tagged DLC "beta")` and the other two.
 
+## Session 3d: on-harvest gathering affixes (loot step 3, second half, about 20 minutes)
+
+Build from **`claude/affixes-loot`**. Roll tools until they carry the affix (`co_loot rare PickaxeBronze`, `co_loot rare AxeBronze`…); its tooltip line is no longer grey. Chances are low (5–25%), so give each one a dozen trees or rock chunks. With a second player, repeat 1, 3 and 9 while the **other** player stands nearest the tree or rock (they own it).
+
+1. **Bountiful** (*of Bounty*): now and then a tree, log, stump, rock or deposit chunk drops everything twice.
+2. **Bountiful** (*of Plenty*, axe): now and then a log drops its wood twice; with both Bountifuls, sometimes three times.
+3. **Determined:** the stamina bar jumps up each time something breaks and drops.
+4. **Artisan:** now and then a copper or tin chunk drops one more ore.
+5. **Gemseeker's:** now and then a rock or chunk drops Amber or Amber pearl (Meadows), also Ruby (Black Forest and later).
+6. **Stonecutter's:** now and then a rock or chunk drops one more stone (also tin, which drops no stone itself).
+7. **Resinous:** now and then a tree, log or stump drops one more resin. **Forester's:** now and then a standing tree drops its seed (beech seeds, pine cone, birch seeds, fir cone, acorn).
+8. **Charring:** now and then wood drops as coal instead.
+9. **Odin's Grace** on an axe: now and then one chop at a standing tree drops all its wood, resin and seeds at once, with no log or stump left. Fell a tree normally, then a lucky chop at its log or stump harvests the log, its pieces and the stump together. A tree you can't chop yet (tool tier) still says "too hard".
+10. The log lists `Harvest affixes: wood …; seeds …; ores …` at startup: wood should be the wood types, seeds the seeds, ores the ores and scrap. No red errors in the console.
+## Session 3e: proc and utility affixes (loot step 4, about 25 minutes)
+
+Build from **`claude/affixes-loot`**. Give yourself the affix you want with `co_affix <id>` (best value; `co_affix deathless 10 chest` puts Deathless on your chest piece): ids `shieldwall`, `rallying`, `skalds`, `steadfast`, `reprisal` (on a shield or a weapon that blocks), `wrath` (a weapon with a combo, e.g. a sword), `skadi`, `fenrir`, `bloodforged` (weapons), `deathless`, `foraging` (armour: `helmet`, `chest`, `legs`, `cape`). Parry = raise the block just before the hit lands (the game's perfect-block effect plays). Check the startup log for the line "Foraging: N wild plants" and "Proc affixes: Reprisal shows …" (after the first Reprisal or Wrath).
+
+1. **Shieldwall:** parry: a buff icon appears for 10 s and the armour number in the inventory goes up by the %.
+2. **Rallying:** parry, then hit a creature: the first hit's damage number is clearly bigger; the icon goes after that hit (or after 10 s).
+3. **Skald's:** parry, then attack: the swing is visibly faster for 10 s.
+4. **Steadfast:** let the stamina bar drop, parry: it jumps up by the value.
+5. **Reprisal** (`co_affix reprisal 100` for a sure proc): parry: lightning strikes the attacker and it takes lightning damage.
+6. **Wrath:** with a sword, swing the full combo into a group of greylings: the last hit sends a shockwave that damages and pushes back everyone within about 3 m.
+7. **Skadi:** keep hitting one creature: the frost damage number grows over 5 hits; switch target or wait 3 s and it starts small again.
+8. **Fenrir:** kill three weak creatures quickly: the icon shows x2, x3 and the swing gets faster; it ends 10 s after the last kill.
+9. **Bloodforged:** get hurt, kill a creature: health jumps up by the % of max health.
+10. **Deathless:** `co_affix deathless 10 chest`, then die (fall from a cliff, or let a troll hit you at low health): you stay at 1 health with "Deathless! You cheat death." and a "Deathless spent" icon counting down 10 minutes. Die again during it: you really die. Relog during the cooldown: the icon comes back with the time left. With EquipmentAndQuickSlots' keep-on-death on, a real death still keeps your gear as before.
+11. **Foraging:** pick a mushroom, berries or thistle: an icon for 8 s and you run faster; picking flint, stones or branches, or your own crops, doesn't trigger it (tell Claude if it does). A PlantEasily bulk harvest of wild plants gives one 8 s boost, not a stack.
+12. **With a friend** (Session 2): your parry buffs (steps 1–4) also reach a friend standing within 10 m, shown on their screen; kills you make on creatures your friend's game controls still trigger Fenrir and Bloodforged.
+13. No red errors in the console.
+
+## Session 3c: gathering-tool affixes (loot step 3, about 20 minutes)
+
+Build from **`claude/affixes-loot`**. Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…). These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) are tested in Session 3d.
+
+1. **Prospector's** on a pickaxe: rocks and copper/tin take more hits off per swing than with a plain pickaxe of the same kind (watch the damage numbers).
+2. **Veinbreaker's:** every 5th swing at rock or ore shows a bigger damage number.
+3. **Seismic:** now and then a swing at a copper or tin deposit knocks off the chunks next to the one you hit too.
+4. **Odin's Grace:** now and then a swing breaks the chunk you hit and every chunk touching it at once; a single rock breaks in one hit. Iron (tier) still needs the right pickaxe.
+5. **Excavator's:** digging the ground with the pickaxe makes a deeper, wider hole than a plain one.
+6. **Lumberjack's / Timberfall / Rootbreaker** on an axe: standing trees / fallen logs / stumps take more damage per chop.
+7. **Splintering:** now and then a chop also damages the nearest other tree or log right next to you.
+8. **Fit:** now and then a swing costs no stamina (the bar doesn't drop). **Careful:** now and then a hit costs no durability.
+9. **Hushed:** creatures notice your chopping later (hard to see; just check nothing breaks).
+10. **Light:** the tool's weight in the tooltip is lower than a plain one's.
+11. **Keen-eyed / Magnetic:** with the tool in hand, items on the ground fly to you from further away (Magnetic: 3–6 m; vanilla 2 m).
+12. **Swift:** the swing animation is visibly faster.
+13. **Scholar's:** Woodcutting or Pickaxes skill rises faster (Skills tab).
+14. No red errors in the console.
+
 ## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
 
 ~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill) and 7 (life steal).

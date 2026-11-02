@@ -32,7 +32,18 @@ namespace Corruption.Content
             // Player stats (2026-10-30): summed over everything the local player has equipped.
             "max_health", "max_stamina", "max_eitr", "health_regen_percent", "stamina_regen_percent", "movement_speed",
             "held_movement_speed", "carry_weight", "fire_resistance", "frost_resistance", "lightning_resistance",
-            "poison_resistance", "all_resistances", "weapon_skill_levels", "life_steal"
+            "poison_resistance", "all_resistances", "weapon_skill_levels", "life_steal",
+            // Gathering tools, striker side (2026-11-01). Odin's Grace: rock and ore here, trees in LootHarvest.
+            "pickaxe_damage_deposits", "every_fifth_hit_damage", "deposit_area_hit", "harvest_instantly", "terrain_dig",
+            "chop_damage_trees", "chop_damage_logs", "chop_damage_stumps", "chop_splash", "stamina_save_chance",
+            "durability_save_chance", "hit_noise_reduction", "item_weight_reduction", "pickup_range", "pickup_radius_set",
+            "attack_speed", "gathering_skill_xp",
+            // Gathering tools, on harvest (2026-11-01): applied by the object's owner (LootHarvest), incl. Odin's Grace on trees.
+            "harvest_double_chance", "wood_double_chance", "stamina_percent_on_harvest", "extra_ore", "gem_find", "extra_stone",
+            "extra_resin", "tree_seed_drop", "wood_to_coal",
+            // Proc and utility affixes (2026-11-01, LootProcs).
+            "parry_buff_armour", "parry_buff_next_hit", "parry_buff_attack_speed", "parry_restore_stamina", "parry_lightning",
+            "combo_shockwave", "frost_stacking", "attack_speed_on_kill", "heal_on_kill", "cheat_death", "forage_speed_boost"
         };
 
         public static AffixCaps Caps;
@@ -127,13 +138,13 @@ namespace Corruption.Content
         }
 
         /// <summary>Total of one affix effect over the local player's equipped items (0 for anyone else).</summary>
-        public static int EquippedTotal(Player player, string effect)
+        public static float EquippedTotal(Player player, string effect)
         {
             return AffixTotals.Sum(Equipped(player), effect, Affixes);
         }
 
         /// <summary>Total of one affix effect on the item (0 for Normal items, or while <see cref="Bypass" /> is on).</summary>
-        public static int Total(ItemDrop.ItemData item, string effect)
+        public static float Total(ItemDrop.ItemData item, string effect)
         {
             var loot = Bypass ? null : Of(item);
             return loot == null ? 0 : loot.Total(effect, Affixes);

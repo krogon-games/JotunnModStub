@@ -21,7 +21,7 @@ namespace Corruption.Rules
         ///     <list type="bullet">
         ///         <item>each pick is weighted by the affix's <c>weight</c> among every affix that still fits;</item>
         ///         <item>a side holds at most <see cref="SideLimit" /> affixes, and one affix per family per side;</item>
-        ///         <item>values are whole numbers anywhere in the affix's range (every range in the table is whole);</item>
+        ///         <item>values roll anywhere in the affix's range, with as many decimals as the range is written with;</item>
         ///         <item>when both halves of a twin roll, they merge into one resonant line, rolled from the resonant range.</item>
         ///     </list>
         ///     Stops early if nothing else fits, so an item can end with fewer affixes.
@@ -57,12 +57,12 @@ namespace Corruption.Rules
                 {
                     var other = picked.First(p => p.Id == twin.Ids[0]);
                     twin.Ids = other.IsPrefix ? new[] { other.Id, affix.Id } : new[] { affix.Id, other.Id };
-                    LootItem.Range(twin, all, out int min, out int max);
-                    twin.Value = RollValue(min, max, random);
+                    LootItem.Range(twin, all, out float min, out float max);
+                    twin.Value = RollValue(min, max, LootItem.Decimals(twin, all), random);
                 }
                 else
                 {
-                    item.Lines.Add(new LootItem.Line { Ids = new[] { affix.Id }, Value = RollValue((int)affix.Min, (int)affix.Max, random) });
+                    item.Lines.Add(new LootItem.Line { Ids = new[] { affix.Id }, Value = RollValue(affix.Min, affix.Max, LootItem.Decimals(affix), random) });
                 }
             }
 
@@ -77,11 +77,23 @@ namespace Corruption.Rules
         /// <summary>A whole number from min to max, both included.</summary>
         public static int RollValue(int min, int max, Func<double> random)
         {
+            return (int)RollValue(min, max, 0, random);
+        }
+
+        /// <summary>
+        ///     A value from min to max, both included, in steps of the given decimals (0: whole numbers, 1: tenths), each
+        ///     step equally likely.
+        /// </summary>
+        public static float RollValue(float min, float max, int decimals, Func<double> random)
+        {
             if (max <= min)
             {
                 return min;
             }
-            return min + Math.Min(max - min, (int)(random() * (max - min + 1)));
+            double step = Math.Pow(10, -decimals);
+            int steps = (int)Math.Round((max - min) / step);
+            int pick = Math.Min(steps, (int)(random() * (steps + 1)));
+            return (float)Math.Round(min + pick * step, decimals);
         }
 
         private static bool TwinOf(LootItem.Line line, AffixTable.Affix affix, List<AffixTable.Affix> picked)
