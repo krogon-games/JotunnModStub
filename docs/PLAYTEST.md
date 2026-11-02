@@ -137,9 +137,9 @@ New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and chec
 
 All passed 2026-10-31 (single player). Left: nothing (sharing XP is in Session 2).
 
-## Orlog stone and class choice (1 minute)
+## Orlog stone and class choice
 
-Works (third round 2026-11-02); the look will be redesigned later. Left: after the size change, the stone behind the Eikthyr stone is **about twice a trophy stone's height** (`StoneSize` 1.7: your `com.krogongames.orlog.cfg` still says 2 from before, so set it to 1.7, then restart the game).
+All passed 2026-11-02 (single player), size included. A custom design comes later.
 
 ## Orlog skill tree and skill points
 

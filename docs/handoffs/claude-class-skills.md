@@ -16,7 +16,7 @@ The classes session's branch: **Orlog**, the Diablo 2-style classes plugin. It c
 
 ## Stage
 
-**C1 and C2 done**, PR into `master`. The Orlog stone works; its size setting changed after the last playtest (check it's about twice a trophy stone). **Asking you questions** before C3 (the Amazon's passives).
+**C1 and C2 done and tested**, PR #20 into `master`. The Orlog stone works at about twice a trophy stone; its custom design comes later. **Asking you questions** before C3 (the Amazon's passives).
 
 ## Done (built and tested in-game by you, single player)
 
@@ -59,7 +59,7 @@ All in `master`:
 
 - **Untested in-game:**
   - **C1:** the trophy stone prefab, the stone's floor height and spot in the ring, the raven, and the server confirmation.
-  - **C1:** the size after the last change (`StoneSize` 1.7). The look is wrong but works; it will be redesigned. The first round's crash and the second round's freeze weren't seen again; their causes aren't known.
+  - **C1:** the first round's crash and the second round's freeze weren't seen again; their causes aren't known. The look will be redesigned.
 - **Untested anywhere: multiplayer.** XP sharing with a friend, the stone placed through a dedicated server, levels seen by other players. These are in `PLAYTEST.md` → Session 2.
 - **Known limits:**
   - A boss counts as one creature of its level for XP.
@@ -166,7 +166,7 @@ From the roadmap (§4.1):
 
 ## Next steps
 
-1. **PR into `master`** for C1 + C2 (opened 2026-11-02). Quick check after it: the stone is about twice a trophy stone (`PLAYTEST.md`).
+1. **PR #20 into `master`** for C1 + C2: everything passed; waiting for you to merge.
 2. **Later:** redesign the stone's look (your call, 2026-11-02).
 3. **C3, the Amazon's passives** (Critical Strike, Dodge, Avoid, Evade, Penetrate), once questions 1–4 are answered. Before patching, agree the `Character.Damage` / `RPC_Damage` order with Corruption's prefixes in `mod-compatibility.md`.
 4. **C4, boss bonus points and the respec item,** once question 6 is answered. The respec item is crafted from boss essences when Corruption is installed.
