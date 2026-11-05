@@ -18,6 +18,26 @@ Entry point to the design. It summarises what has been agreed and where each sys
 | [`ideas.md`](ideas.md) | Original idea backlog, each linked to its design section | — |
 | [`coop-networking.md`](coop-networking.md) | Co-op lag research (not a mod feature) | Research, 2026-09-29 |
 
+The two full designs are **[`corruption-design.md`](corruption-design.md)** (the whole Corruption endgame; `master`'s copy is the current one, with the user's 2026-11-01 decisions) and **[`storage-quests-design.md`](storage-quests-design.md)** (chests and quests). Everything else in this file summarises or points.
+
+## Supporting notes
+
+| Document | Use it for |
+|---|---|
+| [`../STATUS.md`](../STATUS.md) | Where every branch stands, what's half-finished, what's waiting on the user, the top priorities (coordinator only) |
+| [`DECISIONS.md`](DECISIONS.md) | Every user decision in one table, plus the technical log (coordinator only) |
+| [`ROADMAP.md`](ROADMAP.md) | The current stretch's plan per session; the task list is the GitHub issues it links |
+| [`CURRENT_STATE.md`](CURRENT_STATE.md) | What's verified, built, broken; build health |
+| [`riftforge-ui-brief.md`](riftforge-ui-brief.md) | The Riftforge window's contract between the loot, UI and rips sessions |
+| [`mod-compatibility.md`](mod-compatibility.md) | The other mods the group runs, shared game methods and patch order |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Code layout, patterns, server messages, game limits |
+| [`PLAYTEST.md`](PLAYTEST.md) | The open single-player steps and the group evening's script (Session 2) |
+| [`playtests/`](playtests/README.md) | Each round's play-test checklist and the user's feedback, one file per branch |
+| [`handoffs/`](handoffs/README.md) | Each branch's handoff: stage, decisions, open questions, merge notes |
+| [`PLAYER_SETUP.md`](PLAYER_SETUP.md) | Installing the mods and server settings for the group |
+| [`multiplayer-test.md`](multiplayer-test.md) | The older multiplayer test steps (folded into `PLAYTEST.md` → Session 2) |
+| [`../Corruption/Data/`](../Corruption/Data/README.md), [`../Orlog/Data/`](../Orlog/Data/README.md) | Tunable numbers (affixes, caps, drop rates, levelling tables) |
+
 ## Tracks and status
 
 Legend: **Verified** = tested in-game by the user · **Built** = code exists, not verified in-game · **Proposed** = designed, no code.
@@ -86,5 +106,7 @@ Legend: **Verified** = tested in-game by the user · **Built** = code exists, no
 
 ## Open design questions
 
-From the design doc: inventory slots built or from a mod; scars permanent or expiring; one map per group or per player; minimum rip distance from bases; shard yield scaling with map tier; Mistlands/Ashlands/Deep North map materials and Fader's summons.
+The live list of questions waiting on the user is [`STATUS.md`](../STATUS.md) → Waiting on you (and the GitHub issues labelled `needs decision`). Answered since this list was written: inventory slots (EquipmentAndQuickSlots and AdventureBackpacks, 2026-10-28); every biome's map material (`maps.csv`, all approved); Fader's summons (every boss summons its army raid, 2026-10-30); scars expire after 3 in-game days, one map per group, shard yield per tier (all 2026-11-01).
+
+From the design doc, still open: the minimum rip distance from bases (today `BaseDistance`, a ward's radius).
 Added since: runewords (sockets are a placeholder); the world-unique pool contents; orb drop rates; which plugin hosts storage/quests; whether to rename the Corruption plugin to a Norse name.

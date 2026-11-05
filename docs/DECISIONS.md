@@ -1,12 +1,96 @@
 # Decisions
 
-Why things are the way they are, newest first within each group. Each entry: the decision, why, what was rejected, and its status.
+**Only the coordinator, working on `master`, edits this file** (user, 2026-11-05). Feature sessions write each of your decisions into the **Decisions** section of their own handoff file (`docs/handoffs/<branch>.md`) straight away; the coordinator copies them here. That way merges never clash on this file.
+
+Two parts:
+1. **Your decisions**: what you decided, one row each. Collected 2026-11-05 from the Decisions sections of every handoff (`docs/handoffs/`) and the 2026-11-01 decisions in `docs/corruption-design.md`. Newest first.
+2. **Technical log**: the older, longer log with Claude's own choices, the reasons, rejected approaches and corrections. Kept as it was on 2026-11-05.
+
+## 1. Your decisions
+
+Areas: **Process** · **Design** (rules for the whole mod) · **Loot** · **Rips** (maps, rips, waves) · **Bosses** (corrupted bosses) · **Classes** (Orlog) · **UI**.
+
+| Date | Area | Question | What you decided |
+|---|---|---|---|
+| 2026-11-05 | Process | How should sessions be run from now on? | One decision round per session, one branch per round (a couple of related tasks is fine). Each session reads the design, `STATUS.md`, this file, the task list and its handoff, then confirms the round and branch with you. Decisions go into the branch's handoff straight away; play-test checklists and feedback go into `docs/playtests/<branch>.md`. At the end: commit, push, update the handoff, say whether it's ready to merge. Routine in `CLAUDE.md` → Session routine |
+| 2026-11-05 | Process | Who edits `STATUS.md` and `docs/DECISIONS.md`? | Only the coordinator, on `master`. Feature branches never touch them |
+| 2026-11-05 | Process | Which copy of `docs/corruption-design.md` is current? | `master`'s (it has the 2026-11-01 decisions). Several older branches carry an older copy; when one is merged, `master`'s version wins |
+| 2026-11-05 | Process | Where does the task list live? | GitHub issues, labelled by area and priority (#24–#52) |
+| 2026-11-02 | Classes | Is the Orlog stone good enough after the third and fourth play-tests? | "Still not correct but it at least works. I think we will redesign this in the future." Size accepted at twice a trophy stone ("x2 of normal stone"); no mist until the redesign |
+| 2026-11-02 | Classes | Merge the Orlog stone (C1) and skill tree (C2)? | Yes: "Create PR to merge to master" (merged as PR #20) |
+| 2026-11-02 | Classes | Orlog stone rework after the first play-test: where and how should it look? | A few metres behind the Eikthyr stone (settled on a 3 m gap); much larger (2× a trophy stone); a Vegvisir base; a "smokey blue outline", meaning both blue mist and glowing blue runes; the raven on the ground beside the stone, reachable |
+| 2026-11-01 | Rips | One map per player or per group? | One map, one rip for the group: one player opens it and everyone goes through |
+| 2026-11-01 | Rips | How many shards in the end chest per map tier? | Tier 1: 1–4, tier 2: 2–6, tier 3: 3–8, tier 4: 4–10, replacing today's 1–3. Four tiers (a fifth was a slip) |
+| 2026-11-01 | Rips | Are scars permanent or do they expire? | They expire after 3 in-game days |
+| 2026-11-01 | Classes | Which classes are worked on now? | Only the Amazon. The Barbarian and Paladin are extra content after everything else in the roadmap; nothing about them starts until you say so |
+| 2026-11-01 | Process | The roadmap for the next stretch | Goal "playable together"; four sessions (classes, loot, rips, UI), each following its roadmap order. Classes: C1 then C2; loot: the Riftforge brief (L1) first, then L2, L3; UI: the U1 fixes, housekeeping and Riftforge mock-ups. Agents may be used |
+| 2026-11-01 | UI | Who builds the Riftforge window? | You delegated it to Claude: the UI session builds the screen inside Corruption, the loot session owns the rules and writes the brief first, the rips session adds map rolling |
+| 2026-10-31 | Loot | A Rare Odin cape said "DLC required". What about the Odin items? | Unlock them fully: equip, craft and loot. (Claude had filtered them out of the loot without asking; you reversed it) |
+| 2026-10-31 | Bosses | Summons and Eikthyr attacked each other. Who should summons fight? | Players only: never their boss, each other or other creatures |
+| 2026-10-31 | UI | HUD bar order | Health, **stamina, eitr** (swapped so gaining eitr doesn't move stamina) |
+| 2026-10-31 | UI | Bars moving up while building was "not good design". What moves instead? | The bars never move; the game's build box goes to the bottom right. (The ship display followed the same rule; that was Claude's choice, still to confirm) |
+| 2026-10-31 | UI | The XP bar position | A little lower |
+| 2026-10-31 | UI | Skill cross layout | Spread out with the boss power in the middle; no boss name, "Ready" or "Skill button" text; cooldowns must be unmistakable; quick slots under the cross; clearer blocked labels ("Need bow", "Low eitr") |
+| 2026-10-31 | UI | The first skills panel was "not acceptable": what now? | "Find a different approach." You approved the redesign: "looking soooo much better", then "everything looks really good now" |
+| 2026-10-30 | Classes | Should there be Diablo 2-style classes? | Yes, as a separate part of the mod. Build only as much of a class as works without breaking the game. Levels, with points to spend on stats and skills each level |
+| 2026-10-30 | Classes | EpicMMOSystem or our own levels? | Look at EpicMMOSystem first; then: we build our own levels, not EpicMMOSystem, and don't run both |
+| 2026-10-30 | Design | Are new animations allowed? | Yes, where necessary (lifts the old "no new animations" rule). Vanilla animations and emotes come first |
+| 2026-10-30 | Classes | Which class first? | The Amazon (the group's vote), then the Barbarian, maybe the Paladin |
+| 2026-10-30 | Classes | Which rules for levels and points? | Diablo 2's, each changeable in config. No XP loss on death; Valheim's own skill loss stays. Vanilla skills keep levelling by use |
+| 2026-10-30 | Classes | How fast should levelling be? | Slow, like classic WoW. Your levelling guide: Eikthyr 5, Elder 11, Bonemass 20, Moder 35, Yagluth 50, Queen 62, Fader 76, Kall 90 |
+| 2026-10-30 | Classes | Levelling felt too fast: which fix? | Option B: a creature above your level gives your own level's XP plus WoW's bonus, up to +20%. "We can always adjust the multiplier later" |
+| 2026-10-30 | Classes | One D4-style tree or D2's tabs? | D2's three tabs. Skills open at their level tier instead of through broken prerequisite chains. Upgrade choices on the big skills come later |
+| 2026-10-30 | Classes | How are skills cast? | D2's layout for every weapon: left click is the normal attack, right click the skill. Block and parry move to another key; both rebindable (mouse side buttons). A 4-slot skill bar filled by dragging from the skills panel; the number keys stay for weapons and items |
+| 2026-10-30 | Classes | What do skills cost? | Skills that cost mana in D2 cost eitr; eitr gets reworked. Class eitr pool: 15 to start, +1.5 per level, +1.5 per Energy point, scaled to Valheim; eitr food adds on top; eitr regenerates without eitr food; eitr potions in the quick slots; loot affixes add eitr |
+| 2026-10-30 | Classes | Amazon details | Javelin skills throw a spectral copy; Penetrate ignores the creature's resistance to the hit; Decoy and Valkyrie are tinted clones of the player character |
+| 2026-10-30 | Classes | Where is a class chosen? | At the spawn area where the boss trophies go, at a custom stone that blends in. Changing class at the stone for a cost comes later |
+| 2026-10-30 | Classes | Names | Keep D2's class and skill names. The stone is the Orlog stone. The plugin name doesn't matter (working name Orlog) |
+| 2026-10-30 | Classes | Who builds the classes screens? | The UI session builds the XP bar, skills panel and skill slots; HUD bars together at the bottom centre, Elden Ring style, in Valheim's colours; the four skill slots as a cross at the bottom left |
+| 2026-10-30 | UI | Which look for the classes UI? | A mix of the four mock-ups: from D the bronze medallions, eitr-blue rune paths, bronze riveted slots, the bars and the cross; the game's own panel instead of dark wood and parchment; the character sheet restyled to match; a wider skills panel |
+| 2026-10-30 | Loot | The `[10–50]` didn't seem to follow upgrades | Show the actual bonus next to item-stat lines, e.g. `(+23)` |
+| 2026-10-30 | Loot | Resistance affix ranges | Lightning resistance matches the other elements (10–50%); all resistances 2–10% |
+| 2026-10-30 | Bosses | Corrupted boss summons | The boss's army raid, arriving like a raid (40–80 m from a player); "tough fights": at least 1 star; at most 4 alive per player present (12 max if per-player scaling isn't possible) |
+| 2026-10-30 | Bosses | Elite and champion packs | Any creature above 2 stars is an elite or champion, Diablo/PoE style. For later; until then waves and summons stop at 2 stars |
+| 2026-10-30 | Bosses | The corrupted offering icons were "way too over the top" | The vanilla icon recoloured, with a glowing crack and a smoky glow, from your own prompt |
+| 2026-10-30 | Bosses | Stand altars (Moder, Yagluth, Fader) | Every stand must hold a corrupted item, each 1 item + 1 shard; a mix is refused |
+| 2026-10-29 | UI | How to build the character sheet? | Keep EquipmentAndQuickSlots and move its cells. No hand or feet slots, no tabs. A live character picture, brought forward. Generated art closer to your concept image. Revisit the look later for consistency with the game (done 2026-10-30) |
+| 2026-10-29 | UI | Currency and Maps tabs | Items go straight to their tab on pickup; on death they go in the gravestone; weightless; 8 × 4 each; essences go in Currency |
+| 2026-10-29 | Loot | Which item drops? | Mostly from the creature's own biome, 20% from the biome just before; at upgrade level 1; Magic with 1 affix twice as often as 2, Rare with 3 twice as often as 4 |
+| 2026-10-29 | Loot | Rules for affix ranges | "Strongest vanilla source" counts gear only; item stats with no vanilla % source use what a full forge upgrade adds; resistances from a new `co_dump`. Then: carry weight cut by 100 to 10–50; max health/stamina/eitr and life steal keep their drafts; the other derived ranges approved |
+| 2026-10-29 | Loot | Stacking caps on carry weight, regen, max health/stamina/eitr? | None for now: "our mod will be significantly harder than vanilla" |
+| 2026-10-29 | Loot | The Meadows satchel holds too little | Bigger backpacks: AdventureBackpacks' own sizes, one more row on every level (server config, values in `docs/PLAYER_SETUP.md`), not a slot affix |
+| 2026-10-29 | Loot | Should loot step 1 roll the affixes still marked draft? | Yes, every affix; their ranges get settled from the game data before the loot PR |
+| 2026-10-29 | Rips | Waves were too slow ("a lot of the time I was just standing around waiting") | Each raid's most-alive-at-once doubled and interval halved (`WaveMultiplier` 2) |
+| 2026-10-29 | Rips | Waves still weren't challenging | Every wave creature has at least 1 star (`MinStars` 1): "definitely more challenging" |
+| 2026-10-29 | Rips | "The heart is right next to the portal; players need to go find it" | The heart stands 96–128 m away. Your corrupted wishbone idea: Wishbone + 1 shard, everyone sees the pings, mostly red with bits of purple |
+| 2026-10-29 | Rips | The first map icons were "too similar, fine details get lost" | Each map its own colour, one bold silhouette and its own roller material; the ground look stays the leather bundle |
+| 2026-10-28 | Rips | The Hive boss | Left out of development entirely |
+| 2026-10-28 | Rips | Which biome does each essence open? | Each boss's essence makes maps into its own biome (Eikthyr → Meadows, …) |
+| 2026-10-28 | Rips | Map recipes | 1 shard + 1 essence + the biome material; Meadows Leather scraps 5 and Deep North Ice 5 approved; amounts are the median of vanilla recipes |
+| 2026-10-28 | Rips | Where do rips open? | Only to unexplored land: "I doubt we'll explore most of the Meadows by the time we craft the first portal". No special case for the Meadows |
+| 2026-10-28 | Rips | How should rips be built? | As proposed: maps in the normal inventory, red rips, in two steps (travel, then waves and loot) |
+| 2026-10-28 | Rips | Rip step B details | Maddened creatures ignore charms; the end chest holds 1–3 shards (later per tier, 2026-11-01); rip creatures drop shards at twice the normal starred chances |
+| 2026-10-28 | Bosses | How is a corrupted boss summoned? | The full normal offering + 1 shard makes one corrupted offering. The Queen gets a corrupted Sealbreaker |
+| 2026-10-28 | Loot | What happens when a shard corrupts an item? | 25% bricked, 25% unchanged but locked, 50% one corrupted affix on top of the normal limit (a Rare ends with 5). Normal and Magic items can be corrupted too. The corrupted affix rolls from the normal pool for now, may repeat a family, resonates with a twin and ignores the caps. Corrupted gear only comes from a shard (nothing drops corrupted) |
+| 2026-10-28 | Loot | Affix Splinters and shattering (from Last Epoch) | Named Affix Splinters; shattering a Magic or Rare item at the Riftforge is free; 50% per affix line; uniques and corrupted items don't shatter; a resonant twin line gives one splinter with the combined value and counts as 2 affixes (only fits a Normal item); splinters go on Normal and Magic items with fewer than 2 affixes; they don't stack, so they need the Currency tab |
+| 2026-10-28 | Loot | Affix design | Twins (a prefix and a suffix on the same stat resonate); roll weights filler 100 / normal 50 / rare 10 / Deathless 5 / twin halves 25; one combined pool on one-handed axes; gathering twins for all four stats |
+| 2026-10-28 | Loot | How do gathering affixes behave? | "Chance to double" (Bountiful 5–15% to double a harvest's drops; both Bountifuls can trigger) |
+| 2026-10-28 | Loot | The gear affix range rule | Top = the strongest vanilla source of the stat, bottom = a fifth of the top |
+| 2026-10-28 | Loot | Orb names and look | Keep Path of Exile's orb names; the art follows your concept render |
+| 2026-10-28 | Process | Where do numbers come from? | Never guess numbers or choices: take them from the design or the game data, or ask |
+| 2026-10-28 | Process | How are branches used? | One branch per session, merge `master` before each task, open a PR when a feature is finished; you merge it |
+
+Open questions that are still waiting on you are in [`STATUS.md`](../STATUS.md) → Waiting on you, and in the GitHub issues labelled `needs decision`.
+
+## 2. Technical log
+
+Why things are the way they are, newest first within each group. Each entry: the decision, why, what was rejected, and its status. Kept as it stood on 2026-11-05; the coordinator adds technical rows from the handoffs here when they would be expensive to rediscover.
 
 **Status values:** **Decided** (user agreed or asked for it) · **Implemented** (in code) · **Proposed** (recommended, awaiting the user) · **Superseded**.
 
-Add an entry whenever a choice would be expensive to rediscover: a rejected approach, a game limit that forced a design, or a user preference. Don't rewrite old entries; mark them Superseded and add a new one.
+Don't rewrite old entries; mark them Superseded and add a new one.
 
-## Process and tooling
+### Process and tooling
 
 | Date | Decision | Why | Rejected | Status |
 |---|---|---|---|---|
@@ -21,7 +105,7 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 | 2026-09-28 | `FEATURES.md` updated in the same commit as any feature change, with exact Harmony patch targets | User's request; patch lists spot conflicts with Valheim Plus and others | — | Decided |
 | 2026-09-27 | BepInEx + Jötunn + Harmony; SDK-style net462 project; publicized assemblies | Jötunn removes item/piece/recipe boilerplate | — | Implemented |
 
-## Architecture
+### Architecture
 
 | Date | Decision | Why | Rejected | Status |
 |---|---|---|---|---|
@@ -127,7 +211,7 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 | 2026-10-15 | Inventory: vanilla Utility/Trinket slots for v1; test against ExtraSlots / EquipmentAndQuickSlots before building tabs | Avoid slot code until phase 9 | Building slots now | Proposed |
 | 2026-09-29 | Biome of each material derived from game data (collectors + solver); config overrides only for exceptions | User: "you should know the materials list… check game files"; covers Deep North and modded items | Hand-written material list (removed) | Implemented |
 
-## Features
+### Features
 
 | Date | Decision | Why | Rejected | Status |
 |---|---|---|---|---|
@@ -158,7 +242,7 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 | 2026-09-29 | Don't write our own networking; recommend NetworkPerformanceSystem server-only | Works with vanilla and PS5 clients; own code would conflict with networking mods | Own networking; SkadiNet (version lock); Steam send-rate mods (no effect on crossplay) | Proposed, untested |
 | 2026-09-27 | Nearby chests: never ships, carts or tombstones; respect private chests, wards and chests in use; claim ownership before taking | Taking from a ship/cart makes you its owner and disrupts the driver | — | Implemented |
 
-## Design (user decisions, from `corruption-design.md`)
+### Design (user decisions, from `corruption-design.md`)
 
 - Rip return is heart-gated; portals close after 1 in-game day; no fallback.
 - Unlimited copies of uniques; uniques never craftable.
@@ -166,7 +250,7 @@ Add an entry whenever a choice would be expensive to rediscover: a rejected appr
 - No downsides on loot.
 - ~~One talisman at a time~~ → two talismans plus one vanilla trinket (2026-10-28); rings get their own slot.
 
-## Corrections (things we got wrong before)
+### Corrections (things we got wrong before)
 
 | Date | Wrong | Right |
 |---|---|---|

@@ -141,11 +141,11 @@ Development aids to switch off or remove before sharing a public release:
 
 Do this in the same commit whenever a significant feature is completed, changed, deferred or play-tested:
 
-0. `PLAYTEST.md`: add steps for anything new and untested; remove what the user has tested.
+0. `docs/playtests/<branch>.md`: the round's checklist and the user's feedback. `PLAYTEST.md`: remove what the user has tested; add a step to Session 2 only for what needs the group.
 
 1. `FEATURES.md`: table row, section, dated changelog entry (mandatory, see `CLAUDE.md`).
 2. This file: move items between *Verified* / *Built, not verified* / *Not built*; update bugs, assumptions, waiting-on-user and next tasks; bump **Last updated** and the test count.
-3. `DECISIONS.md`: add a row for any new decision, rejected approach or correction.
+3. This branch's handoff (`docs/handoffs/<branch>.md`) → Decisions: add any new user decision straight away; note rejected approaches and corrections there too. Only the coordinator, on `master`, copies them into `DECISIONS.md` (and updates `STATUS.md`).
 4. `GAME_DESIGN.md` status table (and `AFFIX_RULES.md` or the design doc) if a design changed.
 5. `ARCHITECTURE.md` if a new pattern, project, game limit or build step appeared.
 

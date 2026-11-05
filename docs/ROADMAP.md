@@ -4,6 +4,16 @@
 
 The facts here come from `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `FEATURES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/AFFIX_RULES.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/DECISIONS.md` and the code. Where this file and those disagree, those win: fix this file.
 
+## Task list (2026-11-05)
+
+The tasks below are tracked as **[GitHub issues](https://github.com/krogon-games/JotunnModStub/issues)**, labelled by area (`loot`, `UI`, `rips`, `maps`, `classes`, `multiplayer`, `release`, `housekeeping`, `storage`, `design`), priority (`priority: 1 high`, `priority: 2 medium`, `priority: 3 later`) and `needs decision` / `needs playtest`. The issue is the place to tick progress; this table only maps the roadmap's IDs to them. Priorities and what's waiting on the user: [`STATUS.md`](../STATUS.md).
+
+| Priority | Issues |
+|---|---|
+| 1 high | #24 group evening · #25 release build · #26 play-test loot steps 3–4 · #27 small play-test leftovers · #28 orb rules (decision) · #29 L5 Riftforge rules · #30 U3 Riftforge window · #31 R1 map tiers and affixes · #32 C3 Amazon passives |
+| 2 medium | #33 L4 orbs · #34 L6 uniques and ring slot · #35 L7 loot lock and beams · #36 C4 boss points and respec · #37 C5 skill button and bow skills · #38 U2 real Orlog data · #39 R3 + R2 elites and 3 stars · #40 R5 landing check and particles · #41 C6 spear and javelin skills · #42 fresh `co_dump` |
+| 3 later | #43 U4 recipe list · #44 C7 later Amazon skills · #45 R6 phase 8 · #46 storage and quests · #47 Orlog stone redesign · #48 Unity 6 · #49 L8 synced tables · #50 before a public release · #51 other classes · #52 parked ideas |
+
 ## 1. Where we stand
 
 | Track | Built and verified in single player | Not built |
@@ -40,7 +50,7 @@ Four sessions, the same areas and branch names as before, each started fresh fro
 | UI | `claude/ui-overhaul` | `CraftingOverhaul/` screens; the Riftforge window | Play-test fixes, then the Riftforge window |
 
 Rules that keep four sessions from colliding:
-- Stay in your files. `CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Texts.cs`, `FEATURES.md`, `CURRENT_STATE.md`, `DECISIONS.md` and `PLAYTEST.md` are shared: add, never rewrite, merge `master` often, keep both sides in conflicts.
+- Stay in your files. `CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Texts.cs`, `FEATURES.md`, `CURRENT_STATE.md` and `PLAYTEST.md` are shared: add, never rewrite, merge `master` often, keep both sides in conflicts. `STATUS.md` and `DECISIONS.md` are edited only by the coordinator on `master` (2026-11-05); sessions record decisions in their handoff.
 - A game method several sessions patch (`Character.Damage`, `Character.RPC_Damage`, `Player.GetTotalFoodValue`, `SEMan.ModifyAttack`, `Character.OnDeath`) gets its new patch recorded in `docs/mod-compatibility.md` with its Harmony priority, so the order is deliberate.
 - Contracts between sessions are written down before either side builds (`classes-ui-brief.md` is the model). Changes go into the brief in `master`.
 - Every PR keeps `dotnet test CraftingOverhaul.Tests` green and updates `FEATURES.md` and `PLAYTEST.md` in the same commit.
