@@ -68,6 +68,26 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - Only the server holds every object in the world (`ZDOMan.GetAllZDOsWithPrefabIterative` covers them all there), so checks like "near anyone's base" belong on the server.
 - Objects for far-away places (the rip heart) are instantiated there directly: their persistent ZDO stays when the instance is removed as out of range, and they appear when someone arrives. Settle them on the ground once the area is loaded.
 - Rip state lives on the objects' ZDOs (`corruption_rip_*` keys in `Rips.cs`), so it survives restarts and works for every player.
+- **A game only loads the area around its player.** Counting creatures with `Character.GetAllCharacters()` misses the ones near a friend far away. Spawners also remember the ZDO ids they spawned (`BossArmies.Spawned`): a client keeps a ZDO it created until the game reports it destroyed, and destroy messages go to every player, so `ZDOMan.GetZDO(id) != null` means "still alive somewhere".
+- **A flag set on an object others already have loaded** isn't seen by their `Awake` patches. Either poll it (the corrupted boss look checks its ZDO) or broadcast a message (`Corruption_Maddened` makes every game add the maddened look).
+
+### Dedicated-server review (rips and bosses, 2026-11-01)
+
+Read through the code, not run on a server (the user's group session tests it; `PLAYTEST.md` → Session 2). What runs where:
+
+| Path | Runs on | Verdict |
+|---|---|---|
+| Rip request (bases check, closing time) | Server (`ZNet.IsServer`); messages registered in `Game.Start`, which a dedicated server runs too | Sound |
+| Rip heart and exit placed far away | The opener's game creates them; a client sends every object it creates or changes to the server whatever the distance (`ZDOMan.CreateSyncList`, the client change queue), so a friend arriving later gets them | Sound |
+| Waves, summons, chest, essence and shard drops, corrupted summon at an altar | The game that owns the heart, boss, creature or altar (the nearest player, or whoever claimed it); nothing on the server | Sound |
+| Wave and summon limits | The owner's game; now counts what it spawned even when out of its loaded area | **Fixed 2026-11-01** (could exceed the limit with players far apart) |
+| Maddened look on other players' games | Flag on the creature's ZDO; creatures maddened in place when waves start weren't tinted for players who had them loaded already | **Fixed 2026-11-01** (broadcast) |
+| Corrupted boss look, rip portals, heart hover | Every game reads the ZDO | Sound |
+| Wishbone pings | The ping effects have their own network object, so the game shows them to everyone (log: `shared with other players by the game`) | Sound |
+| Messages to a player (raid start) | `Player.Message` on another player's character is sent to that player's game | Sound |
+| Item icons on a headless server | Jötunn's `RenderManager` skips rendering when headless | Sound |
+| Admin settings and versions | Server-synced (Jötunn); Corruption and Orlog require the same minor version everywhere | Sound |
+| Rip portals and hearts closing after their time | Only their owner's game destroys them, so one far from everyone closes when someone is next near | Known, harmless |
 
 ### Build stamp
 

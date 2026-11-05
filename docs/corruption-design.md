@@ -152,7 +152,7 @@ The rip's heart is a destructible object **96–128 m from the landing spot** (j
 
 ### Lingering scars
 
-After a rip closes, the area stays corrupted for a few in-game days: tougher spawns, corrupted versions of resources, a small shard trickle. The player's world slowly gains dangerous zones they created themselves. Scars show on the minimap as a marker.
+After a rip closes, the area stays corrupted for **3 in-game days** *(user, 2026-11-01)*: tougher spawns, corrupted versions of resources, a small shard trickle. The player's world slowly gains dangerous zones they created themselves. Scars show on the minimap as a marker.
 
 **Lore:** rips are cracks toward Ginnungagap, the primordial void. On-screen text can lean on that.
 
@@ -185,6 +185,8 @@ Affixes are the Path of Exile part: spend extra shards at the bench to roll modi
 
 ### Rules
 
+- **One map, one rip for the group** *(user, 2026-11-01)*: one player uses the map and everyone goes through the same rip.
+- **Shards per tier** *(user, 2026-11-01)*: the rip's end chest holds tier 1: 1–4, tier 2: 2–6, tier 3: 3–8, tier 4: 4–10 shards (replacing the flat 1–3). Four tiers (a fifth was a slip).
 - Rolling is random from the pool, with a reroll costing one more shard. This is the shard sink. Rolling map affixes never bricks the map; the 25% brick chance applies to gear only.
 - Affixes stack with tier. A tier-4 Rabid-Swarming map is meant to be a near-death experience.
 - Numbers above are starting points for tuning, not final.

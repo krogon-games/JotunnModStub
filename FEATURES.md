@@ -698,6 +698,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 - **Fixed 2026-10-29:** maddened creatures got **no damage or speed bonus**: the vanilla effects they copy were read at startup, before the game makes them available (log: "SE_Dvergr_buff not found"). They're now read in the world, the first time a creature is maddened, and the log says what was copied (`Maddened: damage ×1.2 …`). To re-test.
 - **Play-test 2026-10-29 (build 65e6271): passed.** Maddened bonuses read correctly (log: `Maddened: damage ×1.2 (from SE_Dvergr_buff), speed +15% (from Potion_hasty)`); charms don't stop rip creatures; Meadows and Swamp rips each left a chest with shards. **Waves felt too slow** (Meadows: at most 4 alive, one every 20 s): rips now use `WaveMultiplier` 2 (user). Whether maddened creatures fight each other couldn't be judged yet. The user wants the heart moved away from the landing spot and found with a corrupted wishbone (to design).
 - A `Failed to find rpc method 327122920` warning when first opening the chest is the game's own: vanilla chests call `discovered` but register `RPC_Discovered`. Harmless, happens with every vanilla treasure chest.
+- **Multiplayer fixes 2026-11-01 (untested):** wave limits count creatures far from the heart's owner too; creatures maddened where they stand turn red for every player (message `Corruption_Maddened`).
 - Maddened creatures stay after the heart is destroyed (the waves stop; the ones alive keep fighting). Vanilla raid creatures despawn when the raid ends; rips have no such end yet.
 - **Play-test 2026-10-29:** the busier waves (`WaveMultiplier` 2) passed, and maddened creatures were seen fighting each other, as the design says.
 - **Play-test 2026-10-29, after the busier waves:** still not challenging enough (user: too few or too weak). Wave creatures now have at least 1 star (`MinStars` 1). **Re-tested 2026-10-29: "definitely more challenging"** (user). With every creature starred, 1-star shard drops (4% in rips) apply to all of them, so rips give more shards, and 2 stars come one level-up roll sooner (10% instead of about 1%).
@@ -708,6 +709,7 @@ New items: `CorruptionMap_<Biome>` (cloned from `LeatherScraps`). New objects: `
 | Target | Patch | Purpose |
 |---|---|---|
 | `Character.Awake` | Postfix | Restores maddened behaviour on creatures loaded with the flag |
+| `Game.Start` | Postfix | Registers `Corruption_Maddened`: tells every game to show a creature maddened in place |
 | `BaseAI.IsEnemy(Character, Character)` | Postfix, last priority | Maddened creatures are everyone's enemy; runs after the talisman patch so charms don't repel them. Corrupted boss summons are enemies of players only |
 | `CharacterDrop.GenerateDropList` | Postfix (the existing shard one) | Double starred shard chances for rip creatures |
 
@@ -826,6 +828,7 @@ The flag is stored on the boss itself, so every player sees the same corrupted b
 
 **Known issues:**
 - **Play-test 2026-10-28 (single player): passed.** `co_corrupt` turns Eikthyr red; it hits harder, takes longer to kill and drops 2–3 essences and 3–5 shards. Since 2026-10-30, corrupted offerings summon them too (see [Corrupted offerings](#corrupted-offerings)).
+- **Multiplayer fix 2026-11-01 (untested):** the limit now counts summons this game spawned even when they're far from it, so it holds with players spread out.
 - **Play-test 2026-10-31 (single player, Eikthyr and Bonemass): passed.** Summons arrive every 30 s from the army, 2–3 at a time, up to 4 alive alone, and stop when the boss dies. **Fixed after the test:** summons attacked Eikthyr when the player was away and he attacked them (maddened creatures treat everything as an enemy); now summons and their boss are allies and summons target players only. To re-check. The Ashlands army's charred spawner stones aren't summoned (only creatures count towards the limit).
 - The design's extra particles (Bonemass poison cloud, Ashlands embers) aren't added yet.
 
@@ -1207,6 +1210,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 - **Orlog stone reworked after its play-test** (it showed the Bonemass carving, read "Sacrificial Stone / [E] Read", crashed once on E, touched the Bonemass stone facing outwards, raven out of reach): now a copy of the game's Vegvisir with every vanilla behaviour stripped, twice a trophy stone's height, glowing blue runes and blue mist, placed 3 m behind the Eikthyr trophy stone and turned like it, raven on the ground beside it; a stone from the first version moves to the new spot. New settings `StoneSize`, `StoneGap`, `StoneTurn`. Untested in-game (263 tests).
 
 ### 2026-11-01
+- **Multiplayer fixes from the dedicated-server review** (untested): wave and summon limits now count creatures this game spawned even when they're far from it (with players spread out, more could spawn than the limit); creatures maddened where they stand when waves start now turn red for every player, not only the one whose game maddened them. Review in `docs/ARCHITECTURE.md` → Dedicated-server review.
 - **Skill tree and skill points built** (roadmap C2): the Amazon's real tree from D2's data with our statuses; D2's spending rules (tiers, built prerequisites, 20 points, one more point per level past the requirement); eitr costs from D2's mana; `GetSkillIdsJson`, `GetSkillInfoJson`, `SpendSkillPoint`; `orlog_skill`; respec returns skill points. Per-level D2 values for every Amazon skill saved in `data/d2-reference/amazon_levels.csv` for C3 onwards. Untested in-game (239 tests).
 - **Orlog stone and class choice built** (roadmap C1): a clone of the game's trophy stone glowing rune blue, placed once per world in the widest gap of the spawn area's ring of trophy stones (server-confirmed); using it opens the classes UI's class choice window (real data, no demo); a raven explains it once; `GetClassStoneRequest` and `ChooseClass` answer for real. `PLAYER_SETUP.md` now covers Orlog. Untested in-game (229 tests).
 - **Fix: buttons clicked twice** (play-test 2026-10-31): Jötunn's buttons played the game's "select" sound on mouse down as well as the click; our buttons (skills panel, + buttons, tabs, Skills, recipe grouping, Corruption's Bag/Currency/Maps) now play one click. Untested.

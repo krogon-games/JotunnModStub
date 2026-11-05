@@ -19,6 +19,13 @@ namespace Corruption.Content
 
         private static readonly Regex Phase = new Regex(@"^(.+)_p\d+$");
 
+        /// <summary>
+        ///     What this game spawned, per tag, by ZDO id. A player's game only loads creatures near it, so in multiplayer
+        ///     the ones near a friend far away aren't loaded here; their ZDOs stay known until the game reports them
+        ///     destroyed (to every player), so they still count towards the limits.
+        /// </summary>
+        private static readonly Dictionary<string, HashSet<ZDOID>> Spawned = new Dictionary<string, HashSet<ZDOID>>();
+
         /// <summary>A boss prefab's name without a phase suffix (FrozenKing_p2 -> FrozenKing).</summary>
         public static string BaseName(string prefab)
         {
@@ -99,7 +106,17 @@ namespace Corruption.Content
         public static Character Spawn(SpawnSystem.SpawnData entry, Vector3 point, string tagKey, string tagValue, int minStars, int maxStars)
         {
             var go = Object.Instantiate(entry.m_prefab, point, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
-            go.GetComponent<ZNetView>()?.GetZDO()?.Set(tagKey, tagValue);
+            var zdo = go.GetComponent<ZNetView>()?.GetZDO();
+            if (zdo != null)
+            {
+                zdo.Set(tagKey, tagValue);
+                string key = tagKey + "|" + tagValue;
+                if (!Spawned.TryGetValue(key, out var ids))
+                {
+                    Spawned[key] = ids = new HashSet<ZDOID>();
+                }
+                ids.Add(zdo.m_uid);
+            }
             var character = go.GetComponent<Character>();
             if (!character)
             {
@@ -124,20 +141,35 @@ namespace Corruption.Content
             return character;
         }
 
-        /// <summary>Living loaded creatures carrying a tag, optionally only of one prefab.</summary>
+        /// <summary>
+        ///     Living creatures carrying a tag, optionally only of one prefab: the ones loaded here, plus the ones this
+        ///     game spawned that still exist anywhere (see <see cref="Spawned" />).
+        /// </summary>
         public static int CountAlive(string tagKey, string tagValue, string prefabName = null)
         {
-            int count = 0;
+            var alive = new HashSet<ZDOID>();
             foreach (var character in Character.GetAllCharacters())
             {
                 var zdo = character.m_nview ? character.m_nview.GetZDO() : null;
                 if (zdo != null && !character.IsDead() && zdo.GetString(tagKey, "") == tagValue &&
                     (prefabName == null || Utils.GetPrefabName(character.gameObject) == prefabName))
                 {
-                    count++;
+                    alive.Add(zdo.m_uid);
                 }
             }
-            return count;
+            if (Spawned.TryGetValue(tagKey + "|" + tagValue, out var ids))
+            {
+                int prefabHash = prefabName != null ? prefabName.GetStableHashCode() : 0;
+                ids.RemoveWhere(id => ZDOMan.instance.GetZDO(id) == null);
+                foreach (var id in ids)
+                {
+                    if (prefabName == null || ZDOMan.instance.GetZDO(id).GetPrefab() == prefabHash)
+                    {
+                        alive.Add(id);
+                    }
+                }
+            }
+            return alive.Count;
         }
     }
 }

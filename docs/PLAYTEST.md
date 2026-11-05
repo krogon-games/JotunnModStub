@@ -211,7 +211,8 @@ On a dedicated server the rip request goes to the server and its answer comes ba
 1. **One player (the opener):** wear the Corrupted wishbone, use `CorruptionMap_Meadows` near the base. Expect: a red rip opens 4 m in front of them. If it says no spot was found, note the message. If a rip ever opens near anyone's bed, ward or portal, tell Claude (the server should prevent that).
 2. **Everyone:** go through. Expect: all land at the same spot, no heart in sight, no waves yet.
 3. **Everyone else:** watch and listen. Expect: you see and hear the opener's red pings (the log says how they reach other players: `shared with other players by …`).
-4. **Everyone:** walk towards the heart together. Expect: within 96 m the army message shows and waves come. Every player sees the creatures red; they attack everyone and each other; charms don't help.
+4. **Everyone:** walk towards the heart together. Expect: within 96 m the army message shows and waves come. Every player sees the creatures red, also the ones that were already standing there when the waves started (fixed 2026-11-01); they attack everyone and each other; charms don't help.
+4b. **Everyone:** split up, 100 m or more apart around the heart. Expect: the waves don't pile up beyond their limit near any one of you (fixed 2026-11-01: limits now count creatures far from the game that spawned them).
 5. **Everyone:** destroy the heart. Expect: the exit rip opens and a chest with Meadows loot and 1–3 shards appears; the pings stop; the waves stop.
 6. **Everyone:** go home through the exit rip. Expect: everyone ends at the first rip.
 7. **Ask:** did anything differ between the opener and the others (the heart's place, the chest, the portal hover text)?

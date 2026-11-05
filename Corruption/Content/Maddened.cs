@@ -52,6 +52,32 @@ namespace Corruption.Content
             {
                 character.gameObject.AddComponent<MaddenedCreature>();
             }
+            // Other players' games that already have this creature loaded only check the flag when it loads: tell them.
+            ZRoutedRpc.instance?.InvokeRoutedRPC(ZRoutedRpc.Everybody, RpcMaddened, character.GetZDOID());
+        }
+
+        private const string RpcMaddened = "Corruption_Maddened";
+
+        private static void RPC_Maddened(long sender, ZDOID id)
+        {
+            Safe.Run("show a creature maddened", () =>
+            {
+                var instance = ZNetScene.instance ? ZNetScene.instance.FindInstance(id) : null;
+                var character = instance ? instance.GetComponent<Character>() : null;
+                if (character && !character.GetComponent<MaddenedCreature>())
+                {
+                    character.gameObject.AddComponent<MaddenedCreature>();
+                }
+            });
+        }
+
+        [HarmonyPatch(typeof(Game), nameof(Game.Start))]
+        private static class RegisterRpc
+        {
+            private static void Postfix()
+            {
+                Safe.Run("register the maddened message", () => ZRoutedRpc.instance.Register<ZDOID>(RpcMaddened, RPC_Maddened));
+            }
         }
 
         /// <summary>The status effect, built from the vanilla effects named above. Register after ObjectDB is ready.</summary>
