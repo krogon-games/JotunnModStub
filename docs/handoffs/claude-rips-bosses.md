@@ -1,6 +1,6 @@
 # Handoff: `claude/rips-bosses`
 
-**Written:** 2026-11-05, from the real branch state. `git status` was clean before writing. The branch was **3 commits ahead of `master` and 27 behind**; `master` was merged in (two conflicts in `FEATURES.md` and `docs/PLAYTEST.md`, both kept). All three plugins build against stand-in game assemblies and **262 tests pass**. No pull request is open for this branch; everything before 2026-11-01 is in `master` (PRs #2, #4, #5, #6, #10, #14).
+**Written:** 2026-11-05, from the real branch state. `git status` was clean before writing. The branch was **3 commits ahead of `master` and 27 behind**; `master` was merged in (two conflicts in `FEATURES.md` and `docs/PLAYTEST.md`, both kept). All three plugins build against stand-in game assemblies and **262 tests pass**. **Updated 2026-11-05:** PR #22 (the dedicated-server fixes, your rip decisions and this file) is merged, so **all of this branch's work is in `master`** (PRs #2, #4, #5, #6, #10, #14, #22) and the branch was brought level with it. Start the next session from the latest `master`.
 
 Detail lives elsewhere; this file points to it:
 - `FEATURES.md`: Maps and rips (step A), Rip waves and loot (step B), Rip heart search and corrupted wishbone, Corrupted offerings, Corrupted bosses (core, with summons), Boss essences.
@@ -17,7 +17,7 @@ The rips and bosses session's branch for the **Corruption** plugin: maps and rip
 
 ## Stage
 
-**Asking you questions.** The map tiers and affixes (R1) need your approval of a table of proposed numbers before building (see Open questions). The dedicated-server review (R4) is finished on this branch but not in `master` yet.
+**Asking you questions.** The map tiers and affixes (R1) need your approval of a table of proposed numbers before building (see Open questions). The dedicated-server review (R4) is finished and merged (PR #22).
 
 ## Done (built and tested in-game by you, single player)
 
@@ -47,7 +47,7 @@ All in `master`:
 ## Broken or unknown
 
 - **Multiplayer: nothing is tested** with more than one player. The group evening is `PLAYTEST.md` → Session 2.
-- **Two multiplayer fixes from the dedicated-server review** (this branch only, untested, read in code but never run on a server):
+- **Two multiplayer fixes from the dedicated-server review** (merged in PR #22; untested, read in code but never run on a server):
   - wave and summon limits now count creatures far from the game that spawned them;
   - creatures maddened where they stand now turn red for every player.
 - **Summons fight players only:** the fix after your 2026-10-31 test (summons and their boss attacked each other) is in `master`, but your re-check on the phone checklist (`sum-allies`) has no result yet.
@@ -134,15 +134,15 @@ Earlier, before the roadmap split the work (now owned by the loot session):
 ## Next steps (most important first)
 
 1. **Get your answers on the R1 table, then build tiers 1–2 and the seven affixes.** The tier and affixes live on the map item; until the UI session's Riftforge window exists, a console command does the rolling. The tooltip shows tier and affixes; the rip carries both. The three loot rewards need one small hook in the loot session's `LootPatches.cs` (today it always adds `rip_tier_1`): agree it with that session.
-2. **Open a PR for the dedicated-server fixes** (or ride them with R1), so the group evening tests them.
+2. **The group evening** tests the dedicated-server fixes (merged in PR #22): fix what it finds.
 3. **Design the elite and champion packs with you (R3)**, then 3-star creatures (R2: the enemy HUD shows only two stars) and tiers 3–4.
 4. **R5:** keep rips out of locations and water once the area has loaded; boss particles (Bonemass cloud, Ashlands embers).
 5. **After the group evening:** fix whatever Session 2 finds in rips and bosses. Later, R6: scars first (3 days), then terror zones and roaming elites.
 
 ## Merge notes
 
-- **Mergeable now:** yes. The branch carries the dedicated-server review (two multiplayer fixes, untested, since they need a second player), your rip decisions and the handoff, on top of the latest `master`. Low risk: the code change is small and only in this session's files.
-- **Code files changed vs `master`:**
+- **Nothing left to merge:** PR #22 (merged 2026-11-05) carried the dedicated-server fixes, your rip decisions and this file. The next work (R1) starts from the latest `master` and gets its own PR.
+- **Code files PR #22 changed:**
   - `Corruption/Content/BossArmies.cs`: counts what it spawned, by id;
   - `Corruption/Content/Maddened.cs`: the `Corruption_Maddened` message, registered in a new `Game.Start` postfix.
 - **Shared docs touched** (add, keep both sides in conflicts): `FEATURES.md`, `docs/DECISIONS.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ARCHITECTURE.md`, `docs/corruption-design.md`.
