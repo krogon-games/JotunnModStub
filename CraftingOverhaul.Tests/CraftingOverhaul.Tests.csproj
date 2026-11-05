@@ -40,10 +40,15 @@
     <Compile Include="..\Corruption\Rules\LootItem.cs" Link="Linked\LootItem.cs" />
     <Compile Include="..\Corruption\Rules\AffixRoller.cs" Link="Linked\AffixRoller.cs" />
     <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />
+    <Compile Include="..\Corruption\Rules\GatheringRules.cs" Link="Linked\GatheringRules.cs" />
+    <Compile Include="..\Corruption\Rules\HarvestRules.cs" Link="Linked\HarvestRules.cs" />
+    <Compile Include="..\Corruption\Rules\ProcRules.cs" Link="Linked\ProcRules.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
     <Compile Include="..\Orlog\Rules\LevelTables.cs" Link="Linked\Orlog\LevelTables.cs" />
     <Compile Include="..\Orlog\Rules\ExperienceRules.cs" Link="Linked\Orlog\ExperienceRules.cs" />
     <Compile Include="..\Orlog\Rules\AttributeRules.cs" Link="Linked\Orlog\AttributeRules.cs" />
+    <Compile Include="..\Orlog\Rules\StonePlacement.cs" Link="Linked\Orlog\StonePlacement.cs" />
+    <Compile Include="..\Orlog\Rules\SkillRules.cs" Link="Linked\Orlog\SkillRules.cs" />
   </ItemGroup>
 
   <ItemGroup>

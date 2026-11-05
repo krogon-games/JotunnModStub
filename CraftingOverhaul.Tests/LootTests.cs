@@ -229,7 +229,7 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(new[] { "hp_p", "hp_s" }, item.Lines[0].Ids);
             Assert.Equal(50, item.Lines[0].Value);
             var byId = table.ToDictionary(a => a.Id);
-            LootItem.Range(item.Lines[0], byId, out int min, out int max);
+            LootItem.Range(item.Lines[0], byId, out float min, out float max);
             Assert.Equal(10, min);
             Assert.Equal(50, max);
             Assert.Equal("+50 hp_p [10–50] ◆ resonant", LootItem.LineText(item.Lines[0], byId));
@@ -241,6 +241,25 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(5, AffixRoller.RollValue(5, 20, () => 0.0));
             Assert.Equal(20, AffixRoller.RollValue(5, 20, () => 0.9999));
             Assert.Equal(7, AffixRoller.RollValue(7, 7, () => 0.5));
+            // Keen-eyed's 0.5–2 m rolls in tenths.
+            Assert.Equal(0.5f, AffixRoller.RollValue(0.5f, 2f, 1, () => 0.0));
+            Assert.Equal(2f, AffixRoller.RollValue(0.5f, 2f, 1, () => 0.9999));
+            Assert.Equal(1.2f, AffixRoller.RollValue(0.5f, 2f, 1, () => 0.47));
+        }
+
+        [Fact]
+        public void DecimalValuesSurviveStorageAndText()
+        {
+            var affixes = RealAffixes().ToDictionary(a => a.Id);
+            Assert.Equal(1, LootItem.Decimals(affixes["keen_eyed"]));
+            Assert.Equal(0, LootItem.Decimals(affixes["swift"]));
+            var item = new LootItem { Rarity = "magic" };
+            item.Lines.Add(new LootItem.Line { Ids = new[] { "keen_eyed" }, Value = 1.5f });
+            var data = new Dictionary<string, string>();
+            item.Write(data);
+            Assert.Equal("keen_eyed=1.5", data[LootItem.AffixesKey]);
+            Assert.Equal(1.5f, LootItem.Read(data).Lines[0].Value);
+            Assert.Equal("+1.5 m item pickup range [0.5–2]", LootItem.LineText(item.Lines[0], affixes));
         }
 
         [Fact]
@@ -265,7 +284,7 @@ namespace CraftingOverhaul.Tests
                         Assert.True(slots <= count, $"{rarity} {string.Join("+", classes)} rolled {slots} affixes for {count}.");
                         foreach (var line in item.Lines)
                         {
-                            LootItem.Range(line, byId, out int min, out int max);
+                            LootItem.Range(line, byId, out float min, out float max);
                             Assert.InRange(line.Value, min, max);
                         }
                         var prefixes = item.Lines.SelectMany(l => l.Ids).Count(id => byId[id].IsPrefix);

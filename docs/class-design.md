@@ -139,7 +139,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | | Lightning Strike | The thrust releases chain lightning to nearby enemies | later |
 | | Lightning Fury | The javelin bursts into lightning bolts on impact | later |
 
-19 skills in v1, 10 later, none dropped. With the tree rule in §4, a skill built before its prerequisite (for example Strafe before Guided Arrow) opens by level alone.
+19 skills built in the first version (18 `v1` and Penetrate `reworked`), 11 later, none dropped (corrected 2026-11-01: the earlier "10 later" was a miscount). With the tree rule in §4, a skill built before its prerequisite (for example Strafe before Guided Arrow) opens by level alone.
 
 **Decoy and Valkyrie look (user, 2026-10-30): a tinted clone of the player character.** Proposed approach, to prove in a prototype: clone the player prefab without the `Player` part, as a creature on the players' side (like `Skeleton_Friendly`) with monster AI; its equipment visuals (`VisEquipment`, synced through the object's ZDO) copy the caster's body, hair and gear, and a tint marks it (`Corrupted.Tint`'s method). The player model already plays every humanoid attack, so the Valkyrie can fight with the vanilla attacks of the weapon she holds. Risk: parts of the player prefab may expect the `Player` component; other mods have built human NPCs on the player model (unverified which and how).
 
@@ -149,6 +149,7 @@ Animations: thrusts, throws, bow shots and the cast all exist in vanilla (`spear
 
 Decided (user, 2026-10-30): **a class is chosen at the spawn area** (the `StartTemple` location in the Meadows, where the boss trophies go), at **a new stone structure that blends in** with the area's standing stones.
 - Name (user, 2026-10-30): the **Orlog stone** (*örlög*, fate).
+- **Built 2026-11-01, reworked 2026-11-02 after the play-test** (user; `FEATURES.md` → Orlog stone and class choice): a copy of the game's Vegvisir, about twice a trophy stone's height, blue runes, 3 m behind the Eikthyr trophy stone, raven on the ground beside it; server-confirmed once per world; without the classes UI, using it twice chooses the only class. Works (third play-test 2026-11-02); the look will be redesigned later (user).
 - Proposed build: cloned from the start area's own stone prefabs (same mesh and material, no new model), placed once per world beside the trophy stones by the server (the start temple's position comes from the world's location list; the stone is a persistent object like the rip heart).
 - Interact (E) to open the class choice (UI from the UI session); a character without a class gets a raven hint the first time it spawns, as the Riftforge's raven does.
 - **Changing class** (user, 2026-10-30): possible at the Orlog stone, for a cost. Details later; not part of the first build.

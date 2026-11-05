@@ -15,6 +15,9 @@ Outputs:
   The XP never drops from one level to the next (it would at levels 8 and 10, by 1-6 XP).
 - Orlog/Data/classes.csv: each Diablo 2 class's per-level and per-point gains (data/d2-reference/classes.csv, unchanged)
   and whether it is playable yet (the Amazon first, user 2026-10-30).
+- Orlog/Data/amazon_skills.csv: the Amazon's 30 skills: D2's tree (tab, row, column, required level, prerequisites,
+  mana) from data/d2-reference/amazon.csv, with our status, kind, weapon and Valheim description from
+  docs/class-design.md §5 (user decisions 2026-10-30). Eitr costs are D2's mana: the class eitr pool is D2's mana 1:1.
 - Orlog/Data/biome_levels.csv: each biome's creature level range (from the guide) and the health span of the creatures
   the world spawns there without a boss key (from the dump). Creatures get their level inside the range by health.
 
@@ -41,6 +44,41 @@ GUIDE = [
     ("DeepNorth", ["FrozenKing", "FrozenKing_p2", "FrozenKing_p3"], 90),
 ]
 MAX_LEVEL = 99
+# The Amazon's skills in Valheim (docs/class-design.md §5): status, kind (attack = on the skill button, cast = on its
+# hotkey, passive = no slot), the weapon it needs, and what it does here.
+AMAZON = {
+    "Magic Arrow": ("v1", "attack", "bow", "Shoots without using an arrow; its damage turns into spirit damage as it levels"),
+    "Fire Arrow": ("v1", "attack", "bow", "Adds fire damage to the shot"),
+    "Cold Arrow": ("v1", "attack", "bow", "Adds frost damage; the target is slowed"),
+    "Multiple Shot": ("v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
+    "Exploding Arrow": ("v1", "attack", "bow", "Fire damage in an area on impact"),
+    "Ice Arrow": ("v1", "attack", "bow", "Frost damage and a short freeze; bosses are only slowed"),
+    "Guided Arrow": ("later", "attack", "bow", "The arrow homes in on the target"),
+    "Strafe": ("later", "attack", "bow", "A volley of arrows at several nearby targets"),
+    "Immolation Arrow": ("later", "attack", "bow", "Exploding Arrow plus a burning patch on the ground"),
+    "Freezing Arrow": ("v1", "attack", "bow", "Ice Arrow's freeze in an area"),
+    "Inner Sight": ("v1", "cast", "", "Nearby enemies glow and take more damage for a while"),
+    "Critical Strike": ("v1", "passive", "", "Chance to deal double physical damage"),
+    "Dodge": ("v1", "passive", "", "Chance to avoid a melee hit while standing or attacking"),
+    "Slow Missiles": ("later", "cast", "", "Enemy projectiles near you slow down"),
+    "Avoid": ("v1", "passive", "", "Chance to avoid a projectile while standing or attacking"),
+    "Penetrate": ("reworked", "passive", "", "Chance for a hit to ignore the creature's resistance to its damage type"),
+    "Decoy": ("later", "cast", "", "A tinted, standing copy of you that creatures attack instead"),
+    "Evade": ("v1", "passive", "", "Chance to avoid any hit while moving"),
+    "Valkyrie": ("later", "cast", "", "A tinted copy of a player character that fights for you"),
+    "Pierce": ("later", "passive", "", "Chance for an arrow or javelin to pass through and hit the next enemy"),
+    "Jab": ("v1", "attack", "spear", "A fast series of thrusts"),
+    "Power Strike": ("v1", "attack", "spear", "Adds lightning damage to the thrust"),
+    "Poison Javelin": ("v1", "attack", "spear", "The javelin (a spectral copy) leaves poison clouds along its path"),
+    "Impale": ("v1", "attack", "spear", "One heavy thrust; wears the spear down faster"),
+    "Lightning Bolt": ("v1", "attack", "spear", "The javelin (a spectral copy) turns into lightning"),
+    "Charged Strike": ("later", "attack", "spear", "The thrust releases small lightning bolts around the target"),
+    "Plague Javelin": ("v1", "attack", "spear", "A spreading poison cloud where the javelin (a spectral copy) lands"),
+    "Fend": ("later", "attack", "spear", "Thrusts at several nearby enemies in turn"),
+    "Lightning Strike": ("later", "attack", "spear", "The thrust releases chain lightning to nearby enemies"),
+    "Lightning Fury": ("later", "attack", "spear", "The javelin (a spectral copy) bursts into lightning bolts on impact"),
+}
+
 # Playable classes (user, 2026-10-30: the Amazon first; the Barbarian and maybe the Paladin later).
 PLAYABLE = {"Amazon"}
 # Our level that matches WoW's level-60 cap (Kall Fimbulbringer).
@@ -130,7 +168,22 @@ def main():
         w.writerow(["class", "status"] + columns)
         for c in classes:
             w.writerow([c["class"], "playable" if c["class"] in PLAYABLE else "later"] + [c[k] for k in columns])
-    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv and classes.csv to", OUT)
+    skills = read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon.csv"))
+    tabs = []
+    with open(os.path.join(OUT, "amazon_skills.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["id", "name", "tab", "row", "col", "req_level", "prereqs", "status", "kind", "needs", "eitr", "eitr_per_level",
+                    "description", "d2_synergies"])
+        for s in skills:
+            if s["tab"] not in tabs:
+                tabs.append(s["tab"])
+            status, kind, needs, text = AMAZON[s["name"]]
+            prereqs = "" if s["prerequisites"] == "none" else "+".join(p.replace(" ", "") for p in s["prerequisites"].split("+"))
+            eitr = s["mana_base"] if kind != "passive" else "0"
+            w.writerow([s["name"].replace(" ", ""), s["name"], tabs.index(s["tab"]), s["row"], s["col"], s["req_level"], prereqs,
+                        status, kind, needs, eitr, s["mana_per_lvl"] if kind != "passive" else "0", text,
+                        "" if s["synergies"] == "none" else s["synergies"]])
+    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv and amazon_skills.csv to", OUT)
 
 
 if __name__ == "__main__":

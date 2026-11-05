@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using BepInEx;
 using HarmonyLib;
+using Jotunn.Managers;
 using Jotunn.Utils;
 using Orlog.Content;
 
@@ -27,6 +28,8 @@ namespace Orlog
             Texts.Register();
             Safe.Run("read the levelling tables", Progress.LoadTables);
             Safe.Run("add the console commands", Commands.Register);
+            // The Orlog stone copies a Vegvisir, which only exists inside location prefabs.
+            ZoneManager.OnVanillaLocationsAvailable += () => Safe.Run("make the Orlog stone", OrlogStone.Build);
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
@@ -45,6 +48,7 @@ namespace Orlog
         private void Update()
         {
             _configWatcher?.Tick();
+            OrlogStone.Tick();
         }
 
         private void OnDestroy()

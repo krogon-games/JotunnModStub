@@ -8,6 +8,7 @@ namespace Orlog
         private const string LevelSection = "1 - Levels";
         private const string DisplaySection = "2 - Display";
         private const string AttributeSection = "3 - Attributes";
+        private const string StoneSection = "4 - Orlog Stone";
 
         public static ConfigEntry<int> MaxLevel;
         public static ConfigEntry<int> StatPointsPerLevel;
@@ -16,6 +17,8 @@ namespace Orlog
         public static ConfigEntry<float> ShareRange;
         public static ConfigEntry<float> PartyBonusPerPlayer;
         public static ConfigEntry<bool> HighLevelPenalty;
+        public static ConfigEntry<int> MaxSkillPoints;
+        public static ConfigEntry<bool> SkillPace;
 
         public static ConfigEntry<bool> ShowXpGains;
 
@@ -26,6 +29,10 @@ namespace Orlog
         public static ConfigEntry<float> EitrPerEnergy;
         public static ConfigEntry<float> DamagePerStrength;
         public static ConfigEntry<float> DamagePerDexterity;
+
+        public static ConfigEntry<float> StoneSize;
+        public static ConfigEntry<float> StoneGap;
+        public static ConfigEntry<float> StoneTurn;
 
         public static void Bind(ConfigFile config)
         {
@@ -49,6 +56,11 @@ namespace Orlog
                 AdminOnly("Diablo 2's XP cut from level 70 (95% at 70, down to 0.5% at 99). Off by default: with it, level 90 by " +
                           "Kall Fimbulbringer (the levelling guide) is out of reach."));
 
+            MaxSkillPoints = config.Bind(LevelSection, "MaxSkillPoints", 20,
+                AdminOnly("Most points one skill can take (Diablo 2: 20).", new AcceptableValueRange<int>(1, 99)));
+            SkillPace = config.Bind(LevelSection, "SkillPace", true,
+                AdminOnly("Diablo 2's pace: a skill takes one more point per character level past its required level."));
+
             // Diablo 2's gains per level and per point (Orlog/Data/classes.csv) turned into Valheim numbers.
             HealthPerD2Life = config.Bind(AttributeSection, "HealthPerD2Life", 0.5f,
                 AdminOnly("Valheim health per Diablo 2 life point (life per level and per Vitality point). 0.5 = Valheim's starting " +
@@ -66,6 +78,20 @@ namespace Orlog
                 AdminOnly("% more physical damage per Strength point, melee and thrown (Diablo 2: 1%).", new AcceptableValueRange<float>(0f, 10f)));
             DamagePerDexterity = config.Bind(AttributeSection, "DamagePerDexterity", 1f,
                 AdminOnly("% more physical damage per Dexterity point, bows and crossbows (Diablo 2: 1%).", new AcceptableValueRange<float>(0f, 10f)));
+
+            // The Orlog stone (user, 2026-11-02): behind the Eikthyr trophy stone, twice as tall, 3 m between them.
+            // 1.7: the Vegvisir is 1.85 m; at 15.5 m the user saw about 10 trophy stones, so one reads as about 1.55 m,
+            // and twice that is 3.1 m = 1.7 x 1.85 m (play-test 2026-11-02).
+            StoneSize = config.Bind(StoneSection, "StoneSize", 1.7f,
+                AdminOnly("The Orlog stone's size, in times the Vegvisir it copies (1.85 m tall). 1.7 = about twice a boss trophy " +
+                          "stone. Restart the game to apply.",
+                    new AcceptableValueRange<float>(0.5f, 6f)));
+            StoneGap = config.Bind(StoneSection, "StoneGap", 3f,
+                AdminOnly("Metres between the Eikthyr trophy stone and the Orlog stone behind it. The stone moves the next time a player " +
+                          "comes to the spawn area.", new AcceptableValueRange<float>(0f, 30f)));
+            StoneTurn = config.Bind(StoneSection, "StoneTurn", 0f,
+                AdminOnly("Degrees added to the stone's turn (it copies the Eikthyr stone's turn). 180 turns it round if it faces the wrong way.",
+                    new AcceptableValueRange<float>(-180f, 180f)));
 
             // Any change (a synced value, a reload on save) refreshes the bonuses.
             config.SettingChanged += (sender, args) => Content.Progress.NotifyChanged();

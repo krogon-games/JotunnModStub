@@ -36,7 +36,15 @@ namespace CraftingOverhaul
             CommandManager.Instance.AddConsoleCommand(new BiomeCommand());
             CommandManager.Instance.AddConsoleCommand(new Classes.ClassesStoneCommand());
 
-            Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded");
+            Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
+        }
+
+        /// <summary>The git branch and commit this DLL was built from (stamped by CraftingOverhaul.csproj, as Corruption and Orlog).</summary>
+        internal static string BuildStamp()
+        {
+            var stamp = typeof(CraftingOverhaul).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyMetadataAttribute), false)
+                .OfType<System.Reflection.AssemblyMetadataAttribute>().FirstOrDefault(a => a.Key == "GitBuild");
+            return stamp == null || string.IsNullOrWhiteSpace(stamp.Value) ? "unknown" : stamp.Value.Trim();
         }
 
         private void Update()

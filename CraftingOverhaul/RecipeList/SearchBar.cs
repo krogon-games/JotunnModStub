@@ -62,6 +62,7 @@ namespace CraftingOverhaul.RecipeList
             var buttonGo = GUIManager.Instance.CreateButton("", parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                 Vector2.zero, ButtonWidth, BarHeight);
             buttonGo.name = "CraftingOverhaul_Grouping";
+            Classes.UiKit.OneClickSound(buttonGo);
             Place(parent, (RectTransform)buttonGo.transform, topLeft + new Vector2(width - ButtonWidth, 0f), ButtonWidth);
 
             _instance = inputGo.AddComponent<SearchBar>();
