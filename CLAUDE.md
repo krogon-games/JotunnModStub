@@ -19,7 +19,7 @@ I'm not a developer: explain things in plain language. Each session runs **one d
 - **Every time I make a decision**, add it to the **Decisions** section of this branch's handoff file straight away, and commit.
 - **Play-test checklists and my feedback** go in `docs/playtests/<branch>.md` (see [`docs/playtests/README.md`](docs/playtests/README.md)).
 
-**At the end:** commit, push, update the handoff file ([`docs/handoffs/README.md`](docs/handoffs/README.md) has the sections), and tell me whether the branch is **ready to merge** (and if not, what's missing).
+**At the end:** I type **`/handoff`** ([`.claude/skills/handoff/SKILL.md`](.claude/skills/handoff/SKILL.md)). It checks the branch, runs the checks, updates the handoff file ([`docs/handoffs/README.md`](docs/handoffs/README.md) has the sections), commits, pushes, and tells me whether the branch is **ready to merge** (and if not, what's missing). If I end a session without it, remind me to run it.
 
 **Only the coordinator, working on `master`, edits `STATUS.md` and `docs/DECISIONS.md`.** Feature branches never touch them, so merges don't clash. The coordinator copies the handoffs' decisions into `docs/DECISIONS.md`.
 
@@ -90,6 +90,7 @@ The user runs several Claude sessions at once, each on a different part of the m
 - **Before starting a task**, bring in the latest `master` (`git fetch origin master && git merge origin/master`) so you build on the other sessions' merged work.
 - **When a feature is finished** (built, tests pass, docs updated, ideally play-tested), open a pull request into `master` with a plain summary and the play-test status. The user merges it on GitHub.
 - The shared docs (`FEATURES.md` changelog, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`) collide most often. Add to them, never rewrite another session's entries, and resolve merge conflicts by keeping both sides. `STATUS.md` and `docs/DECISIONS.md` are the coordinator's: in a conflict, keep `master`'s version.
+- **Version numbers:** a branch that changes a plugin's gameplay (code, data, assets) raises that plugin's version above `master`'s in the second number (`0.1.0` → `0.2.0`), in its `.csproj`, its main `.cs` (`PluginVersion`) and `Package/manifest.json`. Jötunn compares only the first two numbers, so this is what stops players joining with different builds. `/handoff` checks and makes the bump.
 - `master`'s `docs/corruption-design.md` is the current design. Older branches carry an older copy; when merging, `master`'s version wins (see `STATUS.md` → Merge notes).
 
 ## Working style
