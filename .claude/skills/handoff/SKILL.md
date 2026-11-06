@@ -30,6 +30,7 @@ Do the steps in order. Never invent a result, a decision or a command.
 - Never force-push, rebase, reset, stash, switch branches, merge, or discard changes you didn't make.
 - Never edit or commit `STATUS.md` or `docs/DECISIONS.md` on a feature branch (coordinator only, on `master`).
 - Never commit secrets or local settings: `Environment.props`, `*.user`, `.env*`, keys, `.claude/settings.local.json`.
+- Never commit Valheim game files or any `.dll`, even with `git add -f` (the stand-in game files live in `/opt/valheim-standin`, outside the repo).
 - Don't install packages, change dependencies, or weaken a check to make it pass.
 
 ## 1. Check the real state
@@ -42,8 +43,8 @@ Do the steps in order. Never invent a result, a decision or a command.
 
 Mark each **PASS**, **FAIL**, **SKIPPED** (no change of that kind) or **NOT SET UP** (this machine can't run it), with one line why.
 
-1. **Build.** Only the repo's real commands (CLAUDE.md → Build and test). If `dotnet` isn't installed: NOT SET UP. Otherwise run `dotnet test CraftingOverhaul.Tests`, then `dotnet build <Plugin>/<Plugin>.csproj -p:ExecutePrebuild=false` for each changed plugin (`CraftingOverhaul`, `Corruption`, `Orlog`). Add `-p:VALHEIM_INSTALL=$VALHEIM_INSTALL` only if that variable is set. Errors only about missing Valheim/BepInEx/Unity files count as NOT SET UP; any other error is FAIL. (On Windows the build also copies the DLL into the game's plugins folder; that's normal for this repo.)
-2. **Version.** For each plugin whose shipped files changed (its folder except `README.md`, or `Shared/` if it links it), its version must be higher than `origin/master`'s in the first two numbers. Jötunn only checks those (`VersionStrictness.Minor`), so that's what makes all 4 players run the same version. The version is in three places, which must agree: `<Version>` in the `.csproj`, `PluginVersion` in the plugin's main `.cs`, and `version_number` in `Package/manifest.json`. If it hasn't been bumped and all three agree, set them to master's `X.(Y+1).0` and report "FIXED". If they disagree: FAIL.
+1. **Build.** Only the repo's real commands (CLAUDE.md → Build and test). Cloud sessions get .NET and a stand-in game folder from the environment's setup script (`tools/cloud-setup.sh`, `VALHEIM_INSTALL=/opt/valheim-standin`). If `dotnet` isn't installed: NOT SET UP. Otherwise run `dotnet test CraftingOverhaul.Tests`, then `dotnet build <Plugin>/<Plugin>.csproj -p:ExecutePrebuild=false` for each changed plugin (`CraftingOverhaul`, `Corruption`, `Orlog`). Add `-p:VALHEIM_INSTALL=$VALHEIM_INSTALL` only if that variable is set. Errors only about missing Valheim/BepInEx/Unity files count as NOT SET UP; any other error is FAIL. (On Windows the build also copies the DLL into the game's plugins folder; that's normal for this repo.)
+2. **Version.** **Never change a version number yourself**: the coordinator raises it once, when merging into `master`. Only report. For each plugin (`CraftingOverhaul`, `Corruption`, `Orlog`) whose shipped files this branch changed (its folder except `README.md`, or `Shared/`, which all three link): **"gameplay changed: version bump needed at merge"**, naming the plugins. No such change: SKIPPED. If this branch itself changed a version (`<Version>` in the `.csproj`, `PluginVersion` in the main `.cs`, `version_number` in `Package/manifest.json`), say so too, for the coordinator.
 3. **Multiplayer sync** (read the diff; say "read in code, not tested"). Gameplay settings use the admin-only config helper (`IsAdminOnly = true`); visual ones stay per player. New items and pieces are registered in `PrefabManager.OnVanillaPrefabsAvailable`. New data other players or the server need goes on a ZDO or a registered message (`docs/ARCHITECTURE.md` → Server messages), not only local fields. Data tables are compiled into the DLL, so they sync only through the version bump. CraftingOverhaul must still work when only some players have it. Nothing new to sync: SKIPPED.
 4. **Assets, prefabs and names.** New `Assets/` or `Data/` files are included in the `.csproj` (`EmbeddedResource`; Corruption lists each CSV by name). Vanilla prefab names used in new code exist in `data/game-dump-1.0.20/`. New `$` text tokens have an entry in `Content/Texts.cs` (Corruption, Orlog).
 5. **FEATURES.md.** If a feature changed, `FEATURES.md` changed in the same work (CLAUDE.md rule).
@@ -51,7 +52,7 @@ Mark each **PASS**, **FAIL**, **SKIPPED** (no change of that kind) or **NOT SET 
 
 ## 3. Fix only small, obvious mistakes
 
-A typo, a missing `EmbeddedResource` entry, a missing version bump as above. Report anything bigger instead of fixing it.
+A typo, a missing `EmbeddedResource` entry. Never a version number. Report anything bigger instead of fixing it.
 
 ## 4. Write the handoff
 
@@ -59,7 +60,7 @@ Write or update `docs/handoffs/<branch>.md` (`/` in the branch name becomes `-`)
 - **Decisions:** keep every earlier one, add new ones from this conversation with the date and Krogon's choice. Never invent one.
 - Keep earlier open questions and unresolved issues unless this session dealt with them.
 - **Done** lists only work that's built and that Krogon confirmed in game.
-- **Merge notes:** list the files this branch changed that another remote branch with unmerged commits also changes (`git for-each-ref --format='%(refname:short)' refs/remotes/origin`, then `git diff --name-only origin/master...<that branch>` for each), and say if this branch is behind `master`.
+- **Merge notes:** include the version line from check 2 ("gameplay changed: version bump needed at merge: Corruption, Orlog" or "no version bump needed"). List the files this branch changed that another remote branch with unmerged commits also changes (`git for-each-ref --format='%(refname:short)' refs/remotes/origin`, then `git diff --name-only origin/master...<that branch>` for each), and say if this branch is behind `master`.
 - Full play-test checklists and feedback go in `docs/playtests/<branch>.md` (format: [`docs/playtests/README.md`](../../../docs/playtests/README.md)); the handoff summarises.
 
 ## 5. Commit and push
@@ -74,6 +75,7 @@ Write or update `docs/handoffs/<branch>.md` (`/` in the branch name becomes `-`)
 HANDOFF COMPLETE | PARTIAL | BLOCKED
 Branch: … · Commit: <short hash> · Stage: …
 Build: PASS/FAIL/NOT SET UP · Failing: … (or "nothing")
+Version: gameplay changed: version bump needed at merge (<plugins>) | no bump needed
 Ready to merge: yes/no (why)
 Not committed (not from this session): … (or "nothing")
 Krogon's next step: … (e.g. "play-test these 4 things" or "answer these 2 questions")

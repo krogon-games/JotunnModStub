@@ -379,3 +379,12 @@ Environment.props
 # The shard model is a source asset (made by tools/make_shard.py), not a compiler object file.
 !Corruption/Assets/*.obj
 !Corruption/Assets/Orbs/*.obj
+
+# Valheim game files must never be committed (user, 2026-11-06). Cloud sessions keep a
+# stand-in copy in /opt/valheim-standin, outside the repository (tools/cloud-setup.sh);
+# these rules catch a copy that ends up inside it by mistake.
+*.dll
+*.nupkg
+valheim_Data/
+publicized_assemblies/
+BepInEx/

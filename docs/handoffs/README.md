@@ -16,7 +16,7 @@ Under 500 words; only the Decisions list may go past that (decisions are never d
 8. **Open questions for Krogon.**
 9. **Next steps:** the next 3–5 tasks, most important first.
 10. **Checks:** the results of `/handoff`'s checks (build, version, multiplayer sync, assets and names, FEATURES.md, in-game), each PASS / FAIL / SKIPPED / NOT SET UP, or "needs Krogon's playtest".
-11. **Merge notes:** ready to merge yes/no and why; files this branch shares with other open branches or with the shared docs (`FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/Texts.cs`).
+11. **Merge notes:** ready to merge yes/no and why; "gameplay changed: version bump needed at merge" with the plugins, or "no version bump needed" (branches never change versions; the coordinator does at merge); files this branch shares with other open branches or with the shared docs (`FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/Texts.cs`).
 
 **Ready to merge** means: Krogon's final play-test passed, no check FAILED, the branch has the latest `master` merged in, and everything is pushed.
 

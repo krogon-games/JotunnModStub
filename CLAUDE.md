@@ -52,6 +52,7 @@ Game reference data: `data/game-dump-1.0.20/` (from `co_dump`; development only,
 - Build: open `CraftingOverhaul.sln` on Windows (see `README.MD`), or
   `dotnet build <Project>/<Project>.csproj -p:VALHEIM_INSTALL=<Valheim folder> -p:ExecutePrebuild=false`
   (needs Valheim's managed assemblies; without a real install, a folder with the reference assemblies works).
+- Cloud sessions: the "Valheim Mod" environment's setup script ([`tools/cloud-setup.sh`](tools/cloud-setup.sh)) installs the .NET 8 SDK and a stand-in Valheim folder at `/opt/valheim-standin`, and the environment sets `VALHEIM_INSTALL` to it, so the commands above work as they are. **Never commit Valheim game files or `.dll`s** (`.gitignore` blocks them).
 - Only the user can play-test. Never mark anything "Tested in-game" without their report.
 
 ## Hard constraints
@@ -90,7 +91,7 @@ The user runs several Claude sessions at once, each on a different part of the m
 - **Before starting a task**, bring in the latest `master` (`git fetch origin master && git merge origin/master`) so you build on the other sessions' merged work.
 - **When a feature is finished** (built, tests pass, docs updated, ideally play-tested), open a pull request into `master` with a plain summary and the play-test status. The user merges it on GitHub.
 - The shared docs (`FEATURES.md` changelog, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`) collide most often. Add to them, never rewrite another session's entries, and resolve merge conflicts by keeping both sides. `STATUS.md` and `docs/DECISIONS.md` are the coordinator's: in a conflict, keep `master`'s version.
-- **Version numbers:** a branch that changes a plugin's gameplay (code, data, assets) raises that plugin's version above `master`'s in the second number (`0.1.0` → `0.2.0`), in its `.csproj`, its main `.cs` (`PluginVersion`) and `Package/manifest.json`. Jötunn compares only the first two numbers, so this is what stops players joining with different builds. `/handoff` checks and makes the bump.
+- **Version numbers (user, 2026-11-06):** feature branches never change a version. `/handoff` flags "gameplay changed: version bump needed at merge" in the handoff and its report. **The coordinator raises the version once, when it merges gameplay changes into `master`**: the second number (`0.1.0` → `0.2.0`) of each plugin whose gameplay (code, data, assets) changed, in its `.csproj` (`<Version>`), its main `.cs` (`PluginVersion`) and `Package/manifest.json`. Jötunn compares only the first two numbers, so this is what stops players joining with different builds.
 - `master`'s `docs/corruption-design.md` is the current design. Older branches carry an older copy; when merging, `master`'s version wins (see `STATUS.md` → Merge notes).
 
 ## Working style

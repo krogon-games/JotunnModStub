@@ -12,6 +12,9 @@ Areas: **Process** · **Design** (rules for the whole mod) · **Loot** · **Rips
 
 | Date | Area | Question | What you decided |
 |---|---|---|---|
+| 2026-11-06 | Process | Who raises the mods' version numbers? | Not the feature branches: `/handoff` only flags "gameplay changed: version bump needed at merge". The coordinator raises the version once, when it merges gameplay changes into `master` (second number, e.g. `0.1.0` → `0.2.0`, in the `.csproj`, the main `.cs` and `Package/manifest.json`) |
+| 2026-11-06 | Process | Should the mods build in cloud sessions? | Yes: the cloud environment's setup script installs .NET and a stand-in Valheim folder outside the repo (`tools/cloud-setup.sh`). Valheim game files are never committed |
+| 2026-11-06 | Process | How does a session end? | With `/handoff`, typed by you: it checks the branch, runs the checks, writes the handoff, commits and pushes, and reports |
 | 2026-11-05 | Process | How should sessions be run from now on? | One decision round per session, one branch per round (a couple of related tasks is fine). Each session reads the design, `STATUS.md`, this file, the task list and its handoff, then confirms the round and branch with you. Decisions go into the branch's handoff straight away; play-test checklists and feedback go into `docs/playtests/<branch>.md`. At the end: commit, push, update the handoff, say whether it's ready to merge. Routine in `CLAUDE.md` → Session routine |
 | 2026-11-05 | Process | Who edits `STATUS.md` and `docs/DECISIONS.md`? | Only the coordinator, on `master`. Feature branches never touch them |
 | 2026-11-05 | Process | Which copy of `docs/corruption-design.md` is current? | `master`'s (it has the 2026-11-01 decisions). Several older branches carry an older copy; when one is merged, `master`'s version wins |
