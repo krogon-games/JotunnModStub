@@ -1,6 +1,6 @@
 # Handoff: `claude/relaxed-einstein-kdvz4t` (coordinator)
 
-**Written:** 2026-11-06, from the real branch state: 0 commits ahead of `master`, 0 behind, nothing uncommitted before this file. This session was the coordinator: its work was committed straight to `master` (`c15c1a2`, `defc95d`, `e56e91f`) at Krogon's request. This file is the only thing on the branch that isn't in `master`.
+**Written:** 2026-11-06. Level with `master` before this file. The coordinator's work went straight to `master` (`c15c1a2`, `defc95d`, `e56e91f`) at Krogon's request; only this file isn't in `master`.
 
 ## Stage
 
@@ -8,7 +8,7 @@ Ready to merge (docs only).
 
 ## Purpose
 
-Coordinator session: set up how the sessions work together. That covers `STATUS.md`, the decisions table, the session routine, the task list, the `/handoff` skill and the cloud build.
+Coordinator session: set up how the sessions work together.
 
 ## Done
 
@@ -27,7 +27,6 @@ Coordinator session: set up how the sessions work together. That covers `STATUS.
 - `/handoff` has run only here, on a branch with no code changes. Its first run on a feature branch with real changes is untested.
 - Two old handoffs (`claude-affixes-loot.md`, `claude-ui-overhaul.md`) say their PRs are open; both were merged on 2026-11-02. Their sessions should fix this on their next `/handoff`.
 - Build warnings in cloud builds: version-mismatch warnings from the stand-in game files (harmless), an unused variable at `CraftingOverhaul/Classes/VitalBars.cs:288`, and an unused field in `DemoClasses.cs` (removed with the demo, #38).
-- In this session `VALHEIM_INSTALL` isn't set (it applies from the next start); fresh sessions have it.
 
 ## Decisions
 
@@ -57,8 +56,8 @@ Nothing to play-test in game: no gameplay changed. The cloud build check is done
 
 ## Checks
 
-- Build: **PASS**. `dotnet test CraftingOverhaul.Tests` passed 262/262. No plugin changed, so no plugin build was needed; all three built here and in the fresh session.
-- Version: **SKIPPED**. No plugin files changed: no version bump needed.
+- Build: **PASS**. Tests 262/262; no plugin changed (all three built earlier here and in the fresh session).
+- Version: **SKIPPED** (no plugin changed).
 - Multiplayer sync: **SKIPPED** (nothing new to sync).
 - Assets and names: **SKIPPED** (none added).
 - FEATURES.md: **SKIPPED** (no feature changed).
