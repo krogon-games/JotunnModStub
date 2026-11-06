@@ -23,7 +23,7 @@ Coordinator session: set up how the sessions work together.
 
 ## Half-done and known issues
 
-- No GitHub Project board: no tool here can make one. Krogon can create it (Projects → New project → Board, then add the repo's issues).
+- Six branches checked on 2026-11-06 as fully in `master` with their handoffs on `master` (`affixes-loot`, `busy-wozniak-c0j9kc`, `class-skills`, `rips-bosses`, `ui-overhaul`, `valheim-modding-exploration-izv3l8`). Deleting them failed: the cloud session's GitHub connection refuses branch deletion. Krogon deletes them on GitHub.
 - `/handoff` has run only here, on a branch with no code changes. Its first run on a feature branch with real changes is untested.
 - Two old handoffs (`claude-affixes-loot.md`, `claude-ui-overhaul.md`) say their PRs are open; both were merged on 2026-11-02. Their sessions should fix this on their next `/handoff`.
 - Build warnings in cloud builds: version-mismatch warnings from the stand-in game files (harmless), an unused variable at `CraftingOverhaul/Classes/VitalBars.cs:288`, and an unused field in `DemoClasses.cs` (removed with the demo, #38).
@@ -36,6 +36,7 @@ Coordinator session: set up how the sessions work together.
 - 2026-11-05: The task list lives in GitHub issues if possible, otherwise in `ROADMAP.md` (issues were made).
 - 2026-11-06: Every session ends with Krogon typing `/handoff`; it runs only when typed.
 - 2026-11-06: Branches never bump versions; `/handoff` flags "version bump needed at merge"; the coordinator raises the version once when merging gameplay changes.
+- 2026-11-06: Delete every branch that is fully in `master` and has its handoff on `master`; keep and report any that isn't.
 - 2026-11-06: Set up the cloud environment so the mod builds in cloud sessions (approved); Valheim game files are never committed.
 
 ## Playtest
@@ -44,8 +45,7 @@ Nothing to play-test in game: no gameplay changed. The cloud build check is done
 
 ## Open questions for Krogon
 
-1. Delete the two finished branches `claude/busy-wozniak-c0j9kc` and `claude/valheim-modding-exploration-izv3l8`? They hold nothing `master` lacks.
-2. Do you want the GitHub Project board? If yes, create it yourself (see above).
+None. (The Project board exists: Krogon created it and imported the issues, 2026-11-06.)
 
 ## Next steps
 
