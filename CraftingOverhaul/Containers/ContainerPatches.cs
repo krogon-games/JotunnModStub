@@ -17,7 +17,23 @@ namespace CraftingOverhaul.Containers
         private static int _craftingDepth;
         private static int _buildingDepth;
         private static int _suppressDepth;
+        private static int _payDepth;
         private static bool _bypass;
+
+        /// <summary>What the player carries (bag, and whatever other mods add: inventory tabs, backpack), without chests.</summary>
+        public static int CountCarried(Inventory inventory, string name)
+        {
+            bool was = _bypass;
+            _bypass = true;
+            try
+            {
+                return inventory.CountItems(name);
+            }
+            finally
+            {
+                _bypass = was;
+            }
+        }
 
         private static bool IsActiveFor(Inventory inventory)
         {
@@ -63,6 +79,24 @@ namespace CraftingOverhaul.Containers
         }
 
         /// <summary>
+        ///     Right before paying (the craft itself, and placing a piece): only held chests count (see
+        ///     <see cref="ChestLeases" />), so the game's own "enough materials?" check is made against stock nobody
+        ///     else can change before it's paid. The recipe list and build menu still show every usable chest.
+        /// </summary>
+        [HarmonyPatch]
+        private static class PayScope
+        {
+            private static IEnumerable<MethodBase> TargetMethods()
+            {
+                yield return AccessTools.Method(typeof(InventoryGui), nameof(InventoryGui.DoCrafting));
+                yield return AccessTools.Method(typeof(Player), nameof(Player.UpdatePlacement));
+            }
+
+            private static void Prefix() => _payDepth++;
+            private static void Finalizer() => _payDepth--;
+        }
+
+        /// <summary>
         ///     "Any one of these ingredients" recipes pick the actual item from the player's inventory,
         ///     so don't advertise container stock for them.
         /// </summary>
@@ -96,7 +130,7 @@ namespace CraftingOverhaul.Containers
                 {
                     try
                     {
-                        __result += NearbyContainers.Count(__0, __1, __2);
+                        __result += NearbyContainers.Count(__0, __1, __2, _payDepth > 0);
                     }
                     catch (System.Exception ex)
                     {
@@ -110,7 +144,7 @@ namespace CraftingOverhaul.Containers
         private static class RemoveItem_Patch
         {
             /// <summary>
-            ///     Take from the player's own inventory first, and the shortfall from nearby containers.
+            ///     Take from the player's own inventory first, and the shortfall from held chests, all or nothing.
             ///     Runs after other mods' prefixes (low priority). If one of them already paid the whole cost and
             ///     skipped the original (e.g. AdventureBackpacks' craft-from-backpack), take nothing, or the player
             ///     would pay twice.

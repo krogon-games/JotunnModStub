@@ -21,6 +21,8 @@ namespace CraftingOverhaul
         public const string PluginName = "CraftingOverhaul";
         public const string PluginVersion = "0.1.0";
 
+        private static readonly Action LeaseTick = Containers.ChestLeases.Update;
+
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;
 
@@ -50,6 +52,7 @@ namespace CraftingOverhaul
         private void Update()
         {
             _configWatcher?.Tick();
+            Safe.Run("move chest reservations along", LeaseTick);
         }
 
         private void OnDestroy()

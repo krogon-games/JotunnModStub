@@ -76,7 +76,7 @@ Phase 5 (map affixes and tiers, 3-star creatures), phase 6's boss particles, the
 ## Outstanding bugs and open issues
 
 - Corruption's shard and essences have no biome in recipe grouping: they come from our drop patches, which the biome detection doesn't see. Harmless today (map recipes still group by their biome material).
-- Chest race: two players taking from the same chest at the same instant, last write wins (same as Valheim Plus).
+- Chest race: two players taking from the same chest at the same instant, last write wins (same as Valheim Plus). **Fixed in code 2026-11-07** (branch `claude/admiring-babbage-rk1w8d`: exclusive access through the game's chest handshake before paying); untested with two players.
 - Any-one-ingredient recipes don't use chest contents.
 - Talisman families group widely by name (one Blob charm covers every ooze; Troll covers frost trolls).
 - Riftforge has no recipes (expected until phase 4); ingredient amounts are first guesses.

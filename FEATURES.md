@@ -11,7 +11,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Recipe search box](#recipe-search-box) | UI | Tested in-game | `1 - Recipe List` → `ShowSearchBar`, `SearchIngredients`, `ClearSearchOnClose` | `RecipeList/SearchBar.cs`, `RecipeList/RecipeListOrganizer.cs`, `ModConfig.cs` | 2026-10-26 |
 | [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Tested in-game | `1 - Recipe List` → `Grouping`, `StartCollapsed`, `HeaderFontSize` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-10-26 |
 | [Data-driven biome detection](#data-driven-biome-detection) | UI | Tested in-game | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*` (incl. `HatchCollector.cs`), `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
-| [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `ModConfig.cs` | 2026-10-28 |
+| [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game (single player); exclusive access before paying (2026-11-07) built, untested | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `Containers/ChestLeases.cs`, `Containers/ChestLeaseRules.cs`, `CraftingOverhaul.cs`, `CraftingOverhaul.Tests/ChestLeaseTests.cs`, `ModConfig.cs` | 2026-11-07 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `Biomes/Collectors/LocationCollector.cs`, `CraftingOverhaul.cs` | 2026-10-29 |
 | [Config reload on save](#config-reload-on-save) | Dev tools | Tested in-game | Both plugins: `0 - Development` → `ReloadConfigOnFileChange` | `Shared/ConfigWatcher.cs`, `CraftingOverhaul/CraftingOverhaul.cs`, `Corruption/CorruptionPlugin.cs`, both `.csproj` | 2026-10-28 |
 | [Corruption shards](#corruption-shards) | Loot | Tested in-game | Corruption: `1 - Corruption Shards` → `OneStarChance`, `TwoStarChance`, `BossShardsMin`, `BossShardsMax`, `BossShardsFirstKillOnly`; `2 - Look` → `ShardCustomModel`, `ShardGlowIntensity`, `ShardGlowRange`; `2 - Look` → `ShardBaseItem`, `ShardColor`, `ShardTintStrength` | `Corruption/Content/ShardItem.cs`, `Corruption/Content/Corrupted.cs`, `Corruption/Content/ShardDrops.cs`, `Corruption/Rules/ShardRules.cs`, `Corruption/CorruptionConfig.cs`, `CraftingOverhaul.Tests/ShardRulesTests.cs`, `Corruption/Content/GemModel.cs`, `Corruption/Rules/ObjMesh.cs`, `Corruption/Assets/*`, `tools/make_shard.py` | 2026-10-28 |
@@ -117,12 +117,14 @@ Any mod that also re-sorts or re-lays out `InventoryGui.m_availableRecipes` or t
 Chests are skipped when:
 - they're another player's private chest;
 - they're inside a ward you don't have access to;
-- someone else has them open;
+- someone else has them open or is paying from them;
 - they're listed in `ExcludedContainers`.
 
 Ship and cart storage and tombstones are never used. Taking from a ship or cart would make you its network owner, which disrupts whoever is sailing or pulling it.
 
 **How to use it:** Just craft or build near your chests. Nothing to click.
+
+**Exclusive access before paying (2026-11-07, untested in game):** a chest is only paid from while it's yours alone. Pressing Craft asks the chests the recipe needs for exclusive access through the game's own chest handshake (the one that opens a chest, so it works even if the chest's owner doesn't have this mod): the owner hands the chest over with its latest contents and the chest is marked in use (its lid opens; nobody else can open it or pay from it). When the craft bar finishes, the craft goes ahead only with the chests that are held, and the game's own "enough materials?" check counts only those, so it's checked against stock nobody else can change. If a chest isn't held yet, the craft waits for it ("Waiting for the nearby chests…", usually a fraction of a second). If a chest is refused (someone else is using it) or doesn't answer within 3 seconds, the craft is tried with what's held; if that isn't enough, nothing is crafted and nothing is taken ("A chest you need is in use by someone else…"). Taking from chests is all or nothing. Chests are given back right after the craft, or when it's abandoned. Building: while the selected piece needs chest materials, the chests holding them are held, and given back 3 seconds after they're no longer needed or when you put the hammer away; a refused chest shows "A nearby chest is in use by someone else…" and isn't asked again for 3 seconds.
 
 **Config settings** (admin-only: when the mod is on a server, the server's values apply to everyone):
 
@@ -136,7 +138,10 @@ Ship and cart storage and tombstones are never used. Taking from a ship or cart 
 **Known issues:**
 - Play-test 2026-10-26: crafting at the workbench and building with materials from nearby chests both work in single player. Multiplayer is untested; see `docs/multiplayer-test.md`.
 - Play-test 2026-10-28 with AdventureBackpacks: crafting from the backpack alone, and from backpack + chest, charge the right amounts (the double-payment fix works). With the backpack panel open the layout still works, but **needs UI work later** (user). Bulk planting with PlantEasily from chests not yet tested.
-- If two players take from the same chest at the same moment, the last save wins and one of them may keep or lose items incorrectly. Valheim Plus's version has the same race.
+- **Fixed 2026-11-07 (review; untested in game):** two players taking from the same chest at the same moment could both be served from their own copy of it: one payment lost (a free craft) or items taken twice. Now a chest must be held (above) before it's paid from. Tested with a simulation of the game's chest handshake (`ChestLeaseTests`), not yet with two players.
+- While you craft or build from a chest, other players can't open it ("in use"), as when you have it open. The reservation is short (the craft bar, or 3 seconds after building stops needing it).
+- With AdventureBackpacks, the backpack's stock isn't known when you press Craft or while you hold the hammer (AdventureBackpacks only counts it inside its own crafting code), so chests holding materials the backpack would cover may be reserved too. Payment order is unchanged (tabs, backpack, chests, bag), so nothing extra is taken.
+- If you open a chest's window yourself while it's reserved for a craft, it stays yours until you close it.
 - Recipes that accept any one of several ingredients don't use chest contents. The game picks the item from your inventory directly, so chest stock isn't shown for them either.
 - Chest contents are re-checked every 0.5 s, so a chest someone just changed may be briefly out of date in the counts.
 
@@ -144,8 +149,13 @@ Ship and cart storage and tombstones are never used. Taking from a ship or cart 
 
 | Target | Patch | Purpose |
 |---|---|---|
-| `Inventory.CountItems(string, int, bool)` | Postfix | Adds nearby chest stock to the player inventory's count, only inside the crafting/building code paths below. |
-| `Inventory.RemoveItem(string, int, int, bool)` | Prefix, low priority (changes `amount`) | When paying a cost, takes the shortfall from nearby chests, then lets vanilla remove the rest from the player. Runs after other mods' prefixes and does nothing if one of them already skipped the original (it paid). |
+| `Inventory.CountItems(string, int, bool)` | Postfix | Adds nearby chest stock to the player inventory's count, only inside the crafting/building code paths below; inside `DoCrafting` and `UpdatePlacement` (right before paying) only held chests count. |
+| `Inventory.RemoveItem(string, int, int, bool)` | Prefix, low priority (changes `amount`) | When paying a cost, takes the shortfall from held chests, all or nothing, then lets vanilla remove the rest from the player. Runs after other mods' prefixes and does nothing if one of them already skipped the original (it paid). |
+| `InventoryGui.OnCraftPressed` | Postfix | Asks for exclusive access to the chests the craft needs. |
+| `InventoryGui.DoCrafting` | Prefix, high priority (can skip the original) | If the craft needs chests not yet held, waits for them instead of crafting (nothing made or taken); replayed when they're held, refused or time out. |
+| `InventoryGui.DoCrafting`, `Player.UpdatePlacement` | Prefix + Finalizer | Mark "about to pay": only held chests count. |
+| `Container.RPC_OpenResponse` | Prefix (skips the original for our own requests) | Takes the chest owner's answer to our request, so it never opens the chest window or says "in use". |
+| `Player.ConsumeResources` | Prefix (reads only) | Notes that a waiting craft went through. |
 | `InventoryGui.UpdateCraftingPanel`, `InventoryGui.UpdateRecipe`, `InventoryGui.DoCrafting` | Prefix + Finalizer | Mark "crafting in progress" so the two inventory patches apply. |
 | `Player.UpdatePlacement`, `Hud.UpdatePieceBuildStatus`, `Hud.UpdatePieceBuildStatusAll`, `Hud.SetupPieceInfo` | Prefix + Finalizer | Mark "building in progress" (when `UseForBuilding` is on). |
 | `Player.HaveRequirementItems` | Prefix + Finalizer | Turns chest counting off for any-one-ingredient recipes. |
@@ -158,7 +168,7 @@ Ship and cart storage and tombstones are never used. Taking from a ship or cart 
 
 **Conflicts:** Valheim Plus (and mods like Craft From Containers or AzuCraftyBoxes) have their own craft-from-chests features. If one of those is also on, chest contents may be counted twice, and crafting can fail or take the wrong amounts. Use only one: turn off either this feature (`Enabled = false`) or the other mod's.
 
-Networking mods that move object ownership around, such as NetworkPerformanceSystem (see `docs/coop-networking.md`), also touch chest ownership. This feature claims ownership of a chest right before taking from it, which should work alongside them, but the combination is untested.
+Networking mods that move object ownership around, such as NetworkPerformanceSystem (see `docs/coop-networking.md`), also touch chest ownership. This feature is handed a chest's ownership through the game's own chest handshake and pays only while it still owns it, which should work alongside them, but the combination is untested.
 
 ---
 
@@ -1206,6 +1216,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-07
+- **Craft from chests: exclusive access before paying** (review fix, untested in game): a chest is paid from only once its owner has handed it over through the game's own chest handshake and it's marked in use; the craft's "enough materials?" check counts only those chests; taking from chests is all or nothing; a refused chest means nothing crafted and nothing taken (unless what you carry covers it). Fixes free or double-paid crafts when two players use the same chest at once.
 - **Magic and Rare drops from every kill** (review fix, untested in game): creatures whose corpse carries their loot (most of them) now roll too, once per nearby player, on the creature owner's game; genuine no-drop creatures, players and tamed creatures still don't.
 - **Inventory tabs load safely** (review fix, untested in game): a tab whose saved data can't be read completely (damaged, or an item whose prefab is missing) is locked for the session instead of shown, its saved data is kept unchanged, and a message says so. Fixes currency coming back after a reload, and pickups vanishing, when one tab was damaged.
 
