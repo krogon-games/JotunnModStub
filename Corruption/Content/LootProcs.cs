@@ -223,9 +223,14 @@ namespace Corruption.Content
             }
         }
 
-        /// <summary>Sends a proc's own hit. Marked, so Skadi, Rallying and Wrath leave it alone (procs don't trigger procs).</summary>
-        private static void ProcHit(Character target, HitData hit)
+        /// <summary>
+        ///     Sends a proc's own hit. Marked, so Skadi, Rallying and Wrath leave it alone (procs don't trigger procs), and
+        ///     tagged with the item it comes from (Wrath: the weapon; Reprisal: the blocking item), whose knockback and life
+        ///     steal affixes then apply to it.
+        /// </summary>
+        private static void ProcHit(Character target, HitData hit, ItemDrop.ItemData source)
         {
+            HitSources.Tag(hit, source);
             ProcHits.Add(hit);
             try
             {
@@ -272,7 +277,7 @@ namespace Corruption.Content
                 hit.m_damage.m_lightning = blocker.GetBaseBlockPower(blocker.m_quality) * ProcRules.ReprisalBlockShare;
                 hit.m_skill = Skills.SkillType.Blocking;
                 s_lightning?.Create(hit.m_point, Quaternion.identity, null, 1f, -1);
-                ProcHit(attacker, hit);
+                ProcHit(attacker, hit, blocker);
             }
         }
 
@@ -401,7 +406,8 @@ namespace Corruption.Content
                         }
                     }
 
-                    var weapon = player.GetCurrentWeapon();
+                    // The item this hit comes from: an arrow's bow, even if the player has switched weapons since.
+                    var weapon = HitSources.For(hit, player);
                     float skadi = Loot.Total(weapon, "frost_stacking");
                     if (skadi > 0f)
                     {
@@ -460,7 +466,7 @@ namespace Corruption.Content
                 hit.m_skill = weapon.m_shared.m_skillType;
                 hit.m_blockable = weapon.m_shared.m_blockable;
                 hit.m_dodgeable = weapon.m_shared.m_dodgeable;
-                ProcHit(target, hit);
+                ProcHit(target, hit, weapon);
             }
         }
 

@@ -324,7 +324,9 @@ namespace Corruption.Content
 
     /// <summary>
     ///     Knockback, backstab and life steal affixes. A hit's push force and backstab bonus come from the weapon's shared data, so
-    ///     they are raised on the attacker's game, where the hit is made, before it is sent to the target's owner.
+    ///     they are raised on the attacker's game, where the hit is made, before it is sent to the target's owner. The
+    ///     affixes are those of the item the hit comes from (<see cref="HitSources" />): an arrow uses the bow it was
+    ///     shot from, even if the player has switched weapons since.
     /// </summary>
     [HarmonyPatch(typeof(Character), nameof(Character.Damage))]
     internal static class LootHitEffects
@@ -337,7 +339,7 @@ namespace Corruption.Content
             }
             Safe.Run("apply knockback and backstab affixes", () =>
             {
-                var weapon = Player.m_localPlayer.GetCurrentWeapon();
+                var weapon = HitSources.For(hit, Player.m_localPlayer);
                 hit.m_pushForce *= 1f + Loot.Total(weapon, "knockback_percent") / 100f;
                 hit.m_backstabBonus *= 1f + Loot.Total(weapon, "backstab_percent") / 100f;
 
