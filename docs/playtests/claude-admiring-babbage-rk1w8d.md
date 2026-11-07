@@ -62,9 +62,13 @@ Everyone on the new build (check the build stamp lines in each log).
 4. [ ] Everyone: look in your log for `Rip waves: this game now runs the waves of rip …` (whose game took over) and the `alive (counted here) X of Y; spawning Z` lines after it. Count roughly how many wave creatures are alive (C near the heart, B far away).
 5. [ ] Send Claude the log lines from the game that took over, plus your counts. If that game's "alive" number was lower than the real number and it spawned more than the limit (Y), the problem is confirmed and gets fixed next round.
 
-### Your feedback (date)
-- (to fill in after the play-test)
+### Your feedback (2026-11-07, single player)
+- **A. Inventory tabs, steps 1–6:** passed: "1 through to 6 all tested and works". One issue: "the yellow text doesn't fit in the screen and goes out of bounds" (the locked-tab message).
+- **B. Magic and Rare drops, step 1:** passed: "Killed over 100 greydwarves, about 60 1 star and 60 2 star. Only had around 5 items drop but at least that works now." Step 2 (tamed animal, optional) not reported.
+- **C–H:** not done yet ("I'll continue the rest of the playtesting later").
 
 ### What changed after the feedback
+- **A, the message:** it was one long line, and the game's centre message doesn't wrap. Now three short lines ("Your Maps tab couldn't be loaded and is locked." / "Nothing in it was lost; it's kept in your save." / "New pickups go to your bag."). To re-check: repeat A1–A2 and A5 (undo) and see that the whole message fits on screen.
+- **B, "only around 5":** that's the expected rate, not a bug. From `drop_chances.csv` and `drop_modifiers.csv`: a 1-star kill drops Magic or Rare about 3.7% of the time, a 2-star kill about 4.5%, so 60 + 60 kills give about 5 on average. Raising it would be a balance choice for the loot round (the numbers are approved), so nothing changed.
 
 ### Final play-test (date)
