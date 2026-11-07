@@ -11,62 +11,103 @@ namespace Corruption.Content
     ///     Magic and Rare drops from kills. Runs on the machine that simulates the creature, where vanilla drops its loot.
     ///     Personal loot (design): every player within the game's own "nearby players" range (the range it counts
     ///     players in to scale creature difficulty, <c>Game.m_difficultyScaleRange</c>) rolls separately.
+    ///     Both of the game's death paths count: drops at once, and drops handed to the ragdoll (which turns the
+    ///     creature's own drops off first); see <see cref="DeathLoot" />.
     /// </summary>
-    [HarmonyPatch(typeof(CharacterDrop), nameof(CharacterDrop.OnDeath))]
     internal static class LootDrops
     {
         private static readonly List<Player> Nearby = new List<Player>();
+        private static readonly DeathLoot Deaths = new DeathLoot();
 
-        private static void Postfix(CharacterDrop __instance)
+        [HarmonyPatch(typeof(Character), nameof(Character.OnDeath))]
+        private static class DeathScope
         {
-            Safe.Run("drop Magic and Rare loot", () =>
+            private static void Prefix(Character __instance)
             {
-                var character = __instance.m_character;
-                if (!__instance.m_dropsEnabled || !Loot.Loaded || !CorruptionConfig.LootEnabled.Value || !character ||
-                    character.IsPlayer() || character.IsTamed())
+                try
                 {
-                    return;
+                    var drop = __instance ? __instance.GetComponent<CharacterDrop>() : null;
+                    Deaths.BeginDeath(drop, drop && drop.m_dropsEnabled);
                 }
+                catch (System.Exception ex)
+                {
+                    Deaths.BeginDeath(null, false);
+                    Safe.Report("track a creature's death for loot", ex);
+                }
+            }
 
-                var sources = new List<string>();
-                int stars = character.GetLevel() - 1;
-                if (stars > 0)
-                {
-                    sources.Add("star_" + Mathf.Min(stars, 3));
-                }
-                // Maps have no tiers yet, so every rip counts as tier 1.
-                if (Maddened.IsMaddened(character))
-                {
-                    sources.Add("rip_tier_1");
-                }
-                if (character.IsBoss() && CorruptedBosses.IsCorrupted(character))
-                {
-                    sources.Add("corrupted_boss");
-                }
+            private static void Finalizer() => Deaths.EndDeath();
+        }
 
-                Vector3 position = character.GetCenterPoint();
-                string biome = Loot.BiomeAt(position);
-                float range = Game.instance ? Game.instance.m_difficultyScaleRange : 100f;
-                Nearby.Clear();
-                Player.GetPlayersInRange(position, range, Nearby);
-                int players = Mathf.Max(1, Nearby.Count);
-                for (int i = 0; i < players; i++)
+        /// <summary>The ragdoll takes the creature's drops (the game then turns <c>m_dropsEnabled</c> off): still a kill that rolls.</summary>
+        [HarmonyPatch(typeof(Ragdoll), nameof(Ragdoll.Setup))]
+        private static class RagdollScope
+        {
+            private static void Postfix(Ragdoll __instance)
+            {
+                if (__instance)
                 {
-                    foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
+                    Deaths.RagdollSetup(__instance.m_dropItems);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(CharacterDrop), nameof(CharacterDrop.OnDeath))]
+        private static class Rolls
+        {
+            private static void Postfix(CharacterDrop __instance)
+            {
+                Safe.Run("drop Magic and Rare loot", () =>
+                {
+                    var character = __instance.m_character;
+                    if (!Deaths.TakeRolls(__instance, __instance.m_dropsEnabled) || !Loot.Loaded || !CorruptionConfig.LootEnabled.Value ||
+                        !character || character.IsPlayer() || character.IsTamed() ||
+                        // Only the creature's owner rolls (the game only calls this there; checked again in case another mod does).
+                        (character.m_nview && character.m_nview.IsValid() && !character.m_nview.IsOwner()))
                     {
-                        // Uniques come with a later step.
-                        if (rarity != "magic" && rarity != "rare")
+                        return;
+                    }
+
+                    var sources = new List<string>();
+                    int stars = character.GetLevel() - 1;
+                    if (stars > 0)
+                    {
+                        sources.Add("star_" + Mathf.Min(stars, 3));
+                    }
+                    // Maps have no tiers yet, so every rip counts as tier 1.
+                    if (Maddened.IsMaddened(character))
+                    {
+                        sources.Add("rip_tier_1");
+                    }
+                    if (character.IsBoss() && CorruptedBosses.IsCorrupted(character))
+                    {
+                        sources.Add("corrupted_boss");
+                    }
+
+                    Vector3 position = character.GetCenterPoint();
+                    string biome = Loot.BiomeAt(position);
+                    float range = Game.instance ? Game.instance.m_difficultyScaleRange : 100f;
+                    Nearby.Clear();
+                    Player.GetPlayersInRange(position, range, Nearby);
+                    int players = DeathLoot.RollsFor(Nearby.Count);
+                    for (int i = 0; i < players; i++)
+                    {
+                        foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
                         {
-                            continue;
-                        }
-                        var item = Loot.Create(rarity, biome);
-                        if (item != null)
-                        {
-                            Loot.Drop(item, position);
+                            // Uniques come with a later step.
+                            if (rarity != "magic" && rarity != "rare")
+                            {
+                                continue;
+                            }
+                            var item = Loot.Create(rarity, biome);
+                            if (item != null)
+                            {
+                                Loot.Drop(item, position);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
     }
 

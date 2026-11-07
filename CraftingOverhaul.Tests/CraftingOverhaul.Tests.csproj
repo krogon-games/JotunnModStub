@@ -36,6 +36,7 @@
     <Compile Include="..\Corruption\Rules\ShatterRules.cs" Link="Linked\ShatterRules.cs" />
     <Compile Include="..\Corruption\Rules\TabRules.cs" Link="Linked\TabRules.cs" />
     <Compile Include="..\Corruption\Rules\TabStore.cs" Link="Linked\TabStore.cs" />
+    <Compile Include="..\Corruption\Rules\DeathLoot.cs" Link="Linked\DeathLoot.cs" />
     <Compile Include="..\Corruption\Rules\LootBases.cs" Link="Linked\LootBases.cs" />
     <Compile Include="..\Corruption\Rules\LootRules.cs" Link="Linked\LootRules.cs" />
     <Compile Include="..\Corruption\Rules\LootItem.cs" Link="Linked\LootItem.cs" />
