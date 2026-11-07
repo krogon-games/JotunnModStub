@@ -34,6 +34,7 @@ namespace Corruption.Content
                 { "corruption_tab_bag", "Bag" },
                 { "corruption_tab_currency", "Currency" },
                 { "corruption_tab_maps", "Maps" },
+                { "corruption_tab_locked", "Your {0} tab couldn't be loaded, so it's locked this session. Nothing in it was lost: its saved contents are kept unchanged. New pickups go to your bag. Details in the BepInEx log." },
                 { "corruption_talisman_subtitle", "Talisman: place in a Talisman slot" },
                 { "piece_riftforge_description", "A forge that works the void itself. Here maps into the unknown are made." },
                 { "corruption_map_subtitle", "Map: use it to open a rip" },

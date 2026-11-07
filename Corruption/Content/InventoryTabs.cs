@@ -33,8 +33,10 @@ namespace Corruption.Content
         private static Player _owner;
         private static Inventory _currency;
         private static Inventory _maps;
-        /// <summary>Set when a character's saved tabs couldn't be read: they're then never saved over.</summary>
-        private static bool _loadFailed;
+        /// <summary>Which tabs loaded completely; a tab that didn't is locked and its saved blob never written over.</summary>
+        private static readonly TabStore Store = new TabStore(CurrencyKey, MapsKey);
+        /// <summary>The locked-tab warning, shown once the HUD is up.</summary>
+        private static string _pendingWarning;
         private static float _nextSweep;
         private static bool _movedToGrave;
         private static Func<int> _eaqsVisibleRows;
@@ -42,7 +44,10 @@ namespace Corruption.Content
 
         public static bool Enabled => CorruptionConfig.TabsEnabled.Value;
 
-        /// <summary>The local player's inventory for a tab (created empty for a new character), or null.</summary>
+        /// <summary>
+        ///     The local player's inventory for a tab (created empty for a new character), or null. Null too for a tab
+        ///     that couldn't be loaded (<see cref="IsLocked" />): nothing is spent from it or put in it this session.
+        /// </summary>
         public static Inventory Get(InventoryTab tab)
         {
             var player = Player.m_localPlayer;
@@ -51,7 +56,30 @@ namespace Corruption.Content
                 return null;
             }
             Ensure(player);
-            return tab == InventoryTab.Currency ? _currency : _maps;
+            return IsLocked(tab) ? null : tab == InventoryTab.Currency ? _currency : _maps;
+        }
+
+        /// <summary>Whether a tab's saved contents couldn't be loaded this session (it's then kept in the save, untouched).</summary>
+        public static bool IsLocked(InventoryTab tab)
+        {
+            return tab != InventoryTab.None && !Store.IsUsable(KeyOf(tab));
+        }
+
+        private static string KeyOf(InventoryTab tab) => tab == InventoryTab.Currency ? CurrencyKey : MapsKey;
+
+        /// <summary>The usable tabs (none, one or both).</summary>
+        private static IEnumerable<Inventory> UsableTabs()
+        {
+            var currency = Get(InventoryTab.Currency);
+            if (currency != null)
+            {
+                yield return currency;
+            }
+            var maps = Get(InventoryTab.Maps);
+            if (maps != null)
+            {
+                yield return maps;
+            }
         }
 
         /// <summary>The tab an item belongs in, if the tabs are on; null for everything else.</summary>
@@ -67,7 +95,8 @@ namespace Corruption.Content
 
         public static bool IsTab(Inventory inventory)
         {
-            return inventory != null && (inventory == _currency || inventory == _maps) && _owner == Player.m_localPlayer;
+            return inventory != null && _owner == Player.m_localPlayer &&
+                   (inventory == _currency && !IsLocked(InventoryTab.Currency) || inventory == _maps && !IsLocked(InventoryTab.Maps));
         }
 
         /// <summary>The first item in the bag or the tabs that matches; <paramref name="inventory" /> is where it is.</summary>
@@ -113,7 +142,8 @@ namespace Corruption.Content
                 return;
             }
             _owner = player;
-            _loadFailed = false;
+            Store.Reset();
+            _pendingWarning = null;
             _currency = NewTab("$corruption_tab_currency");
             _maps = NewTab("$corruption_tab_maps");
         }
@@ -150,37 +180,82 @@ namespace Corruption.Content
 
         // ------------------------------------------------------------ saving with the character
 
+        /// <summary>
+        ///     Loads each tab from its own saved blob, transactionally (<see cref="TabStore" />): the blob is read into a
+        ///     scratch inventory and only a complete load is shown. A blob that can't be read completely (garbled, an
+        ///     item whose prefab is missing) locks that tab for the session and keeps the blob, untouched, in the save.
+        /// </summary>
         [HarmonyPatch(typeof(Player), nameof(Player.Load))]
         private static class Load_Patch
         {
+            /// <summary>Locked first: if the game's load or anything below fails, both tabs stay locked and their saves untouched.</summary>
+            private static void Prefix(Player __instance)
+            {
+                try
+                {
+                    Ensure(__instance);
+                }
+                finally
+                {
+                    Store.BeginLoad();
+                }
+            }
+
             private static void Postfix(Player __instance)
             {
                 Safe.Run("load the inventory tabs", () =>
                 {
-                    Ensure(__instance);
                     _currency.RemoveAll();
                     _maps.RemoveAll();
-                    try
-                    {
-                        Read(__instance, CurrencyKey, _currency);
-                        Read(__instance, MapsKey, _maps);
-                    }
-                    catch
-                    {
-                        // Keep what's saved untouched rather than overwrite it with empty tabs.
-                        _loadFailed = true;
-                        throw;
-                    }
+                    var problems = new List<string>();
+                    LoadTab(__instance, CurrencyKey, _currency, "$corruption_tab_currency", problems);
+                    LoadTab(__instance, MapsKey, _maps, "$corruption_tab_maps", problems);
+                    _pendingWarning = problems.Count == 0 ? null : string.Join("\n", problems);
                 });
             }
 
-            private static void Read(Player player, string key, Inventory tab)
+            private static void LoadTab(Player player, string key, Inventory tab, string nameToken, List<string> problems)
             {
-                if (player.m_customData.TryGetValue(key, out string text) && !string.IsNullOrEmpty(text))
+                Inventory scratch = null;
+                bool complete = Store.Load(player.m_customData, key, bytes => ReadInto(tab, bytes, out scratch));
+                if (complete)
                 {
-                    tab.Load(new ZPackage(Convert.FromBase64String(text)));
+                    if (scratch != null)
+                    {
+                        tab.m_inventory.AddRange(scratch.m_inventory);
+                        tab.Changed();
+                    }
+                    return;
                 }
+                Jotunn.Logger.LogError($"Inventory tabs: the {key} tab couldn't be loaded: {Store.Problem(key)}. It is locked " +
+                                       "this session: nothing is taken from it or put in it, and its saved contents are kept " +
+                                       "unchanged in the character file. Pickups that would go there go to the bag.");
+                problems.Add(string.Format(Localization.instance.Localize("$corruption_tab_locked"),
+                    Localization.instance.Localize(nameToken)));
             }
+
+            /// <summary>The game's own loader into a scratch inventory of the tab's size; counts what arrived.</summary>
+            private static TabLoadReport ReadInto(Inventory tab, byte[] bytes, out Inventory scratch)
+            {
+                var header = new ZPackage(bytes);
+                int version = header.ReadInt();
+                int expected = version >= (int)global::Version.Item.Smaller ? header.ReadUShort() : header.ReadInt();
+                scratch = new Inventory(tab.m_name, null, tab.GetWidth(), tab.GetHeight());
+                var pkg = new ZPackage(bytes);
+                scratch.Load(pkg);
+                return new TabLoadReport { Expected = expected, Loaded = scratch.m_inventory.Count, ReadToEnd = pkg.GetPos() >= pkg.Size() };
+            }
+        }
+
+        /// <summary>Shows the locked-tab warning once the player is in the world.</summary>
+        private static void ShowPendingWarning(Player player)
+        {
+            if (_pendingWarning == null || !MessageHud.instance)
+            {
+                return;
+            }
+            player.Message(MessageHud.MessageType.Center, _pendingWarning);
+            _pendingWarning = null;
         }
 
         [HarmonyPatch(typeof(Player), nameof(Player.Save))]
@@ -188,14 +263,15 @@ namespace Corruption.Content
         {
             private static void Prefix(Player __instance)
             {
-                if (__instance != _owner || _currency == null || _loadFailed)
+                if (__instance != _owner || _currency == null)
                 {
                     return;
                 }
                 Safe.Run("save the inventory tabs", () =>
                 {
-                    __instance.m_customData[CurrencyKey] = Write(_currency);
-                    __instance.m_customData[MapsKey] = Write(_maps);
+                    // A locked tab's blob stays exactly as it was loaded.
+                    Store.Save(__instance.m_customData, CurrencyKey, () => Write(_currency));
+                    Store.Save(__instance.m_customData, MapsKey, () => Write(_maps));
                 });
             }
 
@@ -308,12 +384,19 @@ namespace Corruption.Content
         {
             private static void Postfix(Player __instance)
             {
-                if (__instance != Player.m_localPlayer || !Enabled || Time.time < _nextSweep)
+                if (__instance != Player.m_localPlayer || Time.time < _nextSweep)
                 {
                     return;
                 }
                 _nextSweep = Time.time + SweepInterval;
-                SweepSafely(__instance);
+                if (_pendingWarning != null)
+                {
+                    ShowPendingWarning(__instance);
+                }
+                if (Enabled)
+                {
+                    SweepSafely(__instance);
+                }
             }
 
             // Separate method: the lambda's captured player would otherwise be allocated on every Update call.
@@ -384,7 +467,10 @@ namespace Corruption.Content
                 }
                 try
                 {
-                    __result += Get(InventoryTab.Currency).CountItems(__0, __1, __2) + Get(InventoryTab.Maps).CountItems(__0, __1, __2);
+                    foreach (var tab in UsableTabs())
+                    {
+                        __result += tab.CountItems(__0, __1, __2);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -404,7 +490,14 @@ namespace Corruption.Content
                 }
                 try
                 {
-                    __result = Get(InventoryTab.Currency).HaveItem(__0, __1) || Get(InventoryTab.Maps).HaveItem(__0, __1);
+                    foreach (var tab in UsableTabs())
+                    {
+                        if (tab.HaveItem(__0, __1))
+                        {
+                            __result = true;
+                            break;
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -430,7 +523,7 @@ namespace Corruption.Content
                 }
                 try
                 {
-                    foreach (var tab in new[] { Get(InventoryTab.Currency), Get(InventoryTab.Maps) })
+                    foreach (var tab in UsableTabs())
                     {
                         int take = TabRules.TakeFromTabs(__1, tab.CountItems(__0, __2, __3));
                         if (take > 0)
@@ -472,7 +565,8 @@ namespace Corruption.Content
                     var bag = __instance.GetInventory();
                     int firstRow = bag.GetHeight();
                     int index = 0;
-                    foreach (var tab in new[] { _currency, _maps })
+                    // A locked tab is empty here; its saved contents stay in the character file.
+                    foreach (var tab in new List<Inventory>(UsableTabs()))
                     {
                         foreach (var item in new List<ItemDrop.ItemData>(tab.GetAllItems()))
                         {
@@ -542,8 +636,10 @@ namespace Corruption.Content
             {
                 var bag = player.GetInventory();
                 int bagFree = bag.GetEmptySlots();
-                int currencyFree = Get(InventoryTab.Currency).GetEmptySlots();
-                int mapsFree = Get(InventoryTab.Maps).GetEmptySlots();
+                var currency = Get(InventoryTab.Currency);
+                var maps = Get(InventoryTab.Maps);
+                int currencyFree = currency != null ? currency.GetEmptySlots() : 0;
+                int mapsFree = maps != null ? maps.GetEmptySlots() : 0;
                 float weight = bag.GetTotalWeight();
                 foreach (var item in grave.GetAllItems())
                 {
@@ -554,12 +650,12 @@ namespace Corruption.Content
                         {
                             continue;
                         }
-                        if (tab == _currency && currencyFree > 0)
+                        if (tab == currency && currencyFree > 0)
                         {
                             currencyFree--;
                             continue;
                         }
-                        if (tab == _maps && mapsFree > 0)
+                        if (tab == maps && mapsFree > 0)
                         {
                             mapsFree--;
                             continue;
