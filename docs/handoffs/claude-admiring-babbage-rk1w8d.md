@@ -1,10 +1,10 @@
 # Handoff: `claude/admiring-babbage-rk1w8d`
 
-**Written:** 2026-11-07 · **Branch:** started from `master` `e56e91f` (up to date with it); 7 commits ahead; no PR yet.
+**Written:** 2026-11-07 · **Branch:** started from `master` `e56e91f` (up to date with it); 8 commits ahead; no PR yet.
 
 ## Stage
 
-Waiting for Krogon's playtest (A and B passed; C–H still to do).
+Waiting for Krogon's playtest (A–D passed alone, except Skadi to re-check with C5–C6; E–H on the server to do).
 
 ## Purpose
 
@@ -12,8 +12,10 @@ Fixes from a code review, in risk order: safe loading of the inventory tabs, Mag
 
 ## Done
 
-- **Tabs (2026-11-07, single player):** locked-tab handling passed, all six steps. The message ran off the screen; now three short lines (re-check).
+- **Tabs (2026-11-07, single player):** locked-tab handling passed, all six steps; the shortened message fits (re-checked).
 - **Loot (2026-11-07, single player):** Magic/Rare from greydwarfs, whose body carries their loot: about 5 from 120 one- and two-star kills, the expected rate.
+- **Arrows (2026-11-07, single player):** life steal follows the bow when switching mid-flight.
+- **Chests alone (2026-11-07):** crafting and building from chests, mixed payment with bag and backpack.
 
 ## Half-done and known issues
 
@@ -31,7 +33,7 @@ None this round (the review gave the fixes; no new balance or design choice was 
 
 ## Playtest
 
-Checklist: [`docs/playtests/claude-admiring-babbage-rk1w8d.md`](../playtests/claude-admiring-babbage-rk1w8d.md): A–D alone (about 40 min), E–H on the dedicated server with 2–3 players. Feedback 2026-11-07: A and B passed; re-check that the shorter tab message fits; C–H to do.
+Checklist: [`docs/playtests/claude-admiring-babbage-rk1w8d.md`](../playtests/claude-admiring-babbage-rk1w8d.md): A–D alone (about 40 min), E–H on the dedicated server with 2–3 players. Feedback 2026-11-07: A–D passed. Skadi showed no blue frost numbers: the game has none (one total per hit) and its slow is too short to see, so the step was wrong; a devcommands-only "Skadi: stack N" message was added, re-test C5–C6.
 
 ## Open questions for Krogon
 
@@ -39,7 +41,7 @@ None new. Step H's result decides whether rip wave counting gets fixed next roun
 
 ## Next steps
 
-1. Krogon: re-check the tab message fits, then C–D alone, then the server steps (E–H).
+1. Krogon: Skadi re-test (C5–C6), then the server steps (E–H).
 2. Fix what fails.
 3. If step H confirms the undercount: fix it, keeping the per-encounter limits.
 4. Final play-test, then a PR into `master`.
@@ -51,7 +53,7 @@ None new. Step H's result decides whether rip wave counting gets fixed next roun
 - Multiplayer sync: read in code, not tested. No new settings or synced data; chest access uses the game's own chest messages, so CraftingOverhaul still works when only some players have it.
 - Assets and names: new text token `corruption_tab_locked` is in `Texts.cs`; prefab `CorruptionShard` exists (ours).
 - FEATURES.md: updated with each fix.
-- In game: A and B passed (Krogon, 2026-11-07); the rest NEEDS KROGON'S PLAYTEST.
+- In game: A–D passed alone (Krogon, 2026-11-07), Skadi to re-check; E–H NEEDS KROGON'S PLAYTEST.
 
 ## Merge notes
 

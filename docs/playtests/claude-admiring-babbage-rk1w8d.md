@@ -27,8 +27,8 @@ What changed, in short:
 
 **C. Arrow affixes (10 min).** You need a bow and arrows, and an axe or sword. Skadi's frost shows as extra frost (blue) damage numbers.
 1. [ ] Equip **only the bow** (nothing in the other hand). F5: `co_affix skadi 5`. → "Added skadi …" to the bow.
-2. [ ] Shoot a creature from far away and, while the arrow flies, switch to the axe. → The hit still shows frost damage (blue number).
-3. [ ] Equip the axe, F5: `co_affix skadi 5` (now on the axe). Equip a **different** bow with no affixes, shoot from far, switch to the axe while the arrow flies. → No frost damage on the arrow's hit.
+2. [ ] Shoot a creature from far away and, while the arrow flies, switch to the axe. → The hit still shows frost damage (blue number). *(Wrong expectation, corrected 2026-11-07: see "What changed after the feedback" and C5–C6.)*
+3. [ ] Equip the axe, F5: `co_affix skadi 5` (now on the axe). Equip a **different** bow with no affixes, shoot from far, switch to the axe while the arrow flies. → No frost damage on the arrow's hit. *(Same correction.)*
 4. [ ] Optional, life steal: take some damage, put `co_affix life_steal 10` on the bow, shoot, switch to a plain weapon mid-flight. → Your health still goes up a little when the arrow hits.
 
 **D. Crafting and building from chests, alone (10 min).** Put wood only in one chest near the workbench.
@@ -70,5 +70,14 @@ Everyone on the new build (check the build stamp lines in each log).
 ### What changed after the feedback
 - **A, the message:** it was one long line, and the game's centre message doesn't wrap. Now three short lines ("Your Maps tab couldn't be loaded and is locked." / "Nothing in it was lost; it's kept in your save." / "New pickups go to your bag."). To re-check: repeat A1–A2 and A5 (undo) and see that the whole message fits on screen.
 - **B, "only around 5":** that's the expected rate, not a bug. From `drop_chances.csv` and `drop_modifiers.csv`: a 1-star kill drops Magic or Rare about 3.7% of the time, a 2-star kill about 4.5%, so 60 + 60 kills give about 5 on average. Raising it would be a balance choice for the loot round (the numbers are approved), so nothing changed.
+
+### Your feedback (2026-11-07, second run, single player)
+- **A–D:** "Everything seems to work as intended." The locked-tab message "is showing good" (fits now). "Lifesteal working well" (C4).
+- **C2–C3, Skadi:** failed as written: "hitting anything with the skadi bow did not show any blue damage in numbers. I tried fire arrows and flint arrows."
+
+### What changed after the second feedback
+- **Skadi:** the checklist was wrong, not (as far as the code shows) Skadi. The game shows **one number per hit**, the total of every damage type, coloured only for weak or resistant targets; there is no separate blue frost number (read in the game code). Skadi's frost is added into that total. Its slowing frost effect lasts frost damage ÷ the target's max health × 10 seconds, so a few points of frost slow for a blink: nothing to see. So there was no way to see Skadi in play. **Added a test-only message:** while `devcommands` is on, each Skadi hit shows "Skadi: stack N, +X frost (weapon name)" at the top left. Re-test with C5–C6:
+  - C5. [ ] `devcommands` on. Bow with Skadi (C1). Shoot the same creature several times in a row, quickly. → Top left: "Skadi: stack 1 …", then stack 2, 3, 4, 5 (it stays at 5), with the frost number growing. Wait 3 s or hit another creature: back to stack 1.
+  - C6. [ ] Shoot, and switch to an axe without Skadi while the arrow flies. → The message still appears (the bow's Skadi). Then put Skadi on the axe only (C3), shoot a plain bow and switch to the axe mid-flight. → No Skadi message for that arrow; hitting with the axe itself shows it.
 
 ### Final play-test (date)

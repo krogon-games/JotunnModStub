@@ -413,7 +413,15 @@ namespace Corruption.Content
                     {
                         int stacks = Skadi.Hit(__instance, weapon, Time.time);
                         var d = hit.m_damage;
-                        hit.m_damage.m_frost += ProcRules.SkadiFrost(d.m_blunt + d.m_slash + d.m_pierce, skadi, stacks);
+                        float frost = ProcRules.SkadiFrost(d.m_blunt + d.m_slash + d.m_pierce, skadi, stacks);
+                        hit.m_damage.m_frost += frost;
+                        // The game shows one number per hit (frost folded in) and Skadi's small frost slows only for a
+                        // blink, so Skadi can't be seen in play. With devcommands on (testing), say what it added.
+                        if (Terminal.m_cheat)
+                        {
+                            player.Message(MessageHud.MessageType.TopLeft,
+                                $"Skadi: stack {stacks}, +{frost:0.#} frost ({Loot.ColoredName(weapon) ?? weapon.m_shared.m_name})");
+                        }
                     }
 
                     if (s_wrathSwing)
