@@ -4,6 +4,8 @@ using System.Reflection;
 using BepInEx.Bootstrap;
 using Corruption.Rules;
 using HarmonyLib;
+using Jotunn.Entities;
+using Jotunn.Managers;
 using UnityEngine;
 
 namespace Corruption.Content
@@ -258,6 +260,106 @@ namespace Corruption.Content
             _pendingWarning = null;
         }
 
+        public static void RegisterCommand()
+        {
+            CommandManager.Instance.AddConsoleCommand(new DamageCommand());
+        }
+
+        /// <summary>
+        ///     co_tabs_damage: replaces a tab's saved data with a damaged copy (an item whose prefab doesn't exist, or
+        ///     cut-off bytes), so the locked-tab handling can be play-tested; <c>undo</c> puts the original back. Both
+        ///     lock the tab at once, so this session's saves don't overwrite what was written; log out and back in.
+        /// </summary>
+        private sealed class DamageCommand : ConsoleCommand
+        {
+            public override string Name => "co_tabs_damage";
+
+            public override string Help =>
+                "Corruption (testing): co_tabs_damage <currency|maps> <missing|garbled|undo> - damage a tab's saved data to test " +
+                "how a broken save is handled (the original is kept and 'undo' restores it); log out and back in after each";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var player = Player.m_localPlayer;
+                string key = args.Length > 0 && args[0] == "currency" ? CurrencyKey : args.Length > 0 && args[0] == "maps" ? MapsKey : null;
+                string mode = args.Length > 1 ? args[1] : null;
+                if (!player || player != _owner || key == null || (mode != "missing" && mode != "garbled" && mode != "undo"))
+                {
+                    Console.instance.Print(Help);
+                    return;
+                }
+                var tab = key == CurrencyKey ? _currency : _maps;
+                string backupKey = key + "_backup";
+                var data = player.m_customData;
+                if (mode == "undo")
+                {
+                    if (!data.TryGetValue(backupKey, out string original))
+                    {
+                        Console.instance.Print("Nothing to undo for that tab.");
+                        return;
+                    }
+                    data[key] = original;
+                    data.Remove(backupKey);
+                    Store.Lock(key, "restored by co_tabs_damage undo; log out and back in");
+                    Console.instance.Print("Original tab data restored. Log out and back in: the tab should load normally with all its items.");
+                    return;
+                }
+                if (!data.ContainsKey(backupKey))
+                {
+                    data[backupKey] = Store.IsUsable(key) ? Save_Patch.Write(tab) : data.TryGetValue(key, out string saved) ? saved : "";
+                }
+                string damaged;
+                if (mode == "garbled")
+                {
+                    var bytes = Convert.FromBase64String(Save_Patch.Write(tab));
+                    Array.Resize(ref bytes, bytes.Length / 2);
+                    damaged = Convert.ToBase64String(bytes);
+                }
+                else
+                {
+                    damaged = WithMissingItem(tab);
+                    if (damaged == null)
+                    {
+                        Console.instance.Print("Couldn't make a test item (no shard prefab).");
+                        return;
+                    }
+                }
+                data[key] = damaged;
+                Store.Lock(key, "damaged by co_tabs_damage; log out and back in");
+                Console.instance.Print("Tab data damaged and the tab locked. Log out and back in: expect the locked-tab message. " +
+                                       "Then 'co_tabs_damage " + args[0] + " undo' and log out and back in again to get everything back.");
+            }
+
+            /// <summary>The tab's items plus a copy of a shard pointing at a prefab that doesn't exist.</summary>
+            private static string WithMissingItem(Inventory tab)
+            {
+                var prefab = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab("CorruptionShard") : null;
+                var drop = prefab ? prefab.GetComponent<ItemDrop>() : null;
+                if (!drop)
+                {
+                    return null;
+                }
+                var missing = new GameObject("CorruptionMissingItem_Test");
+                try
+                {
+                    var fake = drop.m_itemData.Clone();
+                    fake.m_dropPrefab = missing;
+                    fake.m_stack = 1;
+                    fake.m_gridPos = new Vector2i(TabRules.Width - 1, TabRules.Height - 1);
+                    var copy = new Inventory(tab.m_name, null, tab.GetWidth(), tab.GetHeight());
+                    copy.m_inventory.AddRange(tab.m_inventory);
+                    copy.m_inventory.Add(fake);
+                    return Save_Patch.Write(copy);
+                }
+                finally
+                {
+                    UnityEngine.Object.Destroy(missing);
+                }
+            }
+        }
+
         [HarmonyPatch(typeof(Player), nameof(Player.Save))]
         private static class Save_Patch
         {
@@ -275,7 +377,7 @@ namespace Corruption.Content
                 });
             }
 
-            private static string Write(Inventory tab)
+            internal static string Write(Inventory tab)
             {
                 var pkg = new ZPackage();
                 tab.Save(pkg);

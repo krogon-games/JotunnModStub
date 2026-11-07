@@ -106,6 +106,14 @@ namespace Corruption.Rules
 
         public bool IsUsable(string key) => _usable[Index(key)];
 
+        /// <summary>Locks a tab for the rest of the session (its saved blob is no longer written), e.g. to test a damaged save.</summary>
+        public void Lock(string key, string problem)
+        {
+            int i = Index(key);
+            _usable[i] = false;
+            _problems[i] = problem;
+        }
+
         /// <summary>Why a tab is locked, or null.</summary>
         public string Problem(string key) => _problems[Index(key)];
 

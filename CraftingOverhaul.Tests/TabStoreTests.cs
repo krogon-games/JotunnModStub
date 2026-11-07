@@ -217,6 +217,22 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void Lock_MidSession_KeepsWhatWasWrittenThroughLaterSaves()
+        {
+            // co_tabs_damage: writes a damaged blob, locks the tab, and the logout save must not overwrite it.
+            var c = new Character();
+            c.CustomData[Maps] = Character.Blob(3);
+            c.Load();
+            string damaged = Character.Blob(3, 0);
+            c.CustomData[Maps] = damaged;
+            c.Store.Lock(Maps, "test");
+            c.Save();
+            Assert.Equal(damaged, c.CustomData[Maps]);
+            c.Load();
+            Assert.False(c.Store.IsUsable(Maps));
+        }
+
+        [Fact]
         public void Reset_UnlocksForTheNextCharacter()
         {
             var store = new TabStore(Currency, Maps);
