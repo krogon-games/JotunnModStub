@@ -181,7 +181,7 @@ Everything else passed 2026-10-31 ("everything looks really good now"). Left: wi
 4. **Player A:** open and keep open the only chest with wood. **Player B:** try a recipe that needs that wood. Expect: can't craft while A has it open; can once A closes it.
 5. **Player A:** put wood in a personal chest (`piece_chest_private`), empty the others. **Player B:** try to craft. Expect: B can't use A's private chest; A can.
 6. **Player A:** place and activate a ward by the bench without adding B. **Player B:** craft from chests inside it. Expect: B can't; after A adds B to the ward, B can.
-7. **Players A and B:** count down and craft from the same chest at the same moment, a few times. Expect: ideally nothing lost or doubled (known race: note how often it happens).
+7. **Players A and B:** count down and craft from the same chest at the same moment, a few times. Expect: nothing lost or doubled. With exactly enough for one craft, only one of you gets it and the other sees "A chest you need is in use by someone else…" (fix of 2026-11-07; full steps in `docs/playtests/claude-admiring-babbage-rk1w8d.md` → E).
 8. **Player B:** go 30+ m away to a second workbench and craft. Expect: the far chests aren't used.
 9. **One player:** bulk-plant a PlantEasily grid with the seeds only in a nearby chest. Expect: it plants and takes the seeds from the chest (not yet tried even alone).
 

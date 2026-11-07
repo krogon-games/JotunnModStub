@@ -84,10 +84,11 @@ namespace CraftingOverhaul.Containers
         {
             Book.Release(chest);
             KeepUntil.Remove(chest);
-            if (Marked.Remove(chest) && chest && chest.m_nview && chest.m_nview.IsValid() && chest.m_nview.IsOwner() &&
-                !IsOpenInOurWindow(chest))
+            if (Marked.Remove(chest) && chest && chest.m_nview && chest.m_nview.IsValid() && !IsOpenInOurWindow(chest))
             {
-                // No open/close sound: nobody opened it as far as the player is concerned.
+                // No open/close sound: nobody opened it as far as the player is concerned. Cleared even if another game
+                // owns it by now, so a stale local mark can't refuse others if it comes back to us; only the owner
+                // writes the shared flag (UpdateUseVisual).
                 chest.m_inUse = false;
                 chest.UpdateUseVisual();
             }

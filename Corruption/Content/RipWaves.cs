@@ -23,6 +23,8 @@ namespace Corruption.Content
         private readonly List<Player> m_players = new List<Player>();
         private float m_range;
         private bool m_resolved;
+        /// <summary>Diagnostics for the ownership-migration check (handoff 2026-11-07): log when this game starts running the waves.</summary>
+        private bool m_ranWaves;
 
         private void Awake()
         {
@@ -41,7 +43,13 @@ namespace Corruption.Content
             {
                 if (!m_nview.IsValid() || !m_nview.IsOwner() || Rips.IsExpired(m_nview.GetZDO()))
                 {
+                    m_ranWaves = false;
                     return;
+                }
+                if (!m_ranWaves)
+                {
+                    m_ranWaves = true;
+                    Jotunn.Logger.LogInfo($"Rip waves: this game now runs the waves of rip {m_nview.GetZDO().m_uid}.");
                 }
                 if (!m_resolved)
                 {
@@ -146,6 +154,8 @@ namespace Corruption.Content
                 }
                 int group = Mathf.Min(Random.Range(entry.m_groupSizeMin, entry.m_groupSizeMax + 1),
                     maxSpawned > 0 ? maxSpawned - alive : 100);
+                // Read-only diagnostics for the ownership-migration check: what this game counts before it spawns.
+                Jotunn.Logger.LogInfo($"Rip waves: {entry.m_prefab.name} alive (counted here) {alive} of {maxSpawned}; spawning {group}.");
                 float radius = group > 1 ? entry.m_groupRadius : 0f;
                 for (int g = 0; g < group; g++)
                 {
