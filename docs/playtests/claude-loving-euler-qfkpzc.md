@@ -46,7 +46,7 @@ What it means: correct, the Currency tab moves any currency in the bag back to t
 - "Besides that, all steps pass."
 
 What it means:
-- B1: open. `co_craft` counts you as at the Riftforge anywhere within its **build range, 10 m** (the game's `m_rangeBuild` for stations), with or without its window open. Waiting for Krogon: how far away was the test?
+- B1: `co_craft` counts you as at the Riftforge anywhere within its **build range, 10 m** (the game's `m_rangeBuild` for stations), with or without its window open. Krogon: "I was at the Riftforge both times" (window open, then closed), so the same answers are expected: **working as designed**, and the at-the-Riftforge half of B1 passed. Not tried yet: the refusal more than 10 m away.
 - The `GetBiome error` warning is the game's own (`Player.UpdateBiome`, once a second): two of the game's biome lookups disagree at the spot you stand on, here a Black Forest / Meadows border. None of our mods patch biome lookups; harmless.
 
 ### What changed after the feedback
