@@ -80,4 +80,7 @@ Everyone on the new build (check the build stamp lines in each log).
   - C5. [ ] `devcommands` on. Bow with Skadi (C1). Shoot the same creature several times in a row, quickly. → Top left: "Skadi: stack 1 …", then stack 2, 3, 4, 5 (it stays at 5), with the frost number growing. Wait 3 s or hit another creature: back to stack 1.
   - C6. [ ] Shoot, and switch to an axe without Skadi while the arrow flies. → The message still appears (the bow's Skadi). Then put Skadi on the axe only (C3), shoot a plain bow and switch to the axe mid-flight. → No Skadi message for that arrow; hitting with the axe itself shows it.
 
+### Skadi re-test (2026-11-08)
+- **C5, C6:** passed: "c5 and c6 checks out". Every solo step (A–D) has now passed. Still to do: the server steps E–H with 2–3 players.
+
 ### Final play-test (date)
