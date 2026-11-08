@@ -1,37 +1,39 @@
 # Handoff: `claude/hopeful-thompson-eyncm8`
 
-**Written:** 2026-11-08 · **Branch:** 2 commits ahead of `master` (`ced0575`), 0 behind; pushed; no PR yet.
+**Written:** 2026-11-08 · **Branch:** ahead of `master` (`ced0575`), 0 behind; PR into `master` opened 2026-11-08.
 
 ## Stage
 
-Waiting for Krogon's playtest.
+Ready to merge.
 
 ## Purpose
 
-Third set of independent code-review fixes (baseline `e56e91f`): corrupted summons during the spawn delay, saved affix values that aren't finite numbers, overflow-safe stat and skill point totals, and the talisman fight-back time when a creature changes owner.
+Third set of code-review fixes (baseline `e56e91f`): corrupted summons during the spawn delay, non-finite saved affix values, overflow-safe point totals, talisman fight-back time across an owner change.
 
 ## Done
 
-Nothing confirmed in game yet.
+Confirmed by Krogon alone (2026-11-08, "A–D passed alone"; no log sent):
+- **Corrupted summons:** at Eikthyr and Moder, normal, wrong or repeated corrupted offerings during the delay → one corrupted boss, one corrupted item used; a normal summon stays normal.
+- **Affix values:** `co_affix` refuses NaN and infinity; a finite 500% is kept; existing loot unchanged.
+- **Points:** spending and relogging work; a lowered `StatPointsPerLevel` keeps the spent points.
+- **Talisman fight-back:** 30 s after a hit, refreshed by the next hit; other creatures unaffected.
 
 ## Half-done and known issues
 
-Built, 366 tests pass, untested in game:
-- **Corrupted summons:** the altar's owner starts the summon (refused while one is queued), marks it corrupted once started, then the offering player's game takes the one item. Anything offered during the delay changes nothing; the old ownership grab (a second boss) is gone.
-- **Saved affix values:** NaN or infinity: no affix effects, logged once, saved text untouched. Finite values never clamped.
-- **Point totals:** saturate instead of overflowing; an oversized saved count reads as int.MaxValue, never 0; no refunds or removals.
-- **Talisman fight-back:** on the creature's ZDO per player id, in world time; each provoking hit logs which game runs the creature.
+- **Multiplayer untested** (left for later by Krogon): the owner logging out mid fight-back, two players offering at one altar. `PLAYTEST.md` → Session 2, 2g.
+- Damaged saves themselves (NaN in a save, huge point counts) can't be made in game; covered by the tests only.
 - **Game code read in 1.0.14** (the cloud has only body-less 1.0.21 references). The corrupted summon repeats `OfferingBowl.RPC_SpawnBoss`'s steps with the game's own methods: if 1.0.21 changed that body, it isn't picked up.
-- Known limits: the corrupted item is taken when the owner's answer arrives; if the player dropped it meanwhile, nothing is taken (the game's own summon has the same gap). Fight-back entries stay on the creature's saved data (one number per provoking player).
+- Known limit: a corrupted item dropped before the owner's answer arrives isn't taken (vanilla has the same gap).
 - Runtime compatibility and performance profiling are still outstanding (review note).
 
 ## Decisions
 
-- 2026-11-08: none needed for this round: the four corrections follow the review, which says no new balance decision is required. (Krogon asked for the fixes directly; the round and branch weren't separately confirmed.)
+- 2026-11-08: none needed for this round: the four corrections follow the review, which says no new balance decision is required. (Krogon asked for the fixes directly.)
+- 2026-11-08: finish the round on the solo play-test; the multiplayer part (E) comes later ("A–D passed alone, multiplayer later").
 
 ## Playtest
 
-[`docs/playtests/claude-hopeful-thompson-eyncm8.md`](../playtests/claude-hopeful-thompson-eyncm8.md): A–D alone, E with a friend (also `PLAYTEST.md` → Session 2, 2g).
+[`docs/playtests/claude-hopeful-thompson-eyncm8.md`](../playtests/claude-hopeful-thompson-eyncm8.md): A–D passed alone; E (server) left for later, also `PLAYTEST.md` → Session 2, 2g.
 
 ## Open questions for Krogon
 
@@ -39,9 +41,8 @@ None.
 
 ## Next steps
 
-1. Krogon: play-test A–D alone; E on the group evening.
-2. Fix whatever the play-test finds; final play-test.
-3. Open the PR into `master`.
+1. Coordinator: merge into `master` and raise Corruption's and Orlog's versions.
+2. On the group evening: Session 2, 2g.
 
 ## Checks
 
@@ -50,8 +51,8 @@ None.
 - Multiplayer sync: PASS, read in code, not tested. Two new altar RPCs (registered on every game, both plugins required everywhere); fight-back time on the creature's ZDO, written only by its owner.
 - Assets and names: SKIPPED (no new assets, items or text tokens; new ZDO key `corruption_provoked_<player id>`).
 - FEATURES.md: PASS.
-- In-game: needs Krogon's playtest.
+- In-game: passed alone (Krogon, 2026-11-08); multiplayer needs Krogon's playtest.
 
 ## Merge notes
 
-Ready to merge: no (Krogon's play-test outstanding). Up to date with `master`; no other remote branch, so no file clashes. **Gameplay changed: version bump needed at merge (Corruption, Orlog).** Shared docs touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`. Patch list change: `OfferingBowl.RPC_RemoveBossSpawnInventoryItems` prefix removed, `OfferingBowl.Start` postfix added.
+Ready to merge: yes. Krogon's solo play-test passed, no check failed, pushed; multiplayer deferred by his decision. Up to date with `master`; no other remote branch, so no file clashes. **Gameplay changed: version bump needed at merge (Corruption, Orlog).** Shared docs touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`. Patch list change: `OfferingBowl.RPC_RemoveBossSpawnInventoryItems` prefix removed, `OfferingBowl.Start` postfix added.

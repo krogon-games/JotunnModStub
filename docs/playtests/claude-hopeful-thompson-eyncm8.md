@@ -7,26 +7,26 @@
 
 ### A. Corrupted summon at Eikthyr's altar (alone)
 Bring: `spawn CorruptedTrophyDeer 2`, `spawn TrophyDeer 4`, `spawn Wood 5`. Put all three on the hotbar. Eikthyr takes **12 s** to arrive after an offering (game data), so there's time.
-1. [ ] Offer one **corrupted** deer trophy (look at the altar, press its hotbar number). Within the 12 s, offer the **normal** trophies, then **wood**, then the **second corrupted** trophy, a few times each → **one** Eikthyr arrives, red. You have **1** corrupted trophy left, all 4 normal ones, all the wood. The log shows `Corrupted offering: Eikthyr summon started.` and `Corrupted offering: Eikthyr summoned corrupted.` **once each**.
-2. [ ] Kill him (or `killall`). Offer **2 normal** trophies, and within the 12 s offer the corrupted one → a **normal** Eikthyr; you keep your corrupted trophy.
-3. [ ] Kill him. Offer the last corrupted trophy with nothing else → red Eikthyr, as before the fix.
+1. [x] Offer one **corrupted** deer trophy (look at the altar, press its hotbar number). Within the 12 s, offer the **normal** trophies, then **wood**, then the **second corrupted** trophy, a few times each → **one** Eikthyr arrives, red. You have **1** corrupted trophy left, all 4 normal ones, all the wood. The log shows `Corrupted offering: Eikthyr summon started.` and `Corrupted offering: Eikthyr summoned corrupted.` **once each**.
+2. [x] Kill him (or `killall`). Offer **2 normal** trophies, and within the 12 s offer the corrupted one → a **normal** Eikthyr; you keep your corrupted trophy.
+3. [x] Kill him. Offer the last corrupted trophy with nothing else → red Eikthyr, as before the fix.
 
 ### B. Corrupted summon at a stand altar (alone)
 At Moder's altar (Mountains; `spawn CorruptedDragonEgg 3`, `spawn DragonEgg 3`).
-1. [ ] One corrupted egg in **every** cup, use the altar, then use it again a few times during the delay → **one** red Moder; the cups empty.
-2. [ ] A mix (2 corrupted + 1 normal) → "Every offering here must be corrupted, or none." and nothing is used up.
+1. [x] One corrupted egg in **every** cup, use the altar, then use it again a few times during the delay → **one** red Moder; the cups empty.
+2. [x] A mix (2 corrupted + 1 normal) → "Every offering here must be corrupted, or none." and nothing is used up.
 
 ### C. Damaged affix values (alone)
 Hold a fresh sword (`spawn SwordBronze`).
-1. [ ] `co_affix enhanced_damage NaN`, then `co_affix enhanced_damage Infinity` → each says `'…' isn't a finite number.`; the sword's tooltip is unchanged.
-2. [ ] `co_affix enhanced_damage 500` → added (a finite value is kept even far outside the table's range): the tooltip shows +500% and the damage numbers are about six times a plain bronze sword's. Drop and pick it up, relog → still there.
-3. [ ] Your existing Magic and Rare items show their names and affix lines as before; no red errors.
+1. [x] `co_affix enhanced_damage NaN`, then `co_affix enhanced_damage Infinity` → each says `'…' isn't a finite number.`; the sword's tooltip is unchanged.
+2. [x] `co_affix enhanced_damage 500` → added (a finite value is kept even far outside the table's range): the tooltip shows +500% and the damage numbers are about six times a plain bronze sword's. Drop and pick it up, relog → still there.
+3. [x] Your existing Magic and Rare items show their names and affix lines as before; no red errors.
 
 ### D. Stat and skill points, and the talisman fight-back (alone)
-1. [ ] `orlog_class Amazon`, `orlog_level 20`, `orlog_stat vitality 10`, `orlog_skill MagicArrow 2`, then `orlog_info` → it lists Vitality +10 and the points left; no error. Relog → the same.
-2. [ ] Lowered setting (admin): in Orlog's config file in `BepInEx/config/` set `StatPointsPerLevel` to `0` and save (it reloads), then `orlog_info` → **0** stat points to spend, and Vitality still **30** (the Amazon's 20 + the 10 spent: nothing refunded or removed). Set it back to `5` → the points to spend come back.
-3. [ ] Wear a Greydwarf charm. Hit one greydwarf once → only it fights back; the log says `Talisman: Greydwarf fights back at <you> for 30 s (run by this game).` About 30 s after the hit it ignores you again; other greydwarfs ignore you throughout.
-4. [ ] Hit it again at about 20 s → it keeps fighting for 30 s after **that** hit (a new log line).
+1. [x] `orlog_class Amazon`, `orlog_level 20`, `orlog_stat vitality 10`, `orlog_skill MagicArrow 2`, then `orlog_info` → it lists Vitality +10 and the points left; no error. Relog → the same.
+2. [x] Lowered setting (admin): in Orlog's config file in `BepInEx/config/` set `StatPointsPerLevel` to `0` and save (it reloads), then `orlog_info` → **0** stat points to spend, and Vitality still **30** (the Amazon's 20 + the 10 spent: nothing refunded or removed). Set it back to `5` → the points to spend come back.
+3. [x] Wear a Greydwarf charm. Hit one greydwarf once → only it fights back; the log says `Talisman: Greydwarf fights back at <you> for 30 s (run by this game).` About 30 s after the hit it ignores you again; other greydwarfs ignore you throughout.
+4. [x] Hit it again at about 20 s → it keeps fighting for 30 s after **that** hit (a new log line).
 
 ### E. With a friend (on the server)
 Also in [`../PLAYTEST.md`](../PLAYTEST.md) → Session 2, 2g. Player A and player B. The game that runs a creature or altar is usually the player who was there first.
@@ -37,3 +37,14 @@ Also in [`../PLAYTEST.md`](../PLAYTEST.md) → Session 2, 2g. Player A and playe
 5. [ ] **The other way round.** A does a normal summon (2 trophies); during the delay **B** offers a corrupted trophy → a **normal** Eikthyr; B keeps the corrupted trophy.
 6. [ ] Swap who goes to the altar first and repeat step 4 once → the same result.
 7. [ ] No red errors on either game (F5).
+
+### Your feedback (2026-11-08)
+- A, B, C, D: "A–D passed alone".
+- E: "multiplayer later" (in `PLAYTEST.md` → Session 2, 2g).
+- No log or build stamp sent with it.
+
+### What changed after the feedback
+- Nothing needed.
+
+### Final play-test (2026-11-08)
+- Passed alone (A–D). E (two players) waits for the group evening.

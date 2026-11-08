@@ -214,7 +214,7 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 2. **D2:** B runs a log A hit once; it breaks by falling or rolling → normal drops, B's log says "without a player's swing".
 3. **D3:** A runs the log, B the stump of one felled tree; both swing Odin's Grace axes at the same moment → one tree's worth of wood or two? Send both players' `Odin's Grace: whole-tree harvest …` lines.
 
-**2g. Review fixes: talisman fight-back and corrupted summons (2026-11-08, not tried yet).** Full steps in [`playtests/claude-hopeful-thompson-eyncm8.md`](playtests/claude-hopeful-thompson-eyncm8.md) → E.
+**2g. Review fixes: talisman fight-back and corrupted summons (2026-11-08; solo part passed, multiplayer left for later by Krogon).** Full steps in [`playtests/claude-hopeful-thompson-eyncm8.md`](playtests/claude-hopeful-thompson-eyncm8.md) → E.
 1. **E1–E2:** B reaches a greydwarf group first (B's game runs them); A, wearing a Greydwarf charm, hits one; B logs out within 10 s → it keeps attacking A for the rest of the 30 s; A's next hit restarts it (the `Talisman: … (run by this game)` line moves to A's log).
 2. **E3:** both wear the charm; A hits one → it attacks A only; the rest ignore both.
 3. **E4–E6:** A offers a corrupted deer trophy at Eikthyr; during the 12 s B offers a corrupted trophy, normal trophies and wood → one red Eikthyr, only A's corrupted trophy used. A normal summon with B's corrupted trophy during the delay → normal Eikthyr, B keeps it.
