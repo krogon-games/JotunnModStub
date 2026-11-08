@@ -47,7 +47,7 @@ Built and merged, but not play-tested (the code is in `master`):
 - **Two dedicated-server fixes** for rips and bosses (PR #22): read in the code, never run on a server. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **PR #53's multiplayer steps** (skipped by you on 2026-11-08): two players on one chest, loot per player, arrows on the server, and a check of a suspected rip-wave undercount when the heart passes to another player's game (needs 3 players). In `PLAYTEST.md` → Session 2, 2e. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **PR #55's multiplayer steps** (left for later by you on 2026-11-08): another player's game running the deposit or log, and a check of a suspected double whole-tree harvest when two players' games each run part of one tree and both swing Odin's Grace at once (not fixed until it's seen; send Claude both players' `Odin's Grace: whole-tree harvest …` lines). In `PLAYTEST.md` → Session 2, 2f. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
-- **Small leftovers:** the adrenaline bar, one click per button, the build stamp, summons fighting players only, weapon-skill and life-steal affixes, crafting an Odin item, PlantEasily planting from chests. [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
+- **Small leftovers:** one click per button, the build stamp, weapon-skill and life-steal affixes, crafting an Odin item, PlantEasily planting from chests. [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
 - **Multiplayer:** nothing at all has been tried with more than one player. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 
 Started but not finished:

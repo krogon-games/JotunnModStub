@@ -8,28 +8,22 @@ Everything built but not yet tested in-game, in one place, in the order that mak
 
 **Before you start:** since 2026-11-01 every branch is merged, so build from `master` (a session's new work: from its branch, it will say so); rebuild all three mods (`CraftingOverhaul.sln`), start the game with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily installed (the group's setup), load a test world, open the console (F5) and type `devcommands`. `god` and `fly` help.
 
-## Session 1c: solo (about 20 minutes)
+## Session 1c: solo (about 5 minutes; only bulk planting left)
 
 ### 1. Rip waves (step B)
-0. Check the build: `BepInEx/LogOutput.log` has `Corruption 0.1.0 loaded (build: claude/rips-bosses …)`. A build from `master` doesn't have step B yet.
 1. ~~Waves start with the army message; a 2-star dropped a shard; the heart leaves a chest with shards~~ (passed 2026-10-29).
 1a. ~~Maddened bonuses in the log, red creatures; charms ignored; chests in Meadows and Swamp~~ (passed 2026-10-29).
 1b. ~~Busier waves (`WaveMultiplier` 2); maddened creatures fight each other; heart search with the corrupted wishbone~~ (passed 2026-10-29).
 1c. ~~Wishbone pings mostly red; stop when the heart dies~~ (passed 2026-10-29).
 1e. ~~Every wave creature at least 1 star: more challenging~~ (passed 2026-10-29).
 1d. ~~Map icons~~ (passed 2026-10-29).
-2. Wear a Boar or Neck charm: rip creatures still attack you.
-3. Watch whether maddened creatures also fight each other.
-4. Destroy the heart: the exit rip opens and a chest appears with Meadows chest loot plus 1–3 corruption shards; the waves stop.
-5. Try one later biome, e.g. `spawn CorruptionMap_Swamp` (draugr and skeletons) or `CorruptionMap_Plains` (fulings).
-6. No red errors in the console.
+2–6. ~~Charms don't stop rip creatures; maddened creatures fight each other; the heart leaves the exit rip and a chest with shards; a later biome; no errors~~ (passed 2026-10-29, phone log).
 
 ### 1f. Corrupted offerings
 ~~Eikthyr, Moder (and a mix refused), the Queen, Kall's phases, the fixed seed and blood icons~~ (passed 2026-10-30).
 
 ### 1g. Corrupted boss summons
-Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the boss dies.
-1. **Re-check after the fix:** `spawn Eikthyr`, `co_corrupt`, then walk away (out of their reach) and watch: the summons and Eikthyr don't attack each other, and the summons ignore other creatures. They still come for you.
+Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the boss dies. ~~Re-check after the fix: the summons and Eikthyr leave each other alone~~ (passed the same day, phone log).
 
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
@@ -151,8 +145,7 @@ All passed 2026-11-02 (single player).
 
 ## Classes UI (merged into `master`, 2 minutes)
 
-Everything else passed 2026-10-31 ("everything looks really good now"). Left: with `[5 - Classes UI]` → `Demo = true`:
-1. **Adrenaline:** with a trinket on, block or parry, or use a power: an orange bar appears above health in the same style; nothing shows under the bars.
+All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar~~ passed the same day (phone log).
 
 ## Session 2: with a friend
 
