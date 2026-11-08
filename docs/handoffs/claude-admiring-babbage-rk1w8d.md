@@ -1,6 +1,6 @@
 # Handoff: `claude/admiring-babbage-rk1w8d`
 
-**Written:** 2026-11-08 · **Branch:** 12 commits ahead of `master`, 0 behind (`master` `e56e91f`); no PR yet.
+**Written:** 2026-11-08 · **Branch:** ahead of `master`, 0 behind (`master` `ddc1c28` merged in); PR opened 2026-11-08.
 
 ## Stage
 
