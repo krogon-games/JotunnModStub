@@ -35,8 +35,10 @@
 3. [ ] Fresh axe (`spawn AxeBronze`), `co_affix resinous 100` → every chop on a standing tree, a log or a stump drops **one resin**.
 4. [ ] No red errors in the console during A–D.
 
-### Your feedback
--
+### Your feedback (2026-11-08)
+- Step B1: "put the sword in slot 1 and an Orb of Transmutation in slot 2 does not work. After half a second it teleports back to the currency tab." Krogon thinks that's intended (the Currency tab's design).
+
+What it means: correct, the Currency tab moves any currency in the bag back to the tab twice a second (Currency and Maps tabs, by design), so an orb can't stay in hotbar slot 2 and `co_craft` never sees it. The checklist's mistake, not a tab bug. Steps A–C can't be done as written; D (Stonecutter's/Resinous) doesn't use orbs.
 
 ### What changed after the feedback
 -
