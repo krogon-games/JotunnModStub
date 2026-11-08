@@ -1,34 +1,28 @@
 # Handoff: `claude/loving-euler-qfkpzc`
 
-**Written:** 2026-11-08. Branch started from `master` at `96f22e3`; 0 behind `master`, all commits pushed; no PR yet.
+**Written:** 2026-11-08 by `/handoff`. 11 commits ahead of `master`, 0 behind; everything pushed; no PR yet.
 
 ## Stage
 
-**Waiting for Krogon's playtest** (`docs/playtests/claude-loving-euler-qfkpzc.md`).
+**Ready to merge.**
 
 ## Purpose
 
-Loot round: settle the Riftforge orb rules and the gathering and proc affix defaults ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)), then build them: the currency orbs with their Riftforge rules (first part of ROADMAP L5, [#29](https://github.com/krogon-games/JotunnModStub/issues/29)) and Stonecutter's/Resinous per hit.
+Loot round: Krogon's orb rules and affix defaults ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)), then the currency orbs with their Riftforge rules (first part of ROADMAP L5, [#29](https://github.com/krogon-games/JotunnModStub/issues/29)) and Stonecutter's/Resinous per hit.
 
 ## Done
 
-Nothing play-tested yet.
+Built and confirmed by Krogon in single player (2026-11-08):
+- **Currency orbs:** ten items in the Currency tab (orb art embedded; the Mirror a placeholder gem), no drops yet. Every orb's rules through `co_craft` (the orb taken from the Currency tab), the Mirror with corrupted and mirrored items, Corrupted/Mirrored tooltip lines, all kept after relogging.
+- **Stonecutter's and Resinous per damaging hit**, nothing on a "too hard" hit.
+- No red errors (a repeated `GetBiome error` warning is the game's own, at a biome border).
 
 ## Half-done and known issues
 
-Built, untested (394 tests pass; Corruption builds):
-- **Currency orbs:** ten items (`OrbItems.cs`, the orb art now embedded), going to the Currency tab; **no drops** (L4 needs sources and rates). Rules in `Rules/OrbRules.cs` (unit-tested), the brief's API in `Content/RiftforgeCrafting.cs`, `co_craft list | <orb> | give | testcorrupt` (the orb comes from the bag or the Currency tab). Tooltips show Corrupted / Mirrored. New table `orb_chance.csv`.
-- **Stonecutter's and Resinous per damaging hit** (`HarvestRules.PerHit`, postfixes on the five owner-side hit methods in `LootHarvest.cs`); affix text says "per hit".
-- **Already built, confirmed by decisions 7, 9–13 (no change):** Gemseeker's, life steal, Wrath, Foraging, Rallying, Deathless.
-
-Claude's interim choices (not Krogon's decisions; easy to change):
-- Orb stack 50 and weight 0.2, copied from the shard, until L4's `orbs.csv`.
-- The Mirror has no art: a tinted vanilla gem (`GemstoneBlue`) for now.
-- Alchemy and Chance roll the same affix counts as drops (`loot_rules.csv`: Magic 1–2, Rare 3–4).
-- Annulment picks each affix equally (a resonant line is 2 affixes).
-- Copies of a swing (Seismic, Splintering, a breaking rock's hit on its copper deposit) count as hits for Stonecutter's, as they do for "only your swings"; an Odin's Grace whole-tree harvest counts as one hit.
-- "At a Riftforge" = within its build range. Extra refusals: "Mirrored items can't be changed", "This item can't take affixes", "This item's affixes can't be read" (brief §2 updated).
-- Not built yet in L5: corrupting with a shard, shattering, Affix Splinters.
+- **Skipped by Krogon:** the "Use this at a Riftforge" refusal more than 10 m away; check it with the window (U3).
+- **Not built (rest of L5):** corrupting with a shard, shattering, Affix Splinters. L4: orb drops, sources and rates. The Mirror has no art.
+- **Claude's interim choices** (easy to change): orb stack 50, weight 0.2 (the shard's); Alchemy/Chance use the drop affix counts; Annulment picks each affix equally; Seismic/Splintering copies count as hits; "at a Riftforge" = 10 m build range.
+- **For the window (U3):** materials must come from the Currency tab (it pulls currency out of the bag); brief §4 says so.
 
 ## Decisions
 
@@ -64,26 +58,29 @@ Later on 2026-11-08, after the first play-test try:
 
 ## Playtest
 
-Checklist: `docs/playtests/claude-loving-euler-qfkpzc.md` (A orb items, B using orbs, C Mirror and corrupted, D Stonecutter's/Resinous; about 30 minutes, alone). First try: orbs snapped back from hotbar slot 2 to the Currency tab, so `co_craft` now takes them from the tab; A–C rewritten, waiting for the re-test.
+`docs/playtests/claude-loving-euler-qfkpzc.md`: orbs snapped back to the Currency tab on the first try (fixed); the re-test passed A–D but one skipped step.
 
 ## Open questions for Krogon
 
-None (decisions 14–18 answered them).
+None.
 
 ## Next steps
 
-1. Krogon play-tests A–D and reports.
-2. Fix what fails; final play-test.
-3. `/handoff`, then a PR into `master`.
-4. Next L5 part: corrupting with a shard, shattering and Affix Splinters; L4: orb drop sources and rates (needs Krogon).
+1. Open a PR into `master`; Krogon merges it; the coordinator raises Corruption's version.
+2. Next loot round: L5's shard corruption, shattering and Affix Splinters; L4's orb drops (needs Krogon); the Stonecutter's/Resinous rework (decision 8).
 
 ## Checks
 
-Not run yet (`/handoff` runs them). So far: `dotnet test CraftingOverhaul.Tests` 394 passed; Corruption builds against the stand-in game assemblies.
+- Build: PASS (`dotnet test CraftingOverhaul.Tests` 394 passed; `Corruption` builds against the stand-in game folder).
+- Version: gameplay changed: version bump needed at merge (Corruption). This branch changed no version number.
+- Multiplayer sync: read in code, not tested. Orbs registered in `OnVanillaPrefabsAvailable`; locks in the item's saved data; extra stone/resin spawned by the object's owner (existing chances message); no new config.
+- Assets and names: PASS. Orb art and `orb_chance.csv` embedded; vanilla names in the game dump; orb texts added in `OrbItems.cs`, as the essences do.
+- FEATURES.md: PASS (row, section, patch targets, changelog).
+- In-game: passed in Krogon's single-player play-test (2026-11-08): "Besides that, all steps pass."
 
 ## Merge notes
 
-- Ready to merge: no, waiting for the play-test.
-- **Gameplay changed: version bump needed at merge** for Corruption (new items, orb rules, Stonecutter's/Resinous behaviour, `affixes.csv` text, new `orb_chance.csv`).
-- Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (Session 3d steps 6–7 point here now), `Corruption/CorruptionPlugin.cs`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `docs/riftforge-ui-brief.md`, `docs/corruption-design.md` (orb table), `docs/GAME_DESIGN.md`.
-- The coordinator should copy the Decisions into `docs/DECISIONS.md` and close #28.
+- **Ready to merge: yes.** Final play-test passed (one step skipped by Krogon), no check failed, `master` has nothing this branch lacks, all pushed.
+- **Gameplay changed: version bump needed at merge: Corruption.**
+- No other remote branch has unmerged commits, so no overlaps. Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `Corruption/CorruptionPlugin.cs`, design docs.
+- Coordinator: copy Decisions 1–20 into `docs/DECISIONS.md`; close #28; #29 is partly done.
