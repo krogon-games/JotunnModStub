@@ -546,9 +546,9 @@ New item registered through Jötunn: `CorruptionShard` (cloned from the `ShardBa
 - **Refusals** are the brief's texts, the first that applies: not at a Riftforge, unreadable saved affixes, wrong rarity, corrupted, mirrored, no room / no affixes / can't take affixes (an item not in `loot_bases.csv`).
 - **Result messages** (console and centre of the screen), e.g. "Bronze Sword became Sharp Bronze Sword: +12% damage [5–40]", "Grim Fang lost +3 stamina regen [1–5]".
 
-**How to use it (until the window exists):** stand at a Riftforge, put the item in hotbar slot 1 and the orb in slot 2, open the console (devcommands):
-- `co_craft list` (or just `co_craft`): every operation for that item and orb, allowed or refused with the reason, and the preview.
-- `co_craft regal` (or `orb:regal`, any orb's id): uses it.
+**How to use it (until the window exists):** stand at a Riftforge, put the item in hotbar slot 1, open the console (devcommands). The orbs stay in the **Currency tab** (it pulls currency out of the bag twice a second, so an orb can't wait in the hotbar); `co_craft` takes them from the bag or the tab:
+- `co_craft list` (or just `co_craft`): for every orb you carry, allowed or refused with the reason, and the preview.
+- `co_craft regal` (or `orb:regal`, any orb's id): uses one of that orb.
 - `co_craft give [count]`: every orb, 5 each by default.
 - `co_craft testcorrupt`: marks or unmarks the slot-1 item as corrupted.
 
@@ -1269,6 +1269,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-08
+- **Fix (Riftforge orbs, play-test): `co_craft` takes the orb from the Currency tab.** An orb put in hotbar slot 2 went back to the Currency tab within half a second (the tab's design), so `co_craft` never found it. Only the item goes in slot 1 now.
 - **New (Riftforge, ROADMAP L5 first part): the currency orbs and their rules**, built, untested. Ten orb items (the orb art, now in the mod; the Mirror a placeholder gem) going to the Currency tab, no drops yet; used at a Riftforge through `co_craft` until the window exists. Krogon's rules (issue #28): Augmentation on Magic with 0 or 1 affix, Regal only with exactly 2, Annulment never changes rarity, Chance 50/30/20 but always Rare while no unique exists, the Mirror copies corrupted items (the copy can't be changed or mirrored), the Jeweller's Orb greyed. Tooltips show Corrupted and Mirrored. New table `orb_chance.csv`.
 - **Change (gathering, Krogon's decision): Stonecutter's and Resinous roll on every hit that does damage**, not once per broken piece, on any rock, deposit, tree, log or stump; the stone or resin drops at the hit point. Tooltip text now says "per hit". Both flagged for a rework. Built, untested.
 - **Play-test (single player):** the four review fixes passed alone (corrupted summons at Eikthyr and Moder with offerings during the delay, `co_affix` refusing NaN and infinity, point spending with a lowered setting, the talisman fight-back time and its refresh). Multiplayer left for later by Krogon (`PLAYTEST.md` → Session 2, 2g).

@@ -102,10 +102,12 @@ internal sealed class RiftforgeResult
 
 **Built (2026-11-08, loot round on `claude/loving-euler-qfkpzc`):** `RiftforgeCrafting` in `Corruption/Content/RiftforgeCrafting.cs` with the orb operations (rules in `Corruption/Rules/OrbRules.cs`), `IsMaterial` for the orbs and `Register`. Corrupt, shatter and splinter are not built yet.
 
+**Materials come from the Currency tab (play-test 2026-11-08).** The Currency tab pulls currency out of the bag twice a second, so an orb (or shard) can't wait in the bag or hotbar for the window: the material slot must accept items from the Currency tab. `Apply` takes the material from the bag or its tab; `RiftforgeCrafting.FindOrb(player, orb)` finds one.
+
 ## 5. Until the window exists
 
 A cheat console command uses the same calls, so the rules can be play-tested first:
-- `co_craft list`: the options for the item in hotbar slot 1 and the material in slot 2.
+- `co_craft list`: the options for the item in hotbar slot 1 with each orb the player carries (built: the orbs come from the Currency tab, not slot 2).
 - `co_craft <operation id>`: applies it and prints the result message (`co_craft regal` works too).
 - Built 2026-11-08 with two testing extras: `co_craft give [count]` (every orb) and `co_craft testcorrupt` (marks the slot-1 item corrupted, until shards can).
 

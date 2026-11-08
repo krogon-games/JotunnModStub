@@ -17,7 +17,7 @@ Nothing play-tested yet.
 ## Half-done and known issues
 
 Built, untested (394 tests pass; Corruption builds):
-- **Currency orbs:** ten items (`OrbItems.cs`, the orb art now embedded), going to the Currency tab; **no drops** (L4 needs sources and rates). Rules in `Rules/OrbRules.cs` (unit-tested), the brief's API in `Content/RiftforgeCrafting.cs`, `co_craft list | <orb> | give | testcorrupt`. Tooltips show Corrupted / Mirrored. New table `orb_chance.csv`.
+- **Currency orbs:** ten items (`OrbItems.cs`, the orb art now embedded), going to the Currency tab; **no drops** (L4 needs sources and rates). Rules in `Rules/OrbRules.cs` (unit-tested), the brief's API in `Content/RiftforgeCrafting.cs`, `co_craft list | <orb> | give | testcorrupt` (the orb comes from the bag or the Currency tab). Tooltips show Corrupted / Mirrored. New table `orb_chance.csv`.
 - **Stonecutter's and Resinous per damaging hit** (`HarvestRules.PerHit`, postfixes on the five owner-side hit methods in `LootHarvest.cs`); affix text says "per hit".
 - **Already built, confirmed by decisions 7, 9–13 (no change):** Gemseeker's, life steal, Wrath, Foraging, Rallying, Deathless.
 
@@ -56,9 +56,13 @@ Later on 2026-11-08, answering this branch's questions:
 17. **A valid hit for Stonecutter's and Resinous** is any hit with the right tool (pickaxe on rock or deposit, axe on tree, log or stump) that does damage.
 18. **Orb of Augmentation (design change, replaces decision 2):** works on a Magic item with 0 or 1 affix (adds one; stays Magic), so a Magic item emptied by Annulment can be brought back. Not on Normal items (that's Transmutation's job). Krogon's pick of Claude's option A over "Annulment turns an emptied Magic item Normal" and "leave it".
 
+Later on 2026-11-08, after the first play-test try:
+
+19. **Fix `co_craft` and test the orbs now** rather than wrapping up and testing them once the Riftforge window exists (Krogon left the choice to Claude, who recommended the fix). The orbs couldn't stay in hotbar slot 2: the Currency tab pulls them back.
+
 ## Playtest
 
-Checklist: `docs/playtests/claude-loving-euler-qfkpzc.md` (A orb items, B using orbs, C Mirror and corrupted, D Stonecutter's/Resinous; about 30 minutes, alone). No feedback yet.
+Checklist: `docs/playtests/claude-loving-euler-qfkpzc.md` (A orb items, B using orbs, C Mirror and corrupted, D Stonecutter's/Resinous; about 30 minutes, alone). First try: orbs snapped back from hotbar slot 2 to the Currency tab, so `co_craft` now takes them from the tab; A–C rewritten, waiting for the re-test.
 
 ## Open questions for Krogon
 

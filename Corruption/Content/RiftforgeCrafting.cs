@@ -191,10 +191,11 @@ namespace Corruption.Content
                 }
                 var player = Player.m_localPlayer;
                 var inventory = player ? player.GetInventory() : null;
-                if (inventory == null || item == null || !inventory.ContainsItem(item) || !inventory.ContainsItem(material) ||
+                var materialSource = player ? SourceOf(player, material) : null;
+                if (inventory == null || item == null || !inventory.ContainsItem(item) || materialSource == null ||
                     ReferenceEquals(item, material))
                 {
-                    result.Message = "The item and the orb must both be in your inventory";
+                    result.Message = "The item must be in your bag and the orb in your bag or Currency tab";
                     return result;
                 }
                 var option = OrbOption(orb, item);
@@ -203,7 +204,7 @@ namespace Corruption.Content
                     result.Message = option.Refusal;
                     return result;
                 }
-                return ApplyOrb(orb, item, material, inventory, result);
+                return ApplyOrb(orb, item, material, inventory, materialSource, result);
             }
             catch (System.Exception ex)
             {
@@ -214,8 +215,33 @@ namespace Corruption.Content
             }
         }
 
+        /// <summary>
+        ///     Where a material is: the bag, or its inventory tab. Orbs live in the Currency tab (the tab pulls currency out
+        ///     of the bag twice a second), so the window and <c>co_craft</c> take them from there.
+        /// </summary>
+        private static Inventory SourceOf(Player player, ItemDrop.ItemData material)
+        {
+            if (material == null)
+            {
+                return null;
+            }
+            var bag = player.GetInventory();
+            if (bag != null && bag.ContainsItem(material))
+            {
+                return bag;
+            }
+            var tab = InventoryTabs.TabFor(material);
+            return tab != null && tab.ContainsItem(material) ? tab : null;
+        }
+
+        /// <summary>The first orb of this kind in the bag or the Currency tab, or null.</summary>
+        public static ItemDrop.ItemData FindOrb(Player player, string orb)
+        {
+            return InventoryTabs.Find(player, i => OrbRules.OrbOf(PrefabName(i)) == orb, out _);
+        }
+
         private static RiftforgeResult ApplyOrb(string orb, ItemDrop.ItemData item, ItemDrop.ItemData material, Inventory inventory,
-            RiftforgeResult result)
+            Inventory materialSource, RiftforgeResult result)
         {
             var craft = ToCraft(item, out _);
             string before = DisplayName(item);
@@ -243,7 +269,7 @@ namespace Corruption.Content
                     return result;
                 }
                 result.Created.Add(copy);
-                inventory.RemoveItem(material, 1);
+                materialSource.RemoveItem(material, 1);
                 result.Done = true;
                 result.Message = $"Mirrored {before}: the copy is in your inventory and can never be changed";
                 return result;
@@ -253,7 +279,7 @@ namespace Corruption.Content
             outcome.Loot.Write(item.m_customData);
             // A lost durability affix lowers the most it can hold; a new one doesn't repair it.
             item.m_durability = Mathf.Min(item.m_durability, item.GetMaxDurability());
-            inventory.RemoveItem(material, 1);
+            materialSource.RemoveItem(material, 1);
             inventory.Changed();
             result.Done = true;
             result.Message = Message(orb, before, item, outcome);
@@ -339,16 +365,16 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     co_craft: the Riftforge's rules without the window (brief §5). The item goes in hotbar slot 1, the orb in
-        ///     slot 2.
+        ///     co_craft: the Riftforge's rules without the window (brief §5). The item goes in hotbar slot 1; the orb is
+        ///     taken from the bag or the Currency tab (it can't stay in the hotbar: the tab pulls currency back).
         /// </summary>
         private sealed class CraftCommand : ConsoleCommand
         {
             public override string Name => "co_craft";
 
             public override string Help =>
-                "Corruption: co_craft [list | <operation> | give [count] | testcorrupt] - Riftforge crafting with the item in hotbar slot 1 " +
-                "and the orb in slot 2. <operation>: e.g. orb:regal or just regal. give: every orb (default 5 each). " +
+                "Corruption: co_craft [list | <orb> | give [count] | testcorrupt] - Riftforge crafting on the item in hotbar slot 1, with an " +
+                "orb from your Currency tab. list: what each orb you carry would do. <orb>: e.g. regal or orb:regal. give: every orb (default 5 each). " +
                 "testcorrupt: marks or unmarks the slot-1 item as corrupted (testing only; shards can't corrupt yet)";
 
             public override bool IsCheat => true;
@@ -369,7 +395,6 @@ namespace Corruption.Content
                 var inventory = player.GetInventory();
                 string command = args.Length > 0 ? args[0].ToLowerInvariant() : "list";
                 var item = inventory.GetItemAt(0, 0);
-                var material = inventory.GetItemAt(1, 0);
 
                 if (command == "give")
                 {
@@ -382,7 +407,7 @@ namespace Corruption.Content
                             inventory.AddItem(prefab, count);
                         }
                     }
-                    Console.instance.Print($"Added {count} of each orb to your Currency tab. Drag one to hotbar slot 2.");
+                    Console.instance.Print($"Added {count} of each orb to your Currency tab.");
                     return;
                 }
                 if (command == "testcorrupt")
@@ -406,17 +431,25 @@ namespace Corruption.Content
                 }
                 if (item == null)
                 {
-                    Console.instance.Print("Put the item in hotbar slot 1 and the orb in slot 2.");
+                    Console.instance.Print("Put the item in hotbar slot 1.");
                     return;
                 }
                 if (command == "list")
                 {
-                    var options = Options(item, material);
-                    Console.instance.Print($"Item: {DisplayName(item)}. Material: {(material != null ? DisplayName(material) : "none")}" +
-                                           (AtRiftforge() ? "" : " (you're not at a Riftforge)"));
+                    // One line per orb you carry (bag or Currency tab), as if it were in the material slot.
+                    var options = new List<RiftforgeOption>();
+                    foreach (var orb in OrbRules.Orbs)
+                    {
+                        var found = FindOrb(player, orb);
+                        if (found != null)
+                        {
+                            options.AddRange(Options(item, found));
+                        }
+                    }
+                    Console.instance.Print($"Item: {DisplayName(item)}" + (AtRiftforge() ? "" : " (you're not at a Riftforge)"));
                     if (options.Count == 0)
                     {
-                        Console.instance.Print("No operations: put an orb in slot 2.");
+                        Console.instance.Print("You carry no orbs: co_craft give.");
                     }
                     foreach (var option in options)
                     {
@@ -430,6 +463,18 @@ namespace Corruption.Content
                 }
 
                 string id = command.Contains(":") ? command : OrbRules.OperationId(command);
+                string wanted = id.StartsWith("orb:") ? id.Substring(4) : null;
+                if (wanted == null || !OrbRules.Orbs.Contains(wanted))
+                {
+                    Console.instance.Print($"'{command}' isn't an orb. Orbs: {string.Join(", ", OrbRules.Orbs)}.");
+                    return;
+                }
+                var material = FindOrb(player, wanted);
+                if (material == null)
+                {
+                    Console.instance.Print($"You have no {OrbRules.Name(wanted)} (co_craft give).");
+                    return;
+                }
                 var result = Apply(item, material, id);
                 Console.instance.Print(result.Done ? result.Message : "Refused: " + result.Message);
                 if (result.Done)
