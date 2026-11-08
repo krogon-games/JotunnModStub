@@ -12,6 +12,8 @@ Areas: **Process** · **Design** (rules for the whole mod) · **Loot** · **Rips
 
 | Date | Area | Question | What you decided |
 |---|---|---|---|
+| 2026-11-08 | Bosses / Loot / Classes | Test PR #57's review fixes (corrupted summons, affix values, point totals, talisman fight-back) with other players now? | No: "A–D passed alone, multiplayer later". The round finished on the solo play-test (A–D passed); the multiplayer steps (the creature's owner logging out mid fight-back, two players offering at one altar) moved to the group evening (`PLAYTEST.md` → Session 2, 2g) |
+| 2026-11-08 | Bosses / Loot / Classes | Do PR #57's four review fixes need a design or balance decision? | No: you asked for the fixes directly; they follow the code review, which needs no new balance decision |
 | 2026-11-08 | Loot | Test PR #55's gathering review fixes with other players now? | No: "multiplayer testing will be done at a later stage". The round finished on the solo play-test (all passed); the multiplayer steps, including the check of a possible double whole-tree harvest with Odin's Grace, moved to the group evening (`PLAYTEST.md` → Session 2, 2f) |
 | 2026-11-08 | Loot | Veinbreaker's count resets when the tool is unequipped. Do putting it away (hide key), swimming and eating, which the game also counts as unequipping, reset it too? | Yes, any unequip resets the count |
 | 2026-11-08 | Loot | A tree, log or rock you hit with an affixed tool but didn't break later breaks on its own (a log rolling and smashing, a falling tree knocking another apart). Do your affixes apply to those drops? | No: only your own swings get your tool's affixes; such breaks give normal drops. A rock that turns into a copper deposit still passes the pickaxe's affixes on to the deposit |

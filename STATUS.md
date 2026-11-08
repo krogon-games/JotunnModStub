@@ -1,6 +1,6 @@
 # Status
 
-**Last updated:** 2026-11-08 by the coordinator, from the real state of GitHub (every branch fetched and compared with `master`, open pull requests listed), after PR #55 and Corruption's bump to 0.3.0.
+**Last updated:** 2026-11-08 by the coordinator, from the real state of GitHub (every branch fetched and compared with `master`, open pull requests listed), after PR #57 and the bump of Corruption to 0.4.0 and Orlog to 0.2.0.
 
 **Only the coordinator, working on `master`, edits this file.** Feature branches never touch it, so merges don't clash. Feature sessions report through their handoff file (`docs/handoffs/<branch>.md`).
 
@@ -8,7 +8,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 ## In one paragraph
 
-**Everything is in `master`.** Every pull request (up to #55) is merged, none is open, and `master` is the only branch left. So nothing is waiting to be merged today. Every other branch has been deleted on GitHub; their handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
+**Everything is in `master`.** Every pull request (up to #57) is merged and none is open. So nothing is waiting to be merged today. The only other branch, `claude/hopeful-thompson-eyncm8`, is merged (PR #57) and can be deleted; every other branch has been deleted on GitHub; their handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
 
 ## Branches
 
@@ -16,9 +16,9 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 | Branch | Purpose | Stage | Behind / ahead | Ready to merge? |
 |---|---|---|---|---|
-| `master` | The shared, play-tested base. **Versions: Corruption 0.3.0, CraftingOverhaul 0.2.0, Orlog 0.1.0** (Corruption bumped again 2026-11-08 after PR #55) | — | — | — |
+| `master` | The shared, play-tested base. **Versions: Corruption 0.4.0, CraftingOverhaul 0.2.0, Orlog 0.2.0** (Corruption and Orlog bumped 2026-11-08 for PR #57) | — | — | — |
 
-Checked 2026-11-08: `master` is the only branch on GitHub (you deleted `claude/festive-albattani-lg4p35` after PR #55), and there are no open pull requests. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
+Checked 2026-11-08 after PR #57: besides `master`, GitHub has only `claude/hopeful-thompson-eyncm8`, fully merged (0 ahead); please delete it. No open pull requests. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
 
 **Areas without a branch now** (their old branches were deleted; each next round starts a new branch from `master`, and its handoff file in `docs/handoffs/` says where it stopped):
 
@@ -28,6 +28,7 @@ Checked 2026-11-08: `master` is the only branch on GitHub (you deleted `claude/f
 | Classes (Orlog: levels, attributes, the Orlog stone, the Amazon) | `claude-class-skills.md` | Asking you questions before C3 (the Amazon's passives) |
 | Rips and bosses (maps, rips, waves, corrupted bosses) | `claude-rips-bosses.md` | Asking you to approve the map tiers and affixes table (R1) |
 | UI (character sheet, HUD bars, classes UI, tabs, next the Riftforge window) | `claude-ui-overhaul.md` | Asking where the Riftforge window opens; waiting for a small play-test. |
+| Code-review fixes, round 3: corrupted summons during the spawn delay, unreadable affix values, overflow-safe point totals, talisman fight-back across an owner change | `claude-hopeful-thompson-eyncm8.md` | Merged (PR #57, Corruption 0.4.0, Orlog 0.2.0); solo play-test passed (A–D), multiplayer steps left for the group evening (Session 2, 2g) |
 | Code-review fixes, round 2: gathering (Seismic and Odin's Grace on your own deposits, Veinbreaker's reset, only your own swings) | `claude-festive-albattani-lg4p35.md` | Merged (PR #55, Corruption 0.3.0); solo play-test passed, multiplayer steps left for the group evening (Session 2, 2f) |
 | Code-review fixes, round 1 | `claude-admiring-babbage-rk1w8d.md` | Merged (PR #53); multiplayer steps left for the group evening |
 | Coordinator, cloud build test | `claude-relaxed-einstein-kdvz4t.md`, `claude-awesome-ptolemy-gjigjh.md` | Finished |
@@ -36,7 +37,7 @@ Checked 2026-11-08: `master` is the only branch on GitHub (you deleted `claude/f
 
 - **`docs/corruption-design.md`: `master`'s version always wins.** The branches that carried an older copy are deleted; new branches start from `master` and have the current one.
 - **Start every round from the latest `master`** (`git fetch origin master && git merge origin/master`). A session that skips this works on stale docs and code.
-- **Version bump at merge (user, 2026-11-06).** Feature branches never change version numbers; their handoff says "gameplay changed: version bump needed at merge" and names the plugins. When the coordinator merges such a branch into `master`, it raises each named plugin's second number once (`0.1.0` → `0.2.0`) in three places that must agree: `<Version>` in the `.csproj`, `PluginVersion` in the main `.cs`, `version_number` in `Package/manifest.json`. Several branches merged in one go share one bump. First bump done 2026-11-08 after PR #53: Corruption and CraftingOverhaul 0.1.0 → 0.2.0 (Orlog unchanged, 0.1.0). Second, 2026-11-08 after PR #55: Corruption 0.2.0 → 0.3.0. The group evening's build check (`PLAYTEST.md` → Session 2) and `PLAYER_SETUP.md` expect these numbers.
+- **Version bump at merge (user, 2026-11-06).** Feature branches never change version numbers; their handoff says "gameplay changed: version bump needed at merge" and names the plugins. When the coordinator merges such a branch into `master`, it raises each named plugin's second number once (`0.1.0` → `0.2.0`) in three places that must agree: `<Version>` in the `.csproj`, `PluginVersion` in the main `.cs`, `version_number` in `Package/manifest.json`. Several branches merged in one go share one bump. First bump done 2026-11-08 after PR #53: Corruption and CraftingOverhaul 0.1.0 → 0.2.0 (Orlog unchanged, 0.1.0). Second, 2026-11-08 after PR #55: Corruption 0.2.0 → 0.3.0. Third, 2026-11-08 for PR #57 (done on the branch before merging): Corruption 0.3.0 → 0.4.0, Orlog 0.1.0 → 0.2.0. The group evening's build check (`PLAYTEST.md` → Session 2) and `PLAYER_SETUP.md` expect these numbers.
 - **Files only the coordinator edits:** `STATUS.md`, `docs/DECISIONS.md`. If a feature branch changed them, keep `master`'s version.
 - **Shared files that still collide** (add, never rewrite; keep both sides in conflicts): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/Content/Texts.cs`.
 
@@ -49,6 +50,7 @@ Built and merged, but not play-tested (the code is in `master`):
 - **Two dedicated-server fixes** for rips and bosses (PR #22): read in the code, never run on a server. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **PR #53's multiplayer steps** (skipped by you on 2026-11-08): two players on one chest, loot per player, arrows on the server, and a check of a suspected rip-wave undercount when the heart passes to another player's game (needs 3 players). In `PLAYTEST.md` → Session 2, 2e. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **PR #55's multiplayer steps** (left for later by you on 2026-11-08): another player's game running the deposit or log, and a check of a suspected double whole-tree harvest when two players' games each run part of one tree and both swing Odin's Grace at once (not fixed until it's seen; send Claude both players' `Odin's Grace: whole-tree harvest …` lines). In `PLAYTEST.md` → Session 2, 2f. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
+- **PR #57's multiplayer steps** (left for later by you on 2026-11-08): a greydwarf keeps fighting back after its owner logs out; two players offering at one altar give one corrupted boss and use one item. In `PLAYTEST.md` → Session 2, 2g. The corrupted summon copies the game's own summon steps as read in 1.0.14; if 1.0.21 changed them, it isn't picked up. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **Small leftovers:** one click per button, the build stamp, life steal with a melee weapon, crafting an Odin item, PlantEasily planting from chests. [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
 - **Multiplayer:** nothing at all has been tried with more than one player. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 
@@ -92,7 +94,7 @@ Map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issue
 
 ## Recommended merge order
 
-**Today: nothing to merge.** PR #55 was the last; no pull request is open.
+**Today: nothing to merge.** PR #57 was the last; no pull request is open.
 
 For the next round's pull requests, merge **safest first**:
 

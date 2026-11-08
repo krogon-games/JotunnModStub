@@ -2,7 +2,7 @@
 
 **Written:** 2026-11-01, after every session's branch was merged into `master` (PRs #1–#16; 225 tests pass). **For:** the user and the next round of Claude sessions. Each session reads its own part below before starting, then follows `CLAUDE.md` (branch from the latest `master`, one branch per session, PR when a feature is finished).
 
-**Update 2026-11-08 (coordinator, after PR #55):** every PR up to #55 is merged; loot L2 and L3 were built (PR #18) and L2's review fixes were play-tested alone (PR #55); Corruption is at 0.3.0. The old session branches are deleted on GitHub, so each session's next round starts a **new** branch from `master` (the branch names in §3 and §4 are where the earlier rounds ran). Current state of each: `STATUS.md`.
+**Update 2026-11-08 (coordinator, after PR #57):** every PR up to #57 is merged; loot L2 and L3 were built (PR #18) and L2's review fixes were play-tested alone (PR #55); a third set of review fixes passed alone (PR #57); Corruption is at 0.4.0, Orlog at 0.2.0. The old session branches are deleted on GitHub, so each session's next round starts a **new** branch from `master` (the branch names in §3 and §4 are where the earlier rounds ran). Current state of each: `STATUS.md`.
 
 The facts here come from `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `FEATURES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/AFFIX_RULES.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/DECISIONS.md` and the code. Where this file and those disagree, those win: fix this file.
 

@@ -4,7 +4,7 @@
 
 ## Stage
 
-Ready to merge.
+Merged into `master` (PR #57, 2026-11-08) after Krogon confirmed the play-test; the coordinator raised Corruption to 0.4.0 and Orlog to 0.2.0, and copied the decisions into `docs/DECISIONS.md`.
 
 ## Purpose
 
@@ -41,7 +41,7 @@ None.
 
 ## Next steps
 
-1. Coordinator: merge into `master` and raise Corruption's and Orlog's versions.
+1. ~~Coordinator: merge into `master` and raise Corruption's and Orlog's versions.~~ Done (PR #57; Corruption 0.4.0, Orlog 0.2.0).
 2. On the group evening: Session 2, 2g.
 
 ## Checks
