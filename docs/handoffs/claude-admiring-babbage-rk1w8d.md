@@ -1,60 +1,59 @@
 # Handoff: `claude/admiring-babbage-rk1w8d`
 
-**Written:** 2026-11-07 · **Branch:** started from `master` `e56e91f` (up to date with it); 9 commits ahead; no PR yet.
+**Written:** 2026-11-08 · **Branch:** 11 commits ahead of `master`, 0 behind (`master` `e56e91f`); no PR yet.
 
 ## Stage
 
-Waiting for Krogon's playtest: every solo step (A–D) passed; the server steps (E–H, 2–3 players) are left.
+Ready to merge.
 
 ## Purpose
 
-Fixes from a code review, in risk order: safe loading of the inventory tabs, Magic/Rare loot on both death paths, exclusive chest access for craft-from-chests, and arrows using their own bow's affixes. Plus a check (no fix) of rip wave limits after the heart changes hands.
+Fixes from a code review: safe loading of the inventory tabs, Magic/Rare loot on both death paths, exclusive chest access for craft-from-chests, and arrows using their own bow's affixes. Plus a check (no fix) of rip wave limits after the heart changes hands.
 
 ## Done
 
-- **Tabs (2026-11-07, single player):** locked-tab handling passed, all six steps; the shortened message fits (re-checked).
-- **Loot (2026-11-07, single player):** Magic/Rare from greydwarfs, whose body carries their loot: about 5 from 120 one- and two-star kills, the expected rate.
-- **Arrows (2026-11-07/08, single player):** life steal and Skadi follow the bow when switching mid-flight (Skadi checked with its devcommands message).
-- **Chests alone (2026-11-07):** crafting and building from chests, mixed payment with bag and backpack.
+Confirmed by Krogon in single player (2026-11-07/08):
+- **Tabs:** a tab whose save can't be read is locked and kept untouched; the other works; the shortened message fits. Test command `co_tabs_damage`.
+- **Loot:** creatures whose body carries their loot now roll Magic/Rare (about 5 from 120 greydwarfs, the expected rate).
+- **Chests alone:** crafting and building from chests, mixed payment with bag and backpack.
+- **Arrows:** life steal and Skadi follow the bow when switching mid-flight (Skadi checked with its devcommands-only "Skadi: stack N" message).
 
 ## Half-done and known issues
 
-All built and unit-tested (304 tests pass); not yet tried in game unless listed under Done:
-- **Tabs:** a tab whose save can't be read completely (damaged, or an item whose prefab is missing) is locked for the session and its saved data kept untouched; the other tab works. Test command `co_tabs_damage`.
-- **Loot:** creatures whose body carries their loot (most) never rolled Magic/Rare: the game turns their drops off before our roll. Now both death paths roll, once per death, owner only. The game code was read in the cloud's 1.0.14 assemblies, **not 1.0.21** (no 1.0.21 game code here; a fresh `co_dump` won't show code either).
-- **Chests:** a chest is paid from only after its owner hands it over through the game's own chest handshake and it's marked in use; all-or-nothing payment; a refused chest means nothing crafted or taken unless what you carry covers it. Building holds the chests a selected piece needs, for 3 s after the last need. AdventureBackpacks' stock isn't visible when Craft is pressed, so chests may be reserved needlessly (payment order unchanged).
-- **Arrows:** knockback, backstab, life steal and Skadi follow the item the hit came from (direct hit, splash, spawned area effects); procs carry their own item. Hits from other mods still use the weapon in hand (Orlog skills should tag theirs).
-- **Rip waves (not fixed):** a suspected undercount when the heart passes to another player's game while survivors are far away. Only two log lines added; needs the 3-player check (playtest step H) before any fix.
-- 3-second network timeout and 3-second build linger are technical, not gameplay numbers.
+- **Multiplayer untested** (skipped by Krogon): two players on one chest (the main point of the chest fix), loot per player, arrows on the server. Moved to `PLAYTEST.md` → Session 2, 2e.
+- **Rip waves (not fixed):** a suspected undercount when the heart passes to another player's game while survivors are far away. Two log lines added; needs the 3-player check (2e step 4) before any fix.
+- The death code was read in the cloud's 1.0.14 assemblies, not 1.0.21 (Krogon's 1.0.21 play-test passed).
+- AdventureBackpacks' stock isn't visible when Craft is pressed, so chests may be reserved needlessly (payment order unchanged).
+- Hits from other mods still use the weapon in hand (Orlog skills should tag theirs with `HitSources.Tag`).
+- The 3-second network timeout and build linger are technical numbers, not gameplay.
 
 ## Decisions
 
-None this round (the review gave the fixes; no new balance or design choice was needed).
+- 2026-11-08: skip the multiplayer play-test (steps E–H) at this stage; finish the round on the solo play-test ("skipping multiplayer testing at this stage").
 
 ## Playtest
 
-Checklist: [`docs/playtests/claude-admiring-babbage-rk1w8d.md`](../playtests/claude-admiring-babbage-rk1w8d.md): A–D alone (about 40 min), E–H on the dedicated server with 2–3 players. Feedback 2026-11-07: A–D passed. Skadi showed no blue frost numbers: the game has none (one total per hit) and its slow is too short to see, so the step was wrong; a devcommands-only "Skadi: stack N" message was added, re-test C5–C6 passed 2026-11-08.
+[`docs/playtests/claude-admiring-babbage-rk1w8d.md`](../playtests/claude-admiring-babbage-rk1w8d.md): A–D passed. Skadi first "failed" because the checklist expected blue frost numbers, which the game doesn't show; re-tested with the new message, passed. E–H skipped.
 
 ## Open questions for Krogon
 
-None new. Step H's result decides whether rip wave counting gets fixed next round.
+None. The rip-wave check (2e step 4) decides whether that counting gets fixed later.
 
 ## Next steps
 
-1. Krogon: the server steps (E–H) with 2–3 players.
-2. Fix what fails.
-3. If step H confirms the undercount: fix it, keeping the per-encounter limits.
-4. Final play-test, then a PR into `master`.
+1. Coordinator: merge into `master` and bump the versions.
+2. Group evening: Session 2, 2e (chests with two players, loot per player, arrows, rip waves with three players).
+3. If the rip-wave undercount is confirmed: fix it, keeping the per-encounter limits.
 
 ## Checks
 
-- Build: PASS (solution builds against the cloud stand-in; `dotnet test`: 304 passed).
+- Build: PASS (CraftingOverhaul and Corruption build against the cloud stand-in; `dotnet test`: 304 passed).
 - Version: gameplay changed: version bump needed at merge (CraftingOverhaul, Corruption). No version changed on this branch.
-- Multiplayer sync: read in code, not tested. No new settings or synced data; chest access uses the game's own chest messages, so CraftingOverhaul still works when only some players have it.
-- Assets and names: new text token `corruption_tab_locked` is in `Texts.cs`; prefab `CorruptionShard` exists (ours).
-- FEATURES.md: updated with each fix.
-- In game: A–D passed alone (Krogon, 2026-11-07/08); E–H NEEDS KROGON'S PLAYTEST.
+- Multiplayer sync: read in code, not tested. No new settings, data files or messages; chest access uses the game's own chest messages, so CraftingOverhaul still works when only some players have it.
+- Assets and names: no new assets; new token `corruption_tab_locked` is in `Texts.cs`; `CorruptionShard` is ours.
+- FEATURES.md: PASS (updated with each change).
+- In game: solo passed (Krogon: "Everything seems to work as intended", "c5 and c6 checks out"); multiplayer skipped.
 
 ## Merge notes
 
-Not ready to merge: no play-test yet. Gameplay changed: version bump needed at merge (CraftingOverhaul, Corruption). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`, `Corruption/CorruptionPlugin.cs` (one line), `Corruption/Content/Texts.cs` (one line), `Corruption/Content/RipWaves.cs` (two log lines), `Corruption/Content/LootPatches.cs`, `LootProcs.cs`, `InventoryTabs.cs`. Add, keep both sides in conflicts.
+Ready to merge: yes. Solo play-test passed, no check failed, `master` merged (0 behind), pushed; multiplayer deliberately skipped by Krogon. **Gameplay changed: version bump needed at merge (CraftingOverhaul, Corruption).** No overlap with the other open branches (`claude/awesome-ptolemy-gjigjh`, `claude/relaxed-einstein-kdvz4t`). Shared files touched (add, keep both sides): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`, `Corruption/CorruptionPlugin.cs` (one line), `Corruption/Content/Texts.cs` (one entry).
