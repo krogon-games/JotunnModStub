@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Asking Krogon questions:** the orb rules and affix defaults are decided ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)); the round's build still needs confirming.
+**Building:** the orb rules and affix defaults are decided ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)); building the Stonecutter's/Resinous change and the first Riftforge orb rules.
 
 ## Purpose
 
@@ -37,6 +37,13 @@ All from Krogon on 2026-11-08, answering #28:
 11. **Foraging:** wild plants only; not flint, loose stones or branches.
 12. **Rallying:** the bonus applies to every enemy the empowered attack hits.
 13. **Deathless:** several equipped Deathless items share one cooldown, the shortest rolled one; extra copies give no extra activations.
+
+Later on 2026-11-08, answering this branch's questions:
+
+14. **This round builds** the Stonecutter's/Resinous per-hit change **and** the first Riftforge orb rules with `co_craft` (ROADMAP L5).
+15. **Orb of Augmentation changed (design change):** usable on a Normal (white) item as well as a Magic item with exactly 1 affix. Replaces decision 2's "only Magic with exactly 1". Asked because a Magic item emptied by Annulment had no orb to bring it back.
+16. **Orb of Chance always giving a Rare until uniques exist** (no uniques yet, ROADMAP L6): fine for now.
+17. **A valid hit for Stonecutter's and Resinous** is any hit with the right tool (pickaxe on rock or deposit, axe on tree, log or stump) that does damage.
 
 ## Playtest
 
