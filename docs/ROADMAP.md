@@ -2,6 +2,8 @@
 
 **Written:** 2026-11-01, after every session's branch was merged into `master` (PRs #1–#16; 225 tests pass). **For:** the user and the next round of Claude sessions. Each session reads its own part below before starting, then follows `CLAUDE.md` (branch from the latest `master`, one branch per session, PR when a feature is finished).
 
+**Update 2026-11-08 (coordinator, after PR #55):** every PR up to #55 is merged; loot L2 and L3 were built (PR #18) and L2's review fixes were play-tested alone (PR #55); Corruption is at 0.3.0. The old session branches are deleted on GitHub, so each session's next round starts a **new** branch from `master` (the branch names in §3 and §4 are where the earlier rounds ran). Current state of each: `STATUS.md`.
+
 The facts here come from `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `FEATURES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/AFFIX_RULES.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/DECISIONS.md` and the code. Where this file and those disagree, those win: fix this file.
 
 ## Task list (2026-11-05)
@@ -20,10 +22,10 @@ The tasks below are tracked as **[GitHub issues](https://github.com/krogon-games
 |---|---|---|
 | CraftingOverhaul | Recipe search and categories, biome detection, craft and build from chests, character sheet, HUD bars, classes UI (on demo data), `co_dump` | Riftforge crafting window (see §4), recipe list redesign (user's to-do) |
 | Corruption: core loop | Shards, Riftforge, talismans, essences, maps and rips (A and B), heart search, corrupted offerings, bosses and summons, Currency and Maps tabs, Odin unlock | Phase 5 (map tiers and affixes, 3-star), phase 8 (scars, terror zones, elites, Svartalfheim), boss particles |
-| Corruption: loot (phase 7) | Magic and Rare drops, names, tooltips, 28 item-stat and player-stat affix effects | 33 gathering affix effects, 10 proc affixes, orbs, shard corruption and shattering at the Riftforge, Affix Splinters, uniques, ring slot, personal-loot locks, loot beams |
+| Corruption: loot (phase 7) | Magic and Rare drops, names, tooltips, 28 item-stat and player-stat affix effects; gathering: Seismic, Odin's Grace on rock and ore, Veinbreaker's, Bountiful (2026-11-08, PR #55). The other gathering and the proc affix effects are built (PR #18) but untested ([#26](https://github.com/krogon-games/JotunnModStub/issues/26)) | Orbs, shard corruption and shattering at the Riftforge, Affix Splinters, uniques, ring slot, personal-loot locks, loot beams |
 | Orlog | Levels and XP, attributes, class eitr pool, `Orlog.Api` for the character | Orlog stone, skill trees, every skill, skill button and slots, respec item, boss bonus points, eitr potions |
 
-**Untested anywhere:** multiplayer, for every feature (`PLAYTEST.md` → Session 2). Small single-player leftovers: the adrenaline bar, weapon-skill and life-steal affixes, crafting an Odin item, PlantEasily bulk planting from chests, the corrupted-summons re-check.
+**Untested anywhere:** multiplayer, for every feature (`PLAYTEST.md` → Session 2; PR #55's gathering checks, including a suspected double whole-tree harvest with Odin's Grace, are step 2f). Small single-player leftovers: the adrenaline bar, weapon-skill and life-steal affixes, crafting an Odin item, PlantEasily bulk planting from chests, the corrupted-summons re-check.
 
 **Already settled with the user** (don't reopen): see `DECISIONS.md`. In short: own loot system, own levels, D2 rules in config, the Amazon first, the HUD and panel look, every affix range, the tabs, EquipmentAndQuickSlots and AdventureBackpacks as dependencies.
 
@@ -40,7 +42,7 @@ Everything so far was built and checked alone. The next stretch makes the mods s
 
 ## 3. Sessions
 
-Four sessions, the same areas and branch names as before, each started fresh from `master`:
+Four sessions, the same areas as before, each started fresh from `master` (the branches below were deleted after their work was merged; a new round starts a new branch):
 
 | Session | Branch | Owns | Start with |
 |---|---|---|---|
@@ -80,8 +82,8 @@ Follows `class-design.md` §8 (build order). Step 1 (levels, attributes) is done
 | # | Task | Done when | Notes |
 |---|---|---|---|
 | L1 | **The Riftforge window brief**, [`docs/riftforge-ui-brief.md`](riftforge-ui-brief.md), written first (**draft written 2026-11-01**; open questions in its §6) | The UI session can start the window from it | A short document, like `classes-ui-brief.md`: for an item put into the window, the operations the rules allow and why one is refused, what each shows before confirming (the new lines, the shard's 25/25/50 chances), the result message, and the plain C# calls the screen makes into the rules (same plugin, no reflection). Operations: apply an orb (Transmutation … Mirror, `corruption-design.md` → Currency orbs), corrupt with a shard (`CorruptionOutcomes`, built), shatter (`ShatterRules`, built) into Affix Splinters, apply a splinter, and the rips session's map rolling (R1). Done first so the UI session isn't waiting on L2–L4 |
-| L2 | **Gathering affix effects**: the 33 approved rows still shown as "(not active yet)" (universal, mining, woodcutting pools) | No gathering line is grey; each has a `PLAYTEST.md` step | Rules in `AFFIX_RULES.md` → Interpretations and Multiplayer: hit changes on the striker's game, extra drops by an owner-to-striker message. Mod compatibility: AdventureBackpacks' `GetWeight` (Light: multiply), EquipmentAndQuickSlots' `AutoPickup` (Magnetic, Keen-eyed), PlantEasily bulk harvests |
-| L3 | **Proc and utility affixes**: Shieldwall, Rallying, Skald's, Steadfast, Reprisal, Wrath, Skadi, Fenrir, Bloodforged, Deathless, Foraging | Same | `AFFIX_RULES.md` → Proc and utility affixes. Deathless with EquipmentAndQuickSlots' keep-on-death (`Character.CheckDeath`); ally buffs through the game's status-effect message; kills reported back to the killer as for harvests |
+| L2 | **Gathering affix effects**: the 33 approved rows still shown as "(not active yet)" (universal, mining, woodcutting pools) (**built 2026-11-01**, PR #18; review fixes in PR #55, 2026-11-08: Seismic and Odin's Grace on your own deposits, Veinbreaker's reset on any unequip, only your own swings get the tool's affixes; passed alone, multiplayer in Session 2, 2f) | No gathering line is grey; each has a `PLAYTEST.md` step | Rules in `AFFIX_RULES.md` → Interpretations and Multiplayer: hit changes on the striker's game, extra drops by an owner-to-striker message. Mod compatibility: AdventureBackpacks' `GetWeight` (Light: multiply), EquipmentAndQuickSlots' `AutoPickup` (Magnetic, Keen-eyed), PlantEasily bulk harvests |
+| L3 | **Proc and utility affixes**: Shieldwall, Rallying, Skald's, Steadfast, Reprisal, Wrath, Skadi, Fenrir, Bloodforged, Deathless, Foraging (**built 2026-11-01**, PR #18; untested apart from Skadi, passed 2026-11-08 through PR #53) | Same | `AFFIX_RULES.md` → Proc and utility affixes. Deathless with EquipmentAndQuickSlots' keep-on-death (`Character.CheckDeath`); ally buffs through the game's status-effect message; kills reported back to the killer as for harvests |
 | L4 | **Currency orbs** | The design's ten orbs exist, drop from their sources, land in the Currency tab and stack | Art is made for nine (`Corruption/Assets/Orbs/`, `tools/make_orbs.py`; the Mirror of Kalandra has none yet; add `Assets\Orbs\*` to the csproj). New table `orbs.csv` (effect, sources, rates). Add their prefab names to `TabRules.TabFor` |
 | L5 | **Riftforge crafting rules** behind the brief | Pure, tested rules for every operation in L1; the window calls them | The Affix Splinter item: one item, affix and value in custom data, stack 1. Until the window exists, a console command exercises the rules |
 | L6 | **Uniques and the ring slot** | Boss uniques drop from their boss, world uniques from the biome-gated pool, with orange names and fixed lines; rings have a slot | `uniques.csv` from the design's six boss uniques; the world pool's contents are an open question for the user. Item level = biome (as `loot_bases.csv`). Only Divine and Jeweller's orbs touch them; never shattered or corrupted. The ring slot comes through EquipmentAndQuickSlots' custom-slot API, as the talisman slots do (three boss uniques are rings) |
