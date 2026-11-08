@@ -36,8 +36,13 @@ namespace Corruption.Content
         private static readonly Dictionary<string, string> NameByVanillaItem = new Dictionary<string, string>();
         /// <summary>Corrupted item prefab hashes, as item stands store what they hold.</summary>
         private static readonly HashSet<int> StandHashes = new HashSet<int>();
-        /// <summary>Altars on this game about to summon a corrupted boss.</summary>
-        private static readonly HashSet<OfferingBowl> Pending = new HashSet<OfferingBowl>();
+        /// <summary>Altars this game owns that are about to summon a corrupted boss (marked only when the summon started).</summary>
+        private static readonly SummonMarks<OfferingBowl> Pending = new SummonMarks<OfferingBowl>();
+
+        /// <summary>Sent to the altar's owner: a corrupted offering asks to summon (the spawn area's centre).</summary>
+        private const string RpcSummonCorrupted = "corruption_SummonCorrupted";
+        /// <summary>Sent back to the player who offered, once the summon started: take one of this corrupted item.</summary>
+        private const string RpcTakeOffering = "corruption_TakeCorruptedOffering";
         /// <summary>Base names of corrupted bosses that just died on this game; their next phase is corrupted too.</summary>
         private static readonly HashSet<string> PhaseBases = new HashSet<string>();
 
@@ -205,6 +210,116 @@ namespace Corruption.Content
 
         // ------------------------------------------------------------------ altars
 
+        /// <summary>
+        ///     The altar's RPCs for corrupted summons, next to the game's own (<c>OfferingBowl.Start</c> registers
+        ///     <c>RPC_SpawnBoss</c> on the same view).
+        /// </summary>
+        [HarmonyPatch(typeof(OfferingBowl), nameof(OfferingBowl.Start))]
+        private static class RegisterRpcs
+        {
+            private static void Postfix(OfferingBowl __instance)
+            {
+                Safe.Run("register the corrupted summon RPCs", () =>
+                {
+                    var nview = __instance.m_nview;
+                    if (!nview)
+                    {
+                        return;
+                    }
+                    nview.Register<Vector3>(RpcSummonCorrupted, (sender, point) => RPC_SummonCorrupted(__instance, sender, point));
+                    nview.Register<string>(RpcTakeOffering, (sender, itemName) => RPC_TakeOffering(__instance, itemName));
+                });
+            }
+        }
+
+        /// <summary>
+        ///     Asks the altar's owner to summon the boss corrupted, as the game asks it for a normal summon
+        ///     (<c>OfferingBowl.InitiateSpawnBoss</c>). Ownership isn't taken: the owner alone knows whether a summon is
+        ///     already queued there, so a second offering during the spawn delay, from anyone, starts nothing.
+        /// </summary>
+        private static void RequestCorruptedSummon(OfferingBowl altar, Humanoid user)
+        {
+            altar.m_interactUser = user;   // the game's "summon started" message goes to this player
+            altar.m_nview.InvokeRPC(RpcSummonCorrupted, altar.GetSpawnPosition());
+        }
+
+        /// <summary>
+        ///     On the altar's owner: the game's own summon (<c>OfferingBowl.RPC_SpawnBoss</c>, 1.0.14: refused while a
+        ///     boss is queued; find a spawn point; queue the boss; tell the player), marked corrupted only once it
+        ///     started. A stand altar's stands must all hold corrupted items on this game too; their items go as the
+        ///     game takes them. At an altar the player who offered is sent <see cref="RpcTakeOffering" />: one corrupted
+        ///     item is the whole offering.
+        /// </summary>
+        private static void RPC_SummonCorrupted(OfferingBowl altar, long sender, Vector3 point)
+        {
+            Safe.Run("start a corrupted summon", () =>
+            {
+                var nview = altar.m_nview;
+                if (!altar || !nview || !nview.IsValid() || !nview.IsOwner())
+                {
+                    return;
+                }
+                if (altar.m_useItemStands ? !AllStandsCorrupted(altar, out _) : !altar.m_bossItem)
+                {
+                    Jotunn.Logger.LogWarning("Corrupted offering: the altar's stands aren't all corrupted on its owner (or it takes no item); nothing summoned.");
+                    return;
+                }
+                Pending.Prune(bowl => !bowl);
+                bool started = Pending.TryStart(altar, altar.IsBossSpawnQueued(), () =>
+                {
+                    if (!altar.CanSpawnBoss(point, out var spawnPoint))
+                    {
+                        ZLog.LogError("Failed to spawn boss. Cannot find valid location.");
+                        return false;
+                    }
+                    altar.SpawnBoss(spawnPoint);
+                    nview.InvokeRPC(sender, "RPC_BossSpawnInitiated");
+                    if (altar.m_useItemStands)
+                    {
+                        altar.RemoveAltarItems();
+                    }
+                    else
+                    {
+                        nview.InvokeRPC(sender, RpcTakeOffering, NameByVanillaItem.TryGetValue(altar.m_bossItem.name, out var name) ? name : "");
+                    }
+                    return altar.IsBossSpawnQueued();
+                });
+                if (started)
+                {
+                    Jotunn.Logger.LogInfo($"Corrupted offering: {(altar.m_bossPrefab ? altar.m_bossPrefab.name : "boss")} summon started.");
+                }
+            });
+        }
+
+        /// <summary>On the player who offered, once the summon started: one corrupted item is the whole offering.</summary>
+        private static void RPC_TakeOffering(OfferingBowl altar, string itemName)
+        {
+            Safe.Run("take the corrupted offering", () =>
+            {
+                var user = altar.m_interactUser;
+                var item = user ? user.GetInventory().GetItem(itemName) : null;
+                if (item == null)
+                {
+                    Jotunn.Logger.LogWarning($"Corrupted offering: {itemName} wasn't in the inventory any more; nothing taken.");
+                    return;
+                }
+                user.GetInventory().RemoveItem(item.m_shared.m_name, 1);
+                user.ShowRemovedMessage(item, 1);
+                if (altar.m_itemSpawnPoint)
+                {
+                    altar.m_fuelAddedEffects.Create(altar.m_itemSpawnPoint.position, altar.transform.rotation);
+                }
+            });
+        }
+
+        /// <summary>Whether a stand altar has stands, all of them holding a corrupted offering; also how many do.</summary>
+        private static bool AllStandsCorrupted(OfferingBowl altar, out int corrupted)
+        {
+            var stands = altar.FindItemStands();
+            corrupted = stands.Count(s => s.HaveAttachment() && StandHashes.Contains(s.GetAttachedItem()));
+            return stands.Count > 0 && corrupted == stands.Count;
+        }
+
         /// <summary>Offering a corrupted item at an altar: the one item is the whole offering.</summary>
         [HarmonyPatch(typeof(OfferingBowl), nameof(OfferingBowl.UseItem))]
         private static class OfferAtAltar
@@ -218,14 +333,11 @@ namespace Corruption.Content
                 try
                 {
                     var offering = Find(item);
-                    if (offering == null)
+                    if (offering == null || __instance.m_useItemStands)
                     {
-                        Pending.Remove(__instance);
+                        // A normal or wrong item, or a stand altar (filled stand by stand): the game's own handling. A
+                        // corrupted summon already queued here keeps its mark: only its start and its boss touch it.
                         return true;
-                    }
-                    if (__instance.m_useItemStands)
-                    {
-                        return true;   // stand altars are filled stand by stand
                     }
                     __result = true;
                     if (__instance.IsBossSpawnQueued())
@@ -244,12 +356,7 @@ namespace Corruption.Content
                     {
                         return false;
                     }
-                    // Own the altar, so the summon (and finding the boss after it) runs on this game.
-                    __instance.m_nview.ClaimOwnership();
-                    Pending.Add(__instance);
-                    __instance.m_usedSpawnItem = item;
-                    __instance.m_interactUser = user;
-                    __instance.InitiateSpawnBoss(__instance.GetSpawnPosition(), true);
+                    RequestCorruptedSummon(__instance, user);
                     if (!string.IsNullOrEmpty(__instance.m_setGlobalKey))
                     {
                         ZoneSystem.instance.SetGlobalKey(__instance.m_setGlobalKey);
@@ -261,32 +368,6 @@ namespace Corruption.Content
                     Safe.Report("offer a corrupted item", ex);
                     return true;
                 }
-            }
-        }
-
-        /// <summary>After a corrupted summon, take the one corrupted item (vanilla would take the full offering's count).</summary>
-        [HarmonyPatch(typeof(OfferingBowl), nameof(OfferingBowl.RPC_RemoveBossSpawnInventoryItems))]
-        private static class TakeTheCorruptedItem
-        {
-            private static bool Prefix(OfferingBowl __instance, bool __runOriginal)
-            {
-                var item = __instance.m_usedSpawnItem;
-                if (!__runOriginal || Find(item) == null || !__instance.m_interactUser)
-                {
-                    return __runOriginal;
-                }
-                Safe.Run("take the corrupted offering", () =>
-                {
-                    var user = __instance.m_interactUser;
-                    user.GetInventory().RemoveItem(item.m_shared.m_name, 1);
-                    user.ShowRemovedMessage(item, 1);
-                    user.Message(MessageHud.MessageType.Center, __instance.m_usedAltarText);
-                    if (__instance.m_itemSpawnPoint)
-                    {
-                        __instance.m_fuelAddedEffects.Create(__instance.m_itemSpawnPoint.position, __instance.transform.rotation);
-                    }
-                });
-                return false;
             }
         }
 
@@ -310,24 +391,23 @@ namespace Corruption.Content
                     {
                         return true;   // vanilla says the offering is incomplete
                     }
-                    int corrupted = stands.Count(s => StandHashes.Contains(s.GetAttachedItem()));
+                    AllStandsCorrupted(__instance, out int corrupted);
                     if (corrupted == 0)
                     {
-                        Pending.Remove(__instance);
-                        return true;
+                        return true;   // a normal summon, the game's own
                     }
+                    __result = false;
                     if (corrupted < stands.Count)
                     {
                         user.Message(MessageHud.MessageType.Center, "$corruption_offering_mixed");
-                        __result = false;
                         return false;
                     }
                     if (__instance.m_nview && __instance.m_nview.IsValid())
                     {
-                        __instance.m_nview.ClaimOwnership();
-                        Pending.Add(__instance);
+                        RequestCorruptedSummon(__instance, user);
+                        __result = true;
                     }
-                    return true;
+                    return false;
                 }
                 catch (Exception ex)
                 {
@@ -342,7 +422,7 @@ namespace Corruption.Content
         {
             private static void Postfix(OfferingBowl __instance)
             {
-                if (Pending.Remove(__instance))
+                if (Pending.Take(__instance))
                 {
                     Safe.Run("corrupt the summoned boss", () => CorruptSummoned(__instance));
                 }

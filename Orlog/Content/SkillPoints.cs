@@ -77,7 +77,7 @@ namespace Orlog.Content
                 return blocked;
             }
             var points = Points(player);
-            points[skill.Id] = SkillRules.PointsIn(points, skill.Id) + 1;
+            points[skill.Id] = AttributeRules.AddClamped(SkillRules.PointsIn(points, skill.Id), 1);
             player.m_customData[PointsKey] = SkillRules.Format(points);
             Progress.NotifyChanged();
             return "";

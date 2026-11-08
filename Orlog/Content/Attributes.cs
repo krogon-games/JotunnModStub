@@ -43,7 +43,7 @@ namespace Orlog.Content
             for (int i = 0; i < 4; i++)
             {
                 if (player && player.m_customData.TryGetValue(SpentKeys[i], out string text) &&
-                    int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value) && value > 0)
+                    AttributeRules.TryParsePoints(text, out int value))
                 {
                     spent[i] = value;
                 }
@@ -60,7 +60,7 @@ namespace Orlog.Content
         public static int Value(Player player, Attribute attribute)
         {
             var cls = ClassOf(player);
-            return (cls != null ? cls.Start[(int)attribute] : 0) + Spent(player)[(int)attribute];
+            return AttributeRules.AddClamped(cls != null ? cls.Start[(int)attribute] : 0, Spent(player)[(int)attribute]);
         }
 
         public static bool TryParse(string name, out Attribute attribute)
@@ -89,8 +89,10 @@ namespace Orlog.Content
             {
                 return "No stat points";
             }
+            // Unspent counts the spent total (at most int.MaxValue), so this never passes int.MaxValue.
             var spent = Spent(player);
-            player.m_customData[SpentKeys[(int)attribute]] = (spent[(int)attribute] + count).ToString(CultureInfo.InvariantCulture);
+            player.m_customData[SpentKeys[(int)attribute]] =
+                AttributeRules.AddClamped(spent[(int)attribute], count).ToString(CultureInfo.InvariantCulture);
             Changed();
             return "";
         }

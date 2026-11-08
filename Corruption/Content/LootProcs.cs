@@ -722,9 +722,9 @@ namespace Corruption.Content
                     return;
                 }
                 float value = affix.LowerIsBetter ? affix.Min : affix.Max;
-                if (args.Length > 1 && !float.TryParse(args[1], NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                if (args.Length > 1 && !LootItem.TryParseValue(args[1], out value))
                 {
-                    Console.instance.Print($"'{args[1]}' isn't a number.");
+                    Console.instance.Print($"'{args[1]}' isn't a finite number.");
                     return;
                 }
                 string slot = args.Length > 2 ? args[2].ToLowerInvariant() : "";
@@ -744,7 +744,14 @@ namespace Corruption.Content
                     Console.instance.Print("Nothing equipped there.");
                     return;
                 }
-                var loot = Loot.Of(item) ?? new LootItem { Rarity = "magic" };
+                var loot = Loot.Of(item);
+                if (loot == null && item.m_customData.ContainsKey(LootItem.AffixesKey))
+                {
+                    // Keep unreadable saved affixes recoverable rather than overwrite them.
+                    Console.instance.Print($"{Loot.ColoredName(item)} has unreadable affix data; left unchanged (see the log).");
+                    return;
+                }
+                loot = loot ?? new LootItem { Rarity = "magic" };
                 loot.Lines.Add(new LootItem.Line { Ids = new[] { affix.Id }, Value = value });
                 loot.Write(item.m_customData);
                 Console.instance.Print($"Added {affix.Id} = {value.ToString(CultureInfo.InvariantCulture)} to {Loot.ColoredName(item)}.");

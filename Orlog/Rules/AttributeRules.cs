@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Orlog.Rules
@@ -107,16 +108,77 @@ namespace Orlog.Rules
     /// <summary>Points and bonuses from attributes. No game dependencies, so it is unit-tested.</summary>
     internal static class AttributeRules
     {
-        /// <summary>Stat points earned by <paramref name="level" /> (D2: none at level 1, then per level).</summary>
+        /// <summary>Stat points earned by <paramref name="level" /> (D2: none at level 1, then per level); at most int.MaxValue.</summary>
         public static int Earned(int level, int perLevel)
         {
-            return Math.Max(0, level - 1) * Math.Max(0, perLevel);
+            return Clamp(Math.Max(0L, (long)level - 1) * Math.Max(0, perLevel));
         }
 
-        /// <summary>Unspent points; never below 0 (a lowered setting can leave more spent than earned).</summary>
+        /// <summary>
+        ///     Points spent in total, counting only positive amounts, and at most int.MaxValue: a damaged save with huge
+        ///     amounts reads as "everything spent" instead of overflowing (or throwing, as LINQ's checked Sum does).
+        /// </summary>
+        public static int Total(IEnumerable<int> spent)
+        {
+            long total = 0;
+            if (spent != null)
+            {
+                foreach (int points in spent)
+                {
+                    if (points > 0)
+                    {
+                        total = Math.Min(int.MaxValue, total + points);
+                    }
+                }
+            }
+            return (int)total;
+        }
+
+        /// <summary>
+        ///     A saved point count: a whole number above 0. One too big for an int reads as int.MaxValue (so it still
+        ///     counts as spent, and nothing more can be spent on top), never as 0, which would let the next spend
+        ///     overwrite it. Anything else (empty, negative, not a number) is false.
+        /// </summary>
+        public static bool TryParsePoints(string text, out int points)
+        {
+            points = 0;
+            text = text?.Trim() ?? "";
+            if (long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out long value))
+            {
+                if (value <= 0)
+                {
+                    return false;
+                }
+                points = Clamp(value);
+                return true;
+            }
+            string digits = text.StartsWith("+", StringComparison.Ordinal) ? text.Substring(1) : text;
+            if (digits.Length > 0 && digits.All(c => c >= '0' && c <= '9') && digits.Any(c => c != '0'))
+            {
+                points = int.MaxValue;   // more digits than a long holds
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary><paramref name="a" /> + <paramref name="b" />, held within int's range instead of wrapping.</summary>
+        public static int AddClamped(int a, int b)
+        {
+            return Clamp((long)a + b);
+        }
+
+        private static int Clamp(long value)
+        {
+            return value > int.MaxValue ? int.MaxValue : value < int.MinValue ? int.MinValue : (int)value;
+        }
+
+        /// <summary>
+        ///     Unspent points; never below 0. A lowered setting can leave more spent than earned: the spent points stay
+        ///     where they are (nothing is refunded or removed), there is just nothing more to spend.
+        /// </summary>
         public static int Unspent(int level, int perLevel, int[] spent)
         {
-            return Math.Max(0, Earned(level, perLevel) - spent.Sum());
+            return Math.Max(0, Earned(level, perLevel) - Total(spent));
         }
 
         /// <summary>
