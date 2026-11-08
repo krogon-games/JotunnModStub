@@ -23,8 +23,8 @@ namespace Corruption.Rules
         public const int Height = 4;
 
         /// <summary>
-        ///     Currency (shards, boss essences; later orbs, Affix Splinters and runes) and maps, by prefab name. Items
-        ///     are recognised by the prefixes their tables give them (<see cref="EssenceTable.ItemPrefix" />,
+        ///     Currency (shards, boss essences, orbs; later Affix Splinters and runes) and maps, by prefab name. Items
+        ///     are recognised by the prefixes their tables give them (<see cref="EssenceTable.ItemPrefix" />, <see cref="OrbRules.ItemPrefix" />,
         ///     <see cref="MapList.ItemPrefix" />), so a new essence or map row goes to its tab without code changes.
         /// </summary>
         public static InventoryTab TabFor(string prefabName)
@@ -37,7 +37,8 @@ namespace Corruption.Rules
             {
                 return InventoryTab.Maps;
             }
-            if (prefabName == ShardRules.ShardPrefab || prefabName.StartsWith(EssenceTable.ItemPrefix, StringComparison.Ordinal))
+            if (prefabName == ShardRules.ShardPrefab || prefabName.StartsWith(EssenceTable.ItemPrefix, StringComparison.Ordinal) ||
+                prefabName.StartsWith(OrbRules.ItemPrefix, StringComparison.Ordinal))
             {
                 return InventoryTab.Currency;
             }

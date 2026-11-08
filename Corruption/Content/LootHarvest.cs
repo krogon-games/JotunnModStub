@@ -406,6 +406,17 @@ namespace Corruption.Content
             public global::DropTable Table;
             public bool Woodcutting;
             public Vector3 Position;
+
+            /// <summary>The hit this context belongs to (a nested hit on another object has its own).</summary>
+            public HitData Hit;
+
+            /// <summary>The hit carries the tool's damage for this object: chop on wood, pickaxe on rock (read before resistances).</summary>
+            public bool RightTool;
+
+            /// <summary>The struck object's (or deposit part's) health; negative infinity once it's gone.</summary>
+            public System.Func<float> Health;
+
+            public float HealthBefore = float.NegativeInfinity;
         }
 
         private static Context _current;
@@ -442,7 +453,8 @@ namespace Corruption.Content
         ///     Starts the hit's context when its sender sent chances for this object and the hit is a player's
         ///     (<see cref="ByPlayer" />); returns the previous context.
         /// </summary>
-        private static Context Begin(ZNetView view, long sender, HitData hit, global::DropTable table, bool woodcutting, Vector3 position)
+        private static Context Begin(ZNetView view, long sender, HitData hit, global::DropTable table, bool woodcutting, Vector3 position,
+            System.Func<float> health)
         {
             var previous = _current;
             Safe.Run("start a harvest", () =>
@@ -458,9 +470,62 @@ namespace Corruption.Content
                                           "(no attacker, or a creature); cached tool chances not used.");
                     return;
                 }
-                _current = new Context { Chances = chances, Table = table, Woodcutting = woodcutting, Position = position };
+                var context = new Context
+                {
+                    Chances = chances, Table = table, Woodcutting = woodcutting, Position = position, Hit = hit, Health = health,
+                    RightTool = woodcutting ? hit.m_damage.m_chop > 0f : hit.m_damage.m_pickaxe > 0f
+                };
+                context.HealthBefore = health();
+                _current = context;
             });
             return previous;
+        }
+
+        /// <summary>
+        ///     After the owner has applied a hit: Stonecutter's or Resinous roll once if the hit was valid (the right tool,
+        ///     and it did damage: the struck object or part lost health or broke). The extra stone or resin drops at the
+        ///     hit point, spawned by the owner like the object's own drops (Krogon, 2026-11-08).
+        /// </summary>
+        private static void AfterHit(HitData hit)
+        {
+            var context = _current;
+            if (context == null || !ReferenceEquals(context.Hit, hit) || context.Health == null)
+            {
+                return;
+            }
+            Safe.Run("roll Stonecutter's or Resinous", () =>
+            {
+                float after = context.Health();
+                PerHit(context.Chances, context.Woodcutting, context.RightTool, context.HealthBefore > 0f && after < context.HealthBefore, hit);
+            });
+        }
+
+        private static void PerHit(HarvestChances chances, bool woodcutting, bool rightTool, bool didDamage, HitData hit)
+        {
+            if (!ObjectDB.instance)
+            {
+                return;
+            }
+            var items = new HarvestItems<GameObject>
+            {
+                Stone = ObjectDB.instance.GetItemPrefab(StonePrefab),
+                Resin = ObjectDB.instance.GetItemPrefab(ResinPrefab)
+            };
+            var extra = HarvestRules.PerHit(chances, woodcutting, rightTool, didDamage, items, Random01);
+            if (!extra)
+            {
+                return;
+            }
+            // Just off the surface, towards the striker, so it doesn't spawn inside the rock or trunk.
+            var back = hit.m_dir.sqrMagnitude > 0.01f ? -hit.m_dir.normalized * 0.3f : Vector3.zero;
+            var go = Object.Instantiate(extra, hit.m_point + back + Vector3.up * 0.3f, Quaternion.Euler(0f, Random.Range(0, 360), 0f));
+            ItemDrop.OnCreateNew(go);
+        }
+
+        /// <summary>A ZDO-saved health, or negative infinity once the object is gone (it broke or was removed).</summary>
+        private static System.Func<float> SavedHealth(ZNetView view, int key, System.Func<float> fallback)
+        {
+            return () => view && view.IsValid() ? view.GetZDO().GetFloat(key, fallback()) : float.NegativeInfinity;
         }
 
         /// <summary>Odin's Grace on a tree, log or stump: takes the one-strike flag and harvests the whole tree. True when done.</summary>
@@ -478,6 +543,11 @@ namespace Corruption.Content
             try
             {
                 done = WholeTree.Harvest(piece, view, hit, chances);
+                if (done)
+                {
+                    // The strike harvested the tree: a damaging chop hit, so Resinous rolls once for it too.
+                    PerHit(chances, true, true, true, hit);
+                }
             }
             catch (System.Exception ex)
             {
@@ -500,9 +570,13 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropWhenDestroyed, true, __instance.transform.position);
+                var tree = __instance;
+                __state = Begin(tree.m_nview, sender, hit, tree.m_dropWhenDestroyed, true, tree.transform.position,
+                    SavedHealth(tree.m_nview, ZDOVars.s_health, () => tree.m_health));
                 return true;
             }
+
+            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -517,9 +591,13 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropWhenDestroyed, true, __instance.transform.position);
+                var log = __instance;
+                __state = Begin(log.m_nview, sender, hit, log.m_dropWhenDestroyed, true, log.transform.position,
+                    SavedHealth(log.m_nview, ZDOVars.s_health, () => 0f));
                 return true;
             }
+
+            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -546,9 +624,16 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                __state = Begin(__instance.m_nview, sender, hit, drops ? drops.m_dropWhenDestroyed : null, tree, __instance.transform.position);
+                var target = __instance;
+                // The default is vanilla's own: health grows with the world level (Destructible.RPC_Damage).
+                var saved = SavedHealth(target.m_nview, ZDOVars.s_health,
+                    () => target.m_health + Game.m_worldLevel * target.m_health * (Game.instance ? Game.instance.m_worldLevelMineHPMultiplier : 0f));
+                __state = Begin(target.m_nview, sender, hit, drops ? drops.m_dropWhenDestroyed : null, tree, target.transform.position,
+                    () => target.m_destroyed ? float.NegativeInfinity : saved());
                 return true;
             }
+
+            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -556,8 +641,15 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(MineRock), nameof(MineRock.RPC_Hit))]
         private static class RockHit
         {
-            private static void Prefix(MineRock __instance, long sender, HitData hit, out Context __state) =>
-                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropItems, false, __instance.transform.position);
+            private static void Prefix(MineRock __instance, long sender, HitData hit, int hitAreaIndex, out Context __state)
+            {
+                var rock = __instance;
+                var saved = SavedHealth(rock.m_nview, ("Health" + hitAreaIndex).GetStableHashCode(), () => rock.GetHealth());
+                __state = Begin(rock.m_nview, sender, hit, rock.m_dropItems, false, rock.transform.position,
+                    () => rock.GetHitArea(hitAreaIndex) == null ? float.NegativeInfinity : saved());
+            }
+
+            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -566,8 +658,23 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(MineRock5), nameof(MineRock5.RPC_Damage))]
         private static class DepositHit
         {
-            private static void Prefix(MineRock5 __instance, long sender, HitData hit, out Context __state) =>
-                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropItems, false, __instance.transform.position);
+            private static void Prefix(MineRock5 __instance, long sender, HitData hit, int hitAreaIndex, out Context __state)
+            {
+                var deposit = __instance;
+                __state = Begin(deposit.m_nview, sender, hit, deposit.m_dropItems, false, deposit.transform.position, () =>
+                {
+                    if (!deposit.m_nview || !deposit.m_nview.IsValid())
+                    {
+                        return float.NegativeInfinity;
+                    }
+                    deposit.LoadHealth();
+                    var area = deposit.GetHitArea(hitAreaIndex);
+                    return area == null ? float.NegativeInfinity : area.m_health;
+                });
+            }
+
+            /// <summary>Only the part struck counts for Stonecutter's: parts that fall for lack of support aren't hits.</summary>
+            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
