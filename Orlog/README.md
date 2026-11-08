@@ -44,3 +44,7 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - `orlog_stat <strength|dexterity|vitality|energy> [points]`: spend stat points, until the UI exists (no `devcommands` needed).
 - `orlog_skill <skill id> [points]`: spend skill points (no `devcommands` needed).
 - `orlog_respec`: take back all spent stat and skill points.
+
+## Changelog
+- 0.2.0 (2026-11-08): review fixes (PR #57): stat and skill point totals can't overflow, and a lowered `StatPointsPerLevel` keeps the points already spent.
+- 0.1.0 (unreleased): first version.

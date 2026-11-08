@@ -4,7 +4,7 @@
     <AssemblyName>Orlog</AssemblyName>
     <RootNamespace>Orlog</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Product>Orlog</Product>
     <Description>Diablo 2-style classes for Valheim: character levels from XP, stat and skill points, class skill trees.</Description>
     <Copyright>Copyright © 2026</Copyright>

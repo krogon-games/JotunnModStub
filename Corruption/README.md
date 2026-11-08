@@ -58,6 +58,7 @@ Look settings (per player, not synced, restart to apply):
 | Look / RiftforgeTintStrength | 0.6 | 0 = Galdr table colours, 1 = fully the tint colour |
 
 ## Changelog
+- 0.4.0 (2026-11-08): review fixes (PR #57): a corrupted boss summon stays one corrupted boss when more offerings arrive during the spawn delay (one corrupted item used); a saved affix value that isn't a finite number is refused; the talisman's fight-back time survives a change of owner.
 - 0.3.0 (2026-11-08): gathering review fixes (PR #55): Seismic and Odin's Grace break the touching chunks on your own deposits too, Veinbreaker's count starts over whenever the tool is unequipped, only your own swings get your tool's on-harvest affixes; test command `co_own`.
 - 0.2.0 (2026-11-08): everything merged into `master` since 0.1.0, up to the code-review fixes (PR #53): safe tab loading, Magic/Rare loot on both death paths, arrows use their own bow's affixes.
 - 0.1.0 (unreleased): corruption shards, the Riftforge, talismans, boss essences, maps and rips (travel only).

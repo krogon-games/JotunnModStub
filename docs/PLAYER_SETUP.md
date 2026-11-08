@@ -62,7 +62,7 @@ In r2modman, go to **Online**, search for each mod and click **Download** (accep
 1. In r2modman, click **Start modded** (not the normal Steam button: that starts the game without mods).
 2. Join the server as usual.
 
-**Check it worked:** in the profile folder, open `BepInEx/LogOutput.log` and search for `Corruption 0.3.0 loaded`, `Orlog 0.1.0 loaded` and `CraftingOverhaul 0.2.0 loaded`.
+**Check it worked:** in the profile folder, open `BepInEx/LogOutput.log` and search for `Corruption 0.4.0 loaded`, `Orlog 0.2.0 loaded` and `CraftingOverhaul 0.2.0 loaded`.
 
 ## Updating
 
