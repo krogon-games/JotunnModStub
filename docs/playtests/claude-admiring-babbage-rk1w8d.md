@@ -83,4 +83,6 @@ Everyone on the new build (check the build stamp lines in each log).
 ### Skadi re-test (2026-11-08)
 - **C5, C6:** passed: "c5 and c6 checks out". Every solo step (A–D) has now passed. Still to do: the server steps E–H with 2–3 players.
 
-### Final play-test (date)
+### Final play-test (2026-11-08)
+- **Solo: passed.** Every step of A–D passed (2026-11-07/08).
+- **Multiplayer (E–H): skipped for now** (Krogon, 2026-11-08: "skipping multiplayer testing at this stage"). Moved to the group evening: `PLAYTEST.md` → Session 2, 2e.

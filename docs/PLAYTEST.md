@@ -204,6 +204,12 @@ Everything else passed 2026-10-31 ("everything looks really good now"). Left: wi
 3. **One player** stays more than 70 m away. Expect: no XP for them.
 4. Other players' levels don't show anywhere on screen yet; they're only used for the split above.
 
+**2e. Review fixes (2026-11-07, multiplayer part skipped for now by Krogon, 2026-11-08).** Full steps in [`playtests/claude-admiring-babbage-rk1w8d.md`](playtests/claude-admiring-babbage-rk1w8d.md):
+1. **E:** two players, one chest: only one craft when there's exactly enough; "in use" while someone holds a chest for building or has it open; still works when the chest's owner lacks CraftingOverhaul (2a step 7 is E1).
+2. **F:** loot per player: about twice the Magic/Rare drops with two players near; no kill drops twice.
+3. **G:** arrow affixes on the server: Skadi (with `devcommands`, the top-left "Skadi: stack N" message) and life steal follow the bow when switching mid-flight.
+4. **H (Part 3, 3 players):** rip waves after the heart changes hands: send Claude the `Rip waves: …` log lines from the game that took over, and your creature counts.
+
 ### Part 3: a rip run (about 45 minutes)
 
 On a dedicated server the rip request goes to the server and its answer comes back; alone this was all one game.
