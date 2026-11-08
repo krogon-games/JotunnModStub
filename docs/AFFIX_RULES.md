@@ -189,11 +189,12 @@ Each half keeps the original affix's range; both halves have half the normal rol
 
 **Derived from the user's spec and the game code (no new numbers):**
 - **Odin's Grace** (the user's spec: the chunk hit plus every chunk touching it; the whole tree from tree, log or stump). "Touching" = the chunks' colliders overlap the hit chunk's bounds. The game doesn't link a fallen log to its stump, so the mod tags them: when a tree falls or a log splits, the pieces and the stump get a shared tree ID (stored on each object), and Odin's Grace harvests every loaded piece with that ID plus the pieces each log would still split into. Trees felled before the mod was installed have no ID: there it harvests the piece hit and everything it would split into.
-- **Seismic** uses the same "touching" rule: the hit also lands on the touching chunks. **Splintering** sends a copy of the same hit to the nearest other tree or log within the axe's own attack range (read from the item). Neither needs a radius or damage share of its own.
+- **Seismic** uses the same "touching" rule: the hit also lands on the touching chunks. Which chunks touch is read before the hit is sent (2026-11-08), so it doesn't depend on whose game runs the deposit. **Splintering** sends a copy of the same hit to the nearest other tree or log within the axe's own attack range (read from the item). Neither needs a radius or damage share of its own.
 - **Harvest event:** every object or deposit part that drops resources when it breaks counts once (a tree, each log, a stump, a rock, each chunk of a copper deposit). On-harvest effects roll per event.
 - **Lumberjack's** covers standing trees, **Timberfall** fallen logs, **Rootbreaker** stumps: the user's three separate affixes.
 - **Forester's:** the seed is the one the tree's own vanilla drop table already lists (1.0.20: Beech → Beech seeds, Pine → Pine cone, Birch → Birch seeds, Fir → Fir cone, Oak → Acorn, Deep North fir → its fir cone).
-- **Veinbreaker's** counts hits on rocks and deposits only; the count resets when the tool is unequipped.
+- **Veinbreaker's** counts hits on rocks and deposits only; the count resets when the tool is unequipped, for any reason, including putting it away, swimming and eating with it in hand (user, 2026-11-08).
+- **Only the player's own swings** (user, 2026-11-08): on-harvest affixes apply to what a player's hit breaks (the swing, or a copy of it: Seismic, Splintering, Odin's Grace, the hit a breaking rock passes to its copper deposit). A tree, log, stump or rock broken without a player's hit (rolling or falling, another falling tree, a creature) gives normal drops, even if the player hit it earlier.
 - **Efficient and Fit stack** on a pickaxe: one lowers each swing's cost, the other sometimes makes it free.
 
 ### Open questions (gathering tools)

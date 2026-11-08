@@ -126,6 +126,30 @@ namespace Corruption.Content
         }
 
         /// <summary>
+        ///     Veinbreaker's count starts over when its tool leaves the local player's hands: switching items, putting it
+        ///     away (the hide key, swimming, eating; the game unequips it for those too), dropping, storing or breaking it.
+        ///     A prefix, because the game clears the equipped slot inside; only a real unequip of an equipped item counts.
+        /// </summary>
+        [HarmonyPatch(typeof(Humanoid), nameof(Humanoid.UnequipItem))]
+        private static class ToolUnequipped
+        {
+            private static void Prefix(Humanoid __instance, ItemDrop.ItemData item)
+            {
+                if (item == null || __instance != Player.m_localPlayer)
+                {
+                    return;
+                }
+                Safe.Run("reset Veinbreaker's count", () =>
+                {
+                    if (__instance.IsItemEquiped(item))
+                    {
+                        Veinbreaker.Unequipped(item);
+                    }
+                });
+            }
+        }
+
+        /// <summary>
         ///     The rolls a mining swing makes once (one swing can hit several deposit parts): Veinbreaker's count,
         ///     Seismic, Odin's Grace.
         /// </summary>
@@ -165,24 +189,77 @@ namespace Corruption.Content
             return kill;
         }
 
-        private static List<int> TouchingAreas(Collider hitArea, IList<Collider> areas)
+        /// <summary>
+        ///     Seismic's and Odin's Grace's extra hits for one struck deposit part, worked out in the <c>Damage</c> prefix,
+        ///     before the original hit is sent, and sent in the postfix, after it (so the owner gets the original first).
+        /// </summary>
+        private sealed class Strike
         {
-            var touching = new List<int>();
-            if (!hitArea)
+            public List<GatheringRules.ExtraHit> Extra;
+        }
+
+        /// <summary>
+        ///     Once per swing, for the first deposit part it hits: takes the swing's Seismic and Odin's Grace and plans
+        ///     their extra hits from the parts as they are now. Reading them later fails on the striker's own deposits:
+        ///     the game handles an owner's hit at once and hides the part it breaks (<c>MineRock5.RPC_SetAreaHealth</c>,
+        ///     <c>MineRock.RPC_Hide</c>), so its bounds would be gone and no neighbour found.
+        /// </summary>
+        private static Strike PlanStrike(Collider struck, IList<Collider> areas)
+        {
+            if (!(Swing.Seismic || Swing.OdinsGrace))
             {
-                return touching;
+                return null;
             }
-            var bounds = hitArea.bounds;
-            bounds.Expand(TouchMargin * 2f);
+            bool seismic = Swing.Seismic, odin = Swing.OdinsGrace;
+            Swing.Seismic = Swing.OdinsGrace = false;
+            int hitIndex = -1;
+            var boxes = new List<GatheringRules.AreaBox>(areas.Count);
             for (int i = 0; i < areas.Count; i++)
             {
                 var area = areas[i];
-                if (area && area != hitArea && area.enabled && area.gameObject.activeInHierarchy && bounds.Intersects(area.bounds))
+                if (!area)
                 {
-                    touching.Add(i);
+                    boxes.Add(new GatheringRules.AreaBox());
+                    continue;
                 }
+                if (struck && area == struck)
+                {
+                    hitIndex = i;
+                }
+                var b = area.bounds;
+                boxes.Add(new GatheringRules.AreaBox(b.min.x, b.min.y, b.min.z, b.max.x, b.max.y, b.max.z,
+                    area.enabled && area.gameObject.activeInHierarchy));
             }
-            return touching;
+            if (hitIndex < 0)
+            {
+                return null;
+            }
+            var touching = GatheringRules.TouchingAreas(hitIndex, boxes, TouchMargin);
+            return new Strike { Extra = GatheringRules.ExtraHits(hitIndex, touching, seismic, odin) };
+        }
+
+        /// <summary>Sends a planned strike's extra hits; stops if the deposit is gone (its last part broke).</summary>
+        private static void SendStrike(ZNetView view, string rpc, HitData hit, Strike strike)
+        {
+            foreach (var extra in strike.Extra)
+            {
+                if (view == null || !view.IsValid())
+                {
+                    return;
+                }
+                HitData copy;
+                if (extra.Killing)
+                {
+                    copy = KillingHit(hit);
+                }
+                else
+                {
+                    copy = hit.Clone();
+                    copy.m_radius = 0f;
+                    Swing.Processed.Add(copy);
+                }
+                view.InvokeRPC(rpc, copy, extra.Area);
+            }
         }
 
         // ---- Rock and ore ----
@@ -190,113 +267,78 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(MineRock5), nameof(MineRock5.Damage))]
         private static class MultiPartDeposit
         {
-            private static void Prefix(HitData hit, out bool __state)
+            private static void Prefix(MineRock5 __instance, HitData hit, out Strike __state)
             {
-                __state = Take(hit);
+                __state = null;
+                bool take = Take(hit);
                 Enter();
-                if (__state)
-                {
-                    ScaleDepositHit(hit);
-                }
-            }
-
-            private static void Finalizer() => Leave();
-
-            /// <summary>Seismic and Odin's Grace: extra hits on the parts touching the one struck, sent after the original.</summary>
-            private static void Postfix(MineRock5 __instance, HitData hit, bool __state)
-            {
-                if (!__state || !(Swing.Seismic || Swing.OdinsGrace))
+                if (!take)
                 {
                     return;
                 }
-                var tool = Swing.Tool;
-                bool seismic = Swing.Seismic, odin = Swing.OdinsGrace;
-                Swing.Seismic = Swing.OdinsGrace = false;
-                Safe.Run("apply Seismic and Odin's Grace on a deposit", () =>
+                ScaleDepositHit(hit);
+                Strike strike = null;
+                Safe.Run("plan Seismic and Odin's Grace on a deposit", () =>
                 {
                     if (__instance.m_nview == null || !__instance.m_nview.IsValid() || __instance.m_hitAreas == null)
                     {
                         return;
                     }
-                    int hitIndex = hit.m_hitCollider ? __instance.GetAreaIndex(hit.m_hitCollider) : -1;
-                    if (hitIndex < 0)
-                    {
-                        return;
-                    }
-                    var colliders = new List<Collider>();
+                    var colliders = new List<Collider>(__instance.m_hitAreas.Count);
                     foreach (var area in __instance.m_hitAreas)
                     {
-                        colliders.Add(area.m_collider);
+                        colliders.Add(area != null ? area.m_collider : null);
                     }
-                    var touching = TouchingAreas(colliders[hitIndex], colliders);
-                    if (odin)
-                    {
-                        __instance.m_nview.InvokeRPC("RPC_Damage", KillingHit(hit), hitIndex);
-                    }
-                    foreach (int index in touching)
-                    {
-                        HitData extra;
-                        if (odin)
-                        {
-                            extra = KillingHit(hit);
-                        }
-                        else
-                        {
-                            extra = hit.Clone();
-                            extra.m_radius = 0f;
-                            Swing.Processed.Add(extra);
-                        }
-                        __instance.m_nview.InvokeRPC("RPC_Damage", extra, index);
-                    }
+                    strike = PlanStrike(hit.m_hitCollider, colliders);
                 });
+                __state = strike;
+            }
+
+            private static void Finalizer() => Leave();
+
+            /// <summary>Seismic and Odin's Grace: extra hits on the parts touching the one struck, sent after the original.</summary>
+            private static void Postfix(MineRock5 __instance, HitData hit, Strike __state)
+            {
+                if (__state != null)
+                {
+                    Safe.Run("apply Seismic and Odin's Grace on a deposit",
+                        () => SendStrike(__instance.m_nview, "RPC_Damage", hit, __state));
+                }
             }
         }
 
         [HarmonyPatch(typeof(MineRock), nameof(MineRock.Damage))]
         private static class SinglePartDeposit
         {
-            private static void Prefix(HitData hit, out bool __state)
+            private static void Prefix(MineRock __instance, HitData hit, out Strike __state)
             {
-                __state = Take(hit);
+                __state = null;
+                bool take = Take(hit);
                 Enter();
-                if (__state)
+                if (!take)
                 {
-                    ScaleDepositHit(hit);
+                    return;
                 }
+                ScaleDepositHit(hit);
+                Strike strike = null;
+                Safe.Run("plan Seismic and Odin's Grace on a rock", () =>
+                {
+                    if (__instance.m_nview != null && __instance.m_nview.IsValid() && __instance.m_hitAreas != null)
+                    {
+                        strike = PlanStrike(hit.m_hitCollider, __instance.m_hitAreas);
+                    }
+                });
+                __state = strike;
             }
 
             private static void Finalizer() => Leave();
 
-            private static void Postfix(MineRock __instance, HitData hit, bool __state)
+            private static void Postfix(MineRock __instance, HitData hit, Strike __state)
             {
-                if (!__state || !(Swing.Seismic || Swing.OdinsGrace))
+                if (__state != null)
                 {
-                    return;
+                    Safe.Run("apply Seismic and Odin's Grace on a rock", () => SendStrike(__instance.m_nview, "Hit", hit, __state));
                 }
-                bool odin = Swing.OdinsGrace;
-                Swing.Seismic = Swing.OdinsGrace = false;
-                Safe.Run("apply Seismic and Odin's Grace on a rock", () =>
-                {
-                    if (__instance.m_nview == null || !__instance.m_nview.IsValid() || __instance.m_hitAreas == null)
-                    {
-                        return;
-                    }
-                    int hitIndex = hit.m_hitCollider ? __instance.GetAreaIndex(hit.m_hitCollider) : -1;
-                    if (hitIndex < 0)
-                    {
-                        return;
-                    }
-                    if (odin)
-                    {
-                        __instance.m_nview.InvokeRPC("Hit", KillingHit(hit), hitIndex);
-                    }
-                    foreach (int index in TouchingAreas(__instance.m_hitAreas[hitIndex], __instance.m_hitAreas))
-                    {
-                        var extra = odin ? KillingHit(hit) : hit.Clone();
-                        Swing.Processed.Add(extra);
-                        __instance.m_nview.InvokeRPC("Hit", extra, index);
-                    }
-                });
             }
         }
 

@@ -1,10 +1,10 @@
 # Handoff: `claude/festive-albattani-lg4p35`
 
-**Written:** 2026-11-08 · **Branch:** started from `master` `a6fda65`; no PR yet.
+**Written:** 2026-11-08 · **Branch:** ahead of `master` (`a6fda65`), 0 behind; no PR yet.
 
 ## Stage
 
-Building.
+Waiting for Krogon's playtest.
 
 ## Purpose
 
@@ -16,7 +16,13 @@ Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-Being built.
+Built, untested in game:
+- **Seismic and Odin's Grace on your own deposits:** the touching chunks are read before the hit is sent. Before, when your game ran the deposit, a hit that broke the chunk found no neighbours. Tool tier still applies; no chunk drops twice (tests simulate both owners).
+- **Veinbreaker's** count starts over on any unequip of the tool (`Humanoid.UnequipItem` prefix).
+- **Only your swings:** the owner applies cached tool chances only to a player's hit; physics and creature breaks give normal drops; the copper-deposit hand-on is kept. The owner logs each skipped case.
+- **Odin's Grace, two games on one tree (suspected, not reproduced):** both may harvest the whole tree. A log line per whole-tree harvest and the test command `co_own` were added for the check; no fix until it's confirmed.
+- Game code read in the cloud's 1.0.14 assemblies only; no 1.0.21 code with method bodies is available here.
+- `/workspace/.setup/activate.sh` doesn't exist in this cloud session; ran `dotnet restore` once, then the given build and test commands.
 
 ## Decisions
 
@@ -25,23 +31,22 @@ Being built.
 
 ## Playtest
 
-Checklist to come in [`docs/playtests/claude-festive-albattani-lg4p35.md`](../playtests/claude-festive-albattani-lg4p35.md).
+[`docs/playtests/claude-festive-albattani-lg4p35.md`](../playtests/claude-festive-albattani-lg4p35.md): A–C alone (about 20 minutes), D on the server (also `PLAYTEST.md` → Session 2, 2f). No feedback yet.
 
 ## Open questions for Krogon
 
-None yet.
+None. D3 (two players, one tree) decides whether the whole-tree harvest needs coordinating.
 
 ## Next steps
 
-1. Seismic and Odin's Grace find the touching parts before the hit lands.
-2. Veinbreaker's resets on unequip.
-3. Leftover tool chances stop applying to breaks without a swing.
-4. Two-player check of Odin's Grace on one tree.
+1. Krogon's solo play-test (A–C); fix what fails.
+2. The server check D, especially D3; if both games harvest one tree, make the tree's harvest happen once (coordinated before rewards spawn).
+3. `/handoff`, then a PR into `master`.
 
 ## Checks
 
-Not run yet (`/handoff`).
+Build PASS (0 errors) · tests PASS (315) · in-game: needs Krogon's playtest. Full `/handoff` checks not run yet.
 
 ## Merge notes
 
-Not ready. Gameplay changes in Corruption: version bump needed at merge.
+Not ready (no play-test). Gameplay changed in Corruption: version bump needed at merge. Shared docs touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `Corruption/CorruptionPlugin.cs` (one command line), `docs/AFFIX_RULES.md`, `docs/ARCHITECTURE.md`, `docs/mod-compatibility.md`.
