@@ -1,6 +1,6 @@
 # Status
 
-**Last updated:** 2026-11-08 by the coordinator, from the real state of every branch on GitHub (`git fetch`, then each branch compared with `master`, after PR #53).
+**Last updated:** 2026-11-08 by the coordinator, from the real state of GitHub (every branch fetched and compared with `master`, open pull requests listed), after PR #55 and Corruption's bump to 0.3.0.
 
 **Only the coordinator, working on `master`, edits this file.** Feature branches never touch it, so merges don't clash. Feature sessions report through their handoff file (`docs/handoffs/<branch>.md`).
 
@@ -8,7 +8,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 ## In one paragraph
 
-**Everything is in `master`.** Every pull request (up to #53) is merged and no branch has work that `master` lacks. So nothing is waiting to be merged today. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
+**Everything is in `master`.** Every pull request (up to #55) is merged, none is open, and the only branch left besides `master` has nothing `master` lacks. So nothing is waiting to be merged today. The older branches have been deleted on GitHub; their handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
 
 ## Branches
 
@@ -17,32 +17,36 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 | Branch | Purpose | Stage | Behind / ahead | Ready to merge? |
 |---|---|---|---|---|
 | `master` | The shared, play-tested base. **Versions: Corruption 0.3.0, CraftingOverhaul 0.2.0, Orlog 0.1.0** (Corruption bumped again 2026-11-08 after PR #55) | — | — | — |
-| `claude/admiring-babbage-rk1w8d` | Code-review fixes: safe tab loading, Magic/Rare loot on both death paths, one player at a time on a chest for craft-from-chests, arrows use their own bow's affixes | **Merged** (PR #53, 2026-11-08). Solo play-test passed; multiplayer skipped by you for now | 1 / 0 | Nothing left to merge. Safe to delete |
-| `claude/affixes-loot` | Loot: Magic/Rare drops, affixes, orbs, Riftforge crafting rules, uniques | Waiting for your play-test of loot steps 3–4 (merged untested) and your answers on the orb rules | 50 / 0 | Nothing to merge (PRs #11, #13, #18). Its handoff still says PR #18 is open; it was merged 2026-11-02. Safe to delete |
-| `claude/class-skills` | Classes (Orlog): levels, attributes, the Orlog stone, the Amazon's skill tree and skills | Asking you questions before C3 (the Amazon's passives) | 32 / 0 | Nothing to merge (PRs #8, #9, #16, #20, #21). Safe to delete |
-| `claude/rips-bosses` | Maps, rips, waves, corrupted bosses, server messages | Asking you to approve the map tiers and affixes table (R1) | 25 / 0 | Nothing to merge (PRs #4–#6, #10, #14, #22, #23). Safe to delete |
-| `claude/ui-overhaul` | Every screen: character sheet, HUD bars, classes UI, tabs, next the Riftforge window | Asking where the Riftforge window opens; waiting for a small play-test | 43 / 0 | Nothing to merge (PRs #3, #7, #12, #15, #19). Its handoff still says PR #19 is open; it was merged 2026-11-02. Safe to delete |
-| `claude/busy-wozniak-c0j9kc` | One-off session that wrote the roadmap (PR #17) | Finished; no handoff file | 59 / 0 | Nothing to merge. Safe to delete |
-| `claude/valheim-modding-exploration-izv3l8` | The first session (PRs #1, #2) | Finished; no handoff file | 178 / 0 | Nothing to merge. Safe to delete |
-| `claude/awesome-ptolemy-gjigjh` | Build-test session for the cloud setup (2026-11-06) | Finished; handoff merged 2026-11-08 | 20 / 0 | Nothing to merge. Safe to delete |
-| `claude/relaxed-einstein-kdvz4t` | This coordinator session | Handoff merged 2026-11-08 | 15 / 0 | Nothing to merge. Keep while the coordinator session is in use |
+| `claude/festive-albattani-lg4p35` | Gathering review fixes: Seismic and Odin's Grace on your own deposits, Veinbreaker's resets on any unequip, only your own swings get your tool's affixes; a check of a suspected double whole-tree harvest with two players | **Merged** (PR #55, 2026-11-08). Solo play-test passed; multiplayer later, as you decided | 3 / 0 | Nothing left to merge. Safe to delete |
 
-Every branch above holds nothing `master` lacks (checked 2026-11-08), so deleting any of them loses nothing. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon). New rounds start new branches from `master`.
+Checked 2026-11-08: these are the only two branches on GitHub, and there are no open pull requests. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
+
+**Areas without a branch now** (their old branches were deleted; each next round starts a new branch from `master`, and its handoff file in `docs/handoffs/` says where it stopped):
+
+| Area | Last handoff | Where it stopped |
+|---|---|---|
+| Loot (Magic/Rare drops, affixes, orbs, Riftforge rules, uniques) | `claude-affixes-loot.md` | Waiting for your play-test of loot steps 3–4 (partly done through PR #55) and your answers on the orb rules. Its handoff still says PR #18 is open; it was merged 2026-11-02 |
+| Classes (Orlog: levels, attributes, the Orlog stone, the Amazon) | `claude-class-skills.md` | Asking you questions before C3 (the Amazon's passives) |
+| Rips and bosses (maps, rips, waves, corrupted bosses) | `claude-rips-bosses.md` | Asking you to approve the map tiers and affixes table (R1) |
+| UI (character sheet, HUD bars, classes UI, tabs, next the Riftforge window) | `claude-ui-overhaul.md` | Asking where the Riftforge window opens; waiting for a small play-test. Its handoff still says PR #19 is open; it was merged 2026-11-02 |
+| Code-review fixes, round 1 | `claude-admiring-babbage-rk1w8d.md` | Merged (PR #53); multiplayer steps left for the group evening |
+| Coordinator, cloud build test | `claude-relaxed-einstein-kdvz4t.md`, `claude-awesome-ptolemy-gjigjh.md` | Finished |
 
 ### Merge notes
 
-- **⚠ `docs/corruption-design.md`: `master`'s version always wins.** These branches carry an **older** copy of it (without your 2026-11-01 decisions: one map per group, shards per tier, scars expire after 3 days): `claude/affixes-loot`, `claude/ui-overhaul`, `claude/busy-wozniak-c0j9kc`, `claude/class-skills`, `claude/valheim-modding-exploration-izv3l8`. Whenever one of them is merged (or work restarts on it), merge `master` into it first; if `docs/corruption-design.md` conflicts or changes, keep `master`'s version and re-apply only genuinely new lines on top. `claude/rips-bosses` already has the current copy.
-- **Start every round from the latest `master`** (`git fetch origin master && git merge origin/master`). All the old branches are behind; a session that skips this works on stale docs and code.
+- **`docs/corruption-design.md`: `master`'s version always wins.** The branches that carried an older copy are deleted; new branches start from `master` and have the current one.
+- **Start every round from the latest `master`** (`git fetch origin master && git merge origin/master`). A session that skips this works on stale docs and code.
 - **Version bump at merge (user, 2026-11-06).** Feature branches never change version numbers; their handoff says "gameplay changed: version bump needed at merge" and names the plugins. When the coordinator merges such a branch into `master`, it raises each named plugin's second number once (`0.1.0` → `0.2.0`) in three places that must agree: `<Version>` in the `.csproj`, `PluginVersion` in the main `.cs`, `version_number` in `Package/manifest.json`. Several branches merged in one go share one bump. First bump done 2026-11-08 after PR #53: Corruption and CraftingOverhaul 0.1.0 → 0.2.0 (Orlog unchanged, 0.1.0). Second, 2026-11-08 after PR #55: Corruption 0.2.0 → 0.3.0. The group evening's build check (`PLAYTEST.md` → Session 2) and `PLAYER_SETUP.md` expect these numbers.
 - **Files only the coordinator edits:** `STATUS.md`, `docs/DECISIONS.md`. If a feature branch changed them, keep `master`'s version.
-- **Shared files that still collide** (add, never rewrite; keep both sides in conflicts): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/Content/Texts.cs`.
+- **Shared files that still collide** (add, never rewrite; keep both sides in conflicts): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/Content/Texts.cs`.
 
 ## Half-finished
 
 Built and merged, but not play-tested (the code is in `master`):
-- **Loot steps 3–4** (gathering-tool affixes, on-harvest effects, Odin's Grace on trees, the proc and utility affixes): never tried in game. [#26](https://github.com/krogon-games/JotunnModStub/issues/26)
+- **Loot steps 3–4** (gathering-tool affixes, on-harvest effects, Odin's Grace on trees, the proc and utility affixes): partly tried. PR #55's solo play-test (2026-11-08) passed Seismic, Odin's Grace on rock and ore, Veinbreaker's and Bountiful; the rest never tried in game. [#26](https://github.com/krogon-games/JotunnModStub/issues/26)
 - **Two dedicated-server fixes** for rips and bosses (PR #22): read in the code, never run on a server. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **PR #53's multiplayer steps** (skipped by you on 2026-11-08): two players on one chest, loot per player, arrows on the server, and a check of a suspected rip-wave undercount when the heart passes to another player's game (needs 3 players). In `PLAYTEST.md` → Session 2, 2e. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
+- **PR #55's multiplayer steps** (left for later by you on 2026-11-08): another player's game running the deposit or log, and a check of a suspected double whole-tree harvest when two players' games each run part of one tree and both swing Odin's Grace at once (not fixed until it's seen; send Claude both players' `Odin's Grace: whole-tree harvest …` lines). In `PLAYTEST.md` → Session 2, 2f. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **Small leftovers:** the adrenaline bar, one click per button, the build stamp, summons fighting players only, weapon-skill and life-steal affixes, crafting an Odin item, PlantEasily planting from chests. [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
 - **Multiplayer:** nothing at all has been tried with more than one player. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 
@@ -61,7 +65,7 @@ Started but not finished:
 
 Play-tests (only you can run them):
 1. **The group evening** on the dedicated server, after the release build. [#24](https://github.com/krogon-games/JotunnModStub/issues/24), [#25](https://github.com/krogon-games/JotunnModStub/issues/25)
-2. **Loot steps 3–4**, about an hour alone. [#26](https://github.com/krogon-games/JotunnModStub/issues/26)
+2. **Loot steps 3–4**, about an hour alone (the gathering parts PR #55 covered are done). [#26](https://github.com/krogon-games/JotunnModStub/issues/26)
 3. **The small leftovers.** [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
 
 Questions, by session (each session asks them at the start of its round):
@@ -85,14 +89,14 @@ Map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issue
 
 ## Recommended merge order
 
-**Today: nothing to merge.** Every branch is already in `master` and there are no open pull requests.
+**Today: nothing to merge.** PR #55 was the last; no pull request is open.
 
 For the next round's pull requests, merge **safest first**:
 
 1. **Coordinator and docs-only PRs.** They change no game code.
-2. **Classes** (`claude/class-skills`). Orlog lives in its own folder and plugin; no other session edits its files. Its one risk, the damage patch order with Corruption, is agreed in `docs/mod-compatibility.md` before building.
-3. **Loot** (`claude/affixes-loot`). It touches shared Corruption files (`CorruptionPlugin.cs`, `Texts.cs`), and the UI and rips work builds on its Riftforge rules, so it should land before them.
-4. **UI** (`claude/ui-overhaul`). The Riftforge window calls the loot rules, so it goes in after them. Its own screens are self-contained.
-5. **Rips** (`claude/rips-bosses`) last. Map tiers need a hook in the loot session's `LootPatches.cs` and map rolling in the Riftforge window, so it depends on both.
+2. **Classes** (Orlog). Orlog lives in its own folder and plugin; no other session edits its files. Its one risk, the damage patch order with Corruption, is agreed in `docs/mod-compatibility.md` before building.
+3. **Loot**. It touches shared Corruption files (`CorruptionPlugin.cs`, `Texts.cs`), and the UI and rips work builds on its Riftforge rules, so it should land before them.
+4. **UI**. The Riftforge window calls the loot rules, so it goes in after them. Its own screens are self-contained.
+5. **Rips** last. Map tiers need a hook in the loot session's `LootPatches.cs` and map rolling in the Riftforge window, so it depends on both.
 
 Before each merge: the branch has merged the latest `master`, `dotnet test CraftingOverhaul.Tests` passes, and you have play-tested it (the round's last step). Merge one PR, then have the next branch merge `master` again before you merge it. After merging gameplay changes, the coordinator raises the version (Merge notes above) before the next release build.
