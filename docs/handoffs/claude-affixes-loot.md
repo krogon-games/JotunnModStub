@@ -1,6 +1,10 @@
 # Handoff: `claude/affixes-loot`
 
-**Written:** 2026-11-02, from the real branch state (`git status` clean, in sync with `origin`). The branch is 7 commits ahead of `master` (`dd93cb8`); `master` has nothing the branch lacks. **PR #18** is open from this branch into `master`, mergeable (clean), at the same commit (`7712290`). Earlier work from this branch is already in `master` through PR #11 (loot step 1) and PR #13 (player stats, Odin unlock).
+**Written:** 2026-11-02, from the real branch state (`git status` clean, in sync with `origin`). The branch is 7 commits ahead of `master` (`dd93cb8`); `master` has nothing the branch lacks. **PR #18** was opened from this branch into `master` at the same commit (`7712290`).
+
+**Coordinator update (2026-11-08):** PR #18 was **merged** into `master` on 2026-11-02 (merge `e0a98b0`), so everything on this branch is in `master`. The branch has since been deleted on GitHub; the next loot round starts a new branch from `master`. Part of loot step 3 was play-tested alone through PR #55 (2026-11-08: Seismic, Odin's Grace on rock and ore, Veinbreaker's, Bountiful).
+
+Earlier work from this branch is already in `master` through PR #11 (loot step 1) and PR #13 (player stats, Odin unlock).
 
 Detail lives elsewhere; this file points to it: `FEATURES.md` → Loot system, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md` §4.2, `docs/riftforge-ui-brief.md`, `docs/AFFIX_RULES.md`.
 
@@ -28,7 +32,7 @@ The loot session's branch for the Corruption mod's loot system (design phase 7):
 
 ## Broken or unknown
 
-- **Not play-tested (in PR #18):** loot step 3, gathering tools: striker side (`PLAYTEST.md` → Session 3c) and on-harvest effects with Odin's Grace on trees (3d); loot step 4, proc and utility affixes (3e). All three are in the phone play-test log.
+- **Not play-tested (merged in PR #18):** loot step 3, gathering tools: striker side (`PLAYTEST.md` → Session 3c) and on-harvest effects with Odin's Grace on trees (3d); loot step 4, proc and utility affixes (3e). All three are in the phone play-test log.
 - **Not tried from earlier steps:** weapon skill levels, life steal, crafting an Odin item, natural drops with several players, the bigger backpacks (server config not changed yet).
 - **Multiplayer:** nothing in this branch has been tested with another player. The on-harvest affixes and parry buffs depend on it most.
 - **Known limits** (see `FEATURES.md` → Loot system): life steal uses damage before the target's armour; Hushed covers your own swing and hit noise only; the whole-tree harvest skips the vanilla tree statistics; taking off a Deathless item hides its cooldown icon until relog.
@@ -87,7 +91,7 @@ Gathering and procs (working defaults in place, recorded in `DECISIONS.md`):
 
 ## Merge notes
 
-- **Ready to merge?** Builds and tests pass and PR #18 is clean, but steps 3 and 4 are **not play-tested**. Suggestion: merge after the 3c–3e play-test, unless the UI session needs `docs/riftforge-ui-brief.md` in `master` first.
+- **Ready to merge?** Already merged: PR #18 went into `master` on 2026-11-02, before the 3c–3e play-test (so the UI session had `docs/riftforge-ui-brief.md`). Steps 3 and 4 are in `master` untested apart from PR #55's gathering checks.
 - **Shared with other sessions** (ROADMAP §3): `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`, `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/DECISIONS.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`. Keep both sides in conflicts.
 - **Game methods other sessions patch too:** `Character.Damage` (our prefix at `Priority.High` for Rallying and Skadi, plus life steal at Normal; Orlog's planned crits will patch it too), `Character.RPC_Damage` (resistances, next to the corrupted-boss prefix), `Character.OnDeath` (kill messages, next to offerings and Orlog XP), `Player.GetTotalFoodValue` (max health/stamina/eitr). Priorities are recorded in `docs/mod-compatibility.md`.
 - The Riftforge window itself is the UI session's (ROADMAP U3); map rolling is the rips session's (R1), registered through the brief's API.

@@ -25,10 +25,10 @@ Checked 2026-11-08: these are the only two branches on GitHub, and there are no 
 
 | Area | Last handoff | Where it stopped |
 |---|---|---|
-| Loot (Magic/Rare drops, affixes, orbs, Riftforge rules, uniques) | `claude-affixes-loot.md` | Waiting for your play-test of loot steps 3–4 (partly done through PR #55) and your answers on the orb rules. Its handoff still says PR #18 is open; it was merged 2026-11-02 |
+| Loot (Magic/Rare drops, affixes, orbs, Riftforge rules, uniques) | `claude-affixes-loot.md` | Waiting for your play-test of loot steps 3–4 (partly done through PR #55) and your answers on the orb rules. |
 | Classes (Orlog: levels, attributes, the Orlog stone, the Amazon) | `claude-class-skills.md` | Asking you questions before C3 (the Amazon's passives) |
 | Rips and bosses (maps, rips, waves, corrupted bosses) | `claude-rips-bosses.md` | Asking you to approve the map tiers and affixes table (R1) |
-| UI (character sheet, HUD bars, classes UI, tabs, next the Riftforge window) | `claude-ui-overhaul.md` | Asking where the Riftforge window opens; waiting for a small play-test. Its handoff still says PR #19 is open; it was merged 2026-11-02 |
+| UI (character sheet, HUD bars, classes UI, tabs, next the Riftforge window) | `claude-ui-overhaul.md` | Asking where the Riftforge window opens; waiting for a small play-test. |
 | Code-review fixes, round 1 | `claude-admiring-babbage-rk1w8d.md` | Merged (PR #53); multiplayer steps left for the group evening |
 | Coordinator, cloud build test | `claude-relaxed-einstein-kdvz4t.md`, `claude-awesome-ptolemy-gjigjh.md` | Finished |
 
