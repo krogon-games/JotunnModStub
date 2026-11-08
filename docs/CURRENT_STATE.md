@@ -1,6 +1,6 @@
 # Current state
 
-**Last updated:** 2026-11-01 (housekeeping: statuses in line with FEATURES.md; before that, every session's branch merged into `master`, PRs #1–#16; the next stretch planned in [`ROADMAP.md`](ROADMAP.md)) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.21 (data dump from 1.0.20)
+**Last updated:** 2026-11-07 (review fixes on `claude/admiring-babbage-rk1w8d`, untested in game; before that 2026-11-01, housekeeping: statuses in line with FEATURES.md; before that, every session's branch merged into `master`, PRs #1–#16; the next stretch planned in [`ROADMAP.md`](ROADMAP.md)) · **Branches:** one per session, see `CLAUDE.md` · **Game:** Valheim 1.0.21 (data dump from 1.0.20)
 
 Snapshot for picking up work in a new session. Per-feature detail (config, known issues, patch targets) is in [`FEATURES.md`](../FEATURES.md); reasons in [`DECISIONS.md`](DECISIONS.md).
 
@@ -8,7 +8,7 @@ Snapshot for picking up work in a new session. Per-feature detail (config, known
 
 - Both plugins compile against Valheim reference assemblies (cloud session, stand-in install from NuGet, `ExecutePrebuild=false`).
 - Orlog (the classes plugin, new 2026-10-30) compiles the same way.
-- `dotnet test CraftingOverhaul.Tests`: **262 passed, 0 failed** (2026-11-02, `claude/class-skills` with `master` merged and the stone's scale test removed; 239 on 2026-11-01 with the Orlog stone and skill rule tests; 229 with the stone alone; 225 on `master` after PR #16; 218 on 2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
+- `dotnet test CraftingOverhaul.Tests`: **304 passed, 0 failed** (2026-11-07, `claude/admiring-babbage-rk1w8d`: tab save, death loot, chest lease and hit source tests); 262 (2026-11-02, `claude/class-skills` with `master` merged and the stone's scale test removed; 239 on 2026-11-01 with the Orlog stone and skill rule tests; 229 with the stone alone; 225 on `master` after PR #16; 218 on 2026-10-31, classes UI branch with master merged: cooldown display and skills panel layout tests; 211 after merging loot step 2 into the classes UI branch; 207 with the classes UI's demo data and skill tree layout; 198 with loot step 2; 194 after merging the inventory tabs; 179 before, with the loot system, Orlog's level tables and XP rules and the corrupted offerings table; 129 on 2026-10-29) (biome solver, loot base, loot rule, roller and loot item, shard rules, talisman families and slots, affix, cap, drop, corruption outcome, shattering, essence, map and rip loot tables, rip rules, heart placement and army raids, gem model parser, character sheet layout and JSON reader).
 - Last play-test: 2026-10-31, single player (Orlog attributes, the classes UI, loot step 2, corrupted summons); the first full session was 2026-10-28 with EquipmentAndQuickSlots, AdventureBackpacks and PlantEasily loaded.
 
 ## Implemented
@@ -55,6 +55,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
+| **Review fixes** (2026-11-07, branch `claude/admiring-babbage-rk1w8d`): inventory tabs lock instead of losing items when a save can't be read; Magic/Rare drops from creatures whose body carries their loot; exclusive chest access before paying; arrows use their own bow's affixes | `docs/playtests/claude-admiring-babbage-rk1w8d.md` (A–D alone, E–H on the server). **2026-11-07: A–D passed in single player** (tabs, death-path drops, chests alone, arrow life steal); Skadi passed 2026-11-08 with its devcommands message; multiplayer skipped for now by Krogon (2026-11-08), in `PLAYTEST.md` → Session 2, 2e |
 | Rip heart search and corrupted wishbone (2026-10-29) | Passed in single player 2026-10-29; ping colour changed to mostly red, re-checked the same day ("more red now"). Still to test: a second player sees the pings (`PLAYTEST.md` → Session 2, Part 3) |
 | **Loot step 3: on-harvest gathering affixes and Odin's Grace on trees** (2026-11-01, branch `claude/affixes-loot`) | `PLAYTEST.md` → Session 3d; multiplayer (another player owning the tree or rock) not tried |
 | **Loot step 4: proc and utility affixes** (2026-11-01, branch `claude/affixes-loot`) | `PLAYTEST.md` → Session 3e (single player, then step 12 with a friend) |
@@ -76,7 +77,7 @@ Phase 5 (map affixes and tiers, 3-star creatures), phase 6's boss particles, the
 ## Outstanding bugs and open issues
 
 - Corruption's shard and essences have no biome in recipe grouping: they come from our drop patches, which the biome detection doesn't see. Harmless today (map recipes still group by their biome material).
-- Chest race: two players taking from the same chest at the same instant, last write wins (same as Valheim Plus).
+- Chest race: two players taking from the same chest at the same instant, last write wins (same as Valheim Plus). **Fixed in code 2026-11-07** (branch `claude/admiring-babbage-rk1w8d`: exclusive access through the game's chest handshake before paying); untested with two players.
 - Any-one-ingredient recipes don't use chest contents.
 - Talisman families group widely by name (one Blob charm covers every ooze; Troll covers frost trolls).
 - Riftforge has no recipes (expected until phase 4); ingredient amounts are first guesses.
@@ -85,6 +86,8 @@ Phase 5 (map affixes and tiers, 3-star creatures), phase 6's boss particles, the
 
 ## Assumptions not yet verified
 
+- Rip wave limits after the heart passes to another player's game while survivors are far away: suspected undercount (review, 2026-11-07), not reproduced; log lines added for the 3-player check (`docs/playtests/claude-admiring-babbage-rk1w8d.md` → H). No fix until it's confirmed.
+- The death code (ragdoll hands loot to the corpse and turns the creature's drops off) was read in the 1.0.14 assemblies of the cloud stand-in; assumed the same in 1.0.21.
 - Bloodgold ore is mined by Snow Troll attacks (inferred from tool tiers in the dump).
 - The Queen has no summoning altar (game knowledge).
 - NetworkPerformanceSystem works on a crossplay server and alongside craft-from-chests (reading of its README; untested).

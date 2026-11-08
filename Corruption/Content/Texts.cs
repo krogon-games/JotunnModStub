@@ -34,6 +34,8 @@ namespace Corruption.Content
                 { "corruption_tab_bag", "Bag" },
                 { "corruption_tab_currency", "Currency" },
                 { "corruption_tab_maps", "Maps" },
+                // Three short lines: the game's centre message doesn't wrap (play-test 2026-11-07: one long line ran off the screen).
+                { "corruption_tab_locked", "Your {0} tab couldn't be loaded and is locked.\nNothing in it was lost; it's kept in your save.\nNew pickups go to your bag." },
                 { "corruption_talisman_subtitle", "Talisman: place in a Talisman slot" },
                 { "piece_riftforge_description", "A forge that works the void itself. Here maps into the unknown are made." },
                 { "corruption_map_subtitle", "Map: use it to open a rip" },

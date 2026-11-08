@@ -181,7 +181,7 @@ Everything else passed 2026-10-31 ("everything looks really good now"). Left: wi
 4. **Player A:** open and keep open the only chest with wood. **Player B:** try a recipe that needs that wood. Expect: can't craft while A has it open; can once A closes it.
 5. **Player A:** put wood in a personal chest (`piece_chest_private`), empty the others. **Player B:** try to craft. Expect: B can't use A's private chest; A can.
 6. **Player A:** place and activate a ward by the bench without adding B. **Player B:** craft from chests inside it. Expect: B can't; after A adds B to the ward, B can.
-7. **Players A and B:** count down and craft from the same chest at the same moment, a few times. Expect: ideally nothing lost or doubled (known race: note how often it happens).
+7. **Players A and B:** count down and craft from the same chest at the same moment, a few times. Expect: nothing lost or doubled. With exactly enough for one craft, only one of you gets it and the other sees "A chest you need is in use by someone else…" (fix of 2026-11-07; full steps in `docs/playtests/claude-admiring-babbage-rk1w8d.md` → E).
 8. **Player B:** go 30+ m away to a second workbench and craft. Expect: the far chests aren't used.
 9. **One player:** bulk-plant a PlantEasily grid with the seeds only in a nearby chest. Expect: it plants and takes the seeds from the chest (not yet tried even alone).
 
@@ -203,6 +203,12 @@ Everything else passed 2026-10-31 ("everything looks really good now"). Left: wi
 2. **All within 70 m:** kill some creatures. Expect: everyone within 70 m of the kill gets "+N XP", whoever made the kill; the lower-level player gets the bigger share of a low creature. Also try a kill where the creature was run by another player's game (it was fighting someone else): XP still arrives.
 3. **One player** stays more than 70 m away. Expect: no XP for them.
 4. Other players' levels don't show anywhere on screen yet; they're only used for the split above.
+
+**2e. Review fixes (2026-11-07, multiplayer part skipped for now by Krogon, 2026-11-08).** Full steps in [`playtests/claude-admiring-babbage-rk1w8d.md`](playtests/claude-admiring-babbage-rk1w8d.md):
+1. **E:** two players, one chest: only one craft when there's exactly enough; "in use" while someone holds a chest for building or has it open; still works when the chest's owner lacks CraftingOverhaul (2a step 7 is E1).
+2. **F:** loot per player: about twice the Magic/Rare drops with two players near; no kill drops twice.
+3. **G:** arrow affixes on the server: Skadi (with `devcommands`, the top-left "Skadi: stack N" message) and life steal follow the bow when switching mid-flight.
+4. **H (Part 3, 3 players):** rip waves after the heart changes hands: send Claude the `Rip waves: …` log lines from the game that took over, and your creature counts.
 
 ### Part 3: a rip run (about 45 minutes)
 

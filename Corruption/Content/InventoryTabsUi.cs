@@ -108,6 +108,14 @@ namespace Corruption.Content
 
         private static void Show(InventoryTab tab)
         {
+            if (InventoryTabs.IsLocked(tab))
+            {
+                // Couldn't be loaded this session: there's nothing to show, and nothing may be dropped in.
+                Player.m_localPlayer?.Message(MessageHud.MessageType.Center, string.Format(
+                    Localization.instance.Localize("$corruption_tab_locked"),
+                    Localization.instance.Localize(tab == InventoryTab.Currency ? "$corruption_tab_currency" : "$corruption_tab_maps")));
+                tab = InventoryTab.None;
+            }
             _shown = InventoryTabs.Enabled ? tab : InventoryTab.None;
             bool showingTab = _shown != InventoryTab.None;
             if (_grid)
