@@ -33,7 +33,7 @@ The material decides the operation; shattering has no material. "Refused" lists 
 | Operation (id) | Material | Allowed on | Refused when (text) | Preview shows | Result |
 |---|---|---|---|---|---|
 | Orb of Transmutation (`orb:transmutation`) | the orb | Normal items | not Normal ("Only on Normal items"); corrupted ("Corrupted items can't be changed"); unique ("Uniques only take Divine and Jeweller's orbs") | "Becomes Magic with 1 random affix" | The item, now Magic |
-| Orb of Augmentation (`orb:augmentation`) | the orb | Magic items with exactly 1 affix | not Magic ("Only on Magic items"); not exactly 1 affix ("Only on Magic items with 1 affix"); corrupted; unique | "Adds 1 random affix; stays Magic" | The item with 2 affixes, still Magic |
+| Orb of Augmentation (`orb:augmentation`) | the orb | Magic items with 0 or 1 affix (user, 2026-11-08) | not Magic ("Only on Magic items"); 2 affixes ("This item has no room for another affix"); corrupted; unique | "Adds 1 random affix; stays Magic" | The item with one more affix, still Magic |
 | Orb of Alchemy (`orb:alchemy`) | the orb | Normal items | as Transmutation | "Becomes Rare with 3–4 random affixes" | The item, now Rare with a Rare name |
 | Regal Orb (`orb:regal`) | the orb | Magic items with exactly 2 affixes (user, 2026-11-08; was "any Magic item") | not Magic; not exactly 2 affixes ("Only on Magic items with 2 affixes"); corrupted; unique | "Becomes Rare, keeps its 2 affixes and adds 1" | The item, now Rare with 3 affixes |
 | Exalted Orb (`orb:exalted`) | the orb | Rare items with room | not Rare ("Only on Rare items"); full; corrupted; unique | "Adds 1 random affix" | The item with one more affix |

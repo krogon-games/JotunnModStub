@@ -405,7 +405,7 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 | Orb | What it does | Drops from |
 |---|---|---|
 | Orb of Transmutation | Normal → Magic with 1 affix | Common: rip waves, chests |
-| Orb of Augmentation | Adds an affix to a Magic item with exactly 1; it stays Magic | Common |
+| Orb of Augmentation | Adds an affix to a Magic item with 0 or 1; it stays Magic | Common |
 | Orb of Alchemy | Normal → Rare | Uncommon |
 | Regal Orb | Magic item with exactly 2 affixes → Rare, adding a third | Uncommon |
 | Exalted Orb | Adds an affix to a Rare with room | Rare: tier 3–4 rips, corrupted bosses |

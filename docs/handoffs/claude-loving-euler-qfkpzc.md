@@ -44,6 +44,7 @@ Later on 2026-11-08, answering this branch's questions:
 15. ~~Orb of Augmentation on Normal items~~: withdrawn by Krogon the same day; Krogon asked why a 0-affix Magic item is stuck instead (open question 2). Decision 2 stands until answered.
 16. **Orb of Chance always giving a Rare until uniques exist** (no uniques yet, ROADMAP L6): fine for now.
 17. **A valid hit for Stonecutter's and Resinous** is any hit with the right tool (pickaxe on rock or deposit, axe on tree, log or stump) that does damage.
+18. **Orb of Augmentation (design change, replaces decision 2):** works on a Magic item with 0 or 1 affix (adds one; stays Magic), so a Magic item emptied by Annulment can be brought back. Not on Normal items (that's Transmutation's job). Krogon's pick of Claude's option A over "Annulment turns an emptied Magic item Normal" and "leave it".
 
 ## Playtest
 
@@ -51,10 +52,7 @@ Nothing to test yet. Checklist will go in `docs/playtests/claude-loving-euler-qf
 
 ## Open questions for Krogon
 
-1. Which build this round: the Stonecutter's/Resinous change alone (small), or also the first Riftforge rules with `co_craft` (L5, larger)?
-2. A Magic item emptied by Annulment stays Magic with 0 affixes, so Transmutation (Normal only), Augmentation (exactly 1) and Regal (exactly 2) all refuse it; only an Affix Splinter brings it back. Krogon asked why it's stuck; explained, waiting for the choice.
-3. No uniques exist yet (L6), so until then every Orb of Chance gives a Rare. Fine for now?
-4. What counts as a "valid" hit for Stonecutter's/Resinous: any hit with the right tool that does damage to a rock/tree/log/stump (Claude's proposal), or only hits that the tool tier allows to damage it?
+None right now (all answered on 2026-11-08: decisions 14–18).
 
 ## Next steps
 
