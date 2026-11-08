@@ -1,6 +1,6 @@
 # Handoff: `claude/hopeful-thompson-eyncm8`
 
-**Written:** 2026-11-08 · **Branch:** started from `master` `ced0575`, 0 behind; no PR yet.
+**Written:** 2026-11-08 · **Branch:** 2 commits ahead of `master` (`ced0575`), 0 behind; pushed; no PR yet.
 
 ## Stage
 
@@ -45,7 +45,7 @@ None.
 
 ## Checks
 
-- Build: PASS (solution builds, 0 errors; 366 tests pass).
+- Build: PASS (`/handoff`: 366 tests pass; Corruption and Orlog build, 0 errors).
 - Version: gameplay changed: version bump needed at merge (Corruption, Orlog). This branch changed no version.
 - Multiplayer sync: PASS, read in code, not tested. Two new altar RPCs (registered on every game, both plugins required everywhere); fight-back time on the creature's ZDO, written only by its owner.
 - Assets and names: SKIPPED (no new assets, items or text tokens; new ZDO key `corruption_provoked_<player id>`).
@@ -54,4 +54,4 @@ None.
 
 ## Merge notes
 
-Ready to merge: no (play-test outstanding). **Gameplay changed: version bump needed at merge (Corruption, Orlog).** Shared docs touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`. Patch list change: `OfferingBowl.RPC_RemoveBossSpawnInventoryItems` prefix removed, `OfferingBowl.Start` postfix added.
+Ready to merge: no (Krogon's play-test outstanding). Up to date with `master`; no other remote branch, so no file clashes. **Gameplay changed: version bump needed at merge (Corruption, Orlog).** Shared docs touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`. Patch list change: `OfferingBowl.RPC_RemoveBossSpawnInventoryItems` prefix removed, `OfferingBowl.Start` postfix added.
