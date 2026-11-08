@@ -405,21 +405,21 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 | Orb | What it does | Drops from |
 |---|---|---|
 | Orb of Transmutation | Normal → Magic with 1 affix | Common: rip waves, chests |
-| Orb of Augmentation | Adds an affix to a Magic item with 1 | Common |
+| Orb of Augmentation | Adds an affix to a Magic item with exactly 1; it stays Magic | Common |
 | Orb of Alchemy | Normal → Rare | Uncommon |
-| Regal Orb | Magic → Rare, adding 1 affix | Uncommon |
+| Regal Orb | Magic item with exactly 2 affixes → Rare, adding a third | Uncommon |
 | Exalted Orb | Adds an affix to a Rare with room | Rare: tier 3–4 rips, corrupted bosses |
 | Divine Orb | Rerolls the numbers on existing affixes | Rare |
-| Orb of Annulment | Removes one random affix | Uncommon |
-| Orb of Chance | Normal item becomes a random rarity, small chance of a Unique | Uncommon |
-| Jeweller's Orb | Adds a socket, up to a set maximum | Uncommon |
-| Mirror of Kalandra | Makes an exact copy; the copy can never be modified | Extremely rare: tier 4 rips, corrupted Queen or Fader |
+| Orb of Annulment | Removes one random affix; the rarity never changes, even at 0 affixes | Uncommon |
+| Orb of Chance | Normal item becomes Magic 50%, Rare 30%, Unique 20%; always Rare when no unique can come from that item | Uncommon |
+| Jeweller's Orb | Adds a socket, up to a set maximum. Greyed out (can't be used) until sockets and runewords are designed | Uncommon |
+| Mirror of Kalandra | Makes an exact copy, corrupted items included; the copy can never be modified or mirrored; the original is unchanged | Extremely rare: tier 4 rips, corrupted Queen or Fader |
 
 ### Rules
 
 - Orbs are applied at the Riftforge: put in the item and the orb, press craft. A bench UI is far simpler to build than PoE's right-click-onto-item.
 - Orbs never brick an item. Only the Corruption shard can.
-- Corrupted items (any shard use that doesn't brick the item) are locked; no orb works on them. Corruption is the final step, as in PoE.
+- Corrupted items (any shard use that doesn't brick the item) are locked; no orb works on them, except the Mirror of Kalandra (user, 2026-11-08). Corruption is the final step, as in PoE.
 - Uniques can only be touched by Divine Orbs and Jeweller's Orbs.
 - Orbs stack, live in their own Currency tab, and can go through portals. They're meant to be traded between players.
 

@@ -1,7 +1,7 @@
 # Riftforge window brief (for the UI session)
 
 **From:** the loot session (`claude/affixes-loot`), 2026-11-01. **For:** the UI session (`claude/ui-overhaul`), which builds the window (ROADMAP §4.4 U3), and the rips session, which adds map rolling (ROADMAP §4.3 R1).
-**Status:** draft; the open questions in §6 need the user. The rules behind it (ROADMAP L5) are built by the loot session against this contract.
+**Status:** draft; the orb questions in §6 were answered by the user on 2026-11-08 (§2 updated). The rules behind it (ROADMAP L5) are built by the loot session against this contract.
 
 The Riftforge is where loot is crafted: orbs, corrupting with a shard, shattering, Affix Splinters and (later) rolling maps. This brief is the contract between the screen and the rules, so both sides can be built at the same time. Design and reasons: [`corruption-design.md`](corruption-design.md) → Currency orbs, Corrupted gear, Affix Splinters and shattering, Map affixes and tiers; affix rules: [`AFFIX_RULES.md`](AFFIX_RULES.md).
 
@@ -33,21 +33,21 @@ The material decides the operation; shattering has no material. "Refused" lists 
 | Operation (id) | Material | Allowed on | Refused when (text) | Preview shows | Result |
 |---|---|---|---|---|---|
 | Orb of Transmutation (`orb:transmutation`) | the orb | Normal items | not Normal ("Only on Normal items"); corrupted ("Corrupted items can't be changed"); unique ("Uniques only take Divine and Jeweller's orbs") | "Becomes Magic with 1 random affix" | The item, now Magic |
-| Orb of Augmentation (`orb:augmentation`) | the orb | Magic items with 1 affix | not Magic ("Only on Magic items"); full ("This item has no room for another affix"); corrupted; unique | "Adds 1 random affix" | The item with 2 affixes |
+| Orb of Augmentation (`orb:augmentation`) | the orb | Magic items with exactly 1 affix | not Magic ("Only on Magic items"); not exactly 1 affix ("Only on Magic items with 1 affix"); corrupted; unique | "Adds 1 random affix; stays Magic" | The item with 2 affixes, still Magic |
 | Orb of Alchemy (`orb:alchemy`) | the orb | Normal items | as Transmutation | "Becomes Rare with 3–4 random affixes" | The item, now Rare with a Rare name |
-| Regal Orb (`orb:regal`) | the orb | Magic items | not Magic; corrupted; unique | "Becomes Rare, keeps its affixes and adds 1" | The item, now Rare |
+| Regal Orb (`orb:regal`) | the orb | Magic items with exactly 2 affixes (user, 2026-11-08; was "any Magic item") | not Magic; not exactly 2 affixes ("Only on Magic items with 2 affixes"); corrupted; unique | "Becomes Rare, keeps its 2 affixes and adds 1" | The item, now Rare with 3 affixes |
 | Exalted Orb (`orb:exalted`) | the orb | Rare items with room | not Rare ("Only on Rare items"); full; corrupted; unique | "Adds 1 random affix" | The item with one more affix |
 | Divine Orb (`orb:divine`) | the orb | Magic, Rare, unique | Normal ("This item has no affixes"); corrupted | Each line with its range: "+24% damage [4–19] → rerolled" | The item with new values |
-| Orb of Annulment (`orb:annulment`) | the orb | Magic, Rare | no affixes; corrupted; unique | "Removes 1 random affix"; a resonant line loses one half and the other half rerolls in its own range | The item with one affix fewer |
-| Orb of Chance (`orb:chance`) | the orb | Normal items | as Transmutation | The chances of each result (§6) | The item at its new rarity |
-| Jeweller's Orb (`orb:jeweller`) | the orb | — | always ("Sockets come later") | — | Greyed until sockets are designed |
-| Mirror of Kalandra (`orb:mirror`) | the orb | Magic, Rare | Normal; already mirrored ("Mirrored items can't be copied"); unique (the design: uniques only take Divine and Jeweller's orbs); corrupted? (§6) | "Makes an exact copy; the copy can never be changed" | The item, plus its copy in the inventory |
+| Orb of Annulment (`orb:annulment`) | the orb | Magic, Rare | no affixes; corrupted; unique | "Removes 1 random affix; the item keeps its rarity"; a resonant line loses one half and the other half rerolls in its own range | The item with one affix fewer, same rarity even at 0 affixes (user, 2026-11-08) |
+| Orb of Chance (`orb:chance`) | the orb | Normal items | as Transmutation | "50% Magic · 30% Rare · 20% Unique"; when no unique can come from this item: "Becomes Rare" (user, 2026-11-08) | The item at its new rarity |
+| Jeweller's Orb (`orb:jeweller`) | the orb | — | always ("Sockets come later") | — | Shown greyed until sockets and runewords are designed; can't be used or used up (user, 2026-11-08) |
+| Mirror of Kalandra (`orb:mirror`) | the orb | Magic, Rare, corrupted ones too (user, 2026-11-08) | Normal; already mirrored ("Mirrored items can't be copied"); unique (the design: uniques only take Divine and Jeweller's orbs) | "Makes an exact copy; the copy can never be changed or mirrored" | The item, unchanged, plus its copy in the inventory; the copy keeps the affixes and any corruption |
 | Corrupt (`corrupt`) | a Corruption shard | Normal, Magic, Rare | already corrupted ("Already corrupted"); unique ("Uniques can't be corrupted") | The chances from `corruption_outcomes.csv`: "25% destroyed · 25% unchanged, locked · 50% gains a corrupted affix" | One of the three; the message says which. Destroyed: the item is gone |
 | Shatter (`shatter`) | none | Magic, Rare | Normal ("Only Magic and Rare items shatter"); unique or corrupted ("Uniques and corrupted items can't be shattered") | Each line with "50%": the chance it becomes a splinter (`shattering.csv`); "The item is destroyed" | The item is gone; 0–4 Affix Splinters in the inventory, listed in the message |
 | Apply splinter (`splinter`) | an Affix Splinter | Normal and Magic items with room | Rare, unique or corrupted ("Splinters only go on Normal and Magic items"); 2 affixes already, or a resonant splinter on an item with any ("This item has no room for this splinter"); the item can't roll that affix ("This affix can't roll on this item"); the same family already on that side ("This item already has that kind of affix") | The exact line it adds, e.g. "+12% attack speed [3–15]"; "Becomes Magic" for a Normal item | The item with the line; the splinter is used up |
 | Map rolling (`map:*`) | the rips session's | maps | the rips session's | the rips session's | the rips session's |
 
-General rules (from the design): orbs never destroy an item; only the shard can. A corrupted item is locked: no operation works on it. Every operation uses up one material item; shattering uses none. Divine and Annulment on a resonant line follow `AFFIX_RULES.md` → Twin mods and resonance.
+General rules (from the design): orbs never destroy an item; only the shard can. A corrupted item is locked: no operation works on it, except the Mirror of Kalandra (user, 2026-11-08). Every operation uses up one material item; shattering uses none. Divine and Annulment on a resonant line follow `AFFIX_RULES.md` → Twin mods and resonance.
 
 ## 3. What a player sees
 
@@ -106,8 +106,11 @@ A cheat console command uses the same calls, so the rules can be play-tested fir
 
 ## 6. Open questions (user)
 
-1. **Removing the last affixes:** when an Orb of Annulment takes a Magic item to 0 affixes, or a Rare to 2, does it drop to Normal / Magic, or keep its rarity (as Path of Exile does)?
-2. **Orb of Chance odds:** the chance of Magic, Rare and (once uniques exist) a Unique.
-3. **Mirror of Kalandra on corrupted items:** allowed (Path of Exile allows it) or not?
-4. **Jeweller's Orb:** stays greyed until sockets and runewords are designed. Fine?
+Answered by the user on 2026-11-08 (§2 has the rules):
+1. ~~Removing the last affixes~~: the Orb of Annulment never changes the rarity, even at 0 affixes.
+2. ~~Orb of Chance odds~~: 50% Magic, 30% Rare, 20% Unique; Rare every time when no unique can come from the item.
+3. ~~Mirror on corrupted items~~: allowed; the copy keeps the corruption and can't be changed or mirrored.
+4. ~~Jeweller's Orb~~: greyed until sockets and runewords are designed.
+
+Still open:
 5. Orb drop sources and rates (ROADMAP L4) aren't needed for the window, but are for orbs to exist in play.
