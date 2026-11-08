@@ -1,24 +1,34 @@
 # Handoff: `claude/loving-euler-qfkpzc`
 
-**Written:** 2026-11-08. Branch started from `master` at `96f22e3` (0 behind); no PR yet.
+**Written:** 2026-11-08. Branch started from `master` at `96f22e3`; 0 behind `master`, all commits pushed; no PR yet.
 
 ## Stage
 
-**Building:** the orb rules and affix defaults are decided ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)); building the Stonecutter's/Resinous change and the first Riftforge orb rules.
+**Waiting for Krogon's playtest** (`docs/playtests/claude-loving-euler-qfkpzc.md`).
 
 ## Purpose
 
-Loot round: settle the Riftforge orb rules and the gathering and proc affix defaults (#28), then build what they change.
+Loot round: settle the Riftforge orb rules and the gathering and proc affix defaults ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)), then build them: the currency orbs with their Riftforge rules (first part of ROADMAP L5, [#29](https://github.com/krogon-games/JotunnModStub/issues/29)) and Stonecutter's/Resinous per hit.
 
 ## Done
 
-Nothing built or play-tested yet. Documentation only: the decisions below are written into `docs/riftforge-ui-brief.md` §2 and §6 (the Regal Orb row corrected) and the orb table in `docs/corruption-design.md`.
+Nothing play-tested yet.
 
 ## Half-done and known issues
 
-- **Already built, now confirmed (no code change):** life steal from Reprisal and Wrath, Wrath's shockwave hitting the struck enemy, Rallying on every enemy the empowered attack hits, Deathless using the shortest cooldown, Foraging from wild plants only, Gemseeker's gems equally likely (all in `master`, `Corruption/Content/LootProcs.cs`, `LootHarvest.cs`).
-- **Needs code:** Stonecutter's and Resinous rolling per valid gathering hit instead of per harvested piece (`LootHarvest.cs`, `Rules/HarvestRules.cs`, affix text in `affixes.csv`, `FEATURES.md`, `AFFIX_RULES.md`).
-- **Needs code (ROADMAP L5):** the orbs themselves; none exist as items yet (`RiftforgeCrafting`, `co_craft`).
+Built, untested (394 tests pass; Corruption builds):
+- **Currency orbs:** ten items (`OrbItems.cs`, the orb art now embedded), going to the Currency tab; **no drops** (L4 needs sources and rates). Rules in `Rules/OrbRules.cs` (unit-tested), the brief's API in `Content/RiftforgeCrafting.cs`, `co_craft list | <orb> | give | testcorrupt`. Tooltips show Corrupted / Mirrored. New table `orb_chance.csv`.
+- **Stonecutter's and Resinous per damaging hit** (`HarvestRules.PerHit`, postfixes on the five owner-side hit methods in `LootHarvest.cs`); affix text says "per hit".
+- **Already built, confirmed by decisions 7, 9–13 (no change):** Gemseeker's, life steal, Wrath, Foraging, Rallying, Deathless.
+
+Claude's interim choices (not Krogon's decisions; easy to change):
+- Orb stack 50 and weight 0.2, copied from the shard, until L4's `orbs.csv`.
+- The Mirror has no art: a tinted vanilla gem (`GemstoneBlue`) for now.
+- Alchemy and Chance roll the same affix counts as drops (`loot_rules.csv`: Magic 1–2, Rare 3–4).
+- Annulment picks each affix equally (a resonant line is 2 affixes).
+- Copies of a swing (Seismic, Splintering, a breaking rock's hit on its copper deposit) count as hits for Stonecutter's, as they do for "only your swings"; an Odin's Grace whole-tree harvest counts as one hit.
+- "At a Riftforge" = within its build range. Extra refusals: "Mirrored items can't be changed", "This item can't take affixes", "This item's affixes can't be read" (brief §2 updated).
+- Not built yet in L5: corrupting with a shard, shattering, Affix Splinters.
 
 ## Decisions
 
@@ -48,24 +58,26 @@ Later on 2026-11-08, answering this branch's questions:
 
 ## Playtest
 
-Nothing to test yet. Checklist will go in `docs/playtests/claude-loving-euler-qfkpzc.md`.
+Checklist: `docs/playtests/claude-loving-euler-qfkpzc.md` (A orb items, B using orbs, C Mirror and corrupted, D Stonecutter's/Resinous; about 30 minutes, alone). No feedback yet.
 
 ## Open questions for Krogon
 
-None right now (all answered on 2026-11-08: decisions 14–18).
+None (decisions 14–18 answered them).
 
 ## Next steps
 
-1. Krogon confirms this round's build (question 1).
-2. Build it, with tests; play-test checklist.
-3. Krogon play-tests; fix; final play-test.
+1. Krogon play-tests A–D and reports.
+2. Fix what fails; final play-test.
+3. `/handoff`, then a PR into `master`.
+4. Next L5 part: corrupting with a shard, shattering and Affix Splinters; L4: orb drop sources and rates (needs Krogon).
 
 ## Checks
 
-Not run yet (`/handoff` runs them).
+Not run yet (`/handoff` runs them). So far: `dotnet test CraftingOverhaul.Tests` 394 passed; Corruption builds against the stand-in game assemblies.
 
 ## Merge notes
 
-- Ready to merge: no, nothing built yet.
-- So far docs only (no version bump needed); a Stonecutter's/Resinous change would make it "gameplay changed: version bump needed at merge" for Corruption.
+- Ready to merge: no, waiting for the play-test.
+- **Gameplay changed: version bump needed at merge** for Corruption (new items, orb rules, Stonecutter's/Resinous behaviour, `affixes.csv` text, new `orb_chance.csv`).
+- Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (Session 3d steps 6–7 point here now), `Corruption/CorruptionPlugin.cs`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `docs/riftforge-ui-brief.md`, `docs/corruption-design.md` (orb table), `docs/GAME_DESIGN.md`.
 - The coordinator should copy the Decisions into `docs/DECISIONS.md` and close #28.

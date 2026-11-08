@@ -24,10 +24,10 @@ namespace Corruption.Rules
         /// <summary>Gemseeker's, <c>gem_find</c>.</summary>
         public float Gem;
 
-        /// <summary>Stonecutter's, <c>extra_stone</c>.</summary>
+        /// <summary>Stonecutter's, <c>extra_stone</c>: rolls per damaging mining hit, not per harvest (<see cref="HarvestRules.PerHit{T}" />).</summary>
         public float Stone;
 
-        /// <summary>Resinous, <c>extra_resin</c>.</summary>
+        /// <summary>Resinous, <c>extra_resin</c>: rolls per damaging woodcutting hit, not per harvest (<see cref="HarvestRules.PerHit{T}" />).</summary>
         public float Resin;
 
         /// <summary>Forester's, <c>tree_seed_drop</c>.</summary>
@@ -134,10 +134,11 @@ namespace Corruption.Rules
         ///     <paramref name="drops" />; an empty list isn't a harvest and comes back unchanged.
         ///     <list type="bullet">
         ///         <item>Bountiful: everything in the vanilla list once more. Woodcutting Bountiful: its wood once more. Both can trigger (triple wood).</item>
-        ///         <item>Mining (rocks and ore): Artisan adds 1 of the first ore that dropped, Stonecutter's 1 stone, Gemseeker's 1 gem from the biome's pool (equally likely).</item>
-        ///         <item>Woodcutting (trees, logs, stumps): Resinous adds 1 resin, Forester's 1 of the tree's own seed.</item>
+        ///         <item>Mining (rocks and ore): Artisan adds 1 of the first ore that dropped, Gemseeker's 1 gem from the biome's pool (equally likely).</item>
+        ///         <item>Woodcutting (trees, logs, stumps): Forester's adds 1 of the tree's own seed.</item>
         ///         <item>Charring last: each wood item in the result rolls on its own and becomes coal (replaces the wood, user's choice).</item>
         ///     </list>
+        ///     Stonecutter's and Resinous don't roll here: they roll on every damaging hit (<see cref="PerHit{T}" />).
         /// </summary>
         /// <param name="random">Returns a value in [0, 1).</param>
         public static List<T> Apply<T>(IList<T> drops, HarvestChances chances, bool woodcutting, HarvestItems<T> items, Func<double> random)
@@ -175,10 +176,6 @@ namespace Corruption.Rules
                         }
                     }
                 }
-                if (items.Stone != null && GatheringRules.Roll(chances.Stone, random))
-                {
-                    result.Add(items.Stone);
-                }
                 if (items.Gems.Count > 0 && GatheringRules.Roll(chances.Gem, random))
                 {
                     int pick = Math.Min(items.Gems.Count - 1, (int)(random() * items.Gems.Count));
@@ -187,10 +184,6 @@ namespace Corruption.Rules
             }
             else
             {
-                if (items.Resin != null && GatheringRules.Roll(chances.Resin, random))
-                {
-                    result.Add(items.Resin);
-                }
                 if (items.Seed != null && GatheringRules.Roll(chances.Seed, random))
                 {
                     result.Add(items.Seed);
@@ -207,6 +200,25 @@ namespace Corruption.Rules
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        ///     Stonecutter's and Resinous (Krogon, 2026-11-08): a chance on every valid gathering hit of one stone (mining)
+        ///     or one resin (woodcutting), whether or not the object breaks and whether or not it drops stone or resin
+        ///     itself. A valid hit is one made with the right tool (pickaxe damage on rock, chop damage on wood) that does
+        ///     damage, i.e. passes the object's tool tier and does more than 0 after its resistances. Null: nothing extra.
+        /// </summary>
+        /// <param name="random">Returns a value in [0, 1).</param>
+        public static T PerHit<T>(HarvestChances chances, bool woodcutting, bool rightTool, bool didDamage, HarvestItems<T> items,
+            Func<double> random) where T : class
+        {
+            if (chances == null || !rightTool || !didDamage)
+            {
+                return null;
+            }
+            float chance = woodcutting ? chances.Resin : chances.Stone;
+            T item = woodcutting ? items.Resin : items.Stone;
+            return item != null && chance > 0f && GatheringRules.Roll(chance, random) ? item : null;
         }
     }
 }

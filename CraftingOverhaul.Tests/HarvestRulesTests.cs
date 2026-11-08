@@ -78,11 +78,48 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void MiningExtrasOnlyOnMiningAndWoodExtrasOnlyOnWood()
         {
-            var chances = new HarvestChances { Stone = 100f, Resin = 100f, Seed = 100f };
-            Assert.Equal(new[] { "CopperOre", "Stone" },
+            var chances = new HarvestChances { Ore = 100f, Seed = 100f };
+            Assert.Equal(new[] { "CopperOre", "CopperOre" },
                 HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items("PineCone"), Rolls(0.0)));
-            Assert.Equal(new[] { "Wood", "Resin", "PineCone" },
-                HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items("PineCone"), Rolls(0.0, 0.0)));
+            Assert.Equal(new[] { "Wood", "PineCone" },
+                HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items("PineCone"), Rolls(0.0)));
+        }
+
+        [Fact]
+        public void StonecuttersAndResinousNoLongerRollPerHarvest()
+        {
+            // Krogon, 2026-11-08: they roll per damaging hit instead (PerHit), so a breaking piece adds nothing.
+            var chances = new HarvestChances { Stone = 100f, Resin = 100f };
+            Assert.Equal(new[] { "CopperOre" }, HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items(), Rolls()));
+            Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls()));
+        }
+
+        [Fact]
+        public void PerHitGivesStoneWhenMiningAndResinWhenChopping()
+        {
+            var chances = new HarvestChances { Stone = 25f, Resin = 5f };
+            Assert.Equal("Stone", HarvestRules.PerHit(chances, false, true, true, Items(), Rolls(0.24)));
+            Assert.Null(HarvestRules.PerHit(chances, false, true, true, Items(), Rolls(0.25)));
+            Assert.Equal("Resin", HarvestRules.PerHit(chances, true, true, true, Items(), Rolls(0.04)));
+            Assert.Null(HarvestRules.PerHit(chances, true, true, true, Items(), Rolls(0.05)));
+        }
+
+        [Fact]
+        public void PerHitNeedsTheRightToolAndDamage()
+        {
+            var chances = new HarvestChances { Stone = 100f, Resin = 100f };
+            // Wrong tool, or a hit that did no damage (too low a tool tier, or 0 after resistances): no roll at all.
+            Assert.Null(HarvestRules.PerHit(chances, false, false, true, Items(), Rolls()));
+            Assert.Null(HarvestRules.PerHit(chances, true, true, false, Items(), Rolls()));
+            Assert.Null(HarvestRules.PerHit(null, false, true, true, Items(), Rolls()));
+        }
+
+        [Fact]
+        public void PerHitWithoutTheAffixDoesNotRoll()
+        {
+            // A woodcutting hit with only Stonecutter's (which can't roll on an axe anyway) gives nothing.
+            Assert.Null(HarvestRules.PerHit(new HarvestChances { Stone = 100f }, true, true, true, Items(), Rolls()));
+            Assert.Null(HarvestRules.PerHit(new HarvestChances { Resin = 100f }, false, true, true, Items(), Rolls()));
         }
 
         [Fact]

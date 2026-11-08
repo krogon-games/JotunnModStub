@@ -168,8 +168,8 @@ Each half keeps the original affix's range; both halves have half the normal rol
 | Careful | Universal | Chance a hit costs no durability | Durability drain per hit in `Attack` |
 | Hushed | Universal | Quieter strikes (less noise drawing creatures) | Attack hit noise |
 | Keen-eyed | Universal | Larger item pickup radius while the tool is held. Adds on top of Magnetic | `Player.m_autoPickupRange` |
-| Stonecutter's | Mining | Chance of 1 extra stone from rocks and deposits | Harvest message |
-| Resinous | Woodcutting | Chance of 1 extra resin from trees | Harvest message |
+| Stonecutter's | Mining | Chance of 1 stone on every mining hit that does damage, on any rock or deposit (user, 2026-11-08; was per broken piece). Flagged for a rework | Harvest message |
+| Resinous | Woodcutting | Chance of 1 resin on every woodcutting hit that does damage, on any tree, log or stump (user, 2026-11-08; was per broken piece). Flagged for a rework | Harvest message |
 | Forester's | Woodcutting | Chance a harvested tree also drops its seed (pine cone, beech seed, birch seed, fir cone, acorn) | Harvest message; the seed is the one in the tree's own drop table (confirmed in the 1.0.20 data) |
 
 ### More gathering affixes (user, 2026-10-28)

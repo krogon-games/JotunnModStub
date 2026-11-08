@@ -121,8 +121,13 @@ namespace Corruption.Content
         private static void Postfix(ItemDrop.ItemData item, int qualityLevel, float worldLevel, ref string __result)
         {
             var loot = Loot.Of(item);
+            bool corrupted = RiftforgeCrafting.IsCorrupted(item), mirrored = RiftforgeCrafting.IsMirrored(item);
             if (loot == null)
             {
+                if (corrupted || mirrored)
+                {
+                    __result += Locks(corrupted, mirrored);
+                }
                 return;
             }
             string result = __result;
@@ -148,9 +153,25 @@ namespace Corruption.Content
                     }
                     text.Append("</color>");
                 }
+                text.Append(Locks(corrupted, mirrored));
                 result = text.ToString();
             });
             __result = result;
+        }
+
+        /// <summary>The Riftforge locks: corrupted (no orb but the Mirror) and mirrored (never changed again).</summary>
+        private static string Locks(bool corrupted, bool mirrored)
+        {
+            string text = "";
+            if (corrupted)
+            {
+                text += $"\n<color={RiftforgeCrafting.CorruptedColor}>Corrupted</color>";
+            }
+            if (mirrored)
+            {
+                text += $"\n<color={RiftforgeCrafting.MirroredColor}>Mirrored: can't be changed</color>";
+            }
+            return text;
         }
 
         /// <summary>

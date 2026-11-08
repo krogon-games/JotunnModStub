@@ -74,6 +74,61 @@ namespace Corruption.Rules
             return item;
         }
 
+        /// <summary>
+        ///     Affixes that could be added to an existing item at the given rarity (the Riftforge's Augmentation, Regal and
+        ///     Exalted orbs): the same rules as a new roll (item classes and mechanics, the side limit, one affix per
+        ///     family per side, weight above 0), counting what the item already has; a resonant line fills both sides.
+        /// </summary>
+        public static List<AffixTable.Affix> AddCandidates(LootItem item, string rarity, IDictionary<string, AffixTable.Affix> table,
+            ICollection<string> classes, ICollection<string> mechanics)
+        {
+            var present = item.Lines.SelectMany(l => l.Ids).Where(table.ContainsKey).Select(id => table[id]).ToList();
+            int prefixes = present.Count(a => a.IsPrefix);
+            int suffixes = present.Count - prefixes;
+            int limit = SideLimit(rarity);
+            return table.Values.Where(a =>
+                a.Classes.Any(classes.Contains) && (a.Requires.Length == 0 || mechanics.Contains(a.Requires)) && a.Weight > 0f &&
+                (a.IsPrefix ? prefixes : suffixes) < limit &&
+                !present.Any(p => p.IsPrefix == a.IsPrefix && p.Family == a.Family)).ToList();
+        }
+
+        /// <summary>
+        ///     Adds one affix to an existing item (changing <paramref name="item" />), picked as in <see cref="Roll" /> from
+        ///     <see cref="AddCandidates" />. When it completes a twin, the two merge into one resonant line rolled from the
+        ///     resonant range. Returns the new or merged line, or null when nothing fits.
+        /// </summary>
+        /// <param name="random">Returns a value in [0, 1).</param>
+        public static LootItem.Line AddOne(LootItem item, string rarity, IDictionary<string, AffixTable.Affix> table,
+            ICollection<string> classes, ICollection<string> mechanics, Func<double> random)
+        {
+            var candidates = AddCandidates(item, rarity, table, classes, mechanics);
+            if (candidates.Count == 0)
+            {
+                return null;
+            }
+            var affix = WeightedPick(candidates, random);
+            var twin = item.Lines.FirstOrDefault(l => !l.Resonant && table.TryGetValue(l.Ids[0], out var other) &&
+                                                      other.Family == affix.Family && other.IsPrefix != affix.IsPrefix);
+            LootItem.Line line;
+            if (twin != null)
+            {
+                twin.Ids = affix.IsPrefix ? new[] { affix.Id, twin.Ids[0] } : new[] { twin.Ids[0], affix.Id };
+                LootItem.Range(twin, table, out float min, out float max);
+                twin.Value = RollValue(min, max, LootItem.Decimals(twin, table), random);
+                line = twin;
+            }
+            else
+            {
+                line = new LootItem.Line { Ids = new[] { affix.Id }, Value = RollValue(affix.Min, affix.Max, LootItem.Decimals(affix), random) };
+                item.Lines.Add(line);
+            }
+            // Prefixes first, as the tooltip reads; a resonant line counts as a prefix.
+            var ordered = item.Lines.OrderBy(l => table.TryGetValue(l.Ids[0], out var a) && a.IsPrefix ? 0 : 1).ToList();
+            item.Lines.Clear();
+            item.Lines.AddRange(ordered);
+            return line;
+        }
+
         /// <summary>A whole number from min to max, both included.</summary>
         public static int RollValue(int min, int max, Func<double> random)
         {

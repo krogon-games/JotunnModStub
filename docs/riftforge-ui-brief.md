@@ -47,6 +47,8 @@ The material decides the operation; shattering has no material. "Refused" lists 
 | Apply splinter (`splinter`) | an Affix Splinter | Normal and Magic items with room | Rare, unique or corrupted ("Splinters only go on Normal and Magic items"); 2 affixes already, or a resonant splinter on an item with any ("This item has no room for this splinter"); the item can't roll that affix ("This affix can't roll on this item"); the same family already on that side ("This item already has that kind of affix") | The exact line it adds, e.g. "+12% attack speed [3–15]"; "Becomes Magic" for a Normal item | The item with the line; the splinter is used up |
 | Map rolling (`map:*`) | the rips session's | maps | the rips session's | the rips session's | the rips session's |
 
+Also refused, for every orb but the Mirror (built 2026-11-08): a Mirror's copy ("Mirrored items can't be changed"); an item whose saved affixes can't be read ("This item's affixes can't be read"); an item that isn't a loot base, for orbs that add affixes ("This item can't take affixes"). The Mirror needs a free inventory slot ("No room in your inventory for the copy").
+
 General rules (from the design): orbs never destroy an item; only the shard can. A corrupted item is locked: no operation works on it, except the Mirror of Kalandra (user, 2026-11-08). Every operation uses up one material item; shattering uses none. Divine and Annulment on a resonant line follow `AFFIX_RULES.md` → Twin mods and resonance.
 
 ## 3. What a player sees
@@ -98,11 +100,14 @@ internal sealed class RiftforgeResult
 - **Map rolling:** the rips session adds its operations inside `Options` and `Apply` (ids `map:*`), in its own file, through a small registration call the loot session provides (`RiftforgeCrafting.Register(IRiftforgeOperations)`), so neither session edits the other's code.
 - **Anything the window needs that isn't here:** add it to this section in `master`; bump `ApiVersion` only for changes that break existing callers.
 
+**Built (2026-11-08, loot round on `claude/loving-euler-qfkpzc`):** `RiftforgeCrafting` in `Corruption/Content/RiftforgeCrafting.cs` with the orb operations (rules in `Corruption/Rules/OrbRules.cs`), `IsMaterial` for the orbs and `Register`. Corrupt, shatter and splinter are not built yet.
+
 ## 5. Until the window exists
 
 A cheat console command uses the same calls, so the rules can be play-tested first:
 - `co_craft list`: the options for the item in hotbar slot 1 and the material in slot 2.
-- `co_craft <operation id>`: applies it and prints the result message.
+- `co_craft <operation id>`: applies it and prints the result message (`co_craft regal` works too).
+- Built 2026-11-08 with two testing extras: `co_craft give [count]` (every orb) and `co_craft testcorrupt` (marks the slot-1 item corrupted, until shards can).
 
 ## 6. Open questions (user)
 

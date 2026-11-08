@@ -47,8 +47,8 @@ Build from **`master`** (merged; the loot branch is deleted). Roll tools until t
 3. **Determined:** the stamina bar jumps up each time something breaks and drops.
 4. **Artisan:** now and then a copper or tin chunk drops one more ore.
 5. **Gemseeker's:** now and then a rock or chunk drops Amber or Amber pearl (Meadows), also Ruby (Black Forest and later).
-6. **Stonecutter's:** now and then a rock or chunk drops one more stone (also tin, which drops no stone itself).
-7. **Resinous:** now and then a tree, log or stump drops one more resin. **Forester's:** now and then a standing tree drops its seed (beech seeds, pine cone, birch seeds, fir cone, acorn).
+6. **Stonecutter's:** changed 2026-11-08 to roll on every hit, tested in `docs/playtests/claude-loving-euler-qfkpzc.md` instead.
+7. **Resinous:** changed 2026-11-08 to roll on every hit, tested in `docs/playtests/claude-loving-euler-qfkpzc.md` instead. **Forester's:** now and then a standing tree drops its seed (beech seeds, pine cone, birch seeds, fir cone, acorn).
 8. **Charring:** now and then wood drops as coal instead.
 9. **Odin's Grace** on an axe: now and then one chop at a standing tree drops all its wood, resin and seeds at once, with no log or stump left. Fell a tree normally, then a lucky chop at its log or stump harvests the log, its pieces and the stump together. A tree you can't chop yet (tool tier) still says "too hard".
 10. The log lists `Harvest affixes: wood …; seeds …; ores …` at startup: wood should be the wood types, seeds the seeds, ores the ores and scrap. No red errors in the console.

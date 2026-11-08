@@ -43,6 +43,7 @@
     <Compile Include="..\Corruption\Rules\LootRules.cs" Link="Linked\LootRules.cs" />
     <Compile Include="..\Corruption\Rules\LootItem.cs" Link="Linked\LootItem.cs" />
     <Compile Include="..\Corruption\Rules\AffixRoller.cs" Link="Linked\AffixRoller.cs" />
+    <Compile Include="..\Corruption\Rules\OrbRules.cs" Link="Linked\OrbRules.cs" />
     <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />
     <Compile Include="..\Corruption\Rules\GatheringRules.cs" Link="Linked\GatheringRules.cs" />
     <Compile Include="..\Corruption\Rules\HarvestRules.cs" Link="Linked\HarvestRules.cs" />

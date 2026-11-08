@@ -1,0 +1,4 @@
+﻿outcome,status,chance,notes
+magic,approved,50,"Orb of Chance on a Normal item (user, 2026-11-08)."
+rare,approved,30,"(user, 2026-11-08). While no unique can come from the item, the result is always Rare (100%), whatever the roll."
+unique,approved,20,"(user, 2026-11-08). Uniques are ROADMAP L6; none exist yet, so this never happens for now."

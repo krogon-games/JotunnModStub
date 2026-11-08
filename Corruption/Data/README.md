@@ -10,6 +10,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
 | [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
 | [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
+| [`orb_chance.csv`](orb_chance.csv) | Orb of Chance: what a Normal item becomes (Magic, Rare, Unique), in percent; always Rare while no unique can come from the item |
 | [`loot_bases.csv`](loot_bases.csv) | Items monsters can drop as Magic or Rare loot, with their biome and affix classes. **Generated** from the game dump by `tools/make_loot_bases.py`; don't edit by hand |
 | [`loot_rules.csv`](loot_rules.csv) | Loot settings: chance of a previous-biome item, drop level, how many affixes Magic and Rare items get |
 | [`rare_names.csv`](rare_names.csv) | Words for Rare item names (first word; second word by kind of item) |
@@ -18,7 +19,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`rip_loot.csv`](rip_loot.csv) | Which vanilla chest a rip leaves, per biome, weighted by how often each appears in that biome |
 | [`offerings.csv`](offerings.csv) | Corrupted offerings: per boss, the vanilla item, how it's used (`altar`, `stand`, `door`), how many vanilla items one corrupted item takes (plus 1 shard), name and description |
 
-`essences.csv`, `maps.csv`, `rip_loot.csv`, `offerings.csv` and the loot tables (`affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`, since loot step 1) are compiled into the mod: **rebuild after editing them**. The others (`affix_caps.csv`, `corruption_outcomes.csv`, `shattering.csv`) aren't loaded by the game yet. Later the server's copy of the loot tables will be the one everybody plays with. That way the group can rebalance without a new mod version.
+`essences.csv`, `maps.csv`, `rip_loot.csv`, `offerings.csv` and the loot tables (`affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`, since loot step 1) and `orb_chance.csv` (since 2026-11-08) are compiled into the mod: **rebuild after editing them**. The others (`affix_caps.csv`, `corruption_outcomes.csv`, `shattering.csv`) aren't loaded by the game yet. Later the server's copy of the loot tables will be the one everybody plays with. That way the group can rebalance without a new mod version.
 
 ## How to edit
 
