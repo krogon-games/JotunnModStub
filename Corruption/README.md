@@ -58,4 +58,5 @@ Look settings (per player, not synced, restart to apply):
 | Look / RiftforgeTintStrength | 0.6 | 0 = Galdr table colours, 1 = fully the tint colour |
 
 ## Changelog
+- 0.2.0 (2026-11-08): everything merged into `master` since 0.1.0, up to the code-review fixes (PR #53): safe tab loading, Magic/Rare loot on both death paths, arrows use their own bow's affixes.
 - 0.1.0 (unreleased): corruption shards, the Riftforge, talismans, boss essences, maps and rips (travel only).

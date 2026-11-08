@@ -12,6 +12,7 @@ Areas: **Process** · **Design** (rules for the whole mod) · **Loot** · **Rips
 
 | Date | Area | Question | What you decided |
 |---|---|---|---|
+| 2026-11-08 | Loot / Crafting | Test PR #53's code-review fixes with other players now? | No: "skipping multiplayer testing at this stage". The round finished on the solo play-test; the multiplayer steps (chests with two players, loot per player, arrows, rip waves with three) moved to the group evening |
 | 2026-11-06 | Process | Who raises the mods' version numbers? | Not the feature branches: `/handoff` only flags "gameplay changed: version bump needed at merge". The coordinator raises the version once, when it merges gameplay changes into `master` (second number, e.g. `0.1.0` → `0.2.0`, in the `.csproj`, the main `.cs` and `Package/manifest.json`) |
 | 2026-11-06 | Process | Should the mods build in cloud sessions? | Yes: the cloud environment's setup script installs .NET and a stand-in Valheim folder outside the repo (`tools/cloud-setup.sh`). Valheim game files are never committed |
 | 2026-11-06 | Process | How does a session end? | With `/handoff`, typed by you: it checks the branch, runs the checks, writes the handoff, commits and pushes, and reports |

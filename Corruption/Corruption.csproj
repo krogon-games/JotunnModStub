@@ -4,7 +4,7 @@
     <AssemblyName>Corruption</AssemblyName>
     <RootNamespace>Corruption</RootNamespace>
     <LangVersion>latest</LangVersion>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Product>Corruption</Product>
     <Description>Diablo/Path of Exile-style endgame for Valheim: corruption shards, maps and rips, corrupted bosses and loot.</Description>
     <Copyright>Copyright © 2026</Copyright>

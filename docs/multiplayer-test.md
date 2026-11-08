@@ -8,7 +8,7 @@ Two players, about 30 minutes. Mostly checks chest sharing, the part most likely
    - The host's Debug build copies the dll to `<Valheim>\BepInEx\plugins\CraftingOverhaul\CraftingOverhaul.dll`. Send that file to your friend; they put it in the same folder in their install.
    - If the versions differ, the game refuses the connection. That's expected.
 2. **Host** a world from the main menu ("Start server"), or use a dedicated server with the mod installed. Your friend joins.
-3. Both open the console (F5) once and check `BepInEx/LogOutput.log` has `CraftingOverhaul 0.1.0 loaded`.
+3. Both open the console (F5) once and check `BepInEx/LogOutput.log` has `CraftingOverhaul 0.2.0 loaded`.
 4. Build a test spot: a workbench, 3 chests within 20 m of it, and a bit of wood, stone and leather scraps in the chests (not in either player's inventory).
 
 ## Tests
