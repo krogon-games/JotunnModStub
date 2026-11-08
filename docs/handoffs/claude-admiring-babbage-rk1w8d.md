@@ -1,6 +1,6 @@
 # Handoff: `claude/admiring-babbage-rk1w8d`
 
-**Written:** 2026-11-08 · **Branch:** 11 commits ahead of `master`, 0 behind (`master` `e56e91f`); no PR yet.
+**Written:** 2026-11-08 · **Branch:** 12 commits ahead of `master`, 0 behind (`master` `e56e91f`); no PR yet.
 
 ## Stage
 
@@ -25,7 +25,6 @@ Confirmed by Krogon in single player (2026-11-07/08):
 - The death code was read in the cloud's 1.0.14 assemblies, not 1.0.21 (Krogon's 1.0.21 play-test passed).
 - AdventureBackpacks' stock isn't visible when Craft is pressed, so chests may be reserved needlessly (payment order unchanged).
 - Hits from other mods still use the weapon in hand (Orlog skills should tag theirs with `HitSources.Tag`).
-- The 3-second network timeout and build linger are technical numbers, not gameplay.
 
 ## Decisions
 
@@ -33,7 +32,7 @@ Confirmed by Krogon in single player (2026-11-07/08):
 
 ## Playtest
 
-[`docs/playtests/claude-admiring-babbage-rk1w8d.md`](../playtests/claude-admiring-babbage-rk1w8d.md): A–D passed. Skadi first "failed" because the checklist expected blue frost numbers, which the game doesn't show; re-tested with the new message, passed. E–H skipped.
+[`docs/playtests/claude-admiring-babbage-rk1w8d.md`](../playtests/claude-admiring-babbage-rk1w8d.md): A–D passed (Skadi after fixing the checklist's wrong "blue numbers" step); E–H skipped.
 
 ## Open questions for Krogon
 
@@ -49,11 +48,11 @@ None. The rip-wave check (2e step 4) decides whether that counting gets fixed la
 
 - Build: PASS (CraftingOverhaul and Corruption build against the cloud stand-in; `dotnet test`: 304 passed).
 - Version: gameplay changed: version bump needed at merge (CraftingOverhaul, Corruption). No version changed on this branch.
-- Multiplayer sync: read in code, not tested. No new settings, data files or messages; chest access uses the game's own chest messages, so CraftingOverhaul still works when only some players have it.
+- Multiplayer sync: read in code, not tested. Nothing new to sync; chest access uses the game's own chest messages (works when only some players have CraftingOverhaul).
 - Assets and names: no new assets; new token `corruption_tab_locked` is in `Texts.cs`; `CorruptionShard` is ours.
 - FEATURES.md: PASS (updated with each change).
 - In game: solo passed (Krogon: "Everything seems to work as intended", "c5 and c6 checks out"); multiplayer skipped.
 
 ## Merge notes
 
-Ready to merge: yes. Solo play-test passed, no check failed, `master` merged (0 behind), pushed; multiplayer deliberately skipped by Krogon. **Gameplay changed: version bump needed at merge (CraftingOverhaul, Corruption).** No overlap with the other open branches (`claude/awesome-ptolemy-gjigjh`, `claude/relaxed-einstein-kdvz4t`). Shared files touched (add, keep both sides): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`, `Corruption/CorruptionPlugin.cs` (one line), `Corruption/Content/Texts.cs` (one entry).
+Ready to merge: yes (solo play-test passed, no check failed, 0 behind `master`, pushed; multiplayer skipped by Krogon). **Gameplay changed: version bump needed at merge (CraftingOverhaul, Corruption).** No overlap with the other open branches (`claude/awesome-ptolemy-gjigjh`, `claude/relaxed-einstein-kdvz4t`). Shared files touched (add, keep both sides): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`, `Corruption/CorruptionPlugin.cs` (one line), `Corruption/Content/Texts.cs` (one entry).
