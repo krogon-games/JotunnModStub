@@ -44,9 +44,11 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 
 ## Session 3d: on-harvest gathering affixes (loot step 3, second half, about 20 minutes)
 
-Build from **`claude/affixes-loot`**. Roll tools until they carry the affix (`co_loot rare PickaxeBronze`, `co_loot rare AxeBronze`…); its tooltip line is no longer grey. Chances are low (5–25%), so give each one a dozen trees or rock chunks. With a second player, repeat 1, 3 and 9 while the **other** player stands nearest the tree or rock (they own it).
+Step 1 partly passed 2026-11-08 (PR #55: logs and copper deposit chunks drop twice). Left: step 1 on standing trees, stumps and one-piece rocks; steps 2–10.
 
-1. **Bountiful** (*of Bounty*): now and then a tree, log, stump, rock or deposit chunk drops everything twice.
+Build from **`master`** (merged; the loot branch is deleted). Roll tools until they carry the affix (`co_loot rare PickaxeBronze`, `co_loot rare AxeBronze`…), or add it to the tool in your hand with `co_affix <id> 100` for a sure proc (ids in `Corruption/Data/affixes.csv`); its tooltip line is no longer grey. Rolled chances are low (5–25%), so give each one a dozen trees or rock chunks. Only your own swings count: something that breaks by rolling or falling gives normal drops. With a second player, repeat 1, 3 and 9 while the **other** player's game runs the tree or rock (they stand nearest, or they look at it and type `co_own`).
+
+1. **Bountiful** (*of Bounty*): now and then a tree, log, stump, rock or deposit chunk drops everything twice. ~~Logs, deposit chunks~~ passed 2026-11-08.
 2. **Bountiful** (*of Plenty*, axe): now and then a log drops its wood twice; with both Bountifuls, sometimes three times.
 3. **Determined:** the stamina bar jumps up each time something breaks and drops.
 4. **Artisan:** now and then a copper or tin chunk drops one more ore.
@@ -76,12 +78,14 @@ Build from **`claude/affixes-loot`**. Give yourself the affix you want with `co_
 
 ## Session 3c: gathering-tool affixes (loot step 3, about 20 minutes)
 
-Build from **`claude/affixes-loot`**. Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…). These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) are tested in Session 3d.
+Steps 2–4 passed 2026-11-08 (PR #55, including Veinbreaker's reset when the tool is unequipped), apart from Odin's Grace on a one-piece rock. Left: 1, that part of 4, and 5–14.
+
+Build from **`master`** (merged; the loot branch is deleted). Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…), or `co_affix <id> 100` on the tool in your hand. These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) are tested in Session 3d.
 
 1. **Prospector's** on a pickaxe: rocks and copper/tin take more hits off per swing than with a plain pickaxe of the same kind (watch the damage numbers).
-2. **Veinbreaker's:** every 5th swing at rock or ore shows a bigger damage number.
-3. **Seismic:** now and then a swing at a copper or tin deposit knocks off the chunks next to the one you hit too.
-4. **Odin's Grace:** now and then a swing breaks the chunk you hit and every chunk touching it at once; a single rock breaks in one hit. Iron (tier) still needs the right pickaxe.
+2. ~~**Veinbreaker's:** every 5th swing at rock or ore shows a bigger damage number.~~ Passed 2026-11-08.
+3. ~~**Seismic:** now and then a swing at a copper or tin deposit knocks off the chunks next to the one you hit too.~~ Passed 2026-11-08.
+4. **Odin's Grace:** ~~now and then a swing breaks the chunk you hit and every chunk touching it at once; iron (tier) still needs the right pickaxe~~ passed 2026-11-08 (deposits, tin, silver too hard for a lower pickaxe). Left: a single one-piece rock breaks in one hit.
 5. **Excavator's:** digging the ground with the pickaxe makes a deeper, wider hole than a plain one.
 6. **Lumberjack's / Timberfall / Rootbreaker** on an axe: standing trees / fallen logs / stumps take more damage per chop.
 7. **Splintering:** now and then a chop also damages the nearest other tree or log right next to you.
