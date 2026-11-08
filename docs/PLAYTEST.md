@@ -210,7 +210,7 @@ Everything else passed 2026-10-31 ("everything looks really good now"). Left: wi
 3. **G:** arrow affixes on the server: Skadi (with `devcommands`, the top-left "Skadi: stack N" message) and life steal follow the bow when switching mid-flight.
 4. **H (Part 3, 3 players):** rip waves after the heart changes hands: send Claude the `Rip waves: …` log lines from the game that took over, and your creature counts.
 
-**2f. Gathering review fixes (2026-11-08).** Full steps in [`playtests/claude-festive-albattani-lg4p35.md`](playtests/claude-festive-albattani-lg4p35.md) → D. `co_own` (look at an object) makes your game run it.
+**2f. Gathering review fixes (2026-11-08; solo part passed, multiplayer left for later by Krogon).** Full steps in [`playtests/claude-festive-albattani-lg4p35.md`](playtests/claude-festive-albattani-lg4p35.md) → D. `co_own` (look at an object) makes your game run it.
 1. **D1:** B runs a copper deposit (`co_own`); A's Seismic and Odin's Grace break the same chunks as alone.
 2. **D2:** B runs a log A hit once; it breaks by falling or rolling → normal drops, B's log says "without a player's swing".
 3. **D3:** A runs the log, B the stump of one felled tree; both swing Odin's Grace axes at the same moment → one tree's worth of wood or two? Send both players' `Odin's Grace: whole-tree harvest …` lines.
