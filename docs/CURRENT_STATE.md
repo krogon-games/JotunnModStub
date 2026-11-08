@@ -76,6 +76,7 @@ Phase 5 (map affixes and tiers, 3-star creatures), phase 6's boss particles, the
 
 ## Outstanding bugs and open issues
 
+- Weapon-skill affix: the Skills tab showed +6 for a +7 axe (play-test 2026-10-31; [#56](https://github.com/krogon-games/JotunnModStub/issues/56)). Suspected display quirk after a death (fractional skill levels; read in 1.0.14 code, unconfirmed); the check is in `PLAYTEST.md` → Session 3b step 6.
 - Corruption's shard and essences have no biome in recipe grouping: they come from our drop patches, which the biome detection doesn't see. Harmless today (map recipes still group by their biome material).
 - Chest race: two players taking from the same chest at the same instant, last write wins (same as Valheim Plus). **Fixed in code 2026-11-07** (branch `claude/admiring-babbage-rk1w8d`: exclusive access through the game's chest handshake before paying); untested with two players.
 - Any-one-ingredient recipes don't use chest contents.

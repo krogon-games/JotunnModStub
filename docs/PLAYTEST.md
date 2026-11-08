@@ -93,7 +93,7 @@ Build from **`master`** (merged; the loot branch is deleted). Roll tools with th
 
 ## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
 
-~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill) and 7 (life steal).
+~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill: failed 2026-10-31, now a check for bug #56) and 7 (life steal; passed on a bow 2026-11-07, not yet with other weapons).
 
 Build from `master` (merged 2026-10-31). Roll items until you have the affix (`co_loot rare ArmorLeatherChest`, `co_loot rare CapeDeerHide`, `co_loot rare SwordBronze`…); these lines are no longer grey.
 
@@ -102,7 +102,7 @@ Build from `master` (merged 2026-10-31). Roll items until you have the affix (`c
 3. **Movement speed:** "+N% movement speed" (legs, cape, trinket) or Fleet "while held" (weapon or shield in hand): "Speed from gear" on the character sheet rises by N%; you run faster. Fleet stops counting when you sheathe.
 4. **Regen:** "+N% health regen" / "+N% stamina regen": regen is visibly faster (compare with the item off).
 5. **Resistances:** "N% less fire damage taken" (or frost, lightning, poison, all resistances): stand in a fire (`spawn Surtling` or a campfire) with and without the item: less damage with it.
-6. **Weapon skill:** "+N to the weapon's skill" on a weapon: with it in hand, the skill in the Skills tab shows +N; sheathed: back to normal.
+6. **Weapon skill:** "+N to the weapon's skill" on a weapon: with it in hand, the skill in the Skills tab shows +N; sheathed: back to normal. **Check for [#56](https://github.com/krogon-games/JotunnModStub/issues/56)** (2026-10-31 the panel showed +6 for a +7 axe; suspected a display quirk after a death): equip an axe, type `co_affix weapon_skill_prefix 7`, then `raiseskill Axes 0.6` (the console prints the exact level, e.g. `Skill Axes = 25.6`): the Skills tab should show **+6**. Then `raiseskill Axes 0.4` (back to a whole level): it should show **+7**. If both show +7, tell Claude (the suspected cause is wrong). Send the console lines either way.
 7. **Life steal:** "N% of damage dealt returned as health": take some damage, hit creatures: small green heals.
 8. No red errors in the console.
 
