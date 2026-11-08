@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Corruption.Rules;
 using HarmonyLib;
+using Jotunn.Entities;
 using Jotunn.Managers;
 using UnityEngine;
 
@@ -286,6 +287,57 @@ namespace Corruption.Content
             }
         }
 
+        // ---- co_own (testing) ----
+
+        public static void RegisterCommand()
+        {
+            CommandManager.Instance.AddConsoleCommand(new OwnCommand());
+        }
+
+        /// <summary>
+        ///     co_own: your game takes over running the object you're looking at (a tree, log, stump or rock), so a
+        ///     two-player test can give each player's game a different piece of one tree (playtest: Odin's Grace on one
+        ///     tree from two games). Uses the game's own ownership claim; nothing else changes.
+        /// </summary>
+        private sealed class OwnCommand : ConsoleCommand
+        {
+            public override string Name => "co_own";
+
+            public override string Help => "Corruption: co_own - your game takes over running the object you're looking at (testing)";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var player = Player.m_localPlayer;
+                var camera = GameCamera.instance ? GameCamera.instance.transform : null;
+                if (!player || !camera)
+                {
+                    return;
+                }
+                ZNetView view = null;
+                float best = float.MaxValue;
+                foreach (var hit in Physics.RaycastAll(camera.position, camera.forward, 30f))
+                {
+                    var found = hit.collider ? hit.collider.GetComponentInParent<ZNetView>() : null;
+                    if (found && found.IsValid() && !found.GetComponent<Character>() && hit.distance < best)
+                    {
+                        best = hit.distance;
+                        view = found;
+                    }
+                }
+                if (!view)
+                {
+                    Console.instance.Print("Look at a tree, log, stump or rock first.");
+                    return;
+                }
+                bool had = view.IsOwner();
+                view.ClaimOwnership();
+                Console.instance.Print($"{Utils.GetPrefabName(view.gameObject)}: " +
+                                       (had ? "your game already runs it." : "your game runs it now (another player's game ran it)."));
+            }
+        }
+
         // ---- Owner: keep the chances, apply them while that sender's hit runs ----
 
         private struct Key : System.IEquatable<Key>
@@ -358,17 +410,55 @@ namespace Corruption.Content
 
         private static Context _current;
 
-        /// <summary>Starts the hit's context when its sender sent chances for this object; returns the previous context.</summary>
-        private static Context Begin(ZNetView view, long sender, global::DropTable table, bool woodcutting, Vector3 position)
+        private static int _playerPrefab;
+
+        /// <summary>
+        ///     A hit made by a player: a swing, or a copy of one (Seismic, Splintering, Odin's Grace on rock, the hit a
+        ///     breaking rock passes to its copper deposit), all of which keep the striker as attacker. Hits with no
+        ///     attacker (a log rolling or landing, a falling tree hitting another, <c>ImpactEffect</c>) and creatures' hits
+        ///     are not: what they break gives normal drops, even if a player sent chances for it earlier (Krogon,
+        ///     2026-11-08: "only your swings"). Without this, such a break used the cached chances only when the striker's
+        ///     own game owned the object (the physics hit's sender then matches the striker).
+        /// </summary>
+        private static bool ByPlayer(HitData hit)
+        {
+            if (hit == null || hit.m_attacker.IsNone())
+            {
+                return false;
+            }
+            if (_playerPrefab == 0 && Game.instance && Game.instance.m_playerPrefab)
+            {
+                _playerPrefab = Game.instance.m_playerPrefab.name.GetStableHashCode();
+            }
+            var zdo = ZDOMan.instance != null ? ZDOMan.instance.GetZDO(hit.m_attacker) : null;
+            if (zdo != null && _playerPrefab != 0)
+            {
+                return zdo.GetPrefab() == _playerPrefab;
+            }
+            return hit.GetAttacker() is Player;
+        }
+
+        /// <summary>
+        ///     Starts the hit's context when its sender sent chances for this object and the hit is a player's
+        ///     (<see cref="ByPlayer" />); returns the previous context.
+        /// </summary>
+        private static Context Begin(ZNetView view, long sender, HitData hit, global::DropTable table, bool woodcutting, Vector3 position)
         {
             var previous = _current;
             Safe.Run("start a harvest", () =>
             {
                 // Set even without a drop table: a rock that drops nothing may still break into a deposit that inherits it.
-                if (view && view.IsValid() && Pending.TryGetValue(new Key(view.GetZDO().m_uid, sender), out var chances))
+                if (!view || !view.IsValid() || !Pending.TryGetValue(new Key(view.GetZDO().m_uid, sender), out var chances))
                 {
-                    _current = new Context { Chances = chances, Table = table, Woodcutting = woodcutting, Position = position };
+                    return;
                 }
+                if (!ByPlayer(hit))
+                {
+                    Jotunn.Logger.LogInfo($"Harvest affixes: {Utils.GetPrefabName(view.gameObject)} was hit without a player's swing " +
+                                          "(no attacker, or a creature); cached tool chances not used.");
+                    return;
+                }
+                _current = new Context { Chances = chances, Table = table, Woodcutting = woodcutting, Position = position };
             });
             return previous;
         }
@@ -377,7 +467,7 @@ namespace Corruption.Content
         private static bool OdinsGrace(Component piece, ZNetView view, long sender, HitData hit)
         {
             if (!view || !view.IsValid() || !view.IsOwner() || hit == null || hit.m_damage.m_chop <= 0f ||
-                !Pending.TryGetValue(new Key(view.GetZDO().m_uid, sender), out var chances) || !chances.Odin)
+                !Pending.TryGetValue(new Key(view.GetZDO().m_uid, sender), out var chances) || !chances.Odin || !ByPlayer(hit))
             {
                 return false;
             }
@@ -410,7 +500,7 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                __state = Begin(__instance.m_nview, sender, __instance.m_dropWhenDestroyed, true, __instance.transform.position);
+                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropWhenDestroyed, true, __instance.transform.position);
                 return true;
             }
 
@@ -427,7 +517,7 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                __state = Begin(__instance.m_nview, sender, __instance.m_dropWhenDestroyed, true, __instance.transform.position);
+                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropWhenDestroyed, true, __instance.transform.position);
                 return true;
             }
 
@@ -456,7 +546,7 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                __state = Begin(__instance.m_nview, sender, drops ? drops.m_dropWhenDestroyed : null, tree, __instance.transform.position);
+                __state = Begin(__instance.m_nview, sender, hit, drops ? drops.m_dropWhenDestroyed : null, tree, __instance.transform.position);
                 return true;
             }
 
@@ -466,8 +556,8 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(MineRock), nameof(MineRock.RPC_Hit))]
         private static class RockHit
         {
-            private static void Prefix(MineRock __instance, long sender, out Context __state) =>
-                __state = Begin(__instance.m_nview, sender, __instance.m_dropItems, false, __instance.transform.position);
+            private static void Prefix(MineRock __instance, long sender, HitData hit, out Context __state) =>
+                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropItems, false, __instance.transform.position);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -476,8 +566,8 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(MineRock5), nameof(MineRock5.RPC_Damage))]
         private static class DepositHit
         {
-            private static void Prefix(MineRock5 __instance, long sender, out Context __state) =>
-                __state = Begin(__instance.m_nview, sender, __instance.m_dropItems, false, __instance.transform.position);
+            private static void Prefix(MineRock5 __instance, long sender, HitData hit, out Context __state) =>
+                __state = Begin(__instance.m_nview, sender, hit, __instance.m_dropItems, false, __instance.transform.position);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -670,6 +760,18 @@ namespace Corruption.Content
                         }
                     }
                 }
+                // Two-player check (playtest: Odin's Grace on one tree from two games): which tree, and how many of its
+                // pieces another player's game was running. Both games logging the same tree at once = a double harvest.
+                int others = 0;
+                foreach (var each in pieces)
+                {
+                    if (each && each.IsValid() && !each.IsOwner())
+                    {
+                        others++;
+                    }
+                }
+                Jotunn.Logger.LogInfo($"Odin's Grace: whole-tree harvest of tree {(id.IsNone() ? view.GetZDO().m_uid : id)} from " +
+                                      $"{Utils.GetPrefabName(view.gameObject)}: {pieces.Count} loaded piece(s), {others} run by another player's game.");
                 foreach (var each in pieces)
                 {
                     Real(each, hit, chances);

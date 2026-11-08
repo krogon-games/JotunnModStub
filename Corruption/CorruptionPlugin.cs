@@ -38,6 +38,7 @@ namespace Corruption
             Safe.Run("add the co_loot command", Loot.Register);
             Safe.Run("add the co_affix command", LootProcs.RegisterCommand);
             Safe.Run("add the co_tabs_damage command", InventoryTabs.RegisterCommand);
+            Safe.Run("add the co_own command", LootHarvest.RegisterCommand);
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
         }
