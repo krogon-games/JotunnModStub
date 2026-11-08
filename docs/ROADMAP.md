@@ -2,7 +2,7 @@
 
 **Written:** 2026-11-01, after every session's branch was merged into `master` (PRs #1–#16; 225 tests pass). **For:** the user and the next round of Claude sessions. Each session reads its own part below before starting, then follows `CLAUDE.md` (branch from the latest `master`, one branch per session, PR when a feature is finished).
 
-**Update 2026-11-08 (coordinator, after PR #57):** every PR up to #57 is merged; loot L2 and L3 were built (PR #18) and L2's review fixes were play-tested alone (PR #55); a third set of review fixes passed alone (PR #57); Corruption is at 0.4.0, Orlog at 0.2.0. The old session branches are deleted on GitHub, so each session's next round starts a **new** branch from `master` (the branch names in §3 and §4 are where the earlier rounds ran). Current state of each: `STATUS.md`.
+**Update 2026-11-08 (coordinator, after PR #58):** every PR up to #58 is merged; loot L2 and L3 were built (PR #18) and L2's review fixes were play-tested alone (PR #55); a third set of review fixes passed alone (PR #57); the orb rules were decided (#28, closed) and L5's first part, the currency orbs and their Riftforge rules with `co_craft`, passed alone (PR #58); Corruption is at 0.5.0, Orlog at 0.2.0. The old session branches are deleted on GitHub, so each session's next round starts a **new** branch from `master` (the branch names in §3 and §4 are where the earlier rounds ran). Current state of each: `STATUS.md`.
 
 The facts here come from `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `FEATURES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/AFFIX_RULES.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/DECISIONS.md` and the code. Where this file and those disagree, those win: fix this file.
 
@@ -12,7 +12,7 @@ The tasks below are tracked as **[GitHub issues](https://github.com/krogon-games
 
 | Priority | Issues |
 |---|---|
-| 1 high | #24 group evening · #25 release build · #26 play-test loot steps 3–4 · #27 small play-test leftovers · #28 orb rules (decision) · #29 L5 Riftforge rules · #30 U3 Riftforge window · #31 R1 map tiers and affixes · #32 C3 Amazon passives |
+| 1 high | #24 group evening · #25 release build · #26 play-test loot steps 3–4 · #27 small play-test leftovers · ~~#28 orb rules (decision)~~ closed · #29 L5 Riftforge rules (orbs done in PR #58) · #30 U3 Riftforge window · #31 R1 map tiers and affixes · #32 C3 Amazon passives |
 | 2 medium | #33 L4 orbs · #34 L6 uniques and ring slot · #35 L7 loot lock and beams · #36 C4 boss points and respec · #37 C5 skill button and bow skills · #38 U2 real Orlog data · #39 R3 + R2 elites and 3 stars · #40 R5 landing check and particles · #41 C6 spear and javelin skills · #42 fresh `co_dump` |
 | 3 later | #43 U4 recipe list · #44 C7 later Amazon skills · #45 R6 phase 8 · #46 storage and quests · #47 Orlog stone redesign · #48 Unity 6 · #49 L8 synced tables · #50 before a public release · #51 other classes · #52 parked ideas |
 

@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Ready to merge.**
+Merged into `master` (PR #58, 2026-11-08) after Krogon confirmed the play-test; the coordinator raised Corruption to 0.5.0, copied the decisions into `docs/DECISIONS.md` and closed #28.
 
 ## Purpose
 
@@ -66,7 +66,7 @@ None.
 
 ## Next steps
 
-1. Open a PR into `master`; Krogon merges it; the coordinator raises Corruption's version.
+1. ~~Open a PR into `master`; Krogon merges it; the coordinator raises Corruption's version.~~ Done (PR #58; Corruption 0.5.0).
 2. Next loot round: L5's shard corruption, shattering and Affix Splinters; L4's orb drops (needs Krogon); the Stonecutter's/Resinous rework (decision 8).
 
 ## Checks

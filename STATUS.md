@@ -1,6 +1,6 @@
 # Status
 
-**Last updated:** 2026-11-08 by the coordinator, from the real state of GitHub (every branch fetched and compared with `master`, open pull requests listed), after PR #57 and the bump of Corruption to 0.4.0 and Orlog to 0.2.0.
+**Last updated:** 2026-11-08 by the coordinator, from the real state of GitHub (every branch fetched and compared with `master`, open pull requests listed), after PR #58 and the bump of Corruption to 0.5.0.
 
 **Only the coordinator, working on `master`, edits this file.** Feature branches never touch it, so merges don't clash. Feature sessions report through their handoff file (`docs/handoffs/<branch>.md`).
 
@@ -8,7 +8,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 ## In one paragraph
 
-**Everything is in `master`.** Every pull request (up to #57) is merged and none is open. So nothing is waiting to be merged today. The only other branch, `claude/hopeful-thompson-eyncm8`, is merged (PR #57) and can be deleted; every other branch has been deleted on GitHub; their handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
+**Everything is in `master`.** Every pull request (up to #58) is merged and none is open. So nothing is waiting to be merged today. The only other branch, `claude/loving-euler-qfkpzc`, is merged (PR #58) and can be deleted; every other branch has been deleted on GitHub; their handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
 
 ## Branches
 
@@ -16,15 +16,15 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 | Branch | Purpose | Stage | Behind / ahead | Ready to merge? |
 |---|---|---|---|---|
-| `master` | The shared, play-tested base. **Versions: Corruption 0.4.0, CraftingOverhaul 0.2.0, Orlog 0.2.0** (Corruption and Orlog bumped 2026-11-08 for PR #57) | — | — | — |
+| `master` | The shared, play-tested base. **Versions: Corruption 0.5.0, CraftingOverhaul 0.2.0, Orlog 0.2.0** (Corruption bumped 2026-11-08 for PR #58, Orlog for PR #57) | — | — | — |
 
-Checked 2026-11-08 after PR #57: besides `master`, GitHub has only `claude/hopeful-thompson-eyncm8`, fully merged (0 ahead); please delete it. No open pull requests. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
+Checked 2026-11-08 after PR #58: besides `master`, GitHub has only `claude/loving-euler-qfkpzc`, fully merged (0 ahead); please delete it. No open pull requests. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
 
 **Areas without a branch now** (their old branches were deleted; each next round starts a new branch from `master`, and its handoff file in `docs/handoffs/` says where it stopped):
 
 | Area | Last handoff | Where it stopped |
 |---|---|---|
-| Loot (Magic/Rare drops, affixes, orbs, Riftforge rules, uniques) | `claude-affixes-loot.md` | Waiting for your play-test of loot steps 3–4 (partly done through PR #55) and your answers on the orb rules. |
+| Loot (Magic/Rare drops, affixes, orbs, Riftforge rules, uniques) | `claude-loving-euler-qfkpzc.md` (before it `claude-affixes-loot.md`) | Merged (PR #58, Corruption 0.5.0): your orb rules (#28, closed), the ten currency orbs and their Riftforge rules through `co_craft`, Stonecutter's/Resinous per hit; passed alone. Next round: L5's shard corruption, shattering and Affix Splinters; L4's orb drops (needs your rates, #33); the Stonecutter's/Resinous rework. Loot steps 3–4 still wait for your play-test (#26) |
 | Classes (Orlog: levels, attributes, the Orlog stone, the Amazon) | `claude-class-skills.md` | Asking you questions before C3 (the Amazon's passives) |
 | Rips and bosses (maps, rips, waves, corrupted bosses) | `claude-rips-bosses.md` | Asking you to approve the map tiers and affixes table (R1) |
 | UI (character sheet, HUD bars, classes UI, tabs, next the Riftforge window) | `claude-ui-overhaul.md` | Asking where the Riftforge window opens; waiting for a small play-test. |
@@ -37,7 +37,7 @@ Checked 2026-11-08 after PR #57: besides `master`, GitHub has only `claude/hopef
 
 - **`docs/corruption-design.md`: `master`'s version always wins.** The branches that carried an older copy are deleted; new branches start from `master` and have the current one.
 - **Start every round from the latest `master`** (`git fetch origin master && git merge origin/master`). A session that skips this works on stale docs and code.
-- **Version bump at merge (user, 2026-11-06).** Feature branches never change version numbers; their handoff says "gameplay changed: version bump needed at merge" and names the plugins. When the coordinator merges such a branch into `master`, it raises each named plugin's second number once (`0.1.0` → `0.2.0`) in three places that must agree: `<Version>` in the `.csproj`, `PluginVersion` in the main `.cs`, `version_number` in `Package/manifest.json`. Several branches merged in one go share one bump. First bump done 2026-11-08 after PR #53: Corruption and CraftingOverhaul 0.1.0 → 0.2.0 (Orlog unchanged, 0.1.0). Second, 2026-11-08 after PR #55: Corruption 0.2.0 → 0.3.0. Third, 2026-11-08 for PR #57 (done on the branch before merging): Corruption 0.3.0 → 0.4.0, Orlog 0.1.0 → 0.2.0. The group evening's build check (`PLAYTEST.md` → Session 2) and `PLAYER_SETUP.md` expect these numbers.
+- **Version bump at merge (user, 2026-11-06).** Feature branches never change version numbers; their handoff says "gameplay changed: version bump needed at merge" and names the plugins. When the coordinator merges such a branch into `master`, it raises each named plugin's second number once (`0.1.0` → `0.2.0`) in three places that must agree: `<Version>` in the `.csproj`, `PluginVersion` in the main `.cs`, `version_number` in `Package/manifest.json`. Several branches merged in one go share one bump. First bump done 2026-11-08 after PR #53: Corruption and CraftingOverhaul 0.1.0 → 0.2.0 (Orlog unchanged, 0.1.0). Second, 2026-11-08 after PR #55: Corruption 0.2.0 → 0.3.0. Third, 2026-11-08 for PR #57 (done on the branch before merging): Corruption 0.3.0 → 0.4.0, Orlog 0.1.0 → 0.2.0. Fourth, 2026-11-08 for PR #58 (on the branch before merging): Corruption 0.4.0 → 0.5.0. The group evening's build check (`PLAYTEST.md` → Session 2) and `PLAYER_SETUP.md` expect these numbers.
 - **Files only the coordinator edits:** `STATUS.md`, `docs/DECISIONS.md`. If a feature branch changed them, keep `master`'s version.
 - **Shared files that still collide** (add, never rewrite; keep both sides in conflicts): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`, `Corruption/Content/Texts.cs`.
 
@@ -51,13 +51,14 @@ Built and merged, but not play-tested (the code is in `master`):
 - **PR #53's multiplayer steps** (skipped by you on 2026-11-08): two players on one chest, loot per player, arrows on the server, and a check of a suspected rip-wave undercount when the heart passes to another player's game (needs 3 players). In `PLAYTEST.md` → Session 2, 2e. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **PR #55's multiplayer steps** (left for later by you on 2026-11-08): another player's game running the deposit or log, and a check of a suspected double whole-tree harvest when two players' games each run part of one tree and both swing Odin's Grace at once (not fixed until it's seen; send Claude both players' `Odin's Grace: whole-tree harvest …` lines). In `PLAYTEST.md` → Session 2, 2f. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **PR #57's multiplayer steps** (left for later by you on 2026-11-08): a greydwarf keeps fighting back after its owner logs out; two players offering at one altar give one corrupted boss and use one item. In `PLAYTEST.md` → Session 2, 2g. The corrupted summon copies the game's own summon steps as read in 1.0.14; if 1.0.21 changed them, it isn't picked up. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
+- **PR #58's leftovers** (orbs passed alone 2026-11-08): the "Use this at a Riftforge" refusal more than 10 m away, skipped by you until the Riftforge window exists (U3); orbs with other players never tried. [#29](https://github.com/krogon-games/JotunnModStub/issues/29), [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 - **Small leftovers:** one click per button, the build stamp, life steal with a melee weapon, crafting an Odin item, PlantEasily planting from chests. [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
 - **Multiplayer:** nothing at all has been tried with more than one player. [#24](https://github.com/krogon-games/JotunnModStub/issues/24)
 
 Started but not finished:
-- **Riftforge crafting:** the brief is written and two rule pieces exist (corruption 25/25/50, shattering 50% per line), but no orbs, no `co_craft` command and no window yet. [#29](https://github.com/krogon-games/JotunnModStub/issues/29), [#30](https://github.com/krogon-games/JotunnModStub/issues/30)
+- **Riftforge crafting:** the orb rules work through the `co_craft` test command (PR #58); corrupting with a shard, shattering and Affix Splinters aren't built (two rule pieces exist: corruption 25/25/50, shattering 50% per line), and there's no window yet. [#29](https://github.com/krogon-games/JotunnModStub/issues/29), [#30](https://github.com/krogon-games/JotunnModStub/issues/30)
 - **Riftforge window:** mock-ups made; they need lining up with the brief, and your pick of where it opens. [#30](https://github.com/krogon-games/JotunnModStub/issues/30)
-- **Currency orbs:** art for nine; no items or drops. [#33](https://github.com/krogon-games/JotunnModStub/issues/33)
+- **Currency orbs:** the ten items exist (PR #58; the Mirror of Kalandra has placeholder art) but nothing drops them yet. [#33](https://github.com/krogon-games/JotunnModStub/issues/33)
 - **The Amazon's skills:** points can be spent, but no skill does anything yet. [#32](https://github.com/krogon-games/JotunnModStub/issues/32)
 - **Classes UI:** still partly on sample ("demo") data until Orlog serves skills and slots. [#38](https://github.com/krogon-games/JotunnModStub/issues/38)
 - **Map tiers and affixes:** your first answers recorded; the numbers table waits for your approval; no code. [#31](https://github.com/krogon-games/JotunnModStub/issues/31)
@@ -74,7 +75,7 @@ Play-tests (only you can run them):
 4. **The weapon-skill check** (2 minutes: two console commands, `PLAYTEST.md` → Session 3b step 6). It tells whether the +6 you saw for a +7 axe is only a display quirk. [#56](https://github.com/krogon-games/JotunnModStub/issues/56)
 
 Questions, by session (each session asks them at the start of its round):
-- **Loot** ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)): Orb of Annulment at 0 affixes (drop a rarity or keep it?); Orb of Chance odds; can the Mirror copy a corrupted item?; Jeweller's Orb greyed until sockets exist? Also confirm seven working defaults for gathering and proc affixes. Later: orb drop rates ([#33](https://github.com/krogon-games/JotunnModStub/issues/33)), the world unique pool ([#34](https://github.com/krogon-games/JotunnModStub/issues/34)).
+- **Loot:** the orb rules are answered ([#28](https://github.com/krogon-games/JotunnModStub/issues/28), closed). Next: orb drop sources and rates ([#33](https://github.com/krogon-games/JotunnModStub/issues/33)); what Stonecutter's and Resinous should become (you flagged them for a rework); later the world unique pool ([#34](https://github.com/krogon-games/JotunnModStub/issues/34)).
 - **Rips** ([#31](https://github.com/krogon-games/JotunnModStub/issues/31)): approve the map tiers and affixes table (waves per tier, rolling costs, seven affixes with their rewards). Later: elite packs ([#39](https://github.com/krogon-games/JotunnModStub/issues/39)); escalation after repeated corrupted kills, wanted? ([#40](https://github.com/krogon-games/JotunnModStub/issues/40)); the minimum rip distance from bases.
 - **Classes** ([#32](https://github.com/krogon-games/JotunnModStub/issues/32)): D2's passive chances unchanged?; Penetrate's chance and whether it breaks immunity; can crits double backstabs?; D2R or older numbers? Then: boss XP multiplier and bonus skill points ([#36](https://github.com/krogon-games/JotunnModStub/issues/36)); eitr regen rate and early eitr potions ([#37](https://github.com/krogon-games/JotunnModStub/issues/37)).
 - **UI** ([#30](https://github.com/krogon-games/JotunnModStub/issues/30)): the Riftforge window as its own window or a tab (Claude recommends the tab)? Later: the ship display at the bottom right, and the recipe list redesign you asked to be reminded of ([#43](https://github.com/krogon-games/JotunnModStub/issues/43)).
@@ -87,14 +88,14 @@ Questions, by session (each session asks them at the start of its round):
 Following the roadmap's goal for this stretch, "playable together":
 
 1. **Play together.** Make the release build ([#25](https://github.com/krogon-games/JotunnModStub/issues/25)) and run the group evening ([#24](https://github.com/krogon-games/JotunnModStub/issues/24)). Every feature is verified only alone; this is the biggest unknown, and its findings decide what each session fixes first.
-2. **Close the loot loop.** Play-test loot steps 3–4 ([#26](https://github.com/krogon-games/JotunnModStub/issues/26)), answer the orb questions ([#28](https://github.com/krogon-games/JotunnModStub/issues/28)), then the Riftforge rules ([#29](https://github.com/krogon-games/JotunnModStub/issues/29)) and window ([#30](https://github.com/krogon-games/JotunnModStub/issues/30)). Until this exists, shards have no use on gear and loot can't be crafted.
+2. **Close the loot loop.** Play-test loot steps 3–4 ([#26](https://github.com/krogon-games/JotunnModStub/issues/26)), then the rest of the Riftforge rules (shard corruption, shattering, splinters, [#29](https://github.com/krogon-games/JotunnModStub/issues/29); the orbs are done, PR #58), orb drops ([#33](https://github.com/krogon-games/JotunnModStub/issues/33)) and the window ([#30](https://github.com/krogon-games/JotunnModStub/issues/30)). Until the window exists, players can't craft with orbs (only the `co_craft` test command) and shards have no use on gear.
 3. **Make the Amazon do something.** Answer the four passive questions and build her passives ([#32](https://github.com/krogon-games/JotunnModStub/issues/32)). The group voted for her, and today her skill points have no effect.
 
 Map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31)) come right after: they are the roadmap's fourth goal.
 
 ## Recommended merge order
 
-**Today: nothing to merge.** PR #57 was the last; no pull request is open.
+**Today: nothing to merge.** PR #58 was the last; no pull request is open.
 
 For the next round's pull requests, merge **safest first**:
 
