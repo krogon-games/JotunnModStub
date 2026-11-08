@@ -2,9 +2,11 @@
 
 **Written:** 2026-11-08 · **Branch:** 3 commits ahead of `master` (`a6fda65`), 0 behind; PR into `master` opened 2026-11-08.
 
+**Coordinator update (2026-11-08):** PR #55 was **merged** into `master` (merge `c1cc8bb`) and Corruption raised to **0.3.0** (`4428d1f`); the decisions below are in `docs/DECISIONS.md`. The branch has since been deleted on GitHub. The multiplayer steps wait for the group evening (`PLAYTEST.md` → Session 2, 2f).
+
 ## Stage
 
-Ready to merge.
+Merged (PR #55).
 
 ## Purpose
 
