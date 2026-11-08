@@ -60,6 +60,8 @@ Later on 2026-11-08, after the first play-test try:
 
 19. **Fix `co_craft` and test the orbs now** rather than wrapping up and testing them once the Riftforge window exists (Krogon left the choice to Claude, who recommended the fix). The orbs couldn't stay in hotbar slot 2: the Currency tab pulls them back.
 
+20. **Skip the "Use this at a Riftforge" check away from the station** for now: players can't craft without the Riftforge window anyway (`co_craft` is a cheat), so it's checked with the window (U3).
+
 ## Playtest
 
 Checklist: `docs/playtests/claude-loving-euler-qfkpzc.md` (A orb items, B using orbs, C Mirror and corrupted, D Stonecutter's/Resinous; about 30 minutes, alone). First try: orbs snapped back from hotbar slot 2 to the Currency tab, so `co_craft` now takes them from the tab; A–C rewritten, waiting for the re-test.

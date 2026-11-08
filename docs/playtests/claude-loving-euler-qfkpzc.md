@@ -46,11 +46,11 @@ What it means: correct, the Currency tab moves any currency in the bag back to t
 - "Besides that, all steps pass."
 
 What it means:
-- B1: `co_craft` counts you as at the Riftforge anywhere within its **build range, 10 m** (the game's `m_rangeBuild` for stations), with or without its window open. Krogon: "I was at the Riftforge both times" (window open, then closed), so the same answers are expected: **working as designed**, and the at-the-Riftforge half of B1 passed. Not tried yet: the refusal more than 10 m away.
+- B1: `co_craft` counts you as at the Riftforge anywhere within its **build range, 10 m** (the game's `m_rangeBuild` for stations), with or without its window open. Krogon: "I was at the Riftforge both times" (window open, then closed), so the same answers are expected: **working as designed**, and the at-the-Riftforge half of B1 passed. The refusal more than 10 m away: **skipped by Krogon** ("players won't be able to craft on release without the Riftforge window anyway"): `co_craft` is a cheat command, so it's re-checked with the window (ROADMAP U3).
 - The `GetBiome error` warning is the game's own (`Player.UpdateBiome`, once a second): two of the game's biome lookups disagree at the spot you stand on, here a Black Forest / Meadows border. None of our mods patch biome lookups; harmless.
 
 ### What changed after the feedback
 - Step B1: `co_craft` now takes the orb from your bag or Currency tab (`co_craft regal` finds a Regal Orb itself); only the item goes in hotbar slot 1. `co_craft list` shows every orb you carry. Checklist A–C rewritten for this; nothing re-tested yet.
 
-### Final play-test
--
+### Final play-test (2026-11-08)
+- Every step passed in single player except B1's refusal away from the Riftforge, skipped by Krogon (checked again with the window). Round finished.
