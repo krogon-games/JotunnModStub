@@ -1,7 +1,7 @@
 {
   "name": "Orlog",
   "description": "Diablo 2-style classes for Valheim: character levels from XP, stat and skill points, class skill trees.",
-  "version_number": "0.1.0",
+  "version_number": "0.2.0",
   "website_url": "https://github.com/krogon-games/JotunnModStub",
   "dependencies": [
     "ValheimModding-Jotunn-2.30.2"

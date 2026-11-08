@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Corruption.Rules;
 using HarmonyLib;
-using UnityEngine;
 
 namespace Corruption.Content
 {
@@ -9,27 +9,27 @@ namespace Corruption.Content
     ///
     ///     <see cref="BaseAI.IsEnemy(Character, Character)" /> decides both whom creatures target and whom attacks can
     ///     hit. Only the creature's side is changed (creature asking about the wearer), so the wearer can still hit
-    ///     those creatures. Hitting one provokes it: it fights back for <c>ProvokeSeconds</c> after the last hit.
+    ///     those creatures. Hitting one provokes it: it fights back at that player for <c>ProvokeSeconds</c> after the
+    ///     last hit. The time is kept on the creature's ZDO in world time (<see cref="ProvokeRules" />), so it lasts as
+    ///     long when the creature changes owner (its owner logs out) and only concerns the player who hit.
     ///
     ///     All of this runs on the machine that simulates the creature. Each player's game publishes the talismans
     ///     in its talisman slots on its player object (<see cref="TalismanSlots" />), so it works in multiplayer.
     /// </summary>
     internal static class TalismanRepel
     {
-        private struct Pair
-        {
-            public ZDOID Creature;
-            public ZDOID Player;
-        }
+        /// <summary>The ZDO key hash of each player's provocation (<see cref="ProvokeRules.Key" />), worked out once per player.</summary>
+        private static readonly Dictionary<long, int> KeyHashes = new Dictionary<long, int>();
 
-        private sealed class PairComparer : IEqualityComparer<Pair>
+        private static int KeyHash(long playerId)
         {
-            public bool Equals(Pair a, Pair b) => a.Creature == b.Creature && a.Player == b.Player;
-            public int GetHashCode(Pair p) => p.Creature.GetHashCode() * 397 ^ p.Player.GetHashCode();
+            if (!KeyHashes.TryGetValue(playerId, out int hash))
+            {
+                hash = ProvokeRules.Key(playerId).GetStableHashCode();
+                KeyHashes[playerId] = hash;
+            }
+            return hash;
         }
-
-        /// <summary>Creature + wearer → time until which the creature fights back.</summary>
-        private static readonly Dictionary<Pair, float> ProvokedUntil = new Dictionary<Pair, float>(new PairComparer());
 
         /// <summary>Whether the player wears a talisman (in any talisman slot) that repels this creature.</summary>
         private static bool Wears(Player player, Character creature)
@@ -68,31 +68,41 @@ namespace Corruption.Content
             return Wears(player, creature) && !IsProvoked(creature, player);
         }
 
-        private static bool IsProvoked(Character creature, Character player)
+        /// <summary>
+        ///     Whether the creature is still fighting back at this player: the time on the creature's ZDO (synced, so a
+        ///     new owner sees it) against the world time every game shares.
+        /// </summary>
+        private static bool IsProvoked(Character creature, Player player)
         {
-            var key = new Pair { Creature = creature.GetZDOID(), Player = player.GetZDOID() };
-            return ProvokedUntil.TryGetValue(key, out float until) && Time.time < until;
+            var zdo = creature.m_nview ? creature.m_nview.GetZDO() : null;
+            long playerId = player.GetPlayerID();
+            if (zdo == null || playerId == 0L || !ZNet.instance)
+            {
+                return false;
+            }
+            return ProvokeRules.IsProvoked(zdo.GetLong(KeyHash(playerId)), ZNet.instance.GetTimeSeconds());
         }
 
-        private static void Provoke(Character creature, Character player)
+        /// <summary>
+        ///     On the creature's owner (the game runs <c>BaseAI.OnDamaged</c> only there): it fights back at this player
+        ///     until <c>ProvokeSeconds</c> after this hit, written on the creature's ZDO for this player only.
+        /// </summary>
+        private static void Provoke(Character creature, Player player)
         {
-            if (ProvokedUntil.Count > 256)
+            var nview = creature.m_nview;
+            long playerId = player.GetPlayerID();
+            if (!nview || !nview.IsValid() || !nview.IsOwner() || playerId == 0L || !ZNet.instance)
             {
-                var expired = new List<Pair>();
-                foreach (var entry in ProvokedUntil)
-                {
-                    if (Time.time >= entry.Value)
-                    {
-                        expired.Add(entry.Key);
-                    }
-                }
-                foreach (var key in expired)
-                {
-                    ProvokedUntil.Remove(key);
-                }
+                return;
             }
-            ProvokedUntil[new Pair { Creature = creature.GetZDOID(), Player = player.GetZDOID() }] =
-                Time.time + CorruptionConfig.ProvokeSeconds.Value;
+            long until = ProvokeRules.Until(ZNet.instance.GetTimeSeconds(), CorruptionConfig.ProvokeSeconds.Value);
+            if (until > 0L)
+            {
+                nview.GetZDO().Set(KeyHash(playerId), until);
+                // For the multiplayer check: which game runs the creature, and that each hit restarts the time.
+                Jotunn.Logger.LogInfo($"Talisman: {Utils.GetPrefabName(creature.gameObject)} fights back at {player.GetPlayerName()} " +
+                                      $"for {CorruptionConfig.ProvokeSeconds.Value:0.#} s (run by this game).");
+            }
         }
 
         [HarmonyPatch(typeof(BaseAI), nameof(BaseAI.IsEnemy), typeof(Character), typeof(Character))]
@@ -127,20 +137,15 @@ namespace Corruption.Content
                 try
                 {
                     var creature = __instance.m_character;
-                    if (__1 is Player && creature && IsRepelledIgnoringProvocation(creature, __1))
+                    if (__1 is Player player && creature && Wears(player, creature))
                     {
-                        Provoke(creature, __1);
+                        Provoke(creature, player);
                     }
                 }
                 catch (System.Exception ex)
                 {
                     Safe.Report("provoke a repelled creature", ex);
                 }
-            }
-
-            private static bool IsRepelledIgnoringProvocation(Character creature, Character player)
-            {
-                return Wears((Player)player, creature);
             }
         }
     }

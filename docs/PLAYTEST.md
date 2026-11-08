@@ -165,8 +165,8 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 
 1. **Each player:** start with r2modman's **Start modded** and join the server. Expect: no "incompatible version" message.
 2. **Each player and Krogon (also the server's own log):** open `BepInEx/LogOutput.log` and find the three lines. Expect, the **same** on every machine:
-   - `Corruption 0.3.0 loaded (build: master <commit>)`
-   - `Orlog 0.1.0 loaded (build: master <commit>)`, the same commit
+   - `Corruption 0.4.0 loaded (build: master <commit>)`
+   - `Orlog 0.2.0 loaded (build: master <commit>)`, the same commit
    - `CraftingOverhaul 0.2.0 loaded (build: master <commit>)`, the same commit
 3. **Each player:** F5, no red errors.
 
@@ -213,6 +213,11 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 1. **D1:** B runs a copper deposit (`co_own`); A's Seismic and Odin's Grace break the same chunks as alone.
 2. **D2:** B runs a log A hit once; it breaks by falling or rolling → normal drops, B's log says "without a player's swing".
 3. **D3:** A runs the log, B the stump of one felled tree; both swing Odin's Grace axes at the same moment → one tree's worth of wood or two? Send both players' `Odin's Grace: whole-tree harvest …` lines.
+
+**2g. Review fixes: talisman fight-back and corrupted summons (2026-11-08; solo part passed, multiplayer left for later by Krogon).** Full steps in [`playtests/claude-hopeful-thompson-eyncm8.md`](playtests/claude-hopeful-thompson-eyncm8.md) → E.
+1. **E1–E2:** B reaches a greydwarf group first (B's game runs them); A, wearing a Greydwarf charm, hits one; B logs out within 10 s → it keeps attacking A for the rest of the 30 s; A's next hit restarts it (the `Talisman: … (run by this game)` line moves to A's log).
+2. **E3:** both wear the charm; A hits one → it attacks A only; the rest ignore both.
+3. **E4–E6:** A offers a corrupted deer trophy at Eikthyr; during the 12 s B offers a corrupted trophy, normal trophies and wood → one red Eikthyr, only A's corrupted trophy used. A normal summon with B's corrupted trophy during the delay → normal Eikthyr, B keeps it.
 
 ### Part 3: a rip run (about 45 minutes)
 

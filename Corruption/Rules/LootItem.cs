@@ -53,7 +53,12 @@ namespace Corruption.Rules
                 Lines.Select(l => string.Join("+", l.Ids) + "=" + Format(l.Value)));
         }
 
-        /// <summary>The item's rolled affixes, or null for an item without them (Normal items, or unreadable data).</summary>
+        /// <summary>
+        ///     The item's rolled affixes, or null for an item without them (Normal items, or unreadable data). A value
+        ///     that isn't a finite number (NaN, infinity, or too big for a float) makes the whole item unreadable, so it
+        ///     gives no effects at all; the saved text is left as it is (nothing here writes it), so it can be recovered.
+        ///     Finite values are kept as saved, even outside the table's current range (older rolls, resonant lines).
+        /// </summary>
         public static LootItem Read(IDictionary<string, string> customData)
         {
             if (customData == null || !customData.TryGetValue(RarityKey, out var rarity) ||
@@ -69,7 +74,7 @@ namespace Corruption.Rules
             foreach (var part in affixes.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 int equals = part.LastIndexOf('=');
-                if (equals <= 0 || !float.TryParse(part.Substring(equals + 1), NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+                if (equals <= 0 || !TryParseValue(part.Substring(equals + 1), out var value))
                 {
                     return null;
                 }
@@ -81,6 +86,13 @@ namespace Corruption.Rules
                 item.Lines.Add(new Line { Ids = ids, Value = value });
             }
             return item;
+        }
+
+        /// <summary>An affix value as saved or typed: invariant culture, and only a finite number.</summary>
+        public static bool TryParseValue(string text, out float value)
+        {
+            return float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) &&
+                   !float.IsNaN(value) && !float.IsInfinity(value);
         }
 
         /// <summary>

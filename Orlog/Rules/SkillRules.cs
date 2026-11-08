@@ -118,10 +118,13 @@ namespace Orlog.Rules
     /// <summary>Diablo 2's rules for spending skill points, with our tree rule. No game dependencies, so it is unit-tested.</summary>
     internal static class SkillRules
     {
-        /// <summary>Unspent skill points; never below 0.</summary>
+        /// <summary>
+        ///     Unspent skill points; never below 0 (a lowered setting keeps the spent points). The total is overflow-safe
+        ///     (<see cref="AttributeRules.Total" />), so a damaged save reads as nothing to spend instead of throwing.
+        /// </summary>
         public static int Unspent(int level, int perLevel, IDictionary<string, int> points)
         {
-            return Math.Max(0, AttributeRules.Earned(level, perLevel) - points.Values.Sum());
+            return Math.Max(0, AttributeRules.Earned(level, perLevel) - AttributeRules.Total(points?.Values));
         }
 
         public static int PointsIn(IDictionary<string, int> points, string id)
@@ -159,9 +162,9 @@ namespace Orlog.Rules
                     return "Needs " + prereq.Name;
                 }
             }
-            if (pace && have >= level - skill.ReqLevel + 1)
+            if (pace && (long)have >= (long)level - skill.ReqLevel + 1)
             {
-                return "Needs level " + (skill.ReqLevel + have).ToString(CultureInfo.InvariantCulture);
+                return "Needs level " + ((long)skill.ReqLevel + have).ToString(CultureInfo.InvariantCulture);
             }
             return unspent <= 0 ? "No skill points" : "";
         }
@@ -176,14 +179,14 @@ namespace Orlog.Rules
             return Math.Max(0f, skill.Eitr + skill.EitrPerLevel * (Math.Max(1, skillLevel) - 1));
         }
 
-        /// <summary>The saved form: <c>Id:points;Id:points</c>.</summary>
+        /// <summary>The saved form: <c>Id:points;Id:points</c> (counts as <see cref="AttributeRules.TryParsePoints" /> reads them).</summary>
         public static Dictionary<string, int> Parse(string saved)
         {
             var points = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             foreach (var part in (saved ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 int colon = part.IndexOf(':');
-                if (colon > 0 && int.TryParse(part.Substring(colon + 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out int n) && n > 0)
+                if (colon > 0 && AttributeRules.TryParsePoints(part.Substring(colon + 1), out int n))
                 {
                     points[part.Substring(0, colon).Trim()] = n;
                 }

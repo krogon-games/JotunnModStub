@@ -84,7 +84,7 @@ namespace Corruption.Content
             Jotunn.Logger.LogInfo($"Loot: {Affixes.Count} affixes, {Bases.Bases.Count} base items.");
         }
 
-        /// <summary>The item's rolled affixes, or null for a Normal item.</summary>
+        /// <summary>The item's rolled affixes, or null for a Normal item (or one whose saved affixes are unreadable).</summary>
         public static LootItem Of(ItemDrop.ItemData item)
         {
             if (item == null || item.m_customData == null || !item.m_customData.TryGetValue(LootItem.AffixesKey, out var raw))
@@ -96,6 +96,12 @@ namespace Corruption.Content
             {
                 cached.Raw = raw;
                 cached.Item = LootItem.Read(item.m_customData);
+                if (cached.Item == null)
+                {
+                    // Once per item and saved text: it gives no effects, and its data is kept as it is.
+                    Jotunn.Logger.LogWarning($"Loot: unreadable affix data on {item.m_shared.m_name} (\"{raw}\"); " +
+                                             "it gives no affix effects and its saved data is left unchanged.");
+                }
             }
             return cached.Item;
         }
