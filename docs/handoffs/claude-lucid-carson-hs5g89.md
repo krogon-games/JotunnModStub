@@ -1,10 +1,10 @@
 # Handoff: `claude/lucid-carson-hs5g89`
 
-**Written:** 2026-11-09 (start of round). Branch made from `master` (`47dfd9b`); no PR yet.
+**Written:** 2026-11-09. Branch made from `master` (`47dfd9b`, nothing newer on `master`); no PR yet.
 
 ## Stage
 
-Building.
+Waiting for Krogon's playtest.
 
 ## Purpose
 
@@ -16,7 +16,12 @@ Nothing play-tested yet.
 
 ## Half-done and known issues
 
-Being built.
+Built 2026-11-09, untested in game (compiled against the game's decompiled 1.0 code; 446 tests pass):
+- **Six tabs** (`FEATURES.md` → Inventory tabs): Bag · Currencies · Splinters · Maps · Runes · Essences. Currencies and Essences have fixed cells (`FixedLayout`, tested), dimmed with 0 when empty, no capacity lost (extra stacks use free cells, then the empty homes). Essences move out of Currencies on load and every half second (only between usable tabs, when they fit). Runes has no inventory; its save key is never read or written. New save keys `corruption_tab_splinters`, `corruption_tab_essences`; the old two unchanged. Test command `co_tabs_misplace`.
+- **Forge tab** (`FEATURES.md` → Riftforge workspace): one target slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here; the target's tooltip beside it. Mock-ups `docs/images/riftforge_workspace*.png`.
+- **Not built, #29's:** shard corruption, shattering, the Affix Splinter item, applying splinters. The window says so and fakes nothing; when `RiftforgeCrafting` offers `shatter`/`corrupt`, the window asks for Confirm with the rules' preview. The splinter must be named `CorruptionAffixSplinter…`.
+- **Claude's choices** (easy to change): tab label "Forge"; gear goes in by dragging it from the Bag onto the slot; the slot empties when the inventory closes; positions and sizes of the workspace are first guesses at the panel size.
+- Not checked against EAQS/AB's DLLs (not in the cloud session); `docs/mod-compatibility.md` lists what to test.
 
 ## Decisions
 
@@ -41,7 +46,7 @@ All from Krogon's round brief of 2026-11-09 (replacing #30's two-slot, operation
 
 ## Playtest
 
-Checklist to come in `docs/playtests/claude-lucid-carson-hs5g89.md`.
+`docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. No feedback yet.
 
 ## Open questions for Krogon
 
@@ -49,14 +54,14 @@ Checklist to come in `docs/playtests/claude-lucid-carson-hs5g89.md`.
 
 ## Next steps
 
-1. Build the six tabs and the migration.
-2. Build the Riftforge workspace.
-3. Docs, checklist, push.
+1. Krogon's play-test (checklist A–E), then fix what it finds.
+2. Final play-test, then `/handoff` and a PR into `master`.
+3. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
 
 ## Checks
 
-Not run yet.
+Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 446 passed; Corruption builds against the stand-in game folder.
 
 ## Merge notes
 
-Not ready: building.
+Not ready: waiting for Krogon's play-test. Gameplay changed: version bump needed at merge (Corruption). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.

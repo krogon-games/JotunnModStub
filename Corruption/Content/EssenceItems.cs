@@ -19,6 +19,9 @@ namespace Corruption.Content
         /// <summary>Every essence in the table, by look id (registered or not). Read by <see cref="MapItems" />.</summary>
         public static readonly Dictionary<string, EssenceTable.Essence> ByLook = new Dictionary<string, EssenceTable.Essence>();
 
+        /// <summary>Every essence item's prefab name in the table's order: their fixed places in the Essences tab.</summary>
+        public static readonly List<string> InOrder = new List<string>();
+
         public static void Register()
         {
             var errors = new List<string>();
@@ -32,6 +35,10 @@ namespace Corruption.Content
             foreach (var essence in essences)
             {
                 ByLook[essence.Look] = essence;
+                if (!InOrder.Contains(essence.Item))
+                {
+                    InOrder.Add(essence.Item);
+                }
                 Safe.Run($"register {essence.Item}", () => RegisterOne(essence, localization));
             }
         }
