@@ -8,7 +8,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 ## In one paragraph
 
-**Everything is in `master`.** Every pull request (up to #58) is merged and none is open. So nothing is waiting to be merged today. The only other branch, `claude/loving-euler-qfkpzc`, is merged (PR #58) and can be deleted; every other branch has been deleted on GitHub; their handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
+**Everything is in `master`.** Every pull request (up to #58) is merged and none is open. So nothing is waiting to be merged today. GitHub has no branch besides `master` (you deleted `claude/loving-euler-qfkpzc` after PR #58); their handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
 
 ## Branches
 
@@ -18,7 +18,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 |---|---|---|---|---|
 | `master` | The shared, play-tested base. **Versions: Corruption 0.5.0, CraftingOverhaul 0.2.0, Orlog 0.2.0** (Corruption bumped 2026-11-08 for PR #58, Orlog for PR #57) | — | — | — |
 
-Checked 2026-11-08 after PR #58: besides `master`, GitHub has only `claude/loving-euler-qfkpzc`, fully merged (0 ahead); please delete it. No open pull requests. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
+Checked 2026-11-09 after PR #58: GitHub has only `master`; no open pull requests. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
 
 **Areas without a branch now** (their old branches were deleted; each next round starts a new branch from `master`, and its handoff file in `docs/handoffs/` says where it stopped):
 
