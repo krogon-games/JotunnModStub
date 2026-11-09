@@ -20,7 +20,7 @@ namespace CraftingOverhaul.Classes
     ///     eitr-blue once learned), and the four skill slots. Click a skill to select it, double-click or Learn to spend a
     ///     point, drag it onto a slot here or on the HUD's skill cross. Every position comes from
     ///     <see cref="SkillsPanelLayout" />, which <c>tools/preview_skills_panel.py</c> also draws from.
-    ///     Opened with <see cref="ModConfig.SkillsPanelKey" /> or the Skills button on the inventory; everything shown and
+    ///     Opened with <see cref="ModConfig.SkillsPanelKey" /> (the Skills button on the inventory was removed 2026-11-09, user: it clashed with the inventory tabs; its place is to be decided); everything shown and
     ///     every action goes through <see cref="ClassesSource" />.
     /// </summary>
     internal static class SkillsPanel
@@ -55,7 +55,6 @@ namespace CraftingOverhaul.Classes
         private static readonly GameObject[] AttributeButtons = new GameObject[4];
         private static readonly SlotTileView[] Slots = new SlotTileView[DemoClasses.Slots];
         private static Image _dragGhost;
-        private static GameObject _inventoryButton;
 
         // Details pane.
         private static Image _detailsGlow;
@@ -830,36 +829,6 @@ namespace CraftingOverhaul.Classes
             public void OnEndDrag(PointerEventData data) => Drop(data);
         }
 
-        // ------------------------------------------------------------ inventory button
-
-        private static void UpdateInventoryButton()
-        {
-            var gui = InventoryGui.instance;
-            bool show = gui && InventoryGui.IsVisible() && gui.m_player && ClassesSource.Available
-                        && !string.IsNullOrEmpty(FlatJson.Get(ClassesSource.Character(), "class"));
-            if (!show)
-            {
-                if (_inventoryButton)
-                {
-                    _inventoryButton.SetActive(false);
-                }
-                return;
-            }
-            if (!_inventoryButton)
-            {
-                // Top right of the player's inventory, above it (Corruption's bag tabs sit above its top left).
-                _inventoryButton = GUIManager.Instance.CreateButton("Skills", gui.m_player, new Vector2(1f, 1f), new Vector2(1f, 1f),
-                    Vector2.zero, 112f, 30f);
-                _inventoryButton.name = "CraftingOverhaul_SkillsButton";
-                UiKit.OneClickSound(_inventoryButton);
-                var rt = (RectTransform)_inventoryButton.transform;
-                rt.pivot = new Vector2(1f, 0f);
-                rt.anchoredPosition = new Vector2(-14f, 2f);
-                _inventoryButton.GetComponent<Button>().onClick.AddListener(Toggle);
-            }
-            _inventoryButton.SetActive(true);
-        }
-
         // ------------------------------------------------------------ per frame
 
         private static bool CanUseKeys()
@@ -878,7 +847,6 @@ namespace CraftingOverhaul.Classes
                 }
                 return;
             }
-            UpdateInventoryButton();
             // While the panel is open the game's input is blocked, which Jötunn reports as text input; the key still closes it.
             if ((IsOpen || CanUseKeys()) && ModConfig.SkillsPanelKey.Value.IsDown())
             {
@@ -927,7 +895,6 @@ namespace CraftingOverhaul.Classes
                     UnityEngine.Object.Destroy(_root.gameObject);
                 }
                 _root = null;
-                _inventoryButton = null;
                 _classId = "";
                 _selected = "";
                 _hovered = "";

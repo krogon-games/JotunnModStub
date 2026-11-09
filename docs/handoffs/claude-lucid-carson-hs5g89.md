@@ -44,6 +44,12 @@ All from Krogon's round brief of 2026-11-09 (replacing #30's two-slot, operation
 15. **Don't fake missing operations:** shard corruption, shattering and splinters are #29's; the window must not simulate them, and the loop isn't reported finished while they're missing. Keep map-operation registration (#31) without inventing its costs.
 16. **Migration:** orbs and shards stay in Currencies; essences move to Essences; splinters to Splinters; maps stay; nothing to Runes. Every item, count, custom data, overflow and recovery record kept; safe to repeat and across reconnects; unreadable saved tabs stay protected.
 
+After Krogon's first look (2026-11-09, screenshot; a few orbs tried: "they do work"):
+
+17. **The Forge window must match the station's other tabs** (it "looks very out of place"): bring it in line with the game's crafting panel and give it a polished treatment. The design is settled before the full play-test.
+18. **"Take out" is renamed "Remove".**
+19. **The Skills button on the inventory is removed** ("it does not belong there at all"; it pushed the Essences tab out of view). Where the skills panel's tab or key goes is decided later; the skills panel still opens with its key.
+
 ## Playtest
 
 `docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. No feedback yet.
