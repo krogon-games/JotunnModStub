@@ -1,8 +1,9 @@
 """
 Mock-ups of the Riftforge workspace as built in round claude/lucid-carson-hs5g89 (issue #30, Krogon's brief of
-2026-11-09): the six inventory tabs with Currencies' fixed places, and the Riftforge's third tab ("Forge") with one
-target slot, the target's tooltip beside it and the pick-and-click loop. A second picture shows the Shatter
-confirmation (which waits for #29's rules). Replaces the two-slot, operation-list mock-ups of tools/mockup_riftforge.py.
+2026-11-09): the six inventory tabs with Currencies' fixed places, and the Riftforge's third tab ("Forge") in the
+game's own crafting-panel layout (Krogon's feedback the same day: match the Craft and Upgrade tabs): the bench with the
+forge slot where the recipe list is, a copy of the game's description panel where the description is. A second picture
+shows the Shatter confirmation in the game's Yes/No box (which waits for #29's rules). Replaces the two-slot, operation-list mock-ups of tools/mockup_riftforge.py.
 
     python tools/mockup_riftforge_workspace.py      (writes into docs/images/)
 
@@ -23,7 +24,7 @@ S = P.S
 GOLD, LIGHT, DIM, RED, GREEN = P.GOLD, P.LIGHT, P.LIGHT_DIM, P.RED, P.CAN_SPEND
 MAGIC = M.MAGIC
 ORANGE = (255, 161, 60)
-TABS = ["Bag", "Currencies", "Splinters", "Maps", "Runes", "Essences"]
+TABS = ["Bag", "Currencies", "Splinters", "Maps", "Runes", "Essences"]  # no Skills button (removed 2026-11-09)
 # Currencies' fixed places: the shard, then the ten orbs in the design's order (FixedLayout / InventoryTabs.HomesOf).
 HOMES = ["shard", "transmutation", "augmentation", "alchemy", "regal", "exalted", "divine", "annulment",
          "chance", "jeweller", "mirror"]
@@ -70,64 +71,79 @@ def inventory(canvas, x, y, icons):
 
 
 def workspace(canvas, x, y, icons, confirm=False):
-    w, h = 640, 520
+    """The Riftforge panel with the Forge tab open: the game's header and tabs; the bench where the recipe list was;
+    a copy of the game's description panel (icon, name, tooltip, cost slots, main button) where the description was."""
+    w, h = 640, 540
     P.paste(canvas, P.sliced(P.art("panel"), w, h, 20), x, y)
-    for i, name in enumerate(["Craft", "Upgrade", "Forge"]):
-        P.button(canvas, (x + 20 + i * 150, y + 16, 142, 32), name, enabled=name != "Forge")
     d = ImageDraw.Draw(canvas)
-    P.text(d, (x + 20 + 2 * 150 + 71, y + 32), "Forge", 15, ORANGE, "mm")
-    top = y + 60
-    P.text(d, (x + 20, top + 6), "Riftforge", 20, ORANGE, "la", title=True)
-    M.slot(canvas, x + 24, top + 40, 72, M.item_icon(), glow=P.RUNE)
+    P.text(d, (x + w / 2, y + 34), "RIFTFORGE", 26, ORANGE, "mm", title=True)
+    for i, name in enumerate(["CRAFT", "UPGRADE", "FORGE"]):
+        P.button(canvas, (x + 40 + i * 118, y + 62, 112, 30), name, enabled=name != "FORGE")
     d = ImageDraw.Draw(canvas)
+    P.text(d, (x + 40 + 2 * 118 + 56, y + 77), "FORGE", 15, ORANGE, "mm")
+    top = y + 104
+    # Bench: in the recipe list's own inset.
+    bw, bh = 210, h - 124
+    P.paste(canvas, P.sliced(P.art("inset"), bw, bh, 10), x + 16, top)
+    d = ImageDraw.Draw(canvas)
+    cx = x + 16 + bw / 2
+    P.text(d, (cx, top + 22), "Forge", 20, ORANGE, "mm")
+    M.slot(canvas, cx - 48, top + 44, 96, M.item_icon(), glow=None if confirm else (255, 240, 200))
+    d = ImageDraw.Draw(canvas)
+    P.text(d, (cx, top + 160), "Vigorous Bronze Spear", 15, MAGIC, "mm")
+    P.text(d, (cx, top + 178), "of Embers", 15, MAGIC, "mm")
     if confirm:
-        P.text(d, (x + 20, top + 128), "Right-click an orb to pick it.", 13, DIM, "la")
+        P.text(d, (cx, top + 214), "Right-click an orb to pick it up", 13, DIM, "mm")
     else:
-        P.text(d, (x + 20, top + 128), "Regal Orb (2 left)", 15, LIGHT, "la")
-        P.text(d, (x + 20, top + 148), "Left-click the slot to use it.", 13, DIM, "la")
-    P.button(canvas, (x + 20, top + 180, 170, 32), "Take out")
-    P.button(canvas, (x + 20, top + 220, 170, 32), "Shatter", enabled=confirm)
+        P.text(d, (cx, top + 210), "Regal Orb", 15, ORANGE, "mm")
+        P.text(d, (cx, top + 230), "Click the forge to use it", 13, DIM, "mm")
+    P.text(d, (cx, top + bh - 110), "Vigorous Bronze Spear of Embers", 13, GREEN, "mm")
+    P.text(d, (cx, top + bh - 92), "rerolled: +18% weapon damage;", 13, GREEN, "mm")
+    P.text(d, (cx, top + bh - 74), "+20% fire damage", 13, GREEN, "mm")
+    P.button(canvas, (x + 32, top + bh - 52, bw - 32, 38), "Remove")
+    # Description: the game's own panel, copied.
+    dx, dw = x + 238, w - 254
+    P.paste(canvas, P.sliced(P.art("inset"), dw, bh, 10), dx, top)
+    P.paste(canvas, P.sized(M.item_icon(), 64, 64), dx + 14, top + 12)
     d = ImageDraw.Draw(canvas)
-    note = "Destroys the item; shows the chances first." if confirm else "Shattering isn't built yet\n(it comes with the Affix Splinters)."
-    for i, ln in enumerate(note.split("\n")):
-        P.text(d, (x + 20, top + 262 + i * 16), ln, 12, DIM, "la")
-    # The target's own tooltip, beside the slot.
-    tx = x + 210
-    P.paste(canvas, P.sliced(P.art("inset"), w - 230, 300, 10), tx, top + 36)
-    d = ImageDraw.Draw(canvas)
-    lines = [("Vigorous Bronze Spear of Embers", MAGIC, 17), ("A spear of bronze...", LIGHT, 14), ("", LIGHT, 8),
-             ("Pierce: 35", LIGHT, 14), ("Durability: 200/200", LIGHT, 14), ("", LIGHT, 8), ("Magic", MAGIC, 15),
-             ("+18% weapon damage (+6)", MAGIC, 15), ("+20% fire damage (+7)", MAGIC, 15)]
-    yy = top + 50
+    P.text(d, (dx + 90, top + 20), "Vigorous Bronze Spear", 19, MAGIC, "la")
+    P.text(d, (dx + 90, top + 44), "of Embers", 19, MAGIC, "la")
+    lines = [("A spear of bronze, tipped for hunting.", LIGHT, 14), ("", LIGHT, 8), ("One-handed", LIGHT, 14),
+             ("Weight: 1.0", LIGHT, 14), ("Durability: 200/200", LIGHT, 14), ("Pierce: 35", LIGHT, 14), ("", LIGHT, 8),
+             ("Magic", MAGIC, 15), ("+18% weapon damage (+6) [4–19]", MAGIC, 14), ("+20% fire damage (+7) [10–30]", MAGIC, 14)]
+    yy = top + 90
     for text, colour, size in lines:
         if text:
-            P.text(d, (tx + 14, yy), text, size, colour, "la")
+            P.text(d, (dx + 16, yy), text, size, colour, "la")
         yy += size + 8
-    P.text(d, (x + 20, y + h - 88), "Vigorous Bronze Spear of Embers rerolled: +18% weapon damage;", 15, GREEN, "la")
-    P.text(d, (x + 20, y + h - 68), "+20% fire damage", 15, GREEN, "la")
-    hint = ("Drag gear from your Bag onto the slot. Right-click an orb to pick it, then left-click the slot",
-            "to use it (hold Shift to keep it). Esc or right-click drops the pick.")
-    for i, ln in enumerate(hint):
-        P.text(d, (x + 20, y + h - 42 + i * 16), ln, 12, DIM, "la")
+    # Cost slot (what one click uses) and the main button.
     if not confirm:
+        M.slot(canvas, dx + 16, top + bh - 70, 56, icons["regal"], count=None)
+        d = ImageDraw.Draw(canvas)
+        P.text(d, (dx + 44, top + bh - 8), "Regal Orb (18)", 12, LIGHT, "mm")
+        P.text(d, (dx + 66, top + bh - 64), "1", 14, LIGHT, "ra")
+    P.button(canvas, (dx + dw - 150, top + bh - 52, 136, 38), "SHATTER", enabled=confirm)
+    if not confirm:
+        d = ImageDraw.Draw(canvas)
+        P.text(d, (dx + dw - 82, top + bh - 64), "Shattering comes with #29", 11, DIM, "mm")
         # The pick follows the cursor.
-        ic = P.sized(icons["regal"], 44, 44)
-        P.paste(canvas, ic, x + 92, top + 70)
-        P.badge(canvas, x + 132, top + 110, 2, LIGHT)
+        ic = P.sized(icons["regal"], 40, 40)
+        P.paste(canvas, ic, cx + 30, top + 96)
+        P.badge(canvas, cx + 68, top + 134, 18, LIGHT)
         return
-    bx, by, bw, bh = x + 120, y + 150, 400, 260
+    # The game's own Yes/No box.
+    bx, by, bw2, bh2 = x + 140, y + 170, 380, 230
     d = ImageDraw.Draw(canvas)
-    d.rectangle([bx * S, by * S, (bx + bw) * S, (by + bh) * S], fill=(13, 8, 8, 250))
-    P.paste(canvas, P.sliced(P.art("inset"), bw, bh, 10), bx, by)
+    d.rectangle([bx * S, by * S, (bx + bw2) * S, (by + bh2) * S], fill=(20, 14, 10, 252))
+    P.paste(canvas, P.sliced(P.art("panel"), bw2, bh2, 20), bx, by)
     d = ImageDraw.Draw(canvas)
-    P.text(d, (bx + 16, by + 16), "Shatter: Vigorous Bronze Spear of Embers", 16, RED, "la")
-    P.text(d, (bx + 16, by + 38), "will be destroyed.", 16, RED, "la")
-    P.text(d, (bx + 16, by + 74), "Each line has a 50% chance to become a splinter:", 14, LIGHT, "la")
-    P.text(d, (bx + 16, by + 96), "50%  +18% weapon damage", 14, MAGIC, "la")
-    P.text(d, (bx + 16, by + 116), "50%  +20% fire damage", 14, MAGIC, "la")
-    P.text(d, (bx + 16, by + 148), "(chances from shattering.csv; preview text from #29's rules)", 12, DIM, "la")
-    P.button(canvas, (bx + 40, by + bh - 50, 150, 32), "Confirm")
-    P.button(canvas, (bx + 210, by + bh - 50, 150, 32), "Cancel")
+    P.text(d, (bx + bw2 / 2, by + 26), "Shatter", 20, ORANGE, "mm", title=True)
+    P.text(d, (bx + bw2 / 2, by + 62), "Vigorous Bronze Spear of Embers will be destroyed.", 13, RED, "mm")
+    P.text(d, (bx + bw2 / 2, by + 92), "Each line has a 50% chance to become a splinter:", 13, LIGHT, "mm")
+    P.text(d, (bx + bw2 / 2, by + 112), "50%  +18% weapon damage   ·   50%  +20% fire damage", 13, MAGIC, "mm")
+    P.text(d, (bx + bw2 / 2, by + 136), "(chances from shattering.csv, through #29's rules)", 11, DIM, "mm")
+    P.button(canvas, (bx + 40, by + bh2 - 54, 140, 36), "No")
+    P.button(canvas, (bx + 200, by + bh2 - 54, 140, 36), "Yes")
 
 
 def picture(name, confirm):

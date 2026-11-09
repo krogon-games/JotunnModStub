@@ -12,18 +12,20 @@ namespace Corruption.Content
 {
     /// <summary>
     ///     The Riftforge's crafting workspace (U3, issue #30; Krogon's round brief of 2026-11-09): a third tab on the
-    ///     Riftforge's crafting panel, next to Craft and Upgrade, with one target slot.
+    ///     Riftforge's crafting panel, "Forge", next to Craft and Upgrade, with one forge slot. Its look is
+    ///     <see cref="ForgeView" />'s (the game's own panel parts); this class is the behaviour.
     ///
-    ///     - The target is a reference: the gear never leaves the bag, so closing the window can't lose it. Drag gear
-    ///       from the Bag onto the slot to put it in; right-click the slot (or Take out) to take it out. It's cleared
+    ///     - The gear in the slot is a reference: it never leaves the bag, so closing the window can't lose it. Drag
+    ///       gear from the Bag onto the slot to put it in; right-click the slot (or Remove) to take it out. It's cleared
     ///       when the item is destroyed or leaves the bag.
     ///     - Right-click a material (an orb; later a Corruption shard or an Affix Splinter) in any inventory tab to pick
     ///       it: it follows the cursor and its cell is highlighted. Left-click the slot to use it once; hold Shift to
     ///       keep the pick for the next click. Picking another material replaces the pick; Escape, a right-click or any
     ///       other inventory click drops it (and does nothing else).
-    ///     - The target's normal tooltip stays beside it, refreshed after every use, with the result message below.
-    ///     - Shatter (and corrupting with a shard) destroy gear, so they show their warning and chances and need Confirm.
-    ///       Both are #29's rules and aren't built yet: the Shatter button says so and nothing is faked.
+    ///     - The gear's normal tooltip fills the description beside the bench, refreshed after every use; the cost
+    ///       slots show what one click uses; the last result stays on the bench.
+    ///     - Shatter (and corrupting with a shard) destroy gear, so they ask first in the game's own Yes/No box, with the
+    ///       rules' warning and chances. Both are #29's rules and aren't built yet: Shatter says so and nothing is faked.
     ///
     ///     Every rule check is <see cref="RiftforgeCrafting" />'s (Options, Apply, IsMaterial and registered operations),
     ///     re-checked by Apply on every use. Outside this tab the inventory behaves exactly as before.
@@ -34,40 +36,30 @@ namespace Corruption.Content
         private const float DetailsInterval = 0.5f;
         private const float EligibilityInterval = 1f;
 
-        private const string HintText =
-            "Drag gear from your Bag onto the slot. Right-click an orb to pick it, then left-click the slot to use it " +
-            "(hold Shift to keep it). Esc or right-click drops the pick.";
+        private const string Intro =
+            "Work your gear with orbs here.\n\n" +
+            "<color=orange>1.</color> Drag a piece of gear from your Bag onto the forge.\n" +
+            "<color=orange>2.</color> Right-click an orb in Currencies to pick it up.\n" +
+            "<color=orange>3.</color> Click the forge to use it once. Hold Shift to keep the orb for the next click.\n\n" +
+            "Esc or a right-click puts the orb back. Orbs that can't be used on the gear turn red.";
 
-        private const string ShatterNotBuilt = "Shattering isn't built yet (it comes with the Affix Splinters).";
+        private const string ShatterNotBuilt = "Shattering isn't built yet: it comes with the Affix Splinters.";
         private const string ShardNotBuilt = "Corrupting gear with a shard isn't built yet.";
         private const string SplinterNotBuilt = "Affix Splinters can't be applied yet.";
-        private const string NotAMaterial = "Only orbs (and later shards and splinters) are used at the forge.";
         private const string BagOnly = "Put in gear from your Bag.";
         private const string NotATarget = "This item can't be worked at the Riftforge.";
-        private const string NoTarget = "Put gear in the slot first: drag it from your Bag.";
+        private const string NoTarget = "Put gear in the forge first: drag it from your Bag.";
         private const string NothingToDo = "This material does nothing to this item.";
+        private const string NoConfirm = "The confirmation box isn't available, so nothing was done.";
 
-        private static readonly Color GoodColor = new Color(0.75f, 0.95f, 0.6f);
-        private static readonly Color BadColor = new Color(1f, 0.55f, 0.45f);
         private static readonly Color IncompatibleTint = new Color(1f, 0.45f, 0.45f, 0.9f);
-        private static readonly Color PanelColor = new Color(0.12f, 0.09f, 0.07f, 0.97f);
 
         private static InventoryGui _gui;
         private static Button _tabButton;
-        private static TMP_Text _tabText;
-        private static RectTransform _panel;
-        private static InventoryElement _slot;
-        private static TMP_Text _details;
-        private static Text _pickLine;
-        private static Text _result;
-        private static Button _takeOut;
-        private static Button _shatter;
-        private static Text _shatterNote;
-        private static RectTransform _confirm;
-        private static Text _confirmText;
+        private static bool _failed;
         private static GameObject _cursor;
         private static Image _cursorIcon;
-        private static Text _cursorAmount;
+        private static TMP_Text _cursorAmount;
 
         private static bool _active;
         private static ItemDrop.ItemData _target;
@@ -75,6 +67,7 @@ namespace Corruption.Content
         private static string _pickPrefab;
         private static string _confirmOperation;
         private static ItemDrop.ItemData _confirmMaterial;
+        private static bool _popupOpen;
         private static int _escapeFrame = -1;
         private static bool _detailsDirty;
         private static float _nextDetails;
@@ -82,22 +75,26 @@ namespace Corruption.Content
         private static readonly Dictionary<string, bool> Usable = new Dictionary<string, bool>();
 
         /// <summary>The forge tab is open (the only place crafting clicks exist).</summary>
-        public static bool Active => _active && _panel;
+        public static bool Active => _active && ForgeView.Built;
 
         // ------------------------------------------------------------ building the tab
 
         private static void EnsureCreated(InventoryGui gui)
         {
-            if (_tabButton || GUIManager.IsHeadless() || !gui.m_tabUpgrade || !gui.m_crafting)
+            if (_tabButton || _failed || GUIManager.IsHeadless() || !gui.m_tabUpgrade || !gui.m_crafting)
             {
                 return;
             }
             _gui = gui;
+            if (!ForgeView.Build(gui, left => OnSlotClicked(left), () => SetTarget(null, ""), OnShatterPressed))
+            {
+                _failed = true;
+                return;
+            }
             CreateTabButton(gui);
-            CreatePanel(gui);
             CreateCursor(gui);
             Deactivate();
-            Jotunn.Logger.LogInfo("Riftforge workspace tab added.");
+            Jotunn.Logger.LogInfo("Riftforge Forge tab added.");
         }
 
         /// <summary>A copy of the game's Upgrade tab button, to its right, so it looks like the station's own tabs.</summary>
@@ -117,15 +114,17 @@ namespace Corruption.Content
             // The copied text would be re-localized to "Upgrade" by the game's localize component.
             foreach (var component in go.GetComponentsInChildren<MonoBehaviour>(true))
             {
-                if (component && component.GetType().Name == "Localize")
+                if (component && (component.GetType().Name == "Localize" || component.GetType().Name == "UIGamePad"))
                 {
                     UnityEngine.Object.Destroy(component);
                 }
             }
-            _tabText = go.GetComponentInChildren<TMP_Text>(true);
-            if (_tabText)
+            var text = go.GetComponentInChildren<TMP_Text>(true);
+            var craftText = gui.m_tabCraft.GetComponentInChildren<TMP_Text>(true);
+            if (text)
             {
-                _tabText.text = TabLabel;
+                // Same style as CRAFT and UPGRADE: capitals when they are.
+                text.text = ForgeView.UpperLike(craftText ? craftText.text : text.text, TabLabel);
             }
             _tabButton = go.GetComponent<Button>();
             // Drop the Upgrade button's own click handlers.
@@ -135,221 +134,38 @@ namespace Corruption.Content
             go.SetActive(false);
         }
 
-        private static void CreatePanel(InventoryGui gui)
-        {
-            var crafting = gui.m_crafting;
-            _panel = new GameObject("Corruption_ForgePanel", typeof(RectTransform)).GetComponent<RectTransform>();
-            _panel.SetParent(crafting, false);
-            _panel.anchorMin = Vector2.zero;
-            _panel.anchorMax = Vector2.one;
-            _panel.pivot = new Vector2(0.5f, 0.5f);
-            _panel.offsetMin = Vector2.zero;
-            _panel.offsetMax = new Vector2(0f, -TopInset(crafting, gui.m_tabCraft));
-            _panel.SetAsLastSibling();
-            var background = _panel.gameObject.AddComponent<Image>();
-            var own = crafting.GetComponent<Image>();
-            if (own && own.sprite)
-            {
-                background.sprite = own.sprite;
-                background.type = own.type;
-                background.color = own.color;
-            }
-            else
-            {
-                background.color = PanelColor;
-            }
-            // Blocks clicks, so nothing behind the workspace (the recipe list, the drop-on-the-ground button) reacts.
-            background.raycastTarget = true;
-
-            var gm = GUIManager.Instance;
-            var title = Label("Title", 20, gm.ValheimOrange, TextAnchor.UpperLeft);
-            Place(title.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -10f), new Vector2(300f, 28f));
-            title.text = "Riftforge";
-
-            CreateSlot(gui);
-
-            _pickLine = Label("Pick", 14, Color.white, TextAnchor.UpperLeft);
-            _pickLine.horizontalOverflow = HorizontalWrapMode.Wrap;
-            Place(_pickLine.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -126f), new Vector2(170f, 64f));
-
-            _takeOut = MakeButton("Take out", new Vector2(16f, -196f), 170f, () => SetTarget(null, ""));
-            _shatter = MakeButton("Shatter", new Vector2(16f, -236f), 170f, OnShatterPressed);
-            _shatterNote = Label("ShatterNote", 12, new Color(0.8f, 0.8f, 0.8f), TextAnchor.UpperLeft);
-            _shatterNote.horizontalOverflow = HorizontalWrapMode.Wrap;
-            Place(_shatterNote.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -272f), new Vector2(170f, 60f));
-
-            // The target's own tooltip, as the game builds it (rich text: TextMeshPro, like the game's tooltips).
-            var detailsGo = new GameObject("Details", typeof(RectTransform));
-            var detailsRect = (RectTransform)detailsGo.transform;
-            detailsRect.SetParent(_panel, false);
-            detailsRect.anchorMin = new Vector2(0f, 0f);
-            detailsRect.anchorMax = new Vector2(1f, 1f);
-            detailsRect.pivot = new Vector2(0f, 1f);
-            detailsRect.offsetMin = new Vector2(200f, 96f);
-            detailsRect.offsetMax = new Vector2(-14f, -40f);
-            var details = detailsGo.AddComponent<TextMeshProUGUI>();
-            if (gui.m_craftingStationName)
-            {
-                details.font = gui.m_craftingStationName.font;
-            }
-            details.fontSize = 16f;
-            details.enableAutoSizing = true;
-            details.fontSizeMin = 10f;
-            details.fontSizeMax = 16f;
-            details.richText = true;
-            details.textWrappingMode = TextWrappingModes.Normal;
-            details.overflowMode = TextOverflowModes.Ellipsis;
-            details.alignment = TextAlignmentOptions.TopLeft;
-            details.raycastTarget = false;
-            details.color = Color.white;
-            _details = details;
-
-            _result = Label("Result", 15, GoodColor, TextAnchor.LowerLeft);
-            _result.horizontalOverflow = HorizontalWrapMode.Wrap;
-            _result.rectTransform.anchorMin = new Vector2(0f, 0f);
-            _result.rectTransform.anchorMax = new Vector2(1f, 0f);
-            _result.rectTransform.pivot = new Vector2(0f, 0f);
-            _result.rectTransform.offsetMin = new Vector2(16f, 40f);
-            _result.rectTransform.offsetMax = new Vector2(-14f, 92f);
-
-            var hint = Label("Hint", 12, new Color(0.8f, 0.8f, 0.8f), TextAnchor.LowerLeft);
-            hint.horizontalOverflow = HorizontalWrapMode.Wrap;
-            hint.text = HintText;
-            hint.rectTransform.anchorMin = new Vector2(0f, 0f);
-            hint.rectTransform.anchorMax = new Vector2(1f, 0f);
-            hint.rectTransform.pivot = new Vector2(0f, 0f);
-            hint.rectTransform.offsetMin = new Vector2(16f, 6f);
-            hint.rectTransform.offsetMax = new Vector2(-14f, 38f);
-
-            CreateConfirm();
-        }
-
-        /// <summary>How far the station's tab row reaches into the crafting panel, so the workspace starts below it.</summary>
-        private static float TopInset(RectTransform crafting, Button tab)
-        {
-            if (!tab)
-            {
-                return 0f;
-            }
-            var corners = new Vector3[4];
-            ((RectTransform)tab.transform).GetWorldCorners(corners);
-            float lowest = float.MaxValue;
-            foreach (var corner in corners)
-            {
-                lowest = Mathf.Min(lowest, crafting.InverseTransformPoint(corner).y);
-            }
-            float inset = crafting.rect.yMax - lowest + 4f;
-            return inset > 0f && inset < crafting.rect.height * 0.5f ? inset : 0f;
-        }
-
-        /// <summary>One cell copied from the bag's own cells (bronze frame, icon, durability bar), but not part of a grid.</summary>
-        private static void CreateSlot(InventoryGui gui)
-        {
-            var prefab = gui.m_playerGrid ? gui.m_playerGrid.m_elementPrefab : null;
-            if (!prefab)
-            {
-                return;
-            }
-            var go = UnityEngine.Object.Instantiate(prefab, _panel, false);
-            go.name = "TargetSlot";
-            var rect = (RectTransform)go.transform;
-            rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
-            rect.pivot = new Vector2(0f, 1f);
-            rect.anchoredPosition = new Vector2(20f, -44f);
-            _slot = go.GetComponent<InventoryElement>();
-            if (_slot)
-            {
-                _slot.Initialize(0, 0);
-            }
-            var binding = go.transform.Find("binding");
-            if (binding)
-            {
-                binding.gameObject.SetActive(false);
-            }
-            var input = go.GetComponentInChildren<UIInputHandler>();
-            if (input)
-            {
-                input.m_onLeftDown = (Action<UIInputHandler>)Delegate.Combine(input.m_onLeftDown,
-                    new Action<UIInputHandler>(_ => Safe.Run("use the Riftforge slot", () => OnSlotClicked(true))));
-                input.m_onRightDown = (Action<UIInputHandler>)Delegate.Combine(input.m_onRightDown,
-                    new Action<UIInputHandler>(_ => Safe.Run("use the Riftforge slot", () => OnSlotClicked(false))));
-            }
-        }
-
-        private static void CreateConfirm()
-        {
-            _confirm = new GameObject("Confirm", typeof(RectTransform)).GetComponent<RectTransform>();
-            _confirm.SetParent(_panel, false);
-            Place(_confirm, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(400f, 260f));
-            var bg = _confirm.gameObject.AddComponent<Image>();
-            bg.color = new Color(0.05f, 0.03f, 0.03f, 0.98f);
-            bg.raycastTarget = true;
-            _confirmText = Label("Text", 15, Color.white, TextAnchor.UpperLeft, _confirm);
-            _confirmText.horizontalOverflow = HorizontalWrapMode.Wrap;
-            _confirmText.verticalOverflow = VerticalWrapMode.Truncate;
-            _confirmText.rectTransform.anchorMin = Vector2.zero;
-            _confirmText.rectTransform.anchorMax = Vector2.one;
-            _confirmText.rectTransform.offsetMin = new Vector2(14f, 56f);
-            _confirmText.rectTransform.offsetMax = new Vector2(-14f, -12f);
-            MakeButton("Confirm", new Vector2(40f, 12f), 150f, OnConfirm, _confirm, bottom: true);
-            MakeButton("Cancel", new Vector2(210f, 12f), 150f, CloseConfirm, _confirm, bottom: true);
-            _confirm.gameObject.SetActive(false);
-        }
-
-        /// <summary>The picked material, drawn at the cursor (never catches clicks).</summary>
+        /// <summary>The picked material, drawn at the cursor like the game's own dragged item (never catches clicks).</summary>
         private static void CreateCursor(InventoryGui gui)
         {
             _cursor = new GameObject("Corruption_ForgePick", typeof(RectTransform));
             var rect = (RectTransform)_cursor.transform;
             rect.SetParent(gui.transform, false);
-            rect.sizeDelta = new Vector2(48f, 48f);
+            float size = gui.m_playerGrid ? gui.m_playerGrid.m_elementSpace * 0.8f : 48f;
+            rect.sizeDelta = new Vector2(size, size);
             rect.pivot = new Vector2(0f, 1f);
             _cursorIcon = _cursor.AddComponent<Image>();
             _cursorIcon.raycastTarget = false;
             _cursorIcon.preserveAspect = true;
-            _cursorAmount = Label("Amount", 14, Color.white, TextAnchor.LowerRight, rect);
-            Place(_cursorAmount.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(4f, -2f), new Vector2(60f, 20f));
-            _cursor.SetActive(false);
-        }
-
-        private static Text Label(string name, int size, Color color, TextAnchor anchor, Transform parent = null)
-        {
-            var gm = GUIManager.Instance;
-            var go = gm.CreateText("", parent ? parent : _panel, new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, gm.AveriaSerifBold, size,
-                color, true, Color.black, 100f, 20f, false);
-            go.name = name;
-            var text = go.GetComponent<Text>();
-            text.alignment = anchor;
-            text.supportRichText = true;
-            text.raycastTarget = false;
-            text.horizontalOverflow = HorizontalWrapMode.Overflow;
-            text.verticalOverflow = VerticalWrapMode.Overflow;
-            return text;
-        }
-
-        private static Button MakeButton(string label, Vector2 position, float width, Action onClick, Transform parent = null, bool bottom = false)
-        {
-            var anchor = bottom ? new Vector2(0f, 0f) : new Vector2(0f, 1f);
-            var go = GUIManager.Instance.CreateButton(label, parent ? parent : _panel, anchor, anchor,
-                position + new Vector2(width / 2f, bottom ? 16f : -16f), width, 32f);
-            go.name = "Button_" + label.Replace(" ", "");
-            var sfx = go.GetComponent<ButtonSfx>();
-            if (sfx)
+            var amountGo = new GameObject("Amount", typeof(RectTransform));
+            var amountRect = (RectTransform)amountGo.transform;
+            amountRect.SetParent(rect, false);
+            amountRect.anchorMin = amountRect.anchorMax = new Vector2(1f, 0f);
+            amountRect.pivot = new Vector2(1f, 0f);
+            amountRect.sizeDelta = new Vector2(60f, 22f);
+            var amount = amountGo.AddComponent<TextMeshProUGUI>();
+            var style = gui.m_playerGrid && gui.m_playerGrid.m_elementPrefab
+                ? gui.m_playerGrid.m_elementPrefab.GetComponent<InventoryElement>()?.m_amount
+                : null;
+            if (style)
             {
-                // Jötunn's buttons also play the select sound on mouse down; keep one click.
-                sfx.m_selectSfxPrefab = null;
+                amount.font = style.font;
+                amount.fontSharedMaterial = style.fontSharedMaterial;
+                amount.fontSize = style.fontSize;
             }
-            var button = go.GetComponent<Button>();
-            button.onClick.AddListener(() => Safe.Run("press a Riftforge button", onClick));
-            return button;
-        }
-
-        private static void Place(RectTransform rt, Vector2 anchor, Vector2 pivot, Vector2 position, Vector2 size)
-        {
-            rt.anchorMin = rt.anchorMax = anchor;
-            rt.pivot = pivot;
-            rt.anchoredPosition = position;
-            rt.sizeDelta = size;
+            amount.alignment = TextAlignmentOptions.BottomRight;
+            amount.raycastTarget = false;
+            _cursorAmount = amount;
+            _cursor.SetActive(false);
         }
 
         // ------------------------------------------------------------ opening and closing
@@ -363,13 +179,12 @@ namespace Corruption.Content
 
         private static void Activate()
         {
-            if (!_panel || !AtRiftforgeStation())
+            if (!ForgeView.Built || !AtRiftforgeStation())
             {
                 return;
             }
             _active = true;
-            _panel.gameObject.SetActive(true);
-            _panel.SetAsLastSibling();
+            ForgeView.SetVisible(true);
             if (_tabButton)
             {
                 // The game shows its selected tab as a non-interactable button; the others look unselected.
@@ -385,17 +200,14 @@ namespace Corruption.Content
             _nextEligibility = 0f;
         }
 
-        /// <summary>Back to the station's own tabs: the pick is dropped, the target kept while the window is open.</summary>
+        /// <summary>Back to the station's own tabs: the pick is dropped, the gear kept while the window is open.</summary>
         private static void Deactivate()
         {
             bool wasActive = _active;
             _active = false;
             ClearPick();
             CloseConfirm();
-            if (_panel)
-            {
-                _panel.gameObject.SetActive(false);
-            }
+            ForgeView.SetVisible(false);
             if (_tabButton)
             {
                 _tabButton.interactable = true;
@@ -609,21 +421,35 @@ namespace Corruption.Content
             OpenConfirm(option, null);
         }
 
+        /// <summary>
+        ///     Destructive operations ask first, in the game's own Yes/No box: the warning, then the chances from the
+        ///     rules' preview (their data tables). A random result is never predicted.
+        /// </summary>
         private static void OpenConfirm(RiftforgeOption option, ItemDrop.ItemData material)
         {
+            if (!UnifiedPopup.IsAvailable())
+            {
+                ShowResult(NoConfirm, false);
+                return;
+            }
+            CloseConfirm();
             _confirmOperation = option.Id;
             _confirmMaterial = material;
             var text = new System.Text.StringBuilder();
-            text.Append("<color=#FF8060><b>").Append(option.Name).Append(option.Id == "shatter" ? ": " + TargetName() + " will be destroyed."
-                : ": this can destroy " + TargetName() + ".").Append("</b></color>\n\n");
-            // The chances come from the rules' own preview (their data tables); a random result is never predicted.
+            text.Append("<color=#FF8060>").Append(option.Id == "shatter" ? TargetName() + " will be destroyed."
+                : "This can destroy " + TargetName() + ".").Append("</color>\n\n");
             foreach (var line in option.Preview)
             {
                 text.Append(line).Append('\n');
             }
-            _confirmText.text = Localization.instance.Localize(text.ToString());
-            _confirm.gameObject.SetActive(true);
-            _confirm.SetAsLastSibling();
+            _popupOpen = true;
+            UnifiedPopup.Push(new YesNoPopup(option.Name, Localization.instance.Localize(text.ToString()),
+                () => Safe.Run("confirm at the Riftforge", () =>
+                {
+                    PopOurs();
+                    OnConfirm();
+                }),
+                () => Safe.Run("cancel at the Riftforge", CloseConfirm), false));
         }
 
         private static void OnConfirm()
@@ -647,20 +473,26 @@ namespace Corruption.Content
         {
             _confirmOperation = null;
             _confirmMaterial = null;
-            if (_confirm)
+            PopOurs();
+        }
+
+        /// <summary>Closes our Yes/No box if it's still the one showing.</summary>
+        private static void PopOurs()
+        {
+            if (!_popupOpen)
             {
-                _confirm.gameObject.SetActive(false);
+                return;
+            }
+            _popupOpen = false;
+            if (UnifiedPopup.IsVisible())
+            {
+                UnifiedPopup.Pop();
             }
         }
 
         private static void ShowResult(string message, bool good)
         {
-            if (!_result)
-            {
-                return;
-            }
-            _result.text = string.IsNullOrEmpty(message) ? "" : Localization.instance.Localize(message);
-            _result.color = good ? GoodColor : BadColor;
+            ForgeView.SetResult(string.IsNullOrEmpty(message) ? "" : Localization.instance.Localize(message), good);
         }
 
         private static string TargetName()
@@ -722,6 +554,13 @@ namespace Corruption.Content
                     Deactivate();
                 }
             }
+            if (_popupOpen && !UnifiedPopup.IsVisible())
+            {
+                // Closed some other way.
+                _popupOpen = false;
+                _confirmOperation = null;
+                _confirmMaterial = null;
+            }
             if (!Active)
             {
                 return;
@@ -743,9 +582,11 @@ namespace Corruption.Content
                     _pick = resolved;
                 }
             }
-            UpdateSlot();
-            UpdatePickLine();
-            UpdateShatter();
+            bool usable = _pick != null && _target != null && CanUse(_pick);
+            ForgeView.SetSlot(_target, usable, "Drag gear from your Bag here");
+            UpdateBench();
+            ForgeView.SetCost(_pick, _pick != null ? CountOf(_pickPrefab) : 0, _pick == null || _target == null || usable);
+            UpdateButtons();
             UpdateCursor();
             if (_detailsDirty || Time.time >= _nextDetails)
             {
@@ -753,95 +594,31 @@ namespace Corruption.Content
             }
         }
 
-        private static void UpdateSlot()
+        private static void UpdateBench()
         {
-            if (!_slot || !_slot.m_icon)
+            string caption = _target == null ? "Drag gear from your Bag here" : TargetName();
+            string pick;
+            if (_pick != null)
             {
-                return;
+                pick = "<color=orange>" + Localization.instance.Localize(_pick.m_shared.m_name) + "</color>\n" +
+                       (_target == null ? "Now put gear in the forge" : "Click the forge to use it");
             }
-            bool has = _target != null;
-            _slot.m_icon.enabled = has;
-            if (has)
+            else
             {
-                _slot.m_icon.sprite = _target.GetIcon();
-                _slot.m_icon.color = Color.white;
+                pick = _target == null ? "" : "Right-click an orb to pick it up";
             }
-            bool worn = has && _target.m_shared.m_useDurability && _target.m_durability < _target.GetMaxDurability();
-            if (_slot.m_durability)
-            {
-                _slot.m_durability.gameObject.SetActive(worn);
-                if (worn)
-                {
-                    _slot.m_durability.SetValue(_target.GetDurabilityPercentage());
-                }
-            }
-            if (_slot.m_quality)
-            {
-                _slot.m_quality.enabled = has && _target.m_shared.m_maxQuality > 1;
-                if (_slot.m_quality.enabled)
-                {
-                    _slot.m_quality.text = _target.m_quality.ToString();
-                }
-            }
-            if (_slot.m_amount)
-            {
-                _slot.m_amount.enabled = false;
-            }
-            foreach (var image in new[] { _slot.m_equiped, _slot.m_queued, _slot.m_noteleport, _slot.m_food })
-            {
-                if (image)
-                {
-                    image.enabled = false;
-                }
-            }
-            if (_slot.m_tooltip)
-            {
-                // The details beside the slot already show the tooltip.
-                _slot.m_tooltip.m_text = has ? "" : "Drag gear from your Bag here";
-                _slot.m_tooltip.m_topic = has ? "" : "Riftforge";
-            }
+            ForgeView.SetBench(caption, pick);
         }
 
-        private static void UpdatePickLine()
+        private static void UpdateButtons()
         {
-            if (!_pickLine)
-            {
-                return;
-            }
-            if (_pick == null)
-            {
-                _pickLine.text = _target == null ? "Drag gear here from your Bag." : "Right-click an orb to pick it.";
-                _pickLine.color = new Color(0.8f, 0.8f, 0.8f);
-                return;
-            }
-            int left = CountOf(_pickPrefab);
-            _pickLine.text = Localization.instance.Localize(_pick.m_shared.m_name) + $" ({left} left)\nLeft-click the slot to use it.";
-            _pickLine.color = Color.white;
-        }
-
-        private static void UpdateShatter()
-        {
-            if (!_shatter)
-            {
-                return;
-            }
-            _takeOut.interactable = _target != null;
             // Material-free operations only (no orb is asked), so this is cheap enough every frame.
             var option = _target != null ? RiftforgeCrafting.Options(_target, null).FirstOrDefault(o => o.Id == "shatter") : null;
-            if (_target == null)
-            {
-                _shatter.interactable = false;
-                _shatterNote.text = "";
-                return;
-            }
-            if (option == null)
-            {
-                _shatter.interactable = false;
-                _shatterNote.text = ShatterNotBuilt;
-                return;
-            }
-            _shatter.interactable = option.Allowed;
-            _shatterNote.text = option.Allowed ? "Destroys the item; shows the chances first." : option.Refusal;
+            string tip = _target == null ? "Put gear in the forge first"
+                : option == null ? ShatterNotBuilt
+                : option.Allowed ? "Destroys the item for Affix Splinters; shows the chances first"
+                : option.Refusal;
+            ForgeView.SetButtons(_target != null, option != null && option.Allowed && _confirmOperation == null, tip);
         }
 
         private static void UpdateCursor()
@@ -860,7 +637,7 @@ namespace Corruption.Content
                 return;
             }
             _cursor.transform.SetAsLastSibling();
-            _cursor.transform.position = (Vector3)ZInput.pointerPosition + new Vector3(14f, -10f, 0f);
+            _cursor.transform.position = (Vector3)ZInput.pointerPosition + new Vector3(12f, -8f, 0f);
             _cursorIcon.sprite = _pick.GetIcon();
             int left = CountOf(_pickPrefab);
             _cursorAmount.text = left > 1 ? left.ToString() : "";
@@ -870,18 +647,14 @@ namespace Corruption.Content
         {
             _detailsDirty = false;
             _nextDetails = Time.time + DetailsInterval;
-            if (!_details)
-            {
-                return;
-            }
             if (_target == null)
             {
-                _details.text = "";
+                ForgeView.SetSheet(null, Localization.instance.Localize("$piece_riftforge"), Localization.instance.Localize(Intro));
                 return;
             }
             string tooltip = "";
-            Safe.Run("show the Riftforge target's tooltip", () => tooltip = _target.GetTooltip());
-            _details.text = "<size=120%><b>" + TargetName() + "</b></size>\n" + Localization.instance.Localize(tooltip);
+            Safe.Run("show the forge gear's tooltip", () => tooltip = _target.GetTooltip());
+            ForgeView.SetSheet(_target.GetIcon(), TargetName(), Localization.instance.Localize(tooltip));
         }
 
         /// <summary>How many of a material the player has, in the bag and the tabs together.</summary>
@@ -991,10 +764,9 @@ namespace Corruption.Content
                 Safe.Run("add the Riftforge workspace tab", () =>
                 {
                     EnsureCreated(__instance);
-                    if (_active && _panel)
+                    if (Active)
                     {
-                        // The game re-lists recipes now and then; the workspace stays on top and its tab selected.
-                        _panel.SetAsLastSibling();
+                        // The game re-lists recipes now and then; the Forge tab stays the selected one.
                         __instance.m_tabCraft.interactable = true;
                         __instance.m_tabUpgrade.interactable = true;
                     }
@@ -1019,10 +791,7 @@ namespace Corruption.Content
                     _active = false;
                     ClearPick();
                     CloseConfirm();
-                    if (_panel)
-                    {
-                        _panel.gameObject.SetActive(false);
-                    }
+                    ForgeView.SetVisible(false);
                     if (_tabButton)
                     {
                         _tabButton.interactable = true;
@@ -1034,16 +803,22 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(InventoryGui), nameof(InventoryGui.Update))]
         private static class Update_Patch
         {
-            /// <summary>Escape drops the pick (or closes the confirm box) instead of closing the inventory.</summary>
+            /// <summary>Escape drops the pick (or closes the Yes/No box) instead of closing the inventory.</summary>
             private static void Prefix()
             {
-                if (!Active || (_pick == null && _confirmOperation == null) || !ZInput.GetKeyDown(KeyCode.Escape))
+                if (!Active || (_pick == null && !_popupOpen) || !ZInput.GetKeyDown(KeyCode.Escape))
                 {
                     return;
                 }
                 _escapeFrame = Time.frameCount;
-                ClearPick();
-                CloseConfirm();
+                if (_popupOpen)
+                {
+                    CloseConfirm();
+                }
+                else
+                {
+                    ClearPick();
+                }
             }
 
             private static void Postfix(InventoryGui __instance)
@@ -1135,15 +910,15 @@ namespace Corruption.Content
         {
             private static void Postfix()
             {
+                ForgeView.Forget();
                 _gui = null;
                 _tabButton = null;
-                _panel = null;
-                _slot = null;
+                _failed = false;
                 _cursor = null;
-                _confirm = null;
                 _active = false;
                 _target = null;
                 _pick = null;
+                _popupOpen = false;
             }
         }
     }

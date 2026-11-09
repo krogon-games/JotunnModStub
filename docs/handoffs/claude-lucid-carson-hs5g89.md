@@ -16,11 +16,12 @@ Nothing play-tested yet.
 
 ## Half-done and known issues
 
-Built 2026-11-09, untested in game (compiled against the game's decompiled 1.0 code; 446 tests pass):
+Built 2026-11-09, untested in game (compiled against the game's decompiled 1.0 code; 451 tests pass):
 - **Six tabs** (`FEATURES.md` → Inventory tabs): Bag · Currencies · Splinters · Maps · Runes · Essences. Currencies and Essences have fixed cells (`FixedLayout`, tested), dimmed with 0 when empty, no capacity lost (extra stacks use free cells, then the empty homes). Essences move out of Currencies on load and every half second (only between usable tabs, when they fit). Runes has no inventory; its save key is never read or written. New save keys `corruption_tab_splinters`, `corruption_tab_essences`; the old two unchanged. Test command `co_tabs_misplace`.
-- **Forge tab** (`FEATURES.md` → Riftforge workspace): one target slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here; the target's tooltip beside it. Mock-ups `docs/images/riftforge_workspace*.png`.
+- **Forge tab** (`FEATURES.md` → Riftforge workspace): one forge slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here. Krogon's first look: orbs work, the look didn't fit → **redone** from the game's own panel parts (bench where the recipe list is; a copy of the game's description panel with the gear's tooltip, a cost slot for the pick and Shatter as its main button; the game's Yes/No box for confirmations); "Remove" button. Untested. Mock-ups `docs/images/riftforge_workspace*.png`.
+- **Skills button removed** from above the inventory (CraftingOverhaul); the skills panel opens with K.
 - **Not built, #29's:** shard corruption, shattering, the Affix Splinter item, applying splinters. The window says so and fakes nothing; when `RiftforgeCrafting` offers `shatter`/`corrupt`, the window asks for Confirm with the rules' preview. The splinter must be named `CorruptionAffixSplinter…`.
-- **Claude's choices** (easy to change): tab label "Forge"; gear goes in by dragging it from the Bag onto the slot; the slot empties when the inventory closes; positions and sizes of the workspace are first guesses at the panel size.
+- **Claude's choices** (easy to change): tab label "Forge"; gear goes in by dragging it from the Bag onto the slot; the slot empties when the inventory closes; the bench's layout (heading, slot 1.5× a bag cell, name, pick, result, Remove) is Claude's, the rest is the game's own panel.
 - Not checked against EAQS/AB's DLLs (not in the cloud session); `docs/mod-compatibility.md` lists what to test.
 
 ## Decisions
@@ -52,7 +53,7 @@ After Krogon's first look (2026-11-09, screenshot; a few orbs tried: "they do wo
 
 ## Playtest
 
-`docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. No feedback yet.
+`docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. First look 2026-11-09: orbs work; the Forge window "looks very out of place", the tabs didn't fit (the Skills button), "Take out" → "Remove". All three addressed; Krogon wants the window's design right before the full checklist.
 
 ## Open questions for Krogon
 
@@ -60,14 +61,14 @@ After Krogon's first look (2026-11-09, screenshot; a few orbs tried: "they do wo
 
 ## Next steps
 
-1. Krogon's play-test (checklist A–E), then fix what it finds.
+1. Krogon checks the redone Forge window's look (checklist D1–D6); then the full play-test (A–E) and fixes.
 2. Final play-test, then `/handoff` and a PR into `master`.
 3. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
 
 ## Checks
 
-Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 446 passed; Corruption builds against the stand-in game folder.
+Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 451 passed; Corruption builds against the stand-in game folder.
 
 ## Merge notes
 
-Not ready: waiting for Krogon's play-test. Gameplay changed: version bump needed at merge (Corruption). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.
+Not ready: waiting for Krogon's play-test. Gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.

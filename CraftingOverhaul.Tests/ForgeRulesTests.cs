@@ -51,5 +51,16 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(-1, ForgeRules.PickOperation(new bool[0]));
             Assert.Equal(-1, ForgeRules.PickOperation(null));
         }
+
+        [Theory]
+        [InlineData("CRAFT", "Forge", "FORGE")]
+        [InlineData("Craft", "Forge", "Forge")]
+        [InlineData("", "Remove", "Remove")]
+        [InlineData(null, "Remove", "Remove")]
+        [InlineData("123", "Remove", "Remove")]
+        public void LabelsFollowTheGamesCapitals(string game, string label, string expected)
+        {
+            Assert.Equal(expected, ForgeRules.UpperLike(game, label));
+        }
     }
 }

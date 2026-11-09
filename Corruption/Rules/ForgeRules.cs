@@ -83,5 +83,20 @@ namespace Corruption.Rules
             }
             return -1;
         }
+
+        /// <summary>
+        ///     Our label in capitals when the game's own label next to it is in capitals ("CRAFT", "UPGRADE"), so the
+        ///     Forge tab and buttons match the station's.
+        /// </summary>
+        public static string UpperLike(string gameText, string label)
+        {
+            if (label == null)
+            {
+                return "";
+            }
+            return !string.IsNullOrEmpty(gameText) && gameText == gameText.ToUpperInvariant() && gameText != gameText.ToLowerInvariant()
+                ? label.ToUpperInvariant()
+                : label;
+        }
     }
 }

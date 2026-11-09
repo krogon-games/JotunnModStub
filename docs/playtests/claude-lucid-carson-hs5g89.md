@@ -29,18 +29,18 @@
 
 ### D. The Forge tab: put gear in, craft, take it out (about 10 minutes)
 1. [ ] Use the **Riftforge** (E) → besides Craft and Upgrade there's a third tab, **Forge**. At a workbench or forge there's **no** Forge tab.
-2. [ ] Click **Forge** → the workspace: "Riftforge", an empty slot, buttons Take out and Shatter, a hint line at the bottom. Craft and Upgrade still work; clicking them leaves the Forge tab.
-3. [ ] `spawn SwordBronze`. In the **Bag**, left-click the sword to pick it up, then click the Forge slot → the sword's picture is in the slot, it's **still in your bag** (in its old cell), and its normal tooltip is shown beside the slot.
+2. [ ] Click **Forge** → the station's recipe list and description give way to the **bench** on the left (a "Forge" heading, a large empty slot, a **Remove** button) and, on the right, a description panel like the Craft tab's that explains the three steps, with a greyed **Shatter** button where Craft would be. It should look like part of the station, not a box laid over it. Craft and Upgrade still work; clicking them brings the recipe list back exactly as it was.
+3. [ ] `spawn SwordBronze`. In the **Bag**, left-click the sword to pick it up, then click the forge slot → the sword's picture is in the slot, it's **still in your bag** (in its old cell), and the right-hand panel shows its icon, name and normal tooltip, in the same fonts as the Craft tab.
 4. [ ] Switch the inventory to **Currencies** → the slot and the tooltip stay visible. With the plain sword in, orbs that can't be used on it look **red** (e.g. Augmentation, Regal); orbs you have none of stay **dimmed with 0** (they look different).
-5. [ ] **Right-click** an Orb of Transmutation → it follows the cursor with your count, its cell is highlighted, the line under the slot says "Orb of Transmutation (N left)". Nothing is used yet.
-6. [ ] **Left-click the slot** → the sword becomes Magic (blue): the tooltip beside it updates **at once**, the result line says what it gained, Transmutation's count goes down by 1, the pick is gone, the sword is still in the slot.
+5. [ ] **Right-click** an Orb of Transmutation → it follows the cursor with your count, its cell is highlighted, the bench names it, the cost slot at the bottom of the right-hand panel shows it with "1" and how many you have, and a gold frame shows round the forge slot. Nothing is used yet.
+6. [ ] **Left-click the slot** → the sword becomes Magic (blue): the tooltip on the right updates **at once**, the result on the bench says what it gained, Transmutation's count goes down by 1, the pick is gone, the sword is still in the slot.
 7. [ ] Right-click **Augmentation**, then **hold Shift and left-click** the slot → one affix added and the pick **stays**; Shift-click again → refused "This item has no room for another affix", in red, and **no orb is used** (count unchanged).
 8. [ ] With a pick, right-click another orb → the pick changes to that orb. Press **Escape** → the pick is dropped and the **inventory stays open**. Press Escape again → the inventory closes normally.
 9. [ ] With a pick, left-click any item in a tab or the bag → only the pick is dropped (nothing picked up, moved or equipped). With no pick, everything in the inventory works as usual (equip, drag, split).
 10. [ ] Right-click the **Jeweller's Orb** → "Sockets come later", in red. Clicking the slot with it uses nothing.
-11. [ ] Right-click a **Corruption shard** → "Corrupting gear with a shard isn't built yet". The **Shatter** button is greyed and says "Shattering isn't built yet".
+11. [ ] Right-click a **Corruption shard** → "Corrupting gear with a shard isn't built yet". The **Shatter** button is greyed; hovering it says "Shattering isn't built yet".
 12. [ ] **Mirror of Kalandra** on a Magic or Rare item → the copy appears in your bag; the original stays in the slot.
-13. [ ] Press **Take out** (or right-click the slot) → the slot empties; the sword is where it always was in your bag.
+13. [ ] Press **Remove** (or right-click the slot) → the slot empties; the sword is where it always was in your bag.
 14. [ ] Put the sword in again and close the inventory with the sword in the slot → nothing goes missing; reopening shows an empty slot (the sword in your bag).
 15. [ ] Put the sword in, then drop it on the ground from the bag (or move it into a chest) → the slot empties by itself.
 16. [ ] Pick up an item from **Currencies** or from a chest and click the slot → refused "Put in gear from your Bag". An orb or wood from the bag → "This item can't be worked at the Riftforge".
@@ -52,10 +52,20 @@
 3. [ ] Log out and back in → all still there. No red errors in the console during A–E.
 
 ### F. Later, with #29 (shattering and splinters), not now
-- Put a Magic or Rare item in the Forge slot, press **Shatter** → a box warns the item will be destroyed and shows each line's chance; Cancel keeps it; Confirm destroys it, the splinters arrive in **Splinters**, the slot empties and the result is shown.
+- Put a Magic or Rare item in the forge slot, press **Shatter** → the game's Yes/No box warns the item will be destroyed and shows each line's chance; No (or Escape) keeps it; Yes destroys it, the splinters arrive in **Splinters**, the slot empties and the result is shown.
 - Right-click a splinter, click a Normal or Magic item → the line is added; refused where the rules say.
-- A shard on an item → a warning with the chances and Confirm before anything happens.
+- A shard on an item → a warning with the chances and Yes/No before anything happens.
 - Splinters move to and from a chest with their exact values.
 
-### Your feedback
-(waiting for your play-test)
+### Your feedback (2026-11-09, first look, screenshot)
+- "The new forging window looks very out of place compared to the remainder of the workbench tabs. Please bring it in line with the rest of the design."
+- "Tabs in the inventory do not all fit. I suggest removing the skills tab. It does not belong there at all." (Where it goes is decided later.)
+- "I've tested a few orbs, they do work." The full checklist waits until the window's design is right.
+- "The button 'take out' can be renamed to 'remove'."
+
+### What changed after the feedback
+- The Forge tab is rebuilt from the game's own crafting-panel parts: the station's recipe list and description are hidden while Forge is open and replaced, in the same places, by the bench (forge slot, picked orb, result, Remove) and a copy of the game's description panel (gear icon, name, tooltip in the game's fonts, the cost slot showing the picked orb, Shatter as the main button). The first version laid its own dark box over the station, the recipe list showed through it, and the tooltip used the game's capital-letter heading font.
+- The Shatter confirmation (for #29) uses the game's own Yes/No box.
+- "Take out" is now "Remove".
+- The Skills button above the inventory is gone (CraftingOverhaul); the skills panel still opens with K. All six tabs should now be visible.
+- Checklist D rewritten for the new look; nothing re-tested yet.
