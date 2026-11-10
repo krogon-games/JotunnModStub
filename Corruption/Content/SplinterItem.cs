@@ -12,12 +12,15 @@ namespace Corruption.Content
     ///     The Affix Splinter (corruption-design.md → Affix Splinters and shattering; issue #29): one item whose affix
     ///     line and exact value live in its custom data (<see cref="SplinterRules.LineKey" />), so it is saved, traded
     ///     and stored like any item. Stack size 1: two splinters never merge. It goes to the Splinters tab by its name.
-    ///     The look is a PLACEHOLDER (a tinted vanilla Crystal): Krogon asked for its own models, a shape per kind of
-    ///     affix and a colour per stat, and picks from drafts first (2026-11-10; docs/images/splinters_draft2.png).
+    ///     Its look (Krogon approved, 2026-11-10): a shape per kind of affix and a colour per stat, from
+    ///     <c>splinter_looks.csv</c> and the models of <c>tools/make_splinters.py</c>. Each affix family is its own item
+    ///     (<see cref="SplinterLooks.PrefabFor" />), because an item's model and icon belong to its prefab. The plain
+    ///     <c>CorruptionAffixSplinter</c> stays registered for a line whose family has no look (a tinted gem).
     /// </summary>
     internal static class SplinterItem
     {
-        private const string BasePrefab = "Crystal";
+        // The orbs' base item: its material is the one the custom gem models are known to work with.
+        private const string BasePrefab = "GemstoneRed";
 
         // The shard's weight, as the orbs use (no number of its own in the design; the Splinters tab is weightless).
         private const float Weight = 0.2f;
@@ -25,6 +28,8 @@ namespace Corruption.Content
         private static readonly Color PlaceholderColor = new Color(0.55f, 0.85f, 0.75f);
 
         public const string NameToken = "$item_corruptionaffixsplinter";
+
+        private static SplinterLooks _looks;
 
         public static void Register()
         {
@@ -36,14 +41,55 @@ namespace Corruption.Content
                     "One affix from a shattered item, with its exact value. Put it on a Normal or Magic item at a Riftforge."
                 }
             });
-            var item = new CustomItem(ShatterRules.SplinterPrefab, BasePrefab, new ItemConfig
+            // The plain splinter first: it must exist even if every look fails.
+            RegisterOne(ShatterRules.SplinterPrefab, null);
+
+            var errors = new List<string>();
+            var looks = SplinterLooks.Parse(DataFiles.Read("splinter_looks.csv"), errors, Loot.Affixes.Values);
+            if (errors.Count > 0)
+            {
+                // A family without a look still works: its splinters use the plain item.
+                Jotunn.Logger.LogWarning("splinter_looks.csv has problems (splinters without a look use the plain one):\n" + string.Join("\n", errors));
+            }
+            _looks = looks;
+            foreach (var look in looks.Looks)
+            {
+                Safe.Run($"register the {look.Prefab}", () => RegisterOne(look.Prefab, look));
+            }
+        }
+
+        private static void RegisterOne(string prefabName, SplinterLooks.Look look)
+        {
+            var item = new CustomItem(prefabName, BasePrefab, new ItemConfig
             {
                 Name = NameToken,
                 Description = NameToken + "_description",
                 StackSize = 1,
                 Weight = Weight
             });
-            Corrupted.Tint(item.ItemPrefab, PlaceholderColor, 0.6f);
+            var colour = look != null ? new Color(look.R, look.G, look.B) : PlaceholderColor;
+            bool custom = false;
+            if (look != null)
+            {
+                try
+                {
+                    custom = GemModel.Apply(item.ItemPrefab, new GemModel.Look
+                    {
+                        Name = prefabName,
+                        Mesh = $"splinter_{look.Kind}.obj",
+                        Albedo = prefabName + "_albedo.rgba",
+                        Emission = $"splinter_{look.Kind}_emission.rgba"
+                    }, colour);
+                }
+                catch (System.Exception ex)
+                {
+                    Jotunn.Logger.LogError($"Custom model for {prefabName} failed; using a tinted gem instead. {ex}");
+                }
+            }
+            if (!custom)
+            {
+                Corrupted.Tint(item.ItemPrefab, colour, 0.6f);
+            }
             var shared = item.ItemDrop.m_itemData.m_shared;
             shared.m_itemType = ItemDrop.ItemData.ItemType.Material;
             shared.m_maxStackSize = 1;
@@ -57,7 +103,23 @@ namespace Corruption.Content
                     shared.m_icons = new[] { icon };
                 }
             });
+            // After the icon render, so the light doesn't colour the icon.
+            Safe.Run($"add the {prefabName} glow", () => GemModel.AddGlow(item.ItemPrefab, colour));
             ItemManager.Instance.AddItem(item);
+        }
+
+        /// <summary>The item a splinter holding this line is: its family's look, or the plain splinter.</summary>
+        private static string PrefabFor(LootItem.Line line)
+        {
+            if (_looks != null && line != null && Loot.Affixes.TryGetValue(line.Ids[0], out var affix))
+            {
+                var look = _looks.For(affix);
+                if (look != null && ObjectDB.instance && ObjectDB.instance.GetItemPrefab(look.Prefab))
+                {
+                    return look.Prefab;
+                }
+            }
+            return ShatterRules.SplinterPrefab;
         }
 
         public static bool IsSplinter(ItemDrop.ItemData item)
@@ -74,7 +136,7 @@ namespace Corruption.Content
         /// <summary>A new splinter item holding the line, not yet in any inventory. Null when the item isn't registered.</summary>
         public static ItemDrop.ItemData Create(LootItem.Line line)
         {
-            var prefab = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(ShatterRules.SplinterPrefab) : null;
+            var prefab = ObjectDB.instance && line != null ? ObjectDB.instance.GetItemPrefab(PrefabFor(line)) : null;
             var template = prefab ? prefab.GetComponent<ItemDrop>() : null;
             if (!template || line == null)
             {

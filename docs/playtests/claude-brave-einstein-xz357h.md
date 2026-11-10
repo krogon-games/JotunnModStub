@@ -4,7 +4,7 @@
 
 **Build:** the Corruption DLL built from this branch (the log's build stamp at start-up). Corruption still says 0.6.0: the coordinator raises it at merge.
 **Setup:** single player, your test world, `devcommands` on, a Riftforge built. EquipmentAndQuickSlots and AdventureBackpacks loaded as usual. About 30 minutes.
-**Not final:** every Affix Splinter looks the same for now (a pale green crystal). The real designs wait for your pick (`docs/images/splinters_draft2.png`).
+**Splinter looks:** your approved designs, a shape per kind and a colour per stat (all 67: `docs/images/splinters_preview.png`).
 
 **Console commands you'll use** (F5):
 - `co_craft give` → 5 of every orb **and 5 Corruption shards** in Currencies.
@@ -17,7 +17,7 @@
 1. [ ] Get 3–4 Rare and Magic items (`co_loot rare`, `co_loot magic`). Open the Riftforge → **Forge** tab. Drag a Rare item onto the forge slot → the **Shatter** button is lit.
 2. [ ] Press **Shatter** → a Yes/No box: the item's name "will be destroyed", "Cost: nothing", one line per affix starting with **50%**, and a **Don't warn me again** tickbox under the text. Press **No** → nothing changed, the item is still in the slot.
 3. [ ] Press **Shatter**, then **Yes** → the item is gone, the slot is empty, and the result says "Shattered …: N splinters (…)" or "… no splinters recovered". The inventory stays on the tab you were on.
-4. [ ] Open the **Splinters** tab → one splinter per line the message listed. Hover one → "Affix Splinter", the affix with its number and range, "Prefix" or "Suffix", and "Fits: …". The numbers match what the item had.
+4. [ ] Open the **Splinters** tab → one splinter per line the message listed, each with its own shape and colour (e.g. fire damage an orange spiky lump, max health a red drop; compare with `splinters_preview.png`). Drop one on the ground: same model, faintly glowing. Hover one → "Affix Splinter", the affix with its number and range, "Prefix" or "Suffix", and "Fits: …". The numbers match what the item had.
 5. [ ] Shatter two more items. Splinters never stack, even identical ones.
 6. [ ] Put a **Normal** item in the slot → Shatter is grey; its tooltip says "Only Magic and Rare items shatter".
 7. [ ] If you get an item with a green ◆ resonant line: shatter it until that line survives → **one** splinter holding the combined number, marked resonant, "needs an item with no affixes".

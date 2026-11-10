@@ -20,7 +20,8 @@ Built 2026-11-10, **not tested in game**:
 - **Shard corruption, shattering, Affix Splinters** in the Forge tab, with Krogon's rules below; `co_craft corrupt / shatter / splinter`.
 - **Corrupted affixes beyond the caps**; tooltips show each cap and what worn gear uses.
 - **"Don't warn me again"** tickboxes (settings `10 - Riftforge`).
-- **The splinter's look is a placeholder** (tinted vanilla Crystal). Drafts: `docs/images/splinters_draft.png`, `splinters_draft2.png` (`tools/draft_splinters.py`).
+- **Splinter models** (approved designs): 9 shapes, a colour per family for all 67 (`splinter_looks.csv`, `tools/make_splinters.py`, preview `docs/images/splinters_preview.png`). Colours are Claude's picks within the approved idea.
+- **Shard twin completion** adds both values plus 25% (decision 20); **cap lines removed** from tooltips; the stats sheet is [#60](https://github.com/krogon-games/JotunnModStub/issues/60).
 
 Claude's interim choices (easy to change): a Magic item with 0 affixes can't be shattered; splinter weight 0.2; resistance never above 100%; Skald's and Fenrir buffs stay under the cap even from a corrupted line; caps aren't shown anywhere until #60's stats sheet (decision 21).
 
@@ -69,18 +70,18 @@ None open.
 
 ## Next steps
 
-1. Krogon picks or corrects the splinter design; then the real models, icons and the kind/colour table.
-2. Krogon's play-test (checklist A–H); fix what it finds.
-3. `/handoff`, then a PR into `master`.
+1. Krogon's play-test (checklist A–H); fix what it finds.
+2. `/handoff`, then a PR into `master`.
+3. Later, its own round: the stats sheet ([#60](https://github.com/krogon-games/JotunnModStub/issues/60)).
 
 ## Checks
 
-- Build: PASS (`dotnet test CraftingOverhaul.Tests` 486 passed; Corruption builds against the stand-in game folder).
+- Build: PASS (`dotnet test CraftingOverhaul.Tests` 490 passed; Corruption builds against the stand-in game folder).
 - In-game: needs Krogon's playtest.
 - The rest: run by `/handoff`.
 
 ## Merge notes
 
-- Ready to merge: no (not play-tested; splinter models not chosen).
+- Ready to merge: no (not play-tested).
 - **Gameplay changed: version bump needed at merge (Corruption).** This branch changed no version number.
 - Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/riftforge-ui-brief.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`.
