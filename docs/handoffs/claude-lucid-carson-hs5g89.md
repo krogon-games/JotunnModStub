@@ -51,6 +51,13 @@ After Krogon's first look (2026-11-09, screenshot; a few orbs tried: "they do wo
 18. **"Take out" is renamed "Remove".**
 19. **The Skills button on the inventory is removed** ("it does not belong there at all"; it pushed the Essences tab out of view). Where the skills panel's tab or key goes is decided later; the skills panel still opens with its key.
 
+Krogon's second look (2026-11-10, two screenshots, one annotated): "much better, a lot more consistent"; it feels good, Craft and Upgrade come back as before, all six tabs show and the essences moved to their own tab. Changes asked:
+
+20. **Affixes readable and in a fixed place:** the affix block (rarity line, every affix with its range) moves to the **left panel** under the forge slot, in larger text with more spacing; the routine weapon stats stay on the right as a secondary details area, **at the same text size as the other tabs**.
+21. **Result message:** a full-width area, shorter wording, and a brief highlight of the changed affix so a roll is understood without reading a paragraph; it must not hold up the next click.
+22. **The five empty boxes** under the details (the copied cost slots) are unclear: remove them and use the space (Claude: for the result message).
+23. **Remove the small icon** at the top of the right panel (it repeats the forge slot) and **delete the "Right-click an orb to pick it up" line**.
+
 ## Playtest
 
 `docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. First look 2026-11-09: orbs work; the Forge window "looks very out of place", the tabs didn't fit (the Skills button), "Take out" → "Remove". All three addressed; Krogon wants the window's design right before the full checklist.
