@@ -71,5 +71,10 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 - [ ] No red errors in the log (BepInEx console) during any of this.
 - [ ] Anything that reads as confusing: wording of the boxes, the result lines, the cap lines.
 
-### Your feedback
-(none yet)
+### Your feedback (2026-11-10, first try, with a screenshot of the Splinters tab)
+- Shattering: "shattered quite a few items successfully".
+- Splinters on a white item: the first (a prefix) worked and turned it Magic; a second prefix was refused; a suffix for another item type was refused; a fitting suffix worked (a 2-affix Magic item). "All intended and working well."
+- **Problem: "All the splinters look identical"**: every splinter in the tab is the same red gem (the base item's own icon), not the approved shapes and colours.
+
+### What changed after the feedback
+- Splinter looks: cause not found from the code alone (the models, textures and table are in the build and pass their tests). Added a start-up log line ("Affix Splinters: N looks in the table, N items registered, N with their own model, N icons rendered") and warnings when an icon can't be rendered or a splinter falls back to the plain look. Waiting for Krogon's log.

@@ -30,6 +30,7 @@ namespace Corruption.Content
         public const string NameToken = "$item_corruptionaffixsplinter";
 
         private static SplinterLooks _looks;
+        private static int _models, _icons, _registered;
 
         public static void Register()
         {
@@ -56,6 +57,9 @@ namespace Corruption.Content
             {
                 Safe.Run($"register the {look.Prefab}", () => RegisterOne(look.Prefab, look));
             }
+            // One line that says whether the looks made it into the game (play-test 2026-11-10: every splinter looked alike).
+            Jotunn.Logger.LogInfo($"Affix Splinters: {looks.Looks.Count} looks in the table, {_registered} items registered, " +
+                                  $"{_models} with their own model, {_icons} icons rendered.");
         }
 
         private static void RegisterOne(string prefabName, SplinterLooks.Look look)
@@ -90,6 +94,10 @@ namespace Corruption.Content
             {
                 Corrupted.Tint(item.ItemPrefab, colour, 0.6f);
             }
+            else
+            {
+                _models++;
+            }
             var shared = item.ItemDrop.m_itemData.m_shared;
             shared.m_itemType = ItemDrop.ItemData.ItemType.Material;
             shared.m_maxStackSize = 1;
@@ -101,11 +109,17 @@ namespace Corruption.Content
                 if (icon)
                 {
                     shared.m_icons = new[] { icon };
+                    _icons++;
+                }
+                else
+                {
+                    Jotunn.Logger.LogWarning($"No icon could be rendered for {prefabName}; it keeps the base gem's icon.");
                 }
             });
             // After the icon render, so the light doesn't colour the icon.
             Safe.Run($"add the {prefabName} glow", () => GemModel.AddGlow(item.ItemPrefab, colour));
             ItemManager.Instance.AddItem(item);
+            _registered++;
         }
 
         /// <summary>The item a splinter holding this line is: its family's look, or the plain splinter.</summary>
@@ -147,6 +161,10 @@ namespace Corruption.Content
             item.m_stack = 1;
             item.m_worldLevel = (byte)Game.m_worldLevel;
             SplinterRules.Write(line, item.m_customData);
+            if (prefab.name == ShatterRules.SplinterPrefab)
+            {
+                Jotunn.Logger.LogWarning($"Affix Splinter for {string.Join("+", line.Ids)} uses the plain look: its family has no registered look.");
+            }
             return item;
         }
 
