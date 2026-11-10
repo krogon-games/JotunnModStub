@@ -4,7 +4,7 @@
 
 ## Stage
 
-Asking Krogon questions.
+Building (the splinter models wait for Krogon's pick of a draft).
 
 ## Purpose
 
@@ -38,15 +38,24 @@ Krogon's answers (2026-11-10):
 11. **A Mirror's copy is locked like a corrupted item:** it can't be shattered, corrupted or take a splinter.
 12. **Affix Splinters get their own models**, not a tinted vanilla item: a variety of shapes and colours, inspired by Path of Exile's catalysts. **Drafts or designs first**; nothing final is built until Krogon picks.
 
+Krogon's second answers (2026-11-10):
+
+13. **The tickboxes' choices are remembered** between play sessions (with a setting to switch the warnings back on).
+14. **Caps count across everything worn:** ordinary affixes on all worn items are added up and capped; corrupted affixes add on top.
+15. **Players must be able to see each cap and how close they are to it.**
+16. **The Bag slot freed by shattering counts as room only when the shattered item is in the Bag grid.**
+17. **A splinter that completes a twin gets the resonance bonus: (item's value + splinter's value) + 25%.** Example: Hale +14 and a splinter of the Bear +18 give one resonant line of +40 (32 + 25%). Still no random roll. "This rewards the player for saving shatters." **Replaces** decision 1's "no extra multiplier". An already-resonant splinter still transfers its exact value.
+18. **Splinter designs:** "shape by kind, colour by stat is a fantastic idea"; the shapes should be rough, organic lumps rather than clean cut crystals.
+
 ## Playtest
 
 Nothing to test yet. The checklist will be `docs/playtests/claude-brave-einstein-xz357h.md`.
 
 ## Open questions for Krogon
 
-1. Is the tickbox's choice remembered between sessions (Claude recommends yes, with a setting to switch the warnings back on)?
-2. Claude's reading of three points (corrupted affix completing a twin rerolls in the resonant range; caps count across all worn items with corrupted affixes on top; the freed Bag slot counts only when the item is in the Bag grid): confirm or correct.
-3. Which splinter designs, and what decides a splinter's shape and colour.
+1. A shard's corrupted affix that completes a twin: keep today's fresh roll in the resonant range (Claude builds this, as the brief says), or keep the old value and add?
+2. The second splinter draft (rough lumps): which shapes to keep or change.
+3. Where the caps are shown (Claude builds them into the item tooltip unless told otherwise).
 
 ## Next steps
 
