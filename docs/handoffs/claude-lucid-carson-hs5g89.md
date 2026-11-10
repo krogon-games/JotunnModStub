@@ -1,28 +1,29 @@
 # Handoff: `claude/lucid-carson-hs5g89`
 
-**Written:** 2026-11-09. Branch made from `master` (`47dfd9b`, nothing newer on `master`); no PR yet.
+**Written:** 2026-11-10 by `/handoff`. 12 commits ahead of `master`, 0 behind; everything pushed; no PR yet.
 
 ## Stage
 
-Waiting for Krogon's playtest (final quick look at three tweaks; A–E passed 2026-11-10).
+Ready to merge.
 
 ## Purpose
 
-UI round for [#30](https://github.com/krogon-games/JotunnModStub/issues/30): six inventory tabs (Bag · Currencies · Splinters · Maps · Runes · Essences) and the Riftforge's crafting workspace (one gear slot, materials applied straight from the inventory). The rules behind shard corruption, shattering and splinters are [#29](https://github.com/krogon-games/JotunnModStub/issues/29)'s and aren't built yet.
+UI round for [#30](https://github.com/krogon-games/JotunnModStub/issues/30): six inventory tabs (Bag · Currencies · Splinters · Maps · Runes · Essences) and the Riftforge's Forge tab (one gear slot, materials used straight from the inventory). Shard corruption, shattering and splinters are [#29](https://github.com/krogon-games/JotunnModStub/issues/29)'s rules, not built yet.
 
 ## Done
 
-Confirmed by Krogon in single player (2026-11-10, checklist A–E): the six inventory tabs (order, contents, nothing lost, essences moved to Essences, fixed currency places, Splinters and Runes refusing other items, death and gravestone, relog) and the Forge tab with orbs (put gear in, pick and use, Shift, Escape, refusals, Remove, closing, away from the Riftforge).
+Confirmed by Krogon in single player (2026-11-10, checklist A–E, then six looks at the design):
+- **Six tabs:** order, nothing lost, essences moved to Essences, fixed currency places with dimmed 0s, Splinters and Runes refusing other items, death and gravestone, relog.
+- **Forge tab** with orbs: drag gear in, right-click an orb, click to use, Shift, Escape, refusals, Remove, closing, away from the Riftforge. Built from the game's own panel parts; affixes bulleted under the slot; short result with the changed affix highlighted.
+- **Item tooltips everywhere** use the same affix layout.
+- **Skills button removed** from above the inventory (CraftingOverhaul; K still opens the panel).
 
 ## Half-done and known issues
 
-Built 2026-11-09 and play-tested 2026-11-10 (see Done); only the four look tweaks after the play-test are untested (464 tests pass):
-- **Six tabs** (`FEATURES.md` → Inventory tabs): Bag · Currencies · Splinters · Maps · Runes · Essences. Currencies and Essences have fixed cells (`FixedLayout`, tested), dimmed with 0 when empty, no capacity lost (extra stacks use free cells, then the empty homes). Essences move out of Currencies on load and every half second (only between usable tabs, when they fit). Runes has no inventory; its save key is never read or written. New save keys `corruption_tab_splinters`, `corruption_tab_essences`; the old two unchanged. Test command `co_tabs_misplace`.
-- **Forge tab** (`FEATURES.md` → Riftforge workspace): one forge slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here. Krogon's first look: orbs work, the look didn't fit → **redone** from the game's own panel parts (bench where the recipe list is; a copy of the game's description panel with the gear's tooltip, a cost slot for the pick and Shatter as its main button; the game's Yes/No box for confirmations); "Remove" button. Second look (2026-11-10): "much better"; then **affix block moved under the slot** in large text, stats on the right at the game's size without the icon, **cost slots replaced by a short full-width result** (headline + changed lines), the changed line highlighted 6 s. Untested. Mock-ups `docs/images/riftforge_workspace*.png`.
-- **Skills button removed** from above the inventory (CraftingOverhaul); the skills panel opens with K.
-- **Not built, #29's:** shard corruption, shattering, the Affix Splinter item, applying splinters. The window says so and fakes nothing; when `RiftforgeCrafting` offers `shatter`/`corrupt`, the window asks for Confirm with the rules' preview. The splinter must be named `CorruptionAffixSplinter…`.
-- **Claude's choices** (easy to change): tab label "Forge"; gear goes in by dragging it from the Bag onto the slot; the slot empties when the inventory closes; the bench's layout (heading, slot 1.5× a bag cell, name, pick, result, Remove) is Claude's, the rest is the game's own panel.
-- Not checked against EAQS/AB's DLLs (not in the cloud session); `docs/mod-compatibility.md` lists what to test.
+- **Multiplayer:** not tried (Krogon's choice): `PLAYTEST.md` → Session 2, 2h.
+- **Waiting for #29:** Shatter (greyed, says so), shard corruption, the Affix Splinter item (must be named `CorruptionAffixSplinter…`; it then goes to Splinters). Shatter and corrupt will ask in the game's Yes/No box with the rules' preview. Checklist F.
+- Not checked against EquipmentAndQuickSlots/AdventureBackpacks' DLLs; Krogon played with both loaded.
+- Smaller limits: `FEATURES.md` → Inventory tabs, Riftforge workspace.
 
 ## Decisions
 
@@ -76,23 +77,37 @@ Krogon's sixth look (2026-11-10, two screenshots): the Forge bench is "excellent
 
 29. **The hover tooltips everywhere** (bag, tabs, chests) use the same affix layout as the bench: rarity line, a little space, bulleted affixes with a hanging indent, resonant affixes green with a diamond, Corrupted/Mirrored centred.
 
+Krogon, closing the round (2026-11-10): "it looks good. well done. solid round. … testing is done, except multiplayer."
+
+30. **Multiplayer testing is left for later** (the group evening, `PLAYTEST.md` → Session 2, 2h).
+
+
 ## Playtest
 
-`docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. First look 2026-11-09: orbs work; the Forge window "looks very out of place", the tabs didn't fit (the Skills button), "Take out" → "Remove". All three addressed; Krogon wants the window's design right before the full checklist.
+`docs/playtests/claude-lucid-carson-hs5g89.md`: A–E passed 2026-11-10, after six rounds of look feedback (all recorded there). Multiplayer in `PLAYTEST.md` → Session 2, 2h; F waits for #29.
 
 ## Open questions for Krogon
 
-1. Corruption Shard confirmation (decision 13): Claude's recommendation is to be written into the brief; Krogon to confirm when #29 builds corruption.
+1. Where the skills panel's button or tab goes (decision 19: later).
+2. The Corruption shard's exact confirmation (decision 13): Claude recommends the risk preview plus Yes/No; settle when #29 builds it.
 
 ## Next steps
 
-1. Krogon's quick look at the three tweaks (the last look tweaks and the hover tooltips); then `/handoff` and a PR into `master`.
-2. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
+1. PR into `master`; Krogon merges; the coordinator raises Corruption and CraftingOverhaul.
+2. #29 (loot session): shard corruption, shattering, splinters against `docs/riftforge-ui-brief.md` §4; then checklist F.
+3. The group evening: Session 2, 2h.
 
 ## Checks
 
-Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 464 passed; Corruption builds against the stand-in game folder.
+- Build: PASS. `dotnet test CraftingOverhaul.Tests` 464 passed; Corruption and CraftingOverhaul build against the stand-in game folder (warnings only).
+- Version: gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul). This branch changed no version number.
+- Multiplayer sync: read in code, not tested. No new config, items or pieces; tabs are per player (character data); the Forge tab is local only.
+- Assets and names: PASS. Every new `$` token has an entry in `Texts.cs`; no new data files; mock-ups in `docs/images/`.
+- FEATURES.md: PASS (rows, sections, patch targets, changelog).
+- In-game: passed in Krogon's single-player play-test (2026-11-10): "it looks good. well done. solid round. … testing is done, except multiplayer."
 
 ## Merge notes
 
-Not ready: waiting for Krogon's quick look at the last tweaks (A–E passed). Gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.
+- **Ready to merge: yes.** Krogon's final play-test passed (multiplayer deliberately left for the group evening), no check failed, the latest `master` is in, everything pushed.
+- **Gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul).**
+- No other branch is open. Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`, `Corruption/Content/Texts.cs` and three design docs.

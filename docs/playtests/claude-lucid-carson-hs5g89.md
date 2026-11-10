@@ -112,5 +112,6 @@
 ### What changed after the feedback (sixth look)
 - Every item tooltip (hovering in the bag, the tabs, a chest) now ends with the same affix section as the bench, built by the same code: the rarity line, a little space, each affix behind a bullet with its wrapped lines indented, a resonant affix green with a diamond, Corrupted/Mirrored centred. Untested.
 
-### Final play-test
-- A–E passed (2026-11-10); the bench's look confirmed ("excellent"). Waiting for a quick look at the hover tooltip: hover a Rare item with a resonant affix, and a corrupted one, in the bag.
+### Final play-test (2026-11-10)
+- A–E passed; the bench confirmed ("excellent"); the hover tooltips confirmed: "it looks good. well done. solid round … testing is done, except multiplayer."
+- Multiplayer left for later by Krogon: `PLAYTEST.md` → Session 2, 2h. Part F waits for #29.

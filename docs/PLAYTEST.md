@@ -219,6 +219,12 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 2. **E3:** both wear the charm; A hits one → it attacks A only; the rest ignore both.
 3. **E4–E6:** A offers a corrupted deer trophy at Eikthyr; during the 12 s B offers a corrupted trophy, normal trophies and wood → one red Eikthyr, only A's corrupted trophy used. A normal summon with B's corrupted trophy during the delay → normal Eikthyr, B keeps it.
 
+**2h. Six inventory tabs and the Riftforge's Forge tab (2026-11-10; solo play-test passed, multiplayer left for later by Krogon).** Full solo steps in [`playtests/claude-lucid-carson-hs5g89.md`](playtests/claude-lucid-carson-hs5g89.md).
+1. **Each player:** open the inventory → six tabs (Bag · Currencies · Splinters · Maps · Runes · Essences); your own essences are in Essences, the counts the same as before the update. Nobody sees anyone else's tabs.
+2. **A and B at one Riftforge:** both open it and the Forge tab at the same time; each puts their own gear in the forge and uses an orb → each sees only their own gear and result; the orbs come from each player's own Currencies.
+3. **A** forges while **B** uses the Craft tab → B's recipe list is normal; A's Forge view stays as it is.
+4. **B** dies with orbs and essences; **B** takes all from the gravestone → back in B's Currencies and Essences; nothing ends up with A.
+
 ### Part 3: a rip run (about 45 minutes)
 
 On a dedicated server the rip request goes to the server and its answer comes back; alone this was all one game.
