@@ -215,6 +215,21 @@ namespace Corruption.Content
                     twin.gameObject.SetActive(false);
                 }
             }
+            // The Upgrade tab's item box (its frame holds the icon, name and quality hidden above): the frame goes too
+            // (Krogon, 2026-11-10: one empty box was left at the bottom).
+            if (gui.m_upgradeItemIcon && gui.m_upgradeItemName)
+            {
+                var box = CommonParent(gui.m_upgradeItemIcon.transform, gui.m_upgradeItemName.transform);
+                if (box && box != _descRegion && box.IsChildOf(_descRegion) && !Holds(box, gui))
+                {
+                    Twin(box)?.gameObject.SetActive(false);
+                }
+                var frame = gui.m_upgradeItemIcon.transform.parent;
+                if (frame && frame != _descRegion && frame.IsChildOf(_descRegion) && !Holds(frame, gui))
+                {
+                    Twin(frame)?.gameObject.SetActive(false);
+                }
+            }
             foreach (var part in new[] { gui.m_craftProgressPanel, gui.m_upgradeItemQualityArrow ? gui.m_upgradeItemQualityArrow.transform : null })
             {
                 var twin = Twin(part);
@@ -269,6 +284,10 @@ namespace Corruption.Content
             _result.fontSizeMax = _result.fontSize;
 
             var button = Twin(gui.m_craftButton);
+            if (bandTop > bandBottom)
+            {
+                ClearBand(bandBottom, bandTop, button);
+            }
             if (button)
             {
                 button.gameObject.SetActive(true);
@@ -288,6 +307,50 @@ namespace Corruption.Content
                     rt.pivot = new Vector2(1f, 0f);
                     rt.anchoredPosition = new Vector2(-12f, 12f);
                     _shatterTip = _shatter.GetComponent<UITooltip>();
+                }
+            }
+        }
+
+        /// <summary>Whether a part of the description holds something the Forge view uses (name, text, main button).</summary>
+        private static bool Holds(Transform part, InventoryGui gui)
+        {
+            return gui.m_recipeName && gui.m_recipeName.transform.IsChildOf(part) ||
+                   gui.m_recipeDecription && gui.m_recipeDecription.transform.IsChildOf(part) ||
+                   gui.m_craftButton && gui.m_craftButton.transform.IsChildOf(part);
+        }
+
+        /// <summary>
+        ///     Hides whatever else of the copied panel sits in the row where the cost slots were (an empty frame, a
+        ///     background tile), so only the result text is there. Never the main button, the name or the text, nor
+        ///     anything taller than the row (the panel's own background).
+        /// </summary>
+        private static void ClearBand(float bottom, float top, Transform button)
+        {
+            const float slack = 6f;
+            var corners = new Vector3[4];
+            foreach (var rt in _sheet.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (rt == _sheet || !rt.gameObject.activeSelf || rt == _result.rectTransform || rt.IsChildOf(_result.rectTransform) ||
+                    button && (button.IsChildOf(rt) || rt.IsChildOf(button)) ||
+                    _sheetName && _sheetName.transform.IsChildOf(rt) || _sheetText && _sheetText.transform.IsChildOf(rt))
+                {
+                    continue;
+                }
+                if (!rt.GetComponent<Graphic>())
+                {
+                    continue;
+                }
+                rt.GetWorldCorners(corners);
+                float yMin = float.MaxValue, yMax = float.MinValue;
+                foreach (var corner in corners)
+                {
+                    float y = _sheet.InverseTransformPoint(corner).y;
+                    yMin = Mathf.Min(yMin, y);
+                    yMax = Mathf.Max(yMax, y);
+                }
+                if (yMin >= bottom - slack && yMax <= top + slack)
+                {
+                    rt.gameObject.SetActive(false);
                 }
             }
         }
@@ -375,6 +438,7 @@ namespace Corruption.Content
             rect.pivot = new Vector2(0.5f, 1f);
             rect.anchoredPosition = new Vector2(0f, y);
             rect.localScale = new Vector3(SlotScale, SlotScale, 1f);
+            AddFrame(gui, rect, y);
             _slot = go.GetComponent<InventoryElement>();
             if (_slot)
             {
@@ -393,6 +457,48 @@ namespace Corruption.Content
                 input.m_onRightDown = (Action<UIInputHandler>)Delegate.Combine(input.m_onRightDown,
                     new Action<UIInputHandler>(_ => Safe.Run("use the forge slot", () => onSlotClick(false))));
             }
+        }
+
+        /// <summary>
+        ///     A frame round the forge slot (Krogon, 2026-11-10: "give this item box a nice border"): the station's own
+        ///     selected-tab art, the bronze-edged frame the FORGE tab shows, sliced to the slot's size.
+        /// </summary>
+        private static void AddFrame(InventoryGui gui, RectTransform slot, float y)
+        {
+            var tab = gui.m_tabCraft;
+            var source = tab ? tab.image : null;
+            Sprite sprite = null;
+            if (tab && tab.transition == Selectable.Transition.SpriteSwap && tab.spriteState.disabledSprite)
+            {
+                sprite = tab.spriteState.disabledSprite;
+            }
+            else if (source)
+            {
+                sprite = source.sprite;
+            }
+            if (!sprite)
+            {
+                return;
+            }
+            const float margin = 8f;
+            var size = slot.rect.size * SlotScale + new Vector2(2f * margin, 2f * margin);
+            var frame = new GameObject("ForgeSlotFrame", typeof(RectTransform)).GetComponent<RectTransform>();
+            frame.SetParent(_bench, false);
+            frame.anchorMin = frame.anchorMax = new Vector2(0.5f, 1f);
+            frame.pivot = new Vector2(0.5f, 1f);
+            frame.anchoredPosition = new Vector2(0f, y + margin);
+            frame.sizeDelta = size;
+            frame.SetSiblingIndex(slot.GetSiblingIndex());
+            var image = frame.gameObject.AddComponent<Image>();
+            image.sprite = sprite;
+            image.type = sprite.border.sqrMagnitude > 0f ? Image.Type.Sliced : Image.Type.Simple;
+            image.color = source ? source.color : Color.white;
+            if (source)
+            {
+                image.pixelsPerUnitMultiplier = source.pixelsPerUnitMultiplier;
+                image.material = source.material;
+            }
+            image.raycastTarget = false;
         }
 
         /// <summary>A copy of one of the game's buttons with our label and click, and nothing of the original's behaviour.</summary>

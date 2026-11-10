@@ -684,7 +684,8 @@ namespace Corruption.Content
                 }
                 else
                 {
-                    text.Append(header);
+                    // A little space between the rarity line and the affixes (Krogon, 2026-11-10).
+                    text.Append(header).Append("\n<size=45%> </size>");
                     for (int i = 0; i < lines.Count; i++)
                     {
                         text.Append('\n');

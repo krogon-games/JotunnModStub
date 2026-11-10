@@ -4,7 +4,7 @@
 
 ## Stage
 
-Waiting for Krogon's playtest.
+Waiting for Krogon's playtest (final quick look at three tweaks; A–E passed 2026-11-10).
 
 ## Purpose
 
@@ -12,11 +12,11 @@ UI round for [#30](https://github.com/krogon-games/JotunnModStub/issues/30): six
 
 ## Done
 
-Nothing play-tested yet.
+Confirmed by Krogon in single player (2026-11-10, checklist A–E): the six inventory tabs (order, contents, nothing lost, essences moved to Essences, fixed currency places, Splinters and Runes refusing other items, death and gravestone, relog) and the Forge tab with orbs (put gear in, pick and use, Shift, Escape, refusals, Remove, closing, away from the Riftforge).
 
 ## Half-done and known issues
 
-Built 2026-11-09, untested in game (compiled against the game's decompiled 1.0 code; 460 tests pass):
+Built 2026-11-09 and play-tested 2026-11-10 (see Done); only the three look tweaks after the play-test are untested (460 tests pass):
 - **Six tabs** (`FEATURES.md` → Inventory tabs): Bag · Currencies · Splinters · Maps · Runes · Essences. Currencies and Essences have fixed cells (`FixedLayout`, tested), dimmed with 0 when empty, no capacity lost (extra stacks use free cells, then the empty homes). Essences move out of Currencies on load and every half second (only between usable tabs, when they fit). Runes has no inventory; its save key is never read or written. New save keys `corruption_tab_splinters`, `corruption_tab_essences`; the old two unchanged. Test command `co_tabs_misplace`.
 - **Forge tab** (`FEATURES.md` → Riftforge workspace): one forge slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here. Krogon's first look: orbs work, the look didn't fit → **redone** from the game's own panel parts (bench where the recipe list is; a copy of the game's description panel with the gear's tooltip, a cost slot for the pick and Shatter as its main button; the game's Yes/No box for confirmations); "Remove" button. Second look (2026-11-10): "much better"; then **affix block moved under the slot** in large text, stats on the right at the game's size without the icon, **cost slots replaced by a short full-width result** (headline + changed lines), the changed line highlighted 6 s. Untested. Mock-ups `docs/images/riftforge_workspace*.png`.
 - **Skills button removed** from above the inventory (CraftingOverhaul); the skills panel opens with K.
@@ -74,9 +74,8 @@ Krogon's third look and full play-test (2026-11-10, two screenshots, one annotat
 
 ## Next steps
 
-1. Krogon checks the Forge window's second redo (checklist D1–D6); then the full play-test (A–E) and fixes.
-2. Final play-test, then `/handoff` and a PR into `master`.
-3. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
+1. Krogon's quick look at the three tweaks (the last box, the slot frame, the spacing); then `/handoff` and a PR into `master`.
+2. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
 
 ## Checks
 
@@ -84,4 +83,4 @@ Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul
 
 ## Merge notes
 
-Not ready: waiting for Krogon's play-test. Gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.
+Not ready: waiting for Krogon's quick look at the last three tweaks (A–E passed). Gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.
