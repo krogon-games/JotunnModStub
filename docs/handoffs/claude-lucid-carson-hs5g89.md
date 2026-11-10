@@ -72,6 +72,10 @@ Krogon's fifth look (2026-11-10, screenshot):
 
 28. **Bullet and diamond closer in size; the whole resonant affix green**, not only its diamond; **"Corrupted" centred.**
 
+Krogon's sixth look (2026-11-10, two screenshots): the Forge bench is "excellent".
+
+29. **The hover tooltips everywhere** (bag, tabs, chests) use the same affix layout as the bench: rarity line, a little space, bulleted affixes with a hanging indent, resonant affixes green with a diamond, Corrupted/Mirrored centred.
+
 ## Playtest
 
 `docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. First look 2026-11-09: orbs work; the Forge window "looks very out of place", the tabs didn't fit (the Skills button), "Take out" → "Remove". All three addressed; Krogon wants the window's design right before the full checklist.
@@ -82,7 +86,7 @@ Krogon's fifth look (2026-11-10, screenshot):
 
 ## Next steps
 
-1. Krogon's quick look at the three tweaks (the last box, the slot frame, the spacing, the affix bullets); then `/handoff` and a PR into `master`.
+1. Krogon's quick look at the three tweaks (the last look tweaks and the hover tooltips); then `/handoff` and a PR into `master`.
 2. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
 
 ## Checks

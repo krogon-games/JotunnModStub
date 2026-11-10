@@ -677,27 +677,16 @@ namespace Corruption.Content
             var text = new System.Text.StringBuilder();
             Safe.Run("show the forge gear's affixes", () =>
             {
-                var lines = LootTooltip.Block(_target, _target.m_quality, _target.m_worldLevel, out string header);
-                var loot = Loot.Of(_target);
-                if (lines.Count == 0)
+                // The same section the hover tooltips show, the lines the last use changed highlighted.
+                string section = LootTooltip.Section(_target, _target.m_quality, _target.m_worldLevel, highlight ? _changed : null);
+                if (section.Length == 0)
                 {
-                    text.Append("<color=#B0A898>No affixes yet</color>");
+                    text.Append("<color=#B0A898>No affixes yet</color>").Append(ForgeRules.CentredMarks(LootTooltip.LocksOf(_target)));
                 }
                 else
                 {
-                    // A little space between the rarity line and the affixes (Krogon, 2026-11-10).
-                    text.Append(header).Append("\n<size=45%> </size>");
-                    for (int i = 0; i < lines.Count; i++)
-                    {
-                        text.Append('\n');
-                        bool changed = highlight && _changed.Contains(i);
-                        bool resonant = loot != null && i < loot.Lines.Count && loot.Lines[i].Resonant;
-                        string line = ForgeRules.BulletLine(lines[i], resonant);
-                        // The changed line stands out (a soft band and bold) until the highlight runs out.
-                        text.Append(changed ? "<mark=#E8C66A40><b>" + line + "</b></mark>" : line);
-                    }
+                    text.Append(section);
                 }
-                text.Append(ForgeRules.CentredMarks(LootTooltip.LocksOf(_target)));
             });
             ForgeView.SetBench(TargetName(), Localization.instance.Localize(text.ToString()));
         }
