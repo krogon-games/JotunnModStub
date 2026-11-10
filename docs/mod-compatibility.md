@@ -106,3 +106,5 @@ AdventureBackpacks' sizes are its own synced settings, not our code. The group p
 4. Open a crafting station with the backpack panel open: the search bar and categories should still line up.
 5. With EAQS: the character sheet (`PLAYTEST.md` → Session 1d) replaces EAQS's panel; check the layout with a chest and the backpack open.
 6. With EAQS: put two talismans in the Talisman slots and a vanilla trinket in the Trinket slot; creatures of both families ignore you, the trinket works, and a friend's game agrees (their creatures ignore you too). Try putting the same talisman in both slots: it should refuse.
+
+**Shattering and EquipmentAndQuickSlots (2026-11-10, #29).** No new patch. Shattering counts the shattered item's own cell as free only when the item sits in the Bag grid (`RiftforgeCrafting.InBagGrid`: its grid position is inside the bag's width and height and that cell holds it). Not checked against EAQS's code how it reports an equipped item; if a splinter can't be stored after all, the item is put back and nothing is shattered. To test: shatter a piece you are wearing with the bag otherwise full.

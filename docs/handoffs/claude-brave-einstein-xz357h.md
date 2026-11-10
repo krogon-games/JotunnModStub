@@ -1,10 +1,10 @@
 # Handoff: `claude/brave-einstein-xz357h`
 
-**Written:** 2026-11-10 (round start; `/handoff` rewrites this at the end).
+**Written:** 2026-11-10, mid-round (`/handoff` rewrites this at the end). Everything pushed; no PR.
 
 ## Stage
 
-Building (the splinter models wait for Krogon's pick of a draft).
+Waiting for Krogon's playtest (and his pick of a splinter design).
 
 ## Purpose
 
@@ -16,7 +16,13 @@ Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-Nothing built yet.
+Built 2026-11-10, **not tested in game**:
+- **Shard corruption, shattering, Affix Splinters** in the Forge tab, with Krogon's rules below; `co_craft corrupt / shatter / splinter`.
+- **Corrupted affixes beyond the caps**; tooltips show each cap and what worn gear uses.
+- **"Don't warn me again"** tickboxes (settings `10 - Riftforge`).
+- **The splinter's look is a placeholder** (tinted vanilla Crystal). Drafts: `docs/images/splinters_draft.png`, `splinters_draft2.png` (`tools/draft_splinters.py`).
+
+Claude's interim choices (easy to change): a shard's twin-completing affix rolls the resonant range (the brief's "keep existing behaviour"); a Magic item with 0 affixes can't be shattered; splinter weight 0.2; resistance never above 100%; Skald's and Fenrir buffs stay under the cap even from a corrupted line; the cap line sits under the affix in tooltips.
 
 ## Decisions
 
@@ -49,7 +55,7 @@ Krogon's second answers (2026-11-10):
 
 ## Playtest
 
-Nothing to test yet. The checklist will be `docs/playtests/claude-brave-einstein-xz357h.md`.
+`docs/playtests/claude-brave-einstein-xz357h.md`: checklist A–H written 2026-11-10 (shattering, full storage, splinters, shards, tickboxes, caps, reconnect). No feedback yet.
 
 ## Open questions for Krogon
 
@@ -59,14 +65,18 @@ Nothing to test yet. The checklist will be `docs/playtests/claude-brave-einstein
 
 ## Next steps
 
-1. Splinter design drafts for Krogon to pick from.
-2. Build the rules (pure, tested), then the Forge tab's operations.
-3. Docs and the play-test checklist.
+1. Krogon picks or corrects the splinter design; then the real models, icons and the kind/colour table.
+2. Krogon's play-test (checklist A–H); fix what it finds.
+3. `/handoff`, then a PR into `master`.
 
 ## Checks
 
-Not run yet.
+- Build: PASS (`dotnet test CraftingOverhaul.Tests` 486 passed; Corruption builds against the stand-in game folder).
+- In-game: needs Krogon's playtest.
+- The rest: run by `/handoff`.
 
 ## Merge notes
 
-- Ready to merge: no (nothing built).
+- Ready to merge: no (not play-tested; splinter models not chosen).
+- **Gameplay changed: version bump needed at merge (Corruption).** This branch changed no version number.
+- Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/riftforge-ui-brief.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`.

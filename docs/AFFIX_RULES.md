@@ -297,6 +297,7 @@ Some stats exist as both a prefix and a suffix: **twin mods**. When an item roll
 - **Orbs:**
   - A Divine Orb rerolls the value within the resonant range.
   - Annulment can remove one half, which ends the resonance; the remaining half re-rolls within its own range.
+- **Splinters (user, 2026-11-10):** a splinter that completes a twin doesn't roll: the line is the two exact values added, plus the 25% bonus (14 + 18 → 40; two top halves reach the resonant top). A shard's corrupted affix that completes a twin rolls the resonant range, like an orb.
 
 ### Showing ranges
 
@@ -321,7 +322,7 @@ Twin families (resonate when both halves roll): fire, frost, lightning, poison a
 
 ### Caps and guards
 
-The most a stat can gain from all affixes together. **Numbers are in [`Corruption/Data/affix_caps.csv`](../Corruption/Data/affix_caps.csv)**; each cap lists the affix families it limits. Capped today: movement speed (raised by the user on 2026-10-28, to tune down later if needed), attack speed, pickup radius, each resistance, life steal. A shard's corrupted affix is not capped: it adds on top of the capped total (user, 2026-10-28; [Corrupted gear](corruption-design.md#corrupted-gear)).
+The most a stat can gain from all affixes together. **Numbers are in [`Corruption/Data/affix_caps.csv`](../Corruption/Data/affix_caps.csv)**; each cap lists the affix families it limits. Capped today: movement speed (raised by the user on 2026-10-28, to tune down later if needed), attack speed, pickup radius, each resistance, life steal. A shard's corrupted affix is not capped: it adds on top of the capped total (user, 2026-10-28; [Corrupted gear](corruption-design.md#corrupted-gear)). **Built 2026-11-10:** the cap counts the ordinary affixes of everything worn; tooltips show each cap and how much of it worn gear uses ("Cap 35%: 28% worn"; user, 2026-11-10).
 
 - **No item downsides**, in line with "loot never carries downsides".
 - **Carry weight** stays a boost, not a bypass: there's no "unlimited" affix, so the "boosts, not bypasses" balance rule holds.
