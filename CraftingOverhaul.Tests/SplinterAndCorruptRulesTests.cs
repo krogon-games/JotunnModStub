@@ -355,17 +355,23 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void ACorruptedAffixThatCompletesATwinResonatesLikeARolledTwin()
+        public void ACorruptedAffixThatCompletesATwinAddsBothValuesPlusTheBonus()
         {
             var table = new[] { Affix("p_health", "prefix", "health", 5, 20), Affix("s_health", "suffix", "health", 5, 20) }
                 .ToDictionary(a => a.Id);
-            // The pick lands on the suffix half (second of two equal weights); the merged line rolls its top.
+            // The pick lands on the suffix half (second of two equal weights), which rolls 20 (its top):
+            // (14 + 20) × 1.25 = 42.5 → 43 (health rolls in whole numbers). Krogon, 2026-11-10: like a splinter.
             var result = CorruptRules.Apply(Item("magic", Line("p_health", 14)), table, Outcomes(), Sequence(0.9, 0.75, 0.999));
             Assert.True(result.CompletedTwin);
             var line = Assert.Single(result.Loot.Lines);
             Assert.True(line.Resonant);
             Assert.True(line.Corrupted);
-            Assert.Equal(50f, line.Value);                               // the resonant range's top, not 14 + something
+            Assert.Equal(new[] { "p_health", "s_health" }, line.Ids);
+            Assert.Equal(43f, line.Value);
+
+            // The bottom roll: (14 + 5) × 1.25 = 23.75 → 24. It never goes below what the item had.
+            var low = CorruptRules.Apply(Item("magic", Line("p_health", 14)), table, Outcomes(), Sequence(0.9, 0.75, 0.0));
+            Assert.Equal(24f, low.Loot.Lines.Single().Value);
 
             // The same half again: no twin, its own corrupted line.
             var same = CorruptRules.Apply(Item("magic", Line("p_health", 14)), table, Outcomes(), Sequence(0.9, 0.25, 0.0));

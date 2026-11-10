@@ -22,7 +22,7 @@ Built 2026-11-10, **not tested in game**:
 - **"Don't warn me again"** tickboxes (settings `10 - Riftforge`).
 - **The splinter's look is a placeholder** (tinted vanilla Crystal). Drafts: `docs/images/splinters_draft.png`, `splinters_draft2.png` (`tools/draft_splinters.py`).
 
-Claude's interim choices (easy to change): a shard's twin-completing affix rolls the resonant range (the brief's "keep existing behaviour"); a Magic item with 0 affixes can't be shattered; splinter weight 0.2; resistance never above 100%; Skald's and Fenrir buffs stay under the cap even from a corrupted line; the cap line sits under the affix in tooltips.
+Claude's interim choices (easy to change): a Magic item with 0 affixes can't be shattered; splinter weight 0.2; resistance never above 100%; Skald's and Fenrir buffs stay under the cap even from a corrupted line; caps aren't shown anywhere until #60's stats sheet (decision 21).
 
 ## Decisions
 
@@ -65,9 +65,7 @@ Krogon's third answers (2026-11-10):
 
 ## Open questions for Krogon
 
-1. A shard's corrupted affix that completes a twin: keep today's fresh roll in the resonant range (Claude builds this, as the brief says), or keep the old value and add?
-2. The second splinter draft (rough lumps): which shapes to keep or change.
-3. Where the caps are shown (Claude builds them into the item tooltip unless told otherwise).
+None open.
 
 ## Next steps
 

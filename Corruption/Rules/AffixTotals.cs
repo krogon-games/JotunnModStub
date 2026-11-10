@@ -34,7 +34,10 @@ namespace Corruption.Rules
             return Cap(ordinary, family, caps) + Math.Max(0f, corrupted);
         }
 
-        /// <summary>How close worn gear is to one cap (Krogon, 2026-11-10: players see each cap and how close they are).</summary>
+        /// <summary>
+        ///     How close worn gear is to one cap (Krogon, 2026-11-10: players see each cap and how close they are). Not
+        ///     shown in tooltips (Krogon, 2026-11-10: too crowded); for the detailed stats sheet, issue #60.
+        /// </summary>
         public sealed class CapProgress
         {
             public float Max;

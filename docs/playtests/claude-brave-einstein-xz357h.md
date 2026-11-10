@@ -46,6 +46,7 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
    - [ ] **Destroyed:** the item is gone, the slot empties, the result says "Destroyed: the shard consumed …".
    - [ ] **Unchanged:** the result says **"Corrupted and locked; no affix added."** (not "no change"); the item shows a red centred **Corrupted**.
    - [ ] **Corrupted affix:** one extra **red** line ending in "(corrupted)", highlighted for a few seconds; the item shows **Corrupted**. A full Rare has 5 lines.
+   - [ ] (Rare luck, skip if not seen) If the corrupted affix is the other half of a twin the item has, the two merge into one resonant line worth **more** than the item's half: the two added, plus a quarter.
 4. [ ] On a corrupted item: an orb → "Corrupted items can't be changed"; a shard → "Already corrupted"; a splinter → refused; Shatter is grey ("Uniques and corrupted items can't be shattered").
 5. [ ] `spawn SwordBronze`, corrupt it until it gets an affix → it stays a normal (white) item with one red corrupted line.
 6. [ ] **Mirror:** use a Mirror of Kalandra on a corrupted item → the copy appears. On the **copy**: a shard, a splinter and Shatter are all refused ("Mirrored items can't be changed").
@@ -57,9 +58,8 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 4. [ ] Quit to the menu and come back → both are still off.
 5. [ ] To get the warnings back: BepInEx config `com.krogongames.corruption.cfg` (or the in-game config manager) → section `10 - Riftforge` → set `WarnBeforeCorrupting` and `WarnBeforeShattering` to `true`.
 
-#### F. Caps (about 3 minutes)
-1. [ ] Hover an item with a **movement speed**, **resistance**, **attack speed**, **pickup** or **life steal** affix → under that affix a small grey line: "Cap 35%: X% worn" (X = what you're wearing now). Equip the item → X goes up.
-2. [ ] If you get a corrupted affix of a capped stat (rare; skip if not): the line adds ", +N% corrupted beyond the cap".
+#### F. Tooltips stay short (1 minute)
+1. [ ] Hover an item with a movement speed, resistance, attack speed, pickup or life steal affix → no extra "Cap …" line (you asked for that; caps come with the stats sheet, issue #60).
 
 #### G. Reconnect and storage (about 4 minutes)
 1. [ ] With some splinters in Splinters, one corrupted item and one twin-completed item: log out to the menu and back in → everything is as it was (same numbers, red corrupted line, Corrupted mark, splinters in their tab).

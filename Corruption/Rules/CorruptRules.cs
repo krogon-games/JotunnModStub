@@ -22,7 +22,7 @@ namespace Corruption.Rules
         /// <summary>The corrupted line that was added, or the resonant line it completed (affix outcome only).</summary>
         public LootItem.Line Line;
 
-        /// <summary>Whether the corrupted affix completed a twin and rerolled the merged line.</summary>
+        /// <summary>Whether the corrupted affix completed a twin (the two values added, plus 25%).</summary>
         public bool CompletedTwin;
     }
 
@@ -30,7 +30,8 @@ namespace Corruption.Rules
     ///     Corrupting gear with a Corruption shard at the Riftforge (corruption-design.md → Corrupted gear; issue #29):
     ///     which items take it, the risk shown before confirming, and the three outcomes (chances from
     ///     <c>corruption_outcomes.csv</c>). The corrupted affix rolls from the item's normal pool, on top of the normal
-    ///     limit, may repeat a family, and resonates like a rolled twin when it completes one. Every surviving outcome
+    ///     limit, may repeat a family, and when it completes a twin the two values are added with the resonance bonus on
+    ///     top (Krogon, 2026-11-10: as a splinter does). Every surviving outcome
     ///     locks the item. No game dependencies, so it is unit-tested.
     /// </summary>
     internal static class CorruptRules
@@ -127,10 +128,11 @@ namespace Corruption.Rules
             LootItem.Line line;
             if (twin != null)
             {
-                // Resonates like a rolled twin (Krogon, 2026-10-28): the merged line rolls in the resonant range.
+                // Like a splinter (Krogon, 2026-11-10): the corrupted half rolls its own value, then the two values are
+                // added and the resonance bonus (+25%) goes on top. The item's half keeps its value; nothing rerolls.
+                float rolled = AffixRoller.RollValue(affix.Min, affix.Max, LootItem.Decimals(affix), random);
                 twin.Ids = affix.IsPrefix ? new[] { affix.Id, twin.Ids[0] } : new[] { twin.Ids[0], affix.Id };
-                LootItem.Range(twin, affixes, out float min, out float max);
-                twin.Value = AffixRoller.RollValue(min, max, LootItem.Decimals(twin, affixes), random);
+                twin.Value = SplinterRules.ResonantSum(twin.Value, rolled, LootItem.Decimals(twin, affixes));
                 twin.Corrupted = true;
                 line = twin;
                 result.CompletedTwin = true;

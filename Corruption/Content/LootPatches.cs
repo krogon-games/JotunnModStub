@@ -117,7 +117,6 @@ namespace Corruption.Content
     internal static class LootTooltip
     {
         private const string InactiveColor = ForgeRules.InactiveColor;
-        private const string CapColor = "#B0A898";
 
         /// <summary>
         ///     While true, tooltips leave out the affix block: the Riftforge's Forge tab shows the affixes in their own
@@ -173,7 +172,6 @@ namespace Corruption.Content
             string color = Loot.ColorFor(loot.Rarity);
             header = "<color=" + color + ">" + (loot.Rarity == "rare" ? "Rare " + Localization.instance.Localize(item.m_shared.m_name)
                          : loot.Rarity == "normal" ? "Normal" : "Magic") + "</color>";
-            var worn = Loot.Equipped(Player.m_localPlayer);
             foreach (var line in loot.Lines)
             {
                 bool active = Loot.Affixes.TryGetValue(line.Ids[0], out var affix) && Loot.ActiveEffects.Contains(affix.Effect);
@@ -182,12 +180,7 @@ namespace Corruption.Content
                 string lineColor = !active ? InactiveColor : line.Corrupted ? RiftforgeCrafting.CorruptedColor : color;
                 string text = "<color=" + lineColor + ">" + LootItem.LineText(line, Loot.Affixes, bonus) +
                               (line.Corrupted ? " (corrupted)" : "") + (active ? "" : " (not active yet)") + "</color>";
-                // Capped stats say their cap and how much of it worn gear uses now (Krogon, 2026-11-10).
-                var progress = affix != null ? AffixTotals.Progress(affix.Family, worn, Loot.Affixes, Loot.Caps) : null;
-                if (progress != null)
-                {
-                    text += "\n<size=85%><color=" + CapColor + ">" + progress.Text() + "</color></size>";
-                }
+                // No cap line here (Krogon, 2026-11-10: tooltips are crowded); caps go on a stats sheet (#60).
                 lines.Add(text);
             }
             return lines;
