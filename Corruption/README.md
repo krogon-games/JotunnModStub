@@ -58,6 +58,7 @@ Look settings (per player, not synced, restart to apply):
 | Look / RiftforgeTintStrength | 0.6 | 0 = Galdr table colours, 1 = fully the tint colour |
 
 ## Changelog
+- 0.6.0 (2026-11-10): UI round (#30): six inventory tabs (Bag, Currencies, Splinters, Maps, Runes, Essences; essences move to their own tab, currencies keep fixed places, Runes is an empty placeholder) and a Forge tab on the Riftforge panel (put gear in, right-click an orb, click to use it; Shatter greyed out until #29); loot tooltips everywhere use the Forge bench's bulleted affix layout.
 - 0.5.0 (2026-11-08): loot round (PR #58): ten currency orbs in the Currency tab with their Riftforge rules (tried with the `co_craft` test command; no drops yet; Jeweller's greyed out), Corrupted and Mirrored item lines, the Mirror of Kalandra can copy corrupted items; Stonecutter's and Resinous roll on each damaging gathering hit.
 - 0.4.0 (2026-11-08): review fixes (PR #57): a corrupted boss summon stays one corrupted boss when more offerings arrive during the spawn delay (one corrupted item used); a saved affix value that isn't a finite number is refused; the talisman's fight-back time survives a change of owner.
 - 0.3.0 (2026-11-08): gathering review fixes (PR #55): Seismic and Odin's Grace break the touching chunks on your own deposits too, Veinbreaker's count starts over whenever the tool is unequipped, only your own swings get your tool's on-harvest affixes; test command `co_own`.

@@ -55,6 +55,7 @@ Open the console with F5 while in a world (start the game with `-console` if it 
 - If two players take from the same unopened chest in the same instant, the last write wins.
 
 ## Changelog
+- 0.3.0 (2026-11-10): UI round (#30): the Skills button above the inventory is removed (it pushed the sixth inventory tab out of view); the skills panel still opens with its key (K).
 - 0.2.0 (2026-11-08): everything merged into `master` since 0.1.0, up to the code-review fixes (PR #53): one player at a time takes from a chest when crafting or building from chests.
 - Unreleased (now in 0.2.0): biome grouping now uses the game's own data instead of a built-in list; added `co_dump` and `co_biome` commands.
 - 0.1.0: First version: search, collapsible categories, type/biome grouping, crafting and building from nearby containers.
