@@ -60,6 +60,12 @@ Krogon's third answers (2026-11-10):
 20. **A shard's corrupted affix that completes a twin works like a splinter:** the two values are added, then the 25% bonus on top. No reroll. **Replaces** the rolled resonant range for this case (Claude's interim choice, and "resonates like a normal twin", 2026-10-28).
 21. **No cap lines in item tooltips** ("the tooltip is already overly crowded"). Caps and progress belong on a **detailed character sheet** with the character's stats (added damage, resistances, movement speed, attack speed, …), to be made later through its own GitHub issue. **Replaces** where decision 15 is shown; players still need to see caps, on that sheet.
 
+Krogon's brief for the Shatter confirmation (2026-11-10, during the play-test):
+
+22. **The Shatter confirmation gets its own structured dialog**, matching the Forge and the game's UI, rules unchanged. In order: title "Shatter item" (centred, the game's heading style); the target's icon and rarity-coloured name; "Cost: Free" as a small secondary detail; the warning "This permanently destroys the item." once, in the warning colour; "Potential splinters" as a two-column list (a wide affix column in the Forge's affix formatting with hanging indents, a narrow right-aligned chance column, chances from the rules); a short secondary explanation ("Each affix rolls independently; you may recover none." / "Recovered splinters keep their exact values."); buttons **Cancel** (left) and **Shatter** (right). Content left-aligned. Height from the content; a reserved footer for the buttons; text never overlaps controls; native fonts, wood background, borders and buttons; not everything bold.
+23. **Every shatter asks: the Shatter dialog has no "Don't warn me again".** **Replaces** decisions 10 and 13 for shattering (the shard's tickbox is unchanged).
+24. **The dialog is shown to Krogon before the polish counts as done**, with short and long affix descriptions, resonant lines and the most lines, checked for clipping, chance-column alignment and button separation.
+
 ## Playtest
 
 `docs/playtests/claude-brave-einstein-xz357h.md`: checklist A–H written 2026-11-10 (shattering, full storage, splinters, shards, tickboxes, caps, reconnect). No feedback yet.
