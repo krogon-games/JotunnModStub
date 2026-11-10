@@ -124,6 +124,12 @@ namespace Corruption.Content
             }
         }
 
+        /// <summary>The chance each affix line of a shattered item becomes a splinter, as the dialog shows it ("50%"), from shattering.csv.</summary>
+        public static string ShatterChanceText()
+        {
+            return _shatter == null ? "" : _shatter.SplinterChance.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + "%";
+        }
+
         public static bool IsShard(ItemDrop.ItemData item) => PrefabName(item) == ShardRules.ShardPrefab;
 
         public static void RegisterCommand()

@@ -502,7 +502,7 @@ namespace Corruption.Content
         }
 
         /// <summary>A copy of one of the game's buttons with our label and click, and nothing of the original's behaviour.</summary>
-        private static Button CopyButton(Button original, Transform parent, string label, Action onClick)
+        internal static Button CopyButton(Button original, Transform parent, string label, Action onClick)
         {
             if (!original)
             {
@@ -554,7 +554,7 @@ namespace Corruption.Content
 
         public static string UpperLike(string gameText, string label) => Rules.ForgeRules.UpperLike(gameText, label);
 
-        private static Image LargestImage(Transform root)
+        internal static Image LargestImage(Transform root)
         {
             Image best = null;
             float bestArea = 0f;

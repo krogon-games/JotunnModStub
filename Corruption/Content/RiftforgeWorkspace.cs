@@ -522,12 +522,40 @@ namespace Corruption.Content
                 return;
             }
             ClearPick();
-            if (!CorruptionConfig.WarnBeforeShattering.Value)
+            // Every shatter asks (Krogon, 2026-11-10): the warning and the recovery chances show each time.
+            if (!OpenShatterDialog())
             {
-                Run(option.Id, null);
-                return;
+                OpenConfirm(option, null);
             }
-            OpenConfirm(option, null);
+        }
+
+        /// <summary>
+        ///     The Shatter confirmation in its own dialog (<see cref="ShatterDialog" />): the gear's affix lines as the
+        ///     bench shows them, each with the recovery chance from the rules. False when it can't be built.
+        /// </summary>
+        private static bool OpenShatterDialog()
+        {
+            CloseConfirm();
+            var loot = Loot.Of(_target);
+            var lines = LootTooltip.Block(_target, _target.m_quality, _target.m_worldLevel, out _);
+            var rows = new List<string>();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                rows.Add(ForgeRules.BulletLine(lines[i], loot != null && i < loot.Lines.Count && loot.Lines[i].Resonant));
+            }
+            bool opened = ShatterDialog.Open(_gui, _target, TargetName(), rows, RiftforgeCrafting.ShatterChanceText(),
+                () =>
+                {
+                    ShatterDialog.Close();
+                    OnConfirm();
+                },
+                CloseConfirm);
+            if (opened)
+            {
+                _confirmOperation = ShatterRules.OperationId;
+                _confirmMaterial = null;
+            }
+            return opened;
         }
 
         /// <summary>
@@ -565,13 +593,16 @@ namespace Corruption.Content
                     OnConfirm();
                 }),
                 () => Safe.Run("cancel at the Riftforge", CloseConfirm), false));
-            Safe.Run("add the don't-warn tickbox", AddDontWarnRow);
+            if (!shatter)
+            {
+                Safe.Run("add the don't-warn tickbox", AddDontWarnRow);
+            }
         }
 
         /// <summary>
-        ///     The "Don't warn me again" tickbox under the box's text (Krogon, 2026-11-10): one for shards and one for
-        ///     shattering, each remembered on its own in this player's settings. It only counts when Yes is pressed;
-        ///     cancelling changes nothing. The warnings come back from the mod's settings (10 - Riftforge).
+        ///     The "Don't warn me again" tickbox under the shard box's text (Krogon, 2026-11-10), remembered in this
+        ///     player's settings. It only counts when Yes is pressed; cancelling changes nothing. The warning comes back
+        ///     from the mod's settings (10 - Riftforge). Shattering has none: it asks every time.
         /// </summary>
         private static void AddDontWarnRow()
         {
@@ -648,11 +679,10 @@ namespace Corruption.Content
             {
                 return;
             }
-            if (dontWarn)
+            if (dontWarn && id == CorruptRules.OperationId)
             {
-                // Remembered between sessions, each warning on its own.
-                var setting = id == ShatterRules.OperationId ? CorruptionConfig.WarnBeforeShattering : CorruptionConfig.WarnBeforeCorrupting;
-                setting.Value = false;
+                // Remembered between sessions. Shattering has no such choice: it asks every time.
+                CorruptionConfig.WarnBeforeCorrupting.Value = false;
             }
             if (material != null)
             {
@@ -666,6 +696,7 @@ namespace Corruption.Content
         {
             _confirmOperation = null;
             _confirmMaterial = null;
+            ShatterDialog.Close();
             PopOurs();
         }
 
@@ -1033,12 +1064,13 @@ namespace Corruption.Content
             /// <summary>Escape drops the pick (or closes the Yes/No box) instead of closing the inventory.</summary>
             private static void Prefix()
             {
-                if (!Active || (_pick == null && !_popupOpen) || !ZInput.GetKeyDown(KeyCode.Escape))
+                bool asking = _popupOpen || ShatterDialog.IsOpen;
+                if (!Active || (_pick == null && !asking) || !ZInput.GetKeyDown(KeyCode.Escape))
                 {
                     return;
                 }
                 _escapeFrame = Time.frameCount;
-                if (_popupOpen)
+                if (asking)
                 {
                     CloseConfirm();
                 }
@@ -1138,6 +1170,7 @@ namespace Corruption.Content
             private static void Postfix()
             {
                 ForgeView.Forget();
+                ShatterDialog.Close();
                 _gui = null;
                 _tabButton = null;
                 _failed = false;

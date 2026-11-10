@@ -15,8 +15,10 @@
 
 #### A. Shattering (about 8 minutes)
 1. [ ] Get 3–4 Rare and Magic items (`co_loot rare`, `co_loot magic`). Open the Riftforge → **Forge** tab. Drag a Rare item onto the forge slot → the **Shatter** button is lit.
-2. [ ] Press **Shatter** → a Yes/No box: the item's name "will be destroyed", "Cost: nothing", one line per affix starting with **50%**, and a **Don't warn me again** tickbox under the text. Press **No** → nothing changed, the item is still in the slot.
-3. [ ] Press **Shatter**, then **Yes** → the item is gone, the slot is empty, and the result says "Shattered …: N splinters (…)" or "… no splinters recovered". The inventory stays on the tab you were on.
+2. [ ] Press **Shatter** → the **Shatter item** dialog (compare `docs/images/shatter_dialog_preview.png`): title centred; the item's icon and coloured name; "Cost: Free"; "This permanently destroys the item." once, in red-orange; **Potential splinters** with each affix on the left (bullets, a green ◆ line if resonant, wrapped lines indented) and **50%** on the right in its own column; two small grey lines of explanation; **Cancel** left and **Shatter** right, clear of the text. No tickbox. Nothing clipped or overlapping. Press **Cancel** (or Escape) → nothing changed, the item is still in the slot.
+   - [ ] Try it with an item with a long affix (a parry or kill effect) and with a 4-affix Rare: still nothing clipped, the 50% column still lined up.
+   - [ ] If you play at a large UI scale: the whole dialog fits on screen.
+3. [ ] Press **Shatter**, then **Shatter** in the dialog → the item is gone, the slot is empty, and the result says "Shattered …: N splinters (…)" or "… no splinters recovered". The inventory stays on the tab you were on.
 4. [ ] Open the **Splinters** tab → one splinter per line the message listed, each with its own shape and colour (e.g. fire damage an orange spiky lump, max health a red drop; compare with `splinters_preview.png`). Drop one on the ground: same model, faintly glowing. Hover one → "Affix Splinter", the affix with its number and range, "Prefix" or "Suffix", and "Fits: …". The numbers match what the item had.
 5. [ ] Shatter two more items. Splinters never stack, even identical ones.
 6. [ ] Put a **Normal** item in the slot → Shatter is grey; its tooltip says "Only Magic and Rare items shatter".
@@ -26,7 +28,7 @@
 Splinters go to the Splinters tab first, then the Bag. The refusal needs **both** full.
 1. [ ] Fill the **Splinters** tab (32 cells): keep doing `co_loot rare` and shattering. (Long-winded; if you'd rather skip this section, say so and I'll add a test command that fills the tab.)
 2. [ ] Fill the **Bag** with junk so no cell is free, keeping one Rare item with 3 or 4 affixes in it. Put that item in the forge slot.
-3. [ ] Press **Shatter** → no box; the result says **"Make room for up to X splinters."** (X = the item's number of affix lines). The item is untouched.
+3. [ ] Press **Shatter** → no dialog; the result says **"Make room for up to X splinters."** (X = the item's number of affix lines). The item is untouched.
 4. [ ] A Magic item with **1** affix still shatters with everything full: its own bag cell counts as the one free place.
 5. [ ] Free enough cells → Shatter works again. No splinter ever lies on the ground.
 
@@ -51,12 +53,11 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 5. [ ] `spawn SwordBronze`, corrupt it until it gets an affix → it stays a normal (white) item with one red corrupted line.
 6. [ ] **Mirror:** use a Mirror of Kalandra on a corrupted item → the copy appears. On the **copy**: a shard, a splinter and Shatter are all refused ("Mirrored items can't be changed").
 
-#### E. "Don't warn me again" (about 3 minutes)
+#### E. "Don't warn me again" (shards only; about 2 minutes)
 1. [ ] In the shard's box, tick **Don't warn me again** and press **No** → next shard click still asks (the tick only counts with Yes).
-2. [ ] Tick it and press **Yes** → from now on a shard corrupts with one click, no box. **Shatter still asks** (its tickbox is separate).
-3. [ ] In the Shatter box, tick it and press Yes → Shatter now works with one press.
-4. [ ] Quit to the menu and come back → both are still off.
-5. [ ] To get the warnings back: BepInEx config `com.krogongames.corruption.cfg` (or the in-game config manager) → section `10 - Riftforge` → set `WarnBeforeCorrupting` and `WarnBeforeShattering` to `true`.
+2. [ ] Tick it and press **Yes** → from now on a shard corrupts with one click, no box. **Shatter still asks every time** (it has no tickbox).
+3. [ ] Quit to the menu and come back → the shard warning is still off.
+4. [ ] To get it back: BepInEx config `com.krogongames.corruption.cfg` (or the in-game config manager) → section `10 - Riftforge` → set `WarnBeforeCorrupting` to `true`.
 
 #### F. Tooltips stay short (1 minute)
 1. [ ] Hover an item with a movement speed, resistance, attack speed, pickup or life steal affix → no extra "Cap …" line (you asked for that; caps come with the stats sheet, issue #60).

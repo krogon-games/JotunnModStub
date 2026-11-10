@@ -58,7 +58,6 @@ namespace Corruption
         public static ConfigEntry<float> ShardTintStrength;
         public static ConfigEntry<bool> ShardCustomModel;
         public static ConfigEntry<bool> WarnBeforeCorrupting;
-        public static ConfigEntry<bool> WarnBeforeShattering;
         public static ConfigEntry<float> ShardGlowIntensity;
         public static ConfigEntry<float> ShardGlowRange;
         public static ConfigEntry<string> RiftforgeColor;
@@ -156,13 +155,11 @@ namespace Corruption
                           "weigh nothing, and still pay for crafting and drop into the gravestone. Off: the tabs are hidden and " +
                           "their contents kept (not lost) until they're turned on again."));
 
-            // Per player, not synced: each player's own choice, remembered between sessions (Krogon, 2026-11-10). The
-            // confirmation boxes' "Don't warn me again" tickboxes switch these off; switch them back on here.
+            // Per player, not synced: this player's own choice, remembered between sessions (Krogon, 2026-11-10). The
+            // shard box's "Don't warn me again" tickbox switches it off; switch it back on here. Shattering always asks.
             WarnBeforeCorrupting = config.Bind(RiftforgeSection, "WarnBeforeCorrupting", true,
                 "Ask before a Corruption shard is used on gear (it can destroy the item, and locks it otherwise). " +
                 "Off: a shard works with one click, like an orb.");
-            WarnBeforeShattering = config.Bind(RiftforgeSection, "WarnBeforeShattering", true,
-                "Ask before gear is shattered into Affix Splinters (the item is always destroyed). Off: Shatter works with one click.");
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",
