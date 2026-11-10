@@ -58,6 +58,12 @@ Krogon's second look (2026-11-10, two screenshots, one annotated): "much better,
 22. **The five empty boxes** under the details (the copied cost slots) are unclear: remove them and use the space (Claude: for the result message).
 23. **Remove the small icon** at the top of the right panel (it repeats the forge slot) and **delete the "Right-click an orb to pick it up" line**.
 
+Krogon's third look and full play-test (2026-11-10, two screenshots, one annotated): "full play-test (A–E) has been done, everything seems to work as intended." Asked:
+
+24. **The last empty box** at the bottom of the right panel must go.
+25. **Give the forge slot a nice border.**
+26. **Add some spacing** between the rarity line ("Rare Wood Shield") and the affix lines under it.
+
 ## Playtest
 
 `docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. First look 2026-11-09: orbs work; the Forge window "looks very out of place", the tabs didn't fit (the Skills button), "Take out" → "Remove". All three addressed; Krogon wants the window's design right before the full checklist.
