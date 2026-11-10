@@ -53,6 +53,12 @@ Krogon's second answers (2026-11-10):
 17. **A splinter that completes a twin gets the resonance bonus: (item's value + splinter's value) + 25%.** Example: Hale +14 and a splinter of the Bear +18 give one resonant line of +40 (32 + 25%). Still no random roll. "This rewards the player for saving shatters." **Replaces** decision 1's "no extra multiplier". An already-resonant splinter still transfers its exact value.
 18. **Splinter designs:** "shape by kind, colour by stat is a fantastic idea"; the shapes should be rough, organic lumps rather than clean cut crystals.
 
+Krogon's third answers (2026-11-10):
+
+19. **Splinter designs approved** (draft 2: rough organic lumps, one shape per kind of affix, one colour per stat). Build them.
+20. **A shard's corrupted affix that completes a twin works like a splinter:** the two values are added, then the 25% bonus on top. No reroll. **Replaces** the rolled resonant range for this case (Claude's interim choice, and "resonates like a normal twin", 2026-10-28).
+21. **No cap lines in item tooltips** ("the tooltip is already overly crowded"). Caps and progress belong on a **detailed character sheet** with the character's stats (added damage, resistances, movement speed, attack speed, …), to be made later through its own GitHub issue. **Replaces** where decision 15 is shown; players still need to see caps, on that sheet.
+
 ## Playtest
 
 `docs/playtests/claude-brave-einstein-xz357h.md`: checklist A–H written 2026-11-10 (shattering, full storage, splinters, shards, tickboxes, caps, reconnect). No feedback yet.
