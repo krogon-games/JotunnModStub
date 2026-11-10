@@ -157,7 +157,7 @@ namespace Corruption.Rules
             return other != null && other != affix && other.Family == affix.Family && other.IsPrefix != affix.IsPrefix;
         }
 
-        private static AffixTable.Affix WeightedPick(List<AffixTable.Affix> candidates, Func<double> random)
+        public static AffixTable.Affix WeightedPick(List<AffixTable.Affix> candidates, Func<double> random)
         {
             double total = candidates.Sum(a => (double)a.Weight);
             double roll = random() * total;
