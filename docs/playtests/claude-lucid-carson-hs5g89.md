@@ -29,11 +29,11 @@
 
 ### D. The Forge tab: put gear in, craft, take it out (about 10 minutes)
 1. [ ] Use the **Riftforge** (E) → besides Craft and Upgrade there's a third tab, **Forge**. At a workbench or forge there's **no** Forge tab.
-2. [ ] Click **Forge** → the station's recipe list and description give way to the **bench** on the left (a "Forge" heading, a large empty slot, a **Remove** button) and, on the right, a description panel like the Craft tab's that explains the three steps, with a greyed **Shatter** button where Craft would be. It should look like part of the station, not a box laid over it. Craft and Upgrade still work; clicking them brings the recipe list back exactly as it was.
-3. [ ] `spawn SwordBronze`. In the **Bag**, left-click the sword to pick it up, then click the forge slot → the sword's picture is in the slot, it's **still in your bag** (in its old cell), and the right-hand panel shows its icon, name and normal tooltip, in the same fonts as the Craft tab.
+2. [ ] Click **Forge** → the station's recipe list and description give way to the **bench** on the left (a "Forge" heading, a large empty slot, "Drag gear from your Bag here", a **Remove** button) and, on the right, a description panel like the Craft tab's that explains the three steps, with a greyed **Shatter** button where Craft would be, and **no** empty boxes above it. It should look like part of the station, not a box laid over it. Craft and Upgrade still work; clicking them brings the recipe list back exactly as it was.
+3. [ ] `co_loot rare SwordBronze`, then in the **Bag** left-click the sword to pick it up and click the forge slot → the sword's picture is in the slot and it's **still in your bag**. Under the slot: its name, then **its affixes** (the "Rare Bronze Sword" line and every affix with its range) in large, easy-to-read text. On the right: the name and the routine stats (weight, durability, damage…) at the **same size as in the Craft tab**, no small icon, no affix lines.
 4. [ ] Switch the inventory to **Currencies** → the slot and the tooltip stay visible. With the plain sword in, orbs that can't be used on it look **red** (e.g. Augmentation, Regal); orbs you have none of stay **dimmed with 0** (they look different).
-5. [ ] **Right-click** an Orb of Transmutation → it follows the cursor with your count, its cell is highlighted, the bench names it, the cost slot at the bottom of the right-hand panel shows it with "1" and how many you have, and a gold frame shows round the forge slot. Nothing is used yet.
-6. [ ] **Left-click the slot** → the sword becomes Magic (blue): the tooltip on the right updates **at once**, the result on the bench says what it gained, Transmutation's count goes down by 1, the pick is gone, the sword is still in the slot.
+5. [ ] Put a plain sword in (`spawn SwordBronze`; under the slot it says "No affixes yet"). **Right-click** an Orb of Transmutation → it follows the cursor with your count, its cell is highlighted, and a gold frame shows round the forge slot. Nothing is used yet.
+6. [ ] **Left-click the slot** → the sword becomes Magic (blue): its new affix appears under the slot, **highlighted** for a few seconds; under the stats on the right a short result reads like "Orb of Transmutation: now Magic, 1 affix added" with the new line in green, all on screen, nothing cut off; Transmutation's count goes down by 1, the pick is gone, the sword is still in the slot.
 7. [ ] Right-click **Augmentation**, then **hold Shift and left-click** the slot → one affix added and the pick **stays**; Shift-click again → refused "This item has no room for another affix", in red, and **no orb is used** (count unchanged).
 8. [ ] With a pick, right-click another orb → the pick changes to that orb. Press **Escape** → the pick is dropped and the **inventory stays open**. Press Escape again → the inventory closes normally.
 9. [ ] With a pick, left-click any item in a tab or the bag → only the pick is dropped (nothing picked up, moved or equipped). With no pick, everything in the inventory works as usual (equip, drag, split).
@@ -63,9 +63,22 @@
 - "I've tested a few orbs, they do work." The full checklist waits until the window's design is right.
 - "The button 'take out' can be renamed to 'remove'."
 
-### What changed after the feedback
+### What changed after the feedback (first look)
 - The Forge tab is rebuilt from the game's own crafting-panel parts: the station's recipe list and description are hidden while Forge is open and replaced, in the same places, by the bench (forge slot, picked orb, result, Remove) and a copy of the game's description panel (gear icon, name, tooltip in the game's fonts, the cost slot showing the picked orb, Shatter as the main button). The first version laid its own dark box over the station, the recipe list showed through it, and the tooltip used the game's capital-letter heading font.
 - The Shatter confirmation (for #29) uses the game's own Yes/No box.
 - "Take out" is now "Remove".
 - The Skills button above the inventory is gone (CraftingOverhaul); the skills panel still opens with K. All six tabs should now be visible.
 - Checklist D rewritten for the new look; nothing re-tested yet.
+
+### Your feedback (2026-11-10, second look, two screenshots, one annotated)
+- "It's much better, a lot more consistent." It feels good; Craft and Upgrade come back as before; all six tabs visible; "essences moved to their own tab".
+- The affixes need much stronger readability: larger text, more spacing, a predictable position; routine weapon stats can be secondary (annotated: move the affix block to the left panel; the stats at the same size as the other tabs).
+- The result message is cramped and cut off: give it a full-width area, shorten the wording, briefly highlight the changed affix; it must allow the next click at once.
+- The five empty boxes under the details are unclear; label them or use the space.
+- Annotated: remove the small icon at the top of the right panel; delete "Right-click an orb to pick it up".
+
+### What changed after the feedback (second look)
+- The affix block (rarity line, every affix with its value and range, the Corrupted/Mirrored marks) is under the forge slot in larger, spaced text, always in the same place. The right panel keeps the name and the routine stats only, at the game's own size, without the icon.
+- The five boxes were the game's cost slots, copied with the panel; they're gone. The result of the last use now sits there across the whole width: a short headline ("Regal Orb: now Rare, 1 affix added") and the changed lines (+ green, − red). The new or rerolled line is highlighted in the affix block for 6 seconds; nothing waits on it.
+- "Right-click an orb to pick it up" is gone from the bench (the right panel's steps still explain it while the forge is empty).
+- Checklist D3–D6 updated; nothing re-tested yet.

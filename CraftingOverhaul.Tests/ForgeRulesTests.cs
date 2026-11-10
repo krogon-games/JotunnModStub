@@ -62,5 +62,46 @@ namespace CraftingOverhaul.Tests
         {
             Assert.Equal(expected, ForgeRules.UpperLike(game, label));
         }
+
+        [Fact]
+        public void DiffFindsTheNewAndTheGoneLines()
+        {
+            ForgeRules.Diff(new[] { "a=1", "b=2" }, new[] { "a=1", "b=2", "c=3" }, out var added, out var removed);
+            Assert.Equal(new[] { 2 }, added);
+            Assert.Empty(removed);
+
+            ForgeRules.Diff(new[] { "a=1", "b=2", "c=3" }, new[] { "a=1", "c=3" }, out added, out removed);
+            Assert.Empty(added);
+            Assert.Equal(new[] { 1 }, removed);
+
+            // A reroll: the same affix with a new value is one added and one removed.
+            ForgeRules.Diff(new[] { "a=1", "b=2" }, new[] { "a=5", "b=2" }, out added, out removed);
+            Assert.Equal(new[] { 0 }, added);
+            Assert.Equal(new[] { 0 }, removed);
+        }
+
+        [Fact]
+        public void DiffCountsIdenticalLinesSeparately()
+        {
+            ForgeRules.Diff(new[] { "a=1" }, new[] { "a=1", "a=1" }, out var added, out var removed);
+            Assert.Equal(new[] { 1 }, added);
+            Assert.Empty(removed);
+            ForgeRules.Diff(null, null, out added, out removed);
+            Assert.Empty(added);
+            Assert.Empty(removed);
+        }
+
+        [Theory]
+        [InlineData("Regal Orb", "magic", "rare", 1, 0, "Regal Orb: now Rare, 1 affix added")]
+        [InlineData("Orb of Transmutation", "normal", "magic", 1, 0, "Orb of Transmutation: now Magic, 1 affix added")]
+        [InlineData("Divine Orb", "rare", "rare", 3, 3, "Divine Orb: 3 affixes rerolled")]
+        [InlineData("Orb of Annulment", "rare", "rare", 0, 1, "Orb of Annulment: 1 affix removed")]
+        [InlineData("Orb of Annulment", "rare", "rare", 1, 2, "Orb of Annulment: 1 affix rerolled, 1 affix removed")]
+        [InlineData("Exalted Orb", "rare", "rare", 0, 0, "Exalted Orb: no change")]
+        [InlineData("", "rare", "rare", 2, 0, "2 affixes added")]
+        public void TheHeadlineIsShort(string material, string before, string after, int added, int removed, string expected)
+        {
+            Assert.Equal(expected, ForgeRules.Summary(material, before, after, added, removed));
+        }
     }
 }

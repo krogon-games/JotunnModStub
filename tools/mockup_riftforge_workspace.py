@@ -23,6 +23,7 @@ OUT = M.OUT
 S = P.S
 GOLD, LIGHT, DIM, RED, GREEN = P.GOLD, P.LIGHT, P.LIGHT_DIM, P.RED, P.CAN_SPEND
 MAGIC = M.MAGIC
+RARE = M.RARE
 ORANGE = (255, 161, 60)
 TABS = ["Bag", "Currencies", "Splinters", "Maps", "Runes", "Essences"]  # no Skills button (removed 2026-11-09)
 # Currencies' fixed places: the shard, then the ten orbs in the design's order (FixedLayout / InventoryTabs.HomesOf).
@@ -82,54 +83,53 @@ def workspace(canvas, x, y, icons, confirm=False):
     d = ImageDraw.Draw(canvas)
     P.text(d, (x + 40 + 2 * 118 + 56, y + 77), "FORGE", 15, ORANGE, "mm")
     top = y + 104
-    # Bench: in the recipe list's own inset.
-    bw, bh = 210, h - 124
+    # Bench: in the recipe list's own inset: the forge slot, the gear's name, its affixes (Krogon, 2026-11-10).
+    bw, bh = 236, h - 124
     P.paste(canvas, P.sliced(P.art("inset"), bw, bh, 10), x + 16, top)
     d = ImageDraw.Draw(canvas)
     cx = x + 16 + bw / 2
-    P.text(d, (cx, top + 22), "Forge", 20, ORANGE, "mm")
-    M.slot(canvas, cx - 48, top + 44, 96, M.item_icon(), glow=None if confirm else (255, 240, 200))
+    P.text(d, (cx, top + 20), "Forge", 20, ORANGE, "mm")
+    M.slot(canvas, cx - 44, top + 38, 88, M.item_icon(), glow=None if confirm else (255, 240, 200))
     d = ImageDraw.Draw(canvas)
-    P.text(d, (cx, top + 160), "Vigorous Bronze Spear", 15, MAGIC, "mm")
-    P.text(d, (cx, top + 178), "of Embers", 15, MAGIC, "mm")
-    if confirm:
-        P.text(d, (cx, top + 214), "Right-click an orb to pick it up", 13, DIM, "mm")
-    else:
-        P.text(d, (cx, top + 210), "Regal Orb", 15, ORANGE, "mm")
-        P.text(d, (cx, top + 230), "Click the forge to use it", 13, DIM, "mm")
-    P.text(d, (cx, top + bh - 110), "Vigorous Bronze Spear of Embers", 13, GREEN, "mm")
-    P.text(d, (cx, top + bh - 92), "rerolled: +18% weapon damage;", 13, GREEN, "mm")
-    P.text(d, (cx, top + bh - 74), "+20% fire damage", 13, GREEN, "mm")
-    P.button(canvas, (x + 32, top + bh - 52, bw - 32, 38), "Remove")
-    # Description: the game's own panel, copied.
-    dx, dw = x + 238, w - 254
+    P.text(d, (cx, top + 146), "Grim Wail", 18, RARE, "mm")
+    ax, ay = x + 30, top + 172
+    P.text(d, (ax, ay), "Rare Bronze Sword", 16, RARE, "la")
+    affixes = [("+4% movement speed while in", "your hand [2–6]", False),
+               ("Parrying gives you and nearby", "allies +18% armour [10–30]", not confirm),
+               ("+31% of physical damage as", "lightning (+11) [10–50]", False)]
+    yy = ay + 30
+    for first, second, changed in affixes:
+        if changed:
+            band = Image.new("RGBA", (int((bw - 20) * S), int(46 * S)), (232, 198, 106, 64))
+            canvas.alpha_composite(band, (int((ax - 6) * S), int((yy - 4) * S)))
+            d = ImageDraw.Draw(canvas)
+        P.text(d, (ax, yy), first, 15, RARE, "la")
+        P.text(d, (ax, yy + 19), second, 15, RARE, "la")
+        yy += 50
+    P.button(canvas, (x + 36, top + bh - 52, bw - 40, 38), "Remove")
+    # Description: the game's own panel, copied, without its icon: name and the routine stats.
+    dx, dw = x + 262, w - 278
     P.paste(canvas, P.sliced(P.art("inset"), dw, bh, 10), dx, top)
-    P.paste(canvas, P.sized(M.item_icon(), 64, 64), dx + 14, top + 12)
     d = ImageDraw.Draw(canvas)
-    P.text(d, (dx + 90, top + 20), "Vigorous Bronze Spear", 19, MAGIC, "la")
-    P.text(d, (dx + 90, top + 44), "of Embers", 19, MAGIC, "la")
-    lines = [("A spear of bronze, tipped for hunting.", LIGHT, 14), ("", LIGHT, 8), ("One-handed", LIGHT, 14),
-             ("Weight: 1.0", LIGHT, 14), ("Durability: 200/200", LIGHT, 14), ("Pierce: 35", LIGHT, 14), ("", LIGHT, 8),
-             ("Magic", MAGIC, 15), ("+18% weapon damage (+6) [4–19]", MAGIC, 14), ("+20% fire damage (+7) [10–30]", MAGIC, 14)]
-    yy = top + 90
-    for text, colour, size in lines:
+    P.text(d, (dx + 16, top + 30), "Grim Wail", 24, RARE, "lm", title=True)
+    lines = ["Blood-drinker. A thirsty friend.", "", "One-handed", "Weight: 0.8", "Durability: 100% (199/200)",
+             "Slash: 35 (11–22)", "Lightning: 11 (3–7)", "Block armour: 12 (13)", "Parry bonus: 2x", "Knockback: 40", "Backstab: 3x"]
+    yy = top + 62
+    for text in lines:
         if text:
-            P.text(d, (dx + 16, yy), text, size, colour, "la")
-        yy += size + 8
-    # Cost slot (what one click uses) and the main button.
+            P.text(d, (dx + 16, yy), text, 14, LIGHT, "la")
+        yy += 21 if text else 10
+    # Where the cost slots were: the last result, across the whole width.
+    ry = top + bh - 126
     if not confirm:
-        M.slot(canvas, dx + 16, top + bh - 70, 56, icons["regal"], count=None)
-        d = ImageDraw.Draw(canvas)
-        P.text(d, (dx + 44, top + bh - 8), "Regal Orb (18)", 12, LIGHT, "mm")
-        P.text(d, (dx + 66, top + bh - 64), "1", 14, LIGHT, "ra")
-    P.button(canvas, (dx + dw - 150, top + bh - 52, 136, 38), "SHATTER", enabled=confirm)
+        P.text(d, (dx + 16, ry), "Regal Orb: now Rare, 1 affix added", 16, (200, 235, 160), "la")
+        P.text(d, (dx + 16, ry + 22), "+ Parrying gives you and nearby allies +18% armour", 15, (184, 240, 138), "la")
+    P.button(canvas, (dx + dw - 160, top + bh - 52, 146, 38), "SHATTER", enabled=confirm)
     if not confirm:
-        d = ImageDraw.Draw(canvas)
-        P.text(d, (dx + dw - 82, top + bh - 64), "Shattering comes with #29", 11, DIM, "mm")
         # The pick follows the cursor.
         ic = P.sized(icons["regal"], 40, 40)
-        P.paste(canvas, ic, cx + 30, top + 96)
-        P.badge(canvas, cx + 68, top + 134, 18, LIGHT)
+        P.paste(canvas, ic, cx + 30, top + 92)
+        P.badge(canvas, cx + 68, top + 130, 18, LIGHT)
         return
     # The game's own Yes/No box.
     bx, by, bw2, bh2 = x + 140, y + 170, 380, 230
@@ -138,9 +138,9 @@ def workspace(canvas, x, y, icons, confirm=False):
     P.paste(canvas, P.sliced(P.art("panel"), bw2, bh2, 20), bx, by)
     d = ImageDraw.Draw(canvas)
     P.text(d, (bx + bw2 / 2, by + 26), "Shatter", 20, ORANGE, "mm", title=True)
-    P.text(d, (bx + bw2 / 2, by + 62), "Vigorous Bronze Spear of Embers will be destroyed.", 13, RED, "mm")
+    P.text(d, (bx + bw2 / 2, by + 62), "Grim Wail will be destroyed.", 13, RED, "mm")
     P.text(d, (bx + bw2 / 2, by + 92), "Each line has a 50% chance to become a splinter:", 13, LIGHT, "mm")
-    P.text(d, (bx + bw2 / 2, by + 112), "50%  +18% weapon damage   ·   50%  +20% fire damage", 13, MAGIC, "mm")
+    P.text(d, (bx + bw2 / 2, by + 112), "50% for each of its 3 affix lines", 13, RARE, "mm")
     P.text(d, (bx + bw2 / 2, by + 136), "(chances from shattering.csv, through #29's rules)", 11, DIM, "mm")
     P.button(canvas, (bx + 40, by + bh2 - 54, 140, 36), "No")
     P.button(canvas, (bx + 200, by + bh2 - 54, 140, 36), "Yes")

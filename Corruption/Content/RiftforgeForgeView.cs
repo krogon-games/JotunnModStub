@@ -13,11 +13,12 @@ namespace Corruption.Content
     ///
     ///     - While Forge is open, the panel's two regions (the recipe list on the left, the item description on the
     ///       right) are hidden, not changed, and come back as they were when you leave the tab.
-    ///     - The right region is replaced by a <b>copy of the game's own description panel</b>: same background, icon,
-    ///       name, scrolling description text, cost slots and main button. It shows the gear in the forge (its normal
-    ///       tooltip), the picked orb in the first cost slot (what one click uses), and the main button is Shatter.
-    ///     - The left region becomes the bench: the forge slot (one of the bag's own cells, larger), what's in it and
-    ///       what's picked, a Remove button (a copy of the game's button) and the last result.
+    ///     - The right region is replaced by a <b>copy of the game's own description panel</b>: same background, name,
+    ///       description text and main button (Shatter). It shows the gear's routine stats (its tooltip without the
+    ///       affixes) at the game's own size, and, where the cost slots were, the result of the last use.
+    ///     - The left region becomes the bench: the forge slot (one of the bag's own cells, larger), the gear's name,
+    ///       its affix block in large, well-spaced text (what players read before every click), and a Remove button
+    ///       (a copy of the game's button). Krogon's second look, 2026-11-10.
     ///     - Text uses the game's description font. Nothing is drawn from scratch except the layout of the bench.
     ///
     ///     If the panel isn't laid out as expected (another mod rebuilt it), the tab isn't added and the log says why:
@@ -52,14 +53,12 @@ namespace Corruption.Content
         private static RectTransform _sheet;
         private static InventoryElement _slot;
         private static TMP_Text _caption;
-        private static TMP_Text _pickLine;
+        private static TMP_Text _affixes;
         private static TMP_Text _result;
         private static Button _remove;
 
-        private static Image _sheetIcon;
         private static TMP_Text _sheetName;
         private static TMP_Text _sheetText;
-        private static Transform[] _costs = new Transform[0];
         private static Button _shatter;
         private static UITooltip _shatterTip;
         private static string _lastSheet;
@@ -193,7 +192,12 @@ namespace Corruption.Content
             _sheet = (RectTransform)go.transform;
             Neutralise(go);
 
-            _sheetIcon = Twin(gui.m_recipeIcon)?.GetComponent<Image>();
+            // The icon repeats the forge slot (Krogon, 2026-11-10: remove it).
+            var icon = Twin(gui.m_recipeIcon);
+            if (icon)
+            {
+                icon.gameObject.SetActive(false);
+            }
             _sheetName = Twin(gui.m_recipeName)?.GetComponent<TMP_Text>();
             _sheetText = Twin(gui.m_recipeDecription)?.GetComponent<TMP_Text>();
 
@@ -220,16 +224,49 @@ namespace Corruption.Content
                 }
             }
 
-            var costs = new List<Transform>();
+            // The cost slots meant nothing here (Krogon, 2026-11-10: "what are these?"): they go, and the result of the
+            // last use takes their place, across the panel's whole width.
+            float bandTop = float.MinValue, bandBottom = float.MaxValue;
+            var corners = new Vector3[4];
             foreach (var requirement in gui.m_recipeRequirementList)
             {
-                var twin = requirement ? Twin(requirement.transform) : null;
-                if (twin)
+                var twin = requirement ? Twin(requirement.transform) as RectTransform : null;
+                if (!twin)
                 {
-                    costs.Add(twin);
+                    continue;
                 }
+                twin.GetWorldCorners(corners);
+                foreach (var corner in corners)
+                {
+                    float y = _sheet.InverseTransformPoint(corner).y;
+                    bandTop = Mathf.Max(bandTop, y);
+                    bandBottom = Mathf.Min(bandBottom, y);
+                }
+                twin.gameObject.SetActive(false);
             }
-            _costs = costs.ToArray();
+            _result = Text("Result", 16f, Good, TextAlignmentOptions.TopLeft, _sheet);
+            var r = _result.rectTransform;
+            r.anchorMin = new Vector2(0f, 0.5f);
+            r.anchorMax = new Vector2(1f, 0.5f);
+            r.pivot = new Vector2(0.5f, 1f);
+            if (bandTop > bandBottom)
+            {
+                // The band in the sheet's local space, measured from its centre (the anchors' height).
+                float centre = _sheet.rect.center.y;
+                r.offsetMin = new Vector2(14f, bandBottom - centre);
+                r.offsetMax = new Vector2(-14f, bandTop - centre);
+            }
+            else
+            {
+                r.anchorMin = new Vector2(0f, 0f);
+                r.anchorMax = new Vector2(1f, 0f);
+                r.pivot = new Vector2(0.5f, 0f);
+                r.offsetMin = new Vector2(14f, 64f);
+                r.offsetMax = new Vector2(-14f, 150f);
+            }
+            _result.enableAutoSizing = true;
+            _result.fontSizeMin = _result.fontSize * 0.75f;
+            _result.fontSizeMax = _result.fontSize;
 
             var button = Twin(gui.m_craftButton);
             if (button)
@@ -287,16 +324,15 @@ namespace Corruption.Content
             float slotSize = gui.m_playerGrid ? gui.m_playerGrid.m_elementSpace * SlotScale : 96f;
 
             var title = Text("Title", 20f, Orange, TextAlignmentOptions.Center);
-            Top(title.rectTransform, 12f, 28f);
+            Top(title.rectTransform, 10f, 28f);
             title.text = "Forge";
 
-            CreateSlot(gui, onSlotClick, -46f);
+            CreateSlot(gui, onSlotClick, -42f);
 
-            _caption = Text("Caption", 15f, Dim, TextAlignmentOptions.Top);
-            Top(_caption.rectTransform, 52f + slotSize, 44f);
-
-            _pickLine = Text("Pick", 15f, Color.white, TextAlignmentOptions.Top);
-            Top(_pickLine.rectTransform, 100f + slotSize, 64f);
+            // The gear's name, then its affixes: what players read before every click (Krogon, 2026-11-10), so they
+            // sit in a fixed place in larger, well-spaced text; the routine stats are in the description beside it.
+            _caption = Text("Caption", 17f, Dim, TextAlignmentOptions.Top);
+            Top(_caption.rectTransform, 50f + slotSize, 46f);
 
             _remove = CopyButton(gui.m_craftButton, _bench, "Remove", onRemove);
             if (_remove)
@@ -307,16 +343,21 @@ namespace Corruption.Content
                 rt.anchoredPosition = new Vector2(0f, 12f);
                 rt.sizeDelta = new Vector2(Mathf.Min(width - 32f, Mathf.Max(120f, rt.sizeDelta.x)), rt.sizeDelta.y > 10f ? rt.sizeDelta.y : 40f);
             }
-            float buttonTop = _remove ? 12f + ((RectTransform)_remove.transform).sizeDelta.y + 8f : 12f;
+            float buttonTop = _remove ? 12f + ((RectTransform)_remove.transform).sizeDelta.y + 10f : 12f;
 
-            _result = Text("Result", 15f, Good, TextAlignmentOptions.Bottom);
-            var r = _result.rectTransform;
-            r.anchorMin = new Vector2(0f, 0f);
-            r.anchorMax = new Vector2(1f, 0f);
-            r.pivot = new Vector2(0.5f, 0f);
-            r.offsetMin = new Vector2(12f, buttonTop);
-            r.offsetMax = new Vector2(-12f, buttonTop + 96f);
-            _result.overflowMode = TextOverflowModes.Ellipsis;
+            _affixes = Text("Affixes", 17f, Color.white, TextAlignmentOptions.TopLeft);
+            var a = _affixes.rectTransform;
+            a.anchorMin = new Vector2(0f, 0f);
+            a.anchorMax = new Vector2(1f, 1f);
+            a.pivot = new Vector2(0.5f, 1f);
+            a.offsetMin = new Vector2(12f, buttonTop);
+            a.offsetMax = new Vector2(-10f, -(98f + slotSize));
+            _affixes.lineSpacing = 8f;
+            _affixes.paragraphSpacing = 10f;
+            // Shrinks only when an item has many long lines, never below a size that still reads easily.
+            _affixes.enableAutoSizing = true;
+            _affixes.fontSizeMax = _affixes.fontSize;
+            _affixes.fontSizeMin = _affixes.fontSize * 0.8f;
         }
 
         /// <summary>One of the bag's own cells (bronze frame, icon, durability), larger, not part of any grid.</summary>
@@ -429,10 +470,10 @@ namespace Corruption.Content
         }
 
         /// <summary>Text in the game's description font (copied from its own description).</summary>
-        private static TMP_Text Text(string name, float size, Color color, TextAlignmentOptions alignment)
+        private static TMP_Text Text(string name, float size, Color color, TextAlignmentOptions alignment, Transform parent = null)
         {
             var go = new GameObject(name, typeof(RectTransform));
-            go.transform.SetParent(_bench, false);
+            go.transform.SetParent(parent ? parent : _bench, false);
             var text = go.AddComponent<TextMeshProUGUI>();
             var style = _gui.m_recipeDecription;
             float scale = 1f;
@@ -612,18 +653,20 @@ namespace Corruption.Content
             }
         }
 
-        public static void SetBench(string caption, string pickLine)
+        /// <summary>Under the forge slot: the gear's name, and its affix block (rarity line, affixes, marks).</summary>
+        public static void SetBench(string caption, string affixes)
         {
             if (_caption)
             {
-                _caption.text = caption;
+                _caption.text = caption ?? "";
             }
-            if (_pickLine)
+            if (_affixes && _affixes.text != (affixes ?? ""))
             {
-                _pickLine.text = pickLine;
+                _affixes.text = affixes ?? "";
             }
         }
 
+        /// <summary>The last use's result, across the description's width: a short headline, then the changed lines.</summary>
         public static void SetResult(string message, bool good)
         {
             if (_result)
@@ -633,20 +676,15 @@ namespace Corruption.Content
             }
         }
 
-        /// <summary>The description: the gear's name and tooltip, or how the forge works while it's empty.</summary>
-        public static void SetSheet(Sprite icon, string name, string text)
+        /// <summary>The description: the gear's name and the rest of its tooltip, or how the forge works while it's empty.</summary>
+        public static void SetSheet(string name, string text)
         {
-            string key = name + "\n" + text + (icon ? icon.name : "");
+            string key = name + "\n" + text;
             if (key == _lastSheet)
             {
                 return;
             }
             _lastSheet = key;
-            if (_sheetIcon)
-            {
-                _sheetIcon.enabled = icon;
-                _sheetIcon.sprite = icon;
-            }
             if (_sheetName)
             {
                 _sheetName.enabled = true;
@@ -656,57 +694,6 @@ namespace Corruption.Content
             {
                 _sheetText.enabled = true;
                 _sheetText.text = text;
-            }
-        }
-
-        /// <summary>
-        ///     The cost of one click, in the game's own cost slots: the picked material, 1, with how many you have.
-        ///     The amount is red when the pick can't be used on the gear. Empty without a pick.
-        /// </summary>
-        public static void SetCost(ItemDrop.ItemData pick, int have, bool usable)
-        {
-            for (int i = 0; i < _costs.Length; i++)
-            {
-                var cost = _costs[i];
-                var icon = cost.Find("res_icon")?.GetComponent<Image>();
-                var name = cost.Find("res_name")?.GetComponent<TMP_Text>();
-                var amount = cost.Find("res_amount")?.GetComponent<TMP_Text>();
-                var tip = cost.GetComponent<UITooltip>();
-                bool show = i == 0 && pick != null;
-                if (icon)
-                {
-                    icon.gameObject.SetActive(show);
-                }
-                if (name)
-                {
-                    name.gameObject.SetActive(show);
-                }
-                if (amount)
-                {
-                    amount.gameObject.SetActive(show);
-                }
-                if (tip)
-                {
-                    tip.m_text = show ? pick.m_shared.m_name : "";
-                }
-                if (!show)
-                {
-                    continue;
-                }
-                if (icon)
-                {
-                    icon.sprite = pick.GetIcon();
-                    icon.color = Color.white;
-                }
-                if (name)
-                {
-                    name.text = Localization.instance.Localize(pick.m_shared.m_name) + $" ({have})";
-                }
-                if (amount)
-                {
-                    amount.text = "1";
-                    amount.color = usable ? Color.white : Color.red;
-                }
             }
         }
 
@@ -738,13 +725,11 @@ namespace Corruption.Content
             _sheet = null;
             _slot = null;
             _caption = null;
-            _pickLine = null;
+            _affixes = null;
             _result = null;
             _remove = null;
-            _sheetIcon = null;
             _sheetName = null;
             _sheetText = null;
-            _costs = new Transform[0];
             _shatter = null;
             _shatterTip = null;
             _lastSheet = null;

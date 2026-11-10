@@ -73,6 +73,10 @@ namespace Corruption.Content
         private static float _nextDetails;
         private static float _nextEligibility;
         private static readonly Dictionary<string, bool> Usable = new Dictionary<string, bool>();
+        /// <summary>The affix lines the last use changed (indexes into the gear's lines), highlighted for a few seconds.</summary>
+        private static List<int> _changed = new List<int>();
+        private static float _changedUntil;
+        private const float HighlightSeconds = 6f;
 
         /// <summary>The forge tab is open (the only place crafting clicks exist).</summary>
         public static bool Active => _active && ForgeView.Built;
@@ -231,6 +235,7 @@ namespace Corruption.Content
         private static void SetTarget(ItemDrop.ItemData item, string message)
         {
             _target = item;
+            _changed.Clear();
             CloseConfirm();
             _detailsDirty = true;
             _nextEligibility = 0f;
@@ -250,10 +255,6 @@ namespace Corruption.Content
                 if (chosen < 0)
                 {
                     ShowResult(options.Count > 0 ? options[0].Refusal : NothingToDo, false);
-                }
-                else
-                {
-                    ShowResult("", true);
                 }
             }
         }
@@ -389,15 +390,81 @@ namespace Corruption.Content
         /// <summary>Applies one operation through the rules and shows what happened. Rules re-check everything first.</summary>
         private static void Run(string operationId, ItemDrop.ItemData material)
         {
-            var result = RiftforgeCrafting.Apply(_target, material, operationId);
-            ShowResult(result.Message, result.Done);
-            if (result.Done && (result.Item == null || !TargetStillHere()))
+            var target = _target;
+            var before = Loot.Of(target);
+            string materialName = material != null ? Localization.instance.Localize(material.m_shared.m_name) : "";
+            var result = RiftforgeCrafting.Apply(target, material, operationId);
+            if (!result.Done)
             {
-                // Destroyed (shattered, or bricked by a shard): the slot empties; the message stays.
+                ShowResult(result.Message, false);
+            }
+            else if (result.Item == null || !TargetStillHere())
+            {
+                // Destroyed (shattered, or bricked by a shard): the slot empties; the rules' message says what happened.
                 _target = null;
+                _changed.Clear();
+                ShowResult(result.Message, true);
+            }
+            else if (result.Created.Count > 0)
+            {
+                // The Mirror's copy: the gear itself is unchanged.
+                _changed.Clear();
+                ForgeView.SetResult(materialName + ": copied. The copy is in your bag and can never be changed.", true);
+            }
+            else
+            {
+                ShowChange(materialName, before, Loot.Of(target));
             }
             _detailsDirty = true;
             _nextEligibility = 0f;
+        }
+
+        /// <summary>
+        ///     A short result (Krogon, 2026-11-10): one headline ("Regal Orb: now Rare, 1 affix added"), then each changed
+        ///     line, + new in green, − gone in red; the new lines are also highlighted in the affix block for a few
+        ///     seconds. Nothing waits on it: the next click works at once.
+        /// </summary>
+        private static void ShowChange(string materialName, LootItem before, LootItem after)
+        {
+            var beforeKeys = Keys(before);
+            var afterKeys = Keys(after);
+            ForgeRules.Diff(beforeKeys, afterKeys, out var added, out var removed);
+            var text = new System.Text.StringBuilder(ForgeRules.Summary(materialName, before?.Rarity ?? "normal", after?.Rarity ?? "normal",
+                added.Count, removed.Count));
+            foreach (int i in added)
+            {
+                text.Append("\n<color=#B8F08A>+ ").Append(ShortLine(after.Lines[i])).Append("</color>");
+            }
+            foreach (int i in removed)
+            {
+                text.Append("\n<color=#FF8A70>− ").Append(ShortLine(before.Lines[i])).Append("</color>");
+            }
+            ForgeView.SetResult(text.ToString(), true);
+            _changed = added;
+            _changedUntil = Time.time + HighlightSeconds;
+        }
+
+        private static List<string> Keys(LootItem loot)
+        {
+            var keys = new List<string>();
+            if (loot != null)
+            {
+                foreach (var line in loot.Lines)
+                {
+                    keys.Add(string.Join("+", line.Ids) + "=" + LootItem.Format(line.Value));
+                }
+            }
+            return keys;
+        }
+
+        /// <summary>An affix line without its range or bonus, e.g. "+12% attack speed".</summary>
+        private static string ShortLine(LootItem.Line line)
+        {
+            if (Loot.Affixes.TryGetValue(line.Ids[0], out var affix))
+            {
+                return affix.Text.Replace("{0}", LootItem.Format(line.Value)) + (line.Resonant ? " ◆" : "");
+            }
+            return string.Join("+", line.Ids) + " " + LootItem.Format(line.Value);
         }
 
         private static void OnShatterPressed()
@@ -584,8 +651,12 @@ namespace Corruption.Content
             }
             bool usable = _pick != null && _target != null && CanUse(_pick);
             ForgeView.SetSlot(_target, usable, "Drag gear from your Bag here");
-            UpdateBench();
-            ForgeView.SetCost(_pick, _pick != null ? CountOf(_pickPrefab) : 0, _pick == null || _target == null || usable);
+            if (_changed.Count > 0 && Time.time >= _changedUntil)
+            {
+                // The highlight of the last change runs out.
+                _changed.Clear();
+                _detailsDirty = true;
+            }
             UpdateButtons();
             UpdateCursor();
             if (_detailsDirty || Time.time >= _nextDetails)
@@ -594,20 +665,37 @@ namespace Corruption.Content
             }
         }
 
+        /// <summary>Under the forge slot: the gear's name and its affix block, the lines the last use changed highlighted.</summary>
         private static void UpdateBench()
         {
-            string caption = _target == null ? "Drag gear from your Bag here" : TargetName();
-            string pick;
-            if (_pick != null)
+            if (_target == null)
             {
-                pick = "<color=orange>" + Localization.instance.Localize(_pick.m_shared.m_name) + "</color>\n" +
-                       (_target == null ? "Now put gear in the forge" : "Click the forge to use it");
+                ForgeView.SetBench("Drag gear from your Bag here", "");
+                return;
             }
-            else
+            bool highlight = Time.time < _changedUntil;
+            var text = new System.Text.StringBuilder();
+            Safe.Run("show the forge gear's affixes", () =>
             {
-                pick = _target == null ? "" : "Right-click an orb to pick it up";
-            }
-            ForgeView.SetBench(caption, pick);
+                var lines = LootTooltip.Block(_target, _target.m_quality, _target.m_worldLevel, out string header);
+                if (lines.Count == 0)
+                {
+                    text.Append("<color=#B0A898>No affixes yet</color>");
+                }
+                else
+                {
+                    text.Append(header);
+                    for (int i = 0; i < lines.Count; i++)
+                    {
+                        text.Append('\n');
+                        bool changed = highlight && _changed.Contains(i);
+                        // The changed line stands out (a soft band and bold) until the highlight runs out.
+                        text.Append(changed ? "<mark=#E8C66A40><b>" + lines[i] + "</b></mark>" : lines[i]);
+                    }
+                }
+                text.Append(LootTooltip.LocksOf(_target));
+            });
+            ForgeView.SetBench(TargetName(), Localization.instance.Localize(text.ToString()));
         }
 
         private static void UpdateButtons()
@@ -647,14 +735,27 @@ namespace Corruption.Content
         {
             _detailsDirty = false;
             _nextDetails = Time.time + DetailsInterval;
+            UpdateBench();
             if (_target == null)
             {
-                ForgeView.SetSheet(null, Localization.instance.Localize("$piece_riftforge"), Localization.instance.Localize(Intro));
+                ForgeView.SetSheet(Localization.instance.Localize("$piece_riftforge"), Localization.instance.Localize(Intro));
                 return;
             }
+            // The routine stats: the tooltip without the affix block, which the bench shows.
             string tooltip = "";
-            Safe.Run("show the forge gear's tooltip", () => tooltip = _target.GetTooltip());
-            ForgeView.SetSheet(_target.GetIcon(), TargetName(), Localization.instance.Localize(tooltip));
+            Safe.Run("show the forge gear's tooltip", () =>
+            {
+                LootTooltip.OmitAffixes = true;
+                try
+                {
+                    tooltip = _target.GetTooltip();
+                }
+                finally
+                {
+                    LootTooltip.OmitAffixes = false;
+                }
+            });
+            ForgeView.SetSheet(TargetName(), Localization.instance.Localize(tooltip));
         }
 
         /// <summary>How many of a material the player has, in the bag and the tabs together.</summary>

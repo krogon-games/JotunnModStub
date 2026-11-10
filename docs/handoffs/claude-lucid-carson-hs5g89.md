@@ -16,9 +16,9 @@ Nothing play-tested yet.
 
 ## Half-done and known issues
 
-Built 2026-11-09, untested in game (compiled against the game's decompiled 1.0 code; 451 tests pass):
+Built 2026-11-09, untested in game (compiled against the game's decompiled 1.0 code; 460 tests pass):
 - **Six tabs** (`FEATURES.md` → Inventory tabs): Bag · Currencies · Splinters · Maps · Runes · Essences. Currencies and Essences have fixed cells (`FixedLayout`, tested), dimmed with 0 when empty, no capacity lost (extra stacks use free cells, then the empty homes). Essences move out of Currencies on load and every half second (only between usable tabs, when they fit). Runes has no inventory; its save key is never read or written. New save keys `corruption_tab_splinters`, `corruption_tab_essences`; the old two unchanged. Test command `co_tabs_misplace`.
-- **Forge tab** (`FEATURES.md` → Riftforge workspace): one forge slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here. Krogon's first look: orbs work, the look didn't fit → **redone** from the game's own panel parts (bench where the recipe list is; a copy of the game's description panel with the gear's tooltip, a cost slot for the pick and Shatter as its main button; the game's Yes/No box for confirmations); "Remove" button. Untested. Mock-ups `docs/images/riftforge_workspace*.png`.
+- **Forge tab** (`FEATURES.md` → Riftforge workspace): one forge slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here. Krogon's first look: orbs work, the look didn't fit → **redone** from the game's own panel parts (bench where the recipe list is; a copy of the game's description panel with the gear's tooltip, a cost slot for the pick and Shatter as its main button; the game's Yes/No box for confirmations); "Remove" button. Second look (2026-11-10): "much better"; then **affix block moved under the slot** in large text, stats on the right at the game's size without the icon, **cost slots replaced by a short full-width result** (headline + changed lines), the changed line highlighted 6 s. Untested. Mock-ups `docs/images/riftforge_workspace*.png`.
 - **Skills button removed** from above the inventory (CraftingOverhaul); the skills panel opens with K.
 - **Not built, #29's:** shard corruption, shattering, the Affix Splinter item, applying splinters. The window says so and fakes nothing; when `RiftforgeCrafting` offers `shatter`/`corrupt`, the window asks for Confirm with the rules' preview. The splinter must be named `CorruptionAffixSplinter…`.
 - **Claude's choices** (easy to change): tab label "Forge"; gear goes in by dragging it from the Bag onto the slot; the slot empties when the inventory closes; the bench's layout (heading, slot 1.5× a bag cell, name, pick, result, Remove) is Claude's, the rest is the game's own panel.
@@ -68,13 +68,13 @@ Krogon's second look (2026-11-10, two screenshots, one annotated): "much better,
 
 ## Next steps
 
-1. Krogon checks the redone Forge window's look (checklist D1–D6); then the full play-test (A–E) and fixes.
+1. Krogon checks the Forge window's second redo (checklist D1–D6); then the full play-test (A–E) and fixes.
 2. Final play-test, then `/handoff` and a PR into `master`.
 3. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
 
 ## Checks
 
-Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 451 passed; Corruption builds against the stand-in game folder.
+Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 460 passed; Corruption builds against the stand-in game folder.
 
 ## Merge notes
 
