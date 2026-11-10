@@ -19,7 +19,7 @@ Nothing confirmed in game yet.
 Built 2026-11-10, **not tested in game**:
 - **Shard corruption, shattering, Affix Splinters** in the Forge tab, with Krogon's rules below; `co_craft corrupt / shatter / splinter`.
 - **Corrupted affixes beyond the caps**; tooltips show each cap and what worn gear uses.
-- **One confirmation dialog for Shatter and Corrupt** (decisions 22, 24–26), each with a remembered "Don't warn me again" (settings `10 - Riftforge`). First in-game look: no background, and the shard's tickbox overlapped; rebuilt with the message box's art. Previews `docs/images/forge_dialog_preview.png`; waiting for Krogon's screenshots.
+- **One confirmation dialog for Shatter and Corrupt** (decisions 22, 24–26), each with a remembered "Don't warn me again" (settings `10 - Riftforge`). In-game looks so far: layout, columns and tickbox right; the background was wrong twice (none, then a loading-screen picture) and the buttons showed a stray gamepad hint: now the inventory's own panel, hints hidden. **Confirmed by Krogon: the splinters show their shapes and colours.** Previews `docs/images/forge_dialog_preview.png`; waiting for Krogon's screenshots.
 - **Splinter models** (approved designs): 9 shapes, a colour per family for all 67 (`splinter_looks.csv`, `tools/make_splinters.py`, preview `docs/images/splinters_preview.png`). Colours are Claude's picks within the approved idea.
 - **Shard twin completion** adds both values plus 25% (decision 20); **cap lines removed** from tooltips; the stats sheet is [#60](https://github.com/krogon-games/JotunnModStub/issues/60).
 

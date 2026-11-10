@@ -29,8 +29,8 @@ namespace Corruption.Content
     /// <summary>
     ///     The Forge's confirmation dialog, one design for Shatter and for Corrupt (Krogon, 2026-11-10): title, the
     ///     item's icon and name, the cost, the warning once, a two-column list with right-aligned chances, a short
-    ///     explanation, a "Don't warn me again" tickbox and a footer with Cancel and the action. It is drawn with the
-    ///     art of the game's own message box (its panel, heading font, body font and buttons), so it looks like one.
+    ///     explanation, a "Don't warn me again" tickbox and a footer with Cancel and the action. It is drawn on the
+    ///     game's normal panel (the inventory's background) with the message box's heading font, body font and buttons.
     ///     Positions and the height come from <see cref="ForgeDialogLayout" />, fed with the measured heights of the
     ///     wrapped texts; the whole dialog shrinks when the screen is too small. Only shows and reports the click; the
     ///     rules run in <see cref="RiftforgeCrafting" />.
@@ -88,19 +88,23 @@ namespace Corruption.Content
             panel.SetParent(rootRt, false);
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
             var background = panelGo.GetComponent<Image>();
-            var art = popup && popup.popupUIParent ? PanelArt(popup.popupUIParent.transform) : null;
-            if (art)
+            // The game's normal panel: the inventory's own background ("Bkg"), the one the character sheet copies and
+            // Krogon has seen in game. (Play-test 2026-11-10: guessing the message box's panel picked up a loading-screen
+            // picture instead, a troll behind the text.)
+            var bkg = gui.m_player ? gui.m_player.Find("Bkg") : null;
+            var art = bkg ? bkg.GetComponent<Image>() : null;
+            if (art && art.sprite)
             {
-                // The message box's own panel, fully opaque so nothing behind shows through the text.
                 background.sprite = art.sprite;
                 background.type = art.type;
+                background.material = art.material;
                 background.pixelsPerUnitMultiplier = art.pixelsPerUnitMultiplier;
-                background.color = new Color(art.color.r, art.color.g, art.color.b, 1f);
+                background.color = art.color;
             }
             else
             {
                 background.color = PlainPanel;
-                Jotunn.Logger.LogWarning("Forge dialog: the game's message-box panel wasn't found; using a plain dark panel.");
+                Jotunn.Logger.LogWarning("Forge dialog: the inventory's panel background wasn't found; using a plain dark panel.");
             }
 
             // A plain dark sheet under the art, a little inside its edge: whatever the art does, text is never left
@@ -251,6 +255,27 @@ namespace Corruption.Content
                 }
                 button.interactable = true;
                 Place(button, at);
+                // Only the label stays: the message box's buttons carry a gamepad key hint, which copied here showed
+                // "MISSING BUTTON DEF" down the dialog (play-test 2026-11-10).
+                var labelText = button.GetComponentInChildren<TMP_Text>(true);
+                foreach (var other in button.GetComponentsInChildren<TMP_Text>(true))
+                {
+                    if (other != labelText)
+                    {
+                        other.gameObject.SetActive(false);
+                    }
+                }
+                foreach (var component in button.GetComponentsInChildren<MonoBehaviour>(true))
+                {
+                    if (component && component.GetType().Name == "UIGamePad")
+                    {
+                        var hint = component.GetType().GetField("m_hint")?.GetValue(component) as GameObject;
+                        if (hint)
+                        {
+                            hint.SetActive(false);
+                        }
+                    }
+                }
                 var tip = button.GetComponent<UITooltip>();
                 if (tip)
                 {
@@ -269,38 +294,6 @@ namespace Corruption.Content
             rt.anchorMax = Vector2.one;
             rt.offsetMin = new Vector2(inset, inset);
             rt.offsetMax = new Vector2(-inset, -inset);
-        }
-
-        /// <summary>
-        ///     The message box's panel picture: the largest visible, sprite-carrying image that isn't a button's or a
-        ///     full-screen cover (the first Shatter dialog picked a crafting-panel image that drew nothing).
-        /// </summary>
-        private static Image PanelArt(Transform popupRoot)
-        {
-            Image best = null;
-            float bestArea = 0f;
-            foreach (var image in popupRoot.GetComponentsInChildren<Image>(true))
-            {
-                if (!image.sprite || image.color.a < 0.5f || image.GetComponentInParent<Button>(true) ||
-                    image.type != Image.Type.Sliced && image.type != Image.Type.Simple)
-                {
-                    continue;
-                }
-                var mask = image.GetComponent<Mask>();
-                if (mask && !mask.showMaskGraphic)
-                {
-                    continue;
-                }
-                var rect = image.rectTransform.rect;
-                float area = rect.width * rect.height;
-                // A cover that fills the screen isn't the panel.
-                if (area > bestArea && rect.width < Screen.width * 0.9f)
-                {
-                    best = image;
-                    bestArea = area;
-                }
-            }
-            return best;
         }
 
         public static void Close()

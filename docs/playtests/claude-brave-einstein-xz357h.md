@@ -15,7 +15,7 @@
 
 #### A. Shattering (about 8 minutes)
 1. [ ] Get 3–4 Rare and Magic items (`co_loot rare`, `co_loot magic`). Open the Riftforge → **Forge** tab. Drag a Rare item onto the forge slot → the **Shatter** button is lit.
-2. [ ] Press **Shatter** → the **Shatter item** dialog (compare `docs/images/forge_dialog_preview.png`): a dark panel like the game's message boxes, nothing of the inventory showing through the text: title centred; the item's icon and coloured name; "Cost: Free"; "This permanently destroys the item." once, in red-orange; **Potential splinters** with each affix on the left (bullets, a green ◆ line if resonant, wrapped lines indented) and **50%** on the right in its own column; two small grey lines of explanation; a **Don't warn me again** tickbox on its own line; **Cancel** left and **Shatter** right, clear of the text. Nothing clipped or overlapping. Press **Cancel** (or Escape) → nothing changed, the item is still in the slot.
+2. [ ] Press **Shatter** → the **Shatter item** dialog (compare `docs/images/forge_dialog_preview.png`): the game's normal wood panel, nothing of the inventory showing through the text: title centred; the item's icon and coloured name; "Cost: Free"; "This permanently destroys the item." once, in red-orange; **Potential splinters** with each affix on the left (bullets, a green ◆ line if resonant, wrapped lines indented) and **50%** on the right in its own column; two small grey lines of explanation; a **Don't warn me again** tickbox on its own line; **Cancel** left and **Shatter** right, clear of the text. Nothing clipped or overlapping. Press **Cancel** (or Escape) → nothing changed, the item is still in the slot.
    - [ ] Try it with an item with a long affix (a parry or kill effect) and with a 4-affix Rare: still nothing clipped, the 50% column still lined up.
    - [ ] If you play at a large UI scale: the whole dialog fits on screen.
 3. [ ] Press **Shatter**, then **Shatter** in the dialog → the item is gone, the slot is empty, and the result says "Shattered …: N splinters (…)" or "… no splinters recovered". The inventory stays on the tab you were on.
@@ -83,6 +83,15 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 - Shard box: still the game's Yes/No box; **the tickbox overlaps the last line of text**. "The shard box needs to be consistent in design as well."
 - "I still want a tickbox on both panels … they need to have an option to hide the panel once they get used to the mechanics."
 - (The splinter-look fix isn't reported on yet.)
+
+### Your feedback (2026-11-10, third try: screenshots of both dialogs)
+- **"The splinters now show their own shapes and colours."** (the missing-files fix worked)
+- Both dialogs: layout, columns, tickbox row and buttons are in place, but **"why is there a troll in the background of the panel?"** (a loading-screen picture behind the text). "Please use the normal background like the rest of the UI. Same with the shard panel."
+- Seen in the screenshots: a stray column of text, "MISSING BUTTON DEF "ButtonB"" / "ButtonA", running down from each button.
+
+### What changed after the third feedback
+- Background: the dialog no longer guesses at the message box's art; it copies the inventory's own panel background (the wood panel the character sheet uses, which you've seen in game). To re-test.
+- Stray text: it was the gamepad key hint copied with the message box's buttons; hidden. To re-test.
 
 ### What changed after the second feedback
 - Both confirmations are now one dialog design (decisions 25–26): drawn with the game's message-box panel, heading, body font and buttons, over a plain dark backing so text can't float over the inventory; the shard's "Corrupt item" lists its three outcomes with their chances in the right column; each has its tickbox on a row of its own. Previews: `docs/images/forge_dialog_preview.png`. To re-test.

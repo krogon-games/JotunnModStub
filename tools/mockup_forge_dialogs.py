@@ -98,8 +98,8 @@ def dialog(name, colour, rows, chance="50%", screen=None, label=None, kind=SHATT
     height = y + FOOTER_H
 
     canvas = Image.new("RGBA", (int(WIDTH * S), int(height * S)), (0, 0, 0, 0))
+    P.paste(canvas, P.sliced(P.art("panel"), WIDTH, height, 20), 0, 0)   # the game's normal wood panel
     d = ImageDraw.Draw(canvas)
-    d.rounded_rectangle([0, 0, WIDTH * S - 1, height * S - 1], radius=10 * S, fill=SLATE, outline=SLATE_EDGE, width=3 * S)
     x = PADDING
     P.text(d, (WIDTH / 2, title_y + TITLE_H / 2), kind["title"].title(), 27, ORANGE, "mm", title=True)
 
