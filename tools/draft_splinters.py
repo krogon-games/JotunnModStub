@@ -1,6 +1,6 @@
 """
 DRAFT designs for the Affix Splinters (issue #29), for Krogon to pick from. Nothing here ships:
-it only writes docs/images/splinters_draft.png.
+it only writes docs/images/splinters_draft2.png.
 
     python tools/draft_splinters.py            (needs numpy and Pillow)
 
@@ -72,106 +72,152 @@ def move(tris, dx=0.0, dy=0.0, dz=0.0, lean=0.0, turn=0.0):
     return out
 
 
-# ---------------------------------------------------------------- the nine shapes
+# ---------------------------------------------------------------- the nine shapes (draft 2: rough, organic lumps)
+# Krogon, 2026-11-10: "shape by kind, colour by stat" approved; rough organic lumps, not clean cut crystals.
+# Every shape is a ball of clay pushed around: a coarse sphere whose points are moved by a few rules and some noise.
+
+def icosphere(level=2):
+    t = (1 + 5 ** 0.5) / 2
+    v = [(-1, t, 0), (1, t, 0), (-1, -t, 0), (1, -t, 0), (0, -1, t), (0, 1, t), (0, -1, -t), (0, 1, -t),
+         (t, 0, -1), (t, 0, 1), (-t, 0, -1), (-t, 0, 1)]
+    v = [np.array(p) / np.linalg.norm(p) for p in v]
+    f = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11), (1, 5, 9), (5, 11, 4), (11, 10, 2), (10, 7, 6), (7, 1, 8),
+         (3, 9, 4), (3, 4, 2), (3, 2, 6), (3, 6, 8), (3, 8, 9), (4, 9, 5), (2, 4, 11), (6, 2, 10), (8, 6, 7), (9, 8, 1)]
+    tris = [(v[a], v[b], v[c]) for a, b, c in f]
+    for _ in range(level):
+        out = []
+        for a, b, c in tris:
+            ab, bc, ca = [(x + y) / np.linalg.norm(x + y) for x, y in ((a, b), (b, c), (c, a))]
+            out += [(a, ab, ca), (b, bc, ab), (c, ca, bc), (ab, bc, ca)]
+        tris = out
+    return tris
+
+
+def lumps(seed, count, sharp):
+    """Noise on a sphere: `count` random bumps and dents; higher `sharp` gives smaller, harder knobs."""
+    rng = random.Random(seed)
+    dirs = []
+    for _ in range(count):
+        d = np.array([rng.gauss(0, 1) for _ in range(3)])
+        dirs.append((d / np.linalg.norm(d), rng.uniform(-1.0, 1.0)))
+    def at(p):
+        return sum(amp * max(0.0, float(np.dot(p, d))) ** sharp for d, amp in dirs)
+    return at
+
+
+def clay(push, level=2):
+    """Moves every point of the sphere with `push` (unit point -> position), sets it on the ground, largest side H."""
+    cache = {}
+    def moved(p):
+        key = tuple(np.round(p, 6))
+        if key not in cache:
+            cache[key] = np.array(push(np.array(p)), dtype=float)
+        return cache[key]
+    tris = [tuple(moved(p) for p in t) for t in icosphere(level)]
+    pts = np.array([p for t in tris for p in t])
+    low, high = pts[:, 1].min(), pts[:, 1].max()
+    k = H / max(high - low, pts[:, 0].max() - pts[:, 0].min(), pts[:, 2].max() - pts[:, 2].min())
+    mid = (pts[:, 0].mean(), pts[:, 2].mean())
+    tris = [tuple(((p[0] - mid[0]) * k, (p[1] - low) * k, (p[2] - mid[1]) * k) for p in t) for t in tris]
+    return orient(tris, (0, H / 2, 0))
+
 
 def blade():
-    """Attack: a long, thin, flat sliver with a sharp point, like a broken sword tip."""
-    rng = random.Random(1)
-    rings = [ring(H * f, 0.05 * w, 0.012 * w, 6, rng=rng, wobble=0.08)
-             for f, w in ((0.06, 0.55), (0.3, 1.0), (0.62, 0.8), (0.86, 0.42))]
-    return move(loft(rings, bottom=(0.005, 0, 0), top=(0.012, H * 1.08, 0)), lean=-0.22, dx=0.02, dy=0.0)
+    """Attack: a jagged fang of metal slag, tall and leaning, with a broken point."""
+    n = lumps(11, 26, 5)
+    def push(p):
+        r = 1 + 0.7 * n(p)
+        taper = 1.0 - 0.6 * (p[1] + 1) / 2
+        return (p[0] * r * 0.75 * taper + 0.3 * p[1], p[1] * 1.5 * (1 + 0.25 * n(p)), p[2] * r * 0.5 * taper)
+    return clay(push)
 
 
 def cluster():
-    """Elemental: three jagged crystals grown together."""
-    rng = random.Random(2)
-    tris = []
-    for height, lean, turn, dx in ((1.0, 0.0, 0.3, 0.0), (0.7, 0.5, 1.2, 0.015), (0.55, -0.55, 2.4, -0.015)):
-        h = H * height
-        rings = [ring(h * f, 0.032 * w, 0.03 * w, 5, turn=turn, rng=rng, wobble=0.1) for f, w in ((0.0, 0.8), (0.55, 1.0), (0.8, 0.7))]
-        tris += move(loft(rings, top=(0.004, h, 0.0)), lean=lean, dx=dx)
-    return tris
+    """Elemental: a seething lump with horns bursting out of it."""
+    n = lumps(12, 18, 3)
+    horns = [np.array(d) / np.linalg.norm(d) for d in ((0.1, 1, 0.1), (0.8, 0.6, -0.2), (-0.7, 0.7, 0.3), (0.2, 0.5, -0.9), (-0.3, 0.3, 0.9))]
+    def push(p):
+        r = 1 + 0.4 * n(p)
+        for i, h in enumerate(horns):
+            r += (1.3 if i == 0 else 0.9) * max(0.0, float(np.dot(p, h))) ** 9
+        return p * r
+    return clay(push)
 
 
 def plate():
-    """Defence: a thick six-sided plate, a piece of shield or scale."""
-    rng = random.Random(3)
-    def hexagon(z, k):
-        return [(0.075 * k * math.cos(a) * rng.uniform(0.96, 1.04), H * 0.5 + 0.085 * k * math.sin(a), z)
-                for a in (math.pi / 6 + math.pi / 3 * i for i in range(6))]
-    rings = [hexagon(-0.022, 0.78), hexagon(-0.012, 1.0), hexagon(0.012, 1.0), hexagon(0.022, 0.78)]
-    return move(loft(rings), turn=0.5)
+    """Defence: a thick, chipped slab, like a lump broken off a shield boss."""
+    n = lumps(13, 22, 4)
+    def push(p):
+        flat = np.sign(p[2]) * min(abs(p[2]), 0.45) * 0.55      # squashed front to back, with flat faces
+        r = 1 + 0.22 * n(p)
+        return (p[0] * r, p[1] * r * 0.92, flat * (1 + 0.5 * n(p)))
+    return clay(push)
 
 
 def drop():
-    """Vitality: a smooth heavy drop."""
-    rings = [ring(H * f, 0.06 * w, 0.06 * w, 10, turn=0.3 * i)
-             for i, (f, w) in enumerate(((0.05, 0.55), (0.2, 0.95), (0.38, 1.0), (0.58, 0.72), (0.78, 0.36)))]
-    return loft(rings, bottom=(0, 0, 0), top=(0.004, H, 0))
+    """Vitality: a soft, swollen, two-lobed clot."""
+    n = lumps(14, 14, 3)
+    def push(p):
+        lobe = 0.35 * math.exp(-((p[0] - 0.5) ** 2 + (p[1] - 0.4) ** 2) * 3) + 0.3 * math.exp(-((p[0] + 0.5) ** 2 + (p[1] + 0.2) ** 2) * 3)
+        r = 1 + lobe + 0.3 * n(p)
+        return (p[0] * r, p[1] * r * 0.85, p[2] * r * 0.8)
+    return clay(push)
 
 
 def diamond():
-    """Resistance: a clean eight-sided ward stone, two pyramids base to base."""
-    rings = [ring(H * 0.5, 0.062, 0.062, 4, turn=math.pi / 4)]
-    return loft(rings, bottom=(0, 0, 0), top=(0, H, 0))
+    """Resistance: a geode: a rough round stone, split to show a flat face."""
+    n = lumps(15, 30, 6)
+    cut = np.array([0.45, 0.35, -0.82])
+    cut /= np.linalg.norm(cut)
+    def push(p):
+        q = p * (1 + 0.5 * n(p))
+        over = float(np.dot(q, cut)) - 0.3
+        return q - cut * over if over > 0 else q
+    return clay(push)
 
 
 def twist():
-    """Utility: a square bar wrung into a spiral."""
-    rings = [ring(H * f, 0.036 * w, 0.036 * w, 4, turn=1.5 * f) for f, w in
-             ((0.0, 0.8), (0.2, 1.0), (0.4, 1.0), (0.6, 1.0), (0.8, 1.0), (1.0, 0.8))]
-    return loft(rings)
+    """Utility: a knot: a rope of clay wrung and folded on itself."""
+    n = lumps(16, 10, 3)
+    def push(p):
+        a = 2.4 * p[1]
+        x, z = p[0] * math.cos(a) - p[2] * math.sin(a), p[0] * math.sin(a) + p[2] * math.cos(a)
+        waist = 0.75 + 0.25 * math.cos(p[1] * 5.2)
+        r = waist * (1 + 0.35 * n(p))
+        return (x * r * 0.9 + 0.3 * math.sin(p[1] * 3), p[1] * 1.3, z * r * 0.6)
+    return clay(push)
 
 
 def nugget():
-    """Mining: a rough lump of ore."""
-    rng = random.Random(7)
-    rings = [ring(0.15 * f, 0.075 * w, 0.06 * w, 7, turn=0.4 * i, rng=rng, wobble=0.22)
-             for i, (f, w) in enumerate(((0.08, 0.6), (0.35, 1.0), (0.65, 0.95), (0.9, 0.55)))]
-    return move(loft(rings), dy=0.025)
+    """Mining: a squat lump of raw ore, blocky and pitted."""
+    n = lumps(17, 34, 7)
+    def push(p):
+        boxy = p / (np.abs(p).max() ** 0.55)                   # pulled towards a cube
+        r = 1 + 0.45 * n(p)
+        return (boxy[0] * r * 1.15, boxy[1] * r * 0.72, boxy[2] * r * 0.95)
+    return clay(push)
 
 
 def sliver():
-    """Woodcutting: a split of wood, three long splinters."""
-    rng = random.Random(8)
-    tris = []
-    for height, lean, dx, dz in ((1.0, 0.06, 0.0, 0.0), (0.72, -0.2, -0.022, 0.012), (0.6, 0.3, 0.022, -0.01)):
-        h = H * height
-        rings = [ring(h * f, 0.016 * w, 0.011 * w, 4, turn=0.4, rng=rng, wobble=0.2) for f, w in ((0.0, 1.0), (0.5, 1.15), (0.85, 0.6))]
-        tris += move(loft(rings, top=(rng.uniform(-0.008, 0.008), h, 0.0)), lean=lean, dx=dx, dz=dz)
-    return tris
+    """Woodcutting: a gnarled knot of wood with a broken branch stub."""
+    n = lumps(18, 20, 4)
+    stub = np.array([0.75, 0.6, 0.2])
+    stub /= np.linalg.norm(stub)
+    def push(p):
+        grain = 0.07 * math.sin(math.atan2(p[2], p[0]) * 9)      # ridges running up it, like bark
+        r = 1 + grain + 0.3 * n(p) + 1.0 * max(0.0, float(np.dot(p, stub))) ** 8
+        return (p[0] * r * 0.62, p[1] * r * 1.2, p[2] * r * 0.55)
+    return clay(push)
 
 
 def arc():
-    """Gathering (any tool): a broken arm ring."""
-    tris = []
-    steps, sides = 9, 5
-    path = []
-    for s in range(steps + 1):
-        a = math.radians(-35 + 250 * s / steps)
-        path.append((0.065 * math.cos(a), H * 0.5 + 0.075 * math.sin(a), a))
-    rings = []
-    for x, y, a in path:
-        r = []
-        for k in range(sides):
-            b = 2 * math.pi * k / sides
-            rad = 0.017 * math.cos(b)
-            r.append((x + rad * math.cos(a), y + rad * math.sin(a), 0.017 * math.sin(b)))
-        rings.append(r)
-    n = sides
-    for r in range(len(rings) - 1):
-        mid = tuple(np.mean(rings[r] + rings[r + 1], axis=0))
-        part = []
-        for i in range(n):
-            j = (i + 1) % n
-            part.append((rings[r][i], rings[r][j], rings[r + 1][j]))
-            part.append((rings[r][i], rings[r + 1][j], rings[r + 1][i]))
-        tris += orient(part, mid)
-    for end, nxt in ((rings[0], rings[1]), (rings[-1], rings[-2])):
-        tip = tuple(np.mean(end, axis=0))
-        inner = np.mean(nxt, axis=0)
-        tris += orient([(end[i], end[(i + 1) % n], tip) for i in range(n)], inner)
-    return move(tris, turn=0.35)
+    """Gathering (any tool): a bent, kidney-shaped lump, like a river-worn stone."""
+    n = lumps(19, 12, 3)
+    def push(p):
+        r = 1 + 0.4 * n(p)
+        x, y, z = p[0] * r * 1.3, p[1] * r * 0.7, p[2] * r * 0.65
+        return (x, y + 0.3 * x * x, z)
+    return clay(push)
 
 
 # ---------------------------------------------------------------- the sheet
@@ -220,7 +266,7 @@ def main():
     height = 60 + (cell + pad) * 3 + 70 + small + 50
     sheet = Image.new("RGB", (width, height), BG)
     d = ImageDraw.Draw(sheet)
-    d.text((20, 16), "Affix Splinters: DRAFT. One shape per kind of affix", font=font(24), fill=(235, 225, 200))
+    d.text((20, 16), "Affix Splinters: DRAFT 2. Rough lumps, one shape per kind", font=font(24), fill=(235, 225, 200))
     for i, (name, covers, shape, colour) in enumerate(KINDS):
         x, y = (i % 3) * cell, 60 + (i // 3) * (cell + pad)
         sheet.paste(tile(shape, colour, cell), (x, y))
@@ -233,7 +279,7 @@ def main():
         t = tile(shape, colour, small).resize((w, w))
         sheet.paste(t, (i * w, y + 60))
         d.text((i * w + w / 2, y + 60 + w + 4), name, font=font(14), fill=(220, 220, 220), anchor="ma")
-    out = os.path.join(ROOT, "docs", "images", "splinters_draft.png")
+    out = os.path.join(ROOT, "docs", "images", "splinters_draft2.png")
     sheet.save(out)
     print(out)
 
