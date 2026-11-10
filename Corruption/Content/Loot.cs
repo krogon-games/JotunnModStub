@@ -156,7 +156,17 @@ namespace Corruption.Content
             return loot == null ? 0 : loot.Total(effect, Affixes);
         }
 
-        public static string ColorFor(string rarity) => rarity == "rare" ? RareColor : MagicColor;
+        /// <summary>The same total over only the shard's corrupted lines, or only the ordinary ones (for capped stats).</summary>
+        public static float Total(ItemDrop.ItemData item, string effect, bool corrupted)
+        {
+            var loot = Bypass ? null : Of(item);
+            return loot == null ? 0 : loot.Total(effect, Affixes, corrupted);
+        }
+
+        public const string NormalColor = "#FFFFFF";
+
+        /// <summary>The rarity's colour. A Normal item only has affixes when a shard gave it a corrupted one.</summary>
+        public static string ColorFor(string rarity) => rarity == "rare" ? RareColor : rarity == "normal" ? NormalColor : MagicColor;
 
         /// <summary>The item's name in its rarity colour, or null for a Normal item.</summary>
         public static string ColoredName(ItemDrop.ItemData item)

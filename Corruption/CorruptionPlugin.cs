@@ -40,6 +40,7 @@ namespace Corruption
             Safe.Run("add the co_tabs_damage command", InventoryTabs.RegisterCommand);
             Safe.Run("add the co_own command", LootHarvest.RegisterCommand);
             Safe.Run("read the Orb of Chance table", RiftforgeCrafting.Load);
+            Safe.Run("read the corruption and shattering tables", RiftforgeCrafting.LoadForgeTables);
             Safe.Run("add the co_craft command", RiftforgeCrafting.RegisterCommand);
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
@@ -74,6 +75,7 @@ namespace Corruption
             Safe.Run("find wood, seeds and ores for the harvest affixes", LootHarvest.CollectItems);
             Safe.Run("register the Riftforge", Riftforge.Register);
             Safe.Run("register the currency orbs", OrbItems.Register);
+            Safe.Run("register the Affix Splinter", SplinterItem.Register);
             Safe.Run("register talismans", Talismans.Register);
             Safe.Run("register boss essences", EssenceItems.Register);
             // After essences: map recipes and colours use them.

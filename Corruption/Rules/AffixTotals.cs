@@ -34,6 +34,71 @@ namespace Corruption.Rules
             return Cap(ordinary, family, caps) + Math.Max(0f, corrupted);
         }
 
+        /// <summary>How close worn gear is to one cap (Krogon, 2026-11-10: players see each cap and how close they are).</summary>
+        public sealed class CapProgress
+        {
+            public float Max;
+            public string Unit;
+
+            /// <summary>Ordinary affixes under this cap on the given items, before the cap.</summary>
+            public float Ordinary;
+
+            /// <summary>Corrupted affixes for the same stat: they count beyond the cap.</summary>
+            public float Corrupted;
+
+            /// <summary>"Cap 35%: 28% worn" · "Cap 35%: reached (41% worn)" · with "+7% corrupted, beyond the cap" when there is some.</summary>
+            public string Text()
+            {
+                string cap = LootItem.Format(Max) + Unit;
+                string text = Ordinary >= Max
+                    ? $"Cap {cap}: reached" + (Ordinary > Max ? $" ({LootItem.Format(Ordinary)}{Unit} worn)" : "")
+                    : $"Cap {cap}: {LootItem.Format(Ordinary)}{Unit} worn";
+                return Corrupted > 0f ? text + $", +{LootItem.Format(Corrupted)}{Unit} corrupted beyond the cap" : text;
+            }
+        }
+
+        /// <summary>
+        ///     The cap an affix family is under and how much of it the given items use, or null for an uncapped family.
+        ///     Counts every family of that cap together (Swift, Skald's and Fenrir share one), except resistances, which
+        ///     are capped per element: an element counts itself plus all resistances, and all resistances shows the
+        ///     element that is furthest along. Buffs that only run for a moment (a parry, a kill) count at full value.
+        /// </summary>
+        public static CapProgress Progress(string family, IEnumerable<LootItem> items, IDictionary<string, AffixTable.Affix> affixes, AffixCaps caps)
+        {
+            var cap = caps?.For(family);
+            if (cap == null)
+            {
+                return null;
+            }
+            var lines = items.Where(i => i != null).SelectMany(i => i.Lines)
+                .Where(l => affixes.ContainsKey(l.Ids[0])).ToList();
+            float Of(ICollection<string> families, bool corrupted)
+            {
+                return lines.Where(l => l.Corrupted == corrupted && families.Contains(affixes[l.Ids[0]].Family)).Sum(l => l.Value);
+            }
+
+            var progress = new CapProgress { Max = cap.Max, Unit = cap.Unit };
+            bool perElement = cap.Families.Contains("all_resistances");
+            if (!perElement)
+            {
+                progress.Ordinary = Of(cap.Families, false);
+                progress.Corrupted = Of(cap.Families, true);
+                return progress;
+            }
+            var elements = family == "all_resistances" ? cap.Families.Where(f => f != "all_resistances").ToList() : new List<string> { family };
+            foreach (var element in elements)
+            {
+                var both = new[] { element, "all_resistances" };
+                float ordinary = Of(both, false), corrupted = Of(both, true);
+                if (ordinary + corrupted >= progress.Ordinary + progress.Corrupted)
+                {
+                    progress.Ordinary = ordinary;
+                    progress.Corrupted = corrupted;
+                }
+            }
+            return progress;
+        }
+
         /// <summary>The value after the cap that lists this affix family; uncapped families pass through.</summary>
         public static float Cap(float total, string family, AffixCaps caps)
         {

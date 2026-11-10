@@ -117,6 +117,7 @@ namespace Corruption.Content
     internal static class LootTooltip
     {
         private const string InactiveColor = ForgeRules.InactiveColor;
+        private const string CapColor = "#B0A898";
 
         /// <summary>
         ///     While true, tooltips leave out the affix block: the Riftforge's Forge tab shows the affixes in their own
@@ -128,6 +129,13 @@ namespace Corruption.Content
         {
             if (OmitAffixes)
             {
+                return;
+            }
+            if (SplinterItem.IsSplinter(item))
+            {
+                string withLine = __result;
+                Safe.Run("add a splinter's affix to its tooltip", () => withLine = withLine + "\n\n" + SplinterItem.Tooltip(item));
+                __result = withLine;
                 return;
             }
             var loot = Loot.Of(item);
@@ -163,14 +171,24 @@ namespace Corruption.Content
                 return lines;
             }
             string color = Loot.ColorFor(loot.Rarity);
-            header = "<color=" + color + ">" + (loot.Rarity == "rare" ? "Rare " + Localization.instance.Localize(item.m_shared.m_name) : "Magic") +
-                     "</color>";
+            header = "<color=" + color + ">" + (loot.Rarity == "rare" ? "Rare " + Localization.instance.Localize(item.m_shared.m_name)
+                         : loot.Rarity == "normal" ? "Normal" : "Magic") + "</color>";
+            var worn = Loot.Equipped(Player.m_localPlayer);
             foreach (var line in loot.Lines)
             {
                 bool active = Loot.Affixes.TryGetValue(line.Ids[0], out var affix) && Loot.ActiveEffects.Contains(affix.Effect);
                 string bonus = active ? Bonus(item, loot, line, affix.Effect, qualityLevel, worldLevel) : null;
-                lines.Add("<color=" + (active ? color : InactiveColor) + ">" + LootItem.LineText(line, Loot.Affixes, bonus) +
-                          (active ? "" : " (not active yet)") + "</color>");
+                // A shard's corrupted affix is its own line in the corruption red, so the extra one is clear.
+                string lineColor = !active ? InactiveColor : line.Corrupted ? RiftforgeCrafting.CorruptedColor : color;
+                string text = "<color=" + lineColor + ">" + LootItem.LineText(line, Loot.Affixes, bonus) +
+                              (line.Corrupted ? " (corrupted)" : "") + (active ? "" : " (not active yet)") + "</color>";
+                // Capped stats say their cap and how much of it worn gear uses now (Krogon, 2026-11-10).
+                var progress = affix != null ? AffixTotals.Progress(affix.Family, worn, Loot.Affixes, Loot.Caps) : null;
+                if (progress != null)
+                {
+                    text += "\n<size=85%><color=" + CapColor + ">" + progress.Text() + "</color></size>";
+                }
+                lines.Add(text);
             }
             return lines;
         }
@@ -414,7 +432,7 @@ namespace Corruption.Content
 
                 // Life steal: a share of the hit's combat damage comes back as health, capped (affix_caps.csv). Worked
                 // out on the attacker's game, before the target's armour and resistances, which only its owner knows.
-                float steal = AffixTotals.Cap(Loot.Total(weapon, "life_steal"), "life_steal", Loot.Caps) / 100f;
+                float steal = AffixTotals.Capped(Loot.Total(weapon, "life_steal", false), Loot.Total(weapon, "life_steal", true), "life_steal", Loot.Caps) / 100f;
                 if (steal > 0f && hit.GetAttacker() != null)
                 {
                     var d = hit.m_damage;

@@ -469,6 +469,44 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void PlayersSeeEachCapAndHowCloseTheyAre()
+        {
+            var errors = new List<string>();
+            var affixes = AffixTable.Parse(DataFile("affixes.csv"), errors).ToDictionary(a => a.Id);
+            var caps = AffixCaps.Parse(DataFile("affix_caps.csv"), errors);
+            var movement = affixes.Values.First(a => a.Effect == "movement_speed");
+            var fire = affixes.Values.First(a => a.Effect == "fire_resistance");
+            var all = affixes.Values.First(a => a.Family == "all_resistances");
+            var frost = affixes.Values.First(a => a.Effect == "frost_resistance");
+
+            LootItem Worn(AffixTable.Affix affix, float value, bool corrupted = false)
+            {
+                var item = new LootItem();
+                item.Lines.Add(new LootItem.Line { Ids = new[] { affix.Id }, Value = value, Corrupted = corrupted });
+                return item;
+            }
+
+            Assert.Null(AffixTotals.Progress("max_health", new LootItem[0], affixes, caps));   // not a capped stat
+
+            var worn = new[] { Worn(movement, 10), Worn(movement, 18), Worn(movement, 7, true) };
+            var progress = AffixTotals.Progress(movement.Family, worn, affixes, caps);
+            Assert.Equal(caps.For("movement_speed").Max, progress.Max);
+            Assert.Equal(28f, progress.Ordinary);
+            Assert.Equal(7f, progress.Corrupted);
+            Assert.Equal("Cap 35%: 28% worn, +7% corrupted beyond the cap", progress.Text());
+            Assert.Equal("Cap 35%: 0% worn", AffixTotals.Progress(movement.Family, new LootItem[0], affixes, caps).Text());
+            Assert.Equal("Cap 35%: reached (40% worn)",
+                AffixTotals.Progress(movement.Family, new[] { Worn(movement, 40) }, affixes, caps).Text());
+            Assert.Equal("Cap 35%: reached", AffixTotals.Progress(movement.Family, new[] { Worn(movement, 35) }, affixes, caps).Text());
+
+            // Resistances are capped per element: fire counts fire plus all resistances, not frost.
+            var resist = new[] { Worn(fire, 30), Worn(all, 8), Worn(frost, 50) };
+            Assert.Equal(38f, AffixTotals.Progress(fire.Family, resist, affixes, caps).Ordinary);
+            // "All resistances" shows the element that is furthest along.
+            Assert.Equal(58f, AffixTotals.Progress(all.Family, resist, affixes, caps).Ordinary);
+        }
+
+        [Fact]
         public void CorruptingKeepsAMagicItemsName()
         {
             var table = Table();

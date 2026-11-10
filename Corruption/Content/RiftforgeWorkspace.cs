@@ -37,15 +37,15 @@ namespace Corruption.Content
         private const float EligibilityInterval = 1f;
 
         private const string Intro =
-            "Work your gear with orbs here.\n\n" +
+            "Work your gear with orbs, shards and splinters here.\n\n" +
             "<color=orange>1.</color> Drag a piece of gear from your Bag onto the forge.\n" +
-            "<color=orange>2.</color> Right-click an orb in Currencies to pick it up.\n" +
-            "<color=orange>3.</color> Click the forge to use it once. Hold Shift to keep the orb for the next click.\n\n" +
-            "Esc or a right-click puts the orb back. Orbs that can't be used on the gear turn red.";
+            "<color=orange>2.</color> Right-click an orb or shard in Currencies, or a splinter in Splinters, to pick it up.\n" +
+            "<color=orange>3.</color> Click the forge to use it once. Hold Shift to keep an orb for the next click.\n\n" +
+            "Esc or a right-click puts it back. Materials that can't be used on the gear turn red.\n" +
+            "Shatter destroys Magic or Rare gear for Affix Splinters.";
 
-        private const string ShatterNotBuilt = "Shattering isn't built yet: it comes with the Affix Splinters.";
-        private const string ShardNotBuilt = "Corrupting gear with a shard isn't built yet.";
-        private const string SplinterNotBuilt = "Affix Splinters can't be applied yet.";
+        private const string ShatterUnavailable = "Shattering isn't available (see the log).";
+        private const string DontWarnLabel = "Don't warn me again";
         private const string BagOnly = "Put in gear from your Bag.";
         private const string NotATarget = "This item can't be worked at the Riftforge.";
         private const string NoTarget = "Put gear in the forge first: drag it from your Bag.";
@@ -68,6 +68,9 @@ namespace Corruption.Content
         private static string _confirmOperation;
         private static ItemDrop.ItemData _confirmMaterial;
         private static bool _popupOpen;
+        private static GameObject _dontWarnRow;
+        private static GameObject _dontWarnTick;
+        private static bool _dontWarn;
         private static int _escapeFrame = -1;
         private static bool _detailsDirty;
         private static float _nextDetails;
@@ -375,7 +378,8 @@ namespace Corruption.Content
                 return;
             }
             var option = options[chosen];
-            if (ForgeRules.NeedsConfirmation(option.Id))
+            // Every shard use asks first, unless this player switched its warning off (Krogon, 2026-11-10).
+            if (ForgeRules.NeedsConfirmation(option.Id) && CorruptionConfig.WarnBeforeCorrupting.Value)
             {
                 OpenConfirm(option, material);
                 return;
@@ -404,6 +408,16 @@ namespace Corruption.Content
                 _target = null;
                 _changed.Clear();
                 ShowResult(result.Message, true);
+            }
+            else if (result.Outcome == "unchanged")
+            {
+                // A shard that added nothing still changed the item: it is locked now. Never shown as "no change".
+                _changed.Clear();
+                ForgeView.SetResult(materialName + ": " + CorruptRules.UnchangedMessage, true);
+            }
+            else if (result.Outcome == "affix" || result.Outcome == "splinter")
+            {
+                ShowGained(materialName, result.Outcome == "affix", before, Loot.Of(target));
             }
             else if (result.Created.Count > 0)
             {
@@ -444,6 +458,28 @@ namespace Corruption.Content
             _changedUntil = Time.time + HighlightSeconds;
         }
 
+        /// <summary>
+        ///     A shard's corrupted affix, or a splinter's line: the headline says what happened in words ("corrupted and
+        ///     locked", "twin completed"), then the line the item gained, which is highlighted in the affix block.
+        /// </summary>
+        private static void ShowGained(string materialName, bool corrupted, LootItem before, LootItem after)
+        {
+            ForgeRules.Diff(Keys(before), Keys(after), out var added, out var removed);
+            bool twin = added.Count == 1 && after.Lines[added[0]].Resonant && removed.Count == 1;
+            var text = new System.Text.StringBuilder(materialName).Append(": ");
+            text.Append(corrupted
+                ? "corrupted and locked; " + (twin ? "a twin completed" : "1 corrupted affix added")
+                : twin ? "twin completed" : ForgeRules.Summary("", before?.Rarity ?? "normal", after?.Rarity ?? "normal", added.Count, 0).TrimStart(':', ' '));
+            foreach (int i in added)
+            {
+                text.Append("\n<color=").Append(corrupted ? RiftforgeCrafting.CorruptedColor : "#B8F08A").Append(">+ ")
+                    .Append(ShortLine(after.Lines[i])).Append("</color>");
+            }
+            ForgeView.SetResult(text.ToString(), true);
+            _changed = added;
+            _changedUntil = Time.time + HighlightSeconds;
+        }
+
         private static List<string> Keys(LootItem loot)
         {
             var keys = new List<string>();
@@ -451,7 +487,7 @@ namespace Corruption.Content
             {
                 foreach (var line in loot.Lines)
                 {
-                    keys.Add(string.Join("+", line.Ids) + "=" + LootItem.Format(line.Value));
+                    keys.Add(LootItem.LineToText(line));
                 }
             }
             return keys;
@@ -476,15 +512,21 @@ namespace Corruption.Content
             var option = RiftforgeCrafting.Options(_target, null).FirstOrDefault(o => o.Id == "shatter");
             if (option == null)
             {
-                ShowResult(ShatterNotBuilt, false);
+                ShowResult(ShatterUnavailable, false);
                 return;
             }
             if (!option.Allowed)
             {
+                // Also "Make room for up to X splinters.": checked here, before the box and before any roll.
                 ShowResult(option.Refusal, false);
                 return;
             }
             ClearPick();
+            if (!CorruptionConfig.WarnBeforeShattering.Value)
+            {
+                Run(option.Id, null);
+                return;
+            }
             OpenConfirm(option, null);
         }
 
@@ -502,13 +544,19 @@ namespace Corruption.Content
             CloseConfirm();
             _confirmOperation = option.Id;
             _confirmMaterial = material;
+            bool shatter = option.Id == ShatterRules.OperationId;
             var text = new System.Text.StringBuilder();
-            text.Append("<color=#FF8060>").Append(option.Id == "shatter" ? TargetName() + " will be destroyed."
-                : "This can destroy " + TargetName() + ".").Append("</color>\n\n");
+            text.Append("<color=#FF8060>").Append(shatter ? TargetName() + " will be destroyed."
+                : "This can destroy " + TargetName() + ".").Append("</color>\n");
+            text.Append(shatter ? "Cost: nothing." : "Cost: 1 " + Localization.instance.Localize(Texts.ShardName) +
+                                                     " (you have " + CountOf(ShardRules.ShardPrefab) + ").").Append("\n\n");
             foreach (var line in option.Preview)
             {
                 text.Append(line).Append('\n');
             }
+            // Room for the tickbox under the text.
+            text.Append("\n\n");
+            _dontWarn = false;
             _popupOpen = true;
             UnifiedPopup.Push(new YesNoPopup(option.Name, Localization.instance.Localize(text.ToString()),
                 () => Safe.Run("confirm at the Riftforge", () =>
@@ -517,16 +565,94 @@ namespace Corruption.Content
                     OnConfirm();
                 }),
                 () => Safe.Run("cancel at the Riftforge", CloseConfirm), false));
+            Safe.Run("add the don't-warn tickbox", AddDontWarnRow);
+        }
+
+        /// <summary>
+        ///     The "Don't warn me again" tickbox under the box's text (Krogon, 2026-11-10): one for shards and one for
+        ///     shattering, each remembered on its own in this player's settings. It only counts when Yes is pressed;
+        ///     cancelling changes nothing. The warnings come back from the mod's settings (10 - Riftforge).
+        /// </summary>
+        private static void AddDontWarnRow()
+        {
+            var popup = UnifiedPopup.instance;
+            var body = popup ? popup.bodyText : null;
+            if (!body)
+            {
+                return;
+            }
+            var row = new GameObject("Corruption_DontWarn", typeof(RectTransform), typeof(Image), typeof(Button));
+            var rt = (RectTransform)row.transform;
+            rt.SetParent(body.transform, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 0f);
+            float size = Mathf.Max(18f, body.fontSize);
+            rt.sizeDelta = new Vector2(size * 13f, size * 1.6f);
+            rt.anchoredPosition = Vector2.zero;
+            row.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.01f);   // only there to take the click
+
+            Image Square(string name, Transform parent, float side, Color color)
+            {
+                var go = new GameObject(name, typeof(RectTransform), typeof(Image));
+                var square = (RectTransform)go.transform;
+                square.SetParent(parent, false);
+                square.sizeDelta = new Vector2(side, side);
+                var image = go.GetComponent<Image>();
+                image.color = color;
+                image.raycastTarget = false;
+                return image;
+            }
+
+            var box = Square("Box", rt, size, new Color(0.78f, 0.72f, 0.47f));
+            var boxRt = (RectTransform)box.transform;
+            boxRt.anchorMin = boxRt.anchorMax = new Vector2(0f, 0.5f);
+            boxRt.pivot = new Vector2(0f, 0.5f);
+            boxRt.anchoredPosition = new Vector2(size * 0.3f, 0f);
+            Square("Inside", boxRt, size * 0.8f, new Color(0.12f, 0.1f, 0.08f));
+            _dontWarnTick = Square("Tick", boxRt, size * 0.5f, new Color(1f, 0.631f, 0.235f)).gameObject;
+            _dontWarnTick.SetActive(false);
+
+            var labelGo = new GameObject("Label", typeof(RectTransform));
+            var labelRt = (RectTransform)labelGo.transform;
+            labelRt.SetParent(rt, false);
+            labelRt.anchorMin = Vector2.zero;
+            labelRt.anchorMax = Vector2.one;
+            labelRt.offsetMin = new Vector2(size * 1.7f, 0f);
+            labelRt.offsetMax = Vector2.zero;
+            var label = labelGo.AddComponent<TextMeshProUGUI>();
+            label.font = body.font;
+            label.fontSize = body.fontSize;
+            label.color = body.color;
+            label.alignment = TextAlignmentOptions.MidlineLeft;
+            label.raycastTarget = false;
+            label.text = DontWarnLabel;
+
+            row.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                _dontWarn = !_dontWarn;
+                if (_dontWarnTick)
+                {
+                    _dontWarnTick.SetActive(_dontWarn);
+                }
+            });
+            _dontWarnRow = row;
         }
 
         private static void OnConfirm()
         {
             string id = _confirmOperation;
             var material = _confirmMaterial;
+            bool dontWarn = _dontWarn;
             CloseConfirm();
             if (id == null || !Active || !TargetStillHere())
             {
                 return;
+            }
+            if (dontWarn)
+            {
+                // Remembered between sessions, each warning on its own.
+                var setting = id == ShatterRules.OperationId ? CorruptionConfig.WarnBeforeShattering : CorruptionConfig.WarnBeforeCorrupting;
+                setting.Value = false;
             }
             if (material != null)
             {
@@ -551,6 +677,13 @@ namespace Corruption.Content
                 return;
             }
             _popupOpen = false;
+            _dontWarn = false;
+            if (_dontWarnRow)
+            {
+                UnityEngine.Object.Destroy(_dontWarnRow);
+            }
+            _dontWarnRow = null;
+            _dontWarnTick = null;
             if (UnifiedPopup.IsVisible())
             {
                 UnifiedPopup.Pop();
@@ -587,13 +720,6 @@ namespace Corruption.Content
             if (own && RiftforgeCrafting.IsMaterial(item))
             {
                 Pick(item);
-                return true;
-            }
-            string prefab = item.m_dropPrefab ? item.m_dropPrefab.name : "";
-            if (own && (prefab == ShardRules.ShardPrefab || TabRules.TabFor(prefab) == InventoryTab.Splinters))
-            {
-                ClearPick();
-                ShowResult(prefab == ShardRules.ShardPrefab ? ShardNotBuilt : SplinterNotBuilt, false);
                 return true;
             }
             if (_pick != null)
@@ -696,10 +822,12 @@ namespace Corruption.Content
             // Material-free operations only (no orb is asked), so this is cheap enough every frame.
             var option = _target != null ? RiftforgeCrafting.Options(_target, null).FirstOrDefault(o => o.Id == "shatter") : null;
             string tip = _target == null ? "Put gear in the forge first"
-                : option == null ? ShatterNotBuilt
-                : option.Allowed ? "Destroys the item for Affix Splinters; shows the chances first"
+                : option == null ? ShatterUnavailable
+                : option.Allowed ? "Destroys the item for Affix Splinters"
                 : option.Refusal;
-            ForgeView.SetButtons(_target != null, option != null && option.Allowed && _confirmOperation == null, tip);
+            // "Make room for up to X splinters." keeps the button live, so pressing it says so; rule refusals grey it out.
+            bool roomOnly = option != null && !option.Allowed && option.Refusal.StartsWith("Make room", System.StringComparison.Ordinal);
+            ForgeView.SetButtons(_target != null, option != null && (option.Allowed || roomOnly) && _confirmOperation == null, tip);
         }
 
         private static void UpdateCursor()
@@ -840,6 +968,11 @@ namespace Corruption.Content
         private static bool CanUse(ItemDrop.ItemData material)
         {
             string prefab = material.m_dropPrefab ? material.m_dropPrefab.name : "";
+            // Every splinter is its own material: what it holds decides whether it fits.
+            if (SplinterItem.IsSplinter(material) && material.m_customData.TryGetValue(SplinterRules.LineKey, out var held))
+            {
+                prefab += "|" + held;
+            }
             if (!Usable.TryGetValue(prefab, out bool usable))
             {
                 usable = RiftforgeCrafting.Options(_target, material).Any(o => o.Allowed);

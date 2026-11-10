@@ -14,6 +14,7 @@ namespace Corruption
         private const string LootSection = "7 - Loot";
         // Numbered after the design phase (9: inventory), so other features can take the numbers in between.
         private const string TabsSection = "9 - Inventory Tabs";
+        private const string RiftforgeSection = "10 - Riftforge";
 
         public static ConfigEntry<float> OneStarShardChance;
         public static ConfigEntry<float> TwoStarShardChance;
@@ -56,6 +57,8 @@ namespace Corruption
         public static ConfigEntry<string> ShardColor;
         public static ConfigEntry<float> ShardTintStrength;
         public static ConfigEntry<bool> ShardCustomModel;
+        public static ConfigEntry<bool> WarnBeforeCorrupting;
+        public static ConfigEntry<bool> WarnBeforeShattering;
         public static ConfigEntry<float> ShardGlowIntensity;
         public static ConfigEntry<float> ShardGlowRange;
         public static ConfigEntry<string> RiftforgeColor;
@@ -152,6 +155,14 @@ namespace Corruption
                 AdminOnly("Currency and Maps tabs on the player inventory: shards, essences and maps go there instead of the bag, " +
                           "weigh nothing, and still pay for crafting and drop into the gravestone. Off: the tabs are hidden and " +
                           "their contents kept (not lost) until they're turned on again."));
+
+            // Per player, not synced: each player's own choice, remembered between sessions (Krogon, 2026-11-10). The
+            // confirmation boxes' "Don't warn me again" tickboxes switch these off; switch them back on here.
+            WarnBeforeCorrupting = config.Bind(RiftforgeSection, "WarnBeforeCorrupting", true,
+                "Ask before a Corruption shard is used on gear (it can destroy the item, and locks it otherwise). " +
+                "Off: a shard works with one click, like an orb.");
+            WarnBeforeShattering = config.Bind(RiftforgeSection, "WarnBeforeShattering", true,
+                "Ask before gear is shattered into Affix Splinters (the item is always destroyed). Off: Shatter works with one click.");
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",

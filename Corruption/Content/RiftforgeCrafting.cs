@@ -24,7 +24,13 @@ namespace Corruption.Content
         public bool Done;                 // false: refused, nothing changed
         public string Message = "";       // the result message, or the refusal
         public ItemDrop.ItemData Item;    // the item afterwards, or null when it was destroyed
-        public List<ItemDrop.ItemData> Created = new List<ItemDrop.ItemData>(); // the mirror copy (later splinters)
+        public List<ItemDrop.ItemData> Created = new List<ItemDrop.ItemData>(); // the mirror copy, recovered splinters
+
+        /// <summary>
+        ///     What kind of thing happened, for the window's headline: "" for orbs, else "shattered", "splinter", or a
+        ///     shard's "bricked" / "unchanged" / "affix". "unchanged" still changed the item: it is now locked.
+        /// </summary>
+        public string Outcome = "";
     }
 
     /// <summary>Operations another part of the mod adds to the Riftforge (the rips session's map rolling, ids <c>map:*</c>).</summary>
@@ -40,9 +46,10 @@ namespace Corruption.Content
 
     /// <summary>
     ///     The Riftforge's crafting rules, the contract the UI session's window calls (riftforge-ui-brief.md §4, API
-    ///     version 1). This round (2026-11-08): the currency orbs (<see cref="OrbRules" />). Corrupting with a shard,
-    ///     shattering and Affix Splinters come later (ROADMAP L5). Everything works on the local player and items in
-    ///     their inventory; <c>co_craft</c> exercises it until the window exists (brief §5).
+    ///     version 1): the currency orbs (<see cref="OrbRules" />, 2026-11-08), and since 2026-11-10 (issue #29)
+    ///     corrupting with a shard (<see cref="CorruptRules" />), shattering (<see cref="ShatterRules" />) and Affix
+    ///     Splinters (<see cref="SplinterRules" />). Everything works on the local player and items in their
+    ///     inventory; <c>co_craft</c> exercises it without the window (brief §5).
     /// </summary>
     internal static class RiftforgeCrafting
     {
@@ -64,6 +71,11 @@ namespace Corruption.Content
         private static readonly System.Func<double> Random01 = () => UnityEngine.Random.value * 0.99999f;
         private static readonly List<IRiftforgeOperations> Registered = new List<IRiftforgeOperations>();
         private static OrbChanceTable _chance;
+        private static CorruptionOutcomes _outcomes;
+        private static ShatterRules _shatter;
+
+        public const string TablesMissing = "The loot tables didn't load; see the log";
+        public const string SplinterItemMissing = "The Affix Splinter item isn't available, so nothing was shattered (see the log)";
 
         /// <summary>Adds another session's operations (map rolling) to the window, so neither edits the other's code.</summary>
         public static void Register(IRiftforgeOperations operations)
@@ -86,6 +98,33 @@ namespace Corruption.Content
             }
             _chance = table;
         }
+
+        /// <summary>Reads <c>corruption_outcomes.csv</c> and <c>shattering.csv</c>. Problems are logged and switch that operation off.</summary>
+        public static void LoadForgeTables()
+        {
+            var errors = new List<string>();
+            var outcomes = CorruptionOutcomes.Parse(DataFiles.Read("corruption_outcomes.csv"), errors);
+            if (errors.Count > 0)
+            {
+                Jotunn.Logger.LogError("corruption_outcomes.csv has problems, so shards can't corrupt gear:\n" + string.Join("\n", errors));
+            }
+            else
+            {
+                _outcomes = outcomes;
+            }
+            errors = new List<string>();
+            var shatter = ShatterRules.Parse(DataFiles.Read("shattering.csv"), errors);
+            if (errors.Count > 0)
+            {
+                Jotunn.Logger.LogError("shattering.csv has problems, so shattering is off:\n" + string.Join("\n", errors));
+            }
+            else
+            {
+                _shatter = shatter;
+            }
+        }
+
+        public static bool IsShard(ItemDrop.ItemData item) => PrefabName(item) == ShardRules.ShardPrefab;
 
         public static void RegisterCommand()
         {
@@ -113,7 +152,7 @@ namespace Corruption.Content
             {
                 return false;
             }
-            if (OrbRules.OrbOf(PrefabName(item)) != null)
+            if (OrbRules.OrbOf(PrefabName(item)) != null || IsShard(item) || SplinterItem.IsSplinter(item))
             {
                 return true;
             }
@@ -137,6 +176,18 @@ namespace Corruption.Content
             if (orb != null)
             {
                 options.Add(OrbOption(orb, item));
+            }
+            else if (material == null)
+            {
+                options.Add(ShatterOption(item));
+            }
+            else if (IsShard(material))
+            {
+                options.Add(CorruptOption(item));
+            }
+            else if (SplinterItem.IsSplinter(material))
+            {
+                options.Add(SplinterOption(item, material));
             }
             foreach (var operations in Registered)
             {
@@ -169,6 +220,119 @@ namespace Corruption.Content
             return option;
         }
 
+        /// <summary>The checks every operation shares, before its own rules: at a Riftforge, readable affixes, tables loaded.</summary>
+        private static string CommonRefusal(string unreadable, bool tablesLoaded)
+        {
+            return !AtRiftforge() ? NotAtRiftforge : unreadable.Length > 0 ? unreadable : !tablesLoaded ? TablesMissing : "";
+        }
+
+        /// <summary>
+        ///     Shatter (no material): the rules' refusal, then room for every splinter that could come out, checked
+        ///     before anything is rolled (Krogon, 2026-11-10). The preview lists each line's chance from the data.
+        /// </summary>
+        private static RiftforgeOption ShatterOption(ItemDrop.ItemData item)
+        {
+            var option = new RiftforgeOption { Id = ShatterRules.OperationId, Name = "Shatter" };
+            var craft = ToCraft(item, out string unreadable);
+            bool loaded = Loot.Loaded && _shatter != null;
+            option.Refusal = CommonRefusal(unreadable, loaded);
+            if (option.Refusal.Length == 0)
+            {
+                option.Refusal = ShatterRules.Refusal(craft);
+            }
+            if (option.Refusal.Length == 0 && !RoomForSplinters(item, craft))
+            {
+                option.Refusal = ShatterRules.MakeRoom(ShatterRules.MaxSplinters(craft));
+            }
+            option.Allowed = option.Refusal.Length == 0;
+            if (loaded && unreadable.Length == 0)
+            {
+                option.Preview = _shatter.Preview(craft, Loot.Affixes);
+            }
+            return option;
+        }
+
+        /// <summary>
+        ///     Room for the most splinters the item can give: free cells in the Splinters tab and the Bag, plus the
+        ///     item's own Bag cell when it sits in the Bag grid (it is freed before the splinters arrive).
+        /// </summary>
+        private static bool RoomForSplinters(ItemDrop.ItemData item, CraftItem craft)
+        {
+            var player = Player.m_localPlayer;
+            var bag = player ? player.GetInventory() : null;
+            if (bag == null)
+            {
+                return false;
+            }
+            var tab = InventoryTabs.Get(InventoryTab.Splinters);
+            bool tabsOn = InventoryTabs.TabFor(SplinterTemplate()) != null;
+            int inTab = tab != null && tabsOn ? tab.GetEmptySlots() : 0;
+            return ShatterRules.HasRoom(ShatterRules.MaxSplinters(craft), inTab, bag.GetEmptySlots(), InBagGrid(bag, item));
+        }
+
+        /// <summary>Whether the item occupies a cell of the Bag grid itself (not an equipment or quick slot another mod adds).</summary>
+        private static bool InBagGrid(Inventory bag, ItemDrop.ItemData item)
+        {
+            return bag.ContainsItem(item) && item.m_gridPos.x >= 0 && item.m_gridPos.x < bag.GetWidth() && item.m_gridPos.y >= 0 &&
+                   item.m_gridPos.y < bag.GetHeight() && bag.GetItemAt(item.m_gridPos.x, item.m_gridPos.y) == item;
+        }
+
+        private static ItemDrop.ItemData SplinterTemplate()
+        {
+            var prefab = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(ShatterRules.SplinterPrefab) : null;
+            var drop = prefab ? prefab.GetComponent<ItemDrop>() : null;
+            if (!drop)
+            {
+                return null;
+            }
+            // The tab recognises an item by its prefab; the registered item's own data has none set.
+            drop.m_itemData.m_dropPrefab = prefab;
+            return drop.m_itemData;
+        }
+
+        /// <summary>Corrupt (a Corruption shard): the rules' refusal; the preview is the risk, with the chances from the data.</summary>
+        private static RiftforgeOption CorruptOption(ItemDrop.ItemData item)
+        {
+            var option = new RiftforgeOption { Id = CorruptRules.OperationId, Name = "Corrupt" };
+            var craft = ToCraft(item, out string unreadable);
+            bool loaded = Loot.Loaded && _outcomes != null;
+            option.Refusal = CommonRefusal(unreadable, loaded);
+            if (option.Refusal.Length == 0)
+            {
+                option.Refusal = CorruptRules.Refusal(craft, Loot.Affixes);
+            }
+            option.Allowed = option.Refusal.Length == 0;
+            if (loaded)
+            {
+                option.Preview = CorruptRules.Preview(_outcomes);
+            }
+            return option;
+        }
+
+        /// <summary>Apply splinter (an Affix Splinter): the rules' refusal; the preview is the exact line the item ends with.</summary>
+        private static RiftforgeOption SplinterOption(ItemDrop.ItemData item, ItemDrop.ItemData splinter)
+        {
+            var option = new RiftforgeOption { Id = SplinterRules.OperationId, Name = "Affix Splinter" };
+            var craft = ToCraft(item, out string unreadable);
+            var line = SplinterItem.LineOf(splinter);
+            option.Refusal = CommonRefusal(unreadable, Loot.Loaded);
+            if (option.Refusal.Length == 0)
+            {
+                option.Refusal = SplinterRules.Refusal(craft, line, Loot.Affixes);
+            }
+            option.Allowed = option.Refusal.Length == 0;
+            if (option.Allowed)
+            {
+                var outcome = SplinterRules.Outcome(craft, line, Loot.Affixes, out bool twin);
+                option.Preview.Add((twin ? "Completes a twin: " : "Adds ") + LootItem.LineText(outcome, Loot.Affixes));
+                if (craft.Rarity == "normal")
+                {
+                    option.Preview.Add("Becomes Magic");
+                }
+            }
+            return option;
+        }
+
         /// <summary>Does the operation. Checks everything again first; never throws (failures come back as a refusal).</summary>
         public static RiftforgeResult Apply(ItemDrop.ItemData item, ItemDrop.ItemData material, string operationId)
         {
@@ -183,15 +347,39 @@ namespace Corruption.Content
                         return theirs;
                     }
                 }
+                var player = Player.m_localPlayer;
+                var inventory = player ? player.GetInventory() : null;
+                if (operationId == ShatterRules.OperationId)
+                {
+                    if (inventory == null || item == null || !inventory.ContainsItem(item))
+                    {
+                        result.Message = "The item must be in your bag";
+                        return result;
+                    }
+                    return ApplyShatter(item, player, inventory, result);
+                }
+                var materialSource = player ? SourceOf(player, material) : null;
+                if (operationId == CorruptRules.OperationId || operationId == SplinterRules.OperationId)
+                {
+                    bool corrupt = operationId == CorruptRules.OperationId;
+                    if (inventory == null || item == null || !inventory.ContainsItem(item) || materialSource == null ||
+                        ReferenceEquals(item, material) || (corrupt ? !IsShard(material) : !SplinterItem.IsSplinter(material)))
+                    {
+                        result.Message = corrupt
+                            ? "The item must be in your bag and the shard in your bag or Currencies tab"
+                            : "The item must be in your bag and the splinter in your bag or Splinters tab";
+                        return result;
+                    }
+                    return corrupt
+                        ? ApplyCorrupt(item, material, player, inventory, materialSource, result)
+                        : ApplySplinter(item, material, inventory, materialSource, result);
+                }
                 string orb = OrbRules.OrbOf(PrefabName(material));
                 if (orb == null || operationId != OrbRules.OperationId(orb))
                 {
                     result.Message = "Put the matching orb in the material slot";
                     return result;
                 }
-                var player = Player.m_localPlayer;
-                var inventory = player ? player.GetInventory() : null;
-                var materialSource = player ? SourceOf(player, material) : null;
                 if (inventory == null || item == null || !inventory.ContainsItem(item) || materialSource == null ||
                     ReferenceEquals(item, material))
                 {
@@ -299,6 +487,154 @@ namespace Corruption.Content
             return result;
         }
 
+        /// <summary>
+        ///     Shatters the item as one operation (Krogon, 2026-11-10): everything is checked again and the room is
+        ///     counted before the roll; then the item goes and every recovered splinter is delivered (Splinters tab first,
+        ///     Bag as overflow, the tabs' own routing). If a splinter can't be delivered after all, everything is put
+        ///     back: the item returns, no splinter stays, nothing is dropped on the ground.
+        /// </summary>
+        private static RiftforgeResult ApplyShatter(ItemDrop.ItemData item, Player player, Inventory bag, RiftforgeResult result)
+        {
+            var option = ShatterOption(item);
+            if (!option.Allowed)
+            {
+                result.Message = option.Refusal;
+                return result;
+            }
+            var craft = ToCraft(item, out _);
+            string before = DisplayName(item);
+            // Rolled only now, after the checks: storage can't be used to turn down a roll.
+            var lines = _shatter.Shatter(craft, Random01);
+            var splinters = lines.Select(SplinterItem.Create).ToList();
+            if (splinters.Any(s => s == null))
+            {
+                result.Message = SplinterItemMissing;
+                return result;
+            }
+
+            if (item.m_equipped)
+            {
+                player.UnequipItem(item, false);
+            }
+            bag.RemoveItem(item);
+            var delivered = new List<ItemDrop.ItemData>();
+            bool failed = bag.ContainsItem(item);
+            foreach (var splinter in splinters)
+            {
+                if (failed || !bag.AddItem(splinter))
+                {
+                    failed = true;
+                    break;
+                }
+                delivered.Add(splinter);
+            }
+            if (failed)
+            {
+                foreach (var splinter in delivered)
+                {
+                    SourceOf(player, splinter)?.RemoveItem(splinter);
+                }
+                if (!bag.ContainsItem(item))
+                {
+                    bag.m_inventory.Add(item);
+                }
+                bag.Changed();
+                Jotunn.Logger.LogWarning("Shatter: a recovered splinter couldn't be delivered, so the item was put back and nothing was shattered.");
+                result.Message = "The splinters couldn't be stored, so nothing was shattered";
+                return result;
+            }
+
+            result.Done = true;
+            result.Item = null;
+            result.Outcome = "shattered";
+            result.Created.AddRange(splinters);
+            result.Message = splinters.Count == 0
+                ? $"Shattered {before}: no splinters recovered"
+                : $"Shattered {before}: {splinters.Count} splinter{(splinters.Count == 1 ? "" : "s")} ({string.Join("; ", lines.Select(SplinterItem.LineText))})";
+            return result;
+        }
+
+        /// <summary>
+        ///     Uses one Corruption shard on the item: destroyed, locked with nothing added, or one corrupted affix and
+        ///     locked. A completed attempt uses exactly one shard, also when the item is destroyed; a refusal uses none.
+        /// </summary>
+        private static RiftforgeResult ApplyCorrupt(ItemDrop.ItemData item, ItemDrop.ItemData shard, Player player, Inventory bag,
+            Inventory shardSource, RiftforgeResult result)
+        {
+            var option = CorruptOption(item);
+            if (!option.Allowed)
+            {
+                result.Message = option.Refusal;
+                return result;
+            }
+            string before = DisplayName(item);
+            var outcome = CorruptRules.Apply(ToCraft(item, out _), Loot.Affixes, _outcomes, Random01);
+            if (!outcome.Done)
+            {
+                result.Message = outcome.Refusal;
+                return result;
+            }
+            switch (outcome.Outcome)
+            {
+                case "bricked":
+                    if (item.m_equipped)
+                    {
+                        player.UnequipItem(item, false);
+                    }
+                    bag.RemoveItem(item);
+                    result.Item = null;
+                    result.Message = $"Destroyed: the shard consumed {before}.";
+                    break;
+                case "unchanged":
+                    item.m_customData[CorruptedKey] = "1";
+                    result.Message = $"{before}: {CorruptRules.UnchangedMessage}";
+                    break;
+                default:
+                    outcome.Loot.Write(item.m_customData);
+                    item.m_customData[CorruptedKey] = "1";
+                    result.Message = $"{DisplayName(item)}: corrupted and locked; gained " +
+                                     (outcome.CompletedTwin ? "a resonant twin, " : "") + LootItem.LineText(outcome.Line, Loot.Affixes) + ".";
+                    break;
+            }
+            shardSource.RemoveItem(shard, 1);
+            bag.Changed();
+            result.Done = true;
+            result.Outcome = outcome.Outcome;
+            return result;
+        }
+
+        /// <summary>Puts a splinter's line on the item with its exact value (a completed twin: the sum plus the resonance bonus) and uses the splinter up.</summary>
+        private static RiftforgeResult ApplySplinter(ItemDrop.ItemData item, ItemDrop.ItemData splinter, Inventory bag, Inventory splinterSource,
+            RiftforgeResult result)
+        {
+            var option = SplinterOption(item, splinter);
+            if (!option.Allowed)
+            {
+                result.Message = option.Refusal;
+                return result;
+            }
+            var outcome = SplinterRules.Apply(ToCraft(item, out _), SplinterItem.LineOf(splinter), Loot.Affixes);
+            if (!outcome.Done)
+            {
+                result.Message = outcome.Refusal;
+                return result;
+            }
+            outcome.Loot.Write(item.m_customData);
+            splinterSource.RemoveItem(splinter);
+            bag.Changed();
+            result.Done = true;
+            result.Outcome = "splinter";
+            result.Message = $"{DisplayName(item)} " + (outcome.CompletedTwin ? "completed a twin: " : "gained ") +
+                             LootItem.LineText(outcome.Line, Loot.Affixes);
+            return result;
+        }
+
+        /// <summary>The first Corruption shard in the bag or the Currencies tab, or null.</summary>
+        public static ItemDrop.ItemData FindShard(Player player)
+        {
+            return InventoryTabs.Find(player, IsShard, out _);
+        }
+
         /// <summary>The result message (brief §3): "Grim Fang gained +12% fire damage".</summary>
         private static string Message(string orb, string before, ItemDrop.ItemData item, OrbResult outcome)
         {
@@ -386,15 +722,16 @@ namespace Corruption.Content
             public override string Name => "co_craft";
 
             public override string Help =>
-                "Corruption: co_craft [list | <orb> | give [count] | testcorrupt] - Riftforge crafting on the item in hotbar slot 1, with an " +
-                "orb from your Currency tab. list: what each orb you carry would do. <orb>: e.g. regal or orb:regal. give: every orb (default 5 each). " +
-                "testcorrupt: marks or unmarks the slot-1 item as corrupted (testing only; shards can't corrupt yet)";
+                "Corruption: co_craft [list | <orb> | corrupt | shatter | splinter | give [count] | testcorrupt] - Riftforge crafting on the item in " +
+                "hotbar slot 1, with an orb or shard from your Currencies tab. list: what each orb you carry would do. <orb>: e.g. regal or orb:regal. " +
+                "corrupt: uses a Corruption shard. shatter: shatters it (no confirmation). splinter: applies the first splinter you carry. " +
+                "give: every orb and shards (default 5 each). testcorrupt: marks or unmarks the slot-1 item as corrupted (testing only)";
 
             public override bool IsCheat => true;
 
             public override List<string> CommandOptionList()
             {
-                return new[] { "list", "give", "testcorrupt" }.Concat(OrbRules.Orbs).ToList();
+                return new[] { "list", "corrupt", "shatter", "splinter", "give", "testcorrupt" }.Concat(OrbRules.Orbs).ToList();
             }
 
             public override void Run(string[] args)
@@ -420,7 +757,12 @@ namespace Corruption.Content
                             inventory.AddItem(prefab, count);
                         }
                     }
-                    Console.instance.Print($"Added {count} of each orb to your Currency tab.");
+                    var shardPrefab = ObjectDB.instance.GetItemPrefab(ShardRules.ShardPrefab);
+                    if (shardPrefab)
+                    {
+                        inventory.AddItem(shardPrefab, count);
+                    }
+                    Console.instance.Print($"Added {count} of each orb and {count} Corruption shards to your Currencies tab.");
                     return;
                 }
                 if (command == "testcorrupt")
@@ -459,10 +801,21 @@ namespace Corruption.Content
                             options.AddRange(Options(item, found));
                         }
                     }
-                    Console.instance.Print($"Item: {DisplayName(item)}" + (AtRiftforge() ? "" : " (you're not at a Riftforge)"));
-                    if (options.Count == 0)
+                    options.AddRange(Options(item, null));
+                    var shard = FindShard(player);
+                    if (shard != null)
                     {
-                        Console.instance.Print("You carry no orbs: co_craft give.");
+                        options.AddRange(Options(item, shard));
+                    }
+                    var carried = InventoryTabs.Find(player, SplinterItem.IsSplinter, out _);
+                    if (carried != null)
+                    {
+                        options.AddRange(Options(item, carried));
+                    }
+                    Console.instance.Print($"Item: {DisplayName(item)}" + (AtRiftforge() ? "" : " (you're not at a Riftforge)"));
+                    if (options.Count <= 1)
+                    {
+                        Console.instance.Print("You carry no orbs or shards: co_craft give.");
                     }
                     foreach (var option in options)
                     {
@@ -475,6 +828,23 @@ namespace Corruption.Content
                     return;
                 }
 
+                if (command == "shatter" || command == "corrupt" || command == "splinter")
+                {
+                    var with = command == "corrupt" ? FindShard(player)
+                        : command == "splinter" ? InventoryTabs.Find(player, SplinterItem.IsSplinter, out _) : null;
+                    if (command != "shatter" && with == null)
+                    {
+                        Console.instance.Print(command == "corrupt" ? "You have no Corruption shard (co_craft give)." : "You carry no Affix Splinter.");
+                        return;
+                    }
+                    var done = Apply(item, with, command);
+                    Console.instance.Print(done.Done ? done.Message : "Refused: " + done.Message);
+                    if (done.Done)
+                    {
+                        player.Message(MessageHud.MessageType.Center, done.Message);
+                    }
+                    return;
+                }
                 string id = command.Contains(":") ? command : OrbRules.OperationId(command);
                 string wanted = id.StartsWith("orb:") ? id.Substring(4) : null;
                 if (wanted == null || !OrbRules.Orbs.Contains(wanted))

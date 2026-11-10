@@ -621,15 +621,19 @@ namespace Corruption.Content
                     return;
                 }
                 var tool = __instance.GetCurrentWeapon();
-                float set = Loot.Total(tool, "pickup_radius_set");
-                float add = Loot.Total(tool, "pickup_range");
-                if (set <= 0f && add <= 0f)
+                float set = Loot.Total(tool, "pickup_radius_set", false);
+                float add = Loot.Total(tool, "pickup_range", false);
+                // A shard's corrupted affix counts beyond the cap (corruption-design.md → Corrupted gear).
+                float corruptedSet = Loot.Total(tool, "pickup_radius_set", true);
+                float corruptedAdd = Loot.Total(tool, "pickup_range", true);
+                if (set <= 0f && add <= 0f && corruptedSet <= 0f && corruptedAdd <= 0f)
                 {
                     return;
                 }
                 __state = __instance.m_autoPickupRange;
                 float cap = AffixTotals.Cap(float.MaxValue, "magnetic", Loot.Caps);
-                __instance.m_autoPickupRange = GatheringRules.PickupRadius(__state, set, add, cap < float.MaxValue ? cap : 0f);
+                float capped = GatheringRules.PickupRadius(__state, set, add, cap < float.MaxValue ? cap : 0f);
+                __instance.m_autoPickupRange = Mathf.Max(capped, corruptedSet) + Mathf.Max(0f, corruptedAdd);
             }
 
             private static void Finalizer(Player __instance, float __state)
@@ -656,8 +660,10 @@ namespace Corruption.Content
                     return 1f;
                 }
                 // Skald's and Fenrir (parry and kill buffs, LootProcs) share the cap with Swift.
-                float percent = AffixTotals.Cap(Loot.Total(Player.m_localPlayer.GetCurrentWeapon(), "attack_speed") +
-                                                LootProcs.BuffAttackSpeedPercent(Player.m_localPlayer), "attack_speed", Loot.Caps);
+                // A shard's corrupted Swift adds beyond the cap; the buffs stay under it (their value isn't split).
+                var weapon = Player.m_localPlayer.GetCurrentWeapon();
+                float percent = AffixTotals.Capped(Loot.Total(weapon, "attack_speed", false) + LootProcs.BuffAttackSpeedPercent(Player.m_localPlayer),
+                    Loot.Total(weapon, "attack_speed", true), "attack_speed", Loot.Caps);
                 return 1f + percent / 100f;
             }
 
