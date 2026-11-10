@@ -77,5 +77,11 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 - Splinters on a white item: the first (a prefix) worked and turned it Magic; a second prefix was refused; a suffix for another item type was refused; a fitting suffix worked (a 2-affix Magic item). "All intended and working well."
 - **Problem: "All the splinters look identical"**: every splinter in the tab is the same red gem (the base item's own icon), not the approved shapes and colours.
 
+### Your feedback (2026-11-10, second try: four screenshots of the two confirmations)
+- Shatter dialog: the layout is there (icon, name, Cost: Free, warning, two columns, explanation, Cancel / Shatter) but **it has no background panel**: the text floats over the inventory and is hard to read.
+- Shard box: still the game's Yes/No box; **the tickbox overlaps the last line of text**. "The shard box needs to be consistent in design as well."
+- "I still want a tickbox on both panels … they need to have an option to hide the panel once they get used to the mechanics."
+- (The splinter-look fix isn't reported on yet.)
+
 ### What changed after the feedback
 - Splinter looks, second report (screenshot of splinters on the ground: small gems, the glows in different colours): **found.** The nine shape files (`Corruption/Assets/Splinters/*.obj`) never reached GitHub: the repository's ignore list skips `.obj` files, with exceptions only for the shard's and the orbs' folders. So Krogon's build had the colours and glows but no shapes, and each splinter fell back to a tinted gem. Fixed: exception added to `.gitignore`, the nine files committed. A start-up log line now reports how many looks, models and icons loaded. To re-test.

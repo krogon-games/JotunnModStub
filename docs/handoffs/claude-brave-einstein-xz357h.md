@@ -66,6 +66,11 @@ Krogon's brief for the Shatter confirmation (2026-11-10, during the play-test):
 23. **Every shatter asks: the Shatter dialog has no "Don't warn me again".** **Replaces** decisions 10 and 13 for shattering (the shard's tickbox is unchanged).
 24. **The dialog is shown to Krogon before the polish counts as done**, with short and long affix descriptions, resonant lines and the most lines, checked for clipping, chance-column alignment and button separation.
 
+Krogon, after seeing the dialogs in game (2026-11-10, four screenshots):
+
+25. **Both confirmations keep a "Don't warn me again" tickbox** ("this action will be done many many times by players. they need to have an option to hide the panel once they get used to the mechanics"). **Replaces** decision 23; decisions 10 and 13 stand again (separate, remembered).
+26. **The shard's confirmation uses the same structured design as the Shatter dialog** ("needs to be consistent in design as well").
+
 ## Playtest
 
 `docs/playtests/claude-brave-einstein-xz357h.md`: checklist A–H written 2026-11-10 (shattering, full storage, splinters, shards, tickboxes, caps, reconnect). No feedback yet.
