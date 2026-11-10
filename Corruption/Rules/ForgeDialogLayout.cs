@@ -4,16 +4,17 @@ using System.Collections.Generic;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     Where everything sits in the Shatter confirmation (Krogon's brief, 2026-11-10): a centred title; the item's
-    ///     icon and name; "Cost: Free"; the warning; a two-column list (a wide affix column, a narrow right-aligned
-    ///     chance column); a short explanation; and a footer reserved for Cancel (left) and Shatter (right). The height
+    ///     Where everything sits in the Forge's two confirmations, Shatter and Corrupt (Krogon's brief, 2026-11-10; the
+    ///     same design for both): a centred title; the item's icon and name; the cost; the warning; a two-column list
+    ///     (a wide description column, a narrow right-aligned chance column); a short explanation; the "Don't warn me
+    ///     again" tickbox; and a footer reserved for Cancel (left) and the action (right). The height
     ///     comes from the content: the game measures each wrapped text at the widths given here and this class stacks
     ///     them. When the dialog would be taller than the screen allows, the whole dialog is scaled down, so nothing
     ///     clips and nothing overlaps. Units are canvas units at 16-point body text; the dialog multiplies them by the
     ///     game's own text size. Y runs down from the dialog's top. No game dependencies, so it is unit-tested;
-    ///     <c>tools/mockup_shatter_dialog.py</c> draws the same numbers.
+    ///     <c>tools/mockup_forge_dialogs.py</c> draws the same numbers.
     /// </summary>
-    internal sealed class ShatterDialogLayout
+    internal sealed class ForgeDialogLayout
     {
         public const float Width = 600f;
         public const float Padding = 34f;
@@ -30,7 +31,10 @@ namespace Corruption.Rules
         public const float AfterHeader = 12f;
         public const float RowGap = 12f;
         public const float AfterRows = 18f;
-        public const float AfterExplanation = 22f;
+        public const float AfterExplanation = 18f;
+        public const float TickSize = 20f;
+        public const float TickGap = 10f;
+        public const float AfterTick = 20f;
         public const float FooterHeight = 78f;
         public const float ButtonWidth = 160f;
         public const float ButtonHeight = 42f;
@@ -57,7 +61,7 @@ namespace Corruption.Rules
             public float Right => X + W;
         }
 
-        public Box Title, Icon, Name, Cost, Warning, ListHeader, ChanceHeader, Divider, Explanation, Footer, Cancel, Confirm;
+        public Box Title, Icon, Name, Cost, Warning, ListHeader, ChanceHeader, Divider, Explanation, Tick, TickLabel, Footer, Cancel, Confirm;
         public readonly List<Box> Descriptions = new List<Box>();
         public readonly List<Box> Chances = new List<Box>();
         public float Height;
@@ -71,10 +75,10 @@ namespace Corruption.Rules
         ///     <see cref="DescriptionWidth" />. <paramref name="lineHeight" /> is one line of body text (a row is never
         ///     shorter). <paramref name="availableHeight" /> is the screen's height in the same units (0: don't scale).
         /// </summary>
-        public static ShatterDialogLayout Compute(float nameHeight, float warningHeight, IList<float> rowHeights, float explanationHeight,
+        public static ForgeDialogLayout Compute(float nameHeight, float warningHeight, IList<float> rowHeights, float explanationHeight,
             float lineHeight, float availableHeight)
         {
-            var l = new ShatterDialogLayout();
+            var l = new ForgeDialogLayout();
             float x = Padding, y = TitleTop;
             l.Title = new Box { X = x, Y = y, W = ContentWidth, H = TitleHeight };
             y = l.Title.Bottom + AfterTitle;
@@ -108,6 +112,12 @@ namespace Corruption.Rules
 
             l.Explanation = new Box { X = x, Y = y, W = ContentWidth, H = explanationHeight };
             y = l.Explanation.Bottom + AfterExplanation;
+
+            // "Don't warn me again": its own row, left-aligned with the text, above the footer.
+            float tickRow = Math.Max(TickSize, lineHeight);
+            l.Tick = new Box { X = x, Y = y + (tickRow - TickSize) / 2f, W = TickSize, H = TickSize };
+            l.TickLabel = new Box { X = x + TickSize + TickGap, Y = y, W = ContentWidth - TickSize - TickGap, H = tickRow };
+            y += tickRow + AfterTick;
 
             // The footer is its own band: the buttons never share space with text.
             l.Footer = new Box { X = 0f, Y = y, W = Width, H = FooterHeight };

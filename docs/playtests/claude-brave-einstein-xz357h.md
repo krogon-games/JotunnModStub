@@ -15,7 +15,7 @@
 
 #### A. Shattering (about 8 minutes)
 1. [ ] Get 3–4 Rare and Magic items (`co_loot rare`, `co_loot magic`). Open the Riftforge → **Forge** tab. Drag a Rare item onto the forge slot → the **Shatter** button is lit.
-2. [ ] Press **Shatter** → the **Shatter item** dialog (compare `docs/images/shatter_dialog_preview.png`): title centred; the item's icon and coloured name; "Cost: Free"; "This permanently destroys the item." once, in red-orange; **Potential splinters** with each affix on the left (bullets, a green ◆ line if resonant, wrapped lines indented) and **50%** on the right in its own column; two small grey lines of explanation; **Cancel** left and **Shatter** right, clear of the text. No tickbox. Nothing clipped or overlapping. Press **Cancel** (or Escape) → nothing changed, the item is still in the slot.
+2. [ ] Press **Shatter** → the **Shatter item** dialog (compare `docs/images/forge_dialog_preview.png`): a dark panel like the game's message boxes, nothing of the inventory showing through the text: title centred; the item's icon and coloured name; "Cost: Free"; "This permanently destroys the item." once, in red-orange; **Potential splinters** with each affix on the left (bullets, a green ◆ line if resonant, wrapped lines indented) and **50%** on the right in its own column; two small grey lines of explanation; a **Don't warn me again** tickbox on its own line; **Cancel** left and **Shatter** right, clear of the text. Nothing clipped or overlapping. Press **Cancel** (or Escape) → nothing changed, the item is still in the slot.
    - [ ] Try it with an item with a long affix (a parry or kill effect) and with a 4-affix Rare: still nothing clipped, the 50% column still lined up.
    - [ ] If you play at a large UI scale: the whole dialog fits on screen.
 3. [ ] Press **Shatter**, then **Shatter** in the dialog → the item is gone, the slot is empty, and the result says "Shattered …: N splinters (…)" or "… no splinters recovered". The inventory stays on the tab you were on.
@@ -42,9 +42,9 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 7. [ ] **Twin** (if you have both halves of one stat, e.g. a max-health prefix and a max-health suffix as splinters, or one on an item and the other as a splinter): apply the second half → one green ◆ resonant line whose number is **the two added, plus a quarter** (14 and 18 → 40). Same result every time.
 
 #### D. Corrupting with a shard (about 8 minutes)
-1. [ ] Put a Magic or Rare item in the slot. In **Currencies**, right-click the **Corruption shard**, click the slot → a box: "This can destroy <name>", "Cost: 1 Corruption shard (you have N)", three lines with **25% / 25% / 50%**, a line saying a surviving item is locked for good except for the Mirror, and a **Don't warn me again** tickbox.
-2. [ ] Press **No** → nothing changed; you still have N shards.
-3. [ ] Do it again and press **Yes**. Repeat on several items until you have seen all three results. Each time exactly **one** shard is used.
+1. [ ] Put a Magic or Rare item in the slot. In **Currencies**, right-click the **Corruption shard**, click the slot → the **Corrupt item** dialog, in the same design as Shatter's: the item's icon and name, "Cost: 1 Corruption shard (you have N)", "This can permanently destroy the item.", **Possible outcomes** with **25% / 25% / 50%** in the right column, two grey lines saying a surviving item is locked for good except for the Mirror, the **Don't warn me again** tickbox on its own line (not on top of any text), **Cancel** and **Corrupt**.
+2. [ ] Press **Cancel** → nothing changed; you still have N shards.
+3. [ ] Do it again and press **Corrupt**. Repeat on several items until you have seen all three results. Each time exactly **one** shard is used.
    - [ ] **Destroyed:** the item is gone, the slot empties, the result says "Destroyed: the shard consumed …".
    - [ ] **Unchanged:** the result says **"Corrupted and locked; no affix added."** (not "no change"); the item shows a red centred **Corrupted**.
    - [ ] **Corrupted affix:** one extra **red** line ending in "(corrupted)", highlighted for a few seconds; the item shows **Corrupted**. A full Rare has 5 lines.
@@ -53,11 +53,12 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 5. [ ] `spawn SwordBronze`, corrupt it until it gets an affix → it stays a normal (white) item with one red corrupted line.
 6. [ ] **Mirror:** use a Mirror of Kalandra on a corrupted item → the copy appears. On the **copy**: a shard, a splinter and Shatter are all refused ("Mirrored items can't be changed").
 
-#### E. "Don't warn me again" (shards only; about 2 minutes)
-1. [ ] In the shard's box, tick **Don't warn me again** and press **No** → next shard click still asks (the tick only counts with Yes).
-2. [ ] Tick it and press **Yes** → from now on a shard corrupts with one click, no box. **Shatter still asks every time** (it has no tickbox).
-3. [ ] Quit to the menu and come back → the shard warning is still off.
-4. [ ] To get it back: BepInEx config `com.krogongames.corruption.cfg` (or the in-game config manager) → section `10 - Riftforge` → set `WarnBeforeCorrupting` to `true`.
+#### E. "Don't warn me again" (about 3 minutes)
+1. [ ] In the Corrupt dialog, tick **Don't warn me again** and press **Cancel** → next shard click still asks (the tick only counts when you confirm).
+2. [ ] Tick it and press **Corrupt** → from now on a shard corrupts with one click, no dialog. **Shatter still asks** (its tickbox is separate).
+3. [ ] In the Shatter dialog, tick it and press **Shatter** → Shatter now works with one press.
+4. [ ] Quit to the menu and come back → both are still off.
+5. [ ] To get the warnings back: BepInEx config `com.krogongames.corruption.cfg` (or the in-game config manager) → section `10 - Riftforge` → set `WarnBeforeCorrupting` and `WarnBeforeShattering` to `true`.
 
 #### F. Tooltips stay short (1 minute)
 1. [ ] Hover an item with a movement speed, resistance, attack speed, pickup or life steal affix → no extra "Cap …" line (you asked for that; caps come with the stats sheet, issue #60).
@@ -82,6 +83,9 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 - Shard box: still the game's Yes/No box; **the tickbox overlaps the last line of text**. "The shard box needs to be consistent in design as well."
 - "I still want a tickbox on both panels … they need to have an option to hide the panel once they get used to the mechanics."
 - (The splinter-look fix isn't reported on yet.)
+
+### What changed after the second feedback
+- Both confirmations are now one dialog design (decisions 25–26): drawn with the game's message-box panel, heading, body font and buttons, over a plain dark backing so text can't float over the inventory; the shard's "Corrupt item" lists its three outcomes with their chances in the right column; each has its tickbox on a row of its own. Previews: `docs/images/forge_dialog_preview.png`. To re-test.
 
 ### What changed after the feedback
 - Splinter looks, second report (screenshot of splinters on the ground: small gems, the glows in different colours): **found.** The nine shape files (`Corruption/Assets/Splinters/*.obj`) never reached GitHub: the repository's ignore list skips `.obj` files, with exceptions only for the shard's and the orbs' folders. So Krogon's build had the colours and glows but no shapes, and each splinter fell back to a tinted gem. Fixed: exception added to `.gitignore`, the nine files committed. A start-up log line now reports how many looks, models and icons loaded. To re-test.

@@ -434,7 +434,7 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 - Put in a Magic or Rare item and shatter it. The item is destroyed. Costs nothing: no rune, no Corruption shard.
 - Each affix line has a **50%** chance to become an Affix Splinter. Live value: [`Corruption/Data/shattering.csv`](../Corruption/Data/shattering.csv).
 - **Uniques and corrupted items can't be shattered.** Nor can a Mirror's copy: it is locked like a corrupted item (user, 2026-11-10).
-- **Room first (user, 2026-11-10):** before anything is rolled there must be a place for every splinter that could come out (one per displayed line), in the Splinters tab or the Bag, counting the Bag cell the item frees: otherwise "Make room for up to X splinters." Shattering is all or nothing; splinters are never lost or dropped on the ground. ~~The confirmation has a "Don't warn me again" tickbox.~~ Every shatter asks, in its own dialog listing each affix with its chance (user, 2026-11-10).
+- **Room first (user, 2026-11-10):** before anything is rolled there must be a place for every splinter that could come out (one per displayed line), in the Splinters tab or the Bag, counting the Bag cell the item frees: otherwise "Make room for up to X splinters." Shattering is all or nothing; splinters are never lost or dropped on the ground. The confirmation is its own dialog listing each affix with its chance, with a "Don't warn me again" tickbox, remembered per player (user, 2026-11-10: players shatter many times).
 - **A resonant twin line gives one splinter holding the combined resonant value** (user: "one of the most powerful crafting mechanics"). The line is one affix line, so it gets one 50% roll (confirmed by the user 2026-10-28).
 
 **Affix Splinters:**

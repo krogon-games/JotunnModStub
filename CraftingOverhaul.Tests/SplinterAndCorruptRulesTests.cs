@@ -391,8 +391,15 @@ namespace CraftingOverhaul.Tests
             Assert.Contains("locked", preview[3]);
             Assert.Contains("Mirror", preview[3]);
 
+            var lines = CorruptRules.OutcomeLines(Outcomes());
+            Assert.Equal(new[] { "25%", "25%", "50%" }, lines.Select(l => l.Chance));
+            Assert.StartsWith("Destroyed", lines[0].Text);
+            Assert.StartsWith("Unchanged and locked", lines[1].Text);
+            Assert.Contains("corrupted affix", lines[2].Text);
+
             var errors = new List<string>();
             var other = CorruptionOutcomes.Parse("outcome,status,chance\nbricked,approved,10\nunchanged,approved,30\naffix,approved,60\n", errors);
+            Assert.Equal(new[] { "10%", "30%", "60%" }, CorruptRules.OutcomeLines(other).Select(l => l.Chance));
             Assert.StartsWith("10% destroyed", CorruptRules.Preview(other)[0]);   // read from the table, not written in
         }
 

@@ -94,6 +94,27 @@ namespace Corruption.Rules
             };
         }
 
+        /// <summary>One line of the confirmation's outcome list: what can happen, and its chance from the table.</summary>
+        public struct OutcomeLine
+        {
+            public string Text;
+            public string Chance;
+        }
+
+        public const string Warning = "This can permanently destroy the item.";
+        public const string Explanation = "If it survives it is corrupted: locked for good.\nOnly a Mirror of Kalandra still works on it.";
+
+        /// <summary>The three outcomes for the confirmation's two columns, in the table's order, with the chances read from it.</summary>
+        public static List<OutcomeLine> OutcomeLines(CorruptionOutcomes table)
+        {
+            return new List<OutcomeLine>
+            {
+                new OutcomeLine { Text = "Destroyed: the item is gone for good", Chance = Percent(table, "bricked") },
+                new OutcomeLine { Text = "Unchanged and locked: no affix is added", Chance = Percent(table, "unchanged") },
+                new OutcomeLine { Text = "Gains one corrupted affix, and is locked", Chance = Percent(table, "affix") }
+            };
+        }
+
         private static string Percent(CorruptionOutcomes table, string outcome)
         {
             return (table.Percent.TryGetValue(outcome, out var chance) ? chance : 0f).ToString("0.##", CultureInfo.InvariantCulture) + "%";

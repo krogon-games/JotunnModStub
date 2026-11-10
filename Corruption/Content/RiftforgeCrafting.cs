@@ -130,6 +130,12 @@ namespace Corruption.Content
             return _shatter == null ? "" : _shatter.SplinterChance.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + "%";
         }
 
+        /// <summary>A shard's three outcomes with their chances from corruption_outcomes.csv, for the confirmation (empty when the table didn't load).</summary>
+        public static List<CorruptRules.OutcomeLine> CorruptOutcomeLines()
+        {
+            return _outcomes == null ? new List<CorruptRules.OutcomeLine>() : CorruptRules.OutcomeLines(_outcomes);
+        }
+
         public static bool IsShard(ItemDrop.ItemData item) => PrefabName(item) == ShardRules.ShardPrefab;
 
         public static void RegisterCommand()

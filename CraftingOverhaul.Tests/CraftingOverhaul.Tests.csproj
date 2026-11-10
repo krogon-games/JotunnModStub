@@ -55,7 +55,7 @@
     <Compile Include="..\Corruption\Rules\SplinterRules.cs" Link="Linked\SplinterRules.cs" />
     <Compile Include="..\Corruption\Rules\CorruptRules.cs" Link="Linked\CorruptRules.cs" />
     <Compile Include="..\Corruption\Rules\SplinterLooks.cs" Link="Linked\SplinterLooks.cs" />
-    <Compile Include="..\Corruption\Rules\ShatterDialogLayout.cs" Link="Linked\ShatterDialogLayout.cs" />
+    <Compile Include="..\Corruption\Rules\ForgeDialogLayout.cs" Link="Linked\ForgeDialogLayout.cs" />
     <Compile Include="..\Corruption\CorruptionDefaults.cs" Link="Linked\CorruptionDefaults.cs" />
     <Compile Include="..\Orlog\Rules\LevelTables.cs" Link="Linked\Orlog\LevelTables.cs" />
     <Compile Include="..\Orlog\Rules\ExperienceRules.cs" Link="Linked\Orlog\ExperienceRules.cs" />
