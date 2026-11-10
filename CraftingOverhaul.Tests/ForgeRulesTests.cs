@@ -107,17 +107,33 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void AffixesGetABulletAndAHangingIndent()
         {
-            Assert.Equal("<color=#C8B878>•</color><indent=1.1em><color=#8888FF>+12% attack speed [5–15]</color></indent>",
+            Assert.Equal("<size=125%><color=#C8B878>•</color></size><indent=1.1em><color=#8888FF>+12% attack speed [5–15]</color></indent>",
                 ForgeRules.BulletLine("<color=#8888FF>+12% attack speed [5–15]</color>", false));
         }
 
         [Fact]
-        public void AResonantAffixGetsTheDiamondInsteadOfTheWord()
+        public void AResonantAffixIsGreenWithADiamondInsteadOfTheWord()
         {
             string line = ForgeRules.BulletLine("<color=#FFFF77>+30% fire damage [10–60] ◆ resonant</color>", true);
-            Assert.StartsWith("<color=#5BD16A>◆</color>", line);
+            Assert.StartsWith("<size=70%><color=#5BD16A>◆</color></size>", line);
             Assert.DoesNotContain("resonant", line);
-            Assert.Contains("+30% fire damage [10–60]</color>", line);
+            Assert.DoesNotContain("#FFFF77", line);
+            Assert.Contains("<color=#5BD16A>+30% fire damage [10–60]</color>", line);
+        }
+
+        [Fact]
+        public void AnInactiveResonantAffixStaysGrey()
+        {
+            string line = ForgeRules.BulletLine("<color=#808080>+30% fire damage ◆ resonant (not active yet)</color>", true);
+            Assert.Contains("<color=#808080>+30% fire damage (not active yet)</color>", line);
+        }
+
+        [Fact]
+        public void TheMarksAreCentred()
+        {
+            Assert.Equal("\n<align=center><color=#E04040>Corrupted</color></align>", ForgeRules.CentredMarks("\n<color=#E04040>Corrupted</color>"));
+            Assert.Equal("", ForgeRules.CentredMarks(""));
+            Assert.Equal("", ForgeRules.CentredMarks(null));
         }
     }
 }

@@ -697,7 +697,7 @@ namespace Corruption.Content
                         text.Append(changed ? "<mark=#E8C66A40><b>" + line + "</b></mark>" : line);
                     }
                 }
-                text.Append(LootTooltip.LocksOf(_target));
+                text.Append(ForgeRules.CentredMarks(LootTooltip.LocksOf(_target)));
             });
             ForgeView.SetBench(TargetName(), Localization.instance.Localize(text.ToString()));
         }

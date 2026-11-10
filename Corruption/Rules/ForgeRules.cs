@@ -175,8 +175,28 @@ namespace Corruption.Rules
         public static string BulletLine(string line, bool resonant)
         {
             line = (line ?? "").Replace(ResonantSuffix, "");
-            string bullet = resonant ? "<color=" + ResonantColor + ">◆</color>" : "<color=" + BulletColor + ">•</color>";
+            if (resonant && line.StartsWith("<color=#", System.StringComparison.Ordinal) && !line.StartsWith("<color=" + InactiveColor,
+                    System.StringComparison.Ordinal))
+            {
+                // The whole resonant line is green, not only its diamond (Krogon, 2026-11-10).
+                int end = line.IndexOf('>');
+                line = "<color=" + ResonantColor + ">" + line.Substring(end + 1);
+            }
+            // The diamond's glyph is bigger than the bullet's: sized so the two look alike.
+            string bullet = resonant
+                ? "<size=70%><color=" + ResonantColor + ">◆</color></size>"
+                : "<size=125%><color=" + BulletColor + ">•</color></size>";
             return bullet + "<indent=1.1em>" + line + "</indent>";
+        }
+
+        /// <summary>The colour the tooltip gives affixes that don't do anything yet (left as it is).</summary>
+        public const string InactiveColor = "#808080";
+
+        /// <summary>The Corrupted and Mirrored marks under the affixes, centred (Krogon, 2026-11-10).</summary>
+        public static string CentredMarks(string marks)
+        {
+            marks = (marks ?? "").Trim('\n');
+            return marks.Length == 0 ? "" : "\n<align=center>" + marks + "</align>";
         }
     }
 }

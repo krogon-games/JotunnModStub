@@ -116,7 +116,7 @@ namespace Corruption.Content
         typeof(ItemDrop.ItemData), typeof(int), typeof(bool), typeof(float), typeof(int), typeof(bool))]
     internal static class LootTooltip
     {
-        private const string InactiveColor = "#808080";
+        private const string InactiveColor = ForgeRules.InactiveColor;
 
         /// <summary>
         ///     While true, tooltips leave out the affix block: the Riftforge's Forge tab shows the affixes in their own

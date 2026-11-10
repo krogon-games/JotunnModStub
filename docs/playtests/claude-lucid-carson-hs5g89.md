@@ -100,5 +100,11 @@
 ### What changed after the feedback (fourth look)
 - Each affix under the forge slot starts with a round bullet (a green ◆ when resonant, instead of the word "resonant" at the end); its wrapped lines are indented under the text; a little more space between affixes.
 
+### Your feedback (2026-11-10, fifth look, screenshot)
+- The bullets work (both symbols show). "Tweak the sizes a little: the diamond and the bullet need to be closer in size. Make the resonant affix green in colour, not just the diamond. Also center the 'Corrupted'."
+
+### What changed after the feedback (fifth look)
+- The diamond is drawn at 70% and the bullet at 125% of the text size, so they look alike; a resonant affix's whole text is green (an inactive one stays grey); Corrupted and Mirrored are centred under the affixes.
+
 ### Final play-test
-- A–E passed (2026-11-10). Waiting for a quick look at the affix bullets (D3 with a Rare item).
+- A–E passed (2026-11-10). Waiting for a quick look at these last sizes and colours (D3 with a Rare item that has a resonant affix, and a corrupted one: `co_craft testcorrupt`).
