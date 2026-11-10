@@ -11,12 +11,18 @@ using UnityEngine;
 namespace Corruption.Content
 {
     /// <summary>
-    ///     The Currency and Maps tabs (design phase 9; behaviour decided by the user 2026-10-29): two extra 8 x 4
-    ///     inventories of the local player, saved with the character in its custom data.
+    ///     The player's extra inventory tabs (design phase 9; behaviour decided by the user 2026-10-29; six tabs since
+    ///     2026-11-09, #30): Currencies, Splinters, Maps and Essences are 8 x 4 inventories of the local player, saved
+    ///     with the character in its custom data, each under its own key. Runes is only a placeholder: it has no
+    ///     inventory at all, so nothing can enter it by any route, and its key is never read or written (anything
+    ///     found there is left untouched).
     ///
-    ///     - Picked-up shards, essences and maps go straight to their tab (<see cref="TabRules.TabFor" />); the bag only
-    ///       when the tab is full. Anything that still lands in the bag (crafted, dragged in, from an old save) is moved
-    ///       to its tab twice a second.
+    ///     - Picked-up orbs and shards, essences, splinters and maps go straight to their tab (<see cref="TabRules.TabFor" />);
+    ///       the bag only when the tab is full. Anything that still lands in the bag (crafted, dragged in, from an old
+    ///       save) is moved to its tab twice a second, and so is anything in the wrong tab (the essences that older
+    ///       versions kept in Currencies move to Essences; with Essences full, they wait in Currencies).
+    ///     - Currencies and Essences give each material a fixed cell (<see cref="FixedLayout" />); their contents are
+    ///       re-arranged whenever they change. Only positions change.
     ///     - The tabs weigh nothing: they're not part of the bag, which is what the game weighs.
     ///     - They count and pay as part of the player's inventory, so recipes, the Riftforge, boss altars and building
     ///       costs use them (tabs pay first).
@@ -27,64 +33,114 @@ namespace Corruption.Content
     /// </summary>
     internal static class InventoryTabs
     {
+        // Save keys: Currency and Maps keep the names they've had since 2026-10-29, so existing saves load unchanged.
         private const string CurrencyKey = "corruption_tab_currency";
+        private const string SplintersKey = "corruption_tab_splinters";
         private const string MapsKey = "corruption_tab_maps";
+        private const string EssencesKey = "corruption_tab_essences";
+
+        /// <summary>Reserved for runes when they're built. Never read or written now, so anything saved there is kept.</summary>
+        public const string RunesKey = "corruption_tab_runes";
+
         private const float SweepInterval = 0.5f;
         private const string EaqsGuid = "randyknapp.mods.equipmentandquickslots";
 
+        /// <summary>The stored tabs, their save keys and their names, in parallel (<see cref="TabRules.StoredTabs" />).</summary>
+        private static readonly InventoryTab[] Tabs = TabRules.StoredTabs;
+        private static readonly string[] Keys = { CurrencyKey, SplintersKey, MapsKey, EssencesKey };
+
         private static Player _owner;
-        private static Inventory _currency;
-        private static Inventory _maps;
+        private static Inventory[] _inventories;
         /// <summary>Which tabs loaded completely; a tab that didn't is locked and its saved blob never written over.</summary>
-        private static readonly TabStore Store = new TabStore(CurrencyKey, MapsKey);
+        private static readonly TabStore Store = new TabStore(Keys);
         /// <summary>The locked-tab warning, shown once the HUD is up.</summary>
         private static string _pendingWarning;
         private static float _nextSweep;
         private static bool _movedToGrave;
+        private static bool _arranging;
+        private static bool _arrangePending;
         private static Func<int> _eaqsVisibleRows;
         private static bool _eaqsLookedUp;
+        private static List<string> _currencyHomes;
 
         public static bool Enabled => CorruptionConfig.TabsEnabled.Value;
 
+        /// <summary>The name token of a tab's button and messages.</summary>
+        public static string NameToken(InventoryTab tab)
+        {
+            switch (tab)
+            {
+                case InventoryTab.Currency: return "$corruption_tab_currency";
+                case InventoryTab.Splinters: return "$corruption_tab_splinters";
+                case InventoryTab.Maps: return "$corruption_tab_maps";
+                case InventoryTab.Runes: return "$corruption_tab_runes";
+                case InventoryTab.Essences: return "$corruption_tab_essences";
+                default: return "$corruption_tab_bag";
+            }
+        }
+
         /// <summary>
         ///     The local player's inventory for a tab (created empty for a new character), or null. Null too for a tab
-        ///     that couldn't be loaded (<see cref="IsLocked" />): nothing is spent from it or put in it this session.
+        ///     that couldn't be loaded (<see cref="IsLocked" />): nothing is spent from it or put in it this session; and
+        ///     always null for Runes, which holds nothing.
         /// </summary>
         public static Inventory Get(InventoryTab tab)
         {
             var player = Player.m_localPlayer;
-            if (!player || tab == InventoryTab.None)
+            int i = Array.IndexOf(Tabs, tab);
+            if (!player || i < 0)
             {
                 return null;
             }
             Ensure(player);
-            return IsLocked(tab) ? null : tab == InventoryTab.Currency ? _currency : _maps;
+            return IsLocked(tab) ? null : _inventories[i];
         }
 
         /// <summary>Whether a tab's saved contents couldn't be loaded this session (it's then kept in the save, untouched).</summary>
         public static bool IsLocked(InventoryTab tab)
         {
-            return tab != InventoryTab.None && !Store.IsUsable(KeyOf(tab));
+            int i = Array.IndexOf(Tabs, tab);
+            return i >= 0 && !Store.IsUsable(Keys[i]);
         }
 
-        private static string KeyOf(InventoryTab tab) => tab == InventoryTab.Currency ? CurrencyKey : MapsKey;
+        /// <summary>Whether the character's save has something under the reserved Runes key (kept as it is).</summary>
+        public static bool HasSavedRuneData()
+        {
+            var player = Player.m_localPlayer;
+            return player && player.m_customData != null && player.m_customData.TryGetValue(RunesKey, out var value) && !string.IsNullOrEmpty(value);
+        }
 
-        /// <summary>The usable tabs (none, one or both).</summary>
+        /// <summary>Which tab an inventory is, or None for anything that isn't one of the local player's usable tabs.</summary>
+        public static InventoryTab TabOf(Inventory inventory)
+        {
+            if (inventory == null || _inventories == null || _owner != Player.m_localPlayer)
+            {
+                return InventoryTab.None;
+            }
+            for (int i = 0; i < _inventories.Length; i++)
+            {
+                if (_inventories[i] == inventory)
+                {
+                    return IsLocked(Tabs[i]) ? InventoryTab.None : Tabs[i];
+                }
+            }
+            return InventoryTab.None;
+        }
+
+        /// <summary>The usable tabs (locked ones left out), in <see cref="TabRules.StoredTabs" /> order.</summary>
         private static IEnumerable<Inventory> UsableTabs()
         {
-            var currency = Get(InventoryTab.Currency);
-            if (currency != null)
+            foreach (var tab in Tabs)
             {
-                yield return currency;
-            }
-            var maps = Get(InventoryTab.Maps);
-            if (maps != null)
-            {
-                yield return maps;
+                var inventory = Get(tab);
+                if (inventory != null)
+                {
+                    yield return inventory;
+                }
             }
         }
 
-        /// <summary>The tab an item belongs in, if the tabs are on; null for everything else.</summary>
+        /// <summary>The tab an item belongs in, if the tabs are on; null for everything else (and never Runes).</summary>
         public static Inventory TabFor(ItemDrop.ItemData item)
         {
             if (!Enabled || item == null || !item.m_dropPrefab)
@@ -92,13 +148,12 @@ namespace Corruption.Content
                 return null;
             }
             InventoryTab tab = TabRules.TabFor(item.m_dropPrefab.name);
-            return tab == InventoryTab.None ? null : Get(tab);
+            return TabRules.AcceptsItems(tab) ? Get(tab) : null;
         }
 
         public static bool IsTab(Inventory inventory)
         {
-            return inventory != null && _owner == Player.m_localPlayer &&
-                   (inventory == _currency && !IsLocked(InventoryTab.Currency) || inventory == _maps && !IsLocked(InventoryTab.Maps));
+            return TabOf(inventory) != InventoryTab.None;
         }
 
         /// <summary>The first item in the bag or the tabs that matches; <paramref name="inventory" /> is where it is.</summary>
@@ -127,34 +182,154 @@ namespace Corruption.Content
             return null;
         }
 
+        /// <summary>Where an item of the local player's is: the bag or a usable tab; null if it's in neither.</summary>
+        public static Inventory SourceOf(Player player, ItemDrop.ItemData item)
+        {
+            if (!player || item == null)
+            {
+                return null;
+            }
+            foreach (var source in Sources(player))
+            {
+                if (source != null && source.ContainsItem(item))
+                {
+                    return source;
+                }
+            }
+            return null;
+        }
+
         private static IEnumerable<Inventory> Sources(Player player)
         {
             yield return player.GetInventory();
             if (Enabled && player == Player.m_localPlayer)
             {
-                yield return Get(InventoryTab.Currency);
-                yield return Get(InventoryTab.Maps);
+                foreach (var tab in UsableTabs())
+                {
+                    yield return tab;
+                }
             }
         }
 
         private static void Ensure(Player player)
         {
-            if (_owner == player && _currency != null)
+            if (_owner == player && _inventories != null)
             {
                 return;
             }
             _owner = player;
             Store.Reset();
             _pendingWarning = null;
-            _currency = NewTab("$corruption_tab_currency");
-            _maps = NewTab("$corruption_tab_maps");
+            _inventories = new Inventory[Tabs.Length];
+            for (int i = 0; i < Tabs.Length; i++)
+            {
+                _inventories[i] = NewTab(Tabs[i]);
+            }
         }
 
-        private static Inventory NewTab(string name)
+        private static Inventory NewTab(InventoryTab which)
         {
-            var tab = new Inventory(name, null, TabRules.Width, TabRules.Height);
-            tab.m_onChanged = (Action)Delegate.Combine(tab.m_onChanged, new Action(() => Learn(tab)));
+            var tab = new Inventory(NameToken(which), null, TabRules.Width, TabRules.Height);
+            tab.m_onChanged = (Action)Delegate.Combine(tab.m_onChanged, new Action(() =>
+            {
+                Learn(tab);
+                // Arranged on the next frame, never inside the game's own inventory code: a drag-and-drop swap is
+                // several steps, and moving items between them could make a step fail and lose the item.
+                _arrangePending = true;
+            }));
             return tab;
+        }
+
+        /// <summary>The fixed cells of a tab's materials (<see cref="FixedLayout" />), or null for a plain grid.</summary>
+        public static IList<string> HomesOf(InventoryTab tab)
+        {
+            if (tab == InventoryTab.Currency)
+            {
+                if (_currencyHomes == null)
+                {
+                    _currencyHomes = new List<string> { ShardRules.ShardPrefab };
+                    foreach (var orb in OrbRules.Orbs)
+                    {
+                        _currencyHomes.Add(OrbRules.Prefab(orb));
+                    }
+                }
+                return _currencyHomes;
+            }
+            return tab == InventoryTab.Essences ? EssenceItems.InOrder : null;
+        }
+
+        /// <summary>Arranges the fixed tabs after a change, once nothing is being dragged (called every frame).</summary>
+        private static void ArrangePending()
+        {
+            if (!_arrangePending || _inventories == null || InventoryGui.instance && InventoryGui.instance.m_dragItem != null)
+            {
+                return;
+            }
+            _arrangePending = false;
+            for (int i = 0; i < Tabs.Length; i++)
+            {
+                if (!IsLocked(Tabs[i]))
+                {
+                    Arrange(_inventories[i], Tabs[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Puts each material of a fixed tab in its home cell (<see cref="FixedLayout.Arrange" />). Only grid
+        ///     positions change. Called between frames only (<see cref="ArrangePending" />), never while dragging.
+        /// </summary>
+        private static void Arrange(Inventory tab, InventoryTab which)
+        {
+            var homes = HomesOf(which);
+            if (_arranging || homes == null || homes.Count == 0 || tab == null)
+            {
+                return;
+            }
+            _arranging = true;
+            try
+            {
+                var items = tab.m_inventory;
+                int count = items.Count;
+                var keys = new string[count];
+                var cells = new int[count];
+                var stacks = new int[count];
+                var pinned = new bool[count];
+                var dragged = InventoryGui.instance ? InventoryGui.instance.m_dragItem : null;
+                int width = tab.GetWidth();
+                for (int i = 0; i < count; i++)
+                {
+                    var item = items[i];
+                    keys[i] = item.m_dropPrefab ? item.m_dropPrefab.name : "";
+                    cells[i] = item.m_gridPos.y * width + item.m_gridPos.x;
+                    stacks[i] = item.m_stack;
+                    pinned[i] = item == dragged;
+                }
+                var arranged = FixedLayout.Arrange(width, tab.GetHeight(), homes, keys, cells, stacks, pinned);
+                bool moved = false;
+                for (int i = 0; i < count; i++)
+                {
+                    if (arranged[i] != cells[i])
+                    {
+                        items[i].m_gridPos = new Vector2i(arranged[i] % width, arranged[i] / width);
+                        moved = true;
+                    }
+                }
+                if (moved)
+                {
+                    tab.Changed();
+                    // Our own Changed() mustn't ask for another pass.
+                    _arrangePending = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Safe.Report("arrange an inventory tab", ex);
+            }
+            finally
+            {
+                _arranging = false;
+            }
         }
 
         /// <summary>
@@ -207,12 +382,21 @@ namespace Corruption.Content
             {
                 Safe.Run("load the inventory tabs", () =>
                 {
-                    _currency.RemoveAll();
-                    _maps.RemoveAll();
                     var problems = new List<string>();
-                    LoadTab(__instance, CurrencyKey, _currency, "$corruption_tab_currency", problems);
-                    LoadTab(__instance, MapsKey, _maps, "$corruption_tab_maps", problems);
+                    for (int i = 0; i < Tabs.Length; i++)
+                    {
+                        _inventories[i].RemoveAll();
+                        LoadTab(__instance, Keys[i], _inventories[i], NameToken(Tabs[i]), problems);
+                    }
                     _pendingWarning = problems.Count == 0 ? null : string.Join("\n", problems);
+                    // Older saves kept essences in Currencies: move them to Essences now (and on every sweep after,
+                    // while Essences is full). Only between usable tabs; a locked tab keeps everything it had.
+                    int moved = TidyTabs();
+                    if (moved > 0)
+                    {
+                        Jotunn.Logger.LogInfo($"Inventory tabs: moved {moved} item stack(s) to the tab they now belong in (essences to Essences).");
+                    }
+                    _arrangePending = true;
                 });
             }
 
@@ -263,6 +447,44 @@ namespace Corruption.Content
         public static void RegisterCommand()
         {
             CommandManager.Instance.AddConsoleCommand(new DamageCommand());
+            CommandManager.Instance.AddConsoleCommand(new MisplaceCommand());
+        }
+
+        /// <summary>
+        ///     co_tabs_misplace: puts an essence straight into Currencies, the way saves from before the Essences tab
+        ///     hold them, so the move to Essences can be watched. Testing only.
+        /// </summary>
+        private sealed class MisplaceCommand : ConsoleCommand
+        {
+            public override string Name => "co_tabs_misplace";
+
+            public override string Help =>
+                "Corruption (testing): co_tabs_misplace [count] - put Eikthyr essences straight into your Currencies tab, as older " +
+                "saves have them; within half a second they should move to the Essences tab";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var currency = Get(InventoryTab.Currency);
+                var prefab = ObjectDB.instance && EssenceItems.InOrder.Count > 0 ? ObjectDB.instance.GetItemPrefab(EssenceItems.InOrder[0]) : null;
+                var drop = prefab ? prefab.GetComponent<ItemDrop>() : null;
+                if (currency == null || !drop)
+                {
+                    Console.instance.Print("Needs a loaded character with a usable Currencies tab and the essences registered.");
+                    return;
+                }
+                int count = args.Length > 0 && int.TryParse(args[0], out var n) && n > 0 ? Math.Min(n, drop.m_itemData.m_shared.m_maxStackSize) : 1;
+                var item = drop.m_itemData.Clone();
+                item.m_dropPrefab = prefab;
+                item.m_stack = count;
+                if (!currency.AddItem(item))
+                {
+                    Console.instance.Print("Currencies is full.");
+                    return;
+                }
+                Console.instance.Print($"Put {count} essence(s) in Currencies. Open the inventory: they should be in Essences within half a second.");
+            }
         }
 
         /// <summary>
@@ -275,7 +497,7 @@ namespace Corruption.Content
             public override string Name => "co_tabs_damage";
 
             public override string Help =>
-                "Corruption (testing): co_tabs_damage <currency|maps> <missing|garbled|undo> - damage a tab's saved data to test " +
+                "Corruption (testing): co_tabs_damage <currency|splinters|maps|essences> <missing|garbled|undo> - damage a tab's saved data to test " +
                 "how a broken save is handled (the original is kept and 'undo' restores it); log out and back in after each";
 
             public override bool IsCheat => true;
@@ -283,14 +505,15 @@ namespace Corruption.Content
             public override void Run(string[] args)
             {
                 var player = Player.m_localPlayer;
-                string key = args.Length > 0 && args[0] == "currency" ? CurrencyKey : args.Length > 0 && args[0] == "maps" ? MapsKey : null;
+                int index = args.Length > 0 ? Array.IndexOf(new[] { "currency", "splinters", "maps", "essences" }, args[0]) : -1;
+                string key = index >= 0 ? Keys[index] : null;
                 string mode = args.Length > 1 ? args[1] : null;
                 if (!player || player != _owner || key == null || (mode != "missing" && mode != "garbled" && mode != "undo"))
                 {
                     Console.instance.Print(Help);
                     return;
                 }
-                var tab = key == CurrencyKey ? _currency : _maps;
+                var tab = _inventories[index];
                 string backupKey = key + "_backup";
                 var data = player.m_customData;
                 if (mode == "undo")
@@ -365,15 +588,18 @@ namespace Corruption.Content
         {
             private static void Prefix(Player __instance)
             {
-                if (__instance != _owner || _currency == null)
+                if (__instance != _owner || _inventories == null)
                 {
                     return;
                 }
                 Safe.Run("save the inventory tabs", () =>
                 {
-                    // A locked tab's blob stays exactly as it was loaded.
-                    Store.Save(__instance.m_customData, CurrencyKey, () => Write(_currency));
-                    Store.Save(__instance.m_customData, MapsKey, () => Write(_maps));
+                    // A locked tab's blob stays exactly as it was loaded; the Runes key is never written.
+                    for (int i = 0; i < Tabs.Length; i++)
+                    {
+                        var tab = _inventories[i];
+                        Store.Save(__instance.m_customData, Keys[i], () => Write(tab));
+                    }
                 });
             }
 
@@ -486,7 +712,15 @@ namespace Corruption.Content
         {
             private static void Postfix(Player __instance)
             {
-                if (__instance != Player.m_localPlayer || Time.time < _nextSweep)
+                if (__instance != Player.m_localPlayer)
+                {
+                    return;
+                }
+                if (_arrangePending)
+                {
+                    ArrangeSafely();
+                }
+                if (Time.time < _nextSweep)
                 {
                     return;
                 }
@@ -504,7 +738,16 @@ namespace Corruption.Content
             // Separate method: the lambda's captured player would otherwise be allocated on every Update call.
             private static void SweepSafely(Player player)
             {
-                Safe.Run("tidy currency and maps into their tabs", () => Sweep(player));
+                Safe.Run("tidy items into their inventory tabs", () =>
+                {
+                    Sweep(player);
+                    TidyTabs();
+                });
+            }
+
+            private static void ArrangeSafely()
+            {
+                Safe.Run("arrange the inventory tabs", ArrangePending);
             }
         }
 
@@ -535,6 +778,52 @@ namespace Corruption.Content
                     tab.MoveItemToThis(bag, item);
                 }
             }
+        }
+
+        /// <summary>
+        ///     Moves items that sit in the wrong tab to their own (<see cref="TabRules.MoveTo" />): the essences older
+        ///     versions kept in Currencies, mostly. Only between usable tabs, only when the right tab has room, never
+        ///     while the item is being dragged, and never into Runes. Returns how many stacks moved.
+        /// </summary>
+        private static int TidyTabs()
+        {
+            if (!Enabled || _inventories == null)
+            {
+                return 0;
+            }
+            var dragged = InventoryGui.instance ? InventoryGui.instance.m_dragItem : null;
+            int moved = 0;
+            for (int i = 0; i < Tabs.Length; i++)
+            {
+                var from = Get(Tabs[i]);
+                if (from == null)
+                {
+                    continue;
+                }
+                List<ItemDrop.ItemData> moving = null;
+                foreach (var item in from.GetAllItems())
+                {
+                    if (item != dragged && item.m_dropPrefab && TabRules.MoveTo(Tabs[i], item.m_dropPrefab.name) != InventoryTab.None)
+                    {
+                        (moving ?? (moving = new List<ItemDrop.ItemData>())).Add(item);
+                    }
+                }
+                if (moving == null)
+                {
+                    continue;
+                }
+                foreach (var item in moving)
+                {
+                    var to = Get(TabRules.MoveTo(Tabs[i], item.m_dropPrefab.name));
+                    if (to != null && to != from && to.CanAddItem(item))
+                    {
+                        // The game's own move: the item leaves 'from' only once it's in 'to'.
+                        to.MoveItemToThis(from, item);
+                        moved++;
+                    }
+                }
+            }
+            return moved;
         }
 
         /// <summary>The bag's visible rows: EquipmentAndQuickSlots' (its API) when it's installed, else the whole inventory.</summary>
@@ -654,7 +943,7 @@ namespace Corruption.Content
             private static void Prefix(Player __instance)
             {
                 _movedToGrave = false;
-                if (__instance != Player.m_localPlayer || !Enabled || __instance != _owner || _currency == null)
+                if (__instance != Player.m_localPlayer || !Enabled || __instance != _owner || _inventories == null)
                 {
                     return;
                 }
@@ -738,10 +1027,11 @@ namespace Corruption.Content
             {
                 var bag = player.GetInventory();
                 int bagFree = bag.GetEmptySlots();
-                var currency = Get(InventoryTab.Currency);
-                var maps = Get(InventoryTab.Maps);
-                int currencyFree = currency != null ? currency.GetEmptySlots() : 0;
-                int mapsFree = maps != null ? maps.GetEmptySlots() : 0;
+                var tabFree = new Dictionary<Inventory, int>();
+                foreach (var tab in UsableTabs())
+                {
+                    tabFree[tab] = tab.GetEmptySlots();
+                }
                 float weight = bag.GetTotalWeight();
                 foreach (var item in grave.GetAllItems())
                 {
@@ -752,14 +1042,9 @@ namespace Corruption.Content
                         {
                             continue;
                         }
-                        if (tab == currency && currencyFree > 0)
+                        if (tabFree.TryGetValue(tab, out int free) && free > 0)
                         {
-                            currencyFree--;
-                            continue;
-                        }
-                        if (tab == maps && mapsFree > 0)
-                        {
-                            mapsFree--;
+                            tabFree[tab] = free - 1;
                             continue;
                         }
                     }

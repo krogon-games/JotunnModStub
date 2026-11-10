@@ -2,30 +2,67 @@ using System;
 
 namespace Corruption.Rules
 {
-    /// <summary>The player's extra inventory tabs (design phase 9; decided by the user 2026-10-29).</summary>
+    /// <summary>
+    ///     The player's extra inventory tabs. Started 2026-10-29 (Currency and Maps); six tabs since Krogon's round
+    ///     brief of 2026-11-09 (issue #30). <c>None</c> is the Bag. The numbers are internal only (the tabs are saved
+    ///     under string keys), so new tabs are added at the end.
+    /// </summary>
     internal enum InventoryTab
     {
         None,
         Currency,
-        Maps
+        Maps,
+        Splinters,
+        Runes,
+        Essences
     }
 
     /// <summary>
     ///     Which tab an item belongs in, and the small sums the tabs need. Pure: no Unity, unit-tested.
     ///
-    ///     Decided by the user (2026-10-29): two tabs of 8 x 4 slots; picked-up currency and maps go straight to their
-    ///     tab (the bag only when the tab is full); tab contents weigh nothing; on death they go into the gravestone
-    ///     with the rest of the inventory.
+    ///     Decided by the user: 2026-10-29, tabs of 8 x 4 slots; picked-up currency and maps go straight to their tab
+    ///     (the bag only when the tab is full); tab contents weigh nothing; on death they go into the gravestone with
+    ///     the rest of the inventory. 2026-11-09 (#30): six tabs, Bag · Currencies · Splinters · Maps · Runes ·
+    ///     Essences; boss essences move out of Currencies into Essences; Splinters is a plain bag-sized grid; Runes
+    ///     takes nothing at all until runes are built.
     /// </summary>
     internal static class TabRules
     {
+        /// <summary>
+        ///     The game's own bag (<c>Humanoid.m_inventory</c>: 8 x 4, without EquipmentAndQuickSlots' or a backpack's
+        ///     extra rows). Every tab has this size, Splinters by the user's rule ("capacity equals the default bag").
+        /// </summary>
         public const int Width = 8;
+
         public const int Height = 4;
 
+        /// <summary>The tab buttons, left to right (user, 2026-11-09). <c>None</c> is the Bag.</summary>
+        public static readonly InventoryTab[] DisplayOrder =
+        {
+            InventoryTab.None, InventoryTab.Currency, InventoryTab.Splinters, InventoryTab.Maps, InventoryTab.Runes, InventoryTab.Essences
+        };
+
+        /// <summary>The tabs that hold items and are saved with the character. Runes isn't one of them.</summary>
+        public static readonly InventoryTab[] StoredTabs =
+        {
+            InventoryTab.Currency, InventoryTab.Splinters, InventoryTab.Maps, InventoryTab.Essences
+        };
+
         /// <summary>
-        ///     Currency (shards, boss essences, orbs; later Affix Splinters and runes) and maps, by prefab name. Items
-        ///     are recognised by the prefixes their tables give them (<see cref="EssenceTable.ItemPrefix" />, <see cref="OrbRules.ItemPrefix" />,
-        ///     <see cref="MapList.ItemPrefix" />), so a new essence or map row goes to its tab without code changes.
+        ///     Whether anything may ever be put in a tab. Runes takes nothing (user, 2026-11-09: an empty placeholder
+        ///     until the rune feature is deliberately built); the Bag and every stored tab do.
+        /// </summary>
+        public static bool AcceptsItems(InventoryTab tab)
+        {
+            return tab != InventoryTab.Runes;
+        }
+
+        /// <summary>
+        ///     Where an item belongs, by prefab name: orbs and the Corruption shard in Currencies, boss essences in
+        ///     Essences, Affix Splinters in Splinters, maps in Maps, everything else in the bag. Items are recognised by
+        ///     the prefixes their tables give them (<see cref="OrbRules.ItemPrefix" />, <see cref="EssenceTable.ItemPrefix" />,
+        ///     <see cref="ShatterRules.SplinterPrefab" />, <see cref="MapList.ItemPrefix" />), so a new row goes to its tab
+        ///     without code changes. Never <see cref="InventoryTab.Runes" />: no name sends an item there.
         /// </summary>
         public static InventoryTab TabFor(string prefabName)
         {
@@ -37,12 +74,30 @@ namespace Corruption.Rules
             {
                 return InventoryTab.Maps;
             }
-            if (prefabName == ShardRules.ShardPrefab || prefabName.StartsWith(EssenceTable.ItemPrefix, StringComparison.Ordinal) ||
-                prefabName.StartsWith(OrbRules.ItemPrefix, StringComparison.Ordinal))
+            if (prefabName.StartsWith(EssenceTable.ItemPrefix, StringComparison.Ordinal))
+            {
+                return InventoryTab.Essences;
+            }
+            if (prefabName.StartsWith(ShatterRules.SplinterPrefab, StringComparison.Ordinal))
+            {
+                return InventoryTab.Splinters;
+            }
+            if (prefabName == ShardRules.ShardPrefab || prefabName.StartsWith(OrbRules.ItemPrefix, StringComparison.Ordinal))
             {
                 return InventoryTab.Currency;
             }
             return InventoryTab.None;
+        }
+
+        /// <summary>
+        ///     Whether an item sitting in tab <paramref name="current" /> belongs in another tab, and which: an essence
+        ///     saved in Currencies before Essences existed, say. <see cref="InventoryTab.None" /> when it's where it
+        ///     belongs, or belongs in no tab (then it stays put: nothing is pushed out to a full bag).
+        /// </summary>
+        public static InventoryTab MoveTo(InventoryTab current, string prefabName)
+        {
+            var belongs = TabFor(prefabName);
+            return belongs == InventoryTab.None || belongs == current || !AcceptsItems(belongs) ? InventoryTab.None : belongs;
         }
 
         /// <summary>

@@ -195,7 +195,7 @@ namespace Corruption.Content
                 if (inventory == null || item == null || !inventory.ContainsItem(item) || materialSource == null ||
                     ReferenceEquals(item, material))
                 {
-                    result.Message = "The item must be in your bag and the orb in your bag or Currency tab";
+                    result.Message = "The item must be in your bag and the orb in your bag or Currencies tab";
                     return result;
                 }
                 var option = OrbOption(orb, item);
@@ -216,23 +216,36 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     Where a material is: the bag, or its inventory tab. Orbs live in the Currency tab (the tab pulls currency out
-        ///     of the bag twice a second), so the window and <c>co_craft</c> take them from there.
+        ///     Where a material is: the bag, or the inventory tab it's in. Orbs live in Currencies (the tab pulls currency
+        ///     out of the bag twice a second), so the window and <c>co_craft</c> take them from there; one that waits in
+        ///     the bag because its tab was full is taken from the bag.
         /// </summary>
         private static Inventory SourceOf(Player player, ItemDrop.ItemData material)
         {
-            if (material == null)
-            {
-                return null;
-            }
-            var bag = player.GetInventory();
-            if (bag != null && bag.ContainsItem(material))
-            {
-                return bag;
-            }
-            var tab = InventoryTabs.TabFor(material);
-            return tab != null && tab.ContainsItem(material) ? tab : null;
+            return InventoryTabs.SourceOf(player, material);
         }
+
+        /// <summary>
+        ///     Whether an item can go in the Riftforge's target slot (riftforge-ui-brief.md §1): gear that can carry
+        ///     affixes (a loot base, or an item that already has affixes). Materials and everything else can't. Map
+        ///     targets come with the rips session's operations (#31).
+        /// </summary>
+        public static bool IsTarget(ItemDrop.ItemData item)
+        {
+            if (item == null || IsMaterial(item) || item.m_shared == null || item.m_shared.m_maxStackSize > 1)
+            {
+                return false;
+            }
+            string prefab = PrefabName(item);
+            if (item.m_customData != null && item.m_customData.ContainsKey(LootItem.AffixesKey))
+            {
+                return true;
+            }
+            return prefab != null && Loot.Bases != null && Loot.Bases.Bases.Any(b => b.Prefab == prefab);
+        }
+
+        /// <summary>Whether the local player is close enough to a Riftforge to craft (the rules refuse otherwise).</summary>
+        public static bool IsAtRiftforge() => AtRiftforge();
 
         /// <summary>The first orb of this kind in the bag or the Currency tab, or null.</summary>
         public static ItemDrop.ItemData FindOrb(Player player, string orb)

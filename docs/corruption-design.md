@@ -300,7 +300,7 @@ These came from the original brainstorm. They're worth doing but are not part of
 
 ### Inventory and equipment slots
 
-- Dedicated equipment slots for talismans and rings, so they don't eat bag space. Two extra tabs off the main player inventory: a Currency tab (orbs, shards, Affix Splinters, runes) and a Maps tab. Affix Splinters don't stack, so they need the Currency tab (user, 2026-10-28).
+- Dedicated equipment slots for talismans and rings, so they don't eat bag space. Two extra tabs off the main player inventory: a Currency tab (orbs, shards, Affix Splinters, runes) and a Maps tab. Affix Splinters don't stack, so they need the Currency tab (user, 2026-10-28). **Changed 2026-11-09 (user, #30): six tabs**, Bag · Currencies · Splinters · Maps · Runes · Essences. Currencies holds orbs and Corruption shards in fixed places; Essences the boss essences, in fixed places; Splinters is a plain bag-sized grid of single splinters (limited on purpose: collections go in chests); Runes is an empty placeholder that takes nothing until runes are built.
 - *Decided 2026-10-29 (user), built:* the tabs are 8 × 4 each; picked-up currency and maps go straight to their tab (the bag only when it's full); tab contents weigh nothing; on death they go into the gravestone like the rest of the inventory. Boss essences count as currency. Detail: `FEATURES.md` → Currency and Maps tabs.
 - WoW-style backpack with tabs is UI work on top of existing extended-inventory approaches. Check compatibility with popular inventory mods before building; it may be better to depend on one than to compete.
 - *Decided 2026-10-28:* the group uses **AdventureBackpacks** for backpacks (it has its own models and textures) instead of us building one, and **EquipmentAndQuickSlots** for equipment slots. See [`mod-compatibility.md`](mod-compatibility.md).
@@ -421,7 +421,7 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 - Orbs never brick an item. Only the Corruption shard can.
 - Corrupted items (any shard use that doesn't brick the item) are locked; no orb works on them, except the Mirror of Kalandra (user, 2026-11-08). Corruption is the final step, as in PoE.
 - Uniques can only be touched by Divine Orbs and Jeweller's Orbs.
-- Orbs stack, live in their own Currency tab, and can go through portals. They're meant to be traded between players.
+- Orbs stack, live in their own Currencies tab (each orb in a fixed place, 2026-11-09), and can go through portals. They're meant to be traded between players.
 
 ### Affix Splinters and shattering
 

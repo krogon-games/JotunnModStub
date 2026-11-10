@@ -1,7 +1,7 @@
 # Riftforge window brief (for the UI session)
 
 **From:** the loot session (`claude/affixes-loot`), 2026-11-01. **For:** the UI session (`claude/ui-overhaul`), which builds the window (ROADMAP §4.4 U3), and the rips session, which adds map rolling (ROADMAP §4.3 R1).
-**Status:** draft; the orb questions in §6 were answered by the user on 2026-11-08 (§2 updated). The rules behind it (ROADMAP L5) are built by the loot session against this contract.
+**Status:** the orb questions in §6 were answered by the user on 2026-11-08 (§2 updated). **The window's design was replaced by the user's round brief of 2026-11-09** (issue #30, decisions in `docs/handoffs/claude-lucid-carson-hs5g89.md`): one gear slot, materials applied straight from the inventory, no operation list or confirm button for orbs (§1, §3). Built on `claude/lucid-carson-hs5g89` as the Riftforge workspace (`FEATURES.md` → Riftforge workspace), not play-tested yet. The rules behind it (ROADMAP L5) are built by the loot session against this contract; shard corruption, shattering and splinters are still to come (#29).
 
 The Riftforge is where loot is crafted: orbs, corrupting with a shard, shattering, Affix Splinters and (later) rolling maps. This brief is the contract between the screen and the rules, so both sides can be built at the same time. Design and reasons: [`corruption-design.md`](corruption-design.md) → Currency orbs, Corrupted gear, Affix Splinters and shattering, Map affixes and tiers; affix rules: [`AFFIX_RULES.md`](AFFIX_RULES.md).
 
@@ -18,12 +18,16 @@ Map rolling is the rips session's: it adds its operations to the same API (§4),
 
 ## 1. The window
 
-- **Where:** the UI session's call (ROADMAP U3): a tab on the Riftforge's crafting panel, or a window when using the station. It only works while the player is at a Riftforge (the rules check too).
-- **Two slots**, both pointing at items in the player's own inventory (Bag or Currency tab). Nothing is moved into the window, so nothing can be lost if it closes:
-  - **Item:** the gear (or map) being worked on.
-  - **Material:** an orb, a Corruption shard or an Affix Splinter. Empty for shattering.
-- **Operation list:** what this item and material allow (§2), each enabled or greyed with its reason.
-- **Preview** of the chosen operation, then **Confirm**, then the **result message**. The item slot keeps the item after an operation (so a player can keep crafting); it empties when the item is destroyed (bricked or shattered).
+**Replaced 2026-11-09 (user's round brief, #30).** The earlier design (two slots, an operation list, a preview and a Confirm button) is withdrawn, and so is crafting anywhere: **crafting is Riftforge-only**. Mock-ups: [`images/riftforge_workspace.png`](images/riftforge_workspace.png), [`images/riftforge_workspace_shatter.png`](images/riftforge_workspace_shatter.png) (`tools/mockup_riftforge_workspace.py`); the older `riftforge_window_*.png` and `riftforge_tab.png` show the withdrawn design.
+
+- **Where:** a third tab, "Forge", on the Riftforge's crafting panel, next to Craft and Upgrade (which keep working).
+- **Look (user, 2026-11-09, after the first version "looks very out of place"):** in line with the station's other tabs. Built from the game's own panel parts: the recipe list's place becomes the bench (forge slot, picked orb, result, Remove), the description's place a copy of the game's description panel (name, routine stats, Shatter as the main button); destructive operations ask in the game's own Yes/No box. **2026-11-10 (user):** the affixes sit under the forge slot in large text, a fixed place; the stats stay secondary at the game's size; the result of each use is short and full width (headline + changed lines, the changed affix highlighted briefly), where the cost slots were.
+- **One target slot**, pointing at gear in the player's **Bag** (nothing is moved, so nothing can be lost when the window closes). It's filled by dragging gear from the Bag onto it and emptied by a right-click or Remove; it clears itself when the item is destroyed or leaves the bag. No gear slot inside Currencies or Splinters, and no currency drawer.
+- **Materials stay where they are** (Currencies, Splinters, or the bag when their tab was full): right-click one to pick it (shown at the cursor, its cell highlighted), left-click the target to use it once; Shift keeps the pick for the next click; picking another material replaces it; Escape or a safe click drops it. Every use is a deliberate click; nothing rolls by itself. No operation list and no confirm button for ordinary orbs.
+- **The target and its normal tooltip stay visible** while the inventory switches tabs, and refresh straight after each use. The result message is shown under them; the gear stays in the slot.
+- **Destructive operations ask first:** Shatter (a button; the item is always destroyed) and corrupting with a shard (25% destroyed) show their warning and the chances from the rules (`Preview`), then Confirm. Kept separate from the fast orb loop. The shard's exact confirmation is still open; Claude's recommendation is this risk preview plus Confirm.
+- **Unavailable vs incompatible:** a material the player has none of keeps its fixed cell, dimmed with a 0; one that can't be used on the target is tinted red, and picking it shows the refusal text. The Jeweller's Orb stays disabled with "Sockets come later".
+- **No forced tab change** after crafting or shattering.
 - Item tooltips are the normal ones (the loot tooltip code); the window doesn't draw its own affix lines.
 
 ## 2. Operations
@@ -53,8 +57,8 @@ General rules (from the design): orbs never destroy an item; only the shard can.
 
 ## 3. What a player sees
 
-- **Greyed operations** show their refusal text, so the player learns the rules from the window.
-- **Random results** can't be previewed exactly: the preview says what kind of change happens and, where there's a table, the chances.
+- **Refusals** show their text in the window (on picking a material that can't be used, and on a click that's refused), so the player learns the rules; nothing is used up.
+- **Random results** can't be previewed exactly: the preview says what kind of change happens and, where there's a table, the chances. Never suggest a random result can be predicted.
 - **The result message** is one or two lines in the rarity colour, e.g. "Grim Fang gained +12% fire damage", "The shard shattered the Bronze Sword", "Shattered: 2 splinters (Swift +12% attack speed; of Embers +30% fire)".
 
 ## 4. API contract (version 1)
@@ -102,9 +106,11 @@ internal sealed class RiftforgeResult
 
 **Built (2026-11-08, loot round on `claude/loving-euler-qfkpzc`):** `RiftforgeCrafting` in `Corruption/Content/RiftforgeCrafting.cs` with the orb operations (rules in `Corruption/Rules/OrbRules.cs`), `IsMaterial` for the orbs and `Register`. Corrupt, shatter and splinter are not built yet.
 
-**Materials come from the Currency tab (play-test 2026-11-08).** The Currency tab pulls currency out of the bag twice a second, so an orb (or shard) can't wait in the bag or hotbar for the window: the material slot must accept items from the Currency tab. `Apply` takes the material from the bag or its tab; `RiftforgeCrafting.FindOrb(player, orb)` finds one.
+**Built for the window (2026-11-09, `claude/lucid-carson-hs5g89`):** `RiftforgeCrafting.IsTarget(item)` (gear that can carry affixes; the target slot accepts only these) and `IsAtRiftforge()`. The window treats `shatter` and `corrupt` as destructive (`ForgeRules.NeedsConfirmation`): it shows the option's `Preview` in the game's Yes/No box before `Apply`. For #29: the shatter option must come from `Options(item, null)` with id `shatter` and its preview must list each line's chance and that the item is destroyed; the corrupt option from `Options(item, shard)` once `IsMaterial(shard)` is true; the Affix Splinter item must be named `CorruptionAffixSplinter…` (`ShatterRules.SplinterPrefab`, so it goes to the Splinters tab) and `IsMaterial` must accept it. Map operations (#31) still register through `Register`; maps aren't accepted as targets until #31 says how.
 
-## 5. Until the window exists
+**Materials come from the Currencies tab (play-test 2026-11-08).** The Currency tab pulls currency out of the bag twice a second, so an orb (or shard) can't wait in the bag or hotbar for the window: the material slot must accept items from the Currency tab. `Apply` takes the material from the bag or its tab; `RiftforgeCrafting.FindOrb(player, orb)` finds one.
+
+## 5. Until the window exists (now: for testing)
 
 A cheat console command uses the same calls, so the rules can be play-tested first:
 - `co_craft list`: the options for the item in hotbar slot 1 with each orb the player carries (built: the orbs come from the Currency tab, not slot 2).
@@ -121,3 +127,4 @@ Answered by the user on 2026-11-08 (§2 has the rules):
 
 Still open:
 5. Orb drop sources and rates (ROADMAP L4) aren't needed for the window, but are for orbs to exist in play.
+6. The Corruption shard's exact confirmation (round brief 2026-11-09). Claude recommends: the risk preview with the chances from `corruption_outcomes.csv` and a separate Confirm, as for Shatter. To settle when #29 builds corruption.

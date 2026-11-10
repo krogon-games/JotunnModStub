@@ -116,47 +116,95 @@ namespace Corruption.Content
         typeof(ItemDrop.ItemData), typeof(int), typeof(bool), typeof(float), typeof(int), typeof(bool))]
     internal static class LootTooltip
     {
-        private const string InactiveColor = "#808080";
+        private const string InactiveColor = ForgeRules.InactiveColor;
+
+        /// <summary>
+        ///     While true, tooltips leave out the affix block: the Riftforge's Forge tab shows the affixes in their own
+        ///     panel (<see cref="Block" />) and the rest of the tooltip beside it.
+        /// </summary>
+        [System.ThreadStatic] public static bool OmitAffixes;
 
         private static void Postfix(ItemDrop.ItemData item, int qualityLevel, float worldLevel, ref string __result)
         {
+            if (OmitAffixes)
+            {
+                return;
+            }
             var loot = Loot.Of(item);
             bool corrupted = RiftforgeCrafting.IsCorrupted(item), mirrored = RiftforgeCrafting.IsMirrored(item);
             if (loot == null)
             {
                 if (corrupted || mirrored)
                 {
-                    __result += Locks(corrupted, mirrored);
+                    __result += "\n" + ForgeRules.CentredMarks(Locks(corrupted, mirrored));
                 }
                 return;
             }
             string result = __result;
             Safe.Run("add affix lines to a tooltip", () =>
             {
-                var text = new StringBuilder(result);
-                string color = Loot.ColorFor(loot.Rarity);
-                text.Append("\n\n<color=").Append(color).Append('>').Append(loot.Rarity == "rare" ? "Rare" : "Magic");
-                if (loot.Rarity == "rare")
-                {
-                    text.Append(" ").Append(Localization.instance.Localize(item.m_shared.m_name));
-                }
-                text.Append("</color>");
-                foreach (var line in loot.Lines)
-                {
-                    bool active = Loot.Affixes.TryGetValue(line.Ids[0], out var affix) && Loot.ActiveEffects.Contains(affix.Effect);
-                    string bonus = active ? Bonus(item, loot, line, affix.Effect, qualityLevel, worldLevel) : null;
-                    text.Append("\n<color=").Append(active ? color : InactiveColor).Append('>')
-                        .Append(LootItem.LineText(line, Loot.Affixes, bonus));
-                    if (!active)
-                    {
-                        text.Append(" (not active yet)");
-                    }
-                    text.Append("</color>");
-                }
-                text.Append(Locks(corrupted, mirrored));
-                result = text.ToString();
+                result = result + "\n\n" + Section(item, qualityLevel, worldLevel, null);
             });
             __result = result;
+        }
+
+        /// <summary>
+        ///     The affix block as the tooltip shows it: the coloured rarity header ("Rare Bronze Sword") in
+        ///     <paramref name="header" />, then one coloured line per affix, in the item's line order (index i is
+        ///     <c>Loot.Of(item).Lines[i]</c>). Empty for an item without affixes.
+        /// </summary>
+        public static List<string> Block(ItemDrop.ItemData item, int qualityLevel, float worldLevel, out string header)
+        {
+            var lines = new List<string>();
+            header = "";
+            var loot = Loot.Of(item);
+            if (loot == null)
+            {
+                return lines;
+            }
+            string color = Loot.ColorFor(loot.Rarity);
+            header = "<color=" + color + ">" + (loot.Rarity == "rare" ? "Rare " + Localization.instance.Localize(item.m_shared.m_name) : "Magic") +
+                     "</color>";
+            foreach (var line in loot.Lines)
+            {
+                bool active = Loot.Affixes.TryGetValue(line.Ids[0], out var affix) && Loot.ActiveEffects.Contains(affix.Effect);
+                string bonus = active ? Bonus(item, loot, line, affix.Effect, qualityLevel, worldLevel) : null;
+                lines.Add("<color=" + (active ? color : InactiveColor) + ">" + LootItem.LineText(line, Loot.Affixes, bonus) +
+                          (active ? "" : " (not active yet)") + "</color>");
+            }
+            return lines;
+        }
+
+        /// <summary>
+        ///     The affix section as every tooltip and the Forge tab's bench show it (Krogon, 2026-11-10: "copy those same
+        ///     rules"): the rarity header, a little space, each affix behind a bullet with a hanging indent (a resonant
+        ///     affix green with a diamond), then the Corrupted/Mirrored marks centred. Lines listed in
+        ///     <paramref name="highlight" /> (indexes into the item's lines) are marked with a soft band and bold.
+        ///     Empty for an item without affixes.
+        /// </summary>
+        public static string Section(ItemDrop.ItemData item, int qualityLevel, float worldLevel, ICollection<int> highlight)
+        {
+            var lines = Block(item, qualityLevel, worldLevel, out string header);
+            var loot = Loot.Of(item);
+            if (loot == null)
+            {
+                return "";
+            }
+            var text = new StringBuilder(header).Append("\n<size=45%> </size>");
+            for (int i = 0; i < lines.Count; i++)
+            {
+                bool resonant = i < loot.Lines.Count && loot.Lines[i].Resonant;
+                string line = ForgeRules.BulletLine(lines[i], resonant);
+                text.Append('\n').Append(highlight != null && highlight.Contains(i) ? "<mark=#E8C66A40><b>" + line + "</b></mark>" : line);
+            }
+            text.Append(ForgeRules.CentredMarks(LocksOf(item)));
+            return text.ToString();
+        }
+
+        /// <summary>The Riftforge marks of an item, as tooltip lines (empty when it has none).</summary>
+        public static string LocksOf(ItemDrop.ItemData item)
+        {
+            return Locks(RiftforgeCrafting.IsCorrupted(item), RiftforgeCrafting.IsMirrored(item));
         }
 
         /// <summary>The Riftforge locks: corrupted (no orb but the Mirror) and mirrored (never changed again).</summary>

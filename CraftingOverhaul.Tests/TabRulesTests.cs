@@ -31,14 +31,86 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void TheShardAndEveryRealEssenceGoToTheCurrencyTab()
+        public void TheShardAndEveryOrbGoToCurrencies()
+        {
+            Assert.Equal(InventoryTab.Currency, TabRules.TabFor(ShardRules.ShardPrefab));
+            Assert.All(OrbRules.Orbs, o => Assert.Equal(InventoryTab.Currency, TabRules.TabFor(OrbRules.Prefab(o))));
+        }
+
+        [Fact]
+        public void EveryRealEssenceGoesToTheEssencesTab()
         {
             var errors = new List<string>();
             var essences = EssenceTable.Parse(Data("essences.csv"), errors);
             Assert.Empty(errors);
             Assert.NotEmpty(essences);
-            Assert.All(essences, e => Assert.Equal(InventoryTab.Currency, TabRules.TabFor(e.Item)));
-            Assert.Equal(InventoryTab.Currency, TabRules.TabFor(ShardRules.ShardPrefab));
+            Assert.All(essences, e => Assert.Equal(InventoryTab.Essences, TabRules.TabFor(e.Item)));
+        }
+
+        [Theory]
+        [InlineData("CorruptionAffixSplinter")]
+        [InlineData("CorruptionAffixSplinter_Resonant")]
+        public void AffixSplintersGoToTheSplintersTab(string prefab)
+        {
+            Assert.Equal(InventoryTab.Splinters, TabRules.TabFor(prefab));
+        }
+
+        [Theory]
+        [InlineData("CorruptionRune_Thurisaz")]
+        [InlineData("Rune")]
+        [InlineData("CorruptionRune")]
+        [InlineData("RuneStone")]
+        [InlineData("CorruptionShard")]
+        [InlineData("CorruptionEssence_eikthyr")]
+        [InlineData("CorruptionMap_Meadows")]
+        public void NoItemIsEverSentToRunes(string prefab)
+        {
+            Assert.NotEqual(InventoryTab.Runes, TabRules.TabFor(prefab));
+            foreach (var tab in TabRules.DisplayOrder)
+            {
+                Assert.NotEqual(InventoryTab.Runes, TabRules.MoveTo(tab, prefab));
+            }
+        }
+
+        [Fact]
+        public void RunesTakesNothingAndIsNeverSaved()
+        {
+            Assert.False(TabRules.AcceptsItems(InventoryTab.Runes));
+            Assert.DoesNotContain(InventoryTab.Runes, TabRules.StoredTabs);
+            Assert.True(TabRules.AcceptsItems(InventoryTab.None));
+            Assert.All(TabRules.StoredTabs, t => Assert.True(TabRules.AcceptsItems(t)));
+        }
+
+        [Fact]
+        public void TheSixTabsInTheUsersOrder()
+        {
+            Assert.Equal(new[]
+            {
+                InventoryTab.None, InventoryTab.Currency, InventoryTab.Splinters, InventoryTab.Maps, InventoryTab.Runes, InventoryTab.Essences
+            }, TabRules.DisplayOrder);
+        }
+
+        [Fact]
+        public void SplintersHoldAsMuchAsTheDefaultBag()
+        {
+            // The game's bag: Humanoid.m_inventory = new Inventory("Inventory", null, 8, 4).
+            Assert.Equal(8, TabRules.Width);
+            Assert.Equal(4, TabRules.Height);
+        }
+
+        [Theory]
+        [InlineData("Currency", "CorruptionEssence_eikthyr", "Essences")]
+        [InlineData("Currency", "CorruptionAffixSplinter", "Splinters")]
+        [InlineData("Currency", "CorruptionShard", "None")]
+        [InlineData("Currency", "CorruptionOrb_Regal", "None")]
+        [InlineData("Essences", "CorruptionEssence_eikthyr", "None")]
+        [InlineData("Essences", "CorruptionShard", "Currency")]
+        [InlineData("Maps", "CorruptionMap_Meadows", "None")]
+        [InlineData("Currency", "Wood", "None")]
+        [InlineData("None", "CorruptionEssence_eikthyr", "Essences")]
+        public void MisplacedItemsMoveToTheirTabAndOthersStay(string current, string prefab, string expected)
+        {
+            Assert.Equal(Enum.Parse(typeof(InventoryTab), expected), TabRules.MoveTo((InventoryTab)Enum.Parse(typeof(InventoryTab), current), prefab));
         }
 
         [Theory]

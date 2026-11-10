@@ -19,7 +19,7 @@ namespace CraftingOverhaul
     {
         public const string PluginGUID = "com.krogongames.craftingoverhaul";
         public const string PluginName = "CraftingOverhaul";
-        public const string PluginVersion = "0.2.0";
+        public const string PluginVersion = "0.3.0";
 
         private static readonly Action LeaseTick = Containers.ChestLeases.Update;
 

@@ -11,6 +11,12 @@ namespace Corruption.Rules
     /// </summary>
     internal sealed class ShatterRules
     {
+        /// <summary>
+        ///     The Affix Splinter item's prefab name, or the start of it (the Splinters tab recognises splinters by it).
+        ///     The item itself is #29's (ROADMAP L5) and isn't built yet; it must use this name.
+        /// </summary>
+        public const string SplinterPrefab = "CorruptionAffixSplinter";
+
         /// <summary>Most affixes an item can have and still take a splinter, counting the splinter (the Magic limit).</summary>
         public const int MaxAffixesWithSplinters = 2;
 
