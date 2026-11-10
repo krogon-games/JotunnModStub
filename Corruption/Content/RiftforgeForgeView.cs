@@ -416,7 +416,7 @@ namespace Corruption.Content
             a.offsetMin = new Vector2(12f, buttonTop);
             a.offsetMax = new Vector2(-10f, -(98f + slotSize));
             _affixes.lineSpacing = 8f;
-            _affixes.paragraphSpacing = 10f;
+            _affixes.paragraphSpacing = 14f;
             // Shrinks only when an item has many long lines, never below a size that still reads easily.
             _affixes.enableAutoSizing = true;
             _affixes.fontSizeMax = _affixes.fontSize;

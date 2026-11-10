@@ -103,5 +103,21 @@ namespace CraftingOverhaul.Tests
         {
             Assert.Equal(expected, ForgeRules.Summary(material, before, after, added, removed));
         }
+
+        [Fact]
+        public void AffixesGetABulletAndAHangingIndent()
+        {
+            Assert.Equal("<color=#C8B878>•</color><indent=1.1em><color=#8888FF>+12% attack speed [5–15]</color></indent>",
+                ForgeRules.BulletLine("<color=#8888FF>+12% attack speed [5–15]</color>", false));
+        }
+
+        [Fact]
+        public void AResonantAffixGetsTheDiamondInsteadOfTheWord()
+        {
+            string line = ForgeRules.BulletLine("<color=#FFFF77>+30% fire damage [10–60] ◆ resonant</color>", true);
+            Assert.StartsWith("<color=#5BD16A>◆</color>", line);
+            Assert.DoesNotContain("resonant", line);
+            Assert.Contains("+30% fire damage [10–60]</color>", line);
+        }
     }
 }

@@ -94,5 +94,11 @@
 - Half a line of space between the rarity line and the affixes.
 - Not re-tested yet: a quick look at D2 and D3 is enough.
 
+### Your feedback (2026-11-10, fourth look, annotated screenshot)
+- "Everything looking good, almost there." The box, frame and spacing are fine. "The mods get lost, it looks like a wall of text": a bullet in front of each affix, the wrapped lines indented, a green diamond for a resonant affix.
+
+### What changed after the feedback (fourth look)
+- Each affix under the forge slot starts with a round bullet (a green ◆ when resonant, instead of the word "resonant" at the end); its wrapped lines are indented under the text; a little more space between affixes.
+
 ### Final play-test
-- A–E passed (2026-11-10). Waiting for the quick look at the three tweaks above.
+- A–E passed (2026-11-10). Waiting for a quick look at the affix bullets (D3 with a Rare item).

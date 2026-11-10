@@ -678,6 +678,7 @@ namespace Corruption.Content
             Safe.Run("show the forge gear's affixes", () =>
             {
                 var lines = LootTooltip.Block(_target, _target.m_quality, _target.m_worldLevel, out string header);
+                var loot = Loot.Of(_target);
                 if (lines.Count == 0)
                 {
                     text.Append("<color=#B0A898>No affixes yet</color>");
@@ -690,8 +691,10 @@ namespace Corruption.Content
                     {
                         text.Append('\n');
                         bool changed = highlight && _changed.Contains(i);
+                        bool resonant = loot != null && i < loot.Lines.Count && loot.Lines[i].Resonant;
+                        string line = ForgeRules.BulletLine(lines[i], resonant);
                         // The changed line stands out (a soft band and bold) until the highlight runs out.
-                        text.Append(changed ? "<mark=#E8C66A40><b>" + lines[i] + "</b></mark>" : lines[i]);
+                        text.Append(changed ? "<mark=#E8C66A40><b>" + line + "</b></mark>" : line);
                     }
                 }
                 text.Append(LootTooltip.LocksOf(_target));

@@ -160,5 +160,23 @@ namespace Corruption.Rules
         }
 
         private static string Count(int n, string verb) => n + (n == 1 ? " affix " : " affixes ") + verb;
+
+        /// <summary>What <c>LootItem.LineText</c> adds to a resonant line; the bench shows a diamond instead.</summary>
+        public const string ResonantSuffix = " ◆ resonant";
+
+        public const string BulletColor = "#C8B878";
+        public const string ResonantColor = "#5BD16A";
+
+        /// <summary>
+        ///     One affix on the bench as a bulleted item (Krogon, 2026-11-10: the affixes read as "a wall of text"): a
+        ///     round bullet, or a green diamond for a resonant line, then the text with its wrapped lines indented
+        ///     under the first word, so each affix starts clearly. TextMeshPro's indent keeps the hanging indent.
+        /// </summary>
+        public static string BulletLine(string line, bool resonant)
+        {
+            line = (line ?? "").Replace(ResonantSuffix, "");
+            string bullet = resonant ? "<color=" + ResonantColor + ">◆</color>" : "<color=" + BulletColor + ">•</color>";
+            return bullet + "<indent=1.1em>" + line + "</indent>";
+        }
     }
 }

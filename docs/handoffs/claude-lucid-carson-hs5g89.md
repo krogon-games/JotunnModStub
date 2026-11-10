@@ -16,7 +16,7 @@ Confirmed by Krogon in single player (2026-11-10, checklist A–E): the six inve
 
 ## Half-done and known issues
 
-Built 2026-11-09 and play-tested 2026-11-10 (see Done); only the three look tweaks after the play-test are untested (460 tests pass):
+Built 2026-11-09 and play-tested 2026-11-10 (see Done); only the four look tweaks after the play-test are untested (462 tests pass):
 - **Six tabs** (`FEATURES.md` → Inventory tabs): Bag · Currencies · Splinters · Maps · Runes · Essences. Currencies and Essences have fixed cells (`FixedLayout`, tested), dimmed with 0 when empty, no capacity lost (extra stacks use free cells, then the empty homes). Essences move out of Currencies on load and every half second (only between usable tabs, when they fit). Runes has no inventory; its save key is never read or written. New save keys `corruption_tab_splinters`, `corruption_tab_essences`; the old two unchanged. Test command `co_tabs_misplace`.
 - **Forge tab** (`FEATURES.md` → Riftforge workspace): one forge slot (a reference to bag gear), right-click to pick an orb, left-click the slot to use it, Shift keeps the pick, Escape drops it; red tint = can't be used here. Krogon's first look: orbs work, the look didn't fit → **redone** from the game's own panel parts (bench where the recipe list is; a copy of the game's description panel with the gear's tooltip, a cost slot for the pick and Shatter as its main button; the game's Yes/No box for confirmations); "Remove" button. Second look (2026-11-10): "much better"; then **affix block moved under the slot** in large text, stats on the right at the game's size without the icon, **cost slots replaced by a short full-width result** (headline + changed lines), the changed line highlighted 6 s. Untested. Mock-ups `docs/images/riftforge_workspace*.png`.
 - **Skills button removed** from above the inventory (CraftingOverhaul); the skills panel opens with K.
@@ -64,6 +64,10 @@ Krogon's third look and full play-test (2026-11-10, two screenshots, one annotat
 25. **Give the forge slot a nice border.**
 26. **Add some spacing** between the rarity line ("Rare Wood Shield") and the affix lines under it.
 
+Krogon's fourth look (2026-11-10, annotated screenshot): "Everything looking good, almost there." One tweak:
+
+27. **The affixes get lost in a wall of text:** each affix gets a bullet with its wrapped lines indented under it, and a resonant affix a green diamond instead of the round bullet (Krogon's mock-up).
+
 ## Playtest
 
 `docs/playtests/claude-lucid-carson-hs5g89.md`: A (six tabs, nothing lost), B (fixed currency places), C (Splinters, Runes), D (the Forge tab), E (death, gravestone, relog); F waits for #29. First look 2026-11-09: orbs work; the Forge window "looks very out of place", the tabs didn't fit (the Skills button), "Take out" → "Remove". All three addressed; Krogon wants the window's design right before the full checklist.
@@ -74,13 +78,13 @@ Krogon's third look and full play-test (2026-11-10, two screenshots, one annotat
 
 ## Next steps
 
-1. Krogon's quick look at the three tweaks (the last box, the slot frame, the spacing); then `/handoff` and a PR into `master`.
+1. Krogon's quick look at the three tweaks (the last box, the slot frame, the spacing, the affix bullets); then `/handoff` and a PR into `master`.
 2. #29 (loot session): shard corruption, shattering, splinters against brief §4; then checklist F.
 
 ## Checks
 
-Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 460 passed; Corruption builds against the stand-in game folder.
+Run by `/handoff` at the end of the round. So far: `dotnet test CraftingOverhaul.Tests` 462 passed; Corruption builds against the stand-in game folder.
 
 ## Merge notes
 
-Not ready: waiting for Krogon's quick look at the last three tweaks (A–E passed). Gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.
+Not ready: waiting for Krogon's quick look at the last tweaks (A–E passed). Gameplay changed: version bump needed at merge (Corruption, CraftingOverhaul). Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `docs/riftforge-ui-brief.md`, `Corruption/Content/Texts.cs`.
