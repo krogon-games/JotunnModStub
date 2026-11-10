@@ -1,6 +1,6 @@
 # Handoff: `claude/lucid-carson-hs5g89`
 
-**Written:** 2026-11-10 by `/handoff`. 12 commits ahead of `master`, 0 behind; everything pushed; no PR yet.
+**Written:** 2026-11-10 by `/handoff`. 13 commits ahead of `master`, 0 behind; everything pushed; no PR yet.
 
 ## Stage
 
@@ -8,13 +8,13 @@ Ready to merge.
 
 ## Purpose
 
-UI round for [#30](https://github.com/krogon-games/JotunnModStub/issues/30): six inventory tabs (Bag · Currencies · Splinters · Maps · Runes · Essences) and the Riftforge's Forge tab (one gear slot, materials used straight from the inventory). Shard corruption, shattering and splinters are [#29](https://github.com/krogon-games/JotunnModStub/issues/29)'s rules, not built yet.
+UI round for [#30](https://github.com/krogon-games/JotunnModStub/issues/30): six inventory tabs and the Riftforge's Forge tab. Shards, shattering and splinters are [#29](https://github.com/krogon-games/JotunnModStub/issues/29)'s, not built yet.
 
 ## Done
 
 Confirmed by Krogon in single player (2026-11-10, checklist A–E, then six looks at the design):
 - **Six tabs:** order, nothing lost, essences moved to Essences, fixed currency places with dimmed 0s, Splinters and Runes refusing other items, death and gravestone, relog.
-- **Forge tab** with orbs: drag gear in, right-click an orb, click to use, Shift, Escape, refusals, Remove, closing, away from the Riftforge. Built from the game's own panel parts; affixes bulleted under the slot; short result with the changed affix highlighted.
+- **Forge tab** with orbs: drag gear in, right-click an orb, click to use, Shift, Escape, refusals, Remove, closing, away from the Riftforge. Built from the game's own panel; bulleted affixes; short highlighted results.
 - **Item tooltips everywhere** use the same affix layout.
 - **Skills button removed** from above the inventory (CraftingOverhaul; K still opens the panel).
 
