@@ -4,7 +4,7 @@
 
 ## Stage
 
-Ready to merge.
+Merged into `master` (PR #59, 2026-11-10) after Krogon confirmed the play-test; the coordinator raised Corruption to 0.6.0 and CraftingOverhaul to 0.3.0, copied the decisions into `docs/DECISIONS.md` and closed #30. The branch can be deleted.
 
 ## Purpose
 
@@ -93,7 +93,7 @@ Krogon, closing the round (2026-11-10): "it looks good. well done. solid round. 
 
 ## Next steps
 
-1. PR into `master`; Krogon merges; the coordinator raises Corruption and CraftingOverhaul.
+1. ~~PR into `master`; Krogon merges; the coordinator raises Corruption and CraftingOverhaul.~~ Done (PR #59; Corruption 0.6.0, CraftingOverhaul 0.3.0).
 2. #29 (loot session): shard corruption, shattering, splinters against `docs/riftforge-ui-brief.md` §4; then checklist F.
 3. The group evening: Session 2, 2h.
 
