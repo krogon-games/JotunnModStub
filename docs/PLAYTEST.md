@@ -2,7 +2,7 @@
 
 Everything built but not yet tested in-game, in one place, in the order that makes a session quick. Tick items off in the phone log or tell Claude the result; Claude then updates `FEATURES.md` and `CURRENT_STATE.md`. Remove a section here once it's tested.
 
-**Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes. Last brought in line: 2026-11-11 (the build check's version numbers, Session 2's 2g–2i, the two small checks of Session 1c); before that 2026-11-08. The rounds since 2026-11-05 keep their own solo checklist in `docs/playtests/<branch>.md`, so only steps still untried after a round belong on the phone page.
+**Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes. Last brought in line: 2026-11-11 (the build check's version numbers, Session 2's 2g–2i, the two small checks of Session 1c); before that 2026-11-08. The rounds since 2026-11-05 keep their own solo checklist in `docs/playtests/<branch>.md`, and **every round's solo checklist also goes on the phone page while its round is open** (Krogon, 2026-11-11), so the page is always the place to tick; when the round's play-test has passed, its steps come off the page again.
 
 **Results so far:** the first session (2026-10-28) passed boss essences, corrupted bosses, talismans, craft from chests with AdventureBackpacks, category headers, `co_biome` and config reload; maps and rips worked apart from two bugs, fixed and confirmed in a re-test. Details: `FEATURES.md`.
 
@@ -152,6 +152,23 @@ All passed 2026-11-02 (single player).
 ## Classes UI (merged into `master`, 2 minutes)
 
 All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar~~ passed the same day (phone log).
+
+## Session 2-solo: alone on the dedicated server (before the group evening)
+
+**Krogon alone, joined to the group's dedicated server** (added 2026-11-11). It needs the release build ([#25](https://github.com/krogon-games/JotunnModStub/issues/25)) on the server and on your PC, nobody else. Every step is taken from Session 2 below or from a handoff's "untested on a server" list; the origin is in brackets.
+
+**What it can find:** everything so far was played in single player, where the "server" is your own game. On the dedicated server the mods load on a machine with no player and no screen, and the rip and Orlog stone requests really travel to the server and back ([`ARCHITECTURE.md`](ARCHITECTURE.md) → Server messages, Dedicated-server review). **What it can't find:** anything that needs a second player's game (who runs a creature or chest, what others see, loot and XP per player). Those stay in Session 2.
+
+1. **The mods load on the server** (Part 1): start the server. Its own log has the three lines `Corruption 0.7.0 loaded (build: master <commit>)`, `Orlog 0.2.0 loaded …` and `CraftingOverhaul 0.3.0 loaded …`, and no red errors from our mods.
+2. **Joining** (Part 1): **Start modded** in r2modman and join. Expect: no "incompatible version" message; your own `BepInEx/LogOutput.log` has the same three lines with the same commit; F5 shows no red errors.
+3. **`devcommands`** (Session 2's open question): type `devcommands`, then `spawn Boar`, `orlog_info` and `orlog_level 10`. Do they work on the server? If not, note what the console says: the evening's script then needs real items brought in from play.
+4. **The server's settings win** (Part 5, step 1): set `[2 - Nearby Containers] Enabled = false` in the server's `com.krogongames.craftingoverhaul.cfg` and restart it; try crafting from a chest. Expect: you can't. Set it back.
+5. **The Orlog stone through the server** (classes handoff, untested on a server): in the server's world the stone stands behind the Eikthyr trophy stone, once; E opens the class choice; the class is kept after relogging.
+6. **Tabs after relogging** (2b step 3, 2h step 1): the six tabs (Bag · Currencies · Splinters · Maps · Runes · Essences) hold what they held; pick up a shard, relog: still in Currencies.
+7. **XP and loot from kills** (2c step 3, 2d step 2): kill starred creatures (`spawn Boar 10 2`). Expect: "+N XP" on each kill; Magic and Rare drops about as often as in single player, never the same drop twice.
+8. **A rip run** (Part 3, steps 1, 2, 4, 5, 6): use `CorruptionMap_Meadows` near the base wearing the Corrupted wishbone. Expect: a red rip 4 m in front of you, never near a bed, ward or portal (if it says no spot was found, note the message); you land with no heart in sight; pings lead to it; within 96 m the army message shows and red waves come; destroying the heart gives the exit rip and a chest with 1–3 shards; the exit brings you back to the first rip.
+9. **A corrupted boss** (Part 4): offer a Corrupted deer trophy at Eikthyr's altar. Expect: he arrives red; every 30 s 2–3 red creatures of his army, at most 4 alive; they go for you only; the kill gives 2–3 essences and 3–5 shards and the summons stop.
+10. **Logs:** copy your `BepInEx/LogOutput.log` and the server's log right away (the next start overwrites them) and send both.
 
 ## Session 2: with a friend
 
