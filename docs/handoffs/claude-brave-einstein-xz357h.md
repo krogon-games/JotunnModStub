@@ -4,7 +4,7 @@
 
 ## Stage
 
-Waiting for Krogon's playtest (and his pick of a splinter design).
+Ready to merge once `/handoff` has run its checks (Krogon's solo play-test passed 2026-11-11).
 
 ## Purpose
 
@@ -12,16 +12,17 @@ Loot round for [#29](https://github.com/krogon-games/JotunnModStub/issues/29): c
 
 ## Done
 
-Nothing confirmed in game yet.
+Confirmed by Krogon in single player (2026-11-10/11):
+- **Shattering** (room check, all or nothing), **Affix Splinters** (exact values, refusals, their own shapes and colours), **shard corruption** (three outcomes and their messages, one shard each).
+- **Both confirmation dialogs** in one design, each with a remembered "Don't warn me again".
+- Everything kept after reconnecting.
 
 ## Half-done and known issues
 
-Built 2026-11-10, **not tested in game**:
-- **Shard corruption, shattering, Affix Splinters** in the Forge tab, with Krogon's rules below; `co_craft corrupt / shatter / splinter`.
-- **Corrupted affixes beyond the caps**; tooltips show each cap and what worn gear uses.
-- **One confirmation dialog for Shatter and Corrupt** (decisions 22, 24–26), each with a remembered "Don't warn me again" (settings `10 - Riftforge`). In-game looks so far: layout, columns and tickbox right; the background was wrong twice (none, then a loading-screen picture) and the buttons showed a stray gamepad hint: now the inventory's own panel, hints hidden. **Confirmed by Krogon: the splinters show their shapes and colours.** Previews `docs/images/forge_dialog_preview.png`; waiting for Krogon's screenshots.
-- **Splinter models** (approved designs): 9 shapes, a colour per family for all 67 (`splinter_looks.csv`, `tools/make_splinters.py`, preview `docs/images/splinters_preview.png`). Colours are Claude's picks within the approved idea.
-- **Shard twin completion** adds both values plus 25% (decision 20); **cap lines removed** from tooltips; the stats sheet is [#60](https://github.com/krogon-games/JotunnModStub/issues/60).
+- **Multiplayer:** not tried (`PLAYTEST.md` → Session 2, 2i).
+- The font-warning fix (last code commit) isn't re-checked in the log.
+- Caps aren't shown to players until the stats sheet ([#60](https://github.com/krogon-games/JotunnModStub/issues/60)).
+- Splinter colours are Claude's picks within the approved idea (`splinter_looks.csv`, status `proposed`).
 
 Claude's interim choices (easy to change): a Magic item with 0 affixes can't be shattered; splinter weight 0.2; resistance never above 100%; Skald's and Fenrir buffs stay under the cap even from a corrupted line; caps aren't shown anywhere until #60's stats sheet (decision 21).
 
@@ -73,7 +74,7 @@ Krogon, after seeing the dialogs in game (2026-11-10, four screenshots):
 
 ## Playtest
 
-`docs/playtests/claude-brave-einstein-xz357h.md`: checklist A–H written 2026-11-10 (shattering, full storage, splinters, shards, tickboxes, caps, reconnect). No feedback yet.
+`docs/playtests/claude-brave-einstein-xz357h.md`: passed alone 2026-11-11 after four rounds of feedback (all recorded there). Multiplayer in `PLAYTEST.md` → Session 2, 2i.
 
 ## Open questions for Krogon
 
@@ -81,18 +82,18 @@ None open.
 
 ## Next steps
 
-1. Krogon's play-test (checklist A–H); fix what it finds.
-2. `/handoff`, then a PR into `master`.
-3. Later, its own round: the stats sheet ([#60](https://github.com/krogon-games/JotunnModStub/issues/60)).
+1. `/handoff`, then a PR into `master`; Krogon merges; the coordinator raises Corruption's version and closes #29.
+2. The group evening: Session 2, 2i.
+3. Its own round: the stats sheet ([#60](https://github.com/krogon-games/JotunnModStub/issues/60)).
 
 ## Checks
 
 - Build: PASS (`dotnet test CraftingOverhaul.Tests` 498 passed; Corruption builds against the stand-in game folder).
-- In-game: needs Krogon's playtest.
+- In-game: passed in Krogon's single-player play-test (2026-11-11): "these have all been checked, all working. well done."
 - The rest: run by `/handoff`.
 
 ## Merge notes
 
-- Ready to merge: no (not play-tested).
+- Ready to merge: yes after `/handoff`'s checks (solo play-test passed; multiplayer left for the group evening).
 - **Gameplay changed: version bump needed at merge (Corruption).** This branch changed no version number.
 - Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/riftforge-ui-brief.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`.

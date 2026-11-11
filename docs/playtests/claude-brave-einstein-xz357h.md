@@ -106,3 +106,7 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 
 ### What changed after the feedback
 - Splinter looks, second report (screenshot of splinters on the ground: small gems, the glows in different colours): **found.** The nine shape files (`Corruption/Assets/Splinters/*.obj`) never reached GitHub: the repository's ignore list skips `.obj` files, with exceptions only for the shard's and the orbs' folders. So Krogon's build had the colours and glows but no shapes, and each splinter fell back to a tinted gem. Fixed: exception added to `.gitignore`, the nine files committed. A start-up log line now reports how many looks, models and icons loaded. To re-test.
+
+### Final play-test (2026-11-11)
+- Krogon: the three shard outcomes and their result messages, the tickboxes hiding each dialog and staying hidden after a restart, the full-storage refusal and reconnecting "have all been checked, all working. well done."
+- Passed alone. Not re-checked: that the log no longer shows the "LiberationSans" warnings (the fix came after the last log). Not tried: anything with other players (`PLAYTEST.md` → Session 2, 2i).

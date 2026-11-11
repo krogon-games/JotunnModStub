@@ -225,6 +225,12 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 3. **A** forges while **B** uses the Craft tab → B's recipe list is normal; A's Forge view stays as it is.
 4. **B** dies with orbs and essences; **B** takes all from the gravestone → back in B's Currencies and Essences; nothing ends up with A.
 
+**2i. Riftforge shards, shattering and Affix Splinters (2026-11-11; solo play-test passed, multiplayer not tried).** Full solo steps in [`playtests/claude-brave-einstein-xz357h.md`](playtests/claude-brave-einstein-xz357h.md).
+1. **A** shatters an item and drops a splinter; **B** picks it up → it goes to B's Splinters tab with the same affix and number, and its own shape and colour.
+2. **A** gives **B** a corrupted item (with a red corrupted line) and a twin-completed item → B sees the same lines, numbers and the Corrupted mark.
+3. **A** puts splinters in a shared chest; **B** takes them → unchanged.
+4. **A and B at one Riftforge**, each shattering and corrupting their own gear → no mix-ups; each one's "Don't warn me again" choice is their own.
+
 ### Part 3: a rip run (about 45 minutes)
 
 On a dedicated server the rip request goes to the server and its answer comes back; alone this was all one game.
