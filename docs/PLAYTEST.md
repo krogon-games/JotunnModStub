@@ -165,7 +165,7 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 
 1. **Each player:** start with r2modman's **Start modded** and join the server. Expect: no "incompatible version" message.
 2. **Each player and Krogon (also the server's own log):** open `BepInEx/LogOutput.log` and find the three lines. Expect, the **same** on every machine:
-   - `Corruption 0.6.0 loaded (build: master <commit>)`
+   - `Corruption 0.7.0 loaded (build: master <commit>)`
    - `Orlog 0.2.0 loaded (build: master <commit>)`, the same commit
    - `CraftingOverhaul 0.3.0 loaded (build: master <commit>)`, the same commit
 3. **Each player:** F5, no red errors.
