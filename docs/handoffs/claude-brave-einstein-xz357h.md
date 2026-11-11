@@ -4,7 +4,7 @@
 
 ## Stage
 
-Ready to merge.
+Merged into `master` (PR #61, 2026-11-11) after Krogon confirmed the play-test; the coordinator raised Corruption to 0.7.0, copied the decisions into `docs/DECISIONS.md` and closed #29. The branch can be deleted.
 
 ## Purpose
 
@@ -82,7 +82,7 @@ Krogon, after seeing the dialogs in game (2026-11-10, four screenshots):
 
 ## Next steps
 
-1. A PR into `master` (when Krogon asks); Krogon merges; the coordinator raises Corruption's version, copies decisions 1–26 into `docs/DECISIONS.md` and closes #29.
+1. ~~A PR into `master`; the coordinator raises Corruption's version, copies the decisions and closes #29.~~ Done (PR #61; Corruption 0.7.0).
 2. The group evening: Session 2, 2i.
 3. Its own round: the stats sheet ([#60](https://github.com/krogon-games/JotunnModStub/issues/60)).
 
