@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Building** (C3, the Amazon's passives).
+**Waiting for Krogon's playtest** (C3, the Amazon's passives, built 2026-11-11).
 
 ## Purpose
 
@@ -16,7 +16,10 @@ Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-- Building C3.
+- **C3 built, untested in game** (`FEATURES.md` → Amazon passives): Critical Strike, Dodge, Avoid, Evade, Penetrate with Krogon's rules; tooltips show the chance; `orlog_passive <effect> <chance>` for sure procs. Read in the cloud's 1.0.14 game code, not checked against 1.0.21.
+- **How it crosses games:** Penetrate's marker rides in the hit's eitr field (`m_eitrAdd`, `-1000 - original`); creature area and breath hits on players get a radius (`m_radius`) on the creature's game so the player's game knows they can't be avoided. Both fields are sent with every hit and otherwise unused on creature/player hits (game code).
+- **Assumption:** breath is found by the attack item's prefab name ("breath"); if the game leaves the name empty for creature attacks, breath could be avoided (play-test step 10).
+- PvP hits are neither crit, penetrated nor avoided (creatures only).
 - Loot 3c play-test marks read from the phone page (8 of 10 passed on 2026-11-11, Splintering "needs a little bigger radius/hit detection range"): to record in issue #26 and `STATUS.md` at `/handoff`.
 
 ## Decisions
@@ -46,7 +49,7 @@ Nothing confirmed in game yet.
 
 ## Playtest
 
-Nothing yet. The checklist will go in `docs/playtests/claude-lucid-albattani-imrei7.md` and on the phone page.
+Krogon: the 12 solo steps in `docs/playtests/claude-lucid-albattani-imrei7.md`, also on the phone page ("The Amazon's passives"). Multiplayer steps: `PLAYTEST.md` → Session 2, 2j (and the phone page's 2j). No feedback yet.
 
 ## Open questions for Krogon
 
@@ -54,14 +57,14 @@ Nothing yet. The checklist will go in `docs/playtests/claude-lucid-albattani-imr
 
 ## Next steps
 
-1. Build C3: pure rules and tests, the patches, tooltips, the debug commands.
-2. Write the play-test checklist (repo file and phone page).
-3. `/handoff`: `STATUS.md`, comment on #26.
+1. Krogon's play-test of C3; fix what fails.
+2. `/handoff`: `STATUS.md` (coordinator update agreed this session), comment on #26 with the loot 3c marks.
+3. Next Amazon round: C5 (skill button, four slots, bow skills; prototype the bow draw on another button first), with C4 (boss points, reset item) whenever convenient.
 
 ## Checks
 
-Not run yet.
+Not run by `/handoff` yet. So far: `dotnet test CraftingOverhaul.Tests` 532 passed; Orlog builds against the stand-in game assemblies.
 
 ## Merge notes
 
-Not ready. Gameplay will change (Orlog): version bump needed at merge.
+Not ready (waiting for the play-test). **Gameplay changed: version bump needed at merge (Orlog).** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/GAME_DESIGN.md`, `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj`. No Corruption or CraftingOverhaul code changed.

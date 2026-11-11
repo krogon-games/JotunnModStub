@@ -37,6 +37,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Attributes and class eitr](#attributes-and-class-eitr) | Combat | Tested in-game (single player) | Orlog: `3 - Attributes` → `HealthPerD2Life`, `StaminaPerD2Stamina`, `EitrStart`, `EitrPerLevel`, `EitrPerEnergy`, `DamagePerStrength`, `DamagePerDexterity`; table `Orlog/Data/classes.csv`; console `orlog_class`, `orlog_stat`, `orlog_respec` | `Orlog/Content/Attributes.cs`, `Orlog/Rules/AttributeRules.cs`, `Orlog/Data/classes.csv`, `Orlog/Content/Commands.cs`, `Orlog/Content/Progress.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Api.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogAttributeTests.cs`, `CraftingOverhaul.Tests/OrlogPointTotalTests.cs` | 2026-11-08 |
 | [Orlog stone and class choice](#orlog-stone-and-class-choice) | Combat | Tested in-game (works; look to be redesigned later) | Orlog: `4 - Orlog Stone` → `StoneSize`, `StoneGap`, `StoneTurn` (`orlog_class` stays as a cheat) | `Orlog/Content/OrlogStone.cs`, `Orlog/Rules/StonePlacement.cs`, `Orlog/Content/Texts.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Api.cs`, `Orlog/Safe.cs`, `CraftingOverhaul.Tests/OrlogStoneTests.cs` | 2026-11-01 |
 | [Skill tree and skill points](#skill-tree-and-skill-points) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `SkillPointsPerLevel`, `MaxSkillPoints`, `SkillPace`; table `Orlog/Data/amazon_skills.csv`; console `orlog_skill` | `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Data/amazon_skills.csv`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Content/Attributes.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/amazon_levels.csv`, `CraftingOverhaul.Tests/OrlogSkillTests.cs`, `CraftingOverhaul.Tests/OrlogPointTotalTests.cs` | 2026-11-08 |
+| [Amazon passives](#amazon-passives) | Combat | Built, untested in-game | Orlog: table `Orlog/Data/amazon_passives.csv`; console `orlog_passive` (test chances) | `Orlog/Content/Passives.cs`, `Orlog/Rules/PassiveRules.cs`, `Orlog/Data/amazon_passives.csv`, `Orlog/Api.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogPassiveTests.cs` | 2026-11-11 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
 There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
@@ -1337,25 +1338,67 @@ Unit-tested (`OrlogStoneTests`: 4 tests: straight behind, any angle, on-centre, 
 
 ## Skill tree and skill points
 
-*Orlog. Built 2026-11-01; tested in-game 2026-11-02 (single player, all 9 steps passed). Roadmap task C2. The skills don't do anything yet: their effects come one by one (C3 onwards).*
+*Orlog. Built 2026-11-01; tested in-game 2026-11-02 (single player, all 9 steps passed). Roadmap task C2. The passives act since 2026-11-11 ([Amazon passives](#amazon-passives), C3); the other skills come one by one (C5 onwards).*
 
 **What it does:** the Amazon's real tree in the classes UI's skills panel, and spending skill points on it, Diablo 2 style.
 - **The tree:** `Orlog/Data/amazon_skills.csv`, made by `tools/make_orlog_tables.py` from D2's tree (`data/d2-reference/amazon.csv`: tab, row, column, required level, prerequisites, mana) and our statuses, kinds, weapons and Valheim descriptions (`class-design.md` §5): 19 built (18 `v1` and Penetrate `reworked`), 11 `later`.
 - **Points:** 1 per level (from level 2, D2), at most 20 per skill (`MaxSkillPoints`). D2's pace (`SkillPace`): a skill holds at most one more point per level past its required level (Dodge, level 6: 1 point at level 6, 2 at level 7). A skill opens at its tier's level (1/6/12/18/24/30). A **built** prerequisite needs a point first; a `later` one is skipped (`class-design.md` §4). Later skills can't take points ("Coming later"). Refusals give their reason ("Needs level 12", "Needs Magic Arrow", "Maxed", "No skill points").
 - **Eitr cost** shown per skill: D2's mana at the skill's level (Multiple Shot 4, +1 per level; Magic Arrow 1.5, free from level 13). The class eitr pool is D2's mana 1:1, so D2's costs keep D2's balance.
 - Saved with the character (custom data `orlog_skills`). `orlog_respec` returns skill points with the stat points. `orlog_skill <id> [points]` spends from the console.
-- `Orlog.Api` now answers `GetSkillIdsJson`, `GetSkillInfoJson` (every brief field; description and next level text; the effective level is the hard points until +skills exist) and `SpendSkillPoint`; `GetCharacterJson`'s `skillPoints` is the unspent count.
+- `Orlog.Api` now answers `GetSkillIdsJson`, `GetSkillInfoJson` (every brief field; description and next level text, with the chance for passives since 2026-11-11; the effective level is the hard points until +skills exist) and `SpendSkillPoint`; `GetCharacterJson`'s `skillPoints` is the unspent count.
 - New reference data for the next steps: `data/d2-reference/amazon_levels.csv`, every Amazon skill's values per level 1–20 (Arreat Summit and D2R, differences noted in its README).
 
 Unit-tested (`OrlogSkillTests`: 10 tests: the real table, kinds and weapons, D2's prerequisites, the later-prerequisite rule, tiers and pace, cap and points, eitr costs, saving, bad tables).
 
 **Known issues / not yet:**
 - **Play-test 2026-11-02 (user): every step passed**: the real tree in three tabs, later skills greyed, "Needs Magic Arrow", Dodge holding 7 at level 12, Exploding Arrow's two prerequisites, tooltips with eitr cost, respec, saving, `orlog_skill`, no errors.
-- Points go into skills that don't act yet; each skill's effect (and its Valheim numbers, to agree with the user) comes with roadmap C3–C7.
+- Points go into skills that don't act yet, apart from the passives (2026-11-11); each other skill's effect (and its Valheim numbers, to agree with the user) comes with roadmap C5–C7.
 - No +skills from items yet (the loot session's affixes), so the effective level equals the points.
 - **Damaged saves (review fix 2026-11-08; passed alone 2026-11-08):** the same overflow-safe totals as the attributes: a huge saved count reads as the most there can be and blocks further spending, without throwing, refunding or removing points; the spending check's "Needs level" doesn't wrap.
 
 **Vanilla behaviour overridden (Harmony patch targets):** none (data, rules and the API only).
+
+## Amazon passives
+
+*Orlog. Built 2026-11-11, untested in-game. Roadmap task C3 (issue #32); every rule below is Krogon's decision of 2026-11-11 (handoff `docs/handoffs/claude-lucid-albattani-imrei7.md`).*
+
+**What it does:** the first Amazon skills that act. Each has a chance per skill level, Diablo 2's unchanged (`Orlog/Data/amazon_passives.csv`, made by `tools/make_orlog_tables.py` from `data/d2-reference/amazon_levels.csv`); the skills panel's tooltip shows the chance now and at the next level.
+
+| Skill | Chance (level 1 → 20) | Effect |
+|---|---|---|
+| Critical Strike | 16% → 68% | The hit's physical damage (blunt, slash, pierce) is doubled; fire, frost, poison, lightning and spirit aren't. Any weapon, against creatures only (not players; trees, rocks and buildings are never affected). Plays the game's own critical-hit effect (the one a staggered creature's hit plays) |
+| Dodge | 18% → 56% | A creature's close-range hit misses, while you stand still or attack |
+| Avoid | 24% → 65% | A creature's projectile misses, while you stand still or attack |
+| Evade | 18% → 56% | Any creature hit (close-range or projectile) misses, while you walk or run (moving, not attacking) |
+| Penetrate | 16% → 68% (Critical Strike's curve; D2's Penetrate raises attack rating, which Valheim lacks) | The hit ignores the creature's resistances: slightly resistant (¾), resistant (½) and very resistant (¼) become full damage. Immunity stays; weaknesses stay |
+
+- **Stacking:** a crit multiplies on top of the game's sneak attack bonus (bows and spears ×3, knives ×6, once per creature every 5 minutes on an unaware creature) and the stagger bonus (×2): a crit sneak shot with a bow ×6, a crit on a staggered creature ×4. Corruption's Backstab affix adds to the sneak bonus as before.
+- **Unavoidable:** anything that isn't a creature's hit (falls, traps, burning and poison ticks, lava, players), hits the game's own dodge roll can't escape (`m_dodgeable` off: Bonemass's and the Gjall's and the hive's attacks, game dump), area blasts (the game's Aoe hits, and creatures' area attacks such as stomps and ground slams) and breath (creature attack items with "breath" in the name: Moder's and Fader's breath, the Bonemaw serpent, the fallen Valkyrie).
+- **While you hold block,** a hit the block takes (blockable, from the front, a shield or weapon in hand) isn't rolled: the block or parry handles it, so the parry affixes keep working. A hit from behind or an unblockable one still rolls.
+- **An avoided hit** does nothing at all (no damage, stagger, push or status effect): a floating "Dodge", "Avoid" or "Evade" (white) where it would have landed, and the game's dodge-roll whoosh (`Player.m_dodgeEffects`). No animation.
+- **Testing:** `orlog_passive crit 100` (or `penetrate`, `dodge`, `avoid`, `evade`; any chance 0–100) sets a chance until you quit or type `orlog_passive off`; without arguments it lists your chances. With `devcommands` on, each passive that triggers also says so at the top left.
+
+**How it works in multiplayer:**
+- Critical Strike and Penetrate roll on the **attacker's game**, where the hit is made (`Character.Damage`), before Corruption's prefixes (Rallying and Skadi at High, life steal at Normal), so they count a crit's damage. The crit effect plays there.
+- Resistances are applied on the **creature owner's game**. A Penetrate hit carries a marker in the hit's eitr field (`HitData.m_eitrAdd`, sent with every hit; vanilla only reads it above 0): `-1000 - original`. The owner's game takes it off before anything reads the hit and lifts the resistances in `HitData.ApplyResistance`.
+- Dodge, Avoid and Evade roll on the **player's own game**, which owns the player and receives every hit on them (`Character.RPC_Damage`, first priority, so an avoided hit never reaches vanilla or Corruption's damage changes).
+- Area hits are recognised on the player's game by their radius (`HitData.m_radius`, sent with every hit; vanilla only reads it on rocks). Aoe hits have one; the **creature's game** gives one to hits from its area attacks (`Attack.DoAreaAttack`) and breath projectiles.
+
+Unit-tested (`OrlogPassiveTests`: the real table against D2's numbers, Penetrate's curve, the table matches the tree, chances by level, tooltip text, rolls, the avoid split, breath names, which resistances Penetrate lifts, the marker, bad tables).
+
+**Known issues / not yet:**
+- **Untested in-game.** Read in the cloud's copy of the game code (1.0.14); not checked against 1.0.21.
+- **Breath by name:** found from the attack item's prefab name (`ItemData.m_dropPrefab`). If the game leaves that empty for creature attacks, breath can be avoided; the play-test checks Moder's breath.
+- **PvP:** players' hits on each other are neither crit, penetrated nor avoided (creatures only).
+- **No +skills yet:** the skill level is the points spent; the table stops at level 20 (a higher level would keep 20's chance).
+- **Only the Amazon's own games roll:** a crit or Penetrate made by her shows only on her game; another player sees the damage, not the effect, unless the effect prefab syncs itself.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+- `Character.Damage`: prefix at `Priority.VeryHigh` (Critical Strike, Penetrate's marker on the attacker's game; the area radius on the creature's game)
+- `Character.RPC_Damage`: prefix at `Priority.First` (takes Penetrate's marker off; Dodge, Avoid and Evade: can skip the original) + finalizer
+- `HitData.ApplyResistance`: prefix (Penetrate: changes the modifiers argument for a marked hit only)
+- `Attack.DoAreaAttack`: prefix + finalizer (record only)
+- `Projectile.OnHit`: prefix + finalizer (record only)
 
 ## Classes, levels and skill trees
 
@@ -1370,6 +1413,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-11
+- **Amazon passives built** (roadmap C3, issue #32; Orlog): Critical Strike, Dodge, Avoid, Evade and Penetrate act, with D2's chances and Krogon's rules of 2026-11-11; tooltips show the chance; `orlog_passive` sets test chances. Untested in-game (532 tests).
 - **Play-test (single player): Riftforge shards, shattering and Affix Splinters passed** ("all working"), with both confirmation dialogs. Multiplayer in `PLAYTEST.md` → Session 2, 2i.
 - **Fix (Forge UI):** no more "LiberationSans SDF Font Asset was not found" warnings when the dialogs open. Not re-checked in the log yet.
 

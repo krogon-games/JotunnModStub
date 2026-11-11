@@ -252,6 +252,11 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 3. **A** puts splinters in a shared chest; **B** takes them → unchanged.
 4. **A and B at one Riftforge**, each shattering and corrupting their own gear → no mix-ups; each one's "Don't warn me again" choice is their own.
 
+**2j. The Amazon's passives (2026-11-11, branch `claude/lucid-albattani-imrei7`; solo steps in [`playtests/claude-lucid-albattani-imrei7.md`](playtests/claude-lucid-albattani-imrei7.md)).** A is an Amazon (`orlog_class Amazon`); the creature must be run by **B's** game (B reaches it first and stays nearer).
+1. **A** finds a creature whose hits show grey numbers (resisted), types `orlog_passive penetrate 100` and hits it → white, bigger numbers, as alone.
+2. **A** types `orlog_passive crit 100` and hits a creature B's game runs → about twice the damage; A sees the critical-hit effect.
+3. **A** types `orlog_passive dodge 100`, `orlog_passive avoid 100`, `orlog_passive evade 100` and fights a troll (or a greydwarf group) B's game runs → punches and thrown rocks are dodged, avoided or evaded; the troll's **ground slam still hurts**.
+
 ### Part 3: a rip run (about 45 minutes)
 
 On a dedicated server the rip request goes to the server and its answer comes back; alone this was all one game.

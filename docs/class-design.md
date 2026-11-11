@@ -105,6 +105,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 - **Spear skills ride the spear's own attacks:** thrust skills (Jab, Power Strike, Impale, Charged and Lightning Strike, Fend) on the primary attack, javelin skills (Poison, Plague, Lightning Bolt, Lightning Fury) on the throw.
 - **Javelin skills throw a spectral copy** of the spear, so the real spear stays in hand (a vanilla throw leaves it on the ground to pick up, which doesn't suit casting). Decided (user, 2026-10-30).
 - **Passives** (Critical Strike, Dodge, Avoid, Evade, Pierce) need no casting.
+- **Passive rules (user, 2026-11-11; built, `FEATURES.md` → Amazon passives):** D2's chances unchanged; a crit doubles physical damage only, any weapon, creatures only, and stacks with the game's sneak attack and stagger bonuses; it shows the game's critical-hit effect. Dodge (close-range hits) and Avoid (projectiles) while standing still or attacking, Evade (any hit) while walking or running. Area blasts, breath, burning and poison ticks, falls and traps can't be avoided; no roll while blocking a hit the block takes. An avoided hit floats "Dodge", "Avoid" or "Evade" with a whoosh, no animation.
 
 | Tab | Skill | Valheim version | Status |
 |---|---|---|---|
@@ -123,7 +124,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | | Avoid | Chance to avoid a projectile while standing or attacking | v1 |
 | | Evade | Chance to avoid any hit while moving | v1 |
 | | Inner Sight | Cast: nearby enemies glow and take more damage for a while | v1 |
-| | Penetrate | Reworked (user, 2026-10-30): chance for a hit to ignore the creature's resistance to its damage type (a resistant or very resistant creature takes normal damage). Whether it also breaks immunity is open | reworked |
+| | Penetrate | Reworked (user, 2026-10-30): chance for a hit to ignore the creature's resistance to its damage type (a resistant or very resistant creature takes normal damage). **Not immunity; Critical Strike's chance curve** (user, 2026-11-11) | reworked |
 | | Pierce | Chance for an arrow or javelin to pass through and hit the next enemy | later |
 | | Slow Missiles | Enemy projectiles near you slow down (they belong to their shooter's game, so it needs messages) | later |
 | | Decoy | A tinted, standing copy of you that creatures attack instead | later |
