@@ -408,7 +408,7 @@ namespace Corruption.Rules
             }
             copy.Rarity = loot.Rarity;
             copy.Name = loot.Name;
-            copy.Lines.AddRange(loot.Lines.Select(l => new LootItem.Line { Ids = l.Ids.ToArray(), Value = l.Value }));
+            copy.Lines.AddRange(loot.Lines.Select(l => new LootItem.Line { Ids = l.Ids.ToArray(), Value = l.Value, Corrupted = l.Corrupted }));
             return copy;
         }
     }

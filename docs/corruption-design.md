@@ -331,9 +331,12 @@ Corrupted loot is what keeps people running maps and farming bosses. Two layers:
   Live chances: [`Corruption/Data/corruption_outcomes.csv`](../Corruption/Data/corruption_outcomes.csv) (tune there; code `CorruptionOutcomes.Roll`).
   - The corrupted affix rolls from the same pool as the item's normal affixes (`affixes.csv`, same item-class columns and weights), prefix or suffix. A separate corrupted-only pool may come later.
   - It may repeat a family the item already has, even on the same side (e.g. a second Enhanced damage prefix): the normal one-per-family rule doesn't bind it *(user, 2026-10-28)*.
-  - If it completes a twin (the item has the prefix half and the corrupted affix is the suffix half, or the reverse), the two resonate like a normal twin *(user, 2026-10-28)*.
+  - If it completes a twin (the item has the prefix half and the corrupted affix is the suffix half, or the reverse), the two resonate *(user, 2026-10-28)*: ~~like a normal twin~~ **the corrupted half's rolled value and the item's value are added, plus 25% (user, 2026-11-10, as for splinters)**.
   - It is shown as its own line, marked corrupted, so it is clear which affix is the extra one. A resonant line it completes is marked corrupted too.
   - The affix caps (`affix_caps.csv`) do **not** apply to the corrupted affix *(user, 2026-10-28)*: the normal affixes are capped as usual, and the corrupted affix adds on top, so a corrupted item can go past a cap.
+  - **Confirmation (user, 2026-11-10):** every shard use asks first, with the item's name, the cost and the chances from the table, saying that every surviving outcome locks the item; cancelling uses nothing; an attempt uses exactly one shard, also when the item is destroyed. Its own "Don't warn me again" tickbox, remembered per player. Each outcome is reported in words ("Corrupted and locked; no affix added.").
+  - **Caps (user, 2026-11-10):** counted over everything worn: ordinary affixes are capped together, corrupted ones add on top. Players see each cap and how close they are, on a detailed character stats sheet (not in tooltips, which are too crowded; issue #60).
+  - A Mirror's copy can't be corrupted (locked like a corrupted item; user, 2026-11-10).
   - A corrupted item is locked either way: no currency orb can change it afterwards, and it can't be corrupted again. Corruption is the final step, as in Path of Exile (Vaal Orb).
 - ~~Decide early whether to build this or depend on Epic Loot.~~ **Decided 2026-10-27: build our own**, for full control.
 
@@ -430,7 +433,8 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 **Shattering** (at the Riftforge, free):
 - Put in a Magic or Rare item and shatter it. The item is destroyed. Costs nothing: no rune, no Corruption shard.
 - Each affix line has a **50%** chance to become an Affix Splinter. Live value: [`Corruption/Data/shattering.csv`](../Corruption/Data/shattering.csv).
-- **Uniques and corrupted items can't be shattered.**
+- **Uniques and corrupted items can't be shattered.** Nor can a Mirror's copy: it is locked like a corrupted item (user, 2026-11-10).
+- **Room first (user, 2026-11-10):** before anything is rolled there must be a place for every splinter that could come out (one per displayed line), in the Splinters tab or the Bag, counting the Bag cell the item frees: otherwise "Make room for up to X splinters." Shattering is all or nothing; splinters are never lost or dropped on the ground. The confirmation is its own dialog listing each affix with its chance, with a "Don't warn me again" tickbox, remembered per player (user, 2026-11-10: players shatter many times).
 - **A resonant twin line gives one splinter holding the combined resonant value** (user: "one of the most powerful crafting mechanics"). The line is one affix line, so it gets one 50% roll (confirmed by the user 2026-10-28).
 
 **Affix Splinters:**
@@ -439,7 +443,7 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 - Applied at the Riftforge: put in the item and the splinter, press craft. The affix lands with the splinter's value; the splinter is used up.
 - **Only on Normal and Magic items with fewer than 2 affixes.** Once an item has 2 affixes in total (from orbs, drops or splinters), splinters can't be used on it. A splinter on a Normal item makes it Magic. Rares, uniques and corrupted items never take splinters; to go further, use the Regal Orb (Magic → Rare) and the Exalted Orb, so orbs stay the way to finish an item.
 - A **resonant splinter** is a prefix and a suffix together, so it counts as 2 affixes: it only fits an item with no affixes yet (a Normal item), which it turns into a Magic item with the resonant line. *Derived from the 2-affix limit and the twin rule; confirmed by the user 2026-10-28.*
-- The normal affix rules apply: the affix must be one the item's class can roll (the item-class columns in `affixes.csv`), one affix per family per side, and a prefix splinter needs a free prefix slot (suffix likewise). A splinter that completes a twin resonates as usual.
+- The normal affix rules apply: the affix must be one the item's class can roll (the item-class columns in `affixes.csv`), one affix per family per side, and a prefix splinter needs a free prefix slot (suffix likewise). ~~A splinter that completes a twin resonates as usual.~~ **Changed 2026-11-10 (user, #29):** a splinter that completes a twin is deterministic: the resonant line is the item's existing value plus the splinter's value, plus the resonance bonus (+25%), with no roll (Hale +14 and a splinter of the Bear +18 give +40). The line takes the prefix and the suffix place. An already-resonant splinter moves its exact combined value. A shard's corrupted affix that completes a twin works the same way: its half rolls, then the two values are added and the 25% goes on top (user, 2026-11-10). Randomly rolled affixes and orbs keep the rolled resonant range. "This rewards the player for saving shatters."
 - Splinters can go through portals and be traded, like orbs.
 
 **Technical notes:** one splinter item (a cloned, tinted vanilla prefab) whose affix and value live in `m_customData`, like affixes on gear; the tooltip shows which affix it holds. No new prefab per affix, so new rows in `affixes.csv` need no splinter work. Max stack size 1, so the game never merges two splinters with different values. Rules (shatter roll, which items can take a splinter): `Corruption/Rules/ShatterRules.cs`, unit-tested.

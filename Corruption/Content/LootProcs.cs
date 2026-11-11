@@ -689,9 +689,11 @@ namespace Corruption.Content
                     return;
                 }
                 var items = Loot.Equipped(__instance);
-                float worn = AffixTotals.Sum(items, "movement_speed", Loot.Affixes) + AffixTotals.Sum(items, "held_movement_speed", Loot.Affixes);
-                float extra = AffixTotals.Sum(items, "forage_speed_boost", Loot.Affixes);
-                __result += ProcRules.ExtraUnderCap(worn, extra, "foraging", Loot.Caps) / 100f;
+                // Ordinary Foraging fills what the movement cap leaves; a shard's corrupted Foraging adds beyond it.
+                float worn = AffixTotals.MovementOrdinary(items, Loot.Affixes);
+                float extra = AffixTotals.Sum(items, "forage_speed_boost", Loot.Affixes, false);
+                float corrupted = AffixTotals.Sum(items, "forage_speed_boost", Loot.Affixes, true);
+                __result += (ProcRules.ExtraUnderCap(worn, extra, "foraging", Loot.Caps) + corrupted) / 100f;
             }
         }
 

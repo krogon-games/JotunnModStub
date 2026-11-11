@@ -98,6 +98,89 @@ namespace Corruption.Rules
             return !corrupted && (rarity == "magic" || rarity == "rare");
         }
 
+        public const string OperationId = "shatter";
+
+        // Refusal texts (riftforge-ui-brief.md §2).
+        public const string OnlyMagicOrRare = "Only Magic and Rare items shatter";
+        public const string NoUniquesOrCorrupted = "Uniques and corrupted items can't be shattered";
+
+        /// <summary>Why the item can't be shattered, or "" when it can. The first reason that applies.</summary>
+        public static string Refusal(CraftItem item)
+        {
+            if (item.Rarity == "unique" || item.Corrupted)
+            {
+                return NoUniquesOrCorrupted;
+            }
+            if (item.Rarity != "magic" && item.Rarity != "rare")
+            {
+                return OnlyMagicOrRare;
+            }
+            // A Mirror's copy is locked like a corrupted item (Krogon, 2026-11-10).
+            if (item.Mirrored)
+            {
+                return OrbRules.MirroredLocked;
+            }
+            return MaxSplinters(item) > 0 ? "" : OrbRules.NoAffixes;
+        }
+
+        /// <summary>The most splinters a shatter can give: one per displayed affix line (a resonant line is one).</summary>
+        public static int MaxSplinters(CraftItem item)
+        {
+            return item.Loot == null ? 0 : item.Loot.Lines.Count;
+        }
+
+        /// <summary>
+        ///     Whether every possible splinter has a place before anything is rolled (Krogon, 2026-11-10): free cells in
+        ///     the Splinters tab plus free Bag cells, plus the Bag cell the shattered item frees when it is in the Bag
+        ///     grid. Checked against the most that can come out, so storage never depends on the roll.
+        /// </summary>
+        public static bool HasRoom(int maxSplinters, int freeSplinterCells, int freeBagCells, bool sourceInBag)
+        {
+            return Math.Max(0, freeSplinterCells) + Math.Max(0, freeBagCells) + (sourceInBag ? 1 : 0) >= maxSplinters;
+        }
+
+        /// <summary>The refusal when there isn't room: "Make room for up to 3 splinters."</summary>
+        public static string MakeRoom(int maxSplinters)
+        {
+            return $"Make room for up to {maxSplinters} splinter{(maxSplinters == 1 ? "" : "s")}.";
+        }
+
+        /// <summary>What the window shows before confirming: each line with its chance, and that the item is destroyed.</summary>
+        public List<string> Preview(CraftItem item, IDictionary<string, AffixTable.Affix> affixes)
+        {
+            var lines = new List<string>();
+            string chance = SplinterChance.ToString("0.##", CultureInfo.InvariantCulture) + "%";
+            if (item.Loot != null)
+            {
+                lines.AddRange(item.Loot.Lines.Select(l => chance + " · " + LootItem.LineText(l, affixes)));
+            }
+            lines.Add("The item is destroyed. Each line has that chance to become an Affix Splinter with its exact value.");
+            return lines;
+        }
+
+        /// <summary>
+        ///     Shatters the item's lines: the splinters that come out, each the line's affix (or twin) and exact value.
+        ///     Rolls once per displayed line. Never changes <paramref name="item" />.
+        /// </summary>
+        /// <param name="random">Returns a value in [0, 1).</param>
+        public List<LootItem.Line> Shatter(CraftItem item, Func<double> random)
+        {
+            var splinters = new List<LootItem.Line>();
+            if (item.Loot == null)
+            {
+                return splinters;
+            }
+            var kept = RollSplinters(item.Loot.Lines.Count, random);
+            for (int i = 0; i < kept.Length; i++)
+            {
+                if (kept[i])
+                {
+                    splinters.Add(SplinterRules.FromShattered(item.Loot.Lines[i]));
+                }
+            }
+            return splinters;
+        }
+
         /// <summary>
         ///     Rolls a shattered item's affix lines: true where that line becomes a splinter. A resonant twin line is one
         ///     line (one roll) and gives one splinter with the combined value.

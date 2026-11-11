@@ -27,7 +27,47 @@ namespace Corruption.Rules
 
             public float Value;
 
+            /// <summary>
+            ///     Added by a Corruption shard (on top of the normal limit), or a resonant line a shard completed. Its
+            ///     value counts beyond the stat caps (corruption-design.md → Corrupted gear). Saved as a leading "~".
+            /// </summary>
+            public bool Corrupted;
+
             public bool Resonant => Ids.Length == 2;
+        }
+
+        /// <summary>Marks a saved line as a shard's corrupted affix ("~fire_damage_suffix=30").</summary>
+        public const char CorruptedMark = '~';
+
+        /// <summary>One line as saved: "id=12", "prefix+suffix=40", "~id=12" for a corrupted one.</summary>
+        public static string LineToText(Line line)
+        {
+            return (line.Corrupted ? CorruptedMark.ToString() : "") + string.Join("+", line.Ids) + "=" + Format(line.Value);
+        }
+
+        /// <summary>Reads one saved line; null when it can't be read (see <see cref="Read" />).</summary>
+        public static Line LineFromText(string part)
+        {
+            if (string.IsNullOrEmpty(part))
+            {
+                return null;
+            }
+            bool corrupted = part[0] == CorruptedMark;
+            if (corrupted)
+            {
+                part = part.Substring(1);
+            }
+            int equals = part.LastIndexOf('=');
+            if (equals <= 0 || !TryParseValue(part.Substring(equals + 1), out var value))
+            {
+                return null;
+            }
+            var ids = part.Substring(0, equals).Split('+');
+            if (ids.Length > 2 || ids.Any(id => id.Length == 0))
+            {
+                return null;
+            }
+            return new Line { Ids = ids, Value = value, Corrupted = corrupted };
         }
 
         public string Rarity = "magic";
@@ -49,8 +89,7 @@ namespace Corruption.Rules
             {
                 customData.Remove(NameKey);
             }
-            customData[AffixesKey] = string.Join(";",
-                Lines.Select(l => string.Join("+", l.Ids) + "=" + Format(l.Value)));
+            customData[AffixesKey] = string.Join(";", Lines.Select(LineToText));
         }
 
         /// <summary>
@@ -73,17 +112,12 @@ namespace Corruption.Rules
             }
             foreach (var part in affixes.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                int equals = part.LastIndexOf('=');
-                if (equals <= 0 || !TryParseValue(part.Substring(equals + 1), out var value))
+                var line = LineFromText(part);
+                if (line == null)
                 {
                     return null;
                 }
-                var ids = part.Substring(0, equals).Split('+');
-                if (ids.Length > 2 || ids.Any(id => id.Length == 0))
-                {
-                    return null;
-                }
-                item.Lines.Add(new Line { Ids = ids, Value = value });
+                item.Lines.Add(line);
             }
             return item;
         }
@@ -166,7 +200,8 @@ namespace Corruption.Rules
                 return Name;
             }
             string prefix = "", suffix = "";
-            foreach (var line in Lines)
+            // A shard's extra affix names the item only where that side has no name yet, so corrupting keeps the name.
+            foreach (var line in Lines.OrderBy(l => l.Corrupted && !l.Resonant ? 0 : 1))
             {
                 foreach (var id in line.Ids)
                 {
@@ -247,13 +282,22 @@ namespace Corruption.Rules
             return (shown > 0f ? "+" : "−") + number + unit;
         }
 
-        /// <summary>The total of one effect over the item's lines (e.g. every <c>fire_damage_percent</c> line).</summary>
+        /// <summary>The total of one effect over the item's lines (e.g. every <c>fire_damage_percent</c> line), corrupted ones included.</summary>
         public float Total(string effect, IDictionary<string, AffixTable.Affix> affixes)
+        {
+            return Total(effect, affixes, true) + Total(effect, affixes, false);
+        }
+
+        /// <summary>
+        ///     The total of one effect over only the shard's corrupted lines, or only the ordinary ones. Capped stats
+        ///     cap the ordinary part and add the corrupted part on top (<see cref="AffixTotals.Capped" />).
+        /// </summary>
+        public float Total(string effect, IDictionary<string, AffixTable.Affix> affixes, bool corrupted)
         {
             float total = 0f;
             foreach (var line in Lines)
             {
-                if (affixes.TryGetValue(line.Ids[0], out var affix) && affix.Effect == effect)
+                if (line.Corrupted == corrupted && affixes.TryGetValue(line.Ids[0], out var affix) && affix.Effect == effect)
                 {
                     total += line.Value;
                 }
