@@ -1,6 +1,6 @@
 # Status
 
-**Last updated:** 2026-11-11 by the coordinator (branch `claude/relaxed-cray-8dkrr2`), from the real state of GitHub (branches and open pull requests listed, the 28 open issues read, tests run), after PR #61 and the bump of Corruption to 0.7.0. This update: the top 3 priorities you agreed, the phone play-test page brought in line, and a play-test you can run alone on the dedicated server.
+**Last updated:** 2026-11-11 by the coordinator (branch `claude/relaxed-cray-8dkrr2`), from the real state of GitHub (branches and open pull requests listed, the 28 open issues read, tests run), after PR #62 (the coordinator's documents; Corruption stays at 0.7.0, raised for PR #61). This update: the top 3 priorities you agreed, the phone play-test page brought in line, and a play-test you can run alone on the dedicated server.
 
 **Only the coordinator, working on `master`, edits this file.** Feature branches never touch it, so merges don't clash. Feature sessions report through their handoff file (`docs/handoffs/<branch>.md`).
 
@@ -8,7 +8,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 ## In one paragraph
 
-**Everything is in `master`.** Every pull request (up to #61) is merged and none is open. The last round's branch, `claude/brave-einstein-xz357h` (PR #61: shard corruption, shattering and Affix Splinters at the Riftforge), is merged and deleted; the handoff files stay in `docs/handoffs/`. The only branch besides `master` is the coordinator's `claude/relaxed-cray-8dkrr2` (documents only: this file, the decisions, the play-test checklist). What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
+**Everything is in `master`.** Every pull request (up to #62) is merged and none is open. The last round's branch, `claude/brave-einstein-xz357h` (PR #61: shard corruption, shattering and Affix Splinters at the Riftforge), is merged and deleted; the handoff files stay in `docs/handoffs/`. The coordinator's `claude/relaxed-cray-8dkrr2` (documents only: this file, the decisions, the play-test checklist) is merged too (PR #62, 2026-11-11) and can be deleted. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
 
 ## Branches
 
@@ -17,7 +17,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 | Branch | Purpose | Stage | Behind / ahead | Ready to merge? |
 |---|---|---|---|---|
 | `master` | The shared, play-tested base. **Versions: Corruption 0.7.0, CraftingOverhaul 0.3.0, Orlog 0.2.0** (Corruption bumped 2026-11-11 for PR #61, CraftingOverhaul 2026-11-10 for PR #59, Orlog 2026-11-08 for PR #57) | — | — | — |
-| `claude/relaxed-cray-8dkrr2` | Coordinator: status review, the phone play-test page, the solo-on-server checklist. Documents only, no game code | Ready once you merge its pull request | 0 behind; ahead by its own document commits | Yes: no play-test needed, no version bump |
+| `claude/relaxed-cray-8dkrr2` | Coordinator: status review, the phone play-test page, the solo-on-server checklist. Documents only, no game code | Merged (PR #62, 2026-11-11) | 0 / 0 (everything is in `master`) | Done. **Safe to delete** |
 
 Checked 2026-11-11: no open pull requests; `claude/brave-einstein-xz357h` is deleted on GitHub, so `master` and the coordinator's branch are the only ones. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
 
@@ -100,7 +100,7 @@ Map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issue
 
 ## Recommended merge order
 
-**Today:** only the coordinator's documents branch `claude/relaxed-cray-8dkrr2` (no game code, no play-test, no version bump). PR #61 was the last feature pull request.
+**Today: nothing to merge.** PR #62 (the coordinator's documents) was the last; PR #61 was the last with game code.
 
 For the next round's pull requests, merge **safest first**:
 
