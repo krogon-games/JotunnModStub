@@ -1,6 +1,6 @@
 # Status
 
-**Last updated:** 2026-11-11 by the coordinator, from the real state of GitHub (branches fetched and compared with `master`, open pull requests listed), after PR #61 and the bump of Corruption to 0.7.0.
+**Last updated:** 2026-11-11 by the coordinator (branch `claude/relaxed-cray-8dkrr2`), from the real state of GitHub (branches and open pull requests listed, the 28 open issues read, tests run), after PR #61 and the bump of Corruption to 0.7.0. This update: the top 3 priorities you agreed, the phone play-test page brought in line, and a play-test you can run alone on the dedicated server.
 
 **Only the coordinator, working on `master`, edits this file.** Feature branches never touch it, so merges don't clash. Feature sessions report through their handoff file (`docs/handoffs/<branch>.md`).
 
@@ -8,7 +8,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 
 ## In one paragraph
 
-**Everything is in `master`.** Every pull request (up to #61) is merged and none is open. So nothing is waiting to be merged today. The last round's branch, `claude/brave-einstein-xz357h` (PR #61: shard corruption, shattering and Affix Splinters at the Riftforge), is fully in `master` and can be deleted; the handoff files stay in `docs/handoffs/`. What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
+**Everything is in `master`.** Every pull request (up to #61) is merged and none is open. The last round's branch, `claude/brave-einstein-xz357h` (PR #61: shard corruption, shattering and Affix Splinters at the Riftforge), is merged and deleted; the handoff files stay in `docs/handoffs/`. The only branch besides `master` is the coordinator's `claude/relaxed-cray-8dkrr2` (documents only: this file, the decisions, the play-test checklist). What *is* waiting: your play-tests (above all the first evening with the group), and your answers to the questions each session asked before its next round.
 
 ## Branches
 
@@ -17,9 +17,9 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 | Branch | Purpose | Stage | Behind / ahead | Ready to merge? |
 |---|---|---|---|---|
 | `master` | The shared, play-tested base. **Versions: Corruption 0.7.0, CraftingOverhaul 0.3.0, Orlog 0.2.0** (Corruption bumped 2026-11-11 for PR #61, CraftingOverhaul 2026-11-10 for PR #59, Orlog 2026-11-08 for PR #57) | — | — | — |
-| `claude/brave-einstein-xz357h` | Loot round for #29: shard corruption, shattering, Affix Splinters | Merged (PR #61, 2026-11-11) | 0 / 0 (everything is in `master`) | Done. **Safe to delete** |
+| `claude/relaxed-cray-8dkrr2` | Coordinator: status review, the phone play-test page, the solo-on-server checklist. Documents only, no game code | Ready once you merge its pull request | 0 behind; ahead by its own document commits | Yes: no play-test needed, no version bump |
 
-Checked 2026-11-11 after PR #61: no open pull requests; `claude/brave-einstein-xz357h` has nothing `master` lacks. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
+Checked 2026-11-11: no open pull requests; `claude/brave-einstein-xz357h` is deleted on GitHub, so `master` and the coordinator's branch are the only ones. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
 
 **Areas without a branch now** (their old branches were deleted; each next round starts a new branch from `master`, and its handoff file in `docs/handoffs/` says where it stopped):
 
@@ -70,11 +70,12 @@ Started but not finished:
 
 ## Waiting on you
 
-Play-tests (only you can run them):
-1. **The group evening** on the dedicated server, after the release build. [#24](https://github.com/krogon-games/JotunnModStub/issues/24), [#25](https://github.com/krogon-games/JotunnModStub/issues/25)
-2. **Loot steps 3–4**, about an hour alone (the gathering parts PR #55 covered are done). [#26](https://github.com/krogon-games/JotunnModStub/issues/26)
-3. **The small leftovers.** [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
-4. **The weapon-skill check** (2 minutes: two console commands, `PLAYTEST.md` → Session 3b step 6). It tells whether the +6 you saw for a +7 axe is only a display quirk. [#56](https://github.com/krogon-games/JotunnModStub/issues/56)
+Play-tests (only you can run them). The phone page ([Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht)) has every step below; it was brought in line on 2026-11-11 after standing still since 2026-11-08, and from now on every round's solo checklist goes on it too (your decision, 2026-11-11).
+1. **You alone on the dedicated server** (`PLAYTEST.md` → Session 2-solo, new 2026-11-11), after the release build. It checks that the three mods load on the server, that `devcommands` works there, the Orlog stone, a rip and a corrupted boss through the server. It can't check anything that needs a second player's game.
+2. **The group evening** on the dedicated server, after the release build. One friend is enough for nearly all of it: only the rip-wave check after the heart changes hands needs three players. [#24](https://github.com/krogon-games/JotunnModStub/issues/24), [#25](https://github.com/krogon-games/JotunnModStub/issues/25)
+3. **Loot steps 3–4**, about an hour alone (the gathering parts PR #55 covered are done). [#26](https://github.com/krogon-games/JotunnModStub/issues/26)
+4. **The small leftovers.** [#27](https://github.com/krogon-games/JotunnModStub/issues/27)
+5. **The weapon-skill check** (2 minutes: two console commands, `PLAYTEST.md` → Session 3b step 6). It tells whether the +6 you saw for a +7 axe is only a display quirk. [#56](https://github.com/krogon-games/JotunnModStub/issues/56)
 
 Questions, by session (each session asks them at the start of its round):
 - **Loot:** the orb rules are answered ([#28](https://github.com/krogon-games/JotunnModStub/issues/28), closed). Next: orb drop sources and rates ([#33](https://github.com/krogon-games/JotunnModStub/issues/33)); what Stonecutter's and Resinous should become (you flagged them for a rework); later the world unique pool ([#34](https://github.com/krogon-games/JotunnModStub/issues/34)).
@@ -87,17 +88,19 @@ Questions, by session (each session asks them at the start of its round):
 
 ## Top 3 priorities
 
-Following the roadmap's goal for this stretch, "playable together":
+Agreed with you on 2026-11-11, following the roadmap's goal for this stretch, "playable together":
 
-1. **Play together.** Make the release build ([#25](https://github.com/krogon-games/JotunnModStub/issues/25)) and run the group evening ([#24](https://github.com/krogon-games/JotunnModStub/issues/24)). Every feature is verified only alone; this is the biggest unknown, and its findings decide what each session fixes first.
-2. **Close the loot loop.** Play-test loot steps 3–4 ([#26](https://github.com/krogon-games/JotunnModStub/issues/26)), then orb drops ([#33](https://github.com/krogon-games/JotunnModStub/issues/33)). The Riftforge is done (window [#30](https://github.com/krogon-games/JotunnModStub/issues/30), PR #59; rules [#29](https://github.com/krogon-games/JotunnModStub/issues/29), PR #61): players can craft with orbs, corrupt with shards, shatter and use splinters, but nothing drops orbs yet.
-3. **Make the Amazon do something.** Answer the four passive questions and build her passives ([#32](https://github.com/krogon-games/JotunnModStub/issues/32)). The group voted for her, and today her skill points have no effect.
+1. **Play together, from today's `master`.** Make the release build now ([#25](https://github.com/krogon-games/JotunnModStub/issues/25)): `master` is clean (no open pull request, the three version numbers agree, 498 tests pass) and the evening's script already expects 0.7.0 / 0.2.0 / 0.3.0. Don't wait for another feature: seven merged pull requests (#22, #53, #55, #57, #58, #59, #61) have multiplayer steps waiting, and every round adds more. Then, in this order: **you alone on the dedicated server** (`PLAYTEST.md` → Session 2-solo; no friends needed), **one friend** for the two-player steps (nearly all of Session 2 is written for players A and B), and the **group evening** ([#24](https://github.com/krogon-games/JotunnModStub/issues/24)).
+2. **Orb drops as the next build round** ([#33](https://github.com/krogon-games/JotunnModStub/issues/33)). The Riftforge is done (window [#30](https://github.com/krogon-games/JotunnModStub/issues/30), PR #59; rules [#29](https://github.com/krogon-games/JotunnModStub/issues/29), PR #61), but nothing drops orbs, so its orb half only works through console commands. One short round; the session proposes the drop sources and rates from the drop tables for you to approve. The loot steps 3–4 play-test ([#26](https://github.com/krogon-games/JotunnModStub/issues/26)) is no longer part of this priority: it blocks nothing, so do it when you have a spare hour.
+3. **Make the Amazon do something** ([#32](https://github.com/krogon-games/JotunnModStub/issues/32)). Answer the four passive questions (asked 2026-11-02), then her passives are built. She has the longest road ahead (passives, then the skill button, then the bow skills), the group voted for her, and today her skill points have no effect. Orlog is its own plugin, so this round can run beside the loot one.
 
-Map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31)) come right after: they are the roadmap's fourth goal.
+Map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31)) come right after: the table has waited for your approval since 2026-11-01, and only tiers 1–2 can be built until elites are designed ([#39](https://github.com/krogon-games/JotunnModStub/issues/39)).
+
+**Where the work went:** the last six rounds (PRs #53–#61) were loot, UI and review fixes. Classes last moved on 2026-11-02 and rips on 2026-11-05; both wait only on your answers.
 
 ## Recommended merge order
 
-**Today: nothing to merge.** PR #61 was the last; no pull request is open.
+**Today:** only the coordinator's documents branch `claude/relaxed-cray-8dkrr2` (no game code, no play-test, no version bump). PR #61 was the last feature pull request.
 
 For the next round's pull requests, merge **safest first**:
 

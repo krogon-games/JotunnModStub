@@ -17,7 +17,7 @@ I'm not a developer: explain things in plain language. Each session runs **one d
 **During the round:**
 - **One decision round per session, one branch per round.** A couple of related tasks per round is fine.
 - **Every time I make a decision**, add it to the **Decisions** section of this branch's handoff file straight away, and commit.
-- **Play-test checklists and my feedback** go in `docs/playtests/<branch>.md` (see [`docs/playtests/README.md`](docs/playtests/README.md)).
+- **Play-test checklists and my feedback** go in `docs/playtests/<branch>.md` (see [`docs/playtests/README.md`](docs/playtests/README.md)). **Put every round's solo checklist on the phone page too** (user, 2026-11-11): the [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht), linked from `docs/PLAYTEST.md`. Add the steps when you write the checklist, read my marks from it, and take the steps off again once the round has passed.
 
 **At the end:** I type **`/handoff`** ([`.claude/skills/handoff/SKILL.md`](.claude/skills/handoff/SKILL.md)). It checks the branch, runs the checks, updates the handoff file ([`docs/handoffs/README.md`](docs/handoffs/README.md) has the sections), commits, pushes, and tells me whether the branch is **ready to merge** (and if not, what's missing). If I end a session without it, remind me to run it.
 
