@@ -20,7 +20,7 @@ Confirmed by Krogon in single player (2026-11-10/11):
 ## Half-done and known issues
 
 - **Multiplayer:** not tried (`PLAYTEST.md` → Session 2, 2i).
-- The font-warning fix (last code commit) isn't re-checked in the log.
+- Krogon's last log (build `4f670b1`): the font warnings are gone; five of the game's own "Trying to add item to occupied slot -1, -1" lines, cause not pinned down (details in the play-test file).
 - Caps aren't shown to players until the stats sheet ([#60](https://github.com/krogon-games/JotunnModStub/issues/60)).
 - Splinter colours are Claude's picks within the approved idea (`splinter_looks.csv`, status `proposed`).
 

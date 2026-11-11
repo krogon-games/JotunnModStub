@@ -110,3 +110,8 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 ### Final play-test (2026-11-11)
 - Krogon: the three shard outcomes and their result messages, the tickboxes hiding each dialog and staying hidden after a restart, the full-storage refusal and reconnecting "have all been checked, all working. well done."
 - Passed alone. Not re-checked: that the log no longer shows the "LiberationSans" warnings (the fix came after the last log). Not tried: anything with other players (`PLAYTEST.md` → Session 2, 2i).
+
+### Log check (2026-11-11, Krogon's second log, build `4f670b1`)
+- **The "LiberationSans" warnings are gone** (the fix is confirmed). No red errors from any mod. The splinter line is right again (67 looks, 68 items, 67 models, 68 icons).
+- Five yellow lines "Trying to add item to occupied slot -1, -1" (three at 14:41:21, two at 14:42:03): the game's own message when a non-stacking item is added to an inventory with no free cell (read in the game's code: `Inventory.AddItem(item)` logs it when it finds no empty slot). Not from a failed shatter (that logs its own line, absent) and not from the tabs (they check for room first). Most likely moving items into a full bag, backpack or chest; Krogon to say what he was doing.
+- Not this round's: CraftingOverhaul's biome detection took 13.7 s after spawning (14.7 s in the earlier log); `FEATURES.md` calls it "a short hitch".
