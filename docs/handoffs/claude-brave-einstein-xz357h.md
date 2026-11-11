@@ -1,10 +1,10 @@
 # Handoff: `claude/brave-einstein-xz357h`
 
-**Written:** 2026-11-10, mid-round (`/handoff` rewrites this at the end). Everything pushed; no PR.
+**Written:** 2026-11-11 by `/handoff`. 22 commits ahead of `master`, 0 behind; everything pushed; no PR yet.
 
 ## Stage
 
-Ready to merge once `/handoff` has run its checks (Krogon's solo play-test passed 2026-11-11).
+Ready to merge.
 
 ## Purpose
 
@@ -78,22 +78,25 @@ Krogon, after seeing the dialogs in game (2026-11-10, four screenshots):
 
 ## Open questions for Krogon
 
-None open.
+1. What were you doing at 14:41:21 and 14:42:03 in the last log (five of the game's "Trying to add item to occupied slot -1, -1" lines)? Harmless if nothing went missing.
 
 ## Next steps
 
-1. `/handoff`, then a PR into `master`; Krogon merges; the coordinator raises Corruption's version and closes #29.
+1. A PR into `master` (when Krogon asks); Krogon merges; the coordinator raises Corruption's version, copies decisions 1–26 into `docs/DECISIONS.md` and closes #29.
 2. The group evening: Session 2, 2i.
 3. Its own round: the stats sheet ([#60](https://github.com/krogon-games/JotunnModStub/issues/60)).
 
 ## Checks
 
-- Build: PASS (`dotnet test CraftingOverhaul.Tests` 498 passed; Corruption builds against the stand-in game folder).
+- Build: PASS. `dotnet test CraftingOverhaul.Tests` 498 passed; Corruption builds against the stand-in game folder.
+- Version: gameplay changed: version bump needed at merge (Corruption). This branch changed no version number.
+- Multiplayer sync: read in code, not tested. The two warning settings are per player (not synced), as intended; the 68 splinter items are registered in `OnVanillaPrefabsAvailable`; a splinter's line and a corrupted affix live in the item's own saved data; the new tables are compiled into the DLL. No new messages.
+- Assets and names: PASS. Splinter models, textures and the three tables are embedded (`Corruption.csproj`; `.gitignore` now lets the models through); `GemstoneRed` is in the game dump; the splinter's texts are added in `SplinterItem.cs`, as the orbs' are in `OrbItems.cs`.
+- FEATURES.md: PASS (row, section, patch targets, changelog).
 - In-game: passed in Krogon's single-player play-test (2026-11-11): "these have all been checked, all working. well done."
-- The rest: run by `/handoff`.
 
 ## Merge notes
 
-- Ready to merge: yes after `/handoff`'s checks (solo play-test passed; multiplayer left for the group evening).
-- **Gameplay changed: version bump needed at merge (Corruption).** This branch changed no version number.
-- Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/riftforge-ui-brief.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`.
+- **Ready to merge: yes.** Final solo play-test passed, no check failed, `master` has nothing this branch lacks, everything pushed. Multiplayer left for the group evening.
+- **Gameplay changed: version bump needed at merge (Corruption).**
+- No other remote branch has unmerged commits, so no overlaps. Shared files touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/mod-compatibility.md`, `docs/AFFIX_RULES.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/riftforge-ui-brief.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/CorruptionConfig.cs`, `.gitignore`.
