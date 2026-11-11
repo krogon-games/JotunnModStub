@@ -154,6 +154,8 @@ namespace Corruption.Content
             amountRect.anchorMin = amountRect.anchorMax = new Vector2(1f, 0f);
             amountRect.pivot = new Vector2(1f, 0f);
             amountRect.sizeDelta = new Vector2(60f, 22f);
+            // Off while the text component is added, so it doesn't ask for the engine's default font (not in the game) and warn.
+            amountGo.SetActive(false);
             var amount = amountGo.AddComponent<TextMeshProUGUI>();
             var style = gui.m_playerGrid && gui.m_playerGrid.m_elementPrefab
                 ? gui.m_playerGrid.m_elementPrefab.GetComponent<InventoryElement>()?.m_amount
@@ -167,6 +169,7 @@ namespace Corruption.Content
             amount.alignment = TextAlignmentOptions.BottomRight;
             amount.raycastTarget = false;
             _cursorAmount = amount;
+            amountGo.SetActive(true);
             _cursor.SetActive(false);
         }
 

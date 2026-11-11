@@ -89,6 +89,14 @@ Splinters go to the Splinters tab first, then the Bag. The refusal needs **both*
 - Both dialogs: layout, columns, tickbox row and buttons are in place, but **"why is there a troll in the background of the panel?"** (a loading-screen picture behind the text). "Please use the normal background like the rest of the UI. Same with the shard panel."
 - Seen in the screenshots: a stray column of text, "MISSING BUTTON DEF "ButtonB"" / "ButtonA", running down from each button.
 
+### Your feedback (2026-11-11, fourth try, with the log)
+- Both dialogs: "Looking a lot better now. well done."
+- "Noticed something going on in the log": a block of yellow warnings, "The LiberationSans SDF Font Asset was not found. There is no Font Asset assigned to Name / Cost / Warning / …", every time a dialog opens.
+- The log also confirms the splinters: "67 looks in the table, 68 items registered, 67 with their own model, 68 icons rendered". No red errors from the mods.
+
+### What changed after the fourth feedback
+- The warnings were harmless noise: each new piece of text briefly asked for the engine's default font, which Valheim doesn't ship, before the mod gave it the game's font. Text is now created switched off, given its font, then switched on, so nothing is logged (the dialogs, the Forge bench and the picked-material counter). To re-test: open both dialogs and check the log has no "LiberationSans" lines.
+
 ### What changed after the third feedback
 - Background: the dialog no longer guesses at the message box's art; it copies the inventory's own panel background (the wood panel the character sheet uses, which you've seen in game). To re-test.
 - Stray text: it was the gamepad key hint copied with the message box's buttons; hidden. To re-test.

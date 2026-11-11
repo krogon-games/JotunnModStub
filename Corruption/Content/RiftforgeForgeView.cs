@@ -580,6 +580,7 @@ namespace Corruption.Content
         {
             var go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent ? parent : _bench, false);
+            go.SetActive(false);   // see ForgeDialog: no default-font warning
             var text = go.AddComponent<TextMeshProUGUI>();
             var style = _gui.m_recipeDecription;
             float scale = 1f;
@@ -597,6 +598,7 @@ namespace Corruption.Content
             text.raycastTarget = false;
             text.textWrappingMode = TextWrappingModes.Normal;
             text.overflowMode = TextOverflowModes.Ellipsis;
+            go.SetActive(true);
             return text;
         }
 

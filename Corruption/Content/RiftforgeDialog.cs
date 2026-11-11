@@ -120,6 +120,9 @@ namespace Corruption.Content
             {
                 var go = new GameObject(objectName, typeof(RectTransform));
                 go.transform.SetParent(panel, false);
+                // Switched off while the text component is added: a text that wakes up without a font asks for the
+                // engine's default one, which the game doesn't ship, and logs a warning each time (Krogon's log, 2026-11-11).
+                go.SetActive(false);
                 var tmp = go.AddComponent<TextMeshProUGUI>();
                 tmp.font = bodyStyle.font;
                 tmp.fontSharedMaterial = bodyStyle.fontSharedMaterial;
@@ -131,6 +134,7 @@ namespace Corruption.Content
                 tmp.textWrappingMode = TextWrappingModes.Normal;
                 tmp.overflowMode = TextOverflowModes.Overflow;
                 tmp.text = text ?? "";
+                go.SetActive(true);
                 return tmp;
             }
 
