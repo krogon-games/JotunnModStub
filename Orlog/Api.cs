@@ -178,8 +178,12 @@ namespace Orlog
             Field(json, "level", points);
             Field(json, "canSpend", blocked.Length == 0);
             Field(json, "spendBlocked", blocked);
-            Field(json, "description", (points > 0 ? "" : "Not learned yet. ") + skill.Description);
-            Field(json, "nextDescription", points < max ? "Level " + (points + 1).ToString(CultureInfo.InvariantCulture) + ": " + skill.Description : "");
+            // Passives show their chance at the current and the next level (roadmap C3).
+            var cls = Attributes.ClassOf(player);
+            string now = Passives.Describe(cls, skill.Id, points) ?? skill.Description;
+            string next = Passives.Describe(cls, skill.Id, points + 1) ?? skill.Description;
+            Field(json, "description", points > 0 ? now : "Not learned yet. " + skill.Description);
+            Field(json, "nextDescription", points < max ? "Level " + (points + 1).ToString(CultureInfo.InvariantCulture) + ": " + next : "");
             Field(json, "eitrCost", SkillRules.EitrCost(skill, points));
             json.Length--;
             return json.Append('}').ToString();

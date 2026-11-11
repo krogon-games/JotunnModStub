@@ -18,6 +18,7 @@ namespace Orlog.Content
             CommandManager.Instance.AddConsoleCommand(new StatCommand());
             CommandManager.Instance.AddConsoleCommand(new RespecCommand());
             CommandManager.Instance.AddConsoleCommand(new SkillCommand());
+            CommandManager.Instance.AddConsoleCommand(new PassiveCommand());
         }
 
         private static Player LocalPlayer()
@@ -203,6 +204,44 @@ namespace Orlog.Content
                     }
                 }
                 Print(player);
+            }
+        }
+
+        private sealed class PassiveCommand : ConsoleCommand
+        {
+            private static readonly string[] Effects = { "crit", "penetrate", "dodge", "avoid", "evade" };
+
+            public override string Name => "orlog_passive";
+
+            public override string Help => "Orlog: test a passive with a set chance until you quit, e.g. orlog_passive crit 100 (crit, penetrate, dodge, avoid, evade); orlog_passive off";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var player = LocalPlayer();
+                if (!player)
+                {
+                    return;
+                }
+                if (args.Length == 1 && args[0].ToLowerInvariant() == "off")
+                {
+                    Passives.ClearTestChances();
+                }
+                else if (args.Length == 2 && Effects.Contains(args[0].ToLowerInvariant())
+                         && float.TryParse(args[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float chance) && chance >= 0f && chance <= 100f)
+                {
+                    Passives.SetTestChance(args[0].ToLowerInvariant(), chance);
+                }
+                else if (args.Length != 0)
+                {
+                    Console.instance.Print("Usage: orlog_passive <crit|penetrate|dodge|avoid|evade> <chance 0-100>, or orlog_passive off");
+                    return;
+                }
+                foreach (string effect in Effects)
+                {
+                    Console.instance.Print($"{effect}: {Passives.Chance(player, effect):0.#}%" + (Passives.HasTestChance(effect) ? " (test chance)" : ""));
+                }
             }
         }
 
