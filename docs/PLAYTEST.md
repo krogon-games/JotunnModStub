@@ -2,7 +2,7 @@
 
 Everything built but not yet tested in-game, in one place, in the order that makes a session quick. Tick items off in the phone log or tell Claude the result; Claude then updates `FEATURES.md` and `CURRENT_STATE.md`. Remove a section here once it's tested.
 
-**Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes.
+**Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes. Last brought in line: 2026-11-11 (the build check's version numbers, Session 2's 2g–2i, the two small checks of Session 1c); before that 2026-11-08. The rounds since 2026-11-05 keep their own solo checklist in `docs/playtests/<branch>.md`, so only steps still untried after a round belong on the phone page.
 
 **Results so far:** the first session (2026-10-28) passed boss essences, corrupted bosses, talismans, craft from chests with AdventureBackpacks, category headers, `co_biome` and config reload; maps and rips worked apart from two bugs, fixed and confirmed in a re-test. Details: `FEATURES.md`.
 
@@ -27,6 +27,10 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 
 ### 2. Bulk planting from chests
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
+
+### 3. Small checks ([#27](https://github.com/krogon-games/JotunnModStub/issues/27))
+1. **One click sound:** the + buttons for attribute points, the skills panel's buttons and the inventory's tab buttons play one click, not two (on 2026-10-31 you heard double clicks, most on the first press; fixed the same day, never re-tried).
+2. **Build stamp:** `BepInEx/LogOutput.log` has the line `CraftingOverhaul 0.3.0 loaded (build: master <commit>)`, beside Corruption's and Orlog's.
 
 ## Odin items (2 minutes)
 
