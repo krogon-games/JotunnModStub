@@ -19,6 +19,7 @@ namespace Orlog.Content
             CommandManager.Instance.AddConsoleCommand(new RespecCommand());
             CommandManager.Instance.AddConsoleCommand(new SkillCommand());
             CommandManager.Instance.AddConsoleCommand(new PassiveCommand());
+            CommandManager.Instance.AddConsoleCommand(new SlotCommand());
         }
 
         private static Player LocalPlayer()
@@ -242,6 +243,29 @@ namespace Orlog.Content
                 {
                     Console.instance.Print($"{effect}: {Passives.Chance(player, effect):0.#}%" + (Passives.HasTestChance(effect) ? " (test chance)" : ""));
                 }
+            }
+        }
+
+        private sealed class SlotCommand : ConsoleCommand
+        {
+            public override string Name => "orlog_slot";
+
+            public override string Help => "Orlog: put a skill in a skill slot, e.g. orlog_slot 1 MagicArrow (orlog_slot 1 to clear; the skills panel does the same by dragging)";
+
+            public override void Run(string[] args)
+            {
+                var player = LocalPlayer();
+                if (!player)
+                {
+                    return;
+                }
+                if (args.Length < 1 || !int.TryParse(args[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int slot) || slot < 1 || slot > 4)
+                {
+                    Console.instance.Print("Usage: orlog_slot <1-4> [skill id]");
+                    return;
+                }
+                string refused = SkillBar.SetSlot(player, slot - 1, args.Length > 1 ? args[1] : "");
+                Console.instance.Print(refused.Length > 0 ? refused : "Slots: " + string.Join(", ", SkillBar.Slots(player).Select((id, i) => (i + 1) + " " + (id.Length > 0 ? id : "-"))));
             }
         }
 

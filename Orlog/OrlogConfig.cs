@@ -9,6 +9,8 @@ namespace Orlog
         private const string DisplaySection = "2 - Display";
         private const string AttributeSection = "3 - Attributes";
         private const string StoneSection = "4 - Orlog Stone";
+        private const string SkillSection = "5 - Skills";
+        private const string KeySection = "6 - Skill Keys";
 
         public static ConfigEntry<int> MaxLevel;
         public static ConfigEntry<int> StatPointsPerLevel;
@@ -29,6 +31,13 @@ namespace Orlog
         public static ConfigEntry<float> EitrPerEnergy;
         public static ConfigEntry<float> DamagePerStrength;
         public static ConfigEntry<float> DamagePerDexterity;
+
+        public static ConfigEntry<float> SkillDamageMultiplier;
+        public static ConfigEntry<float> InnerSightDamageTaken;
+
+        public static ConfigEntry<UnityEngine.KeyCode> SkillButton;
+        public static ConfigEntry<UnityEngine.KeyCode> BlockKey;
+        public static ConfigEntry<UnityEngine.KeyCode>[] SlotKeys = new ConfigEntry<UnityEngine.KeyCode>[4];
 
         public static ConfigEntry<float> StoneSize;
         public static ConfigEntry<float> StoneGap;
@@ -92,6 +101,30 @@ namespace Orlog
             StoneTurn = config.Bind(StoneSection, "StoneTurn", 0f,
                 AdminOnly("Degrees added to the stone's turn (it copies the Eikthyr stone's turn). 180 turns it round if it faces the wrong way.",
                     new AcceptableValueRange<float>(-180f, 180f)));
+
+            // Skills (roadmap C5). Damage: D2's numbers × Orlog/Data/skill_damage_scale.csv × this.
+            SkillDamageMultiplier = config.Bind(SkillSection, "SkillDamageMultiplier", 1f,
+                AdminOnly("Multiplies the damage skills add (fire, frost, explosions, Magic Arrow). 1 = D2's ratio of skill damage to bow " +
+                          "damage (Orlog/Data/skill_damage_scale.csv). Proposed 2026-11-11, waiting for the user's approval.",
+                    new AcceptableValueRange<float>(0f, 10f)));
+            InnerSightDamageTaken = config.Bind(SkillSection, "InnerSightDamageTaken", 25f,
+                AdminOnly("% more damage enemies under Inner Sight take. 25 = the game's own 'slightly weak' step (Claude's interim " +
+                          "choice, 2026-11-11: D2 lowers defence instead, which Valheim lacks).", new AcceptableValueRange<float>(0f, 200f)));
+
+            // Keys, per player (class-design.md §4; user 2026-10-30: right click is the skill button, block moves, both rebindable).
+            SkillButton = config.Bind(KeySection, "SkillButton", UnityEngine.KeyCode.Mouse1,
+                "Fires the chosen attack skill (right click, as in Diablo 2). Only for characters with a class.");
+            BlockKey = config.Bind(KeySection, "BlockKey", UnityEngine.KeyCode.Mouse4,
+                "Block and parry for characters with a class, while the game's Block key is the same as the skill button. Default: the " +
+                "mouse's back side button (Valheim's dodge is block + jump). If you set Block to another key in the game's controls, " +
+                "that key blocks too.");
+            UnityEngine.KeyCode[] slotDefaults = { UnityEngine.KeyCode.F1, UnityEngine.KeyCode.F2, UnityEngine.KeyCode.F3, UnityEngine.KeyCode.F4 };
+            for (int i = 0; i < SlotKeys.Length; i++)
+            {
+                // F1-F4: Diablo 2's skill keys; unused by Valheim alone (Ctrl+F1, Ctrl+F3 are) and by the group's mods.
+                SlotKeys[i] = config.Bind(KeySection, "Slot" + (i + 1) + "Key", slotDefaults[i],
+                    "Skill slot " + (i + 1) + ": an attack skill goes on the skill button, a cast skill casts.");
+            }
 
             // Any change (a synced value, a reload on save) refreshes the bonuses.
             config.SettingChanged += (sender, args) => Content.Progress.NotifyChanged();

@@ -30,6 +30,8 @@ namespace Orlog
             Safe.Run("add the console commands", Commands.Register);
             // The Orlog stone copies a Vegvisir, which only exists inside location prefabs.
             ZoneManager.OnVanillaLocationsAvailable += () => Safe.Run("make the Orlog stone", OrlogStone.Build);
+            // The freeze copies the game's Immobilized status effect, which needs ObjectDB.
+            PrefabManager.OnVanillaPrefabsAvailable += () => Safe.Run("add the skills' status effects", BowSkills.RegisterStatusEffects);
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
@@ -49,6 +51,7 @@ namespace Orlog
         {
             _configWatcher?.Tick();
             OrlogStone.Tick();
+            SkillBar.Tick();
         }
 
         private void OnDestroy()

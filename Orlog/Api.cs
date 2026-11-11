@@ -9,13 +9,10 @@ namespace Orlog
     /// <summary>
     ///     The contract with CraftingOverhaul's UI (<c>docs/classes-ui-brief.md</c>, version 1), read by reflection. Works on
     ///     the local player; JSON answers are flat objects or string arrays; "" means no data. Levels, XP, attributes,
-    ///     the class, the Orlog stone and the skill tree (spending) are built; the skill bar answers "no data" until the
-    ///     skills work (roadmap C5).
+    ///     the class, the Orlog stone, the skill tree (spending) and the skill bar (roadmap C5, 2026-11-11) are built.
     /// </summary>
     public static class Api
     {
-        private const string NotYet = "Not available yet";
-
         public static int GetApiVersion()
         {
             return 1;
@@ -180,11 +177,11 @@ namespace Orlog
             Field(json, "spendBlocked", blocked);
             // Passives show their chance at the current and the next level (roadmap C3).
             var cls = Attributes.ClassOf(player);
-            string now = Passives.Describe(cls, skill.Id, points) ?? skill.Description;
-            string next = Passives.Describe(cls, skill.Id, points + 1) ?? skill.Description;
+            string now = Passives.Describe(cls, skill.Id, points) ?? SkillBar.Describe(player, skill.Id, points) ?? skill.Description;
+            string next = Passives.Describe(cls, skill.Id, points + 1) ?? SkillBar.Describe(player, skill.Id, points + 1) ?? skill.Description;
             Field(json, "description", points > 0 ? now : "Not learned yet. " + skill.Description);
             Field(json, "nextDescription", points < max ? "Level " + (points + 1).ToString(CultureInfo.InvariantCulture) + ": " + next : "");
-            Field(json, "eitrCost", SkillRules.EitrCost(skill, points));
+            Field(json, "eitrCost", ActiveSkillRules.EitrCost(skill, SkillBar.ValuesFor(cls), points));
             json.Length--;
             return json.Append('}').ToString();
         }
@@ -196,12 +193,22 @@ namespace Orlog
 
         public static string GetSkillBarJson()
         {
-            return "";
+            var player = Player.m_localPlayer;
+            if (!player || !Progress.Ready || Attributes.ClassOf(player) == null)
+            {
+                return "";
+            }
+            return Safe.Try("read the skill bar", () => SkillBar.BarJson(player), "");
         }
 
         public static string GetSlotStateJson(int slot)
         {
-            return "";
+            var player = Player.m_localPlayer;
+            if (!player || !Progress.Ready || Attributes.ClassOf(player) == null)
+            {
+                return "";
+            }
+            return Safe.Try("read a skill slot", () => SkillBar.SlotStateJson(player, slot), "");
         }
 
         public static string SpendStatPoint(string attribute)
@@ -226,7 +233,12 @@ namespace Orlog
 
         public static string SetSkillSlot(int slot, string skillId)
         {
-            return NotYet;
+            var player = Player.m_localPlayer;
+            if (!player || !Progress.Ready)
+            {
+                return "No character";
+            }
+            return Safe.Try("set a skill slot", () => SkillBar.SetSlot(player, slot, skillId), "Something went wrong");
         }
 
         public static string ChooseClass(string classId)
