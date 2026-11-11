@@ -18,6 +18,9 @@ Outputs:
 - Orlog/Data/amazon_skills.csv: the Amazon's 30 skills: D2's tree (tab, row, column, required level, prerequisites,
   mana) from data/d2-reference/amazon.csv, with our status, kind, weapon and Valheim description from
   docs/class-design.md §5 (user decisions 2026-10-30). Eitr costs are D2's mana: the class eitr pool is D2's mana 1:1.
+- Orlog/Data/amazon_passives.csv: the chance per skill level (1-20) of the Amazon's passives, from
+  data/d2-reference/amazon_levels.csv (Arreat Summit; D2R the same), with the tooltip text. Penetrate takes Critical
+  Strike's curve (user, 2026-11-11: D2's Penetrate raises attack rating, which Valheim doesn't have).
 - Orlog/Data/biome_levels.csv: each biome's creature level range (from the guide) and the health span of the creatures
   the world spawns there without a boss key (from the dump). Creatures get their level inside the range by health.
 
@@ -78,6 +81,17 @@ AMAZON = {
     "Lightning Strike": ("later", "attack", "spear", "The thrust releases chain lightning to nearby enemies"),
     "Lightning Fury": ("later", "attack", "spear", "The javelin (a spectral copy) bursts into lightning bolts on impact"),
 }
+
+# The Amazon's passives (roadmap C3; user decisions 2026-11-11): skill id -> (effect, the amazon_levels.csv row whose
+# per-level chances it takes, tooltip text with {0} for the chance).
+PASSIVES = [
+    ("CriticalStrike", "crit", ("Critical Strike", "crit_chance"), "{0}% chance to deal double physical damage"),
+    ("Dodge", "dodge", ("Dodge", "dodge_chance"), "{0}% chance to dodge a close-range hit while standing still or attacking"),
+    ("Avoid", "avoid", ("Avoid", "dodge_missile_chance"), "{0}% chance to avoid a projectile while standing still or attacking"),
+    ("Penetrate", "penetrate", ("Critical Strike", "crit_chance"),
+     "{0}% chance for a hit to ignore the creature's resistances (not immunities)"),
+    ("Evade", "evade", ("Evade", "evade_chance"), "{0}% chance to evade any hit while walking or running"),
+]
 
 # Playable classes (user, 2026-10-30: the Amazon first; the Barbarian and maybe the Paladin later).
 PLAYABLE = {"Amazon"}
@@ -183,7 +197,14 @@ def main():
             w.writerow([s["name"].replace(" ", ""), s["name"], tabs.index(s["tab"]), s["row"], s["col"], s["req_level"], prereqs,
                         status, kind, needs, eitr, s["mana_per_lvl"] if kind != "passive" else "0", text,
                         "" if s["synergies"] == "none" else s["synergies"]])
-    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv and amazon_skills.csv to", OUT)
+    per_level = {(r["skill"], r["value"]): r for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv"))}
+    with open(os.path.join(OUT, "amazon_passives.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["id", "effect", "text"] + ["l%d" % i for i in range(1, 21)] + ["source"])
+        for skill_id, effect, (name, value), text in PASSIVES:
+            row = per_level[(name, value)]
+            w.writerow([skill_id, effect, text] + [row["l%d" % i] for i in range(1, 21)] + ["%s %s (%s)" % (name, value, row["source"])])
+    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv, amazon_skills.csv and amazon_passives.csv to", OUT)
 
 
 if __name__ == "__main__":
