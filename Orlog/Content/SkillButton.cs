@@ -113,6 +113,15 @@ namespace Orlog.Content
                 var state = SkillBar.StateOf(player, slot);
                 if (!state.Usable)
                 {
+                    // Eitr ran short during a skill draw: keep drawing; the release shoots a normal arrow ("Not enough eitr").
+                    if (!pressed && state.Blocked == "eitr" && s_pending != null)
+                    {
+                        s_pendingSince = Time.time;
+                        attackHold = true;
+                        block = false;
+                        blockHold = false;
+                        return;
+                    }
                     if (pressed && Time.time - s_lastRefusal > 0.5f)
                     {
                         s_lastRefusal = Time.time;

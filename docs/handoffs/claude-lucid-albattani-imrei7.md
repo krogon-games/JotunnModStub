@@ -20,7 +20,7 @@ All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code
 - **Crossing games:** Penetrate's marker rides in the hit's `m_eitrAdd`; creature area and breath hits get `m_radius` so they can't be avoided. Breath is found by name (assumption: the attack item's prefab name is set).
 - **Proposals waiting for Krogon:** the damage scale (`skill_damage_scale.csv`: D2's skill-to-bow ratio; a creature-health scale came out 7–10× lower mid-game); boss XP ×9.4 (Eikthyr) … ×66.6 (Kall), from D2R's act bosses (`monstats` Exp ÷ the median normal monster's 97), spread by order.
 - **Claude's interim choices:** Multiple Shot's fan 5°/60°; Exploding Arrow's radius = Freezing Arrow's 3.3 yards; Inner Sight +25%.
-- **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game. From the code review: out of eitr mid-draw shoots a normal arrow; blast hits count for Corruption's life steal per creature.
+- **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game. From the code review: blast hits count for Corruption's life steal per creature.
 - **Not built:** the respec item, the boss XP multiplier (C4); spear skills (C6).
 - **Coordinator, for `/handoff`:** loot 3c marks on the phone page (8 of 10 passed; Splintering "needs a little bigger radius/hit detection range") go into #26 and `STATUS.md`.
 
