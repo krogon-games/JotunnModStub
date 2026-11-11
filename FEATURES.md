@@ -38,6 +38,8 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Orlog stone and class choice](#orlog-stone-and-class-choice) | Combat | Tested in-game (works; look to be redesigned later) | Orlog: `4 - Orlog Stone` → `StoneSize`, `StoneGap`, `StoneTurn` (`orlog_class` stays as a cheat) | `Orlog/Content/OrlogStone.cs`, `Orlog/Rules/StonePlacement.cs`, `Orlog/Content/Texts.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Api.cs`, `Orlog/Safe.cs`, `CraftingOverhaul.Tests/OrlogStoneTests.cs` | 2026-11-01 |
 | [Skill tree and skill points](#skill-tree-and-skill-points) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `SkillPointsPerLevel`, `MaxSkillPoints`, `SkillPace`; table `Orlog/Data/amazon_skills.csv`; console `orlog_skill` | `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Data/amazon_skills.csv`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Content/Attributes.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/amazon_levels.csv`, `CraftingOverhaul.Tests/OrlogSkillTests.cs`, `CraftingOverhaul.Tests/OrlogPointTotalTests.cs` | 2026-11-08 |
 | [Amazon passives](#amazon-passives) | Combat | Built, untested in-game | Orlog: table `Orlog/Data/amazon_passives.csv`; console `orlog_passive` (test chances) | `Orlog/Content/Passives.cs`, `Orlog/Rules/PassiveRules.cs`, `Orlog/Data/amazon_passives.csv`, `Orlog/Api.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogPassiveTests.cs` | 2026-11-11 |
+| [Amazon skill bar and bow skills](#amazon-skill-bar-and-bow-skills) | Combat | Built, untested in-game | Orlog: `5 - Skills` → `SkillDamageMultiplier`, `InnerSightDamageTaken`; `6 - Skill Keys` → `SkillButton`, `BlockKey`, `Slot1Key`–`Slot4Key`; tables `Orlog/Data/amazon_skill_values.csv`, `skill_damage_scale.csv`; console `orlog_slot` | `Orlog/Content/SkillBar.cs`, `Orlog/Content/SkillButton.cs`, `Orlog/Content/BowSkills.cs`, `Orlog/Content/CastSkills.cs`, `Orlog/Rules/ActiveSkillRules.cs`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/bows.csv`, `CraftingOverhaul.Tests/OrlogActiveSkillTests.cs` | 2026-11-11 |
+| [Boss bonus skill points](#boss-bonus-skill-points) | Combat | Built, untested in-game | Orlog: `Orlog/Data/biome_levels.csv` → `boss_skill_points` | `Orlog/Content/KillXp.cs`, `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Rules/LevelTables.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogBossPointTests.cs` | 2026-11-11 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
 There are three plugins: **CraftingOverhaul** (quality of life; works when only some players have it), **Corruption** (the endgame mod from `docs/corruption-design.md`; the server and every player need it) and **Orlog** (Diablo 2-style classes and levels from `docs/class-design.md`; the server and every player need it). File paths are relative to `CraftingOverhaul/` unless they start with `Corruption/`, `Orlog/` or `CraftingOverhaul.Tests/`. Config settings are in `BepInEx/config/com.krogongames.craftingoverhaul.cfg`, `com.krogongames.corruption.cfg` and `com.krogongames.orlog.cfg`.
@@ -1400,6 +1402,70 @@ Unit-tested (`OrlogPassiveTests`: the real table against D2's numbers, Penetrate
 - `Attack.DoAreaAttack`: prefix + finalizer (record only)
 - `Projectile.OnHit`: prefix + finalizer (record only)
 
+## Amazon skill bar and bow skills
+
+*Orlog (with CraftingOverhaul's classes UI for the slots and the cross). Built 2026-11-11, untested in-game. Roadmap task C5; branch `claude/lucid-albattani-imrei7`. Krogon asked on 2026-11-11 to "continue building out the Amazon with her other skills".*
+
+**Controls (characters with a class; keyboard and mouse):**
+- **Skill slots:** drag a learned skill from the skills panel onto one of the four slots (or `orlog_slot <1-4> <skill id>`). Passives don't take a slot; skills that don't act yet (the spear skills, C6) are refused ("Doesn't work yet"). Saved per character (`orlog_slots`).
+- **Slot keys F1–F4** (D2's skill keys; not used by Valheim alone or the group's mods, read from their code 2026-11-11: EquipmentAndQuickSlots Z/V/B and Left Alt, AdventureBackpacks I/Y/L, PlantEasily F6/F8/F10, arrows, Right Ctrl). An attack skill goes on the skill button for its weapon (its slot lights up); a cast skill casts at once.
+- **Skill button: right click** fires the chosen attack skill with the weapon in hand: hold to draw the bow, release to shoot, as with the attack button. The chosen skill is remembered per weapon kind (bow, spear; Krogon 2026-11-11). With no skill chosen, or the wrong weapon, right click does nothing ("Need bow", "Not enough eitr").
+- **Block moves to the mouse's back side button (Mouse 4)** while the game's Block key is right click (its default). If you set Block to another key in the game's controls, that key blocks too. Valheim's dodge stays block + jump.
+- **Eitr:** each skill shot or cast pays D2's mana as eitr, D2R's numbers (Magic Arrow 1.5, free from level 13; Multiple Shot 4 + 1 per level; `amazon_skill_values.csv` → `mana_cost`). The slot greys out when you can't pay.
+
+**The skills** (numbers per skill level from `Orlog/Data/amazon_skill_values.csv`, D2's unchanged; damage D2 points × the damage scale below):
+
+| Skill | Effect |
+|---|---|
+| Magic Arrow | Shoots without an arrow from your quiver (a copy of the cheapest arrow for the bow's ammo flies instead, never a real one): +1 → +20 D2 damage, and 5% → 43% of the physical damage becomes spirit |
+| Fire Arrow | Adds 1–4 → 63–70 D2 fire damage; 3% → 41% of the physical damage becomes fire |
+| Cold Arrow | Adds 3–4 → 53–56 D2 frost damage (the game's frost slows); 3% → 41% becomes frost |
+| Multiple Shot | 2 → 21 arrows in an even fan for one arrow, each at 75% damage |
+| Exploding Arrow | On impact: 5–13 → 199–226 D2 fire damage to every enemy within 3 m, with the staff fireball's impact effect |
+| Ice Arrow | Adds 6–10 → 216–232 D2 frost damage and freezes the creature hit for 2 → 5.8 s (a copy of the game's Immobilized, `Orlog_Freeze`); bosses are only slowed |
+| Freezing Arrow | On impact: 40–50 → 310–320 D2 frost damage within 3 m (D2's 3.3 yards), freezing for 2 s (not bosses), with the ice shards' impact effect |
+| Inner Sight (cast) | Every enemy within 16.5 m (D2's 18 yards) is marked for 8 → 84 s and takes 25% more damage (`InnerSightDamageTaken`); you see the marked creatures glow pale blue |
+
+- **Damage scale (proposed, waiting for Krogon's approval):** `Orlog/Data/skill_damage_scale.csv` gives, per character level, Valheim points per D2 point: the best bow plus the best arrow of that level's biome (game dump) ÷ D2's best bow by that level (`data/d2-reference/bows.csv`). So a skill adds as much compared with your bow as in D2: ×22 at level 1 (crude bow + fire arrow 55 ÷ short bow 2.5), ×13 in the Swamp and Mountains, ×4–6 later. `SkillDamageMultiplier` (admin, default 1) scales all of it.
+- **Tooltips:** each skill's line in the skills panel shows its Valheim numbers now and at the next level, at your character level.
+- **Claude's interim choices (2026-11-11, easy to change):** Multiple Shot's fan (5° between arrows, at most 60°); Exploding Arrow's radius (D2's tables give none: Freezing Arrow's 3.3 yards); Inner Sight's 25% (the game's "slightly weak" step; D2 lowers defence, which Valheim lacks).
+
+**How it works:** the skill button feeds the game's own controls (`Player.SetControls`), so bows draw and shoot as usual; the attack it starts is a skill attack (`Humanoid.StartAttack`) and pays its eitr. The arrows it fires are changed as they're made (`Projectile.Setup`) and tagged; Multiple Shot sets the burst's arrow count (`Attack.FireProjectileBurst`). Impacts run on the shooter's game, which runs its arrows: explosions hit every enemy in range with our own hit (fire or frost, the area radius marked); Ice Arrow's freeze is added to its hit before it is sent. Status effects (freeze, Inner Sight's mark) go to the creature owner's game through the game's own message; their duration travels as the hit's skill level. Inner Sight's extra damage is applied there (`Character.RPC_Damage`).
+
+Unit-tested (`OrlogActiveSkillTests`: the values against D2's, eitr costs, the damage scale, damage rolls, slots, refusals, slot states, per-weapon choice, the fan, conversion, tooltips, bad tables).
+
+**Known issues / not yet:**
+- **Untested in-game.** Read in the cloud's copy of the game code (1.0.14); the input path (`SetControls` parameter names) is the riskiest part on 1.0.21.
+- **No gamepad support** for the skill button and slot keys yet; with a gamepad nothing changes.
+- **The freeze stops movement only** (the game's Immobilized: speed −1000); a frozen creature may still swing.
+- **Glow only on the caster's game;** other players see no glow (the mark and extra damage work for everyone's hits).
+- No cooldowns (D2's bow skills and Inner Sight have none). The spear and javelin skills come with C6.
+
+**Vanilla behaviour overridden (Harmony patch targets):**
+- `Player.SetControls`: prefix (the skill button holds attack; block from `BlockKey`)
+- `Humanoid.StartAttack`: postfix (marks the skill attack, pays eitr)
+- `Attack.HaveAmmo`, `Attack.EquipAmmoItem`: prefix, can skip (Magic Arrow with no arrows)
+- `Attack.UseAmmo`: prefix, can skip (Magic Arrow's free arrow)
+- `Attack.FireProjectileBurst`: prefix + finalizer (Multiple Shot's arrow count)
+- `Projectile.Setup`: prefix (skill damage, fan direction, tag)
+- `Projectile.OnHit`: prefix + postfix + finalizer (explosions; marks the projectile whose hit is running)
+- `Character.Damage`: prefix (Ice Arrow's freeze on its direct hit)
+- `Character.RPC_Damage`: prefix (Inner Sight's extra damage on a marked creature)
+- `StatusEffect.SetLevel`: postfix (the freeze's and Inner Sight's duration)
+- Status effects added through Jötunn: `Orlog_Freeze` (copy of `Immobilized`), `Orlog_InnerSight`
+
+## Boss bonus skill points
+
+*Orlog. Built 2026-11-11, untested in-game. Roadmap task C4 (the respec item and the boss XP multiplier are still to come).*
+
+**What it does:** a character's first kill of each biome's boss gives skill points, Diablo 2's quest points (12 in all; Krogon 2026-11-11): 1 each for Eikthyr, the Elder, Bonemass and Moder, 2 each for Yagluth, the Queen, Fader and Kall Fimbulbringer (`Orlog/Data/biome_levels.csv` → `boss_skill_points`). Every player within `ShareRange` of the kill gets them, like the kill's XP, once per character: recorded by biome (`orlog_boss_kills`), so Kall's three phases count once and a second Eikthyr gives nothing. A character without a class records the kill too and gets the points once it has one. "First victory over this foe: +N skill points" shows. A respec keeps them (they're earned, like level points).
+
+Unit-tested (`OrlogBossPointTests`: 12 in all, Kall's phases as one boss, saving, adding to unspent points).
+
+**Known issues:** untested; kills by fall damage or another creature give no XP and so no points (as for XP).
+
+**Vanilla behaviour overridden (Harmony patch targets):** none new (the existing `Character.OnDeath` prefix sends an `Orlog_BossKill` message).
+
 ## Classes, levels and skill trees
 
 **Status:** Planned. Design only, no code (branch `claude/class-skills`).
@@ -1413,6 +1479,8 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-11
+- **Amazon skill bar and bow skills built** (roadmap C5; Orlog): right click fires the chosen skill, block moves to the mouse's back button, F1–F4 use the four slots; Magic Arrow, Fire, Cold, Ice, Exploding and Freezing Arrow, Multiple Shot and Inner Sight act, with D2's numbers and a proposed damage scale; the skill bar API for the classes UI is real. Untested in-game.
+- **Boss bonus skill points built** (roadmap C4, part): 12 in all for each boss's first kill. Untested in-game (549 tests).
 - **Amazon passives built** (roadmap C3, issue #32; Orlog): Critical Strike, Dodge, Avoid, Evade and Penetrate act, with D2's chances and Krogon's rules of 2026-11-11; tooltips show the chance; `orlog_passive` sets test chances. Untested in-game (532 tests).
 - **Play-test (single player): Riftforge shards, shattering and Affix Splinters passed** ("all working"), with both confirmation dialogs. Multiplayer in `PLAYTEST.md` → Session 2, 2i.
 - **Fix (Forge UI):** no more "LiberationSans SDF Font Asset was not found" warnings when the dialogs open. Not re-checked in the log yet.
