@@ -21,6 +21,13 @@ Outputs:
 - Orlog/Data/amazon_passives.csv: the chance per skill level (1-20) of the Amazon's passives, from
   data/d2-reference/amazon_levels.csv (Arreat Summit; D2R the same), with the tooltip text. Penetrate takes Critical
   Strike's curve (user, 2026-11-11: D2's Penetrate raises attack rating, which Valheim doesn't have).
+- Orlog/Data/amazon_skill_values.csv: the per-level values (1-20) of the Amazon's built active skills, unchanged from
+  data/d2-reference/amazon_levels.csv (D2R where it differs from classic: user 2026-11-11), keyed by skill id.
+- Orlog/Data/skill_damage_scale.csv: per character level, how many Valheim damage points one Diablo 2 damage point of a
+  skill is worth. It keeps D2's ratio of skill damage to bow damage: the best Valheim bow plus the best arrow obtainable
+  in the biome of that level (game dump: items.csv and biome_items.csv, quality 1) divided by the average damage of
+  the best D2 bow that drops by that level (data/d2-reference/bows.csv, bows and Amazon bows; available from the
+  higher of item level and required level). Proposed 2026-11-11, waiting for the user's approval.
 - Orlog/Data/biome_levels.csv: each biome's creature level range (from the guide) and the health span of the creatures
   the world spawns there without a boss key (from the dump). Creatures get their level inside the range by health.
 
@@ -92,6 +99,11 @@ PASSIVES = [
      "{0}% chance for a hit to ignore the creature's resistances (not immunities)"),
     ("Evade", "evade", ("Evade", "evade_chance"), "{0}% chance to evade any hit while walking or running"),
 ]
+
+# The damage types a hit adds up (game dump items.csv columns), for the Valheim side of the damage scale.
+DAMAGE_COLUMNS = ["blunt", "slash", "pierce", "fire", "frost", "lightning", "poison", "spirit"]
+# Biome order as the game dump writes it in biome_items.csv (Ashlands there, AshLands in Heightmap.Biome).
+DUMP_BIOME = {"AshLands": "Ashlands"}
 
 # Playable classes (user, 2026-10-30: the Amazon first; the Barbarian and maybe the Paladin later).
 PLAYABLE = {"Amazon"}
@@ -204,7 +216,55 @@ def main():
         for skill_id, effect, (name, value), text in PASSIVES:
             row = per_level[(name, value)]
             w.writerow([skill_id, effect, text] + [row["l%d" % i] for i in range(1, 21)] + ["%s %s (%s)" % (name, value, row["source"])])
-    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv, amazon_skills.csv and amazon_passives.csv to", OUT)
+    built_active = [s["name"] for s in skills if AMAZON[s["name"]][0] in ("v1", "reworked") and AMAZON[s["name"]][1] != "passive"]
+    with open(os.path.join(OUT, "amazon_skill_values.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["id", "value", "unit"] + ["l%d" % i for i in range(1, 21)] + ["source"])
+        for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv")):
+            if r["skill"] in built_active:
+                w.writerow([r["skill"].replace(" ", ""), r["value"], r["unit"]] + [r["l%d" % i] for i in range(1, 21)] + [r["source"]])
+    write_damage_scale()
+    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv, amazon_skills.csv, amazon_passives.csv, "
+          "amazon_skill_values.csv and skill_damage_scale.csv to", OUT)
+
+
+def write_damage_scale():
+    items = {r["prefab"]: r for r in read_csv(os.path.join(DUMP, "items.csv"))}
+    by_biome = {}
+    for r in read_csv(os.path.join(DUMP, "biome_items.csv")):
+        by_biome.setdefault(r["biome"], []).append(r["item"])
+
+    def total(prefab):
+        return sum(float(items[prefab][c] or 0) for c in DAMAGE_COLUMNS)
+
+    # Best bow and best arrow obtainable by each biome (earlier biomes' gear counts too). Crossbows use bolts and
+    # "Uncooked" casts aren't weapons, so both are left out.
+    best, bow, arrow = {}, 0.0, 0.0
+    for biome, _, _ in GUIDE:
+        for prefab in by_biome.get(DUMP_BIOME.get(biome, biome), []):
+            if prefab not in items:
+                continue
+            kind = items[prefab]["type"]
+            if kind == "Bow" and not prefab.startswith("Crossbow") and "Uncooked" not in prefab:
+                bow = max(bow, total(prefab))
+            elif kind == "Ammo" and prefab.startswith("Arrow"):
+                arrow = max(arrow, total(prefab))
+        best[biome] = (bow, arrow)
+    d2_bows = [(max(int(r["item_level"]), int(r["level_req"])), (float(r["min_damage"]) + float(r["max_damage"])) / 2, r["name"])
+               for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "bows.csv")) if r["type"] in ("bow", "abow")]
+    biome_of = []
+    previous = 1
+    for biome, _, boss_level in GUIDE:
+        biome_of.append((previous, boss_level - 1, biome))
+        previous = boss_level
+    with open(os.path.join(OUT, "skill_damage_scale.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["level", "biome", "valheim_bow_arrow", "d2_bow", "d2_bow_name", "scale"])
+        for level in range(1, MAX_LEVEL + 1):
+            biome = next((b for lo, hi, b in biome_of if lo <= level <= hi), GUIDE[-1][0])
+            valheim = sum(best[biome])
+            d2 = max((b for b in d2_bows if b[0] <= level), key=lambda b: b[1])
+            w.writerow([level, biome, valheim, d2[1], d2[2], round(valheim / d2[1], 3)])
 
 
 if __name__ == "__main__":

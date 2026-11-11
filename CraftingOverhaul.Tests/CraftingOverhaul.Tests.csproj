@@ -63,6 +63,7 @@
     <Compile Include="..\Orlog\Rules\StonePlacement.cs" Link="Linked\Orlog\StonePlacement.cs" />
     <Compile Include="..\Orlog\Rules\SkillRules.cs" Link="Linked\Orlog\SkillRules.cs" />
     <Compile Include="..\Orlog\Rules\PassiveRules.cs" Link="Linked\Orlog\PassiveRules.cs" />
+    <Compile Include="..\Orlog\Rules\ActiveSkillRules.cs" Link="Linked\Orlog\ActiveSkillRules.cs" />
   </ItemGroup>
 
   <ItemGroup>
