@@ -313,6 +313,17 @@ namespace Orlog.Content
                                    $"{SkillPoints.Unspent(player)} skill points to spend.");
             Console.instance.Print($"From the class: +{bonuses.Health:0.#} health, +{bonuses.Stamina:0.#} stamina, +{bonuses.Eitr:0.#} eitr, " +
                                    $"+{bonuses.MeleeDamage * 100f:0.#}% melee and thrown damage, +{bonuses.RangedDamage * 100f:0.#}% bow damage.");
+            // Roadmap C3-C5 (2026-11-11): what a play-test needs to see at a glance.
+            var slots = SkillBar.Slots(player);
+            int selected = SkillBar.SelectedSlot(player);
+            Console.instance.Print("Skill slots: " + string.Join(", ", slots.Select((id, i) =>
+                $"{OrlogConfig.SlotKeys[i].Value} {(id.Length > 0 ? id : "-")}{(i == selected ? " (on the skill button)" : "")}")) +
+                $"; skill button {OrlogConfig.SkillButton.Value}, block {OrlogConfig.BlockKey.Value}.");
+            Console.instance.Print("Passives: " + string.Join(", ", new[] { "crit", "penetrate", "dodge", "avoid", "evade" }
+                .Select(e => $"{e} {Passives.Chance(player, e):0.#}%{(Passives.HasTestChance(e) ? " (test)" : "")}")) +
+                $"; skill damage ×{SkillBar.DamageScaleFor(player):0.##} per D2 point.");
+            var kills = SkillPoints.BossKills(player);
+            Console.instance.Print($"Boss first kills: {(kills.Count > 0 ? string.Join(", ", kills) : "none yet")} (+{SkillPoints.BossBonus(player)} skill points).");
         }
     }
 }

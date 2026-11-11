@@ -1440,6 +1440,7 @@ Unit-tested (`OrlogActiveSkillTests`: the values against D2's, eitr costs, the d
 - **The freeze stops movement only** (the game's Immobilized: speed −1000); a frozen creature may still swing.
 - **Glow only on the caster's game;** other players see no glow (the mark and extra damage work for everyone's hits).
 - No cooldowns (D2's bow skills and Inner Sight have none). The spear and javelin skills come with C6.
+- **Found in the code review (2026-11-11), to watch in the play-test:** running out of eitr in the middle of a skill draw lets the bow go at once with a normal arrow; Exploding and Freezing Arrow hits count for Corruption's life steal of the bow, once per creature caught in the blast.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 - `Player.SetControls`: prefix (the skill button holds attack; block from `BlockKey`)

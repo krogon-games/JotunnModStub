@@ -16,16 +16,13 @@ Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-- **C3 built, untested in game** (`FEATURES.md` → Amazon passives): Critical Strike, Dodge, Avoid, Evade, Penetrate with Krogon's rules; tooltips show the chance; `orlog_passive <effect> <chance>` for sure procs. Read in the cloud's 1.0.14 game code, not checked against 1.0.21.
-- **How it crosses games:** Penetrate's marker rides in the hit's eitr field (`m_eitrAdd`, `-1000 - original`); creature area and breath hits on players get a radius (`m_radius`) on the creature's game so the player's game knows they can't be avoided. Both fields are sent with every hit and otherwise unused on creature/player hits (game code).
-- **Assumption:** breath is found by the attack item's prefab name ("breath"); if the game leaves the name empty for creature attacks, breath could be avoided (play-test step 10).
-- PvP hits are neither crit, penetrated nor avoided (creatures only).
-- **C5 built, untested in game** (`FEATURES.md` → Amazon skill bar and bow skills): right click = skill button through `Player.SetControls`; block on the mouse's back button while the game's Block is right click; F1–F4 (read from the three mods' decompiled code: none uses them). Magic Arrow, Fire, Cold, Ice, Exploding and Freezing Arrow, Multiple Shot, Inner Sight. The skill bar API for the classes UI is real. No gamepad support yet.
-- **Damage scale is a proposal** (`Orlog/Data/skill_damage_scale.csv`): Valheim bow + arrow of the level's biome ÷ D2's best bow by that level (D2's bows from D2R's `weapons.txt`, `data/d2-reference/bows.csv`). It keeps D2's skill-to-bow ratio (×22 at level 1, ×13 mid-game, ×4–6 late). A creature-health-based scale (D2 monster life per level from `monlvl`/`monstats` vs Orlog's biome health) came out 7–10× lower mid-game; noted as the alternative.
-- **Claude's interim choices (easy to change):** Multiple Shot's fan 5° between arrows, at most 60°; Exploding Arrow's radius = Freezing Arrow's 3.3 yards (D2 gives none); Inner Sight +25% damage taken (the game's "slightly weak" step; config `InnerSightDamageTaken`).
-- **C4 boss points built, untested:** 12 in all from first boss kills; the respec item and boss XP multiplier are not built.
-- **Boss XP proposal (not built):** D2's act bosses give ×9.4 (Andariel), ×17.1, ×22.0, ×35.7, ×66.6 (Baal) a normal monster's XP of their level (D2R `monstats` Exp ÷ the median normal monster's, 97). Spread over our eight bosses by order: Eikthyr ×9.4, Elder ×13.2, Bonemass ×17.7, Moder ×20.5, Yagluth ×25.3, Queen ×33.3, Fader ×46.6, Kall ×66.6.
-- Loot 3c play-test marks read from the phone page (8 of 10 passed on 2026-11-11, Splintering "needs a little bigger radius/hit detection range"): to record in issue #26 and `STATUS.md` at `/handoff`.
+All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code (not 1.0.21). Detail: `FEATURES.md` → Amazon passives, Amazon skill bar and bow skills, Boss bonus skill points.
+- **Crossing games:** Penetrate's marker rides in the hit's `m_eitrAdd`; creature area and breath hits get `m_radius` so they can't be avoided. Breath is found by name (assumption: the attack item's prefab name is set).
+- **Proposals waiting for Krogon:** the damage scale (`skill_damage_scale.csv`: D2's skill-to-bow ratio; a creature-health scale came out 7–10× lower mid-game); boss XP ×9.4 (Eikthyr) … ×66.6 (Kall), from D2R's act bosses (`monstats` Exp ÷ the median normal monster's 97), spread by order.
+- **Claude's interim choices:** Multiple Shot's fan 5°/60°; Exploding Arrow's radius = Freezing Arrow's 3.3 yards; Inner Sight +25%.
+- **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game. From the code review: out of eitr mid-draw shoots a normal arrow; blast hits count for Corruption's life steal per creature.
+- **Not built:** the respec item, the boss XP multiplier (C4); spear skills (C6).
+- **Coordinator, for `/handoff`:** loot 3c marks on the phone page (8 of 10 passed; Splintering "needs a little bigger radius/hit detection range") go into #26 and `STATUS.md`.
 
 ## Decisions
 
@@ -55,27 +52,27 @@ Nothing confirmed in game yet.
 
 ## Playtest
 
-Krogon: the 12 solo steps in `docs/playtests/claude-lucid-albattani-imrei7.md`, also on the phone page ("The Amazon's passives"). Multiplayer steps: `PLAYTEST.md` → Session 2, 2j (and the phone page's 2j). No feedback yet.
+Krogon: rounds 1 (passives, 12 steps) and 2 (skill bar, bow skills, Inner Sight, boss points, 16 steps) in `docs/playtests/claude-lucid-albattani-imrei7.md`, also on the phone page. With others: `PLAYTEST.md` → Session 2, 2j. No feedback yet.
 
 ## Open questions for Krogon
 
-1. **The damage scale:** keep the proposed one (D2's ratio of skill damage to bow damage; skills feel like D2, strong), or the creature-health one (7–10× lower mid-game; Valheim's own weapons stay the main damage)? Play-test step 15 of round 2 helps; `SkillDamageMultiplier` tunes it in the meantime.
-2. **Boss XP multipliers** as proposed (Eikthyr ×9.4 … Kall ×66.6)?
-3. **Inner Sight's extra damage:** 25% flat, or growing with its level?
-4. **The interim choices:** Multiple Shot's fan, Exploding Arrow's 3 m radius.
-5. The reset item's recipe for players without Corruption (C4).
+1. **Damage scale:** the proposed D2 skill-to-bow ratio (strong), or the creature-health one (7–10× lower mid-game)? Round 2 step 15 helps; `SkillDamageMultiplier` tunes it meanwhile.
+2. **Boss XP:** ×9.4 (Eikthyr) … ×66.6 (Kall) as proposed?
+3. **Inner Sight:** 25% flat, or growing with its level?
+4. **Interim choices:** Multiple Shot's fan, Exploding Arrow's 3 m.
+5. **Reset item** recipe without Corruption (C4).
 
 ## Next steps
 
-1. Krogon's play-test of rounds 1 and 2 (`docs/playtests/claude-lucid-albattani-imrei7.md`, also on the phone page); fix what fails.
-2. Krogon's answers to the open questions; then the boss XP multiplier and the respec item (C4).
-3. `/handoff`: `STATUS.md` (the coordinator update agreed this session), comment on #26 with the loot 3c marks.
-4. Next: C6, the spear and javelin skills.
+1. Krogon's play-test; fix what fails.
+2. His answers; then boss XP and the respec item (C4).
+3. `/handoff`: `STATUS.md` and the #26 comment (agreed this session).
+4. C6, the spear and javelin skills (first settle how they fire: the design says on the spear's own attacks, the skill button says right click).
 
 ## Checks
 
-Not run by `/handoff` yet. So far: `dotnet test CraftingOverhaul.Tests` 549 passed; Orlog builds against the stand-in game assemblies.
+Not run by `/handoff` yet: 549 tests pass; Orlog builds against the stand-in assemblies.
 
 ## Merge notes
 
-Not ready (waiting for the play-test). **Gameplay changed: version bump needed at merge (Orlog).** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/GAME_DESIGN.md`, `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj`. New reference data `data/d2-reference/bows.csv` (never ship it). No Corruption or CraftingOverhaul code changed.
+Not ready (play-test). **Gameplay changed: version bump needed at merge (Orlog).** Shared docs touched, add-only: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/PLAYER_SETUP.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/GAME_DESIGN.md`, the tests' `.csproj`. New reference data `data/d2-reference/bows.csv` (never ship). No Corruption or CraftingOverhaul code changed.

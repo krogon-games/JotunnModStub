@@ -7,7 +7,7 @@ For everyone joining our Valheim server. Takes about 10 minutes. You only do thi
 | Mod | What it does | Where from |
 |---|---|---|
 | **Corruption** | Our endgame mod: corruption shards, the Riftforge, creature talismans | Krogon sends you `Corruption.dll` |
-| **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes, the class eitr pool; choose your class at the Orlog stone in the spawn area (what the skills do is still to come) | Krogon sends you `Orlog.dll` |
+| **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes, the class eitr pool; choose your class at the Orlog stone in the spawn area; the Amazon's passives, bow skills and Inner Sight work (her spear skills are still to come). **With a class, right click fires your chosen skill and block moves to the mouse's back side button** (see *Orlog's keys* below) | Krogon sends you `Orlog.dll` |
 | **CraftingOverhaul** | Our crafting mod: recipe search, collapsible categories, crafting and building from nearby chests | Krogon sends you `CraftingOverhaul.dll` |
 | [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) | Equipment slots and quick slots. **Talismans go in its slots**, so you need it | Thunderstore |
 | [AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) | Craftable backpacks | Thunderstore |
@@ -103,7 +103,7 @@ The dedicated server needs, in its own BepInEx install:
 | EquipmentAndQuickSlots | Optional: only syncs its own settings |
 | PlantEasily | No |
 
-- **Settings:** the gameplay settings of our mods are server-controlled. Edit them on the server in `BepInEx/config/com.krogongames.corruption.cfg`, `com.krogongames.orlog.cfg` and `com.krogongames.craftingoverhaul.cfg`; players' own values for those are ignored. Look settings (shard and Riftforge colours) stay per player, and so do CraftingOverhaul's screen settings (`3 - Character Sheet`, `4 - HUD`, `5 - Classes UI`) and Orlog's `2 - Display` → `ShowXpGains` ("+N XP" for each kill).
+- **Settings:** the gameplay settings of our mods are server-controlled. Edit them on the server in `BepInEx/config/com.krogongames.corruption.cfg`, `com.krogongames.orlog.cfg` and `com.krogongames.craftingoverhaul.cfg`; players' own values for those are ignored. Look settings (shard and Riftforge colours) stay per player, and so do CraftingOverhaul's screen settings (`3 - Character Sheet`, `4 - HUD`, `5 - Classes UI`) and Orlog's `2 - Display` → `ShowXpGains` ("+N XP" for each kill) and `6 - Skill Keys`.
 - **Orlog's server settings** (`com.krogongames.orlog.cfg`; defaults from Diablo 2, the eitr ones from Krogon):
 
 | Section | Setting | Default | What it does |
@@ -127,6 +127,16 @@ The dedicated server needs, in its own BepInEx install:
 | `4 - Orlog Stone` | `StoneSize` | 1.7 | The Orlog stone's size in times the Vegvisir it copies; 1.7 ≈ twice a trophy stone (restart to apply) |
 | `4 - Orlog Stone` | `StoneGap` | 3 | Metres between the Eikthyr trophy stone and the Orlog stone behind it |
 | `4 - Orlog Stone` | `StoneTurn` | 0 | Degrees to turn the stone if it faces the wrong way |
+| `5 - Skills` | `SkillDamageMultiplier` | 1 | Multiplies the damage skills add (fire, frost, explosions, Magic Arrow) |
+| `5 - Skills` | `InnerSightDamageTaken` | 25 | % more damage enemies under Inner Sight take |
+
+- **Orlog's keys (each player's own, in `com.krogongames.orlog.cfg` → `6 - Skill Keys`).** Only for a character with a class; keyboard and mouse only:
+
+| Setting | Default | What it does |
+|---|---|---|
+| `SkillButton` | `Mouse1` (right click) | Fires the skill chosen for the weapon in hand; hold to draw the bow |
+| `BlockKey` | `Mouse4` (the mouse's back side button) | Block and parry while the game's own Block key is right click. No side buttons? Set this to a keyboard key, or set Block to another key in the game's controls (that key then blocks too) |
+| `Slot1Key` … `Slot4Key` | `F1` … `F4` | The four skill slots: an attack skill goes on the skill button, a cast skill (Inner Sight) casts |
 
 - **Bigger backpacks (user, 2026-10-29: one more row on every level).** Set on the server in `BepInEx/config/vapok.mods.adventurebackpacks.cfg` (AdventureBackpacks syncs them to everyone). Each backpack has a section `[Backpack: <name>]` with `Backpack Size - Level 1` to `Level 4`, written as `{"x":3.0,"y":2.0}` (width, height). New values (AdventureBackpacks 2.4.6 defaults plus one row; widths unchanged):
 
