@@ -27,7 +27,7 @@ Coordinator session: review `STATUS.md` and the open issues, agree the top 3 pri
 1. **2026-11-11: every round's solo checklist goes on the phone page from now on** ("i want every rounds solo checklist on the phone page going forward").
 2. **2026-11-11: the top 3 priorities are agreed** ("Yes to the top three"): the release build now and playing together (#25, #24); orb drops as the next build round (#33), with the loot steps 3–4 play-test (#26) out of the priority; the Amazon's passives (#32). Map tiers (#31) stay fourth.
 3. **2026-11-11: Krogon will carry out the solo play-tests.**
-4. **2026-11-11: merge `STATUS.md` and today's decisions into `master`** ("Yes merge status.md and today's decisions to master"). Krogon merged PR #62 himself.
+4. **2026-11-11: merge `STATUS.md` and today's decisions into `master`** ("Yes merge status.md and today's decisions to master"). Krogon merged PR #62 on GitHub.
 
 ## Playtest
 
