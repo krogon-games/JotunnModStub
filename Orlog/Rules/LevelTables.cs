@@ -156,12 +156,21 @@ namespace Orlog.Rules
             public float HealthMax;
             public int BossLevel;
             public string[] Bosses;
+            /// <summary>Skill points for a character's first kill of this biome's boss (user, 2026-11-11; 0 when the table has none).</summary>
+            public int BossSkillPoints;
         }
 
         private readonly Dictionary<string, Biome> _biomes = new Dictionary<string, Biome>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, int> _bosses = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Biome> _bossBiome = new Dictionary<string, Biome>(StringComparer.OrdinalIgnoreCase);
 
         public IEnumerable<Biome> All => _biomes.Values;
+
+        /// <summary>The biome whose boss <paramref name="prefab" /> is (Kall's three phases share one), or null.</summary>
+        public Biome BiomeOfBoss(string prefab)
+        {
+            return prefab != null && _bossBiome.TryGetValue(prefab, out var biome) ? biome : null;
+        }
 
         public static BiomeLevels Parse(string csv, List<string> errors)
         {
@@ -178,7 +187,9 @@ namespace Orlog.Rules
                     HealthMin = Table.Float(row, "health_min", errors),
                     HealthMax = Table.Float(row, "health_max", errors),
                     BossLevel = Table.Int(row, "boss_level", errors),
-                    Bosses = row["bosses"].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(b => b.Trim()).ToArray()
+                    Bosses = row["bosses"].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(b => b.Trim()).ToArray(),
+                    // Optional column (added 2026-11-11 for roadmap C4).
+                    BossSkillPoints = row.ContainsKey("boss_skill_points") && row["boss_skill_points"].Trim().Length > 0 ? Table.Int(row, "boss_skill_points", errors) : 0
                 };
                 if (biome.Name.Length == 0 || result._biomes.ContainsKey(biome.Name))
                 {
@@ -197,6 +208,7 @@ namespace Orlog.Rules
                 foreach (var boss in biome.Bosses)
                 {
                     result._bosses[boss] = biome.BossLevel;
+                    result._bossBiome[boss] = biome;
                 }
             }
             return result;

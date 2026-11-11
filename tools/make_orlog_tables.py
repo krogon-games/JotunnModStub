@@ -54,6 +54,9 @@ GUIDE = [
     ("DeepNorth", ["FrozenKing", "FrozenKing_p2", "FrozenKing_p3"], 90),
 ]
 MAX_LEVEL = 99
+# Skill points for a character's first kill of each biome's boss, in GUIDE order (user, 2026-11-11: D2's 12 quest points,
+# 1 each for the first four bosses, 2 each for the last four).
+BOSS_SKILL_POINTS = [1, 1, 1, 1, 2, 2, 2, 2]
 # The Amazon's skills in Valheim (docs/class-design.md §5): status, kind (attack = on the skill button, cast = on its
 # hotkey, passive = no slot), the weapon it needs, and what it does here.
 AMAZON = {
@@ -180,12 +183,12 @@ def main():
     spans = biome_spans()
     with open(os.path.join(OUT, "biome_levels.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["biome", "min_level", "max_level", "health_min", "health_max", "boss_level", "bosses"])
+        w.writerow(["biome", "min_level", "max_level", "health_min", "health_max", "boss_level", "bosses", "boss_skill_points"])
         previous = 1
-        for biome, bosses, boss_level in GUIDE:
+        for i, (biome, bosses, boss_level) in enumerate(GUIDE):
             lo, hi = spans[biome]
             # Creatures fill the range up to one below the boss; the next biome starts at the boss's level.
-            w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses)])
+            w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses), BOSS_SKILL_POINTS[i]])
             previous = boss_level
     classes = read_csv(os.path.join(ROOT, "data", "d2-reference", "classes.csv"))
     with open(os.path.join(OUT, "classes.csv"), "w", newline="", encoding="utf-8") as f:

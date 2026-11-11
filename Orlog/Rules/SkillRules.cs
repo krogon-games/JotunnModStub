@@ -122,9 +122,40 @@ namespace Orlog.Rules
         ///     Unspent skill points; never below 0 (a lowered setting keeps the spent points). The total is overflow-safe
         ///     (<see cref="AttributeRules.Total" />), so a damaged save reads as nothing to spend instead of throwing.
         /// </summary>
-        public static int Unspent(int level, int perLevel, IDictionary<string, int> points)
+        public static int Unspent(int level, int perLevel, IDictionary<string, int> points, int bonus = 0)
         {
-            return Math.Max(0, AttributeRules.Earned(level, perLevel) - AttributeRules.Total(points?.Values));
+            long earned = (long)AttributeRules.Earned(level, perLevel) + Math.Max(0, bonus);
+            return (int)Math.Max(0L, Math.Min(int.MaxValue, earned - AttributeRules.Total(points?.Values)));
+        }
+
+        /// <summary>The bosses (by biome) a character has had its first-kill points for, saved as <c>Meadows;Swamp</c>.</summary>
+        public static HashSet<string> ParseBossKills(string saved)
+        {
+            return new HashSet<string>((saved ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(b => b.Trim()).Where(b => b.Length > 0),
+                StringComparer.OrdinalIgnoreCase);
+        }
+
+        public static string FormatBossKills(IEnumerable<string> biomes)
+        {
+            return string.Join(";", biomes.OrderBy(b => b, StringComparer.Ordinal));
+        }
+
+        /// <summary>Skill points from first boss kills (roadmap C4; user 2026-11-11): each biome's <c>boss_skill_points</c>, once.</summary>
+        public static int BossBonus(IEnumerable<string> killedBiomes, BiomeLevels biomes)
+        {
+            if (killedBiomes == null || biomes == null)
+            {
+                return 0;
+            }
+            long total = 0;
+            foreach (var biome in biomes.All)
+            {
+                if (killedBiomes.Contains(biome.Name, StringComparer.OrdinalIgnoreCase))
+                {
+                    total += Math.Max(0, biome.BossSkillPoints);
+                }
+            }
+            return (int)Math.Min(int.MaxValue, total);
         }
 
         public static int PointsIn(IDictionary<string, int> points, string id)

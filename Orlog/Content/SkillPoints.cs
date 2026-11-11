@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Orlog.Rules;
 
 namespace Orlog.Content
@@ -46,9 +47,39 @@ namespace Orlog.Content
             return SkillRules.Parse(player && player.m_customData.TryGetValue(PointsKey, out string saved) ? saved : "");
         }
 
+        public const string BossKillsKey = "orlog_boss_kills";
+
         public static int Unspent(Player player)
         {
-            return SkillRules.Unspent(Progress.GetLevel(player), OrlogConfig.SkillPointsPerLevel.Value, Points(player));
+            return SkillRules.Unspent(Progress.GetLevel(player), OrlogConfig.SkillPointsPerLevel.Value, Points(player), BossBonus(player));
+        }
+
+        /// <summary>The bosses (by biome) whose first kill has given this character skill points.</summary>
+        public static HashSet<string> BossKills(Player player)
+        {
+            return SkillRules.ParseBossKills(player && player.m_customData.TryGetValue(BossKillsKey, out string saved) ? saved : "");
+        }
+
+        public static int BossBonus(Player player)
+        {
+            return SkillRules.BossBonus(BossKills(player), Progress.Biomes);
+        }
+
+        /// <summary>A boss of <paramref name="biome" /> died near the player: its first-kill skill points, once per character.</summary>
+        public static void BossKilled(Player player, string biome)
+        {
+            var killed = BossKills(player);
+            var entry = Progress.Biomes?.All.FirstOrDefault(b => string.Equals(b.Name, biome, System.StringComparison.OrdinalIgnoreCase));
+            if (entry == null || entry.BossSkillPoints <= 0 || !killed.Add(entry.Name))
+            {
+                return;
+            }
+            player.m_customData[BossKillsKey] = SkillRules.FormatBossKills(killed);
+            Progress.NotifyChanged();
+            if (Attributes.ClassOf(player) != null)
+            {
+                player.Message(MessageHud.MessageType.Center, $"First victory over this foe: +{entry.BossSkillPoints} skill point{(entry.BossSkillPoints == 1 ? "" : "s")}");
+            }
         }
 
         /// <summary>Why a point can't go into <paramref name="skill" /> for the local player, "" if it can.</summary>

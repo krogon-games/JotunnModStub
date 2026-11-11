@@ -23,6 +23,7 @@ namespace Orlog.Content
     internal static class KillXp
     {
         private const string RpcXp = "Orlog_Xp";
+        private const string RpcBossKill = "Orlog_BossKill";
         private static readonly List<Player> Nearby = new List<Player>();
 
         [HarmonyPatch(typeof(Game), nameof(Game.Start))]
@@ -31,6 +32,7 @@ namespace Orlog.Content
             private static void Postfix()
             {
                 Safe.Run("register the XP message", () => ZRoutedRpc.instance.Register<ZPackage>(RpcXp, RPC_Xp));
+                Safe.Run("register the boss kill message", () => ZRoutedRpc.instance.Register<ZPackage>(RpcBossKill, RPC_BossKill));
             }
         }
 
@@ -81,6 +83,23 @@ namespace Orlog.Content
             var shares = ExperienceRules.Share(level => (long)System.Math.Round(Progress.CreatureXp.For(level) * perLevel), creatureLevel, levels,
                 OrlogConfig.PartyBonusPerPlayer.Value, OrlogConfig.HighLevelPenalty.Value ? (System.Func<int, float>)Progress.Levels.HighLevelRatio : null);
 
+            // A boss's first kill gives skill points to every player sharing it (D2's quest points; roadmap C4).
+            var bossBiome = Progress.Biomes.BiomeOfBoss(Utils.GetPrefabName(creature.gameObject));
+            if (bossBiome != null && bossBiome.BossSkillPoints > 0)
+            {
+                foreach (var player in Nearby)
+                {
+                    var zdo = player.m_nview ? player.m_nview.GetZDO() : null;
+                    if (zdo == null)
+                    {
+                        continue;
+                    }
+                    var package = new ZPackage();
+                    package.Write(player.GetZDOID());
+                    package.Write(bossBiome.Name);
+                    ZRoutedRpc.instance.InvokeRoutedRPC(zdo.GetOwner(), RpcBossKill, package);
+                }
+            }
             for (int i = 0; i < Nearby.Count; i++)
             {
                 var zdo = Nearby[i].m_nview ? Nearby[i].m_nview.GetZDO() : null;
@@ -111,6 +130,22 @@ namespace Orlog.Content
         {
             string faction = character.m_faction.ToString();
             return faction == "Players" || faction == "PlayerSpawned" || faction == "TrainingDummy";
+        }
+
+        /// <summary>A boss died near the player: its first-kill skill points (once per character and boss).</summary>
+        private static void RPC_BossKill(long sender, ZPackage package)
+        {
+            Safe.Run("add a boss's skill points", () =>
+            {
+                ZDOID target = package.ReadZDOID();
+                string biome = package.ReadString();
+                var player = Player.m_localPlayer;
+                if (player && player.GetZDOID() == target)
+                {
+                    // Recorded without a class too: the points are there once one is chosen.
+                    SkillPoints.BossKilled(player, biome);
+                }
+            });
         }
 
         /// <summary>A share of a kill's XP, arriving at the game of the player it's for.</summary>
