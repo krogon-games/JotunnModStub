@@ -111,3 +111,7 @@
 - First world load "failed to load" after choosing the character and world; that log was overwritten on restart. The second attempt loaded: "the keys work".
 - The second log is clean (no errors from our mods). Every load today freezes about 19–22 s right after spawning while CraftingOverhaul's biome detection runs (`Resolved biomes … in 18348 ms`); older than this round, suggested as a separate task. If a load hangs again: wait half a minute, then copy `LogOutput.log` before restarting.
 
+### Phone page marks and log (read 2026-11-13)
+- Marks (from the morning of 2026-11-13, before the demo was found): round 1 step 2 (`orlog_passive` lists the chances) **passed**; round 2 step 1 (slots) **failed**, step 2 (block on its own key) **passed**, step 3 (skill button) **failed**. Steps 1 and 3 failed because the classes UI demo was on (skills dragged into the demo's slots); to re-mark on build `21770e8` or later.
+- Log of the evening session (build `21770e8`, about 50 minutes, a greydwarf raid): no errors from our mods; no "ignored" key lines, so the keys reached the skills.
+
