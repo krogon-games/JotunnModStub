@@ -1,4 +1,4 @@
-class,status,str,dex,vit,energy,life_per_lvl,stamina_per_lvl,life_per_vit,stamina_per_vit
-Barbarian,later,30,20,25,10,2,1,4,1
-Amazon,playable,20,25,20,15,2,1,3,1
-Paladin,later,25,20,25,15,2,1,3,1
+class,status,str,dex,vit,energy,life_per_lvl,stamina_per_lvl,life_per_vit,stamina_per_vit,description,tab0,tab1,tab2
+Barbarian,later,30,20,25,10,2,1,4,1,,Combat Skills,Combat Masteries,Warcries
+Amazon,playable,20,25,20,15,2,1,3,1,"A huntress of bow and javelin. Fast, precise and hard to hit.",Bow and Crossbow,Passive and Magic,Javelin and Spear
+Paladin,later,25,20,25,15,2,1,3,1,,Combat Skills,Offensive Auras,Defensive Auras

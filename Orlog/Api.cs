@@ -119,6 +119,10 @@ namespace Orlog
             var json = new StringBuilder("{");
             Field(json, "id", cls.Name);
             Field(json, "name", cls.Name);
+            Field(json, "description", cls.Description);
+            Field(json, "tab0", cls.Tabs[0]);
+            Field(json, "tab1", cls.Tabs[1]);
+            Field(json, "tab2", cls.Tabs[2]);
             json.Length--;
             return json.Append('}').ToString();
         }

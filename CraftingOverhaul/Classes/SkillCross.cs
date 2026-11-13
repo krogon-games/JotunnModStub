@@ -29,7 +29,7 @@ namespace CraftingOverhaul.Classes
         private static readonly Color Flash = new Color(1f, 0.93f, 0.7f);
 
         private static RectTransform _root;
-        private static readonly Slot[] SlotViews = new Slot[DemoClasses.Slots];
+        private static readonly Slot[] SlotViews = new Slot[ClassesSource.Slots];
         private static Slot _power;
         private static int _lastCounter = -1;
         private static string _bar = "";
@@ -238,7 +238,6 @@ namespace CraftingOverhaul.Classes
             _gameGpRoot = hud.m_gpRoot;
 
             Safe.Run("toggle quick cast", HandleQuickCastClick);
-            ClassesSource.WarnDemoWithOrlog();
             int selected = FlatJson.GetInt(_bar, "selected", -1);
             for (int i = 0; i < SlotViews.Length; i++)
             {

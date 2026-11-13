@@ -44,7 +44,7 @@
 ## Round 2: the skill bar, the bow skills, Inner Sight and boss points (2026-11-11)
 
 **Build:** the same branch, newer commit (Orlog's log line names `claude/lucid-albattani-imrei7`). Round 1 (the passives) and this round can be played in one go.
-**Setup:** single player, test world, the group's mods loaded, CraftingOverhaul's classes screens on (its demo off). F5, `devcommands`; no `god` for the fights. `orlog_class Amazon` if needed, `orlog_level 30`, then spend: `orlog_skill MagicArrow`, `orlog_skill FireArrow`, `orlog_skill ColdArrow`, `orlog_skill MultipleShot`, `orlog_skill InnerSight`, `orlog_skill ExplodingArrow`, `orlog_skill IceArrow`, `orlog_skill FreezingArrow`. `spawn BowFineWood`, `spawn ArrowWood 50`, `spawn ShieldWood`.
+**Setup:** single player, test world, the group's mods loaded, CraftingOverhaul's classes screens on (the demo is gone since 2026-11-13; an old `Demo` line in its config does nothing now). F5, `devcommands`; no `god` for the fights. `orlog_class Amazon` if needed, `orlog_level 30`, then spend: `orlog_skill MagicArrow`, `orlog_skill FireArrow`, `orlog_skill ColdArrow`, `orlog_skill MultipleShot`, `orlog_skill InnerSight`, `orlog_skill ExplodingArrow`, `orlog_skill IceArrow`, `orlog_skill FreezingArrow`. `spawn BowFineWood`, `spawn ArrowWood 50`, `spawn ShieldWood`.
 
 **New keys:** right click = the skill button; F1–F4 = the four skill slots. **Block has no key by default now** (2026-11-13): set `BlockKey` in the Orlog config, section `6 - Skill Keys` (e.g. `Mouse4`, the mouse's back side button), before step 2.
 
@@ -76,6 +76,7 @@
 
 **Tooltips and boss points**
 
+13a. [ ] **Demo removed (2026-11-13):** the skills panel's three tabs are named Bow and Crossbow, Passive and Magic, Javelin and Spear; using the Orlog stone with a classless character (`orlog_class none`), the class choice window shows the Amazon with "A huntress of bow and javelin. Fast, precise and hard to hit." `co_classes_stone` no longer exists.
 13. [ ] The skills panel's tooltip for each bow skill shows its numbers (e.g. "Adds … fire damage; …% of the physical damage becomes fire") and the next level's.
 14. [ ] **Boss points:** note the skill points to spend (`orlog_info`). `spawn Eikthyr` and kill him → "First victory over this foe: +1 skill point", one more point to spend. Kill another Eikthyr → no more. Relog → the point is still there.
 

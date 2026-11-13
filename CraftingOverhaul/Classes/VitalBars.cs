@@ -13,7 +13,7 @@ namespace CraftingOverhaul.Classes
     ///     <c>docs/images/hud_reference_bars.jpg</c>): health on top, stamina under it, eitr at the bottom (only once you
     ///     have any; order changed by the user 2026-10-31 so gaining eitr doesn't move stamina), in the game's colours.
     ///     They grow with the maximum up to a cap, have a fading "damage taken" trail and the numbers past their end. Your
-    ///     food sits in three round slots to their left (time left under each), and with Orlog (or the classes demo) a
+    ///     food sits in three round slots to their left (time left under each), and with Orlog a
     ///     thin XP bar runs under them, with the level and a hint when points wait to be spent. The game's own health,
     ///     stamina, eitr and food displays are hidden while they're on.
     ///

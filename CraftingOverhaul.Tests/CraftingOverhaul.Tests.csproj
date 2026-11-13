@@ -14,8 +14,6 @@
     <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\SheetLayout.cs" Link="Linked\SheetLayout.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\FlatJson.cs" Link="Linked\FlatJson.cs" />
-    <Compile Include="..\CraftingOverhaul\Classes\JsonOut.cs" Link="Linked\JsonOut.cs" />
-    <Compile Include="..\CraftingOverhaul\Classes\DemoClasses.cs" Link="Linked\DemoClasses.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\SkillTreeLayout.cs" Link="Linked\SkillTreeLayout.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\CooldownDisplay.cs" Link="Linked\CooldownDisplay.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\QuickCastShimmer.cs" Link="Linked\QuickCastShimmer.cs" />

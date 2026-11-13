@@ -50,7 +50,6 @@ namespace CraftingOverhaul
 
         public static ConfigEntry<KeyboardShortcut> SkillsPanelKey;
         public static ConfigEntry<UnityEngine.Vector2> SkillCrossPosition;
-        public static ConfigEntry<bool> ClassesDemo;
 
         public static void Bind(ConfigFile config)
         {
@@ -109,14 +108,9 @@ namespace CraftingOverhaul
                                       "move up out of the way, as the game's own bars do.", new AcceptableValueRange<float>(0f, 1000f)));
 
             SkillsPanelKey = config.Bind(ClassesSection, "SkillsPanelKey", new KeyboardShortcut(UnityEngine.KeyCode.K),
-                "Opens and closes the skills panel (needs the Orlog plugin, or the demo). K is free in Valheim's default keys.");
+                "Opens and closes the skills panel (needs the Orlog plugin). K is free in Valheim's default keys.");
             SkillCrossPosition = config.Bind(ClassesSection, "SkillCrossPosition", new UnityEngine.Vector2(24f, 180f),
                 "Bottom-left corner of the skill cross, in pixels from the bottom-left of the screen.");
-            ClassesDemo = config.Bind(ClassesSection, "Demo", false,
-                "Development: show the class screens with built-in sample data (an Amazon at level 12) instead of Orlog's, so " +
-                "they can be tried before classes exist. Spending points and filling slots change the sample only. Leave it off when " +
-                "Orlog is installed: with it on, Orlog's skill keys find your real slots empty.");
-
             BiomeMaterialOverrides.SettingChanged += (_, __) =>
             {
                 BiomeResolver.Invalidate();

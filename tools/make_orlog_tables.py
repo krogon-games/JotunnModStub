@@ -108,6 +108,12 @@ DAMAGE_COLUMNS = ["blunt", "slash", "pierce", "fire", "frost", "lightning", "poi
 # Biome order as the game dump writes it in biome_items.csv (Ashlands there, AshLands in Heightmap.Biome).
 DUMP_BIOME = {"AshLands": "Ashlands"}
 
+# Each class's line in the class choice window (the classes UI demo's text, seen in the play-tests since 2026-10-30;
+# moved here when the demo was removed, user 2026-11-13). Classes without one show none.
+CLASS_DESCRIPTIONS = {
+    "Amazon": "A huntress of bow and javelin. Fast, precise and hard to hit.",
+}
+
 # Playable classes (user, 2026-10-30: the Amazon first; the Barbarian and maybe the Paladin later).
 PLAYABLE = {"Amazon"}
 # Our level that matches WoW's level-60 cap (Kall Fimbulbringer).
@@ -194,9 +200,18 @@ def main():
     with open(os.path.join(OUT, "classes.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
         columns = ["str", "dex", "vit", "energy", "life_per_lvl", "stamina_per_lvl", "life_per_vit", "stamina_per_vit"]
-        w.writerow(["class", "status"] + columns)
+        w.writerow(["class", "status"] + columns + ["description", "tab0", "tab1", "tab2"])
         for c in classes:
-            w.writerow([c["class"], "playable" if c["class"] in PLAYABLE else "later"] + [c[k] for k in columns])
+            # The skill tree's three tab names in D2's order (data/d2-reference/<class>.csv), where the tree is collected.
+            tabs = []
+            tree_file = os.path.join(ROOT, "data", "d2-reference", c["class"].lower() + ".csv")
+            if os.path.exists(tree_file):
+                for s in read_csv(tree_file):
+                    if s["tab"] not in tabs:
+                        tabs.append(s["tab"])
+            tabs = (tabs + ["", "", ""])[:3]
+            w.writerow([c["class"], "playable" if c["class"] in PLAYABLE else "later"] + [c[k] for k in columns]
+                       + [CLASS_DESCRIPTIONS.get(c["class"], "")] + tabs)
     skills = read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon.csv"))
     tabs = []
     with open(os.path.join(OUT, "amazon_skills.csv"), "w", newline="", encoding="utf-8") as f:

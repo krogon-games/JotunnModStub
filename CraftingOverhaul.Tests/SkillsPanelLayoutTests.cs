@@ -96,8 +96,7 @@ namespace CraftingOverhaul.Tests
             sb.Append("\n},\n\"tile\": ").Append(F(SkillTreeLayout.Tile));
             sb.Append(",\n\"rowCentres\": [").Append(string.Join(",", Enumerable.Range(1, SkillTreeLayout.Rows).Select(r => F(SkillTreeLayout.RowCentre(r))))).Append("]");
             sb.Append(",\n\"tiers\": [").Append(string.Join(",", SkillTreeLayout.TierLevels)).Append("]");
-            var demo = new DemoClasses();
-            var skills = FlatJson.Strings(demo.GetSkillIdsJson("Amazon")).Select(id => SkillView.Parse(demo.GetSkillInfoJson(id))).ToList();
+            var skills = ClassesFixture.AmazonSkills();
             sb.Append(",\n\"tabs\": [");
             for (int tab = 0; tab < 3; tab++)
             {

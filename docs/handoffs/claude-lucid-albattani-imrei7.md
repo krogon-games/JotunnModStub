@@ -22,6 +22,7 @@ All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code
 - **Claude's interim choices:** Multiple Shot's fan 5°/60°; Exploding Arrow's radius = Freezing Arrow's 3.3 yards; Inner Sight +25%.
 - **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game. From the code review: blast hits count for Corruption's life steal per creature.
 - **Quick cast per skill built 2026-11-13** (Orlog + CraftingOverhaul's skill cross: right-click toggle, gold shimmer), untested; `BlockKey` blank by default (characters with a class can't block until it's set).
+- **Classes UI demo removed 2026-11-13** (U2, #38): Orlog answers the class description and tab names; the UI tests use Orlog's real tree. Closes #38 and the demo item of #50 at merge (coordinator).
 - **Not built:** the respec item, the boss XP multiplier (C4); Gungnir's Throw and the spear skills (C6).
 - **Coordinator, for `/handoff`:** loot 3c marks on the phone page (8 of 10 passed; Splintering "needs a little bigger radius/hit detection range") go into #26 and `STATUS.md`.
 
@@ -56,6 +57,7 @@ All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code
 9. **2026-11-13: keep remembering the right-click skill per weapon kind** ("hopefully that will work. will need to consider edgecases").
 10. **2026-11-13: the game's own throw (middle mouse) stays exactly as it is; we don't touch it.** Instead a new skill copies the throw with a perk: the weapon never leaves the player's hand, a ghost copy flies at what the player aims at, so nothing litters the ground ("most players dont use the throw skill because you have to go fetch your weapon after… unfun").
 11. **2026-11-13: the ghost throw, Claude's three suggestions** ("use your suggestions for all three questions"): a basic skill outside the tree like Diablo 2's own Throw, named **Gungnir's Throw**, for every character with a class, no skill points; it costs **stamina** like the game's throw and does **the same damage** as the game's throw with that spear; it aims where the camera points. The Amazon's javelin skills throw the same ghost copy (roadmap C6).
+12. **2026-11-13: remove the classes UI demo** ("yes go ahead, remove the demo"; roadmap U2, issue #38): Orlog fills the class description and tab names first, then the demo's code, setting and `co_classes_stone` go.
 
 ## Playtest
 
@@ -78,7 +80,7 @@ Krogon: rounds 1 (passives, 12 steps) and 2 (skill bar, bow skills, Inner Sight,
 
 ## Checks
 
-Not run by `/handoff` yet: 559 tests pass; Orlog builds against the stand-in assemblies.
+Not run by `/handoff` yet: 553 tests pass (8 demo-only tests removed); Orlog builds against the stand-in assemblies.
 
 ## Merge notes
 

@@ -53,7 +53,7 @@ namespace CraftingOverhaul.Classes
         private static readonly Text[] AttributeValues = new Text[4];
         private static readonly Text[] AttributeEffects = new Text[4];
         private static readonly GameObject[] AttributeButtons = new GameObject[4];
-        private static readonly SlotTileView[] Slots = new SlotTileView[DemoClasses.Slots];
+        private static readonly SlotTileView[] Slots = new SlotTileView[ClassesSource.Slots];
         private static Image _dragGhost;
 
         // Details pane.

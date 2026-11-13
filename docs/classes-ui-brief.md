@@ -101,6 +101,8 @@ Anything the UI needs that isn't here: add it to this table in `master` (both se
 
 ## 4. Demo data (build before the classes plugin exists)
 
+**Removed 2026-11-13 (user):** Orlog serves every call in §3 (the class description and tab names since that day), so the demo setting, `DemoClasses.cs` and `co_classes_stone` are gone. The UI's tests use Orlog's real Amazon tree. The text below is the original brief, kept for the record.
+
 Add a development setting in CraftingOverhaul (e.g. `ClassesUiDemo`, off by default) that serves the calls in §3 from built-in sample data when Orlog isn't installed, so the screens can be built and play-tested now:
 - Character: the `GetCharacterJson` example above (an Amazon at level 12 with points to spend).
 - Skills: the Amazon's 30 skills from [`data/d2-reference/amazon.csv`](../data/d2-reference/amazon.csv) (tab, row, col, name, required level, prerequisites) with the statuses in [`class-design.md`](class-design.md#5-amazon-first-class) §5 (`v1`, `reworked`, `later`); a few with points; vanilla item icons as placeholders (e.g. the fire arrow's icon for Fire Arrow).
