@@ -1,30 +1,27 @@
 # Handoff: `claude/lucid-albattani-imrei7`
 
-**Written:** 2026-11-11. Started from `master` at PR #63 (level with it). No pull request yet.
+**Written:** 2026-11-13 by `/handoff`. 20 commits ahead of `master`, 0 behind. No pull request yet.
 
 ## Stage
 
-**Waiting for Krogon's playtest**: C3 (passives), C5 (skill bar, bow skills, Inner Sight) and C4's boss points, all built 2026-11-11.
+**Waiting for Krogon's playtest.**
 
 ## Purpose
 
-The Amazon (`docs/ROADMAP.md` §4.1): C3, her passives (issue #32); then, at Krogon's request, C5 (skill button, four slots, the bow skills and Inner Sight, issue #37) and C4's boss bonus points (issue #36). The session started as a coordinator review (top 3 priorities agreed; `STATUS.md` is updated at `/handoff`).
+The Amazon (`ROADMAP.md` §4.1): passives (C3, #32), skill button, slots, bow skills, Inner Sight (C5, #37), boss points (C4 part, #36), quick cast, demo removed (U2, #38).
 
 ## Done
 
-Nothing confirmed in game yet.
+Krogon, 2026-11-13: "the keys work"; the panel shows Orlog's real data (screenshot); the bigger panel is "much better now". The rest is untested.
 
 ## Half-done and known issues
 
-All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code (not 1.0.21). Detail: `FEATURES.md` → Amazon passives, Amazon skill bar and bow skills, Boss bonus skill points.
-- **Crossing games:** Penetrate's marker rides in the hit's `m_eitrAdd`; creature area and breath hits get `m_radius` so they can't be avoided. Breath is found by name (assumption: the attack item's prefab name is set).
-- **Proposals waiting for Krogon:** the damage scale (`skill_damage_scale.csv`: D2's skill-to-bow ratio; a creature-health scale came out 7–10× lower mid-game); boss XP ×9.4 (Eikthyr) … ×66.6 (Kall), from D2R's act bosses (`monstats` Exp ÷ the median normal monster's 97), spread by order.
-- **Claude's interim choices:** Multiple Shot's fan 5°/60°; Exploding Arrow's radius = Freezing Arrow's 3.3 yards; Inner Sight +25%.
-- **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game. From the code review: blast hits count for Corruption's life steal per creature.
-- **Quick cast per skill built 2026-11-13** (Orlog + CraftingOverhaul's skill cross: right-click toggle, gold shimmer), untested; `BlockKey` blank by default (characters with a class can't block until it's set).
-- **Classes UI demo removed 2026-11-13** (U2, #38): Orlog answers the class description and tab names; the UI tests use Orlog's real tree. Closes #38 and the demo item of #50 at merge (coordinator).
-- **Not built:** the respec item, the boss XP multiplier (C4); Gungnir's Throw and the spear skills (C6).
-- **Coordinator, for `/handoff`:** loot 3c marks on the phone page (8 of 10 passed; Splintering "needs a little bigger radius/hit detection range") go into #26 and `STATUS.md`.
+Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
+- **Proposals waiting for Krogon:** the skill damage scale (D2's skill-to-bow ratio; a creature-health scale is 7–10× lower mid-game); boss XP ×9.4 (Eikthyr) … ×66.6 (Kall). Interim choices: Multiple Shot's fan 5°/60°, Exploding Arrow 3 m, Inner Sight +25%.
+- **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game; blast hits count for Corruption's life steal per creature; `BlockKey` blank by default (no block with a class until set).
+- **One world load hung** (log lost); every load freezes ~20 s in biome detection (older; `claude/biome-load-freeze`).
+- **Not built:** the respec item and boss XP (C4); Gungnir's Throw and the spear skills (C6).
+- **For the coordinator (on `master`):** `STATUS.md` (agreed at the start, decision 2; feature branches don't touch it) and #38 / the demo item of #50 at merge. The #26 comment with the loot 3c marks is posted by this `/handoff`.
 
 ## Decisions
 
@@ -58,30 +55,39 @@ All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code
 10. **2026-11-13: the game's own throw (middle mouse) stays exactly as it is; we don't touch it.** Instead a new skill copies the throw with a perk: the weapon never leaves the player's hand, a ghost copy flies at what the player aims at, so nothing litters the ground ("most players dont use the throw skill because you have to go fetch your weapon after… unfun").
 11. **2026-11-13: the ghost throw, Claude's three suggestions** ("use your suggestions for all three questions"): a basic skill outside the tree like Diablo 2's own Throw, named **Gungnir's Throw**, for every character with a class, no skill points; it costs **stamina** like the game's throw and does **the same damage** as the game's throw with that spear; it aims where the camera points. The Amazon's javelin skills throw the same ghost copy (roadmap C6).
 12. **2026-11-13: remove the classes UI demo** ("yes go ahead, remove the demo"; roadmap U2, issue #38): Orlog fills the class description and tab names first, then the demo's code, setting and `co_classes_stone` go.
+13. **2026-11-13: make the skills panel bigger** ("please enlarge the skills panel window, its hard to read"), then **10% smaller than that** ("Skills panel is much better now. maybe even tone it down by 10%"): it fills 79% of the screen's height (or 83% of its width); `SkillsPanelSize` fixes a size.
+14. **2026-11-13: block on the mouse's side button is the mouse software, not the mod** ("block holds fine on another key, it's my mouse software").
+15. **2026-11-13: wrap up; the play-test waits for a fresh session** ("Save the playtesting for another session so its fresh").
+
 
 ## Playtest
 
-Krogon: rounds 1 (passives, 12 steps) and 2 (skill bar, bow skills, Inner Sight, boss points, 16 steps) in `docs/playtests/claude-lucid-albattani-imrei7.md`, also on the phone page. With others: `PLAYTEST.md` → Session 2, 2j. No feedback yet.
+Rounds 1 and 2 in `docs/playtests/claude-lucid-albattani-imrei7.md` and on the phone page; with others `PLAYTEST.md` → 2j. Passed: round 1 step 2, round 2 step 2. Round 2 steps 1 and 3 failed only because the demo was on: re-mark. In a fresh session.
 
 ## Open questions for Krogon
 
-1. **Damage scale:** the proposed D2 skill-to-bow ratio (strong), or the creature-health one (7–10× lower mid-game)? Round 2 step 15 helps; `SkillDamageMultiplier` tunes it meanwhile.
-2. **Boss XP:** ×9.4 (Eikthyr) … ×66.6 (Kall) as proposed?
+1. **Skill damage scale:** the proposed one, or the creature-health one? (Round 2 step 15.)
+2. **Boss XP:** ×9.4 (Eikthyr) … ×66.6 (Kall)?
 3. **Inner Sight:** 25% flat, or growing with its level?
 4. **Interim choices:** Multiple Shot's fan, Exploding Arrow's 3 m.
-5. **Reset item** recipe without Corruption (C4).
+5. **Reset item** recipe without Corruption.
+6. **A default block key** (blank for now).
 
 ## Next steps
 
 1. Krogon's play-test; fix what fails.
-2. His answers; then boss XP and the respec item (C4).
-3. `/handoff`: `STATUS.md` and the #26 comment (agreed this session).
-4. C6: Gungnir's Throw and the spear and javelin skills, all from right click (decisions 6, 10, 11).
+2. His answers; then boss XP and the respec item.
+3. C6: Gungnir's Throw, spear and javelin skills.
 
 ## Checks
 
-Not run by `/handoff` yet: 553 tests pass (8 demo-only tests removed); Orlog builds against the stand-in assemblies.
+- Build: PASS (556 tests; CraftingOverhaul and Orlog build).
+- Version: gameplay changed: version bump needed at merge (Orlog, CraftingOverhaul). The branch changed no version.
+- Multiplayer sync: PASS, read in code, not tested (gameplay settings admin-only; registered boss message; game's status-effect message; hit fields).
+- Assets and names: PASS (CSVs embedded by wildcard; prefab names in the dump; no new tokens).
+- FEATURES.md: PASS.
+- In-game: NEEDS KROGON'S PLAYTEST (beyond the three confirmations above).
 
 ## Merge notes
 
-Not ready (play-test). **Gameplay changed: version bump needed at merge (Orlog and CraftingOverhaul: the skill cross's quick cast).** Shared docs touched, add-only: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/PLAYER_SETUP.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/GAME_DESIGN.md`, the tests' `.csproj`. New reference data `data/d2-reference/bows.csv` (never ship). CraftingOverhaul: `SkillCross.cs`, `ClassesSource.cs`, new `QuickCastShimmer.cs` (the UI session's area; no UI branch is open). No Corruption code changed.
+Not ready (play-test). **Gameplay changed: version bump needed at merge: Orlog, CraftingOverhaul.** Level with `master`. `claude/biome-load-freeze` also changes `CraftingOverhaul.cs`, the tests' `.csproj`, `FEATURES.md`, `ARCHITECTURE.md`, `CURRENT_STATE.md`: keep both sides. `data/d2-reference/bows.csv` never ships.
