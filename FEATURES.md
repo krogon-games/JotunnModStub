@@ -1481,6 +1481,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-13
+- **Classes UI: warns when its demo is on while Orlog is installed** (log and on screen; Krogon's re-test had the demo on, so skills dragged onto the cross went into the sample data and Orlog's keys found empty slots).
 - **Fixes after Krogon's first quick test (2026-11-13):** the freeze no longer needs the game's Immobilized at start-up (the red error); slot keys and the skill button no longer stop while the game thinks a gamepad is active, and every ignored press logs why. Not re-tested yet.
 - **Quick cast per skill** (Orlog and CraftingOverhaul's skill cross; Krogon's design): skills without a weapon cast from their key, or go on right click with quick cast off; right-click a cross slot (inventory open) to toggle; a gold shimmer runs round quick-cast slots. **`BlockKey` is blank by default** for now. Untested in-game (559 tests).
 

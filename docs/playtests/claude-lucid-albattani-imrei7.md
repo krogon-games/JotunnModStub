@@ -97,3 +97,11 @@
 ### What changed after the feedback
 - The freeze no longer needs the game's Immobilized at start-up: it copies it when found (by name), else it is Orlog's own (speed −1000, no jumping). No error either way; the log says which.
 - The keys: the check "does the game take input now" no longer uses the game's "gamepad active" state (it can be on with a controller connected while playing with keyboard and mouse) and checks chat, console, menu, map, inventory, store and build menu directly. Keys are read through the game's input and, where it's on, Unity's legacy input. **Each ignored press now logs why** (`Orlog: F1 ignored (…)`, `Orlog: Skill button ignored (…)`), for the re-test.
+
+### Your feedback (2026-11-13, re-test, build `cd839c0`)
+- "keys still not working", with the log and a screenshot of the skill cross (Multiple Shot, Fire Arrow, Magic Arrow and one more in the slots, keys shown as 1–4, a "2" on slot 2).
+- The new log lines: `Orlog: F1 ignored (slot 1 is empty)`, `F2`/`F3`/`F4` the same, `Skill button ignored (no skill on it for the weapon in hand (bow))`. The red error is gone ("the freeze is Orlog's own").
+
+### What changed after the feedback
+- **Cause:** CraftingOverhaul's classes UI was in demo mode (`[5 - Classes UI] Demo = true` in `com.krogongames.craftingoverhaul.cfg`): the cross showed the demo's slots (keys 1–4 and a pretend cooldown are the demo's), so the skills dragged there never reached Orlog, whose slots stayed empty. Orlog's keys worked and found nothing. **Set `Demo = false`** and drag the skills onto the cross again (it then shows F1–F4).
+- CraftingOverhaul now warns when the demo is on while Orlog is installed: a log warning and a message on screen once.

@@ -114,7 +114,8 @@ namespace CraftingOverhaul
                 "Bottom-left corner of the skill cross, in pixels from the bottom-left of the screen.");
             ClassesDemo = config.Bind(ClassesSection, "Demo", false,
                 "Development: show the class screens with built-in sample data (an Amazon at level 12) instead of Orlog's, so " +
-                "they can be tried before classes exist. Spending points and filling slots change the sample only.");
+                "they can be tried before classes exist. Spending points and filling slots change the sample only. Leave it off when " +
+                "Orlog is installed: with it on, Orlog's skill keys find your real slots empty.");
 
             BiomeMaterialOverrides.SettingChanged += (_, __) =>
             {

@@ -46,6 +46,23 @@ namespace CraftingOverhaul.Classes
         /// <summary>The demo replaces Orlog's answers while it's on, so the screens can be tried before classes exist.</summary>
         public static bool Demo => ModConfig.ClassesDemo.Value;
 
+        private static bool _demoWarned;
+
+        /// <summary>
+        ///     With Orlog installed and the demo still on, says so once on screen (Krogon's play-test 2026-11-13: skills dragged
+        ///     onto the cross went into the demo, so Orlog's keys found empty slots).
+        /// </summary>
+        public static void WarnDemoWithOrlog()
+        {
+            if (_demoWarned || !Demo || !HasOrlog || !Player.m_localPlayer)
+            {
+                return;
+            }
+            _demoWarned = true;
+            Player.m_localPlayer.Message(MessageHud.MessageType.Center,
+                "Classes UI demo is on: sample data, not your character. Set Demo = false in CraftingOverhaul's config ([5 - Classes UI]).");
+        }
+
         public static bool HasOrlog
         {
             get
@@ -101,6 +118,11 @@ namespace CraftingOverhaul.Classes
             // Set last: it's what HasOrlog checks.
             _character = Method<Func<string>>(api, "GetCharacterJson");
             Jotunn.Logger.LogInfo("Orlog's classes API (version 1) found: the class screens are on.");
+            if (Demo)
+            {
+                Jotunn.Logger.LogWarning("The classes UI demo is on ([5 - Classes UI] Demo = true): the class screens show sample data, " +
+                                         "not your character, and Orlog's skill keys find empty slots. Set Demo = false to use Orlog.");
+            }
         }
 
         private static T Method<T>(Type api, string name) where T : class

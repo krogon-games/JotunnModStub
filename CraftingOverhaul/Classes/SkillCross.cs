@@ -238,6 +238,7 @@ namespace CraftingOverhaul.Classes
             _gameGpRoot = hud.m_gpRoot;
 
             Safe.Run("toggle quick cast", HandleQuickCastClick);
+            ClassesSource.WarnDemoWithOrlog();
             int selected = FlatJson.GetInt(_bar, "selected", -1);
             for (int i = 0; i < SlotViews.Length; i++)
             {
