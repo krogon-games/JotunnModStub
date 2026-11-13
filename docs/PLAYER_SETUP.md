@@ -7,7 +7,7 @@ For everyone joining our Valheim server. Takes about 10 minutes. You only do thi
 | Mod | What it does | Where from |
 |---|---|---|
 | **Corruption** | Our endgame mod: corruption shards, the Riftforge, creature talismans | Krogon sends you `Corruption.dll` |
-| **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes, the class eitr pool; choose your class at the Orlog stone in the spawn area; the Amazon's passives, bow skills and Inner Sight work (her spear skills are still to come). **With a class, right click fires your chosen skill and block moves to the mouse's back side button** (see *Orlog's keys* below) | Krogon sends you `Orlog.dll` |
+| **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes, the class eitr pool; choose your class at the Orlog stone in the spawn area; the Amazon's passives, bow skills and Inner Sight work (her spear skills are still to come). **With a class, right click fires your chosen skill and block needs a key of its own** (see *Orlog's keys* below) | Krogon sends you `Orlog.dll` |
 | **CraftingOverhaul** | Our crafting mod: recipe search, collapsible categories, crafting and building from nearby chests | Krogon sends you `CraftingOverhaul.dll` |
 | [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) | Equipment slots and quick slots. **Talismans go in its slots**, so you need it | Thunderstore |
 | [AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) | Craftable backpacks | Thunderstore |
@@ -135,8 +135,8 @@ The dedicated server needs, in its own BepInEx install:
 | Setting | Default | What it does |
 |---|---|---|
 | `SkillButton` | `Mouse1` (right click) | Fires the skill chosen for the weapon in hand; hold to draw the bow |
-| `BlockKey` | `Mouse4` (the mouse's back side button) | Block and parry while the game's own Block key is right click. No side buttons? Set this to a keyboard key, or set Block to another key in the game's controls (that key then blocks too) |
-| `Slot1Key` … `Slot4Key` | `F1` … `F4` | The four skill slots: an attack skill goes on the skill button, a cast skill (Inner Sight) casts |
+| `BlockKey` | blank (`None`) for now | Block and parry while the game's own Block key is right click. **Set one, or you can't block:** e.g. `Mouse4` (the mouse's back side button) or a keyboard key; or set Block to another key in the game's controls (that key then blocks too) |
+| `Slot1Key` … `Slot4Key` | `F1` … `F4` | The four skill slots: a weapon skill goes on the skill button; a skill without a weapon (Inner Sight) casts at once while its quick cast is on (right-click its slot on the skill cross, inventory open, to toggle) |
 
 - **Bigger backpacks (user, 2026-10-29: one more row on every level).** Set on the server in `BepInEx/config/vapok.mods.adventurebackpacks.cfg` (AdventureBackpacks syncs them to everyone). Each backpack has a section `[Backpack: <name>]` with `Backpack Size - Level 1` to `Level 4`, written as `{"x":3.0,"y":2.0}` (width, height). New values (AdventureBackpacks 2.4.6 defaults plus one row; widths unchanged):
 

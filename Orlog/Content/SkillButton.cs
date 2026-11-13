@@ -129,6 +129,17 @@ namespace Orlog.Content
                     }
                     return;
                 }
+                // A cast skill on the skill button (quick cast off) casts on the press; no attack.
+                if (skill.Kind == "cast")
+                {
+                    if (pressed)
+                    {
+                        CastSkills.Cast(player, skill, SkillBar.LevelOf(player, skill.Id), state.EitrCost);
+                    }
+                    block = false;
+                    blockHold = false;
+                    return;
+                }
                 if (pressed || s_pending == null)
                 {
                     s_pending = skill;

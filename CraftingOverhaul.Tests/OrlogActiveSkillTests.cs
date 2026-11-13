@@ -198,6 +198,29 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void QuickCastOnlyForSkillsWithoutAWeapon()
+        {
+            // User 2026-11-13: per skill, on by default; a weapon skill goes on right click.
+            var t = Tree();
+            var inner = t.Find("InnerSight");
+            var fire = t.Find("FireArrow");
+            Assert.True(ActiveSkillRules.CanQuickCast(inner));
+            Assert.False(ActiveSkillRules.CanQuickCast(fire));
+            Assert.False(ActiveSkillRules.CanQuickCast(t.Find("Dodge")));
+            Assert.False(ActiveSkillRules.CanQuickCast(null));
+            var off = ActiveSkillRules.ParseIds("");
+            Assert.True(ActiveSkillRules.IsQuickCast(inner, off));
+            Assert.False(ActiveSkillRules.OnSkillButton(inner, off));
+            off = ActiveSkillRules.ParseIds("InnerSight;;innersight");
+            Assert.Single(off);
+            Assert.False(ActiveSkillRules.IsQuickCast(inner, off));
+            Assert.True(ActiveSkillRules.OnSkillButton(inner, off));
+            Assert.True(ActiveSkillRules.OnSkillButton(fire, off));
+            Assert.False(ActiveSkillRules.OnSkillButton(t.Find("Dodge"), off));
+            Assert.Equal("A;B", ActiveSkillRules.FormatIds(new[] { "B", "A" }));
+        }
+
+        [Fact]
         public void BrokenTablesAreReported()
         {
             string header = "id,value," + string.Join(",", Enumerable.Range(1, 20).Select(i => "l" + i)) + "\n";

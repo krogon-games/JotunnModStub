@@ -21,7 +21,8 @@ All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code
 - **Proposals waiting for Krogon:** the damage scale (`skill_damage_scale.csv`: D2's skill-to-bow ratio; a creature-health scale came out 7–10× lower mid-game); boss XP ×9.4 (Eikthyr) … ×66.6 (Kall), from D2R's act bosses (`monstats` Exp ÷ the median normal monster's 97), spread by order.
 - **Claude's interim choices:** Multiple Shot's fan 5°/60°; Exploding Arrow's radius = Freezing Arrow's 3.3 yards; Inner Sight +25%.
 - **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game. From the code review: blast hits count for Corruption's life steal per creature.
-- **Not built:** the respec item, the boss XP multiplier (C4); spear skills (C6).
+- **Quick cast per skill built 2026-11-13** (Orlog + CraftingOverhaul's skill cross: right-click toggle, gold shimmer), untested; `BlockKey` blank by default (characters with a class can't block until it's set).
+- **Not built:** the respec item, the boss XP multiplier (C4); Gungnir's Throw and the spear skills (C6).
 - **Coordinator, for `/handoff`:** loot 3c marks on the phone page (8 of 10 passed; Splintering "needs a little bigger radius/hit detection range") go into #26 and `STATUS.md`.
 
 ## Decisions
@@ -51,9 +52,10 @@ All built 2026-11-11, **untested in game**, read in the cloud's 1.0.14 game code
 5. **2026-11-11: build the rest of the Amazon in this session too** ("I'd suggest that you continue building out the Amazon with her other skills as well"). Built: C5 and C4's boss points; numbers not yet decided were proposed (above) and wait for Krogon.
 6. **2026-11-12: skill use simplified** ("left click would always be your basic attack… right click becomes the selectable character skill button, whether it's throw a javelin or multi-shot or strafe or any of the other skills"; the 4-slot skill cross stays). This replaces `class-design.md` §5's "spear skills ride the spear's own attacks": spear and javelin skills fire from right click too.
 7. **2026-11-13: quick cast per skill** ("quick cast per skill would be awesome"): a skill that needs no weapon casts straight from its skill cross hotkey when quick cast is on; one that needs a weapon goes on right click. Right-clicking a slot on the skill cross toggles quick cast; a quick-cast slot shows a rotating shimmer around it ("exactly like the dota 2 autocast animation").
-8. **2026-11-13: block is a rebindable key** (already so: `6 - Skill Keys` → `BlockKey`). Its default: asked (the message was cut off after "by default").
+8. **2026-11-13: block is a rebindable key** (`6 - Skill Keys` → `BlockKey`), **blank by default for now** ("are you able to use a blank keybind for the block? i cant think of a good alternative at the moment"). So with a class, blocking needs a key set there, or Block set to another key in the game's controls.
 9. **2026-11-13: keep remembering the right-click skill per weapon kind** ("hopefully that will work. will need to consider edgecases").
 10. **2026-11-13: the game's own throw (middle mouse) stays exactly as it is; we don't touch it.** Instead a new skill copies the throw with a perk: the weapon never leaves the player's hand, a ghost copy flies at what the player aims at, so nothing litters the ground ("most players dont use the throw skill because you have to go fetch your weapon after… unfun").
+11. **2026-11-13: the ghost throw, Claude's three suggestions** ("use your suggestions for all three questions"): a basic skill outside the tree like Diablo 2's own Throw, named **Gungnir's Throw**, for every character with a class, no skill points; it costs **stamina** like the game's throw and does **the same damage** as the game's throw with that spear; it aims where the camera points. The Amazon's javelin skills throw the same ghost copy (roadmap C6).
 
 ## Playtest
 
@@ -72,12 +74,12 @@ Krogon: rounds 1 (passives, 12 steps) and 2 (skill bar, bow skills, Inner Sight,
 1. Krogon's play-test; fix what fails.
 2. His answers; then boss XP and the respec item (C4).
 3. `/handoff`: `STATUS.md` and the #26 comment (agreed this session).
-4. C6, the spear and javelin skills (first settle how they fire: the design says on the spear's own attacks, the skill button says right click).
+4. C6: Gungnir's Throw and the spear and javelin skills, all from right click (decisions 6, 10, 11).
 
 ## Checks
 
-Not run by `/handoff` yet: 549 tests pass; Orlog builds against the stand-in assemblies.
+Not run by `/handoff` yet: 559 tests pass; Orlog builds against the stand-in assemblies.
 
 ## Merge notes
 
-Not ready (play-test). **Gameplay changed: version bump needed at merge (Orlog).** Shared docs touched, add-only: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/PLAYER_SETUP.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/GAME_DESIGN.md`, the tests' `.csproj`. New reference data `data/d2-reference/bows.csv` (never ship). No Corruption or CraftingOverhaul code changed.
+Not ready (play-test). **Gameplay changed: version bump needed at merge (Orlog and CraftingOverhaul: the skill cross's quick cast).** Shared docs touched, add-only: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/PLAYER_SETUP.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`, `docs/GAME_DESIGN.md`, the tests' `.csproj`. New reference data `data/d2-reference/bows.csv` (never ship). CraftingOverhaul: `SkillCross.cs`, `ClassesSource.cs`, new `QuickCastShimmer.cs` (the UI session's area; no UI branch is open). No Corruption code changed.

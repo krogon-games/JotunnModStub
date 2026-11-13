@@ -17,6 +17,7 @@ namespace Orlog.Content
     {
         public const string SlotsKey = "orlog_slots";
         public const string SelectedKey = "orlog_selected";
+        public const string QuickCastOffKey = "orlog_quickcast_off";
 
         private static readonly Dictionary<string, SkillValueTable> Values = new Dictionary<string, SkillValueTable>(System.StringComparer.OrdinalIgnoreCase);
         private static DamageScale s_scale;
@@ -98,6 +99,57 @@ namespace Orlog.Content
             return ActiveSkillRules.ParseSlots(player && player.m_customData.TryGetValue(SlotsKey, out string saved) ? saved : "");
         }
 
+        /// <summary>The skills this character turned quick cast off for (user, 2026-11-13: on by default).</summary>
+        public static HashSet<string> QuickCastOff(Player player)
+        {
+            return ActiveSkillRules.ParseIds(player && player.m_customData.TryGetValue(QuickCastOffKey, out string saved) ? saved : "");
+        }
+
+        /// <summary>Turns quick cast on or off for a slot's skill (right click on the skill cross); "" on success, otherwise why not.</summary>
+        public static string ToggleQuickCast(Player player, int slot)
+        {
+            if (slot < 0 || slot >= ActiveSkillRules.Slots)
+            {
+                return "No such slot";
+            }
+            var skill = SkillPoints.TableOf(player)?.Find(Slots(player)[slot]);
+            if (skill == null)
+            {
+                return "Empty slot";
+            }
+            if (!ActiveSkillRules.CanQuickCast(skill))
+            {
+                return skill.Needs.Length > 0 ? "Needs a " + skill.Needs + ": it fires from the skill button" : "Fires from the skill button";
+            }
+            var off = QuickCastOff(player);
+            bool nowOn = off.Contains(skill.Id);
+            if (nowOn)
+            {
+                off.Remove(skill.Id);
+            }
+            else
+            {
+                off.Add(skill.Id);
+            }
+            player.m_customData[QuickCastOffKey] = ActiveSkillRules.FormatIds(off);
+            // A skill whose quick cast comes back on leaves the skill button.
+            if (nowOn)
+            {
+                var selected = Selected(player);
+                foreach (var kind in new List<string>(selected.Keys))
+                {
+                    if (selected[kind] == slot)
+                    {
+                        selected[kind] = -1;
+                    }
+                }
+                player.m_customData[SelectedKey] = ActiveSkillRules.FormatSelected(selected);
+            }
+            Progress.NotifyChanged();
+            player.Message(MessageHud.MessageType.TopLeft, skill.Name + (nowOn ? ": quick cast on" : ": quick cast off, it goes on the skill button"));
+            return "";
+        }
+
         private static Dictionary<string, int> Selected(Player player)
         {
             return ActiveSkillRules.ParseSelected(player && player.m_customData.TryGetValue(SelectedKey, out string saved) ? saved : "");
@@ -112,7 +164,7 @@ namespace Orlog.Content
                 return -1;
             }
             var skill = SkillPoints.TableOf(player)?.Find(Slots(player)[slot]);
-            return skill != null && skill.Kind == "attack" ? slot : -1;
+            return ActiveSkillRules.OnSkillButton(skill, QuickCastOff(player)) ? slot : -1;
         }
 
         /// <summary>The attack skill on the skill button for the weapon in hand, or null.</summary>
@@ -168,7 +220,7 @@ namespace Orlog.Content
             {
                 return;
             }
-            if (skill.Kind == "cast")
+            if (ActiveSkillRules.IsQuickCast(skill, QuickCastOff(player)))
             {
                 var state = StateOf(player, slot);
                 if (!state.Usable)
@@ -179,6 +231,7 @@ namespace Orlog.Content
                 CastSkills.Cast(player, skill, LevelOf(player, skill.Id), state.EitrCost);
                 return;
             }
+            // On the skill button: an attack skill for its weapon; a cast skill (quick cast off) for the weapon in hand.
             var selected = Selected(player);
             selected[skill.Needs.Length > 0 ? skill.Needs : WeaponKind(player)] = slot;
             player.m_customData[SelectedKey] = ActiveSkillRules.FormatSelected(selected);
@@ -220,6 +273,14 @@ namespace Orlog.Content
                 json.Append("\"slot").Append(i).Append("\":\"").Append(slots[i]).Append("\",");
                 json.Append("\"key").Append(i).Append("\":\"").Append(KeyLabel(OrlogConfig.SlotKeys[i].Value)).Append("\",");
             }
+            var table = SkillPoints.TableOf(player);
+            var off = QuickCastOff(player);
+            for (int i = 0; i < ActiveSkillRules.Slots; i++)
+            {
+                var skill = table?.Find(slots[i]);
+                json.Append("\"quick").Append(i).Append("\":").Append(ActiveSkillRules.IsQuickCast(skill, off) ? "true" : "false").Append(',');
+                json.Append("\"quickable").Append(i).Append("\":").Append(ActiveSkillRules.CanQuickCast(skill) ? "true" : "false").Append(',');
+            }
             json.Append("\"skillButton\":\"").Append(KeyLabel(OrlogConfig.SkillButton.Value)).Append("\",");
             json.Append("\"selected\":").Append(SelectedSlot(player).ToString(CultureInfo.InvariantCulture));
             return json.Append('}').ToString();
@@ -256,6 +317,8 @@ namespace Orlog.Content
                     return "Mouse 5";
                 case KeyCode.Mouse4:
                     return "Mouse 4";
+                case KeyCode.None:
+                    return "none";
                 default:
                     return key.ToString();
             }

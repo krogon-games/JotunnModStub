@@ -48,6 +48,8 @@ namespace CraftingOverhaul.Classes
             public Text Key;
             public Text Blocked;
             public string Id = "";
+            /// <summary>The quick-cast shimmer's dots (sparks × trail), shown while the slot's skill quick casts.</summary>
+            public Image[] Shimmer;
             public float LastRemaining;
             public float ReadyAt = -100f;
         }
@@ -139,7 +141,73 @@ namespace CraftingOverhaul.Classes
             UiKit.Place(view.Key.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(round ? 2f : 7f, -4f), new Vector2(30f, 16f));
             view.Blocked = UiKit.Text("Blocked", view.Root, 11, new Color(1f, 0.6f, 0.5f), TextAnchor.LowerCenter);
             UiKit.Place(view.Blocked.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 6f), new Vector2(size, 14f));
+            if (!round)
+            {
+                view.Shimmer = new Image[QuickCastShimmer.Sparks * QuickCastShimmer.Trail];
+                for (int i = 0; i < view.Shimmer.Length; i++)
+                {
+                    var dot = UiKit.Image("Shimmer" + i, view.Root, SheetArt.Disc);
+                    UiKit.Place(dot.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(ShimmerDot, ShimmerDot));
+                    dot.enabled = false;
+                    view.Shimmer[i] = dot;
+                }
+            }
             return view;
+        }
+
+        /// <summary>The shimmer's spark size in pixels, and its gold (user, 2026-11-13: like Dota 2's autocast).</summary>
+        private const float ShimmerDot = 7f;
+        private static readonly Color ShimmerGold = new Color(1f, 0.84f, 0.4f, 1f);
+
+        /// <summary>Two gold sparks with fading trails running round the slot's edge (<see cref="QuickCastShimmer" />).</summary>
+        private static void ShowShimmer(Slot view, bool on)
+        {
+            if (view.Shimmer == null)
+            {
+                return;
+            }
+            float half = view.Root.rect.width / 2f - 1f;
+            float time = UnityEngine.Time.time;
+            for (int spark = 0; spark < QuickCastShimmer.Sparks; spark++)
+            {
+                for (int dot = 0; dot < QuickCastShimmer.Trail; dot++)
+                {
+                    var image = view.Shimmer[spark * QuickCastShimmer.Trail + dot];
+                    image.enabled = on && image.sprite;
+                    if (!image.enabled)
+                    {
+                        continue;
+                    }
+                    QuickCastShimmer.Point(QuickCastShimmer.Progress(time, spark, dot), half, out float x, out float y);
+                    image.rectTransform.anchoredPosition = new Vector2(x, y);
+                    float size = ShimmerDot * QuickCastShimmer.Size(dot);
+                    image.rectTransform.sizeDelta = new Vector2(size, size);
+                    image.color = new Color(ShimmerGold.r, ShimmerGold.g, ShimmerGold.b, QuickCastShimmer.Alpha(dot));
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Right click on a slot while the pointer is free (inventory or skills panel open) toggles its skill's quick cast
+        ///     (user, 2026-11-13). The game itself does nothing with right clicks there.
+        /// </summary>
+        private static void HandleQuickCastClick()
+        {
+            if (!ZInput.GetMouseButtonDown(1) || !(InventoryGui.IsVisible() || SkillsPanel.IsOpen))
+            {
+                return;
+            }
+            int slot = SlotAt(ZInput.pointerPosition);
+            if (slot < 0 || SlotViews[slot].Id.Length == 0)
+            {
+                return;
+            }
+            string refused = ClassesSource.ToggleQuickCast(slot);
+            if (refused.Length > 0)
+            {
+                Player.m_localPlayer?.Message(MessageHud.MessageType.Center, refused);
+            }
+            _lastCounter = -1;
         }
 
         private static void Update(Hud hud)
@@ -169,6 +237,7 @@ namespace CraftingOverhaul.Classes
             _root.anchoredPosition = ModConfig.SkillCrossPosition.Value;
             _gameGpRoot = hud.m_gpRoot;
 
+            Safe.Run("toggle quick cast", HandleQuickCastClick);
             int selected = FlatJson.GetInt(_bar, "selected", -1);
             for (int i = 0; i < SlotViews.Length; i++)
             {
@@ -194,6 +263,7 @@ namespace CraftingOverhaul.Classes
                     : blocked == "weapon" ? (needs.Length > 0 ? "Need " + needs : "Wrong weapon")
                     : blocked == "eitr" ? "Low eitr" : "";
                 ShowState(view, id.Length > 0, remaining, total, reason);
+                ShowShimmer(view, id.Length > 0 && FlatJson.GetBool(_bar, "quick" + i, false));
             }
             UpdatePower(Player.m_localPlayer);
         }

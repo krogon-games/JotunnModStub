@@ -241,6 +241,17 @@ namespace Orlog
             return Safe.Try("set a skill slot", () => SkillBar.SetSlot(player, slot, skillId), "Something went wrong");
         }
 
+        /// <summary>Right click on a skill cross slot: quick cast on or off for its skill (user, 2026-11-13). "" or why not.</summary>
+        public static string ToggleQuickCast(int slot)
+        {
+            var player = Player.m_localPlayer;
+            if (!player || !Progress.Ready || Attributes.ClassOf(player) == null)
+            {
+                return "No character";
+            }
+            return Safe.Try("toggle quick cast", () => SkillBar.ToggleQuickCast(player, slot), "Something went wrong");
+        }
+
         public static string ChooseClass(string classId)
         {
             return Safe.Try("choose a class", () => OrlogStone.Choose(classId), "Something went wrong");

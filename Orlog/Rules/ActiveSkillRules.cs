@@ -248,6 +248,37 @@ namespace Orlog.Rules
                 .Select(p => p.Key + ":" + p.Value.ToString(CultureInfo.InvariantCulture)));
         }
 
+        // ------------------------------------------------------------ quick cast (user, 2026-11-13)
+
+        /// <summary>Only a skill that needs no weapon can quick cast (cast from its slot key); one that needs a weapon goes on right click.</summary>
+        public static bool CanQuickCast(SkillTable.Skill skill)
+        {
+            return skill != null && skill.Kind == "cast" && skill.Needs.Length == 0;
+        }
+
+        /// <summary>Quick cast is on unless the player turned it off for that skill (saved as the skills with it off).</summary>
+        public static bool IsQuickCast(SkillTable.Skill skill, ICollection<string> quickCastOff)
+        {
+            return CanQuickCast(skill) && (quickCastOff == null || !quickCastOff.Contains(skill.Id));
+        }
+
+        /// <summary>Whether a slot's skill can be on the skill button: an attack skill, or a cast skill with quick cast off.</summary>
+        public static bool OnSkillButton(SkillTable.Skill skill, ICollection<string> quickCastOff)
+        {
+            return skill != null && (skill.Kind == "attack" || (skill.Kind == "cast" && !IsQuickCast(skill, quickCastOff)));
+        }
+
+        public static HashSet<string> ParseIds(string saved)
+        {
+            return new HashSet<string>((saved ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).Where(s => s.Length > 0),
+                StringComparer.OrdinalIgnoreCase);
+        }
+
+        public static string FormatIds(IEnumerable<string> ids)
+        {
+            return string.Join(";", ids.OrderBy(i => i, StringComparer.Ordinal));
+        }
+
         // ------------------------------------------------------------ numbers
 
         /// <summary>The eitr cost: D2's mana per level from the values table (D2R where it differs), else the tree's formula.</summary>

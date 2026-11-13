@@ -46,13 +46,13 @@
 **Build:** the same branch, newer commit (Orlog's log line names `claude/lucid-albattani-imrei7`). Round 1 (the passives) and this round can be played in one go.
 **Setup:** single player, test world, the group's mods loaded, CraftingOverhaul's classes screens on (its demo off). F5, `devcommands`; no `god` for the fights. `orlog_class Amazon` if needed, `orlog_level 30`, then spend: `orlog_skill MagicArrow`, `orlog_skill FireArrow`, `orlog_skill ColdArrow`, `orlog_skill MultipleShot`, `orlog_skill InnerSight`, `orlog_skill ExplodingArrow`, `orlog_skill IceArrow`, `orlog_skill FreezingArrow`. `spawn BowFineWood`, `spawn ArrowWood 50`, `spawn ShieldWood`.
 
-**New keys:** right click = the skill button; block = the mouse's **back side button (Mouse 4)**; F1–F4 = the four skill slots. All can be changed in the Orlog config, section `6 - Skill Keys`.
+**New keys:** right click = the skill button; F1–F4 = the four skill slots. **Block has no key by default now** (2026-11-13): set `BlockKey` in the Orlog config, section `6 - Skill Keys` (e.g. `Mouse4`, the mouse's back side button), before step 2.
 
 ### Checklist
 
 **Slots and keys**
 1. [ ] Skills panel: drag Magic Arrow onto slot 1, Fire Arrow onto slot 2, Multiple Shot onto slot 3, Inner Sight onto slot 4 → the cross shows them with F1–F4. Drag Dodge onto a slot → "Passive skills don't take a slot". (If dragging fails: `orlog_slot 1 MagicArrow` and so on.)
-2. [ ] Shield in hand: right click **no longer blocks**; the back side button blocks (and parries); block + jump still dodges.
+2. [ ] Shield in hand: right click **no longer blocks**; your `BlockKey` blocks (and parries); block + jump still dodges. With `BlockKey` blank you can't block at all (expected for now).
 
 **The skill button**
 
@@ -72,6 +72,7 @@
 **Inner Sight**
 
 12. [ ] F4 near a few creatures → your character does the "power" gesture, "Inner Sight: N marked", the creatures glow pale blue for 8 seconds, and your hits on them show about a quarter more damage than before.
+12b. [ ] **Quick cast** (added 2026-11-13): slot 4 (Inner Sight) has two gold sparks running round its edge. Open the inventory and right-click slot 4 → "quick cast off", the sparks stop. Close the inventory, press F4 → slot 4 lights up instead of casting; right click casts it. Right-click it again in the inventory → sparks back, F4 casts at once. Right-click a bow skill's slot → "Needs a bow: it fires from the skill button". Relog → each slot's quick cast is kept.
 
 **Tooltips and boss points**
 

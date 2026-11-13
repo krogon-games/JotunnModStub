@@ -18,6 +18,7 @@
     <Compile Include="..\CraftingOverhaul\Classes\DemoClasses.cs" Link="Linked\DemoClasses.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\SkillTreeLayout.cs" Link="Linked\SkillTreeLayout.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\CooldownDisplay.cs" Link="Linked\CooldownDisplay.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\QuickCastShimmer.cs" Link="Linked\QuickCastShimmer.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\SkillsPanelLayout.cs" Link="Linked\SkillsPanelLayout.cs" />
     <Compile Include="..\CraftingOverhaul\Containers\ChestLeaseRules.cs" Link="Linked\ChestLeaseRules.cs" />
     <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />

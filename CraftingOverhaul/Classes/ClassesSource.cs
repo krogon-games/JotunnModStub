@@ -37,6 +37,7 @@ namespace CraftingOverhaul.Classes
         private static Func<string, string> _spendStat;
         private static Func<string, string> _spendSkill;
         private static Func<int, string, string> _setSlot;
+        private static Func<int, string> _toggleQuick;
         private static Func<string, string> _chooseClass;
 
         private static DemoClasses _demo;
@@ -93,6 +94,9 @@ namespace CraftingOverhaul.Classes
             _spendStat = Method<Func<string, string>>(api, "SpendStatPoint");
             _spendSkill = Method<Func<string, string>>(api, "SpendSkillPoint");
             _setSlot = Method<Func<int, string, string>>(api, "SetSkillSlot");
+            // Added 2026-11-13 (quick cast per skill); an older Orlog without it just has no toggle.
+            _toggleQuick = api?.GetMethod("ToggleQuickCast", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(int) }, null) != null
+                ? Method<Func<int, string>>(api, "ToggleQuickCast") : null;
             _chooseClass = Method<Func<string, string>>(api, "ChooseClass");
             // Set last: it's what HasOrlog checks.
             _character = Method<Func<string>>(api, "GetCharacterJson");
@@ -149,6 +153,16 @@ namespace CraftingOverhaul.Classes
                 return DemoData.SetSkillSlot(slot, skillId);
             }
             return _setSlot != null ? _setSlot(slot, skillId ?? "") ?? "" : "Not available";
+        }
+
+        /// <summary>Right click on a skill cross slot: quick cast on or off for its skill. "" or why not.</summary>
+        public static string ToggleQuickCast(int slot)
+        {
+            if (Demo)
+            {
+                return "Quick cast isn't in the demo";
+            }
+            return _toggleQuick != null ? _toggleQuick(slot) ?? "" : "Not available";
         }
 
         public static Sprite ClassIcon(string classId)
