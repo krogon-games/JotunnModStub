@@ -43,6 +43,28 @@ namespace CraftingOverhaul.Classes
         public static float RightWidth => SkillTreeLayout.GridWidth + 2f * TabletPadding;
         public static float Width => RightX + RightWidth + Margin;
 
+        /// <summary>Share of the screen the panel may fill when it scales itself (user, 2026-11-13: "please enlarge the skills panel").</summary>
+        public const float FitHeight = 0.88f;
+        public const float FitWidth = 0.92f;
+
+        /// <summary>
+        ///     The panel's scale on a canvas of the given size: <paramref name="setting" /> when above 0, else as large as fits
+        ///     (<see cref="FitHeight" /> of the height, <see cref="FitWidth" /> of the width), never below 1 or above 3.
+        /// </summary>
+        public static float Scale(float canvasWidth, float canvasHeight, float setting)
+        {
+            if (setting > 0f)
+            {
+                return setting;
+            }
+            if (canvasWidth <= 0f || canvasHeight <= 0f)
+            {
+                return 1f;
+            }
+            float fit = System.Math.Min(canvasHeight * FitHeight / Height, canvasWidth * FitWidth / Width);
+            return System.Math.Max(1f, System.Math.Min(3f, fit));
+        }
+
         public static SheetRect Tablet => new SheetRect(RightX, HeaderHeight + TabHeight + TabGap, RightWidth,
             SkillTreeLayout.GridHeight + 2f * TabletPadding);
 

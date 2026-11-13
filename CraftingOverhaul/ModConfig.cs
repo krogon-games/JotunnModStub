@@ -50,6 +50,7 @@ namespace CraftingOverhaul
 
         public static ConfigEntry<KeyboardShortcut> SkillsPanelKey;
         public static ConfigEntry<UnityEngine.Vector2> SkillCrossPosition;
+        public static ConfigEntry<float> SkillsPanelSize;
 
         public static void Bind(ConfigFile config)
         {
@@ -109,6 +110,10 @@ namespace CraftingOverhaul
 
             SkillsPanelKey = config.Bind(ClassesSection, "SkillsPanelKey", new KeyboardShortcut(UnityEngine.KeyCode.K),
                 "Opens and closes the skills panel (needs the Orlog plugin). K is free in Valheim's default keys.");
+            SkillsPanelSize = config.Bind(ClassesSection, "SkillsPanelSize", 0f,
+                new ConfigDescription("Size of the skills panel. 0 = as large as fits the screen (most of its height); any other value is a " +
+                                      "fixed scale, e.g. 1 = the original size, 1.5 = half again as large. Applies the next time the panel opens.",
+                    new AcceptableValueRange<float>(0f, 3f)));
             SkillCrossPosition = config.Bind(ClassesSection, "SkillCrossPosition", new UnityEngine.Vector2(24f, 180f),
                 "Bottom-left corner of the skill cross, in pixels from the bottom-left of the screen.");
             BiomeMaterialOverrides.SettingChanged += (_, __) =>

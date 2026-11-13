@@ -109,6 +109,10 @@ namespace CraftingOverhaul.Classes
                 return;
             }
             EnsureCreated();
+            // As large as the screen allows (user, 2026-11-13), or the size set in the config.
+            var canvas = GUIManager.CustomGUIFront.GetComponent<RectTransform>();
+            float scale = SkillsPanelLayout.Scale(canvas ? canvas.rect.width : 0f, canvas ? canvas.rect.height : 0f, ModConfig.SkillsPanelSize.Value);
+            _root.localScale = new Vector3(scale, scale, 1f);
             _root.gameObject.SetActive(true);
             _root.SetAsLastSibling();
             _lastCounter = -1;

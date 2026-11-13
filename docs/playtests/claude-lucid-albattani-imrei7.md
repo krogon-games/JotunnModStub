@@ -115,3 +115,11 @@
 - Marks (from the morning of 2026-11-13, before the demo was found): round 1 step 2 (`orlog_passive` lists the chances) **passed**; round 2 step 1 (slots) **failed**, step 2 (block on its own key) **passed**, step 3 (skill button) **failed**. Steps 1 and 3 failed because the classes UI demo was on (skills dragged into the demo's slots); to re-mark on build `21770e8` or later.
 - Log of the evening session (build `21770e8`, about 50 minutes, a greydwarf raid): no errors from our mods; no "ignored" key lines, so the keys reached the skills.
 
+### Your feedback (2026-11-13, screenshot of the skills panel)
+- "please enlarge the skills panel window, its hard to read. theres a lot of UI space still to make use of." The screenshot shows the real data working: tab names, Inner Sight's tooltip with its numbers, F1–F4 on the slots and the cross ("Need bow" with an axe in hand).
+- "i rebound \"block\" to mouse button 4, and it kind of works but not how its meant to. It doesnt continually block as you hold down the button. It only triggers the animation when you release the held button."
+
+### What changed after the feedback
+- **Skills panel:** now scales itself to fill most of the screen (88% of the height or 92% of the width, never smaller than before); `[5 - Classes UI] SkillsPanelSize` sets a fixed size instead (e.g. 1.5). Not re-tested yet.
+- **Block on mouse button 4:** with the game's own Block key set to another key (here the mouse's back button), Orlog doesn't touch blocking at all; the game reads that key itself. A press that only arrives on release usually comes from the mouse's software (e.g. G Hub, Synapse) sending the side button as a "browser back" command instead of a mouse button. Checks asked: hold block on a keyboard key (e.g. Caps Lock) — does it hold? And the side button's setting in the mouse software.
+
