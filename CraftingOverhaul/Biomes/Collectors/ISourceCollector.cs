@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace CraftingOverhaul.Biomes.Collectors
@@ -10,7 +11,18 @@ namespace CraftingOverhaul.Biomes.Collectors
     {
         string Name { get; }
 
-        void Collect(List<ItemSource> sources);
+        /// <summary>
+        ///     Adds sources to the list. Yields after each small piece of work (one prefab, one recipe...) so the
+        ///     work can be spread over frames, and yields <see cref="SlicedWork.WaitFrame" /> while an asset loads.
+        /// </summary>
+        IEnumerable Collect(List<ItemSource> sources, CollectRun run);
+    }
+
+    /// <summary>How a collection is being run. Can switch to synchronous half-way (a console command needs the result now).</summary>
+    internal sealed class CollectRun
+    {
+        /// <summary>Do everything now (load assets directly, never wait for a frame).</summary>
+        public bool Synchronous;
     }
 
     internal static class CollectorUtil

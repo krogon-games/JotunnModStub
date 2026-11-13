@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace CraftingOverhaul.Biomes.Collectors
@@ -10,11 +11,11 @@ namespace CraftingOverhaul.Biomes.Collectors
     {
         public string Name => "Hatching";
 
-        public void Collect(List<ItemSource> sources)
+        public IEnumerable Collect(List<ItemSource> sources, CollectRun run)
         {
             if (!ObjectDB.instance)
             {
-                return;
+                yield break;
             }
             foreach (var prefab in ObjectDB.instance.m_items)
             {
@@ -30,6 +31,7 @@ namespace CraftingOverhaul.Biomes.Collectors
                     found.RequiredItems.Add(prefab.name);
                     sources.Add(found);
                 }
+                yield return null;
             }
         }
     }

@@ -57,17 +57,26 @@ namespace CraftingOverhaul.Dump
                 return;
             }
 
-            if (args[0].Equals("refresh", StringComparison.OrdinalIgnoreCase))
+            if (IsRefresh(args))
             {
+                // Ignores the saved biomes and saves the new result.
                 BiomeResolver.Invalidate();
                 RecipeList.RecipeCategories.ClearCache();
-                BiomeResolver.EnsureResolved();
+                BiomeResolver.EnsureResolved(false);
                 RecipeList.RecipeListOrganizer.Refresh();
                 Out.Print("Biomes recalculated.");
                 return;
             }
 
+            // Console commands need the answer now: finish any background work on this frame.
+            BiomeResolver.EnsureResolved();
+
             Explain(args[0], 0, new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+        }
+
+        private static bool IsRefresh(string[] args)
+        {
+            return args.Length > 0 && args[0].Equals("refresh", StringComparison.OrdinalIgnoreCase);
         }
 
         public override List<string> CommandOptionList()

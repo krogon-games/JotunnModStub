@@ -45,6 +45,16 @@ namespace CraftingOverhaul.RecipeList
             string query = (SearchText ?? "").Trim();
             bool searching = query.Length > 0;
             var mode = ModConfig.Grouping.Value;
+            if (mode == GroupingMode.Biome && !Biomes.BiomeResolver.IsResolved)
+            {
+                // Biomes are worked out in the background; keep the game's order until they are ready
+                // (the list refreshes itself then).
+                Biomes.BiomeResolver.StartResolving();
+                if (!Biomes.BiomeResolver.IsResolved)
+                {
+                    mode = GroupingMode.None;
+                }
+            }
 
             // Work everything out before touching the list, so a failure here leaves the vanilla list intact.
             var rows = new List<Row>(recipes.Count);

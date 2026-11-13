@@ -9,8 +9,8 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | Feature | Area | Status | Config option | Files touched | Last updated |
 |---|---|---|---|---|---|
 | [Recipe search box](#recipe-search-box) | UI | Tested in-game | `1 - Recipe List` → `ShowSearchBar`, `SearchIngredients`, `ClearSearchOnClose` | `RecipeList/SearchBar.cs`, `RecipeList/RecipeListOrganizer.cs`, `ModConfig.cs` | 2026-10-26 |
-| [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Tested in-game | `1 - Recipe List` → `Grouping`, `StartCollapsed`, `HeaderFontSize` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-10-26 |
-| [Data-driven biome detection](#data-driven-biome-detection) | UI | Tested in-game | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*`, `Biomes/Collectors/*` (incl. `HatchCollector.cs`), `RecipeList/RecipeCategories.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-10-26 |
+| [Collapsible recipe categories](#collapsible-recipe-categories) | UI | Tested in-game | `1 - Recipe List` → `Grouping`, `StartCollapsed`, `HeaderFontSize` | `RecipeList/RecipeListOrganizer.cs`, `RecipeList/RecipeCategories.cs`, `RecipeList/SearchBar.cs`, `ModConfig.cs` | 2026-11-13 |
+| [Data-driven biome detection](#data-driven-biome-detection) | UI | Built, untested (background loading and saved file, 2026-11-13; the biome results themselves were tested 2026-10-26) | `1 - Recipe List` → `BiomeMaterialOverrides` | `Biomes/*` (incl. `BiomeResolveJob.cs`, `BiomeCacheKey.cs`, `BiomeCacheFile.cs`, `SlicedWork.cs`), `Biomes/Collectors/*` (incl. `HatchCollector.cs`), `RecipeList/RecipeCategories.cs`, `RecipeList/RecipeListOrganizer.cs`, `Dump/Commands.cs`, `Dump/GameDataDump.cs`, `CraftingOverhaul.cs`, `ModConfig.cs`, `CraftingOverhaul.Tests/*` | 2026-11-13 |
 | [Craft and build from nearby chests](#craft-and-build-from-nearby-chests) | Crafting | Tested in-game (single player); exclusive access before paying tested alone 2026-11-07; two players untested | `2 - Nearby Containers` → `Enabled`, `Range`, `UseForBuilding`, `ExcludedContainers` | `Containers/NearbyContainers.cs`, `Containers/ContainerPatches.cs`, `Containers/ChestLeases.cs`, `Containers/ChestLeaseRules.cs`, `CraftingOverhaul.cs`, `CraftingOverhaul.Tests/ChestLeaseTests.cs`, `ModConfig.cs` | 2026-11-07 |
 | [Game data dump and biome inspector](#game-data-dump-and-biome-inspector) | Dev tools | Tested in-game | — (console commands `co_dump`, `co_biome`) | `Dump/*`, `Biomes/Collectors/LocationCollector.cs`, `CraftingOverhaul.cs` | 2026-10-29 |
 | [Config reload on save](#config-reload-on-save) | Dev tools | Tested in-game | Both plugins: `0 - Development` → `ReloadConfigOnFileChange` | `Shared/ConfigWatcher.cs`, `CraftingOverhaul/CraftingOverhaul.cs`, `Corruption/CorruptionPlugin.cs`, both `.csproj` | 2026-10-28 |
@@ -80,7 +80,7 @@ Also uses Jötunn's `GUIManager.BlockInput` while the box has focus. Any mod tha
 
 Grouping modes:
 - **By type:** Melee Weapons, Bows & Crossbows, Magic, Ammo, Shields, Armor, Tools, Utility & Trinkets, Food & Potions, Materials, Other. Pickaxes and fishing rods count as Tools; staffs count as Magic.
-- **By biome:** Meadows, Black Forest, Swamp, Ocean, Mountain, Plains, Mistlands, Ashlands, Deep North, Other. A recipe goes under the latest biome of any of its ingredients. Ingredient biomes come from [data-driven biome detection](#data-driven-biome-detection). Recipes whose ingredients can't be placed go under Other.
+- **By biome:** Meadows, Black Forest, Swamp, Ocean, Mountain, Plains, Mistlands, Ashlands, Deep North, Other. A recipe goes under the latest biome of any of its ingredients. Ingredient biomes come from [data-driven biome detection](#data-driven-biome-detection). Recipes whose ingredients can't be placed go under Other. While the biomes are still being worked out in the background (only on the first world load after a game or mod update, when there is no saved result), the list shows the game's order without headers and switches to biome groups by itself when they're ready.
 - **No groups:** the vanilla flat list.
 
 **How to use it:** Click a header to collapse or expand it. The button to the right of the search box cycles By type → By biome → No groups; the choice is saved to the config. Works in both the Craft and Upgrade tabs.
@@ -204,6 +204,13 @@ Rules (in `Biomes/BiomeSolver.cs`):
 
 The rules are covered by unit tests (`CraftingOverhaul.Tests`, run with `dotnet test`); the collectors can only be checked in-game.
 
+**When it runs (2026-11-13):** Collecting reads every location and dungeon room, which froze the game for 18–22 s after spawning (Krogon's 1.0.21 logs, 2026-11-13). It now never blocks the game:
+- **Saved result:** the solved biomes are saved to `BepInEx/cache/CraftingOverhaul.biomes.txt` with a key: the game version, every loaded mod and its version, this DLL's build, the overrides, and a fingerprint of the game data the collectors read (item and prefab names, recipes, building costs, vegetation, locations and spawn tables). When the key matches, the next world load uses the file at once (`Loaded biomes for N items from the saved file in X ms`). When anything changed, the log names what (`saved biomes not used: changed: game, mods`) and the biomes are worked out again and the file rewritten.
+- **Background work:** otherwise it starts right after you spawn with biome grouping on (or when you switch to it) and runs about 4 ms per frame. Location and room prefabs load in the background, 4 at a time (`LoadsInFlight`), and are released after reading; the solver runs on a separate thread. Afterwards the log says `Resolved biomes for N items from M sources in X s (Y ms of game time over Z frames; longest frame A ms, longest step B ms). Vegetation … (… ms); Locations … (… ms); …`, i.e. where the time went.
+- Console commands (`co_biome`, `co_dump`) need the answer at once, so they finish any background work on the spot (a pause, as before). `co_biome refresh` ignores the saved file and rewrites it; `co_dump` collects every source again, since the file only keeps each item's winning source.
+
+The saved-file format and the per-frame slicing are covered by unit tests (`BiomeCacheTests.cs`).
+
 **How to use it:** Nothing to do. To check or correct a result:
 - Run `co_biome <item prefab>` in the console to see why an item got its biome, e.g. `co_biome Bronze`.
 - Run `co_dump` to list every source, result and unplaced ingredient.
@@ -216,7 +223,8 @@ The rules are covered by unit tests (`CraftingOverhaul.Tests`, run with `dotnet 
 | `BiomeMaterialOverrides` | *(empty)* | Comma separated `PrefabName:Biome` pairs, only for items the detection gets wrong or can't place. Biomes: Meadows, BlackForest, Swamp, Ocean, Mountain, Plains, Mistlands, Ashlands, DeepNorth. |
 
 **Known issues:**
-- The Locations collector loads every location and dungeon-room prefab once, when you spawn with biome grouping on (or on first use). This may cause a short hitch; the time taken is logged as `Resolved biomes for N items from M sources in X ms`.
+- **Untested in-game (2026-11-13): background loading and the saved file.** Not yet confirmed: that the freeze is gone; that loading location prefabs in the background (`SoftReference.LoadAsync`) doesn't cause stutters of its own; how long the background work takes in wall time (the old freeze took 18–22 s; frame-limited, it may take longer); that the second load uses the saved file. Where the old 18 s went wasn't measured in-game (the old log only had the total). Timing the solver alone on 40,000 made-up sources took about 0.1 s in .NET 8, so the collecting (mostly the location and room loads) is assumed to be the bulk; the new log line shows the split per collector.
+- The saved file can be stale if another mod changes what a prefab drops through its own settings without a version change; the key doesn't read inside prefabs. Run `co_biome refresh` after changing such a setting.
 - Items only obtainable in ways the collectors don't read will go unplaced (e.g. things only given by quests or events). `co_dump` lists them in `biome_unresolved.csv`.
 - **First in-game dump (1.0.20, 2026-10-26):** 747 items placed. The key materials all landed in the right biome: iron Swamp, silver Mountain, black metal Plains, eitr Mistlands, flametal Ashlands, and 117 Deep North items. Problems found, fixed in the next build, awaiting a new dump:
   - Krigen, Hexen and Elaking drops (molds, keys, Nornathread) landed in Meadows, because some spawn entries apply to every biome. Entries covering every land biome are now ignored.
@@ -241,9 +249,9 @@ The rules are covered by unit tests (`CraftingOverhaul.Tests`, run with `dotnet 
 
 | Target | Patch | Purpose |
 |---|---|---|
-| `Player.OnSpawned` | Postfix | Resolves biomes right after the local player spawns, when grouping is `Biome`. Reads game data only. |
+| `Player.OnSpawned` | Postfix | Starts working out biomes right after the local player spawns, when grouping is `Biome`: loads the saved file, or starts the background work. Reads game data only. |
 
-Also shares the `InventoryGui.Awake` postfix from the categories feature to reset its cache.
+Also shares the `InventoryGui.Awake` postfix from the categories feature to reset its result (and stop background work), and the `InventoryGui.UpdateRecipeList` postfix, which starts the work if needed and keeps the game's order until it's done.
 
 ---
 
@@ -1368,6 +1376,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-11-13
+- **Fix (biome detection): no more 18–22 s freeze after spawning** (Krogon's 1.0.21 logs). The result is saved to `BepInEx/cache/CraftingOverhaul.biomes.txt` and reused while the game, mods and game data are unchanged. When it has to be worked out again, it runs in the background (about 4 ms per frame, prefabs loaded asynchronously, the solver on its own thread) and the recipe list keeps the game's order until it's ready. The log now shows the time per collector. Untested.
 
 ### 2026-11-11
 - **Play-test (single player): Riftforge shards, shattering and Affix Splinters passed** ("all working"), with both confirmation dialogs. Multiplayer in `PLAYTEST.md` → Session 2, 2i.

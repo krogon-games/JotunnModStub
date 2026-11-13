@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace CraftingOverhaul.Biomes.Collectors
@@ -7,11 +8,11 @@ namespace CraftingOverhaul.Biomes.Collectors
     {
         public string Name => "Vegetation";
 
-        public void Collect(List<ItemSource> sources)
+        public IEnumerable Collect(List<ItemSource> sources, CollectRun run)
         {
             if (!ZoneSystem.instance)
             {
-                return;
+                yield break;
             }
             foreach (var veg in ZoneSystem.instance.m_vegetation)
             {
@@ -25,6 +26,7 @@ namespace CraftingOverhaul.Biomes.Collectors
                     continue;
                 }
                 CollectorUtil.AddAll(sources, PrefabWalker.Walk(veg.m_prefab), biome, Name);
+                yield return null;
             }
         }
     }

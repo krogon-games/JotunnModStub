@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace CraftingOverhaul.Biomes.Collectors
@@ -10,11 +11,11 @@ namespace CraftingOverhaul.Biomes.Collectors
     {
         public string Name => "Conversions";
 
-        public void Collect(List<ItemSource> sources)
+        public IEnumerable Collect(List<ItemSource> sources, CollectRun run)
         {
             if (!ZNetScene.instance)
             {
-                return;
+                yield break;
             }
             foreach (var prefab in ZNetScene.instance.m_prefabs)
             {
@@ -50,6 +51,7 @@ namespace CraftingOverhaul.Biomes.Collectors
                         Add(sources, c.m_from, c.m_to, cooking.m_fuelItem, piece, prefab.name);
                     }
                 }
+                yield return null;
             }
         }
 

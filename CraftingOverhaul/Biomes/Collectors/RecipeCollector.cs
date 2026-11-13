@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,11 +9,11 @@ namespace CraftingOverhaul.Biomes.Collectors
     {
         public string Name => "Recipes";
 
-        public void Collect(List<ItemSource> sources)
+        public IEnumerable Collect(List<ItemSource> sources, CollectRun run)
         {
             if (!ObjectDB.instance)
             {
-                return;
+                yield break;
             }
 
             var stations = FindStationPieces();
@@ -45,6 +46,7 @@ namespace CraftingOverhaul.Biomes.Collectors
                 {
                     sources.Add(source);
                 }
+                yield return null;
             }
         }
 

@@ -24,7 +24,8 @@ namespace CraftingOverhaul.Dump
             string dir = Path.Combine(Paths.BepInExRootPath, "CraftingOverhaul", "dump-" + DateTime.Now.ToString("yyyyMMdd-HHmmss"));
             Directory.CreateDirectory(dir);
 
-            BiomeResolver.EnsureResolved();
+            // The dump lists every source, so collect them all now (the saved biomes keep only the results).
+            BiomeResolver.EnsureSources();
 
             WriteMeta(Path.Combine(dir, "meta.txt"));
             WriteItems(Path.Combine(dir, "items.csv"));

@@ -12,6 +12,8 @@
     <Compile Include="..\CraftingOverhaul\Biomes\Biome.cs" Link="Linked\Biome.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\ItemSource.cs" Link="Linked\ItemSource.cs" />
     <Compile Include="..\CraftingOverhaul\Biomes\BiomeSolver.cs" Link="Linked\BiomeSolver.cs" />
+    <Compile Include="..\CraftingOverhaul\Biomes\BiomeCacheFile.cs" Link="Linked\BiomeCacheFile.cs" />
+    <Compile Include="..\CraftingOverhaul\Biomes\SlicedWork.cs" Link="Linked\SlicedWork.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\SheetLayout.cs" Link="Linked\SheetLayout.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\FlatJson.cs" Link="Linked\FlatJson.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\JsonOut.cs" Link="Linked\JsonOut.cs" />
