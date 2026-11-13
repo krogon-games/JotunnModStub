@@ -106,3 +106,8 @@
 ### What changed after the feedback
 - **Cause:** CraftingOverhaul's classes UI was in demo mode (`[5 - Classes UI] Demo = true` in `com.krogongames.craftingoverhaul.cfg`): the cross showed the demo's slots (keys 1–4 and a pretend cooldown are the demo's), so the skills dragged there never reached Orlog, whose slots stayed empty. Orlog's keys worked and found nothing. **Set `Demo = false`** and drag the skills onto the cross again (it then shows F1–F4).
 - CraftingOverhaul now warns when the demo is on while Orlog is installed: a log warning and a message on screen once.
+
+### Your feedback (2026-11-13, build `21770e8`, demo removed)
+- First world load "failed to load" after choosing the character and world; that log was overwritten on restart. The second attempt loaded: "the keys work".
+- The second log is clean (no errors from our mods). Every load today freezes about 19–22 s right after spawning while CraftingOverhaul's biome detection runs (`Resolved biomes … in 18348 ms`); older than this round, suggested as a separate task. If a load hangs again: wait half a minute, then copy `LogOutput.log` before restarting.
+
