@@ -51,7 +51,7 @@ namespace Orlog
         {
             _configWatcher?.Tick();
             OrlogStone.Tick();
-            SkillBar.Tick();
+            Safe.Run("read the skill slot keys", SkillBar.Tick);
         }
 
         private void OnDestroy()

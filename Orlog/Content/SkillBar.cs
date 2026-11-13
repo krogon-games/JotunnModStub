@@ -238,27 +238,127 @@ namespace Orlog.Content
             Progress.NotifyChanged();
         }
 
-        /// <summary>Whether the local player's keys go to the game (no chat, console, menu, map or inventory open).</summary>
+        /// <summary>
+        ///     Why the local player's keys don't go to the game now ("" when they do): chat, console, menu, text input,
+        ///     the map, the inventory, a store or the build menu open. Not the game's "gamepad active" state: with a
+        ///     controller connected it can be on while playing with keyboard and mouse (keys didn't work, Krogon 2026-11-13).
+        /// </summary>
+        public static string InputBlocked(Player player)
+        {
+            if (!player)
+            {
+                return "no player";
+            }
+            if (Chat.instance && Chat.instance.HasFocus())
+            {
+                return "chat";
+            }
+            if (Console.IsVisible())
+            {
+                return "console";
+            }
+            if (Menu.IsVisible())
+            {
+                return "menu";
+            }
+            if (TextInput.IsVisible() || Minimap.InTextInput())
+            {
+                return "text input";
+            }
+            if (Minimap.IsOpen())
+            {
+                return "map";
+            }
+            if (InventoryGui.IsVisible())
+            {
+                return "inventory";
+            }
+            if (StoreGui.IsVisible())
+            {
+                return "store";
+            }
+            if (Hud.IsPieceSelectionVisible() || Hud.InRadial())
+            {
+                return "build or radial menu";
+            }
+            return "";
+        }
+
         public static bool TakesInput(Player player)
         {
-            var controller = player ? player.GetComponent<PlayerController>() : null;
-            return controller && controller.TakeInput() && !controller.InInventoryEtc() && !Hud.InRadial() && !ZInput.IsGamepadActive();
+            return InputBlocked(player).Length == 0;
+        }
+
+        private static bool s_legacyInputOff;
+
+        /// <summary>A key is held: the game's input (ZInput), or Unity's legacy input where the game has it on.</summary>
+        public static bool KeyHeld(KeyCode key)
+        {
+            return key != KeyCode.None && (ZInput.GetKey(key, false) || Legacy(key, false));
+        }
+
+        public static bool KeyPressed(KeyCode key)
+        {
+            return key != KeyCode.None && (ZInput.GetKeyDown(key, false) || Legacy(key, true));
+        }
+
+        /// <summary>Unity's legacy input, as a second reading; switched off for good the first time it throws (input system only).</summary>
+        private static bool Legacy(KeyCode key, bool down)
+        {
+            if (s_legacyInputOff)
+            {
+                return false;
+            }
+            try
+            {
+                return down ? Input.GetKeyDown(key) : Input.GetKey(key);
+            }
+            catch (System.Exception)
+            {
+                s_legacyInputOff = true;
+                return false;
+            }
+        }
+
+        private static float s_lastIgnoredLog = -100f;
+
+        /// <summary>Logs (at most every 2 s) why a skill key press was ignored, for play-tests.</summary>
+        public static void LogIgnored(string key, string why)
+        {
+            if (Time.time - s_lastIgnoredLog > 2f)
+            {
+                s_lastIgnoredLog = Time.time;
+                Jotunn.Logger.LogInfo($"Orlog: {key} ignored ({why}).");
+            }
         }
 
         /// <summary>Called every frame: the slot hotkeys.</summary>
         public static void Tick()
         {
             var player = Player.m_localPlayer;
-            if (!player || !Progress.Ready || Attributes.ClassOf(player) == null || !TakesInput(player))
+            if (!player || !Progress.Ready)
             {
                 return;
             }
             for (int i = 0; i < ActiveSkillRules.Slots; i++)
             {
-                if (ZInput.GetKeyDown(OrlogConfig.SlotKeys[i].Value, false))
+                var key = OrlogConfig.SlotKeys[i].Value;
+                if (!KeyPressed(key))
                 {
-                    Safe.Run("use a skill slot", () => Use(player, i));
+                    continue;
                 }
+                string why = Attributes.ClassOf(player) == null ? "no class" : InputBlocked(player);
+                if (why.Length == 0 && Slots(player)[i].Length == 0)
+                {
+                    why = "slot " + (i + 1) + " is empty";
+                }
+                if (why.Length > 0)
+                {
+                    LogIgnored(key.ToString(), why);
+                    continue;
+                }
+                int slot = i;
+                Safe.Run("use a skill slot", () => Use(player, slot));
             }
         }
 

@@ -47,18 +47,27 @@ namespace Orlog.Content
         /// <summary>Registers the freeze (and Inner Sight's mark) once the game's status effects exist.</summary>
         public static void RegisterStatusEffects()
         {
-            var immobilized = ObjectDB.instance.GetStatusEffect("Immobilized".GetStableHashCode());
-            if (!immobilized)
+            // A copy of the game's Immobilized when ObjectDB has it here (on 1.0.21 it wasn't found at this point:
+            // Krogon's log, 2026-11-13), else our own with the same effect (speed −1000, no jumping).
+            var immobilized = ObjectDB.instance.m_StatusEffects.FirstOrDefault(se => se &&
+                (se.name == "Immobilized" || se.name.StartsWith("Immobilized", System.StringComparison.OrdinalIgnoreCase)) && se is SE_Stats);
+            SE_Stats freeze;
+            if (immobilized)
             {
-                Jotunn.Logger.LogError("Orlog: the game's Immobilized status effect wasn't found; Ice Arrow and Freezing Arrow won't freeze.");
+                freeze = (SE_Stats)ScriptableObject.Instantiate(immobilized);
+                Jotunn.Logger.LogInfo($"Orlog: the freeze copies the game's {immobilized.name}.");
             }
             else
             {
-                var freeze = ScriptableObject.Instantiate(immobilized);
-                freeze.name = FreezeName;
-                freeze.m_name = "Frozen";
-                ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(freeze, false));
+                freeze = ScriptableObject.CreateInstance<SE_Stats>();
+                freeze.m_speedModifier = -1000f;
+                freeze.m_jumpModifier = new Vector3(-1f, -1f, -1f);
+                freeze.m_ttl = 2f;
+                Jotunn.Logger.LogInfo("Orlog: the game's Immobilized isn't loaded yet; the freeze is Orlog's own (speed −1000, no jumping).");
             }
+            freeze.name = FreezeName;
+            freeze.m_name = "Frozen";
+            ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(freeze, false));
             CastSkills.RegisterStatusEffects();
         }
 

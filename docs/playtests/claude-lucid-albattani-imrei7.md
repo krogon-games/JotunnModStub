@@ -89,3 +89,11 @@
 ### Your feedback
 
 (none yet)
+
+### Your feedback (2026-11-13, first quick test, build `9d87b62`)
+- Red error in the console: "Orlog: the game's Immobilized status effect wasn't found; Ice Arrow and Freezing Arrow won't freeze."
+- "the keys are not working": right click (skill button) and F1–F4 (skill slots).
+
+### What changed after the feedback
+- The freeze no longer needs the game's Immobilized at start-up: it copies it when found (by name), else it is Orlog's own (speed −1000, no jumping). No error either way; the log says which.
+- The keys: the check "does the game take input now" no longer uses the game's "gamepad active" state (it can be on with a controller connected while playing with keyboard and mouse) and checks chat, console, menu, map, inventory, store and build menu directly. Keys are read through the game's input and, where it's on, Unity's legacy input. **Each ignored press now logs why** (`Orlog: F1 ignored (…)`, `Orlog: Skill button ignored (…)`), for the re-test.

@@ -76,12 +76,12 @@ namespace Orlog.Content
                     s_wasHeld = false;
                     return;
                 }
-                bool held = ZInput.GetKey(OrlogConfig.SkillButton.Value, false);
+                bool held = SkillBar.KeyHeld(OrlogConfig.SkillButton.Value);
                 bool pressed = held && !s_wasHeld;
                 s_wasHeld = held;
 
                 // Block: the game's key, unless it is the skill button; then our block key.
-                bool ourBlock = ZInput.GetKey(OrlogConfig.BlockKey.Value, false);
+                bool ourBlock = SkillBar.KeyHeld(OrlogConfig.BlockKey.Value);
                 bool ourBlockPressed = ourBlock && !s_wasBlockHeld;
                 s_wasBlockHeld = ourBlock;
                 if (BlockIsSkillButton())
@@ -107,6 +107,10 @@ namespace Orlog.Content
                 var skill = SkillBar.SelectedSkill(player);
                 if (skill == null)
                 {
+                    if (pressed)
+                    {
+                        SkillBar.LogIgnored("Skill button", "no skill on it for the weapon in hand (" + (SkillBar.WeaponKind(player).Length > 0 ? SkillBar.WeaponKind(player) : "none") + ")");
+                    }
                     return;
                 }
                 int slot = SkillBar.SelectedSlot(player);
