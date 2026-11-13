@@ -123,3 +123,8 @@
 - **Skills panel:** now scales itself to fill most of the screen (88% of the height or 92% of the width, never smaller than before); `[5 - Classes UI] SkillsPanelSize` sets a fixed size instead (e.g. 1.5). Not re-tested yet.
 - **Block on mouse button 4:** with the game's own Block key set to another key (here the mouse's back button), Orlog doesn't touch blocking at all; the game reads that key itself. A press that only arrives on release usually comes from the mouse's software (e.g. G Hub, Synapse) sending the side button as a "browser back" command instead of a mouse button. Checks asked: hold block on a keyboard key (e.g. Caps Lock) — does it hold? And the side button's setting in the mouse software.
 
+### Your feedback (2026-11-13, last of the session)
+- **Block:** "block holds fine on another key, it's my mouse software." Not a mod problem.
+- **Skills panel:** "much better now. maybe even tone it down by 10%." → the panel now fills 79% of the screen's height (or 83% of its width), 10% smaller. Not re-checked in game.
+- The rest of the play-test (rounds 1 and 2) waits for a fresh session (Krogon).
+

@@ -43,9 +43,12 @@ namespace CraftingOverhaul.Classes
         public static float RightWidth => SkillTreeLayout.GridWidth + 2f * TabletPadding;
         public static float Width => RightX + RightWidth + Margin;
 
-        /// <summary>Share of the screen the panel may fill when it scales itself (user, 2026-11-13: "please enlarge the skills panel").</summary>
-        public const float FitHeight = 0.88f;
-        public const float FitWidth = 0.92f;
+        /// <summary>
+        ///     Share of the screen the panel may fill when it scales itself (user, 2026-11-13: "please enlarge the skills panel";
+        ///     then "maybe even tone it down by 10%": 88% and 92% × 0.9).
+        /// </summary>
+        public const float FitHeight = 0.79f;
+        public const float FitWidth = 0.83f;
 
         /// <summary>
         ///     The panel's scale on a canvas of the given size: <paramref name="setting" /> when above 0, else as large as fits

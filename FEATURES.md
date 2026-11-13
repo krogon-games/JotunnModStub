@@ -432,7 +432,7 @@ Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJso
 |---|---|---|
 | `SkillsPanelKey` | `K` | Opens and closes the skills panel. K is free in Valheim's defaults and the group's mods (EAQS Z/V/B, AdventureBackpacks I) |
 | `SkillCrossPosition` | `24, 180` | Bottom-left corner of the cross, in pixels from the bottom left of the screen (proposed) |
-| `SkillsPanelSize` | `0` | Size of the skills panel: 0 = as large as fits (88% of the screen's height or 92% of its width, never below the original size; added 2026-11-13 after "please enlarge the skills panel window, its hard to read"); another value is a fixed scale (1 = the original size) |
+| `SkillsPanelSize` | `0` | Size of the skills panel: 0 = as large as fits (79% of the screen's height or 83% of its width, never below the original size; 10% smaller than first built, Krogon 2026-11-13; added 2026-11-13 after "please enlarge the skills panel window, its hard to read"); another value is a fixed scale (1 = the original size) |
 
 **Known issues:**
 - **Play-test 2026-10-30 (first look, screenshots, single player, with the demo):** the panel opens, the three tabs switch, spending skill and stat points works, and dragging skills onto the slots fills the panel row and the HUD cross. Broken in the screenshots, **fixed the same day** (re-check): an empty cross slot showed a white square; the tab names ran into each other; long skill names (and "(later)") overlapped or ran off the panel; prerequisite lines crossed the names; locked skills' icons were too dark to see; the selected slot's gold outline barely showed; "Skill button: Right mouse" overlapped the Forsaken power's name (now above the cross). The look was "very basic" (user): restyled the same day (see Look).
