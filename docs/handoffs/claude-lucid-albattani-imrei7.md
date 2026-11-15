@@ -95,6 +95,8 @@ Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
    Compared: classic WoW gives a dungeon boss ×2.5 an ordinary creature (elite in a dungeon, `data/wow-reference/README.md`); WoW Forever (launched 2026-11-04) keeps Classic's pace (Blizzard's beta data: 20.5 h to level 20 against Classic's 20.4 h) and raised dungeon kill XP by about 20–50% (guide sites, unconfirmed); no source found for its elite or boss multiplier.
 29. **2026-11-15: the D2 boss XP list above is approved** ("approve the D2 boss XP list, build it"). Built: `biome_levels.csv` → `boss_xp` and `boss_xp_shares` (Kall's phases: see 30).
 30. **2026-11-15: Kall pays all his boss XP on the final kill only** ("no, for Kall all the xp should be awarded on final kill only"; replaces Claude's split by phase health). His first two phases give no XP; `boss_xp_shares` 0;0;1.
+31. **2026-11-15: a key-binding screen comes later** ("i think we will create a UI keybindings overhaul later on. so players can rebind whatever keys they want"); the block default's step was skipped for it.
+32. **2026-11-15: the skills to be reworked aren't play-tested now** ("doesnt matter, will rework skill later": Magic Arrow without arrows, Fire, Cold, Ice and Exploding Arrow on a group).
 
 
 ## Playtest
