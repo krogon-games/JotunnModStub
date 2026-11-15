@@ -272,15 +272,26 @@ namespace Orlog.Content
         [HarmonyPatch(typeof(Projectile), nameof(Projectile.OnHit))]
         private static class Impact
         {
-            private static void Prefix(Projectile __instance)
+            private static void Prefix(Projectile __instance, Collider collider, Vector3 hitPoint)
             {
                 s_hitting = __instance;
+                // Diagnostic (Krogon, 2026-11-15: Freezing Arrow only bursts on the ground, not on a creature): what each
+                // blast arrow hits. Remove once the cause is found.
+                var tag = __instance ? __instance.GetComponent<ShotTag>() : null;
+                if (tag != null && IsBlast(tag))
+                {
+                    var hitObject = collider ? Projectile.FindHitObject(collider) : null;
+                    var character = hitObject ? hitObject.GetComponent<Character>() : null;
+                    Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} hits {(collider ? collider.name : "nothing")} " +
+                                          $"({(character ? "creature " + character.m_name : hitObject ? hitObject.name : "no object")}) at {hitPoint}" +
+                                          $"{(tag.Exploded ? ", already burst" : "")}.");
+                }
             }
 
             private static void Postfix(Projectile __instance, Vector3 hitPoint)
             {
                 var tag = __instance ? __instance.GetComponent<ShotTag>() : null;
-                if (tag == null || tag.Exploded || (tag.SkillId != "ExplodingArrow" && tag.SkillId != "FreezingArrow"))
+                if (tag == null || tag.Exploded || !IsBlast(tag))
                 {
                     return;
                 }
@@ -288,10 +299,21 @@ namespace Orlog.Content
                 Safe.Run("explode a skill arrow", () => Explode(__instance.m_owner, tag, hitPoint));
             }
 
-            private static void Finalizer()
+            private static System.Exception Finalizer(System.Exception __exception)
             {
                 s_hitting = null;
+                if (__exception != null)
+                {
+                    // Diagnostic: an error inside the game's hit (ours or another mod's) skips the burst.
+                    Jotunn.Logger.LogWarning($"Orlog: an arrow's hit stopped with an error before its burst: {__exception}");
+                }
+                return __exception;
             }
+        }
+
+        private static bool IsBlast(ShotTag tag)
+        {
+            return tag.SkillId == "ExplodingArrow" || tag.SkillId == "FreezingArrow";
         }
 
         /// <summary>Ice Arrow's direct hit freezes (not bosses), on the shooter's game before the hit is sent.</summary>
@@ -324,11 +346,13 @@ namespace Orlog.Content
         {
             if (!owner || owner != Player.m_localPlayer)
             {
+                Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} doesn't burst: its shooter isn't you on this game.");
                 return;
             }
             var v = SkillBar.ValuesFor(Attributes.ClassOf(Player.m_localPlayer));
             if (v == null)
             {
+                Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} doesn't burst: no skill values for your class.");
                 return;
             }
             bool fire = tag.SkillId == "ExplodingArrow";
@@ -337,12 +361,19 @@ namespace Orlog.Content
             ImpactEffect(fire ? "StaffFireball" : "StaffIceShards", fire ? "ArrowFire" : "ArrowFrost", point);
             s_inRange.Clear();
             Character.GetCharactersInRange(point, radius, s_inRange);
+            // Diagnostic (see Impact.Prefix): who the burst finds and why each is skipped.
+            var report = new System.Text.StringBuilder();
+            int struck = 0;
             foreach (var target in s_inRange)
             {
-                if (!target || target == owner || target.IsPlayer() || target.IsDead() || !BaseAI.IsEnemy(owner, target))
+                string skip = !target ? "gone" : target == owner ? "you" : target.IsPlayer() ? "a player" : target.IsDead() ? "dead"
+                    : !BaseAI.IsEnemy(owner, target) ? "not an enemy" : null;
+                report.Append(target ? target.m_name : "?").Append(skip == null ? "" : " (skipped: " + skip + ")").Append(", ");
+                if (skip != null)
                 {
                     continue;
                 }
+                struck++;
                 var hit = new HitData();
                 if (fire)
                 {
@@ -365,6 +396,8 @@ namespace Orlog.Content
                 hit.SetAttacker(owner);
                 target.Damage(hit);
             }
+            Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} bursts at {point}, radius {radius:0.0} m: found {s_inRange.Count} " +
+                                  $"({report.ToString().TrimEnd(',', ' ')}), struck {struck}.");
         }
 
         /// <summary>

@@ -10,7 +10,9 @@ namespace Orlog.Content
     ///     Skills cast from their slot's hotkey (roadmap C5). Inner Sight: every enemy within the skill's radius is marked
     ///     for the skill's duration (<see cref="InnerSightName" />, a status effect on the creature, added through the game's
     ///     own message so the creature owner's game has it) and takes <c>InnerSightDamageTaken</c>% more damage there. The
-    ///     caster sees the marked creatures glow (a light on their own game only). Plays the game's "gpower" animation.
+    ///     caster sees the marked creatures glow (a light on their own game only). Plays the game's "gpower" animation;
+    ///     that animation's event (<c>CharacterAnimEvent.GPower</c>) would also switch on the Forsaken power
+    ///     (<c>Player.ActivateGuardianPower</c>), so <see cref="NoPowerFromCast" /> skips that while our gesture plays.
     /// </summary>
     internal static class CastSkills
     {
@@ -18,6 +20,13 @@ namespace Orlog.Content
         public static readonly int InnerSightHash = InnerSightName.GetStableHashCode();
 
         private static readonly List<Character> s_inRange = new List<Character>();
+
+        /// <summary>
+        ///     Until when the "gpower" gesture playing is ours (a cast), not the Forsaken power's. Longer than the
+        ///     gesture's animation event; cleared when the event comes or the player starts their power themselves.
+        /// </summary>
+        private static float s_ourGestureUntil;
+        private const float GestureSeconds = 3f;
 
         public static void RegisterStatusEffects()
         {
@@ -46,6 +55,7 @@ namespace Orlog.Content
             }
             player.UseEitr(cost);
             player.m_zanim.SetTrigger("gpower");
+            s_ourGestureUntil = Time.time + GestureSeconds;
             float radius = v.Get(skill.Id, "radius_yards", level) * Rules.ActiveSkillRules.MetresPerYard;
             float seconds = v.Get(skill.Id, "duration_s", level);
             s_inRange.Clear();
@@ -63,6 +73,39 @@ namespace Orlog.Content
                 marked++;
             }
             player.Message(MessageHud.MessageType.TopLeft, $"Inner Sight: {marked} marked");
+        }
+
+        /// <summary>The player starts their Forsaken power themselves: the next gesture event is the power's.</summary>
+        [HarmonyPatch(typeof(Player), nameof(Player.StartGuardianPower))]
+        private static class PowerStarted
+        {
+            private static void Postfix(Player __instance, bool __result)
+            {
+                if (__result && __instance == Player.m_localPlayer)
+                {
+                    s_ourGestureUntil = 0f;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     The "gpower" gesture's animation event activates the Forsaken power (Krogon, 2026-11-15: Inner Sight on F1
+        ///     "uses the boss power as well"). While the gesture is a cast's, skip it once; the power keeps its cooldown.
+        /// </summary>
+        [HarmonyPatch(typeof(Player), nameof(Player.ActivateGuardianPower))]
+        private static class NoPowerFromCast
+        {
+            private static bool Prefix(Player __instance, ref bool __result)
+            {
+                if (__instance != Player.m_localPlayer || Time.time >= s_ourGestureUntil)
+                {
+                    return true;
+                }
+                s_ourGestureUntil = 0f;
+                __result = false;
+                Jotunn.Logger.LogInfo("Orlog: Inner Sight's gesture didn't trigger the Forsaken power.");
+                return false;
+            }
         }
 
         /// <summary>Marked creatures take more damage, on the game that owns them (where the hit is applied).</summary>

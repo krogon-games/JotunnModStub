@@ -66,6 +66,8 @@ Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
 14. **2026-11-13: block on the mouse's side button is the mouse software, not the mod** ("block holds fine on another key, it's my mouse software").
 15. **2026-11-13: wrap up; the play-test waits for a fresh session** ("Save the playtesting for another session so its fresh").
 16. **2026-11-15: end the session; the play-test and bug fixes continue in the next session,** with a longer handoff allowed ("Ill allow you to increase the limit on the handoff to make sure everything important carries accross").
+17. **2026-11-15 (new session): this round is fixing the two bugs, then play-test rounds 1 and 2, on this branch** ("Yes to both"). Open questions asked as they come up.
+18. **2026-11-15: Claude may install `ilspycmd` in the cloud session to read the game's code** ("go ahead and install ilspycmd"). Version 8.2.0.7535 (the newest needs a newer .NET SDK), in the session's scratchpad only.
 
 
 ## Playtest

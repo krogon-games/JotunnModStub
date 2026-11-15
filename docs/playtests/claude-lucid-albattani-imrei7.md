@@ -133,3 +133,22 @@
 - **Inner Sight on F1 with quick cast "uses the boss power as well."** Likely cause: `CastSkills.Cast` plays the game's `gpower` animation trigger, whose animation event activates the Forsaken power. Fix next session: another animation (an emote, or a vanilla attack trigger without that event), or skip `Player.ActivateGuardianPower` while our cast plays; check in the 1.0.14 code which method the animation event calls.
 - Krogon: the play-test and bug fixes continue in the next session.
 
+
+## Round 3: the two bugs (2026-11-15)
+
+**Build:** this branch's newest commit (Orlog's log line names it). Do these two first, then the rest of rounds 1 and 2. Also on the phone page (first group of the skill bar round).
+
+### What changed
+- **Inner Sight fired the Forsaken power. Cause found in the game's code:** the "power" gesture Inner Sight plays has an animation hook (`CharacterAnimEvent.GPower`) that switches on the Forsaken power (`Player.ActivateGuardianPower`). Now, for 3 seconds after a cast, that hook is skipped once; pressing the power key yourself still works at once. The log says "Inner Sight's gesture didn't trigger the Forsaken power" each time.
+- **Freezing / Exploding Arrow on a direct hit: cause not found yet.** The game's arrow code (`Projectile.OnHit`) shows nothing that would skip our burst on a creature hit. **Log lines added** (temporary): what each blast arrow hits (a creature or not), each burst (radius, the creatures found and why each was skipped, how many were struck), and any error that stops the hit before the burst.
+
+### Checklist
+1. [ ] **Inner Sight without the Forsaken power:** choose a Forsaken power (e.g. Eikthyr's at his stone) and wait until it's ready. Cast Inner Sight from its key with quick cast on → the gesture and "Inner Sight: N marked", but **no** Forsaken power (no power icon, no cooldown). Then press your Forsaken power key → the power works as normal.
+2. [ ] **Blast arrows, log lines:** `spawn Greyling 3`. With Freezing Arrow, shoot one greyling **directly in the body**, then shoot the ground beside them. The same with Exploding Arrow. Note what you saw, then send the `LogOutput.log` lines starting `Orlog: FreezingArrow` and `Orlog: ExplodingArrow` (and any with `before its burst`).
+
+### Phone page marks (read 2026-11-15)
+- Passed: round 1 step 2; round 2 steps 1, 2 and 3 (steps 1 and 3 were re-marked Pass on 2026-11-13 after the demo was switched off). Nothing else marked yet.
+
+### Your feedback
+
+(none yet)

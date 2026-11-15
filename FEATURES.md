@@ -38,7 +38,7 @@ Tracks everything the mod adds or changes. It's updated in the same commit as an
 | [Orlog stone and class choice](#orlog-stone-and-class-choice) | Combat | Tested in-game (works; look to be redesigned later) | Orlog: `4 - Orlog Stone` → `StoneSize`, `StoneGap`, `StoneTurn` (`orlog_class` stays as a cheat) | `Orlog/Content/OrlogStone.cs`, `Orlog/Rules/StonePlacement.cs`, `Orlog/Content/Texts.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Api.cs`, `Orlog/Safe.cs`, `CraftingOverhaul.Tests/OrlogStoneTests.cs` | 2026-11-01 |
 | [Skill tree and skill points](#skill-tree-and-skill-points) | Combat | Tested in-game (single player) | Orlog: `1 - Levels` → `SkillPointsPerLevel`, `MaxSkillPoints`, `SkillPace`; table `Orlog/Data/amazon_skills.csv`; console `orlog_skill` | `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Data/amazon_skills.csv`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/Content/Attributes.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/amazon_levels.csv`, `CraftingOverhaul.Tests/OrlogSkillTests.cs`, `CraftingOverhaul.Tests/OrlogPointTotalTests.cs` | 2026-11-08 |
 | [Amazon passives](#amazon-passives) | Combat | Built, untested in-game | Orlog: table `Orlog/Data/amazon_passives.csv`; console `orlog_passive` (test chances) | `Orlog/Content/Passives.cs`, `Orlog/Rules/PassiveRules.cs`, `Orlog/Data/amazon_passives.csv`, `Orlog/Api.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogPassiveTests.cs` | 2026-11-11 |
-| [Amazon skill bar and bow skills](#amazon-skill-bar-and-bow-skills) | Combat | Built, untested in-game (quick cast added 2026-11-13) | Orlog: `5 - Skills` → `SkillDamageMultiplier`, `InnerSightDamageTaken`; `6 - Skill Keys` → `SkillButton`, `BlockKey`, `Slot1Key`–`Slot4Key`; tables `Orlog/Data/amazon_skill_values.csv`, `skill_damage_scale.csv`; console `orlog_slot` | `Orlog/Content/SkillBar.cs`, `Orlog/Content/SkillButton.cs`, `Orlog/Content/BowSkills.cs`, `Orlog/Content/CastSkills.cs`, `Orlog/Rules/ActiveSkillRules.cs`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/bows.csv`, `CraftingOverhaul/Classes/SkillCross.cs`, `CraftingOverhaul/Classes/QuickCastShimmer.cs`, `CraftingOverhaul/Classes/ClassesSource.cs`, `CraftingOverhaul.Tests/OrlogActiveSkillTests.cs`, `CraftingOverhaul.Tests/QuickCastShimmerTests.cs` | 2026-11-13 |
+| [Amazon skill bar and bow skills](#amazon-skill-bar-and-bow-skills) | Combat | Built, untested in-game (quick cast added 2026-11-13); Inner Sight no longer fires the Forsaken power (2026-11-15, to re-test); blast arrows burst only on the ground (diagnosing) | Orlog: `5 - Skills` → `SkillDamageMultiplier`, `InnerSightDamageTaken`; `6 - Skill Keys` → `SkillButton`, `BlockKey`, `Slot1Key`–`Slot4Key`; tables `Orlog/Data/amazon_skill_values.csv`, `skill_damage_scale.csv`; console `orlog_slot` | `Orlog/Content/SkillBar.cs`, `Orlog/Content/SkillButton.cs`, `Orlog/Content/BowSkills.cs`, `Orlog/Content/CastSkills.cs`, `Orlog/Rules/ActiveSkillRules.cs`, `Orlog/Api.cs`, `Orlog/OrlogConfig.cs`, `Orlog/OrlogPlugin.cs`, `Orlog/Content/Commands.cs`, `tools/make_orlog_tables.py`, `data/d2-reference/bows.csv`, `CraftingOverhaul/Classes/SkillCross.cs`, `CraftingOverhaul/Classes/QuickCastShimmer.cs`, `CraftingOverhaul/Classes/ClassesSource.cs`, `CraftingOverhaul.Tests/OrlogActiveSkillTests.cs`, `CraftingOverhaul.Tests/QuickCastShimmerTests.cs` | 2026-11-15 |
 | [Boss bonus skill points](#boss-bonus-skill-points) | Combat | Built, untested in-game | Orlog: `Orlog/Data/biome_levels.csv` → `boss_skill_points` | `Orlog/Content/KillXp.cs`, `Orlog/Content/SkillPoints.cs`, `Orlog/Rules/SkillRules.cs`, `Orlog/Rules/LevelTables.cs`, `tools/make_orlog_tables.py`, `CraftingOverhaul.Tests/OrlogBossPointTests.cs` | 2026-11-11 |
 | [Classes, levels and skill trees](#classes-levels-and-skill-trees) | Combat | Planned | — | — (design: `docs/class-design.md`) | 2026-10-30 |
 
@@ -1441,6 +1441,8 @@ Unit-tested (`OrlogActiveSkillTests`: the values against D2's, eitr costs, the d
 - **The freeze stops movement only** (the game's Immobilized: speed −1000); a frozen creature may still swing.
 - **Glow only on the caster's game;** other players see no glow (the mark and extra damage work for everyone's hits).
 - No cooldowns (D2's bow skills and Inner Sight have none). The spear and javelin skills come with C6.
+- **Found in play (Krogon, 2026-11-15):** Exploding and Freezing Arrow burst only when the arrow lands on the ground beside a creature, not on a direct hit. The game's hit code (`Projectile.OnHit`) shows nothing that would skip it; the cause isn't known yet. **Diagnostic log lines** (temporary): each blast arrow's hit (what it struck, a creature or not), each burst (radius, creatures found, why each was skipped, how many were struck) and any error that stops the hit before the burst.
+- **Fixed (2026-11-15, to re-test):** Inner Sight also fired the Forsaken power. Cause (game code): the "gpower" gesture's animation event (`CharacterAnimEvent.GPower`) calls `Player.ActivateGuardianPower`. Now, for 3 seconds after a cast, that call is skipped once (the log says "Inner Sight's gesture didn't trigger the Forsaken power"); pressing the power key yourself (`Player.StartGuardianPower`) still works at once.
 - **Found in the code review (2026-11-11), to watch in the play-test:** running out of eitr in the middle of a skill draw now keeps the draw and shoots a normal arrow on release (fixed the same day); Exploding and Freezing Arrow hits count for Corruption's life steal of the bow, once per creature caught in the blast.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
@@ -1450,7 +1452,9 @@ Unit-tested (`OrlogActiveSkillTests`: the values against D2's, eitr costs, the d
 - `Attack.UseAmmo`: prefix, can skip (Magic Arrow's free arrow)
 - `Attack.FireProjectileBurst`: prefix + finalizer (Multiple Shot's arrow count)
 - `Projectile.Setup`: prefix (skill damage, fan direction, tag)
-- `Projectile.OnHit`: prefix + postfix + finalizer (explosions; marks the projectile whose hit is running)
+- `Projectile.OnHit`: prefix + postfix + finalizer (explosions; marks the projectile whose hit is running; the finalizer logs an error that passes through and rethrows it)
+- `Player.StartGuardianPower`: postfix (record only: the player started their power)
+- `Player.ActivateGuardianPower`: prefix, can skip (once, within 3 s of Inner Sight's gesture)
 - `Character.Damage`: prefix (Ice Arrow's freeze on its direct hit)
 - `Character.RPC_Damage`: prefix (Inner Sight's extra damage on a marked creature)
 - `StatusEffect.SetLevel`: postfix (the freeze's and Inner Sight's duration)
@@ -1479,6 +1483,10 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-11-15
+- **Fix (Amazon, Inner Sight): casting it no longer fires the Forsaken power** (Krogon's play-test: "uses the boss power as well"). The game's power gesture switches on the power through its animation; the gesture now does so only when you press the power key. Untested.
+- **Diagnostic (Amazon, Exploding and Freezing Arrow):** log lines for each blast arrow's hit and burst, to find why a direct hit on a creature makes no burst (Krogon's play-test). Temporary.
 
 ### 2026-11-13
 - **Skills panel: as large as the screen allows** (Krogon: "please enlarge the skills panel window, its hard to read"): scaled as a whole to fill most of the screen; `SkillsPanelSize` sets a fixed size instead. Untested.
