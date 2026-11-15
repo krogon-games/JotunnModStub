@@ -1,43 +1,36 @@
 # Handoff: `claude/biome-load-freeze`
 
-**Written:** 2026-11-15 (`/handoff`). 5 commits ahead of `master`, 0 behind; no PR yet.
+**Written:** 2026-11-15 (`/handoff`). 6 commits ahead of `master`, 0 behind; no PR yet.
 
 ## Stage
 
-**Ready to merge** once `/handoff` has run (play-test passed 2026-11-15; no fixes needed).
+**Ready to merge.**
 
 ## Purpose
 
-Remove the 18–22 s freeze right after spawning (Krogon's 1.0.21 logs, 2026-11-13: `Resolved biomes for 970 items from 39595 sources in 18348 ms`), caused by CraftingOverhaul's biome detection running all at once on the game's main thread.
+Remove the 18–22 s freeze right after spawning (Krogon's 1.0.21 logs, 2026-11-13), caused by CraftingOverhaul's biome detection running all at once on the game's main thread.
 
 ## Done
 
-- **Play-test 2026-11-15 passed (all six steps, single player, 1.0.21):** no freeze after spawning; background work 28.4 s using 1.2 s of game time over 2,695 frames, longest frame 87 ms; same 970 items; the saved file loads in 12 ms; `co_biome` explanations and refresh work.
+Confirmed by Krogon's play-test, 2026-11-15 (all six steps, single player, 1.0.21):
+- **Saved result:** the biomes go to `BepInEx/cache/CraftingOverhaul.biomes.txt` with a key (game version, mods, this DLL's build, overrides, a game-data fingerprint) and load in 12 ms while it matches.
+- **Background work** otherwise: about 4 ms per frame, location and room prefabs loaded with `SoftReference.LoadAsync` 4 at a time, the solver on a thread-pool thread. First load: 28.4 s in the background, 1.2 s of game time, longest frame 87 ms, the same 970 items. The recipe list keeps the game's order until it's ready.
+- `co_biome` explanations and `co_biome refresh` work; the log shows the time per collector.
+
+Measured: the location and room loading was the freeze (13.5 of 13.6 s run all at once).
 
 ## Half-done and known issues
 
-Built and passed in the play-test:
-- **Saved result:** the solved biomes go to `BepInEx/cache/CraftingOverhaul.biomes.txt` with a key (game version, mods and versions, this DLL's build, overrides, a fingerprint of items, recipes, prefabs and building costs, vegetation, locations, spawn tables). A matching key → used at once on the next load.
-- **Background work** when there's no match: the collectors run as small steps, about 4 ms per frame; location and room prefabs load with `SoftReference.LoadAsync`, 4 at a time, and are released after reading; the solver runs on a thread-pool thread. The recipe list keeps the game's order without biome headers until it's ready, then refreshes by itself.
-- `co_biome` and `co_dump` finish any background work on the spot; `co_biome refresh` ignores and rewrites the saved file.
-- The log line now gives the time per collector, the longest frame and the longest step.
-- Location rooms are now loaded once each (as before) but in a separate pass after all locations; one broken prefab now skips only that prefab.
-
-Measured 2026-11-15: the location and room loading was the freeze (13.5 of 13.6 s run all at once; every other collector under 20 ms).
-
-Known issues:
-- `co_biome refresh` (and `co_dump`) still run all at once: a 14 s pause. Kept on purpose (Krogon, 2026-11-15).
+- `co_biome refresh` and `co_dump` still run all at once: about a 14 s pause (kept, see Decisions).
 - The saved file can go stale if a mod changes drops inside a prefab through its own settings without a version change; `co_biome refresh` fixes it.
 
 ## Decisions
 
-1. **2026-11-15: `co_biome refresh` keeps running all at once** (about a 14 s pause): "Leave it". It's an admin command, rarely used; only the load after spawning works in the background.
-
-The task came with its goal and options (background work, saved result, faster solver); the first two were built, the solver was left as it was (it now runs off the main thread).
+1. **2026-11-15: `co_biome refresh` keeps running all at once** (about a 14 s pause): "Leave it". It's an admin command, rarely used.
 
 ## Playtest
 
-Checklist: [`docs/playtests/claude-biome-load-freeze.md`](../playtests/claude-biome-load-freeze.md), also on the phone page (steps `bio-1` to `bio-6`). Single player is enough: it only runs on each player's own game, not on the server.
+Passed 2026-11-15; details in [`docs/playtests/claude-biome-load-freeze.md`](../playtests/claude-biome-load-freeze.md). The steps are off the phone page.
 
 ## Open questions for Krogon
 
@@ -45,22 +38,19 @@ None.
 
 ## Next steps
 
-1. ~~Krogon play-tests the checklist.~~ Passed 2026-11-15.
-2. ~~The refresh question.~~ Leave it (2026-11-15).
-3. ~~Take the `bio-` steps off the phone page.~~ Done 2026-11-15. Run `/handoff`, then a PR into `master`.
+1. A PR into `master`; the coordinator raises CraftingOverhaul's version at merge.
 
 ## Checks
 
-- Build: PASS. `dotnet test CraftingOverhaul.Tests`: 510 passed (12 new: saved-file format and frame slicing); CraftingOverhaul builds against the stand-in install (0 errors; 3 old warnings).
-- Version: gameplay changed: version bump needed at merge (CraftingOverhaul). This branch changed no version number.
-- Multiplayer sync: PASS (read in code, not tested). No new config, items, pieces or messages; the work and the saved file are per player, so it still works when only some players have the mod.
-- Assets and names: SKIPPED (no new assets, data files, prefab names or text tokens).
-- FEATURES.md: PASS (biome detection row and section, recipe categories row, changelog).
-- In-game: PASS. Krogon's play-test 2026-11-15, all six steps passed (phone page and `LogOutput.log`).
+- Build: PASS. 510 tests passed (12 new); CraftingOverhaul builds against the stand-in install.
+- Version: gameplay changed: version bump needed at merge (CraftingOverhaul). No version number changed on this branch.
+- Multiplayer sync: PASS (read in code, not tested). No new config, items or messages; per-player work, so it works when only some players have the mod.
+- Assets and names: SKIPPED (none new).
+- FEATURES.md: PASS.
+- In-game: PASS (Krogon's play-test 2026-11-15).
 
 ## Merge notes
 
-- **Ready to merge: yes.** The play-test passed, nothing left to fix, no check failed, up to date with `master`, everything pushed.
-- **Gameplay changed: version bump needed at merge: CraftingOverhaul** (code only; no data or assets).
-- Files also changed by another unmerged branch, `claude/lucid-albattani-imrei7`: `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (both add `Compile` links), `CraftingOverhaul/CraftingOverhaul.cs` (this branch adds one line in `Awake`), `FEATURES.md`, `docs/ARCHITECTURE.md`, `docs/CURRENT_STATE.md`. Keep both sides in a conflict.
-- Other shared files touched: `CraftingOverhaul/RecipeList/RecipeListOrganizer.cs`.
+- **Ready to merge: yes.** Play-test passed, no check failed, up to date with `master`, pushed.
+- **Gameplay changed: version bump needed at merge: CraftingOverhaul.**
+- Also changed by the unmerged `claude/lucid-albattani-imrei7`: `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj`, `CraftingOverhaul/CraftingOverhaul.cs` (one line in `Awake` here), `FEATURES.md`, `docs/ARCHITECTURE.md`, `docs/CURRENT_STATE.md`. Keep both sides in a conflict.
