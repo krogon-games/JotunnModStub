@@ -175,6 +175,9 @@
 1. [ ] **Respec:** skills on the cross, then `orlog_respec` → the cross is empty. `orlog_skill InnerSight`, drag it onto a slot again → it works.
 2. [ ] **F2:** with a class, F2 uses slot 2 and no stats panel opens. Ctrl+F2 opens the panel, Ctrl+F2 again closes it.
 3. [x] **Inner Sight:** passed on the phone page (the round 3 step "Inner Sight without the Forsaken power").
+4. [ ] **Inner Sight grows** (Krogon's numbers, 2026-11-15): `orlog_respec`, `orlog_skill InnerSight` once → tooltip "5% more damage", next level 6%; at level 20 → 24%.
+
+Fire, Cold and Ice Arrow may go in the skill overhaul (next round): their steps (round 2 steps 5 and 9) can be skipped.
 
 ### Phone page marks (read 2026-11-15, afternoon)
 - **Passed:** round 3 both steps (Inner Sight without the Forsaken power; blast arrows); round 2 steps 6 (Multiple Shot), 7 (wrong weapon), 8 (out of eitr), 12 (Inner Sight), 12b (quick cast), 13 (tooltips), 15 (damage feel; no note), plus 1–3 from before; round 1 step 2.
