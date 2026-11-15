@@ -1,8 +1,9 @@
 """
 Draws a preview of the skills panel (CraftingOverhaul) from the panel's own layout and art, so its look can be judged
-outside the game. The positions come from SkillsPanelLayout.cs and SkillTreeLayout.cs through a JSON file a test writes;
-the art is CraftingOverhaul/Assets/Sheet (frames, medallion, glows) and CraftingOverhaul/Assets/Skills (icons). The
-colours and sizes below mirror SkillsPanel.cs and UiKit.cs: change both together.
+outside the game. The positions come from SkillsPanelLayout.cs and SkillCardsLayout.cs through a JSON file a test
+writes; the art is CraftingOverhaul/Assets/Sheet (frames, medallion, glows) and CraftingOverhaul/Assets/Skills (icons).
+The colours and sizes below mirror SkillsPanel.cs and UiKit.cs: change both together. The points shown are a sample
+character (level 10, as in Krogon's mock-up docs/images/skills_panel_cards_mockup.webp).
 
     CO_PANEL_LAYOUT=/tmp/layout.json dotnet test CraftingOverhaul.Tests --filter WritesTheLayoutForThePreviewWhenAsked
     python tools/preview_skills_panel.py /tmp/layout.json [tab] [out.png]
@@ -92,16 +93,6 @@ def wrap(draw, s, size, width):
     return lines
 
 
-def line(canvas, x1, y1, x2, y2, colour, width):
-    ImageDraw.Draw(canvas).line([(x1 * S, y1 * S), (x2 * S, y2 * S)], fill=colour, width=max(1, int(width * S)))
-
-
-def glow_line(canvas, x1, y1, x2, y2, colour, width, alpha):
-    layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-    ImageDraw.Draw(layer).line([(x1 * S, y1 * S), (x2 * S, y2 * S)], fill=colour + (int(255 * alpha),), width=int(width * S))
-    canvas.alpha_composite(layer.filter(ImageFilter.GaussianBlur(width * S / 3)))
-
-
 def button(canvas, r, label, enabled=True):
     x, y, w, h = r
     d = ImageDraw.Draw(canvas)
@@ -114,31 +105,77 @@ def button(canvas, r, label, enabled=True):
     text(d, (x + w / 2, y + h / 2), label, 16, GOLD if enabled else LIGHT_DIM, "mm")
 
 
-def medallion(canvas, x, y, size, icon, state, selected=False):
+def medallion(canvas, x, y, size, icon, state):
+    """A skill's medallion (mirrors SkillsPanel.BuildCard): state is later, notLearned, canLearn, learned or maxed."""
     med, ring = art("medallion"), art("glow_ring")
-    glow = {"learned": RUNE, "spend": CAN_SPEND, "maxed": GOLD}.get(state)
-    if selected:
-        g = size * 128 / 96 * 1.12
-        paste(canvas, tinted(sized(ring, g, g), (255, 240, 200), 1.0), x + size / 2 - g / 2, y + size / 2 - g / 2)
-    elif glow:
+    glow = {"learned": RUNE, "canLearn": CAN_SPEND, "maxed": GOLD}.get(state)
+    if glow:
         g = size * 128 / 96
         paste(canvas, tinted(sized(ring, g, g), glow, 0.75), x + size / 2 - g / 2, y + size / 2 - g / 2)
-    tint = {"later": (115, 110, 105), "locked": (184, 178, 173)}.get(state, (255, 255, 255))
+    tint = {"later": (148, 143, 138), "notLearned": (209, 204, 199), "canLearn": (209, 204, 199)}.get(state, (255, 255, 255))
     paste(canvas, tinted(sized(med, size, size), tint), x, y)
     if icon is not None:
         inset = size * 0.06
-        icon_tint = {"later": (95, 95, 95), "locked": (165, 165, 165)}.get(state, (255, 255, 255))
+        icon_tint = {"later": (133, 133, 133), "notLearned": (204, 204, 204), "canLearn": (204, 204, 204)}.get(state, (255, 255, 255))
         paste(canvas, tinted(sized(icon, size - 2 * inset, size - 2 * inset), icon_tint), x + inset, y + inset)
 
 
-def badge(canvas, cx, cy, value, colour):
+# A sample character for the preview: points per skill; everything else is unlearned.
+SAMPLE_POINTS = {"MultipleShot": 3, "FreezingArrow": 1, "InnerSight": 1, "CriticalStrike": 5, "Dodge": 2, "Evade": 20}
+SAMPLE_SKILL_POINTS = 10
+SAMPLE_SELECTED = ["MultipleShot", "CriticalStrike", "Jab"]
+SAMPLE_TEXT = {
+    "MultipleShot": ("Attack  ·  6 eitr", "Fires 4 arrows in a fan for one arrow, each at 75% damage",
+                     "Next rank: Level 4: Fires 5 arrows in a fan for one arrow, each at 75% damage",
+                     "Drag it onto a skill slot to use it."),
+    "CriticalStrike": ("Passive", "42% chance to deal double physical damage",
+                       "Next rank: Level 6: 45% chance to deal double physical damage", "Passive: always on once learned."),
+    "Jab": ("Attack  ·  2 eitr", "Not learned yet. A fast series of thrusts", "Next rank: Level 1: A fast series of thrusts",
+            "Drag it onto a skill slot to use it."),
+}
+MAX_POINTS = 20
+
+
+def state_of(skill):
+    """Mirrors SkillCardsLayout.StateOf for the sample character."""
+    points = SAMPLE_POINTS.get(skill["id"], 0)
+    if skill["status"] == "later":
+        return "later"
+    if points >= MAX_POINTS:
+        return "maxed"
+    if points > 0:
+        return "learned"
+    return "canLearn" if SAMPLE_SKILL_POINTS > 0 else "notLearned"
+
+
+def card(canvas, layout, x, y, skill, selected):
+    """One skill card (mirrors SkillsPanel.BuildCard)."""
+    w, h = skill["w"], skill["h"]
+    state = state_of(skill)
+    points = SAMPLE_POINTS.get(skill["id"], 0)
+    learned = state in ("learned", "maxed")
+    if selected:
+        inset = 14
+        paste(canvas, tinted(sliced(art("glow_box"), w + 2 * inset, h + 2 * inset, 24), (255, 199, 92)), x - inset, y - inset)
+    wood = 0.64 if state == "later" else 1.0 if learned else 0.8
+    paste(canvas, tinted(sliced(art("panel"), w, h, 20), (int(255 * wood),) * 3), x, y)
+    ix, iy, iw, ih = layout["card"]["icon"]
+    medallion(canvas, x + ix, y + iy, iw, art(skill["id"], ICONS), state)
     d = ImageDraw.Draw(canvas)
-    r = 11
-    d.ellipse([(cx - r) * S, (cy - r) * S, (cx + r) * S, (cy + r) * S], fill=(16, 12, 10, 240), outline=(168, 120, 62, 255), width=int(1.5 * S))
-    text(d, (cx, cy), str(value), 13, colour, "mm", outline=False)
+    nx, ny, nw, nh = layout["card"]["name"]
+    text(d, (x + nx + nw / 2, y + ny + nh / 2), skill["name"], 20, LIGHT_DIM if state == "later" else GOLD if learned else LIGHT, "mm")
+    rx, ry, rw, rh = layout["card"]["rank"]
+    label = "Coming later" if state == "later" else "Rank %d / %d" % (points, MAX_POINTS) if points else "Not learned"
+    text(d, (x + rx + rw / 2, y + ry + rh / 2), label, 15, CAN_SPEND if state == "canLearn" else LIGHT if learned else LIGHT_DIM, "mm")
+    if learned:
+        bx, by, bw, bh = layout["card"]["rankBar"]
+        paste(canvas, sliced(art("bar"), bw, bh, 4), x + bx, y + by)
+        fill = GOLD if state == "maxed" else XP
+        ImageDraw.Draw(canvas).rectangle([(x + bx + 2) * S, (y + by + 2) * S, (x + bx + 2 + (bw - 4) * points / MAX_POINTS) * S,
+                                          (y + by + bh - 2) * S], fill=fill + (255,))
 
 
-def render(layout, tab, out, hovered="ExplodingArrow"):
+def render(layout, tab, out):
     R = {k: tuple(v) for k, v in layout["rects"].items()}
     W, H = R["panel"][2], R["panel"][3]
     canvas = Image.new("RGBA", (int((W + 80) * S), int((H + 80) * S)), (56, 74, 52, 255))
@@ -156,19 +193,19 @@ def render(layout, tab, out, hovered="ExplodingArrow"):
     x, y, w, h = r("close")
     paste(canvas, sized(art("close"), w, h), x, y)
     x, y, w, h = r("skillPoints")
-    text(d, (x + w, y + h / 2), "Skill points: 1", 18, GOLD, "rm")
+    text(d, (x + w, y + h / 2), "Skill points: %d" % SAMPLE_SKILL_POINTS, 18, CAN_SPEND, "rm")
 
     tabs = ["Bow and Crossbow", "Passive and Magic", "Javelin and Spear"]
     for i, name in enumerate(tabs):
         button(canvas, r("tab%d" % i), name, enabled=i == tab)
 
-    # Character box.
-    for box in ("character", "details"):
+    # Character box, details pane and the strip under the tablet.
+    for box in ("character", "details", "slotsRow"):
         x, y, w, h = r(box)
         paste(canvas, sliced(art("inset"), w, h, 10), x, y)
     d = ImageDraw.Draw(canvas)
     x, y, w, h = r("level")
-    text(d, (x, y + h / 2), "Level 12", 26, GOLD, "lm")
+    text(d, (x, y + h / 2), "Level 10", 26, GOLD, "lm")
     x, y, w, h = r("xpBar")
     paste(canvas, sliced(art("bar"), w, h, 4), x, y)
     ImageDraw.Draw(canvas).rectangle([(x + 2) * S, (y + 2) * S, (x + 2 + (w - 4) * 0.57) * S, (y + h - 2) * S], fill=XP + (255,))
@@ -189,71 +226,44 @@ def render(layout, tab, out, hovered="ExplodingArrow"):
         button(canvas, r("attributePlus%d" % i), "+")
         d = ImageDraw.Draw(canvas)
 
-    # Tablet and tree.
+    # Tablet and the tab's nine cards.
     x, y, w, h = r("tablet")
     paste(canvas, sliced(art("tile"), w, h, 18), x, y)
-    tx, ty, tw, th = r("tree")
-    d = ImageDraw.Draw(canvas)
-    label_w = 56
-    for i, cy in enumerate(layout["rowCentres"]):
-        text(d, (tx + label_w / 2 - 4, ty + cy), "Lv %d" % layout["tiers"][i], 14, LIGHT_DIM, "mm")
-        if i > 0:
-            yy = ty + cy - (layout["rowCentres"][1] - layout["rowCentres"][0]) / 2
-            line(canvas, tx + label_w, yy, tx + tw - 8, yy, (168, 120, 62, 60), 1)
+    cx, cy, cw, ch = r("cards")
     data = layout["tabs"][tab]
-    by_id = {s["id"]: s for s in data["skills"]}
-    # Paths: a dark groove; learned ones carry an eitr-blue light (mirrors SkillsPanel.BuildTree).
-    for lit in (False, True):
-        for l in data["lines"]:
-            learned = by_id[l["from"]]["points"] > 0
-            if learned != lit:
-                continue
-            x1, y1, x2, y2 = tx + l["x1"], ty + l["y1"], tx + l["x2"], ty + l["y2"]
-            line(canvas, x1, y1, x2, y2, (0, 0, 0, 140), 6)
-            if learned:
-                glow_line(canvas, x1, y1, x2, y2, RUNE, 10, 0.55)
-                line(canvas, x1, y1, x2, y2, (215, 240, 255, 255), 2)
-            else:
-                line(canvas, x1, y1, x2, y2, (120, 92, 62, 230), 2)
-    tile = layout["tile"]
-    for s in data["skills"]:
-        state = "later" if s["status"] == "later" else "learned" if s["points"] > 0 else "spend" if s["canSpend"] else "locked"
-        icon = art(s["id"], ICONS)
-        medallion(canvas, tx + s["x"], ty + s["y"], tile, icon, state, selected=s["id"] == hovered)
-        if state != "later":
-            badge(canvas, tx + s["x"] + tile - 6, ty + s["y"] + tile - 6, s["points"], CAN_SPEND if s["canSpend"] else LIGHT)
+    selected = SAMPLE_SELECTED[tab]
+    for sk in data["skills"]:
+        card(canvas, layout, cx + sk["x"], cy + sk["y"], sk, sk["id"] == selected)
     d = ImageDraw.Draw(canvas)
 
-    # Details pane: the hovered skill.
-    sk = next((s for t in layout["tabs"] for s in t["skills"] if s["id"] == hovered), data["skills"][0])
+    # Details pane: the selected skill.
+    sk = next(s for s in data["skills"] if s["id"] == selected)
+    points = SAMPLE_POINTS.get(sk["id"], 0)
+    kind, now, nxt, use = SAMPLE_TEXT[sk["id"]]
     x, y, w, h = r("detailsIcon")
-    medallion(canvas, x, y, w, art(sk["id"], ICONS), "spend" if sk["canSpend"] else "learned" if sk["points"] else "locked")
+    medallion(canvas, x, y, w, art(sk["id"], ICONS), state_of(sk))
     d = ImageDraw.Draw(canvas)
     x, y, w, h = r("detailsName")
     text(d, (x, y + h / 2), sk["name"], 22, GOLD, "lm")
     x, y, w, h = r("detailsRank")
-    text(d, (x, y + h / 2), "Rank %d / 20" % sk["points"], 16, LIGHT, "lm")
+    text(d, (x, y + h / 2), "Rank %d / %d" % (points, MAX_POINTS), 16, LIGHT, "lm")
     x, y, w, h = r("detailsKind")
-    text(d, (x, y + h / 2), "Attack  ·  level 12  ·  5 eitr", 14, LIGHT_DIM, "lm")
+    text(d, (x, y + h / 2), kind, 14, LIGHT_DIM, "lm")
     x, y, w, h = r("detailsText")
     yy = y
-    for chunk, colour in (("Arrow explodes for area fire damage (8–12).", LIGHT), ("", None),
-                          ("Next rank: 11–16 fire damage, larger blast.", CAN_SPEND), ("", None),
-                          ("Drag it onto a skill slot to use it.", LIGHT_DIM)):
+    for chunk, colour in ((now, LIGHT), ("", None), (nxt, CAN_SPEND), ("", None), (use, LIGHT_DIM)):
         if not chunk:
             yy += 8
             continue
-        for ln in wrap(d, chunk, 16, w):
-            text(d, (x, yy), ln, 16, colour, "la")
-            yy += 21
-    button(canvas, r("learn"), "Learn  (+1 rank)")
-    d = ImageDraw.Draw(canvas)
+        for ln in wrap(d, chunk, 15, w):
+            text(d, (x, yy), ln, 15, colour, "la")
+            yy += 20
 
-    # Skill slots.
+    # The strip: skill slots, a divider, Learn.
     x, y, w, h = r("slotsLabel")
     text(d, (x, y + h / 2 - 10), "Skill slots", 20, GOLD, "lm")
     text(d, (x, y + h / 2 + 12), "drag skills here", 14, LIGHT_DIM, "lm")
-    slots = ["MultipleShot", "InnerSight", "", "FireArrow"]
+    slots = ["MultipleShot", "InnerSight", "FreezingArrow", ""]
     for i, sid in enumerate(slots):
         x, y, w, h = r("slot%d" % i)
         paste(canvas, sliced(art("tile"), w, h, 18), x, y)
@@ -261,7 +271,10 @@ def render(layout, tab, out, hovered="ExplodingArrow"):
         if icon is not None:
             paste(canvas, sized(icon, w - 8, h - 8), x + 4, y + 4)
         d = ImageDraw.Draw(canvas)
-        text(d, (x + 7, y + 4), str(i + 1), 14, (255, 255, 255), "la")
+        text(d, (x + 7, y + 4), "F%d" % (i + 1), 14, (255, 255, 255), "la")
+    x, y, w, h = r("slotsDivider")
+    ImageDraw.Draw(canvas, "RGBA").rectangle([x * S, y * S, (x + max(w, 1)) * S, (y + h) * S], fill=(168, 120, 62, 102))
+    button(canvas, r("learn"), "Learn  (+1 rank)")
     canvas = canvas.resize((canvas.size[0] // S, canvas.size[1] // S), Image.LANCZOS)
     canvas.convert("RGB").save(out)
     print("Wrote", out)

@@ -38,7 +38,7 @@ namespace CraftingOverhaul.Classes
         /// <summary>How bright a card's wood is: full once learned, dimmer before, dark for skills that come later.</summary>
         private const float CardLearned = 1f;
         private const float CardNotLearned = 0.8f;
-        private const float CardLater = 0.5f;
+        private const float CardLater = 0.64f;
 
         private static RectTransform _root;
         private static RectTransform _cardsRoot;
@@ -489,12 +489,12 @@ namespace CraftingOverhaul.Classes
             }
             var medallion = UiKit.Image("Medallion", root, SheetArt.Medallion);
             medallion.color = !medallion.sprite ? new Color(0.08f, 0.07f, 0.06f, 0.9f)
-                : later ? new Color(0.45f, 0.43f, 0.41f) : learned ? Color.white : new Color(0.82f, 0.8f, 0.78f);
+                : later ? new Color(0.58f, 0.56f, 0.54f) : learned ? Color.white : new Color(0.82f, 0.8f, 0.78f);
             Place(medallion.rectTransform, iconRect);
             var icon = UiKit.Image("Icon", medallion.rectTransform, ClassesSource.SkillIcon(skill.Id));
             icon.preserveAspect = true;
             icon.enabled = icon.sprite;
-            icon.color = later ? new Color(0.37f, 0.37f, 0.37f, 1f) : learned ? Color.white : new Color(0.8f, 0.8f, 0.8f, 1f);
+            icon.color = later ? new Color(0.52f, 0.52f, 0.52f, 1f) : learned ? Color.white : new Color(0.8f, 0.8f, 0.8f, 1f);
             UiKit.Stretch(icon.rectTransform, iconRect.Width * IconInset);
 
             var name = UiKit.Text("Name", root, 20, later ? UiKit.LightDim : learned ? UiKit.Gold : UiKit.Light, TextAnchor.MiddleCenter);
@@ -560,8 +560,8 @@ namespace CraftingOverhaul.Classes
             bool learned = state == CardState.Learned || state == CardState.Maxed;
             _detailsIcon.sprite = ClassesSource.SkillIcon(skill.Id);
             _detailsIcon.enabled = _detailsIcon.sprite;
-            _detailsIcon.color = skill.Later ? new Color(0.37f, 0.37f, 0.37f) : learned ? Color.white : new Color(0.8f, 0.8f, 0.8f);
-            _detailsMedallion.color = skill.Later ? new Color(0.45f, 0.43f, 0.41f) : learned ? Color.white : new Color(0.82f, 0.8f, 0.78f);
+            _detailsIcon.color = skill.Later ? new Color(0.52f, 0.52f, 0.52f) : learned ? Color.white : new Color(0.8f, 0.8f, 0.8f);
+            _detailsMedallion.color = skill.Later ? new Color(0.58f, 0.56f, 0.54f) : learned ? Color.white : new Color(0.82f, 0.8f, 0.78f);
             Color glow = GlowColour(state);
             _detailsGlow.enabled = _detailsGlow.sprite && state != CardState.Later && state != CardState.NotLearned;
             _detailsGlow.color = new Color(glow.r, glow.g, glow.b, 0.75f);

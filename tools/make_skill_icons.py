@@ -69,6 +69,7 @@ SPARK = pal("#C8A830", "#FFF07A", "#FFFBD0", "#FFFFFF")
 POISON = pal("#1f420c", "#4e9a22", "#8BE04A", "#D8FF8A")
 SPIRIT = pal("#6e5a34", "#bfa874", "#F4E6C0", "#FFFFFF")
 FEATHER = pal("#4a3a2a", "#9a8a74", "#E2D8C6", "#FFFFFF")
+WIND = pal("#2f5f5c", "#7fc4b8", "#c8f2e8", "#FFFFFF")
 FIRE_FLETCH = pal("#4a1608", "#9a2c10", "#E06A2A", "#FFC890")
 ICE_FLETCH = pal("#2c5a76", "#7ec0e0", "#d8f6ff", "#FFFFFF")
 POISON_HEAD = pal("#1c3a10", "#4f8a30", "#a8d888", "#E8FFD8")
@@ -81,6 +82,7 @@ GLOW_POISON = hexc("#7CD03A")
 GLOW_GOLD = hexc("#E8B850")
 GLOW_SPIRIT = hexc("#FFF0C8")
 GLOW_STEEL = hexc("#B8C4D8")
+GLOW_WIND = hexc("#A8F0E0")
 BOLT_EDGE = hexc("#2a4f9a")
 POISON_EDGE = hexc("#0e2006")
 FIRE_EDGE = hexc("#3a0802")
@@ -558,49 +560,90 @@ def crescent(c, r, a0, a1, width, taper=True):
 
 # ---------------------------------------------------------------- Bow and Crossbow
 
-def icon_magic_arrow(cv):
-    aura(cv, GLOW_MAGIC, 0.22)
-    arrow(cv, (26, 74), (74, 26), shaft=3.6, head_len=17, head_w=15, fletch_len=14, fletch_w=7,
-          head=MAGIC, shaft_pal=MAGIC, fletch=MAGIC, glow_colour=GLOW_MAGIC, glow_r=3.6, glow_s=1.6)
-    flat(cv, blur(m_line([V(30, 70), V(63, 37)], 1.1), 0.3), (1, 1, 1), 0.85)
-    for c, r, d in (((30, 36), 6, 0), ((68, 66), 5, 0), ((48, 24), 3.4, 45), ((77, 48), 3.2, 45)):
-        sparkle(cv, c, r, (1, 1, 1), GLOW_MAGIC, d)
+def icon_forked_lightning(cv):
+    """The arrow strikes, and lightning forks out from the point it hit."""
+    aura(cv, GLOW_SPARK, 0.22)
+    hit = V(46, 54)
+    for i, (a, ln) in enumerate(((-103, 31), (-45, 36), (8, 30))):
+        end = polar(hit, a, ln)
+        bolt(cv, bolt_points(hit, end, 4, 3.0, 40 + i), 3.4, 0.8)
+        sparkle(cv, end, 3.6, (1, 1, 1), GLOW_SPARK, 45)
+    arrow(cv, (19, 81), hit + V(2, -2), shaft=3.2, head_len=14, head_w=12.5, fletch_len=11, fletch_w=5.2,
+          glow_colour=GLOW_SPARK, glow_s=0.6)
+    orb = m_circle(hit + V(1, -1), 4.6)
+    glow(cv, orb, GLOW_SPARK, 3, 1.8)
+    fill(cv, orb, SPARK, depth=1.5, bias=0.3)
+    sparkle(cv, hit + V(1, -1), 8, (1, 1, 1), None)
 
 
-def icon_fire_arrow(cv):
-    aura(cv, GLOW_FIRE, 0.22)
-    T, H = V(25, 75), V(75, 25)
-    back = unit(V(-1.0, 0.15))
-    tongues = []
-    for i, f in enumerate(np.linspace(0.78, 0.3, 5)):
-        tongues.append((lerp(T, H, f), rotate(back, (-1) ** i * 16), 20 + 14 * (f - 0.3), 12 + 5 * f, i * 1.3))
-    flames(cv, tongues)
-    arrow(cv, T, H, fletch=FIRE_FLETCH)
-    flames(cv, [(lerp(T, H, 0.66), rotate(back, -6), 14, 7.5, 0.4), (lerp(T, H, 0.46), rotate(back, 12), 13, 7, 2.0)],
-           alpha=0.92, glow_s=0.4)
+def icon_wind_lance(cv):
+    """A javelin of wind flying dead straight, pushing shock rings ahead of its streaks."""
+    aura(cv, GLOW_WIND, 0.2)
+    T, H = V(23, 77), V(77, 23)
+    u = unit(H - T)
+    n = perp(u)
+    streaks = []
+    for side, start, end in ((1, 0.02, 0.5), (-1, 0.1, 0.58), (1, 0.22, 0.4), (-1, 0.0, 0.3)):
+        off = n * side * (8.5 if end > 0.45 else 14)
+        streaks.append([lerp(T, H, start) + off, lerp(T, H, end) + off])
+    speed_lines(cv, streaks, 2.6, WIND, alpha=0.85, glow_colour=GLOW_WIND)
+    for f, r, w in ((0.5, 15, 3.0), (0.3, 11, 2.4)):
+        ring = crescent(lerp(T, H, f) - u * r * 0.55, r, -45 - 62, -45 + 62, w)
+        glow(cv, ring, GLOW_WIND, 1.8, 0.9)
+        fill(cv, ring, WIND, 0.9, depth=0.5, bias=0.2, gloss=0.2, shade=0.1)
+    spear(cv, T, H, head_len=27, head_w=13, shaft=3.8, head=WIND, shaft_pal=WIND, glow_colour=GLOW_WIND, glow_r=3.2,
+          glow_s=1.5, socket=False)
+    flat(cv, blur(m_line([lerp(T, H, 0.08), lerp(T, H, 0.9)], 1.0), 0.3), (1, 1, 1), 0.8)
+    sparkle(cv, H, 5, (1, 1, 1), GLOW_WIND)
 
 
-def icon_cold_arrow(cv):
-    aura(cv, GLOW_ICE, 0.2)
-    T, H = V(42, 58), V(75, 25)
-    n = perp(unit(H - T))
-    # frost streams back from the arrow, fanning out past its tail like a comet's tail
-    end = T + (T - H) * 0.42
-    trail = np.zeros((S, S))
-    for side in (-1, 0, 1):
-        pts = [lerp(lerp(H, T, 0.35), end, f) + n * side * 10 * f ** 1.3 for f in np.linspace(0, 1, 24)]
-        trail = union(trail, m_stroke(pts[::-1], np.linspace(8 if side == 0 else 6, 0.6, 24)))
-    glow(cv, trail, GLOW_ICE, 2.6, 1.2)
-    fill(cv, blur(trail, 0.5), ICE, 0.85, depth=1.5, bias=0.05, gloss=0.0, shade=0.0)
-    arrow(cv, T, H, head=ICE, shaft_pal=pal("#2c4a5e", "#5f8aa4", "#a8d4ea", "#E8FBFF"), fletch=ICE_FLETCH,
-          glow_colour=GLOW_ICE, glow_s=0.9)
-    for f, side, r in ((0.45, 1, 4.6), (0.75, -1, 5.0), (1.0, 0.4, 4.2)):
-        p = lerp(T, end, f) + n * side * 11
-        flake = snowflake_mask(p, r, arm=1.4, branches=False)
-        glow(cv, flake, GLOW_ICE, 1.2, 1.0)
-        solid(cv, flake, ICE, depth=0.3, bias=0.35, line=0.8, line_colour=hexc("#0a2a40"))
-    sparkle(cv, (63, 22), 4.5, (1, 1, 1), GLOW_ICE)
-    sparkle(cv, (79, 42), 3.2, (1, 1, 1), GLOW_ICE, 45)
+def icon_snipe(cv):
+    """A long, careful shot: the arrow flying into the centre of a sight ring."""
+    aura(cv, GLOW_GOLD, 0.16)
+    c = V(57, 43)
+    sight = union(m_ring(c, 23, 19.6), m_circle(c, 2.4))
+    for a in (0, 90, 180, 270):
+        sight = union(sight, m_line([polar(c, a, 14.5), polar(c, a, 28)], 2.6))
+    glow(cv, sight, GLOW_GOLD, 2.2, 1.1)
+    solid(cv, sight, GOLD, depth=0.5, bias=0.1)
+    arrow(cv, (18, 82), c + V(-5, 5), shaft=3.2, head_len=14, head_w=12.5, fletch_len=11, fletch_w=5.2)
+    sparkle(cv, c, 5, (1, 1, 1), GLOW_GOLD)
+
+
+def icon_venom_strike(cv):
+    """The arrow bursts into a poison cloud where it lands."""
+    aura(cv, GLOW_POISON, 0.24)
+    c = V(57, 43)
+    poison_cloud(cv, c, 22, 8, 31)
+    rng = np.random.default_rng(32)
+    for _ in range(5):
+        p = polar(c, rng.uniform(-150, 30), rng.uniform(7, 16))
+        r = rng.uniform(1.5, 2.6)
+        flat(cv, m_ring(p, r, r * 0.6), hexc("#F0FFC0"), 0.9)
+    arrow(cv, (19, 81), c + V(-3, 3), shaft=3.2, head_len=14, head_w=12.5, fletch_len=11, fletch_w=5.2, head=POISON_HEAD,
+          glow_colour=GLOW_POISON, glow_s=0.8)
+
+
+def icon_shackle_shot(cv):
+    """The arrow drags a chain that shackles its target to whatever stands behind it: two cuffs joined by links."""
+    aura(cv, GLOW_STEEL, 0.16)
+    a, b = V(31, 34), V(69, 66)
+    along = math.degrees(math.atan2(b[1] - a[1], b[0] - a[0]))
+    chain = np.zeros((S, S))
+    for i, f in enumerate((0.3, 0.43, 0.57, 0.7)):
+        p = lerp(a, b, f)
+        if i % 2 == 0:
+            chain = union(chain, sub(m_ellipse(p, 5.6, 3.4, along), m_ellipse(p, 3.3, 1.3, along)))
+        else:
+            chain = union(chain, m_ellipse(p, 4.6, 1.5, along))
+    cuffs = union(m_ring(a, 10.5, 6.6), m_ring(b, 10.5, 6.6))
+    iron = union(chain, cuffs)
+    glow(cv, iron, GLOW_STEEL, 2.0, 0.9)
+    solid(cv, chain, STEEL, depth=0.5, bias=-0.05)
+    solid(cv, cuffs, STEEL, depth=0.9)
+    for c in (a, b):
+        solid(cv, m_circle(c + unit(b - a) * (9 if c is a else -9), 2.0), BRONZE, depth=0.5, line=0.9)
+    arrow(cv, (25, 79), (75, 23), shaft=3.2, head_len=14, head_w=12.5, fletch_len=11, fletch_w=5.2)
 
 
 def icon_multiple_shot(cv):
@@ -610,73 +653,6 @@ def icon_multiple_shot(cv):
         d = polar((0, 0), deg, 1)
         arrow(cv, origin + d * start, origin + d * length, shaft=3.2, head_len=14, head_w=12.5, fletch_len=11,
               fletch_w=5.2)
-
-
-def icon_exploding_arrow(cv):
-    aura(cv, GLOW_FIRE, 0.22)
-    arrow(cv, (26, 74), (53, 47), fletch=FIRE_FLETCH)
-    c = V(59, 41)
-    outer = m_burst(c, 23, 11, 11, deg=-8, jitter=0.25, seed=5)
-    mid = m_burst(c, 16, 8.5, 9, deg=12, jitter=0.25, seed=6)
-    inner = m_burst(c, 9.5, 5, 7, deg=30, jitter=0.2, seed=7)
-    glow(cv, outer, GLOW_FIRE, 3.5, 1.3)
-    outline(cv, outer, 1.1, FIRE_EDGE, 0.8)
-    fill(cv, outer, FIRE_OUT, depth=1.8, gloss=0.2, shade=0.15)
-    fill(cv, mid, pal("#E0500E", "#FF9A2A", "#FFD060", "#FFF0B0"), depth=1.6, gloss=0.2, shade=0.1)
-    fill(cv, inner, FIRE_CORE, depth=1.4, bias=0.25, gloss=0.1, shade=0.0)
-    rng = np.random.default_rng(8)
-    for i in range(9):
-        a = -200 + i * 30 + rng.uniform(-8, 8)
-        p1 = polar(c, a, 28)
-        if np.hypot(*(p1 - V(50, 50))) > 34:
-            p1 = polar(c, a, 24.5)
-        m = m_stroke([polar(c, a, 21), p1], [1.8, 0.2])
-        flat(cv, blur(m, 0.3), hexc("#FFD060"), 0.95)
-
-
-def icon_ice_arrow(cv):
-    aura(cv, GLOW_ICE, 0.2)
-    arrow(cv, (25, 75), (68, 32), fletch=ICE_FLETCH)
-    c = V(59, 41)
-    u = unit(V(1, -1))
-    n = perp(u)
-
-    def prism(centre, axis, length, width):
-        a = unit(axis)
-        b = perp(a)
-        return [centre + a * length, centre + a * length * 0.55 + b * width, centre - a * length * 0.5 + b * width,
-                centre - a * length * 0.8, centre - a * length * 0.5 - b * width,
-                centre + a * length * 0.55 - b * width]
-
-    verts = prism(c, u, 23, 11)
-    glow(cv, m_poly(verts), GLOW_ICE, 3.5, 1.3)
-    navy = hexc("#0a2a40")
-    for axis, off, ln, w in ((rotate(u, -62), -4, 13, 4.5), (rotate(u, 58), -6, 12, 4.2), (rotate(u, 150), 4, 9, 3.6)):
-        base = c + u * off
-        gem(cv, base + unit(axis) * ln * 0.5, prism(base + unit(axis) * ln * 0.5, axis, ln, w), ICE, alpha=0.9,
-            line=1.0, line_colour=navy)
-    gem(cv, c, verts, ICE, alpha=0.7, line=1.2, line_colour=navy)
-    tip = V(68, 32)
-    head = union(m_poly([tip, tip - u * 15 + n * 6.5, tip - u * 10.5]),
-                 m_poly([tip, tip - u * 10.5, tip - u * 15 - n * 6.5]))
-    fill(cv, head, STEEL, 0.5, depth=0.8)
-    sparkle(cv, c + u * 15 + n * 3, 4.5, (1, 1, 1), GLOW_ICE, 20)
-
-
-def icon_guided_arrow(cv):
-    aura(cv, GLOW_MAGIC, 0.2)
-    tc = V(63, 32)
-    rings = union(m_ring(tc, 13, 9.8), m_ring(tc, 6.8, 4.0), m_circle(tc, 1.8))
-    glow(cv, rings, GLOW_MAGIC, 2.5, 1.3)
-    solid(cv, rings, MAGIC, depth=0.5, bias=-0.1)
-    path = bezier((20, 44), (20, 88), (60, 92), (62, 50), 60)
-    for t in np.linspace(0.02, 0.56, 8):
-        p = path[int(t * (len(path) - 1))]
-        m = m_circle(p, 1.0 + 1.8 * t)
-        glow(cv, m, GLOW_MAGIC, 1.2, 0.9)
-        fill(cv, m, MAGIC, 0.6 + 0.4 * t, depth=0.4, bias=0.3)
-    arrow(cv, path[int(0.62 * 59)], (62.5, 46), shaft=3.2, head_len=14, head_w=12.5, fletch_len=10, fletch_w=5,
-          head=MAGIC, shaft_pal=MAGIC, fletch=MAGIC, glow_colour=GLOW_MAGIC, glow_s=1.3)
 
 
 def icon_strafe(cv):
@@ -781,31 +757,6 @@ def icon_dodge(cv):
     swoosh = union(crescent((70, 50), 44, 152, 208, 4.4), crescent((70, 50), 50, 160, 200, 3.2))
     glow(cv, swoosh, GLOW_GOLD, 1.6, 1.0)
     fill(cv, swoosh, pal("#9c7a2a", "#E8C46A", "#FFF4C8", "#FFFFFF"), depth=0.4, bias=0.2)
-
-
-def icon_slow_missiles(cv):
-    aura(cv, GLOW_MAGIC, 0.22)
-    c = V(50, 50)
-    prof = np.sin(np.linspace(0, np.pi, 50)) * 3.4
-    swirl = union(m_stroke(arc_points(c, 31, 200, 340, 50, ry=11), prof),
-                  m_stroke(arc_points(c, 31, 20, 160, 50, ry=11), prof))
-    glow(cv, swirl, GLOW_MAGIC, 2, 1.0)
-    fill(cv, swirl * (GY < 50), MAGIC, 0.75, depth=0.4, bias=0.15)
-    glass = m_poly([V(38, 25), V(62, 25), V(62, 29), V(52.5, 47), V(52.5, 53), V(62, 71), V(62, 75), V(38, 75),
-                    V(38, 71), V(47.5, 53), V(47.5, 47), V(38, 29)])
-    glow(cv, glass, GLOW_MAGIC, 3, 1.1)
-    solid(cv, glass, pal("#140f38", "#241c5c", "#3a2e80", "#5a4aa8"), alpha=0.92, depth=2, gloss=0.35)
-    # the trapped arrow, frozen mid-flight inside the glass
-    arrow(cv, (50, 29), (50, 72), shaft=3.0, head_len=15, head_w=13.5, fletch_len=11, fletch_w=5.2,
-          head=MAGIC, shaft_pal=MAGIC, fletch=MAGIC, glow_colour=GLOW_MAGIC, glow_s=1.6, glow_r=2.2)
-    plates = union(m_poly([V(32, 19), V(68, 19), V(68, 25), V(32, 25)]), m_poly([V(32, 75), V(68, 75), V(68, 81),
-                                                                                    V(32, 81)]))
-    posts = union(m_line([V(35.5, 24), V(35.5, 76)], 2.6), m_line([V(64.5, 24), V(64.5, 76)], 2.6))
-    solid(cv, posts, GOLD, depth=0.6)
-    solid(cv, plates, GOLD, depth=1.0)
-    fill(cv, swirl * (GY >= 50), MAGIC, 0.95, depth=0.4, bias=0.2)
-    sparkle(cv, (72, 60), 4, (1, 1, 1), GLOW_MAGIC)
-    sparkle(cv, (28, 40), 3, (1, 1, 1), GLOW_MAGIC, 45)
 
 
 def icon_avoid(cv):
@@ -946,16 +897,6 @@ def icon_jab(cv):
     streaks = [[V(30, 70) + n * s * 10 - u * 2, V(30, 70) + n * s * 10 + u * ln] for s, ln in ((-1, 22), (1, 22))]
     speed_lines(cv, streaks, 2.6, STEEL, alpha=0.8, glow_colour=GLOW_STEEL)
     spear(cv, V(26, 74), tip, head_len=23, head_w=13.5, shaft=3.6, glow_colour=GLOW_STEEL, glow_s=0.6)
-
-
-def icon_power_strike(cv):
-    aura(cv, GLOW_SPARK, 0.22)
-    spear(cv, (50, 85), (50, 17), head_len=36, head_w=19, shaft=4.4, glow_colour=GLOW_SPARK, glow_s=1.2)
-    # two long bolts climb the blade's edges, two short ones spit sideways
-    for a, b, seed in (((37, 62), (44, 18), 3), ((63, 62), (56, 18), 4),
-                       ((33, 40), (24, 28), 6), ((67, 40), (76, 28), 7)):
-        bolt(cv, bolt_points(a, b, 6 if b[1] < 20 else 3, 3.2, seed), 2.6, 0.7)
-    sparkle(cv, (50, 17), 5.5, (1, 1, 1), GLOW_SPARK)
 
 
 def icon_poison_javelin(cv):
@@ -1111,21 +1052,20 @@ def icon_amazon(cv):
 
 # ---------------------------------------------------------------- registry
 
+# In the order of each tab's cards (tools/make_orlog_tables.py; Krogon's nine per tab, 2026-11-15).
 TABS = [
     ("Bow and Crossbow", [
-        ("MagicArrow", icon_magic_arrow), ("FireArrow", icon_fire_arrow), ("ColdArrow", icon_cold_arrow),
-        ("MultipleShot", icon_multiple_shot), ("ExplodingArrow", icon_exploding_arrow), ("IceArrow", icon_ice_arrow),
-        ("GuidedArrow", icon_guided_arrow), ("Strafe", icon_strafe), ("ImmolationArrow", icon_immolation_arrow),
-        ("FreezingArrow", icon_freezing_arrow)]),
+        ("ForkedLightning", icon_forked_lightning), ("WindLance", icon_wind_lance), ("Snipe", icon_snipe),
+        ("MultipleShot", icon_multiple_shot), ("Strafe", icon_strafe), ("FreezingArrow", icon_freezing_arrow),
+        ("ImmolationArrow", icon_immolation_arrow), ("VenomStrike", icon_venom_strike), ("ShackleShot", icon_shackle_shot)]),
     ("Passive and Magic", [
-        ("InnerSight", icon_inner_sight), ("CriticalStrike", icon_critical_strike), ("Dodge", icon_dodge),
-        ("SlowMissiles", icon_slow_missiles), ("Avoid", icon_avoid), ("Penetrate", icon_penetrate),
-        ("Decoy", icon_decoy), ("Evade", icon_evade), ("Valkyrie", icon_valkyrie), ("Pierce", icon_pierce)]),
+        ("InnerSight", icon_inner_sight), ("CriticalStrike", icon_critical_strike), ("Penetrate", icon_penetrate),
+        ("Dodge", icon_dodge), ("Avoid", icon_avoid), ("Evade", icon_evade),
+        ("Decoy", icon_decoy), ("Valkyrie", icon_valkyrie), ("Pierce", icon_pierce)]),
     ("Javelin and Spear", [
-        ("Jab", icon_jab), ("PowerStrike", icon_power_strike), ("PoisonJavelin", icon_poison_javelin),
-        ("Impale", icon_impale), ("LightningBolt", icon_lightning_bolt), ("ChargedStrike", icon_charged_strike),
-        ("PlagueJavelin", icon_plague_javelin), ("Fend", icon_fend), ("LightningStrike", icon_lightning_strike),
-        ("LightningFury", icon_lightning_fury)]),
+        ("Jab", icon_jab), ("Impale", icon_impale), ("Fend", icon_fend),
+        ("ChargedStrike", icon_charged_strike), ("LightningStrike", icon_lightning_strike), ("LightningBolt", icon_lightning_bolt),
+        ("PoisonJavelin", icon_poison_javelin), ("PlagueJavelin", icon_plague_javelin), ("LightningFury", icon_lightning_fury)]),
 ]
 CLASS_ICON = ("Amazon", icon_amazon)
 
@@ -1164,7 +1104,7 @@ def label(name):
 def preview(icons):
     """Contact sheet: per tab a row at 64 px on the medallion with names, and a row at 48 px; then the class icon."""
     medallion = Image.open(MEDALLION).convert("RGBA")
-    cols, pitch, margin = 10, 100, 20
+    cols, pitch, margin = 9, 100, 20
     w = margin * 2 + cols * pitch
     row_h = 30 + 64 + 22 + 56 + 14
     h = margin + len(TABS) * row_h + 30 + 64 + 22 + margin
