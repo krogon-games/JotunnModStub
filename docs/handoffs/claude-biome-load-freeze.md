@@ -1,6 +1,6 @@
 # Handoff: `claude/biome-load-freeze`
 
-**Written:** 2026-11-13, updated 2026-11-15 after the play-test. Branch from `master` at `7bae804` (PR #63); no PR yet.
+**Written:** 2026-11-15 (`/handoff`). 5 commits ahead of `master`, 0 behind; no PR yet.
 
 ## Stage
 
@@ -51,14 +51,16 @@ None.
 
 ## Checks
 
-- Build: PASS (CraftingOverhaul against the stand-in install). `dotnet test CraftingOverhaul.Tests`: 510 passed (12 new: saved-file format and frame slicing).
-- Version: not changed (feature branches never do).
-- Multiplayer sync: not affected (per-player client work, no network messages, no config added).
-- FEATURES.md: updated (biome detection section and row, recipe categories row, changelog).
-- In-game: PASS (Krogon's play-test 2026-11-15, all six steps).
+- Build: PASS. `dotnet test CraftingOverhaul.Tests`: 510 passed (12 new: saved-file format and frame slicing); CraftingOverhaul builds against the stand-in install (0 errors; 3 old warnings).
+- Version: gameplay changed: version bump needed at merge (CraftingOverhaul). This branch changed no version number.
+- Multiplayer sync: PASS (read in code, not tested). No new config, items, pieces or messages; the work and the saved file are per player, so it still works when only some players have the mod.
+- Assets and names: SKIPPED (no new assets, data files, prefab names or text tokens).
+- FEATURES.md: PASS (biome detection row and section, recipe categories row, changelog).
+- In-game: PASS. Krogon's play-test 2026-11-15, all six steps passed (phone page and `LogOutput.log`).
 
 ## Merge notes
 
-- Ready to merge after `/handoff` (play-test passed, nothing left to fix).
-- **Gameplay changed: version bump needed at merge** for CraftingOverhaul (code only; no data or assets).
-- Shared files touched: `FEATURES.md` (changelog, two table rows, biome section), `docs/CURRENT_STATE.md` (one line under known issues), `docs/ARCHITECTURE.md` (biome bullet, pattern 9), `CraftingOverhaul/CraftingOverhaul.cs` (one line in `Awake`), `CraftingOverhaul/RecipeList/RecipeListOrganizer.cs`.
+- **Ready to merge: yes.** The play-test passed, nothing left to fix, no check failed, up to date with `master`, everything pushed.
+- **Gameplay changed: version bump needed at merge: CraftingOverhaul** (code only; no data or assets).
+- Files also changed by another unmerged branch, `claude/lucid-albattani-imrei7`: `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (both add `Compile` links), `CraftingOverhaul/CraftingOverhaul.cs` (this branch adds one line in `Awake`), `FEATURES.md`, `docs/ARCHITECTURE.md`, `docs/CURRENT_STATE.md`. Keep both sides in a conflict.
+- Other shared files touched: `CraftingOverhaul/RecipeList/RecipeListOrganizer.cs`.
