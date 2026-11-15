@@ -31,7 +31,7 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 ### 3. Small checks ([#27](https://github.com/krogon-games/JotunnModStub/issues/27))
 **Both passed 2026-11-15** (phone log).
 1. **One click sound:** the + buttons for attribute points, the skills panel's buttons and the inventory's tab buttons play one click, not two (on 2026-10-31 you heard double clicks, most on the first press; fixed the same day, never re-tried).
-2. **Build stamp:** `BepInEx/LogOutput.log` has the line `CraftingOverhaul 0.4.0 loaded (build: master <commit>)`, beside Corruption's and Orlog's.
+2. **Build stamp:** `BepInEx/LogOutput.log` has the line `CraftingOverhaul 0.5.0 loaded (build: master <commit>)`, beside Corruption's and Orlog's.
 
 ## Odin items (2 minutes)
 
@@ -160,7 +160,7 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 
 **What it can find:** everything so far was played in single player, where the "server" is your own game. On the dedicated server the mods load on a machine with no player and no screen, and the rip and Orlog stone requests really travel to the server and back ([`ARCHITECTURE.md`](ARCHITECTURE.md) → Server messages, Dedicated-server review). **What it can't find:** anything that needs a second player's game (who runs a creature or chest, what others see, loot and XP per player). Those stay in Session 2.
 
-1. **The mods load on the server** (Part 1): start the server. Its own log has the three lines `Corruption 0.7.0 loaded (build: master <commit>)`, `Orlog 0.3.0 loaded …` and `CraftingOverhaul 0.4.0 loaded …`, and no red errors from our mods.
+1. **The mods load on the server** (Part 1): start the server. Its own log has the three lines `Corruption 0.7.0 loaded (build: master <commit>)`, `Orlog 0.4.0 loaded …` and `CraftingOverhaul 0.5.0 loaded …`, and no red errors from our mods.
 2. **Joining** (Part 1): **Start modded** in r2modman and join. Expect: no "incompatible version" message; your own `BepInEx/LogOutput.log` has the same three lines with the same commit; F5 shows no red errors.
 3. **`devcommands`** (Session 2's open question): type `devcommands`, then `spawn Boar`, `orlog_info` and `orlog_level 10`. Do they work on the server? If not, note what the console says: the evening's script then needs real items brought in from play.
 4. **The server's settings win** (Part 5, step 1): set `[2 - Nearby Containers] Enabled = false` in the server's `com.krogongames.craftingoverhaul.cfg` and restart it; try crafting from a chest. Expect: you can't. Set it back.
@@ -188,8 +188,8 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 1. **Each player:** start with r2modman's **Start modded** and join the server. Expect: no "incompatible version" message.
 2. **Each player and Krogon (also the server's own log):** open `BepInEx/LogOutput.log` and find the three lines. Expect, the **same** on every machine:
    - `Corruption 0.7.0 loaded (build: master <commit>)`
-   - `Orlog 0.3.0 loaded (build: master <commit>)`, the same commit
-   - `CraftingOverhaul 0.4.0 loaded (build: master <commit>)`, the same commit
+   - `Orlog 0.4.0 loaded (build: master <commit>)`, the same commit
+   - `CraftingOverhaul 0.5.0 loaded (build: master <commit>)`, the same commit
 3. **Each player:** F5, no red errors.
 
 ### Part 2: quick checks together at the base (about 45 minutes)
