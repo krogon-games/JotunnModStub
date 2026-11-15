@@ -56,5 +56,6 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - `orlog_respec`: take back all spent stat and skill points.
 
 ## Changelog
+- 0.3.0 (2026-11-15): the Amazon: her five passives (Critical Strike, Penetrate, Dodge, Avoid, Evade) with Diablo 2's chances; right click fires the chosen skill, F1–F4 use the four skill slots, block moves to the mouse's back side button (`BlockKey`, rebindable); the bow skills and Inner Sight; quick cast per skill; a skill point for each boss's first kill (12 in all); bosses give more XP (×9.4 for Eikthyr up to ×66.6 for Kall Fimbulbringer). F2 opens the game's stats window only with Ctrl held, for a character with a class.
 - 0.2.0 (2026-11-08): review fixes (PR #57): stat and skill point totals can't overflow, and a lowered `StatPointsPerLevel` keeps the points already spent.
 - 0.1.0 (unreleased): first version.

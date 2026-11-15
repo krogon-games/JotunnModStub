@@ -50,11 +50,12 @@ Open the console with F5 while in a world (start the game with `-console` if it 
 2. Copy `CraftingOverhaul.dll` into `<Valheim>/BepInEx/plugins/`.
 
 ## Known issues
-- Working out biomes loads every location once, right after you spawn (when biome grouping is on). This may cause a short hitch.
+- Working out biomes loads every location once (when biome grouping is on). Since 0.4.0 this runs in the background after you spawn and the result is saved, so there is no freeze; the recipe list keeps the game's order until it's ready. `co_biome refresh` and `co_dump` still pause the game for about 14 seconds.
 - Items the game data doesn't explain (e.g. quest rewards) go under Other; `co_dump` lists them so they can be added to `BiomeMaterialOverrides`.
 - If two players take from the same unopened chest in the same instant, the last write wins.
 
 ## Changelog
+- 0.4.0 (2026-11-15): biome grouping no longer freezes the game for about 20 seconds after spawning: the result is saved to `BepInEx/cache/CraftingOverhaul.biomes.txt` and reused while the game and mods are unchanged, and is otherwise worked out in the background. The classes UI's sample ("demo") data, its `Demo` setting and the `co_classes_stone` command are removed; the screens show Orlog's answers. The skills panel is larger (`SkillsPanelSize` fixes a size); right-click a skill cross slot to toggle quick cast.
 - 0.3.0 (2026-11-10): UI round (#30): the Skills button above the inventory is removed (it pushed the sixth inventory tab out of view); the skills panel still opens with its key (K).
 - 0.2.0 (2026-11-08): everything merged into `master` since 0.1.0, up to the code-review fixes (PR #53): one player at a time takes from a chest when crafting or building from chests.
 - Unreleased (now in 0.2.0): biome grouping now uses the game's own data instead of a built-in list; added `co_dump` and `co_biome` commands.
