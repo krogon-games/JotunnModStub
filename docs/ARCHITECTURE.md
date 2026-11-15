@@ -28,7 +28,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - `Biomes/`: data-driven biome detection.
   - `Collectors/` turn game data into *sources* (vegetation, spawns, locations and dungeon rooms, conversions, producers, hatching, recipes); `PrefabWalker` reads drop/harvest components.
   - `BiomeSolver.cs` (pure, tested): an item's biome is its earliest source; a source's biome is the latest of its location, requirements, tool tier and boss key; weak sources (random chest loot) only place items nothing else places; config overrides are fixed points.
-  - `BiomeResolver.cs`: orchestration and caching. The Corruption design plans to reuse it (affix tiers, unique item levels, map materials).
+  - `BiomeResolver.cs`: orchestration and caching. The Corruption design plans to reuse it (affix tiers, unique item levels, map materials). It never blocks the game (2026-11-13): it reuses the result saved in `BepInEx/cache/CraftingOverhaul.biomes.txt` (`BiomeCacheFile.cs`, pure, tested) while `BiomeCacheKey.cs` (game version, mods, build, overrides, game-data fingerprint) matches; otherwise `BiomeResolveJob.cs` runs the collectors as small steps, about 4 ms per frame (`SlicedWork.cs`, pure, tested), loads location and room prefabs with `SoftReference.LoadAsync` a few at a time, and runs the solver on a thread-pool thread. `TryGet` answers false until the result is ready; console commands call `EnsureResolved()` to finish on the spot.
 - `Containers/`: `NearbyContainers` (tracks containers from `Container.Awake`, filters unusable ones, claims ownership before taking), `ContainerPatches` (count/remove patches scoped to crafting and building code paths).
 - `Dump/`: `co_dump`, `co_biome`, CSV writer.
 
@@ -103,6 +103,7 @@ Read through the code, not run on a server (the user's group session tests it; `
 6. **Config scope.** Gameplay numbers admin-only (server-synced); visual settings per player.
 7. **Robust patch arguments.** Use `__0`/`__1` positional arguments where parameter names may change.
 8. **No hard-coded positional limits without a guard** (e.g. `Riftforge` refuses more than 5 ingredients and logs an error).
+9. **Long work doesn't block a frame.** Work that reads many prefabs is an enumerator of small steps pumped a few milliseconds per frame from the plugin's coroutine (`Biomes/SlicedWork.cs`); asset-bundle prefabs load with `SoftReference.LoadAsync()` (each load holds a reference: always `Release()` it, also in a `finally` for when the work is stopped), and pure computation can go to a thread-pool thread (no Unity calls there). Results that only depend on game data can be saved under `BepInEx/cache` with a key of everything they depend on (`Biomes/BiomeCacheKey.cs`).
 
 ## Build and test
 

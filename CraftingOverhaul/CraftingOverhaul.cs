@@ -29,6 +29,7 @@ namespace CraftingOverhaul
         private void Awake()
         {
             ModConfig.Bind(Config);
+            Biomes.BiomeResolver.Host = this;
             _configWatcher = new KrogonGames.Shared.ConfigWatcher(Config, Jotunn.Logger.LogInfo);
 
             _harmony = new Harmony(PluginGUID);

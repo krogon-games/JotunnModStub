@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace CraftingOverhaul.Biomes.Collectors
@@ -10,11 +11,11 @@ namespace CraftingOverhaul.Biomes.Collectors
     {
         public string Name => "Producers";
 
-        public void Collect(List<ItemSource> sources)
+        public IEnumerable Collect(List<ItemSource> sources, CollectRun run)
         {
             if (!ZNetScene.instance)
             {
-                return;
+                yield break;
             }
             foreach (var prefab in ZNetScene.instance.m_prefabs)
             {
@@ -61,6 +62,7 @@ namespace CraftingOverhaul.Biomes.Collectors
                 {
                     Add(sources, new ItemSource { Name = sap.m_spawnItem.gameObject.name, Origin = "SapCollector" }, piece, prefab.name);
                 }
+                yield return null;
             }
         }
 

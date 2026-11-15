@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace CraftingOverhaul.Biomes.Collectors
     {
         public string Name => "Spawns";
 
-        public void Collect(List<ItemSource> sources)
+        public IEnumerable Collect(List<ItemSource> sources, CollectRun run)
         {
             foreach (var list in FindSpawnLists())
             {
@@ -25,6 +26,7 @@ namespace CraftingOverhaul.Biomes.Collectors
                     }
                     CollectorUtil.AddAll(sources, PrefabWalker.Walk(spawn.m_prefab), biome, Name,
                         string.IsNullOrEmpty(spawn.m_requiredGlobalKey) ? null : spawn.m_requiredGlobalKey);
+                    yield return null;
                 }
             }
         }

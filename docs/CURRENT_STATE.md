@@ -89,7 +89,7 @@ Phase 5 (map affixes and tiers, 3-star creatures), phase 6's boss particles, the
 - Talisman families group widely by name (one Blob charm covers every ooze; Troll covers frost trolls).
 - Riftforge has no recipes (expected until phase 4); ingredient amounts are first guesses.
 - A boss killed before the Corruption mod was installed won't drop first-kill shards.
-- Location loading for biome detection may cause a short hitch on spawn.
+- Biome detection froze the game for 18–22 s after spawning (Krogon's 1.0.21 logs, 2026-11-13). **Fixed 2026-11-13, passed in single player 2026-11-15** (branch `claude/biome-load-freeze`: saved result reused, otherwise background work spread over frames). `co_biome refresh` still pauses about 14 s.
 
 ## Assumptions not yet verified
 
