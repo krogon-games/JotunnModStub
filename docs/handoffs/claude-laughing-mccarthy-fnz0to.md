@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Play-test passed; `/handoff` and the pull request are left.**
+**Fixing feedback** (after the passed play-test: the Multishot name, attribute icons, `AGENTS.md`).
 
 ## Purpose
 
@@ -38,6 +38,10 @@ Built and passed alone (detail in `FEATURES.md` → Skill tree and skill points,
 10. **2026-11-15: Snipe, in Krogon's words:** "Charge a powerful shot, increasing damage the longer the charge. Drains stamina while charging and slowly zooms in on the target."
 11. **2026-11-15: Venom Strike is a poison cloud** ("Poison cloud": the arrow bursts into a poison cloud where it lands, poisoning everything that stands in it).
 12. **2026-11-15: the play-test passed and the look is approved** ("i filled out the playtest for this session. im really happy with it. well done!"; all 15 steps Pass on the phone page). The cards panel and the new rules stand as built, Claude's own choices included (listed above), unless he says otherwise.
+13. **2026-11-15: Multiple Shot is renamed "Multishot"** ("Change the name to Multishot").
+14. **2026-11-15: the attribute rows get icons, and keep their "what it gives" lines** ("Add the icons, 'what it gives' lines should stay"), as in his mock-up.
+15. **2026-11-15: the subagent split goes in an `AGENTS.md` note** ("maybe you should make a note in agents.md file the breakdown you did previously, of which model you would assign which tasks"): which model gets which kind of work, and how the main session checks it.
+16. **2026-11-15: the panel in game "is looking really good"** (his screenshot: `docs/images/skills_panel_cards_ingame.webp`).
 
 ## Playtest
 
