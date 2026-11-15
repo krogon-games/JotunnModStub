@@ -149,6 +149,18 @@
 ### Phone page marks (read 2026-11-15)
 - Passed: round 1 step 2; round 2 steps 1, 2 and 3 (steps 1 and 3 were re-marked Pass on 2026-11-13 after the demo was switched off). Nothing else marked yet.
 
+### Your feedback (2026-11-15, build `309da28`, the log)
+- Inner Sight cast three times: each time the log says "Inner Sight's gesture didn't trigger the Forsaken power" (the block ran). Whether the power still showed: to confirm.
+- **Blast arrows, from the log:** on greylings a direct hit works ("ExplodingArrow hits Greyling … found 4 … struck 3"; Freezing Arrow the same). On a **troll** every direct hit found nothing ("FreezingArrow hits Attack collider (creature $enemy_troll) at (507.10, 34.45, …) … found 0"), while shots on the ground at its feet (height 29.7) struck it.
+
+### What changed after the feedback
+- **Cause:** the blast looked for creatures with the game's `Character.GetCharactersInRange`, which measures to a creature's **feet**. A troll is about 5 m tall: an arrow in its chest bursts 5 m above its feet, outside the 3 m radius, so the troll (and anything else) wasn't found. Greylings are small, so their feet are always close.
+- **Fix:** the blast now reaches any creature with part of its body within the radius, and always the creature the arrow hit. The log lines stay until the re-test passes.
+
+### Re-test
+1. [ ] `spawn Troll` (Black Forest) or any big creature: Freezing Arrow in its chest → frost damage and the freeze on it; Exploding Arrow in its chest → fire damage. Send the `Orlog: FreezingArrow` / `ExplodingArrow` lines.
+2. [ ] Inner Sight: did the Forsaken power still show (its icon or cooldown) when you cast? And does your power key still use it?
+
 ### Your feedback
 
 (none yet)

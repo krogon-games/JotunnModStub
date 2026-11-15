@@ -288,7 +288,7 @@ namespace Orlog.Content
                 }
             }
 
-            private static void Postfix(Projectile __instance, Vector3 hitPoint)
+            private static void Postfix(Projectile __instance, Collider collider, Vector3 hitPoint)
             {
                 var tag = __instance ? __instance.GetComponent<ShotTag>() : null;
                 if (tag == null || tag.Exploded || !IsBlast(tag))
@@ -296,7 +296,11 @@ namespace Orlog.Content
                     return;
                 }
                 tag.Exploded = true;
-                Safe.Run("explode a skill arrow", () => Explode(__instance.m_owner, tag, hitPoint));
+                Safe.Run("explode a skill arrow", () =>
+                {
+                    var hitObject = collider ? Projectile.FindHitObject(collider) : null;
+                    Explode(__instance.m_owner, tag, hitPoint, hitObject ? hitObject.GetComponent<Character>() : null);
+                });
             }
 
             private static System.Exception Finalizer(System.Exception __exception)
@@ -342,7 +346,33 @@ namespace Orlog.Content
             }
         }
 
-        private static void Explode(Character owner, ShotTag tag, Vector3 point)
+        /// <summary>
+        ///     The creatures a blast at <paramref name="point" /> reaches: any part of their body (their collider) within
+        ///     the radius, and always the creature the arrow struck. The game's <c>Character.GetCharactersInRange</c>
+        ///     measures to the feet, so a blast on a troll's chest, 5 m up, missed the troll (Krogon's log, 2026-11-15).
+        /// </summary>
+        private static void CharactersInBlast(Vector3 point, float radius, Character struck, List<Character> into)
+        {
+            into.Clear();
+            if (struck)
+            {
+                into.Add(struck);
+            }
+            foreach (var c in Character.GetAllCharacters())
+            {
+                if (!c || c == struck)
+                {
+                    continue;
+                }
+                Vector3 nearest = c.m_collider ? c.m_collider.ClosestPoint(point) : c.transform.position;
+                if ((nearest - point).sqrMagnitude <= radius * radius)
+                {
+                    into.Add(c);
+                }
+            }
+        }
+
+        private static void Explode(Character owner, ShotTag tag, Vector3 point, Character struck)
         {
             if (!owner || owner != Player.m_localPlayer)
             {
@@ -359,11 +389,10 @@ namespace Orlog.Content
             float radius = (fire ? ActiveSkillRules.ExplodingRadiusYards : v.Get(tag.SkillId, "radius_yards", tag.Level)) * ActiveSkillRules.MetresPerYard;
             float freeze = fire ? 0f : v.Get(tag.SkillId, "freeze_s", tag.Level);
             ImpactEffect(fire ? "StaffFireball" : "StaffIceShards", fire ? "ArrowFire" : "ArrowFrost", point);
-            s_inRange.Clear();
-            Character.GetCharactersInRange(point, radius, s_inRange);
+            CharactersInBlast(point, radius, struck, s_inRange);
             // Diagnostic (see Impact.Prefix): who the burst finds and why each is skipped.
             var report = new System.Text.StringBuilder();
-            int struck = 0;
+            int hitCount = 0;
             foreach (var target in s_inRange)
             {
                 string skip = !target ? "gone" : target == owner ? "you" : target.IsPlayer() ? "a player" : target.IsDead() ? "dead"
@@ -373,7 +402,7 @@ namespace Orlog.Content
                 {
                     continue;
                 }
-                struck++;
+                hitCount++;
                 var hit = new HitData();
                 if (fire)
                 {
@@ -397,7 +426,7 @@ namespace Orlog.Content
                 target.Damage(hit);
             }
             Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} bursts at {point}, radius {radius:0.0} m: found {s_inRange.Count} " +
-                                  $"({report.ToString().TrimEnd(',', ' ')}), struck {struck}.");
+                                  $"({report.ToString().TrimEnd(',', ' ')}), struck {hitCount}.");
         }
 
         /// <summary>
