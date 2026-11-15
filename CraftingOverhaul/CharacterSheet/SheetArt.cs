@@ -73,7 +73,7 @@ namespace CraftingOverhaul.CharacterSheet
 
         /// <summary>
         ///     A placeholder skill or class icon by id (<c>Assets/Skills/&lt;id&gt;.rgba</c>, made by
-        ///     <c>tools/make_skill_icons.py</c>), or null when there is none. Used by the classes demo and when the Orlog
+        ///     <c>tools/make_skill_icons.py</c>), or null when there is none. Used when the Orlog
         ///     plugin gives no icon.
         /// </summary>
         public static Sprite SkillIcon(string id)

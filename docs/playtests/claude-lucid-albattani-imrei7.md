@@ -1,0 +1,196 @@
+# Play-tests: `claude/lucid-albattani-imrei7`
+
+## Round: the Amazon's passives (2026-11-11)
+
+**Build:** the three DLLs from this branch. The log line should read `Orlog 0.2.0 loaded (build: claude/lucid-albattani-imrei7 <commit>)` (the version is raised when it merges).
+**Setup:** single player, a test world, the group's mods loaded. F5, `devcommands`. **Don't use `god`** for steps 5–11: whether your health drops is the test. `orlog_class Amazon` if your character has no class, then `orlog_level 20`.
+
+`orlog_passive crit 100` (also `penetrate`, `dodge`, `avoid`, `evade`; any chance 0–100) makes a passive trigger for sure until you quit; `orlog_passive off` goes back to your real chances; `orlog_passive` alone lists them. With `devcommands` on, every passive that triggers also says so at the top left.
+
+### Checklist
+
+**Tooltips**
+1. [ ] `orlog_skill CriticalStrike 2`, then open the skills panel and point at Critical Strike → "25% chance to deal double physical damage", and the next level "Level 3: 32% chance …". Point at Dodge (no points) → "Not learned yet …", next "Level 1: 18% chance to dodge a close-range hit while standing still or attacking".
+2. [ ] Type `orlog_passive` → crit 25%, the others 0%.
+
+**Critical Strike**
+
+3. [ ] `spawn Boar 3`. Hit one with a club or sword a few times and note the damage numbers. Then `orlog_passive crit 100` and hit another → about **twice** the numbers, the game's critical-hit effect on each hit, and "Critical Strike" at the top left. `orlog_passive crit 0`: back to normal.
+4. [ ] With `orlog_passive crit 100`, crouch and sneak up behind a boar that hasn't seen you, and hit it with a bow → the game's sneak-attack effect and a much bigger hit than step 3 (about 6× a normal hit).
+
+**Penetrate**
+
+5. [ ] Try your weapons on a few creatures until a hit shows **grey** numbers (grey means the creature resists it). Then `orlog_passive penetrate 100` and hit it the same way → **white**, bigger numbers. `orlog_passive penetrate 0`: grey again.
+
+**Dodge, Avoid, Evade** (`orlog_passive off` first, then only the one each step names)
+
+6. [ ] **Dodge:** `orlog_passive dodge 100`. `spawn Greyling`, stand still and let it hit you → "Dodge" floats up, a whoosh, no damage. Swing at it while it attacks → still "Dodge". Walk around while it hits you → you take damage.
+7. [ ] **Avoid:** `orlog_passive avoid 100` (dodge back to 0: `orlog_passive dodge 0`). `spawn Greydwarf`, stand still at a distance until it throws rocks → "Avoid", no damage. Let it hit you up close → you take damage.
+8. [ ] **Evade:** `orlog_passive off`, then `orlog_passive evade 100`. Keep walking or running while greydwarfs hit and throw at you → "Evade", no damage. Stand still → you take damage.
+9. [ ] **Blocking:** `orlog_passive dodge 100`, shield in hand. Hold block facing a greyling → the game's normal block ("Blocked"), no "Dodge"; a parry still parries. Turn your back to it while holding block → "Dodge".
+10. [ ] **Unavoidable:** `orlog_passive dodge 100`, `orlog_passive avoid 100`, `orlog_passive evade 100`. Stand in a campfire, fall from a height → you take damage. Optional, in the Black Forest: `spawn Troll`: its punches are dodged, its **ground slam still hurts**. Optional, Mountains: `spawn Dragon`: Moder's **breath still hurts**.
+11. [ ] **Real chances:** `orlog_passive off`. Put points in Dodge (`orlog_skill Dodge 5`) and fight a few greydwarfs standing still → now and then a "Dodge", not every time.
+
+**Log**
+
+12. [ ] F5 shows no red errors; `BepInEx/LogOutput.log` has no "Orlog could not …" lines.
+
+**With another player** (group evening: `PLAYTEST.md` → Session 2, 2j): Penetrate when the other player's game runs the creature, and a ground slam that still hurts when the other player's game runs the troll.
+
+### Your feedback
+
+(none yet)
+
+## Round 2: the skill bar, the bow skills, Inner Sight and boss points (2026-11-11)
+
+**Build:** the same branch, newer commit (Orlog's log line names `claude/lucid-albattani-imrei7`). Round 1 (the passives) and this round can be played in one go.
+**Setup:** single player, test world, the group's mods loaded, CraftingOverhaul's classes screens on (the demo is gone since 2026-11-13; an old `Demo` line in its config does nothing now). F5, `devcommands`; no `god` for the fights. `orlog_class Amazon` if needed, `orlog_level 30`, then spend: `orlog_skill MagicArrow`, `orlog_skill FireArrow`, `orlog_skill ColdArrow`, `orlog_skill MultipleShot`, `orlog_skill InnerSight`, `orlog_skill ExplodingArrow`, `orlog_skill IceArrow`, `orlog_skill FreezingArrow`. `spawn BowFineWood`, `spawn ArrowWood 50`, `spawn ShieldWood`.
+
+**New keys:** right click = the skill button; F1–F4 = the four skill slots. **Block has no key by default now** (2026-11-13): set `BlockKey` in the Orlog config, section `6 - Skill Keys` (e.g. `Mouse4`, the mouse's back side button), before step 2.
+
+### Checklist
+
+**Slots and keys**
+1. [ ] Skills panel: drag Magic Arrow onto slot 1, Fire Arrow onto slot 2, Multiple Shot onto slot 3, Inner Sight onto slot 4 → the cross shows them with F1–F4. Drag Dodge onto a slot → "Passive skills don't take a slot". (If dragging fails: `orlog_slot 1 MagicArrow` and so on.)
+2. [ ] Shield in hand: right click **no longer blocks**; your `BlockKey` blocks (and parries); block + jump still dodges. With `BlockKey` blank you can't block at all (expected for now).
+
+**The skill button**
+
+3. [ ] Bow in hand, press F1 → slot 1 lights up. Hold right click (the bow draws), release → an arrow flies; the eitr bar drops a little (1.5). Left click still shoots a normal arrow.
+4. [ ] **Magic Arrow needs no arrows:** put all your arrows in a chest; right click still shoots. With arrows back in the inventory, shooting Magic Arrow doesn't use any (count them).
+5. [ ] **Fire Arrow:** F2 and shoot a boar → it burns; the damage numbers are bigger than a normal arrow's.
+6. [ ] **Multiple Shot:** F3 and shoot → 2 arrows fan out (at skill level 1), for one arrow from the quiver. `orlog_skill MultipleShot 4` → 6 arrows.
+7. [ ] **Wrong weapon:** take out an axe and right click → nothing (a "Need bow" message, or nothing). Take out the bow again → slot 3 (the last bow skill) is lit again.
+8. [ ] **Out of eitr:** shoot Fire Arrow until the eitr bar is empty → "Not enough eitr", the slot greys out; it comes back as eitr refills.
+
+**Frost and explosions** (put Cold Arrow, Ice Arrow, Exploding Arrow and Freezing Arrow in the slots as needed)
+
+9. [ ] **Cold Arrow:** the boar hit is slowed (frost). **Ice Arrow:** the boar hit can't move for about 2 seconds ("Frozen").
+10. [ ] **Exploding Arrow:** `spawn Greyling 5`, shoot the middle of the group → a fiery burst; every greyling nearby takes fire damage.
+11. [ ] **Freezing Arrow:** shoot a group → a frosty burst; the greylings nearby take frost damage and freeze for 2 seconds.
+
+**Inner Sight**
+
+12. [ ] F4 near a few creatures → your character does the "power" gesture, "Inner Sight: N marked", the creatures glow pale blue for 8 seconds, and your hits on them show about a quarter more damage than before.
+12b. [ ] **Quick cast** (added 2026-11-13): slot 4 (Inner Sight) has two gold sparks running round its edge. Open the inventory and right-click slot 4 → "quick cast off", the sparks stop. Close the inventory, press F4 → slot 4 lights up instead of casting; right click casts it. Right-click it again in the inventory → sparks back, F4 casts at once. Right-click a bow skill's slot → "Needs a bow: it fires from the skill button". Relog → each slot's quick cast is kept.
+
+**Tooltips and boss points**
+
+13a. [ ] **Demo removed (2026-11-13):** the skills panel's three tabs are named Bow and Crossbow, Passive and Magic, Javelin and Spear; using the Orlog stone with a classless character (`orlog_class none`), the class choice window shows the Amazon with "A huntress of bow and javelin. Fast, precise and hard to hit." `co_classes_stone` no longer exists.
+13. [ ] The skills panel's tooltip for each bow skill shows its numbers (e.g. "Adds … fire damage; …% of the physical damage becomes fire") and the next level's.
+14. [ ] **Boss points:** note the skill points to spend (`orlog_info`). `spawn Eikthyr` and kill him → "First victory over this foe: +1 skill point", one more point to spend. Kill another Eikthyr → no more. Relog → the point is still there.
+
+**How it feels and the log**
+
+15. [ ] Your impression of the skills' damage next to a normal arrow: too strong, about right, too weak? (The numbers follow the proposed scale; one setting, `SkillDamageMultiplier`, turns it up or down.)
+16. [ ] F5 shows no red errors; `LogOutput.log` has no "Orlog could not …" lines.
+
+**With another player** (`PLAYTEST.md` → Session 2, 2j): a freeze and Inner Sight on creatures the other player's game runs, both players getting a boss's points.
+
+### Your feedback
+
+(none yet)
+
+### Your feedback (2026-11-13, first quick test, build `9d87b62`)
+- Red error in the console: "Orlog: the game's Immobilized status effect wasn't found; Ice Arrow and Freezing Arrow won't freeze."
+- "the keys are not working": right click (skill button) and F1–F4 (skill slots).
+
+### What changed after the feedback
+- The freeze no longer needs the game's Immobilized at start-up: it copies it when found (by name), else it is Orlog's own (speed −1000, no jumping). No error either way; the log says which.
+- The keys: the check "does the game take input now" no longer uses the game's "gamepad active" state (it can be on with a controller connected while playing with keyboard and mouse) and checks chat, console, menu, map, inventory, store and build menu directly. Keys are read through the game's input and, where it's on, Unity's legacy input. **Each ignored press now logs why** (`Orlog: F1 ignored (…)`, `Orlog: Skill button ignored (…)`), for the re-test.
+
+### Your feedback (2026-11-13, re-test, build `cd839c0`)
+- "keys still not working", with the log and a screenshot of the skill cross (Multiple Shot, Fire Arrow, Magic Arrow and one more in the slots, keys shown as 1–4, a "2" on slot 2).
+- The new log lines: `Orlog: F1 ignored (slot 1 is empty)`, `F2`/`F3`/`F4` the same, `Skill button ignored (no skill on it for the weapon in hand (bow))`. The red error is gone ("the freeze is Orlog's own").
+
+### What changed after the feedback
+- **Cause:** CraftingOverhaul's classes UI was in demo mode (`[5 - Classes UI] Demo = true` in `com.krogongames.craftingoverhaul.cfg`): the cross showed the demo's slots (keys 1–4 and a pretend cooldown are the demo's), so the skills dragged there never reached Orlog, whose slots stayed empty. Orlog's keys worked and found nothing. **Set `Demo = false`** and drag the skills onto the cross again (it then shows F1–F4).
+- CraftingOverhaul now warns when the demo is on while Orlog is installed: a log warning and a message on screen once.
+
+### Your feedback (2026-11-13, build `21770e8`, demo removed)
+- First world load "failed to load" after choosing the character and world; that log was overwritten on restart. The second attempt loaded: "the keys work".
+- The second log is clean (no errors from our mods). Every load today freezes about 19–22 s right after spawning while CraftingOverhaul's biome detection runs (`Resolved biomes … in 18348 ms`); older than this round, suggested as a separate task. If a load hangs again: wait half a minute, then copy `LogOutput.log` before restarting.
+
+### Phone page marks and log (read 2026-11-13)
+- Marks (from the morning of 2026-11-13, before the demo was found): round 1 step 2 (`orlog_passive` lists the chances) **passed**; round 2 step 1 (slots) **failed**, step 2 (block on its own key) **passed**, step 3 (skill button) **failed**. Steps 1 and 3 failed because the classes UI demo was on (skills dragged into the demo's slots); to re-mark on build `21770e8` or later.
+- Log of the evening session (build `21770e8`, about 50 minutes, a greydwarf raid): no errors from our mods; no "ignored" key lines, so the keys reached the skills.
+
+### Your feedback (2026-11-13, screenshot of the skills panel)
+- "please enlarge the skills panel window, its hard to read. theres a lot of UI space still to make use of." The screenshot shows the real data working: tab names, Inner Sight's tooltip with its numbers, F1–F4 on the slots and the cross ("Need bow" with an axe in hand).
+- "i rebound \"block\" to mouse button 4, and it kind of works but not how its meant to. It doesnt continually block as you hold down the button. It only triggers the animation when you release the held button."
+
+### What changed after the feedback
+- **Skills panel:** now scales itself to fill most of the screen (88% of the height or 92% of the width, never smaller than before); `[5 - Classes UI] SkillsPanelSize` sets a fixed size instead (e.g. 1.5). Not re-tested yet.
+- **Block on mouse button 4:** with the game's own Block key set to another key (here the mouse's back button), Orlog doesn't touch blocking at all; the game reads that key itself. A press that only arrives on release usually comes from the mouse's software (e.g. G Hub, Synapse) sending the side button as a "browser back" command instead of a mouse button. Checks asked: hold block on a keyboard key (e.g. Caps Lock) — does it hold? And the side button's setting in the mouse software.
+
+### Your feedback (2026-11-13, last of the session)
+- **Block:** "block holds fine on another key, it's my mouse software." Not a mod problem.
+- **Skills panel:** "much better now. maybe even tone it down by 10%." → the panel now fills 79% of the screen's height (or 83% of its width), 10% smaller. Not re-checked in game.
+- The rest of the play-test (rounds 1 and 2) waits for a fresh session (Krogon).
+
+### Your feedback (2026-11-15, end of session; bugs for the next session)
+- **Freezing Arrow** "dealing damage only when it hits the ground next to the enemy, not if the freezing arrow hits the enemy hitbox instead." Not explained yet. Exploding Arrow shares the code (`BowSkills.Impact` postfix on `Projectile.OnHit` → `Explode`), so it likely has the same bug. First step next session: log whether `Explode` runs on a creature hit, how many targets `Character.GetCharactersInRange` finds and whether `BaseAI.IsEnemy` lets them through; then check whether the game's hit path for a creature hit returns or destroys the arrow before our postfix, or ignores a second hit on the same creature in the same frame.
+- **Inner Sight on F1 with quick cast "uses the boss power as well."** Likely cause: `CastSkills.Cast` plays the game's `gpower` animation trigger, whose animation event activates the Forsaken power. Fix next session: another animation (an emote, or a vanilla attack trigger without that event), or skip `Player.ActivateGuardianPower` while our cast plays; check in the 1.0.14 code which method the animation event calls.
+- Krogon: the play-test and bug fixes continue in the next session.
+
+
+## Round 3: the two bugs (2026-11-15)
+
+**Build:** this branch's newest commit (Orlog's log line names it). Do these two first, then the rest of rounds 1 and 2. Also on the phone page (first group of the skill bar round).
+
+### What changed
+- **Inner Sight fired the Forsaken power. Cause found in the game's code:** the "power" gesture Inner Sight plays has an animation hook (`CharacterAnimEvent.GPower`) that switches on the Forsaken power (`Player.ActivateGuardianPower`). Now, for 3 seconds after a cast, that hook is skipped once; pressing the power key yourself still works at once. The log says "Inner Sight's gesture didn't trigger the Forsaken power" each time.
+- **Freezing / Exploding Arrow on a direct hit: cause not found yet.** The game's arrow code (`Projectile.OnHit`) shows nothing that would skip our burst on a creature hit. **Log lines added** (temporary): what each blast arrow hits (a creature or not), each burst (radius, the creatures found and why each was skipped, how many were struck), and any error that stops the hit before the burst.
+
+### Checklist
+1. [ ] **Inner Sight without the Forsaken power:** choose a Forsaken power (e.g. Eikthyr's at his stone) and wait until it's ready. Cast Inner Sight from its key with quick cast on → the gesture and "Inner Sight: N marked", but **no** Forsaken power (no power icon, no cooldown). Then press your Forsaken power key → the power works as normal.
+2. [ ] **Blast arrows, log lines:** `spawn Greyling 3`. With Freezing Arrow, shoot one greyling **directly in the body**, then shoot the ground beside them. The same with Exploding Arrow. Note what you saw, then send the `LogOutput.log` lines starting `Orlog: FreezingArrow` and `Orlog: ExplodingArrow` (and any with `before its burst`).
+
+### Phone page marks (read 2026-11-15)
+- Passed: round 1 step 2; round 2 steps 1, 2 and 3 (steps 1 and 3 were re-marked Pass on 2026-11-13 after the demo was switched off). Nothing else marked yet.
+
+### Your feedback (2026-11-15, build `309da28`, the log)
+- Inner Sight cast three times: each time the log says "Inner Sight's gesture didn't trigger the Forsaken power" (the block ran). Whether the power still showed: to confirm.
+- **Blast arrows, from the log:** on greylings a direct hit works ("ExplodingArrow hits Greyling … found 4 … struck 3"; Freezing Arrow the same). On a **troll** every direct hit found nothing ("FreezingArrow hits Attack collider (creature $enemy_troll) at (507.10, 34.45, …) … found 0"), while shots on the ground at its feet (height 29.7) struck it.
+
+### What changed after the feedback
+- **Cause:** the blast looked for creatures with the game's `Character.GetCharactersInRange`, which measures to a creature's **feet**. A troll is about 5 m tall: an arrow in its chest bursts 5 m above its feet, outside the 3 m radius, so the troll (and anything else) wasn't found. Greylings are small, so their feet are always close.
+- **Fix:** the blast now reaches any creature with part of its body within the radius, and always the creature the arrow hit. The log lines stay until the re-test passes.
+
+### Re-test
+1. [ ] `spawn Troll` (Black Forest) or any big creature: Freezing Arrow in its chest → frost damage and the freeze on it; Exploding Arrow in its chest → fire damage. Send the `Orlog: FreezingArrow` / `ExplodingArrow` lines.
+2. [ ] Inner Sight: did the Forsaken power still show (its icon or cooldown) when you cast? And does your power key still use it?
+
+### Your feedback (2026-11-15, build `44857df`, the log and a screenshot)
+- **Blast arrows: "That works now."** The log: every Freezing and Exploding Arrow in the troll's head or body "found 1 ($enemy_troll), struck 1". Passed; the log lines are removed.
+- **Respec:** "When the character does a respec and has no learnt skills, the previous skills the player put on the skill cross still remain there… Its only visual, pressing the hotkey or using right mouse button does not make the skill work."
+- **F2** "opens this stat window" (the screenshot: the game's network-stats panel). "We need the F1 F2 F3 F4 buttons for skills."
+- The skill tree overhaul (recorded in the handoff's decisions).
+
+### What changed after the feedback
+- **Respec:** it now empties the four slots and the skill button; a slot whose skill has no points also shows empty (cleans a character respecced earlier).
+- **F2:** the game's own F2 toggles its network-stats panel (`ConnectPanel`). For a character with a class, plain F2 is the skill slot's now; **Ctrl+F2** still opens the panel. With Ctrl held, F1–F4 don't use slots (Ctrl+F1 and Ctrl+F3 are the game's mouse capture and hide-the-HUD).
+
+### Re-test
+1. [ ] **Respec:** skills on the cross, then `orlog_respec` → the cross is empty. `orlog_skill InnerSight`, drag it onto a slot again → it works.
+2. [ ] **F2:** with a class, F2 uses slot 2 and no stats panel opens. Ctrl+F2 opens the panel, Ctrl+F2 again closes it.
+3. [x] **Inner Sight:** passed on the phone page (the round 3 step "Inner Sight without the Forsaken power").
+4. [ ] **Inner Sight grows** (Krogon's numbers, 2026-11-15): `orlog_respec`, `orlog_skill InnerSight` once → tooltip "5% more damage", next level 6%; at level 20 → 24%.
+
+5. [ ] **Boss XP** (built 2026-11-15): note your XP (`orlog_info`) at about level 5, `spawn Eikthyr` and kill him alone → about a third of a level ("+N XP", about 9 times what a level-5 creature gives). Block on the mouse's back side button: set `BlockKey` = `Mouse4` in your config (yours keeps the old blank), shield in hand → the back button blocks, the forward one doesn't.
+
+Fire, Cold and Ice Arrow may go in the skill overhaul (next round): their steps (round 2 steps 5 and 9) can be skipped.
+
+### Phone page marks (read 2026-11-15, afternoon)
+- **Passed:** round 3 both steps (Inner Sight without the Forsaken power; blast arrows); round 2 steps 6 (Multiple Shot), 7 (wrong weapon), 8 (out of eitr), 12 (Inner Sight), 12b (quick cast), 13 (tooltips), 15 (damage feel; no note), plus 1–3 from before; round 1 step 2.
+- **Not marked yet:** round 1 steps 1, 3–12; round 2 steps 4, 5, 9, 10, 11, 13a, 14, 16.
+
+### Your feedback
+
+(none yet)
+
+### Final play-test (2026-11-15, phone page, read the same afternoon)
+- **Round 1 (passives): all 12 steps passed.**
+- **Round 2:** passed 1, 2, 3, 6, 7, 8, 11, 12, 12b, 13, 13a, 15, 16. **Skipped** 4 (Magic Arrow without arrows), 5 (Fire Arrow), 9 (Cold and Ice Arrow), 10 (Exploding Arrow on a group): "doesnt matter, will rework skill later". 14 (boss points) passed in chat: "yes boss points worked, second Eikthyr gave nothing." **The round has passed** (single player); this branch's steps are off the phone page, the multiplayer ones stay in `PLAYTEST.md` → 2j.
+- **Round 3 and re-tests:** passed: Inner Sight without the Forsaken power, blast arrows on a troll, respec clears the cross, F2, Inner Sight 5% → 24%, boss XP on Eikthyr. **Skipped:** the block default ("i think we will create a UI keybindings overhaul later on. so players can rebind whatever keys they want").
+- Also marked the same day, other rounds on the page (for the coordinator): `backpack-rows`, `odin-2`, `stat-steal`, `ui-oneclick`, `ui-buildstamp` passed; `stat-skill-56` skipped.

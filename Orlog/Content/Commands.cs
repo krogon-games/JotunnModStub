@@ -18,6 +18,8 @@ namespace Orlog.Content
             CommandManager.Instance.AddConsoleCommand(new StatCommand());
             CommandManager.Instance.AddConsoleCommand(new RespecCommand());
             CommandManager.Instance.AddConsoleCommand(new SkillCommand());
+            CommandManager.Instance.AddConsoleCommand(new PassiveCommand());
+            CommandManager.Instance.AddConsoleCommand(new SlotCommand());
         }
 
         private static Player LocalPlayer()
@@ -206,6 +208,67 @@ namespace Orlog.Content
             }
         }
 
+        private sealed class PassiveCommand : ConsoleCommand
+        {
+            private static readonly string[] Effects = { "crit", "penetrate", "dodge", "avoid", "evade" };
+
+            public override string Name => "orlog_passive";
+
+            public override string Help => "Orlog: test a passive with a set chance until you quit, e.g. orlog_passive crit 100 (crit, penetrate, dodge, avoid, evade); orlog_passive off";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var player = LocalPlayer();
+                if (!player)
+                {
+                    return;
+                }
+                if (args.Length == 1 && args[0].ToLowerInvariant() == "off")
+                {
+                    Passives.ClearTestChances();
+                }
+                else if (args.Length == 2 && Effects.Contains(args[0].ToLowerInvariant())
+                         && float.TryParse(args[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float chance) && chance >= 0f && chance <= 100f)
+                {
+                    Passives.SetTestChance(args[0].ToLowerInvariant(), chance);
+                }
+                else if (args.Length != 0)
+                {
+                    Console.instance.Print("Usage: orlog_passive <crit|penetrate|dodge|avoid|evade> <chance 0-100>, or orlog_passive off");
+                    return;
+                }
+                foreach (string effect in Effects)
+                {
+                    Console.instance.Print($"{effect}: {Passives.Chance(player, effect):0.#}%" + (Passives.HasTestChance(effect) ? " (test chance)" : ""));
+                }
+            }
+        }
+
+        private sealed class SlotCommand : ConsoleCommand
+        {
+            public override string Name => "orlog_slot";
+
+            public override string Help => "Orlog: put a skill in a skill slot, e.g. orlog_slot 1 MagicArrow (orlog_slot 1 to clear; the skills panel does the same by dragging)";
+
+            public override void Run(string[] args)
+            {
+                var player = LocalPlayer();
+                if (!player)
+                {
+                    return;
+                }
+                if (args.Length < 1 || !int.TryParse(args[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int slot) || slot < 1 || slot > 4)
+                {
+                    Console.instance.Print("Usage: orlog_slot <1-4> [skill id]");
+                    return;
+                }
+                string refused = SkillBar.SetSlot(player, slot - 1, args.Length > 1 ? args[1] : "");
+                Console.instance.Print(refused.Length > 0 ? refused : "Slots: " + string.Join(", ", SkillBar.Slots(player).Select((id, i) => (i + 1) + " " + (id.Length > 0 ? id : "-"))));
+            }
+        }
+
         private sealed class RespecCommand : ConsoleCommand
         {
             public override string Name => "orlog_respec";
@@ -250,6 +313,17 @@ namespace Orlog.Content
                                    $"{SkillPoints.Unspent(player)} skill points to spend.");
             Console.instance.Print($"From the class: +{bonuses.Health:0.#} health, +{bonuses.Stamina:0.#} stamina, +{bonuses.Eitr:0.#} eitr, " +
                                    $"+{bonuses.MeleeDamage * 100f:0.#}% melee and thrown damage, +{bonuses.RangedDamage * 100f:0.#}% bow damage.");
+            // Roadmap C3-C5 (2026-11-11): what a play-test needs to see at a glance.
+            var slots = SkillBar.Slots(player);
+            int selected = SkillBar.SelectedSlot(player);
+            Console.instance.Print("Skill slots: " + string.Join(", ", slots.Select((id, i) =>
+                $"{OrlogConfig.SlotKeys[i].Value} {(id.Length > 0 ? id : "-")}{(i == selected ? " (on the skill button)" : "")}")) +
+                $"; skill button {OrlogConfig.SkillButton.Value}, block {OrlogConfig.BlockKey.Value}.");
+            Console.instance.Print("Passives: " + string.Join(", ", new[] { "crit", "penetrate", "dodge", "avoid", "evade" }
+                .Select(e => $"{e} {Passives.Chance(player, e):0.#}%{(Passives.HasTestChance(e) ? " (test)" : "")}")) +
+                $"; skill damage ×{SkillBar.DamageScaleFor(player):0.##} per D2 point.");
+            var kills = SkillPoints.BossKills(player);
+            Console.instance.Print($"Boss first kills: {(kills.Count > 0 ? string.Join(", ", kills) : "none yet")} (+{SkillPoints.BossBonus(player)} skill points).");
         }
     }
 }

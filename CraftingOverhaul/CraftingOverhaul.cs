@@ -37,7 +37,6 @@ namespace CraftingOverhaul
 
             CommandManager.Instance.AddConsoleCommand(new DumpCommand());
             CommandManager.Instance.AddConsoleCommand(new BiomeCommand());
-            CommandManager.Instance.AddConsoleCommand(new Classes.ClassesStoneCommand());
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
         }

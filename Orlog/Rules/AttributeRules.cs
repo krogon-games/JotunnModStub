@@ -30,6 +30,10 @@ namespace Orlog.Rules
             public float StaminaPerLevel;
             public float LifePerVitality;
             public float StaminaPerVitality;
+            /// <summary>The class choice window's line (optional column).</summary>
+            public string Description = "";
+            /// <summary>The skill tree's three tab names, D2's (optional columns).</summary>
+            public string[] Tabs = { "", "", "" };
         }
 
         private readonly List<Class> _classes = new List<Class>();
@@ -65,7 +69,9 @@ namespace Orlog.Rules
                     LifePerLevel = Table.Float(row, "life_per_lvl", errors),
                     StaminaPerLevel = Table.Float(row, "stamina_per_lvl", errors),
                     LifePerVitality = Table.Float(row, "life_per_vit", errors),
-                    StaminaPerVitality = Table.Float(row, "stamina_per_vit", errors)
+                    StaminaPerVitality = Table.Float(row, "stamina_per_vit", errors),
+                    Description = row.TryGetValue("description", out string d) ? d.Trim() : "",
+                    Tabs = new[] { "tab0", "tab1", "tab2" }.Select(t => row.TryGetValue(t, out string v) ? v.Trim() : "").ToArray()
                 };
                 if (c.Name.Length == 0 || result.Find(c.Name) != null)
                 {

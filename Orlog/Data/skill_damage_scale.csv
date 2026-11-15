@@ -1,0 +1,100 @@
+level,biome,valheim_bow_arrow,d2_bow,d2_bow_name,scale
+1,Meadows,55.0,2.5,Short Bow,22.0
+2,Meadows,55.0,2.5,Short Bow,22.0
+3,Meadows,55.0,2.5,Short Bow,22.0
+4,Meadows,55.0,2.5,Short Bow,22.0
+5,BlackForest,65.0,4.0,Hunter's Bow,16.25
+6,BlackForest,65.0,4.0,Hunter's Bow,16.25
+7,BlackForest,65.0,4.0,Hunter's Bow,16.25
+8,BlackForest,65.0,6.5,Long Bow,10.0
+9,BlackForest,65.0,6.5,Long Bow,10.0
+10,BlackForest,65.0,6.5,Long Bow,10.0
+11,Swamp,84.0,6.5,Long Bow,12.923
+12,Swamp,84.0,6.5,Long Bow,12.923
+13,Swamp,84.0,6.5,Long Bow,12.923
+14,Swamp,84.0,6.5,Long Bow,12.923
+15,Swamp,84.0,6.5,Long Bow,12.923
+16,Swamp,84.0,6.5,Long Bow,12.923
+17,Swamp,84.0,6.5,Long Bow,12.923
+18,Swamp,84.0,9.5,Stag Bow,8.842
+19,Swamp,84.0,9.5,Stag Bow,8.842
+20,Mountain,130.0,9.5,Stag Bow,13.684
+21,Mountain,130.0,9.5,Stag Bow,13.684
+22,Mountain,130.0,9.5,Stag Bow,13.684
+23,Mountain,130.0,10.5,Long Battle Bow,12.381
+24,Mountain,130.0,10.5,Long Battle Bow,12.381
+25,Mountain,130.0,10.5,Long Battle Bow,12.381
+26,Mountain,130.0,10.5,Long Battle Bow,12.381
+27,Mountain,130.0,14.0,Reflex Bow,9.286
+28,Mountain,130.0,14.0,Reflex Bow,9.286
+29,Mountain,130.0,14.0,Reflex Bow,9.286
+30,Mountain,130.0,14.0,Reflex Bow,9.286
+31,Mountain,130.0,14.0,Reflex Bow,9.286
+32,Mountain,130.0,14.0,Reflex Bow,9.286
+33,Mountain,130.0,15.0,Razor Bow,8.667
+34,Mountain,130.0,15.0,Razor Bow,8.667
+35,Plains,130.0,19.5,Cedar Bow,6.667
+36,Plains,130.0,19.5,Cedar Bow,6.667
+37,Plains,130.0,19.5,Cedar Bow,6.667
+38,Plains,130.0,19.5,Cedar Bow,6.667
+39,Plains,130.0,22.5,Ashwood Bow,5.778
+40,Plains,130.0,22.5,Ashwood Bow,5.778
+41,Plains,130.0,22.5,Ashwood Bow,5.778
+42,Plains,130.0,22.5,Ashwood Bow,5.778
+43,Plains,130.0,22.5,Ashwood Bow,5.778
+44,Plains,130.0,22.5,Ashwood Bow,5.778
+45,Plains,130.0,22.5,Ashwood Bow,5.778
+46,Plains,130.0,26.0,Long Siege Bow,5.0
+47,Plains,130.0,30.0,Ceremonial Bow,4.333
+48,Plains,130.0,30.0,Ceremonial Bow,4.333
+49,Plains,130.0,30.0,Ceremonial Bow,4.333
+50,Mistlands,155.0,30.0,Ceremonial Bow,5.167
+51,Mistlands,155.0,30.0,Ceremonial Bow,5.167
+52,Mistlands,155.0,30.0,Ceremonial Bow,5.167
+53,Mistlands,155.0,33.5,Matriarchal Bow,4.627
+54,Mistlands,155.0,33.5,Matriarchal Bow,4.627
+55,Mistlands,155.0,36.5,Spider Bow,4.247
+56,Mistlands,155.0,36.5,Spider Bow,4.247
+57,Mistlands,155.0,36.5,Spider Bow,4.247
+58,Mistlands,155.0,36.5,Spider Bow,4.247
+59,Mistlands,155.0,36.5,Spider Bow,4.247
+60,Mistlands,155.0,36.5,Spider Bow,4.247
+61,Mistlands,155.0,36.5,Spider Bow,4.247
+62,AshLands,164.0,36.5,Spider Bow,4.493
+63,AshLands,164.0,37.0,Shadow Bow,4.432
+64,AshLands,164.0,37.0,Shadow Bow,4.432
+65,AshLands,164.0,37.0,Shadow Bow,4.432
+66,AshLands,164.0,37.0,Shadow Bow,4.432
+67,AshLands,164.0,37.0,Shadow Bow,4.432
+68,AshLands,164.0,37.0,Shadow Bow,4.432
+69,AshLands,164.0,37.0,Shadow Bow,4.432
+70,AshLands,164.0,37.0,Shadow Bow,4.432
+71,AshLands,164.0,37.0,Shadow Bow,4.432
+72,AshLands,164.0,37.0,Shadow Bow,4.432
+73,AshLands,164.0,37.0,Shadow Bow,4.432
+74,AshLands,164.0,37.0,Shadow Bow,4.432
+75,AshLands,164.0,37.0,Shadow Bow,4.432
+76,DeepNorth,278.0,37.0,Shadow Bow,7.514
+77,DeepNorth,278.0,39.0,Crusader Bow,7.128
+78,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+79,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+80,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+81,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+82,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+83,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+84,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+85,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+86,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+87,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+88,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+89,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+90,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+91,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+92,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+93,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+94,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+95,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+96,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+97,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+98,DeepNorth,278.0,43.0,Grand Matron Bow,6.465
+99,DeepNorth,278.0,43.0,Grand Matron Bow,6.465

@@ -18,6 +18,16 @@ Outputs:
 - Orlog/Data/amazon_skills.csv: the Amazon's 30 skills: D2's tree (tab, row, column, required level, prerequisites,
   mana) from data/d2-reference/amazon.csv, with our status, kind, weapon and Valheim description from
   docs/class-design.md §5 (user decisions 2026-10-30). Eitr costs are D2's mana: the class eitr pool is D2's mana 1:1.
+- Orlog/Data/amazon_passives.csv: the chance per skill level (1-20) of the Amazon's passives, from
+  data/d2-reference/amazon_levels.csv (Arreat Summit; D2R the same), with the tooltip text. Penetrate takes Critical
+  Strike's curve (user, 2026-11-11: D2's Penetrate raises attack rating, which Valheim doesn't have).
+- Orlog/Data/amazon_skill_values.csv: the per-level values (1-20) of the Amazon's built active skills, unchanged from
+  data/d2-reference/amazon_levels.csv (D2R where it differs from classic: user 2026-11-11), keyed by skill id.
+- Orlog/Data/skill_damage_scale.csv: per character level, how many Valheim damage points one Diablo 2 damage point of a
+  skill is worth. It keeps D2's ratio of skill damage to bow damage: the best Valheim bow plus the best arrow obtainable
+  in the biome of that level (game dump: items.csv and biome_items.csv, quality 1) divided by the average damage of
+  the best D2 bow that drops by that level (data/d2-reference/bows.csv, bows and Amazon bows; available from the
+  higher of item level and required level). Proposed 2026-11-11, waiting for the user's approval.
 - Orlog/Data/biome_levels.csv: each biome's creature level range (from the guide) and the health span of the creatures
   the world spawns there without a boss key (from the dump). Creatures get their level inside the range by health.
 
@@ -44,6 +54,31 @@ GUIDE = [
     ("DeepNorth", ["FrozenKing", "FrozenKing_p2", "FrozenKing_p3"], 90),
 ]
 MAX_LEVEL = 99
+# Skill points for a character's first kill of each biome's boss, in GUIDE order (user, 2026-11-11: D2's 12 quest points,
+# 1 each for the first four bosses, 2 each for the last four).
+BOSS_SKILL_POINTS = [1, 1, 1, 1, 2, 2, 2, 2]
+# Boss XP (user, 2026-11-15: "follow diablo 2 style"): a boss gives ×N an ordinary creature of its level, N = a D2 act
+# boss's Exp ÷ an ordinary monster's (median 97, data/d2-reference/README.md). D2 has 5 act bosses, Valheim 8: the first
+# and last match, the others are read off the line through D2's five by position.
+D2_ORDINARY_EXP = 97
+
+
+def boss_xp_multipliers():
+    exp = [float(r["exp"]) for r in sorted(read_csv(os.path.join(ROOT, "data", "d2-reference", "act_bosses.csv")),
+                                            key=lambda r: int(r["act"]))]
+    d2 = [e / D2_ORDINARY_EXP for e in exp]
+    result = []
+    for i in range(len(GUIDE)):
+        p = i * (len(d2) - 1) / (len(GUIDE) - 1)
+        a = min(int(p), len(d2) - 2)
+        result.append(round(d2[a] + (d2[a + 1] - d2[a]) * (p - a), 1))
+    return result
+
+
+def boss_xp_shares(bosses):
+    """A boss with several phases (Kall) pays all its XP on the final phase's kill, the earlier phases nothing
+    (user, 2026-11-15: "for Kall all the xp should be awarded on final kill only"). GUIDE lists the phases in order."""
+    return ";".join("1" if i == len(bosses) - 1 else "0" for i in range(len(bosses)))
 # The Amazon's skills in Valheim (docs/class-design.md §5): status, kind (attack = on the skill button, cast = on its
 # hotkey, passive = no slot), the weapon it needs, and what it does here.
 AMAZON = {
@@ -77,6 +112,28 @@ AMAZON = {
     "Fend": ("later", "attack", "spear", "Thrusts at several nearby enemies in turn"),
     "Lightning Strike": ("later", "attack", "spear", "The thrust releases chain lightning to nearby enemies"),
     "Lightning Fury": ("later", "attack", "spear", "The javelin (a spectral copy) bursts into lightning bolts on impact"),
+}
+
+# The Amazon's passives (roadmap C3; user decisions 2026-11-11): skill id -> (effect, the amazon_levels.csv row whose
+# per-level chances it takes, tooltip text with {0} for the chance).
+PASSIVES = [
+    ("CriticalStrike", "crit", ("Critical Strike", "crit_chance"), "{0}% chance to deal double physical damage"),
+    ("Dodge", "dodge", ("Dodge", "dodge_chance"), "{0}% chance to dodge a close-range hit while standing still or attacking"),
+    ("Avoid", "avoid", ("Avoid", "dodge_missile_chance"), "{0}% chance to avoid a projectile while standing still or attacking"),
+    ("Penetrate", "penetrate", ("Critical Strike", "crit_chance"),
+     "{0}% chance for a hit to ignore the creature's resistances (not immunities)"),
+    ("Evade", "evade", ("Evade", "evade_chance"), "{0}% chance to evade any hit while walking or running"),
+]
+
+# The damage types a hit adds up (game dump items.csv columns), for the Valheim side of the damage scale.
+DAMAGE_COLUMNS = ["blunt", "slash", "pierce", "fire", "frost", "lightning", "poison", "spirit"]
+# Biome order as the game dump writes it in biome_items.csv (Ashlands there, AshLands in Heightmap.Biome).
+DUMP_BIOME = {"AshLands": "Ashlands"}
+
+# Each class's line in the class choice window (the classes UI demo's text, seen in the play-tests since 2026-10-30;
+# moved here when the demo was removed, user 2026-11-13). Classes without one show none.
+CLASS_DESCRIPTIONS = {
+    "Amazon": "A huntress of bow and javelin. Fast, precise and hard to hit.",
 }
 
 # Playable classes (user, 2026-10-30: the Amazon first; the Barbarian and maybe the Paladin later).
@@ -154,20 +211,32 @@ def main():
     spans = biome_spans()
     with open(os.path.join(OUT, "biome_levels.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["biome", "min_level", "max_level", "health_min", "health_max", "boss_level", "bosses"])
+        w.writerow(["biome", "min_level", "max_level", "health_min", "health_max", "boss_level", "bosses", "boss_skill_points",
+                    "boss_xp", "boss_xp_shares"])
+        boss_xp = boss_xp_multipliers()
         previous = 1
-        for biome, bosses, boss_level in GUIDE:
+        for i, (biome, bosses, boss_level) in enumerate(GUIDE):
             lo, hi = spans[biome]
             # Creatures fill the range up to one below the boss; the next biome starts at the boss's level.
-            w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses)])
+            w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses), BOSS_SKILL_POINTS[i],
+                        boss_xp[i], boss_xp_shares(bosses)])
             previous = boss_level
     classes = read_csv(os.path.join(ROOT, "data", "d2-reference", "classes.csv"))
     with open(os.path.join(OUT, "classes.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
         columns = ["str", "dex", "vit", "energy", "life_per_lvl", "stamina_per_lvl", "life_per_vit", "stamina_per_vit"]
-        w.writerow(["class", "status"] + columns)
+        w.writerow(["class", "status"] + columns + ["description", "tab0", "tab1", "tab2"])
         for c in classes:
-            w.writerow([c["class"], "playable" if c["class"] in PLAYABLE else "later"] + [c[k] for k in columns])
+            # The skill tree's three tab names in D2's order (data/d2-reference/<class>.csv), where the tree is collected.
+            tabs = []
+            tree_file = os.path.join(ROOT, "data", "d2-reference", c["class"].lower() + ".csv")
+            if os.path.exists(tree_file):
+                for s in read_csv(tree_file):
+                    if s["tab"] not in tabs:
+                        tabs.append(s["tab"])
+            tabs = (tabs + ["", "", ""])[:3]
+            w.writerow([c["class"], "playable" if c["class"] in PLAYABLE else "later"] + [c[k] for k in columns]
+                       + [CLASS_DESCRIPTIONS.get(c["class"], "")] + tabs)
     skills = read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon.csv"))
     tabs = []
     with open(os.path.join(OUT, "amazon_skills.csv"), "w", newline="", encoding="utf-8") as f:
@@ -183,7 +252,62 @@ def main():
             w.writerow([s["name"].replace(" ", ""), s["name"], tabs.index(s["tab"]), s["row"], s["col"], s["req_level"], prereqs,
                         status, kind, needs, eitr, s["mana_per_lvl"] if kind != "passive" else "0", text,
                         "" if s["synergies"] == "none" else s["synergies"]])
-    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv and amazon_skills.csv to", OUT)
+    per_level = {(r["skill"], r["value"]): r for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv"))}
+    with open(os.path.join(OUT, "amazon_passives.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["id", "effect", "text"] + ["l%d" % i for i in range(1, 21)] + ["source"])
+        for skill_id, effect, (name, value), text in PASSIVES:
+            row = per_level[(name, value)]
+            w.writerow([skill_id, effect, text] + [row["l%d" % i] for i in range(1, 21)] + ["%s %s (%s)" % (name, value, row["source"])])
+    built_active = [s["name"] for s in skills if AMAZON[s["name"]][0] in ("v1", "reworked") and AMAZON[s["name"]][1] != "passive"]
+    with open(os.path.join(OUT, "amazon_skill_values.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["id", "value", "unit"] + ["l%d" % i for i in range(1, 21)] + ["source"])
+        for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv")):
+            if r["skill"] in built_active:
+                w.writerow([r["skill"].replace(" ", ""), r["value"], r["unit"]] + [r["l%d" % i] for i in range(1, 21)] + [r["source"]])
+    write_damage_scale()
+    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv, amazon_skills.csv, amazon_passives.csv, "
+          "amazon_skill_values.csv and skill_damage_scale.csv to", OUT)
+
+
+def write_damage_scale():
+    items = {r["prefab"]: r for r in read_csv(os.path.join(DUMP, "items.csv"))}
+    by_biome = {}
+    for r in read_csv(os.path.join(DUMP, "biome_items.csv")):
+        by_biome.setdefault(r["biome"], []).append(r["item"])
+
+    def total(prefab):
+        return sum(float(items[prefab][c] or 0) for c in DAMAGE_COLUMNS)
+
+    # Best bow and best arrow obtainable by each biome (earlier biomes' gear counts too). Crossbows use bolts and
+    # "Uncooked" casts aren't weapons, so both are left out.
+    best, bow, arrow = {}, 0.0, 0.0
+    for biome, _, _ in GUIDE:
+        for prefab in by_biome.get(DUMP_BIOME.get(biome, biome), []):
+            if prefab not in items:
+                continue
+            kind = items[prefab]["type"]
+            if kind == "Bow" and not prefab.startswith("Crossbow") and "Uncooked" not in prefab:
+                bow = max(bow, total(prefab))
+            elif kind == "Ammo" and prefab.startswith("Arrow"):
+                arrow = max(arrow, total(prefab))
+        best[biome] = (bow, arrow)
+    d2_bows = [(max(int(r["item_level"]), int(r["level_req"])), (float(r["min_damage"]) + float(r["max_damage"])) / 2, r["name"])
+               for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "bows.csv")) if r["type"] in ("bow", "abow")]
+    biome_of = []
+    previous = 1
+    for biome, _, boss_level in GUIDE:
+        biome_of.append((previous, boss_level - 1, biome))
+        previous = boss_level
+    with open(os.path.join(OUT, "skill_damage_scale.csv"), "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["level", "biome", "valheim_bow_arrow", "d2_bow", "d2_bow_name", "scale"])
+        for level in range(1, MAX_LEVEL + 1):
+            biome = next((b for lo, hi, b in biome_of if lo <= level <= hi), GUIDE[-1][0])
+            valheim = sum(best[biome])
+            d2 = max((b for b in d2_bows if b[0] <= level), key=lambda b: b[1])
+            w.writerow([level, biome, valheim, d2[1], d2[2], round(valheim / d2[1], 3)])
 
 
 if __name__ == "__main__":

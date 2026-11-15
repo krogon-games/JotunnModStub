@@ -4,9 +4,8 @@ using System.Text;
 namespace CraftingOverhaul.Classes
 {
     /// <summary>
-    ///     Writes the flat JSON objects and string arrays of the classes API (<c>docs/classes-ui-brief.md</c> §3), so the
-    ///     demo answers exactly like the Orlog plugin and the UI reads both with <see cref="CharacterSheet.FlatJson" />.
-    ///     Pure: no Unity.
+    ///     Writes the flat JSON objects and string arrays of the classes API (<c>docs/classes-ui-brief.md</c> §3), for the UI
+    ///     tests' sample answers (the classes UI demo used it until it was removed, 2026-11-13). Pure: no Unity.
     /// </summary>
     internal sealed class JsonOut
     {
