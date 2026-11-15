@@ -1,6 +1,6 @@
 # Handoff: `claude/biome-load-freeze`
 
-**Written:** 2026-11-13. Branch from `master` at `7bae804` (PR #63); no PR yet.
+**Written:** 2026-11-13, updated 2026-11-15 after the play-test. Branch from `master` at `7bae804` (PR #63); no PR yet.
 
 ## Stage
 
@@ -12,7 +12,7 @@ Remove the 18–22 s freeze right after spawning (Krogon's 1.0.21 logs, 2026-11-
 
 ## Done
 
-Nothing confirmed in game yet.
+- **Play-test 2026-11-15 passed (all six steps, single player, 1.0.21):** no freeze after spawning; background work 28.4 s using 1.2 s of game time over 2,695 frames, longest frame 87 ms; same 970 items; the saved file loads in 12 ms; `co_biome` explanations and refresh work.
 
 ## Half-done and known issues
 
@@ -23,9 +23,10 @@ Built, untested:
 - The log line now gives the time per collector, the longest frame and the longest step.
 - Location rooms are now loaded once each (as before) but in a separate pass after all locations; one broken prefab now skips only that prefab.
 
-Assumptions (not measured in game):
-- Where the 18 s went: not measured (the old log only had the total). The solver alone on 40,000 made-up sources took about 0.1 s in .NET 8, so loading locations and rooms is assumed to be most of it. The new log line will show it.
-- How long the background work takes in wall time, and whether background asset loads cause stutters, is unknown until the play-test.
+Measured 2026-11-15: the location and room loading was the freeze (13.5 of 13.6 s run all at once; every other collector under 20 ms).
+
+Known issues:
+- `co_biome refresh` (and `co_dump`) still run all at once: a 14 s pause. Krogon to decide whether that matters (open question).
 - The saved file can go stale if a mod changes drops inside a prefab through its own settings without a version change; `co_biome refresh` fixes it.
 
 ## Decisions
@@ -38,13 +39,13 @@ Checklist: [`docs/playtests/claude-biome-load-freeze.md`](../playtests/claude-bi
 
 ## Open questions for Krogon
 
-None.
+1. `co_biome refresh` pauses the game for about 14 s: leave it (an admin command, rarely used), or make it work in the background like at spawn?
 
 ## Next steps
 
-1. Krogon play-tests the checklist and sends the `Resolved biomes for …` log line.
-2. Fix what the play-test finds (e.g. a stutter: lower `LoadsInFlight` or the 4 ms budget).
-3. Run `/handoff`, then a PR into `master`.
+1. ~~Krogon play-tests the checklist.~~ Passed 2026-11-15.
+2. Krogon answers the refresh question; if "background", build it and re-test step 5.
+3. Take the `bio-` steps off the phone page once the round is final; run `/handoff`, then a PR into `master`.
 
 ## Checks
 
@@ -52,10 +53,10 @@ None.
 - Version: not changed (feature branches never do).
 - Multiplayer sync: not affected (per-player client work, no network messages, no config added).
 - FEATURES.md: updated (biome detection section and row, recipe categories row, changelog).
-- In-game: needs Krogon's playtest.
+- In-game: PASS (Krogon's play-test 2026-11-15, all six steps).
 
 ## Merge notes
 
-- Not ready to merge: needs the play-test.
+- Not ready to merge yet: play-test passed; waiting on the refresh question, then `/handoff`.
 - **Gameplay changed: version bump needed at merge** for CraftingOverhaul (code only; no data or assets).
 - Shared files touched: `FEATURES.md` (changelog, two table rows, biome section), `docs/CURRENT_STATE.md` (one line under known issues), `docs/ARCHITECTURE.md` (biome bullet, pattern 9), `CraftingOverhaul/CraftingOverhaul.cs` (one line in `Awake`), `CraftingOverhaul/RecipeList/RecipeListOrganizer.cs`.

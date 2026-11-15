@@ -223,7 +223,8 @@ The saved-file format and the per-frame slicing are covered by unit tests (`Biom
 | `BiomeMaterialOverrides` | *(empty)* | Comma separated `PrefabName:Biome` pairs, only for items the detection gets wrong or can't place. Biomes: Meadows, BlackForest, Swamp, Ocean, Mountain, Plains, Mistlands, Ashlands, DeepNorth. |
 
 **Known issues:**
-- **Untested in-game (2026-11-13): background loading and the saved file.** Not yet confirmed: that the freeze is gone; that loading location prefabs in the background (`SoftReference.LoadAsync`) doesn't cause stutters of its own; how long the background work takes in wall time (the old freeze took 18–22 s; frame-limited, it may take longer); that the second load uses the saved file. Where the old 18 s went wasn't measured in-game (the old log only had the total). Timing the solver alone on 40,000 made-up sources took about 0.1 s in .NET 8, so the collecting (mostly the location and room loads) is assumed to be the bulk; the new log line shows the split per collector.
+- **Play-test 2026-11-15 (1.0.21, single player): background loading and the saved file passed.** No freeze after spawning; the first load worked in the background for 28.4 s using 1.2 s of game time over 2,695 frames (longest frame 87 ms), with the same 970 items and 39,595 sources as before; the second load used the saved file in 12 ms; biomes unchanged. Measured: the location and room loading was the freeze (13.5 of 13.6 s when run all at once; every other collector under 20 ms).
+- `co_biome refresh` (and `co_dump`) still run all at once: about 14 s of pause (13.6 s on 2026-11-15).
 - The saved file can be stale if another mod changes what a prefab drops through its own settings without a version change; the key doesn't read inside prefabs. Run `co_biome refresh` after changing such a setting.
 - Items only obtainable in ways the collectors don't read will go unplaced (e.g. things only given by quests or events). `co_dump` lists them in `biome_unresolved.csv`.
 - **First in-game dump (1.0.20, 2026-10-26):** 747 items placed. The key materials all landed in the right biome: iron Swamp, silver Mountain, black metal Plains, eitr Mistlands, flametal Ashlands, and 117 Deep North items. Problems found, fixed in the next build, awaiting a new dump:
@@ -1376,6 +1377,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-11-15
+- **Play-test: no freeze after spawning passed** (Krogon, 1.0.21): background work 28.4 s using 1.2 s of game time, longest frame 87 ms; the saved file loads in 12 ms; same biomes. `co_biome refresh` still pauses about 14 s.
 
 ### 2026-11-13
 - **Fix (biome detection): no more 18–22 s freeze after spawning** (Krogon's 1.0.21 logs). The result is saved to `BepInEx/cache/CraftingOverhaul.biomes.txt` and reused while the game, mods and game data are unchanged. When it has to be worked out again, it runs in the background (about 4 ms per frame, prefabs loaded asynchronously, the solver on its own thread) and the recipe list keeps the game's order until it's ready. The log now shows the time per collector. Untested.

@@ -15,5 +15,13 @@
 5. [ ] **Refresh:** in the console, `co_biome refresh` → a short pause, then "Biomes recalculated."; the headers are still right.
 6. [ ] **Log:** send me these lines from `BepInEx/LogOutput.log`: the ones starting `Working out item biomes`, `Resolved biomes for` and `Loaded biomes for`. No red errors from CraftingOverhaul.
 
-### Your feedback
-*(not yet)*
+### Your feedback (2026-11-15)
+Build `claude/biome-load-freeze d73a4cf`, Valheim 1.0.21, from the phone page and `LogOutput.log`.
+- Step 1: passed.
+- Step 2: passed. "not sure, didnt notice it" (the switch to biome headers wasn't noticed; the log shows the work finished 28 s after spawning).
+- Step 3: passed.
+- Step 4: passed. Log: `Loaded biomes for 970 items from the saved file in 12 ms.`
+- Step 5: passed. Log: the refresh took 13.6 s all at once (`13614 ms of game time over 1 frames`), so a 14 s pause, not a short one.
+- Step 6: passed; no errors or warnings from CraftingOverhaul.
+
+From the log, first load (no saved file): `Resolved biomes for 970 items from 39595 sources in 28.4 s (1208 ms of game time over 2695 frames; longest frame 87 ms, longest step 84 ms)`, with Locations 38237 sources (1155 ms) and every other collector under 20 ms. Same 970 items and 39,595 sources as before the change. Run all at once (`co_biome refresh`), Locations took 13,457 ms of the 13.6 s: the location and room loading was the freeze, as assumed.
