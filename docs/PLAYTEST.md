@@ -29,12 +29,13 @@ Passed 2026-10-31: summons arrive, 1–2 stars, limit 4 alone, stop when the bos
 1. Bulk-plant a PlantEasily grid with the seeds only in a nearby chest: it plants and takes the seeds from the chest.
 
 ### 3. Small checks ([#27](https://github.com/krogon-games/JotunnModStub/issues/27))
+**Both passed 2026-11-15** (phone log).
 1. **One click sound:** the + buttons for attribute points, the skills panel's buttons and the inventory's tab buttons play one click, not two (on 2026-10-31 you heard double clicks, most on the first press; fixed the same day, never re-tried).
 2. **Build stamp:** `BepInEx/LogOutput.log` has the line `CraftingOverhaul 0.4.0 loaded (build: master <commit>)`, beside Corruption's and Orlog's.
 
 ## Odin items (2 minutes)
 
-~~Equip and log check~~ passed 2026-10-31 (the log also shows the recipes unlocked). Left: craft one.
+~~Equip and log check~~ passed 2026-10-31 (the log also shows the recipes unlocked). ~~Crafting one~~ passed 2026-11-15 (phone log). Nothing left.
 
 1. `co_loot rare CapeOdin` (or `spawn CapeOdin`, `HelmetOdin`, `TankardOdin`): the tooltip no longer says "DLC item", and you can equip them; the character picture shows no "DLC required".
 2. Their recipes show at the workbench once you've picked up the materials, and crafting works.
@@ -99,7 +100,7 @@ Build from **`master`** (merged; the loot branch is deleted). Roll tools with th
 
 ## Session 3b: player-stat affixes (loot step 2, about 10 minutes)
 
-~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Left: steps 6 (weapon skill: failed 2026-10-31, now a check for bug #56) and 7 (life steal; passed on a bow 2026-11-07, not yet with other weapons).
+~~Max health/stamina/eitr, carry weight, movement, regen, resistances, no errors~~ passed 2026-10-31. Step 7 (life steal) passed on a bow 2026-11-07 and with a melee weapon 2026-11-15 (phone log). Left: step 6 (weapon skill: failed 2026-10-31, now a check for bug #56; skipped 2026-11-15).
 
 Build from `master` (merged 2026-10-31). Roll items until you have the affix (`co_loot rare ArmorLeatherChest`, `co_loot rare CapeDeerHide`, `co_loot rare SwordBronze`…); these lines are no longer grey.
 
@@ -128,7 +129,7 @@ Build from `master` (merged 2026-10-31; the log line names the branch and commit
 7. **Natural drops:** kill some starred creatures (`spawn Boar 10 2` spawns ten 1-star boars). Drops are rare (1 in 50 Magic, 1 in 100 Rare; stars raise it), so this mostly checks nothing breaks. Items come from the biome you're in, and 1 in 5 from the biome before it (Meadows: always Meadows items).
 8. **Combat:** hit something with a knockback or backstab item and parry with a parry item: no errors (the effect is subtle).
 9. No red errors in the console or `LogOutput.log`.
-10. **Bigger backpacks** (after setting the sizes in `PLAYER_SETUP.md` → For the server admin): the satchel opens with 2 rows (6 slots); items already in a backpack are kept; a 5-row backpack (`spawn BackpackPlains`) fits on screen.
+10. **Bigger backpacks** (after setting the sizes in `PLAYER_SETUP.md` → For the server admin): the satchel opens with 2 rows (6 slots); items already in a backpack are kept; a 5-row backpack (`spawn BackpackPlains`) fits on screen. **Passed 2026-11-15** (phone log).
 ## Orlog levels and XP (merged into `master`, about 15 minutes)
 
 New plugin: build `Orlog` too (`CraftingOverhaul.sln` builds all three) and check `BepInEx/LogOutput.log` has `Orlog 0.1.0 loaded (build: claude/class-skills …)`.
