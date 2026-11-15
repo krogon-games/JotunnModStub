@@ -1,34 +1,28 @@
 # Handoff: `claude/lucid-albattani-imrei7`
 
-**Written:** 2026-11-13 by `/handoff`, extended 2026-11-15 with the last play-test bugs (Krogon allowed a longer handoff for this big session). 22 commits ahead of `master` with this one, 0 behind. No pull request yet.
+**Written:** 2026-11-15 by `/handoff`. 34 commits ahead of `master` with this one, 0 behind. No pull request yet.
 
 ## Stage
 
-**Waiting for Krogon's playtest.**
+**Ready to merge.**
 
 ## Purpose
 
-The Amazon (`ROADMAP.md` §4.1): passives (C3, #32), skill button, slots, bow skills, Inner Sight (C5, #37), boss points (C4 part, #36), quick cast, demo removed (U2, #38).
+The Amazon (`ROADMAP.md` §4.1): passives (C3, #32), skill button, slots, bow skills, Inner Sight (C5, #37), boss points and boss XP (C4 part, #36), quick cast, demo removed (U2, #38).
 
 ## Done
 
-Krogon, 2026-11-13: "the keys work"; the panel shows Orlog's real data (screenshot); the bigger panel is "much better now". The rest is untested.
+Krogon's single-player play-test passed (2026-11-15): all five passives; slots, F1–F4, the skill button; Multiple Shot, Freezing Arrow; Inner Sight (5% → 24%, no Forsaken power); quick cast; tooltips; boss points and boss XP on Eikthyr; respec clears the cross; F2 for skills (Ctrl+F2: the game's stats window); no red errors.
 
 ## Half-done and known issues
 
-Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
-- **Proposals waiting for Krogon:** the skill damage scale (D2's skill-to-bow ratio; a creature-health scale is 7–10× lower mid-game); boss XP ×9.4 (Eikthyr) … ×66.6 (Kall). Interim choices: Multiple Shot's fan 5°/60°, Exploding Arrow 3 m, Inner Sight +25%.
-- **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game; blast hits count for Corruption's life steal per creature; `BlockKey` blank by default (no block with a class until set).
-- **One world load hung** (log lost); every load freezes ~20 s in biome detection (older; `claude/biome-load-freeze`).
-- **Not built:** the respec item and boss XP (C4); Gungnir's Throw and the spear skills (C6).
-- **For the coordinator (on `master`):** `STATUS.md` (agreed at the start, decision 2; feature branches don't touch it) and #38 / the demo item of #50 at merge. The #26 comment with the loot 3c marks is posted by this `/handoff`.
-
-- **Bugs found in play (2026-11-15, Krogon), first job next session** (detail and first steps: the play-test file's last feedback):
-  1. **Freezing Arrow does no damage when it hits a creature directly,** only when it lands on the ground next to it. Exploding Arrow uses the same code (`BowSkills.Impact` → `Explode`), so it is likely broken the same way. Cause unknown: add a log line first.
-  2. **Inner Sight (quick cast, F1) also fires the Forsaken power.** Likely the `gpower` animation trigger in `CastSkills.Cast`, whose animation event activates the power. Use another animation or block the power during our cast.
-- **Still untested in game:** passives (round 1), Magic Arrow without arrows, Fire/Cold/Ice Arrow damage and freeze, Multiple Shot's fan, eitr costs, quick cast toggle and shimmer, boss points, the per-weapon right-click memory, the new panel size.
-- **Useful for the next session:** commands in `Orlog/README.md` (`orlog_level`, `orlog_skill`, `orlog_slot`, `orlog_passive`, `orlog_info`, `orlog_respec`); Krogon's logs show every ignored skill key with its reason; the game code is decompiled with `ilspycmd` from `/opt/valheim-standin/valheim_Data/Managed/assembly_valheim.dll` (1.0.14; set `DOTNET_ROLL_FORWARD=Major`). The group's mods' code was read from Thunderstore downloads (EAQS 3.1.3, AB 2.4.6, PlantEasily 2.3.1).
-- **Krogon's setup notes:** the classes UI demo is gone (an old `Demo` line in CraftingOverhaul's config does nothing); his block works on a keyboard key, while his mouse software sends the side button only on release; `BlockKey` is blank by default.
+Detail in `FEATURES.md`.
+- **Not tested, to be reworked in the skill overhaul (decision 32):** Magic Arrow without arrows, Fire, Cold and Ice Arrow, Exploding Arrow on a group.
+- **Not tested:** the block default (`Mouse4`; decision 31: a key-binding screen comes later); Kall's boss XP on the final phase; anything with two players (`PLAYTEST.md` → 2j).
+- **Limits:** no gamepad; PvP untouched; the freeze stops movement only; Inner Sight's glow only on the caster's game.
+- **Not built:** the respec item (low priority, decision 26); Gungnir's Throw and the spear skills (C6).
+- **For the coordinator (on `master`):** `STATUS.md` and `docs/DECISIONS.md` (decisions 1–32); #32, #36, #37, #38 and the demo item of #50 at merge. Other rounds' marks from today: see the play-test file's last section.
+- Game code in the cloud: `ilspycmd` 8.2.0.7535 (newer needs a newer SDK), `DOTNET_ROLL_FORWARD=Major`; `ZInput` is in `assembly_utils.dll`.
 
 ## Decisions
 
@@ -98,35 +92,31 @@ Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
 31. **2026-11-15: a key-binding screen comes later** ("i think we will create a UI keybindings overhaul later on. so players can rebind whatever keys they want"); the block default's step was skipped for it.
 32. **2026-11-15: the skills to be reworked aren't play-tested now** ("doesnt matter, will rework skill later": Magic Arrow without arrows, Fire, Cold, Ice and Exploding Arrow on a group).
 
-
 ## Playtest
 
-Rounds 1 and 2 in `docs/playtests/claude-lucid-albattani-imrei7.md` and on the phone page; with others `PLAYTEST.md` → 2j. Passed: round 1 step 2, round 2 step 2. Round 2 steps 1 and 3 failed only because the demo was on: re-mark. In a fresh session.
+Rounds 1–3 in `docs/playtests/claude-lucid-albattani-imrei7.md`: **passed** in single player (2026-11-15), apart from the skipped steps above. This branch's steps are off the phone page; two-player checks stay in `PLAYTEST.md` → 2j for the group evening.
 
 ## Open questions for Krogon
 
-1. **Skill damage scale:** the proposed one, or the creature-health one? (Round 2 step 15.)
-2. **Boss XP:** ×9.4 (Eikthyr) … ×66.6 (Kall)?
-3. **Inner Sight:** 25% flat, or growing with its level?
-4. **Interim choices:** Multiple Shot's fan, Exploding Arrow's 3 m.
-5. **Reset item** recipe without Corruption.
-6. **A default block key** (blank for now).
+1. **Reset item without Corruption:** later (decision 26).
+2. **The skill tree overhaul** (decision 21): which skills stay, go or come; level tiers and prerequisites; Wind Lance's details. Next round.
 
 ## Next steps
 
-1. **Fix the two bugs above** (Freezing/Exploding Arrow on a creature hit; Inner Sight firing the Forsaken power), then Krogon's play-test of rounds 1 and 2; fix what fails.
-2. His answers; then boss XP and the respec item.
+1. Merge into `master` (coordinator: version bump, `STATUS.md`, `DECISIONS.md`, issues).
+2. Next round, new branch: plan and build the skill tree overhaul.
 3. C6: Gungnir's Throw, spear and javelin skills.
+4. Later: the respec item; a key-binding screen.
 
 ## Checks
 
-- Build: PASS (556 tests; CraftingOverhaul and Orlog build).
+- Build: PASS (561 tests; CraftingOverhaul and Orlog build).
 - Version: gameplay changed: version bump needed at merge (Orlog, CraftingOverhaul). The branch changed no version.
-- Multiplayer sync: PASS, read in code, not tested (gameplay settings admin-only; registered boss message; game's status-effect message; hit fields).
-- Assets and names: PASS (CSVs embedded by wildcard; prefab names in the dump; no new tokens).
+- Multiplayer sync: PASS, read in code, not tested (Inner Sight settings admin-only, its % travels in the game's status-effect message; `BlockKey` per player; boss XP in the compiled table).
+- Assets and names: PASS (no new shipped files or tokens).
 - FEATURES.md: PASS.
-- In-game: NEEDS KROGON'S PLAYTEST (beyond the three confirmations above).
+- In-game: PASSED in Krogon's single-player play-test (2026-11-15); two players untested.
 
 ## Merge notes
 
-Not ready (play-test). **Gameplay changed: version bump needed at merge: Orlog, CraftingOverhaul.** Level with `master`. `claude/biome-load-freeze` also changes `CraftingOverhaul.cs`, the tests' `.csproj`, `FEATURES.md`, `ARCHITECTURE.md`, `CURRENT_STATE.md`: keep both sides. `data/d2-reference/bows.csv` never ships.
+**Ready to merge: yes** (play-test passed alone, checks pass, level with `master`). **Gameplay changed: version bump needed at merge: Orlog, CraftingOverhaul.** `claude/biome-load-freeze` also changes `CraftingOverhaul/CraftingOverhaul.cs`, the tests' `.csproj`, `FEATURES.md`, `docs/ARCHITECTURE.md`, `docs/CURRENT_STATE.md`: keep both sides. `data/d2-reference/` never ships.
