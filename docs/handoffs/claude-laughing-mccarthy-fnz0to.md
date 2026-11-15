@@ -43,6 +43,7 @@ Detail in `FEATURES.md`.
 15. **2026-11-15: the subagent split goes in an `AGENTS.md` note** ("maybe you should make a note in agents.md file the breakdown you did previously, of which model you would assign which tasks"): which model gets which kind of work, and how the main session checks it.
 16. **2026-11-15: the panel in game "is looking really good"** (his screenshot: `docs/images/skills_panel_cards_ingame.webp`).
 17. **2026-11-15: the re-check of the Multishot name and the attribute icons passed** ("i did the re-check, all passed"; 3 steps Pass on the phone page).
+18. **2026-11-15: `AGENTS.md`'s subagent split stays on request only** ("lets keep the agents default to be as me asking for subagents to be used for now at least").
 
 ## Playtest
 
@@ -51,12 +52,11 @@ Detail in `FEATURES.md`.
 ## Open questions for Krogon
 
 1. Every new skill's details (cost, damage, range, Wind Lance's and Snipe's charge, Shackle Shot against Dota 2's), in the round that builds them.
-2. Should `AGENTS.md`'s split be the default, or only on "use subagents"?
 
 ## Next steps
 
 1. Pull request into `master`; Krogon merges.
-2. Coordinator: version bump (Orlog, CraftingOverhaul), `STATUS.md`, `DECISIONS.md` (decisions 1–17), close #66, update #41 and #44 (their skill lists changed).
+2. Coordinator: version bump (Orlog, CraftingOverhaul), `STATUS.md`, `DECISIONS.md` (decisions 1–18), close #66, update #41 and #44 (their skill lists changed).
 3. Next classes round, new branch: Forked Lightning and Wind Lance, then the other five bow skills; C6 (#41) after.
 
 ## Checks
