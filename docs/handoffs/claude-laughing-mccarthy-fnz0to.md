@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Asking Krogon questions.**
+**Building.**
 
 ## Purpose
 
@@ -27,6 +27,10 @@ Nothing built yet.
 5. **2026-11-15: this round builds the panel and the rules only** ("Panel and rules only"): the cards panel, no level tiers or prerequisites, the new skill list. Skills that don't work yet show as "Coming later"; a later round builds them.
 6. **2026-11-15: every tab has exactly 9 skills** ("Always exactly 9"), for every class. One skill leaves the Passive and Magic tab and one the Javelin and Spear tab (which: asked).
 7. **2026-11-15: the fourth attribute stays "Energy"** ("Keep Energy"); the mock-up's "Eitr" isn't taken over.
+8. **2026-11-15: Slow Missiles leaves the Passive and Magic tab** ("Slow Missiles"). Its 9: Inner Sight, Critical Strike, Dodge, Avoid, Evade, Penetrate, Decoy, Valkyrie, Pierce.
+9. **2026-11-15: Power Strike leaves the Javelin and Spear tab** ("Power Strike"). Its 9: Jab, Impale, Fend, Charged Strike, Lightning Strike, Poison Javelin, Lightning Bolt, Plague Javelin, Lightning Fury (the rest can still change in the spear round, #41).
+10. **2026-11-15: Snipe, in Krogon's words:** "Charge a powerful shot, increasing damage the longer the charge. Drains stamina while charging and slowly zooms in on the target."
+11. **2026-11-15: Venom Strike is a poison cloud** ("Poison cloud": the arrow bursts into a poison cloud where it lands, poisoning everything that stands in it).
 
 ## Playtest
 
@@ -34,10 +38,8 @@ Nothing to test yet.
 
 ## Open questions for Krogon
 
-1. Which skill leaves the Passive and Magic tab, and which the Javelin and Spear tab (9 each)?
-2. One line each on what Snipe and Venom Strike do (for their cards).
-3. "Multi Shot" or "Multiple Shot" (today's name)?
-4. Every new skill's details (cost, damage, range, Wind Lance's charge), in the round that builds them.
+1. "Multi Shot" or "Multiple Shot" (today's name, kept until he says)?
+2. Every new skill's details (cost, damage, range, Wind Lance's and Snipe's charge, Shackle Shot against Dota 2's), in the round that builds them.
 
 ## Next steps
 
