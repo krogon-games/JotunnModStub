@@ -2,6 +2,8 @@
 
 **Written:** 2026-11-15 by `/handoff`. 10 commits ahead of `master` with this one, 0 behind. No pull request yet.
 
+**Coordinator update (2026-11-15, evening):** PR #68 was **merged** into `master` on Krogon's word ("Merge branch claude/laughing-mccarthy-fnz0to into master using a pull request"). The coordinator raised Orlog to **0.4.0** and CraftingOverhaul to **0.5.0** (PR #69), copied decisions 1–18 into `docs/DECISIONS.md`, closed #66, updated #41 and #44, and opened #70 for the seven bow skills still to build. The branch is fully in `master` and safe to delete; the next classes round starts a new branch from `master`.
+
 ## Stage
 
 **Ready to merge.**
