@@ -1,9 +1,9 @@
 biome,min_level,max_level,health_min,health_max,boss_level,bosses,boss_skill_points,boss_xp,boss_xp_shares
-Meadows,1,4,5,20,5,Eikthyr,1,9.4,1.0
-BlackForest,5,10,10,600,11,gd_king,1,13.8,1.0
-Swamp,11,19,50,800,20,Bonemass,1,17.8,1.0
-Mountain,20,34,80,800,35,Dragon,1,20.6,1.0
-Plains,35,49,10,1200,50,GoblinKing,2,25.9,1.0
-Mistlands,50,61,10,1500,62,SeekerQueen,2,33.7,1.0
-AshLands,62,75,200,1600,76,Fader,2,48.9,1.0
-DeepNorth,76,89,100,2200,90,FrozenKing;FrozenKing_p2;FrozenKing_p3,2,66.6,0.213;0.149;0.638
+Meadows,1,4,5,20,5,Eikthyr,1,9.4,1
+BlackForest,5,10,10,600,11,gd_king,1,13.8,1
+Swamp,11,19,50,800,20,Bonemass,1,17.8,1
+Mountain,20,34,80,800,35,Dragon,1,20.6,1
+Plains,35,49,10,1200,50,GoblinKing,2,25.9,1
+Mistlands,50,61,10,1500,62,SeekerQueen,2,33.7,1
+AshLands,62,75,200,1600,76,Fader,2,48.9,1
+DeepNorth,76,89,100,2200,90,FrozenKing;FrozenKing_p2;FrozenKing_p3,2,66.6,0;0;1

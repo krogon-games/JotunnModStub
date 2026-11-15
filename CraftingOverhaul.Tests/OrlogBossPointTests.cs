@@ -45,13 +45,12 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void KallsPhasesShareHisXpOnce()
+        public void KallPaysAllHisXpOnTheFinalPhase()
         {
             var b = Biomes();
-            float whole = b.BossXpMultiplier("FrozenKing") + b.BossXpMultiplier("FrozenKing_p2") + b.BossXpMultiplier("FrozenKing_p3");
-            Assert.Equal(66.6f, whole, 1);
-            // By base health (game dump: 10000, 7000, 30000): the last phase the most.
-            Assert.True(b.BossXpMultiplier("FrozenKing_p3") > b.BossXpMultiplier("FrozenKing"));
+            Assert.Equal(0f, b.BossXpMultiplier("FrozenKing"));
+            Assert.Equal(0f, b.BossXpMultiplier("FrozenKing_p2"));
+            Assert.Equal(66.6f, b.BossXpMultiplier("FrozenKing_p3"), 2);
         }
 
         [Fact]

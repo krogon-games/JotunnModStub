@@ -79,7 +79,7 @@ namespace Orlog.Content
             {
                 creatureLevel = Mathf.Max(1, Mathf.RoundToInt((float)levelSum / Nearby.Count));
             }
-            // A boss is worth several ordinary creatures of its level (D2's act bosses, user 2026-11-15; Kall split by phase).
+            // A boss is worth several ordinary creatures of its level (D2's act bosses, user 2026-11-15; Kall's earlier phases give none).
             double perLevel = Mathf.Max(1, creature.GetLevel()) * OrlogConfig.XpMultiplier.Value
                               * Progress.Biomes.BossXpMultiplier(Utils.GetPrefabName(creature.gameObject));
             var shares = ExperienceRules.Share(level => (long)System.Math.Round(Progress.CreatureXp.For(level) * perLevel), creatureLevel, levels,

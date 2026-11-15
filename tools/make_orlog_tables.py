@@ -75,10 +75,10 @@ def boss_xp_multipliers():
     return result
 
 
-def boss_xp_shares(bosses, health):
-    """A boss with several phases (Kall) shares its XP by each phase's base health, so the whole fight pays it once."""
-    total = sum(health[b] for b in bosses)
-    return ";".join(str(round(health[b] / total, 3)) for b in bosses)
+def boss_xp_shares(bosses):
+    """A boss with several phases (Kall) pays all its XP on the final phase's kill, the earlier phases nothing
+    (user, 2026-11-15: "for Kall all the xp should be awarded on final kill only"). GUIDE lists the phases in order."""
+    return ";".join("1" if i == len(bosses) - 1 else "0" for i in range(len(bosses)))
 # The Amazon's skills in Valheim (docs/class-design.md §5): status, kind (attack = on the skill button, cast = on its
 # hotkey, passive = no slot), the weapon it needs, and what it does here.
 AMAZON = {
@@ -214,13 +214,12 @@ def main():
         w.writerow(["biome", "min_level", "max_level", "health_min", "health_max", "boss_level", "bosses", "boss_skill_points",
                     "boss_xp", "boss_xp_shares"])
         boss_xp = boss_xp_multipliers()
-        health = {r["prefab"]: float(r["health"]) for r in read_csv(os.path.join(DUMP, "creatures.csv"))}
         previous = 1
         for i, (biome, bosses, boss_level) in enumerate(GUIDE):
             lo, hi = spans[biome]
             # Creatures fill the range up to one below the boss; the next biome starts at the boss's level.
             w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses), BOSS_SKILL_POINTS[i],
-                        boss_xp[i], boss_xp_shares(bosses, health)])
+                        boss_xp[i], boss_xp_shares(bosses)])
             previous = boss_level
     classes = read_csv(os.path.join(ROOT, "data", "d2-reference", "classes.csv"))
     with open(os.path.join(OUT, "classes.csv"), "w", newline="", encoding="utf-8") as f:

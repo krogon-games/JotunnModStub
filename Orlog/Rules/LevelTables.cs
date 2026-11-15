@@ -163,7 +163,7 @@ namespace Orlog.Rules
             ///     when the table has none.
             /// </summary>
             public float BossXp = 1f;
-            /// <summary>Each boss prefab's share of <see cref="BossXp" /> (Kall's phases by base health); 1 for a single boss.</summary>
+            /// <summary>Each boss prefab's share of <see cref="BossXp" /> (Kall: all on the final phase, 0 on the others); 1 for a single boss.</summary>
             public float[] BossXpShares;
         }
 
@@ -245,7 +245,8 @@ namespace Orlog.Rules
         }
 
         /// <summary>
-        ///     The XP multiplier of a creature: a listed boss's (its biome's <c>boss_xp</c> × its phase's share), else 1.
+        ///     The XP multiplier of a creature: a listed boss's (its biome's <c>boss_xp</c> × its phase's share, so 0 for
+        ///     Kall's earlier phases), else 1.
         /// </summary>
         public float BossXpMultiplier(string prefab)
         {
