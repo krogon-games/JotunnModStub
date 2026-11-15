@@ -136,7 +136,7 @@ The dedicated server needs, in its own BepInEx install:
 | Setting | Default | What it does |
 |---|---|---|
 | `SkillButton` | `Mouse1` (right click) | Fires the skill chosen for the weapon in hand; hold to draw the bow |
-| `BlockKey` | blank (`None`) for now | Block and parry while the game's own Block key is right click. **Set one, or you can't block:** e.g. `Mouse4` (the mouse's back side button) or a keyboard key; or set Block to another key in the game's controls (that key then blocks too) |
+| `BlockKey` | `Mouse4` | Block and parry while the game's own Block key is right click. `Mouse4` is the mouse's back side button ("mouse button 4"); any key works (e.g. `CapsLock`), `None` turns it off. Or set Block to another key in the game's controls (that key then blocks too). A config saved before 2026-11-15 keeps a blank `BlockKey`: set `Mouse4` |
 | `Slot1Key` … `Slot4Key` | `F1` … `F4` | The four skill slots: a weapon skill goes on the skill button; a skill without a weapon (Inner Sight) casts at once while its quick cast is on (right-click its slot on the skill cross, inventory open, to toggle) |
 
 - **Bigger backpacks (user, 2026-10-29: one more row on every level).** Set on the server in `BepInEx/config/vapok.mods.adventurebackpacks.cfg` (AdventureBackpacks syncs them to everyone). Each backpack has a section `[Backpack: <name>]` with `Backpack Size - Level 1` to `Level 4`, written as `{"x":3.0,"y":2.0}` (width, height). New values (AdventureBackpacks 2.4.6 defaults plus one row; widths unchanged):

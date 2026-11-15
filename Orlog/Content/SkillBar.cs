@@ -321,7 +321,9 @@ namespace Orlog.Content
         /// <summary>Unity's legacy input, as a second reading; switched off for good the first time it throws (input system only).</summary>
         private static bool Legacy(KeyCode key, bool down)
         {
-            if (s_legacyInputOff)
+            // The side buttons are named the other way round in Unity's legacy input (Mouse3 = back) than in the game's
+            // ZInput (Mouse4 = back, Mouse3 = forward); only the game's reading counts, so Mouse4 is one button.
+            if (s_legacyInputOff || key == KeyCode.Mouse3 || key == KeyCode.Mouse4)
             {
                 return false;
             }

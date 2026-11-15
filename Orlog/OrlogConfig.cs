@@ -118,11 +118,13 @@ namespace Orlog
             // Keys, per player (class-design.md §4; user 2026-10-30: right click is the skill button, block moves, both rebindable).
             SkillButton = config.Bind(KeySection, "SkillButton", UnityEngine.KeyCode.Mouse1,
                 "Fires the chosen attack skill (right click, as in Diablo 2). Only for characters with a class.");
-            // Blank by default for now (user, 2026-11-13: "i cant think of a good alternative at the moment").
-            BlockKey = config.Bind(KeySection, "BlockKey", UnityEngine.KeyCode.None,
+            // The mouse's back side button by default, rebindable (user, 2026-11-15: "put the keybind on mouse side button 4.
+            // but make sure its rebindable"). Mouse4 is the back button in the game's own input (ZInput: Mouse4 = Back).
+            BlockKey = config.Bind(KeySection, "BlockKey", UnityEngine.KeyCode.Mouse4,
                 "Block and parry for characters with a class, while the game's Block key is the same as the skill button (right click). " +
-                "Blank (None) by default: set a key here (e.g. Mouse4, the mouse's back side button; Valheim's dodge is block + jump), " +
-                "or set Block to another key in the game's own controls, which then blocks too.");
+                "Default Mouse4 (the mouse's back side button, often called mouse button 4; Mouse3 is the forward one). Any key works, " +
+                "e.g. CapsLock; None turns it off. Valheim's dodge is block + jump. Setting Block to another key in the game's own " +
+                "controls also works: that key then blocks too.");
             UnityEngine.KeyCode[] slotDefaults = { UnityEngine.KeyCode.F1, UnityEngine.KeyCode.F2, UnityEngine.KeyCode.F3, UnityEngine.KeyCode.F4 };
             for (int i = 0; i < SlotKeys.Length; i++)
             {

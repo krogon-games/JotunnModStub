@@ -14,7 +14,7 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - **Eitr without eitr food:** a class starts with 15 eitr, which vanilla regeneration refills.
 - **Skill tree:** the Amazon's 30 skills in Diablo 2's three tabs; spend 1 skill point per level on the 19 built ones (D2's rules: tiers, prerequisites, 20 points, one more per level past the requirement). Each boss's first kill gives bonus skill points (12 in all). The tooltips show each skill's numbers.
 - **Passives:** Critical Strike (double physical damage), Dodge, Avoid and Evade (a creature's hit misses), Penetrate (ignores resistances, not immunities), with Diablo 2's chances.
-- **Skill slots and the skill button:** drag skills into four slots; F1–F4 choose one, right click fires it (hold to draw the bow). Block needs a key of its own (`BlockKey`, blank by default). Skills without a weapon cast straight from their key (quick cast; right-click the slot to toggle). Skills cost eitr.
+- **Skill slots and the skill button:** drag skills into four slots; F1–F4 choose one, right click fires it (hold to draw the bow). Block has a key of its own (`BlockKey`, the mouse's back side button by default). Skills without a weapon cast straight from their key (quick cast; right-click the slot to toggle). Skills cost eitr.
 - **Bow skills:** Magic Arrow (needs no arrows), Fire, Cold and Ice Arrow, Multiple Shot, Exploding and Freezing Arrow. **Inner Sight** marks nearby enemies: they take more damage.
 
 - **The Orlog stone** in the spawn area, among the boss trophy stones: use it to choose your class (only the Amazon so far). With CraftingOverhaul a window opens; without it, use the stone twice.
@@ -40,7 +40,7 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 | Skills / SkillDamageMultiplier | 1 | Multiplies the damage skills add |
 | Skills / InnerSightDamageBase | 5 | % more damage enemies under Inner Sight take at skill level 1 |
 | Skills / InnerSightDamagePerLevel | 1 | Inner Sight's extra % per level above 1 (24% at 20, no cap) |
-| Skill Keys / SkillButton, BlockKey | Mouse1, none | The skill button (right click) and block's key: set one, or a character with a class can't block (per player) |
+| Skill Keys / SkillButton, BlockKey | Mouse1, Mouse4 | The skill button (right click) and block's key (the mouse's back side button; any key, `None` turns it off; per player) |
 | Skill Keys / Slot1Key … Slot4Key | F1 … F4 | The four skill slots (per player) |
 
 ## Console commands (need `devcommands`, except `orlog_info`)

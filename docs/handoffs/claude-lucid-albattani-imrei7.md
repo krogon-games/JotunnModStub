@@ -75,6 +75,24 @@ Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
 23. **2026-11-15: Inner Sight's extra damage grows with its level:** 5% at level 1, +1% per level (24% at 20), no cap ("start at 5% and add 1% per level. we will have bonus skill points as well later to add extra % over 24% from hard points").
 24. **2026-11-15: keep Multiple Shot's fan (5° apart, at most 60°) and Exploding Arrow's 3 m radius** (Claude's interim numbers, now agreed).
 25. **2026-11-15: the skill tree overhaul (decision 21) is the next round,** in a fresh session on a new branch, after this play-test and merge. The fire and cold arrow steps of this play-test can be skipped, as those skills may go.
+26. **2026-11-15: the reset item is low priority, a future feature** ("Skip reset item for now, place it on low priority. we can add this as a feature in the future"). The recipe without Corruption stays open until then.
+27. **2026-11-15: block's default key is the mouse's back side button, rebindable** ("i think the block key needs to be on the mouse. but it really depends on how players want to play. put the keybind on mouse side button 4. but make sure its rebindable to something else"). `BlockKey` = `Mouse4` (the game's name for the back button).
+28. **2026-11-15: boss XP: follow Diablo 2, and don't let players level too fast** ("work out the full boss XP list, follow diablo 2 style, maybe look at the new wow forever xp as well. I dont want players levelling too fast like diablo 4"). Claude's list follows (proposal 2026-11-15), waiting for approval.
+
+   **Boss XP proposal (2026-11-15), for decision 28.** A boss gives ×N the XP of an ordinary creature of its level. Source: D2R `monstats.json` (d2data, fetched 2026-11-15): a monster's XP = its `Exp` rating × the XP for its level, so a boss's multiplier = its `Exp` ÷ an ordinary monster's. The median `Exp` of the 512 ordinary killable monsters (not bosses, not NPCs) is 97; the act bosses' are Andariel 916 (×9.4), Duriel 1655 (×17.1), Mephisto 2131 (×22.0), Diablo 3462 (×35.7), Baal 6460 (×66.6). D2 has 5 act bosses, Valheim 8: the first and last match, the six between are read off the line through D2's five, by position. "Share of a level" = the multiplier ÷ `creature_xp.csv`'s kills per level at the boss's level (a player of that level, alone; with four players each gets about half, by the +35% per extra player rule).
+
+   | Boss | Level | XP | Share of a level, alone | Each of 4 players |
+   |---|---|---|---|---|
+   | Eikthyr | 5 | ×9.4 | 33% | 17% |
+   | The Elder | 11 | ×13.8 | 23% | 12% |
+   | Bonemass | 20 | ×17.8 | 16% | 8% |
+   | Moder | 35 | ×20.6 | 11% | 6% |
+   | Yagluth | 50 | ×25.9 | 9% | 5% |
+   | The Queen | 62 | ×33.7 | 9% | 4% |
+   | Fader | 76 | ×48.9 | 10% | 5% |
+   | Kall Fimbulbringer | 90 | ×66.6 | 11% | 6% |
+
+   Compared: classic WoW gives a dungeon boss ×2.5 an ordinary creature (elite in a dungeon, `data/wow-reference/README.md`); WoW Forever (launched 2026-11-04) keeps Classic's pace (Blizzard's beta data: 20.5 h to level 20 against Classic's 20.4 h) and raised dungeon kill XP by about 20–50% (guide sites, unconfirmed); no source found for its elite or boss multiplier.
 
 
 ## Playtest
