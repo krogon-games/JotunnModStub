@@ -15,9 +15,9 @@ Outputs:
   The XP never drops from one level to the next (it would at levels 8 and 10, by 1-6 XP).
 - Orlog/Data/classes.csv: each Diablo 2 class's per-level and per-point gains (data/d2-reference/classes.csv, unchanged)
   and whether it is playable yet (the Amazon first, user 2026-10-30).
-- Orlog/Data/amazon_skills.csv: the Amazon's 30 skills: D2's tree (tab, row, column, required level, prerequisites,
-  mana) from data/d2-reference/amazon.csv, with our status, kind, weapon and Valheim description from
-  docs/class-design.md §5 (user decisions 2026-10-30). Eitr costs are D2's mana: the class eitr pool is D2's mana 1:1.
+- Orlog/Data/amazon_skills.csv: the Amazon's 27 skills, nine per tab in card order (user, 2026-11-15: no tiers, no
+  prerequisites), D2's mana from data/d2-reference/amazon.csv where D2 has the skill, with our status, kind, weapon and
+  Valheim description from docs/class-design.md §5. Eitr costs are D2's mana: the class eitr pool is D2's mana 1:1.
 - Orlog/Data/amazon_passives.csv: the chance per skill level (1-20) of the Amazon's passives, from
   data/d2-reference/amazon_levels.csv (Arreat Summit; D2R the same), with the tooltip text. Penetrate takes Critical
   Strike's curve (user, 2026-11-11: D2's Penetrate raises attack rating, which Valheim doesn't have).
@@ -79,40 +79,49 @@ def boss_xp_shares(bosses):
     """A boss with several phases (Kall) pays all its XP on the final phase's kill, the earlier phases nothing
     (user, 2026-11-15: "for Kall all the xp should be awarded on final kill only"). GUIDE lists the phases in order."""
     return ";".join("1" if i == len(bosses) - 1 else "0" for i in range(len(bosses)))
-# The Amazon's skills in Valheim (docs/class-design.md §5): status, kind (attack = on the skill button, cast = on its
-# hotkey, passive = no slot), the weapon it needs, and what it does here.
-AMAZON = {
-    "Magic Arrow": ("v1", "attack", "bow", "Shoots without using an arrow; its damage turns into spirit damage as it levels"),
-    "Fire Arrow": ("v1", "attack", "bow", "Adds fire damage to the shot"),
-    "Cold Arrow": ("v1", "attack", "bow", "Adds frost damage; the target is slowed"),
-    "Multiple Shot": ("v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
-    "Exploding Arrow": ("v1", "attack", "bow", "Fire damage in an area on impact"),
-    "Ice Arrow": ("v1", "attack", "bow", "Frost damage and a short freeze; bosses are only slowed"),
-    "Guided Arrow": ("later", "attack", "bow", "The arrow homes in on the target"),
-    "Strafe": ("later", "attack", "bow", "A volley of arrows at several nearby targets"),
-    "Immolation Arrow": ("later", "attack", "bow", "Exploding Arrow plus a burning patch on the ground"),
-    "Freezing Arrow": ("v1", "attack", "bow", "Ice Arrow's freeze in an area"),
-    "Inner Sight": ("v1", "cast", "", "Nearby enemies glow and take more damage for a while"),
-    "Critical Strike": ("v1", "passive", "", "Chance to deal double physical damage"),
-    "Dodge": ("v1", "passive", "", "Chance to avoid a melee hit while standing or attacking"),
-    "Slow Missiles": ("later", "cast", "", "Enemy projectiles near you slow down"),
-    "Avoid": ("v1", "passive", "", "Chance to avoid a projectile while standing or attacking"),
-    "Penetrate": ("reworked", "passive", "", "Chance for a hit to ignore the creature's resistance to its damage type"),
-    "Decoy": ("later", "cast", "", "A tinted, standing copy of you that creatures attack instead"),
-    "Evade": ("v1", "passive", "", "Chance to avoid any hit while moving"),
-    "Valkyrie": ("later", "cast", "", "A tinted copy of a player character that fights for you"),
-    "Pierce": ("later", "passive", "", "Chance for an arrow or javelin to pass through and hit the next enemy"),
-    "Jab": ("v1", "attack", "spear", "A fast series of thrusts"),
-    "Power Strike": ("v1", "attack", "spear", "Adds lightning damage to the thrust"),
-    "Poison Javelin": ("v1", "attack", "spear", "The javelin (a spectral copy) leaves poison clouds along its path"),
-    "Impale": ("v1", "attack", "spear", "One heavy thrust; wears the spear down faster"),
-    "Lightning Bolt": ("v1", "attack", "spear", "The javelin (a spectral copy) turns into lightning"),
-    "Charged Strike": ("later", "attack", "spear", "The thrust releases small lightning bolts around the target"),
-    "Plague Javelin": ("v1", "attack", "spear", "A spreading poison cloud where the javelin (a spectral copy) lands"),
-    "Fend": ("later", "attack", "spear", "Thrusts at several nearby enemies in turn"),
-    "Lightning Strike": ("later", "attack", "spear", "The thrust releases chain lightning to nearby enemies"),
-    "Lightning Fury": ("later", "attack", "spear", "The javelin (a spectral copy) bursts into lightning bolts on impact"),
-}
+# The Amazon's skills (docs/class-design.md §5). Since the skill tree overhaul (user, 2026-11-15) a tab is not a tree:
+# no level tiers, no prerequisites, exactly nine skills per tab, shown as cards three by three in the order below.
+# Each: name, status, kind (attack = on the skill button, cast = on its hotkey, passive = no slot), the weapon it needs,
+# what it does here. A skill Diablo 2 also has (the same name in data/d2-reference/amazon.csv) takes D2's mana as its
+# eitr cost; a new one (Forked Lightning, Wind Lance, Snipe, Venom Strike, Shackle Shot) has no cost until the user
+# agrees its numbers in the round that builds it.
+AMAZON = [
+    ("Bow and Crossbow", [
+        ("Forked Lightning", "later", "attack", "bow", "The arrow hits an enemy, then lightning forks from its body to nearby enemies"),
+        ("Wind Lance", "later", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, knocking enemies back"),
+        ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
+        ("Multiple Shot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
+        ("Strafe", "later", "attack", "bow", "A volley of arrows at several nearby targets"),
+        ("Freezing Arrow", "v1", "attack", "bow", "Frost damage and a short freeze in an area on impact; bosses are only slowed"),
+        ("Immolation Arrow", "later", "attack", "bow", "Explodes in fire on impact and leaves a burning patch on the ground"),
+        ("Venom Strike", "later", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
+        ("Shackle Shot", "later", "attack", "bow", "Shackles the target to an enemy or a tree behind it, holding both in place; with nothing behind it, only briefly"),
+    ]),
+    ("Passive and Magic", [
+        ("Inner Sight", "v1", "cast", "", "Nearby enemies glow and take more damage for a while"),
+        ("Critical Strike", "v1", "passive", "", "Chance to deal double physical damage"),
+        ("Penetrate", "reworked", "passive", "", "Chance for a hit to ignore the creature's resistance to its damage type"),
+        ("Dodge", "v1", "passive", "", "Chance to avoid a melee hit while standing or attacking"),
+        ("Avoid", "v1", "passive", "", "Chance to avoid a projectile while standing or attacking"),
+        ("Evade", "v1", "passive", "", "Chance to avoid any hit while moving"),
+        ("Decoy", "later", "cast", "", "A tinted, standing copy of you that creatures attack instead"),
+        ("Valkyrie", "later", "cast", "", "A tinted copy of a player character that fights for you"),
+        ("Pierce", "later", "passive", "", "Chance for an arrow or javelin to pass through and hit the next enemy"),
+    ]),
+    ("Javelin and Spear", [
+        ("Jab", "v1", "attack", "spear", "A fast series of thrusts"),
+        ("Impale", "v1", "attack", "spear", "One heavy thrust; wears the spear down faster"),
+        ("Fend", "later", "attack", "spear", "Thrusts at several nearby enemies in turn"),
+        ("Charged Strike", "later", "attack", "spear", "The thrust releases small lightning bolts around the target"),
+        ("Lightning Strike", "later", "attack", "spear", "The thrust releases chain lightning to nearby enemies"),
+        ("Lightning Bolt", "v1", "attack", "spear", "The javelin (a spectral copy) turns into lightning"),
+        ("Poison Javelin", "v1", "attack", "spear", "The javelin (a spectral copy) leaves poison clouds along its path"),
+        ("Plague Javelin", "v1", "attack", "spear", "A spreading poison cloud where the javelin (a spectral copy) lands"),
+        ("Lightning Fury", "later", "attack", "spear", "The javelin (a spectral copy) bursts into lightning bolts on impact"),
+    ]),
+]
+SKILLS_PER_TAB = 9
+SKILL_COLS = 3
 
 # The Amazon's passives (roadmap C3; user decisions 2026-11-11): skill id -> (effect, the amazon_levels.csv row whose
 # per-level chances it takes, tooltip text with {0} for the chance).
@@ -237,21 +246,25 @@ def main():
             tabs = (tabs + ["", "", ""])[:3]
             w.writerow([c["class"], "playable" if c["class"] in PLAYABLE else "later"] + [c[k] for k in columns]
                        + [CLASS_DESCRIPTIONS.get(c["class"], "")] + tabs)
-    skills = read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon.csv"))
-    tabs = []
+    d2 = {s["name"]: s for s in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon.csv"))}
+    d2_tabs = []
+    for s in d2.values():
+        if s["tab"] not in d2_tabs:
+            d2_tabs.append(s["tab"])
+    assert [tab for tab, _ in AMAZON] == d2_tabs, "the Amazon's tabs keep Diablo 2's names and order"
+    built_active = []
     with open(os.path.join(OUT, "amazon_skills.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["id", "name", "tab", "row", "col", "req_level", "prereqs", "status", "kind", "needs", "eitr", "eitr_per_level",
-                    "description", "d2_synergies"])
-        for s in skills:
-            if s["tab"] not in tabs:
-                tabs.append(s["tab"])
-            status, kind, needs, text = AMAZON[s["name"]]
-            prereqs = "" if s["prerequisites"] == "none" else "+".join(p.replace(" ", "") for p in s["prerequisites"].split("+"))
-            eitr = s["mana_base"] if kind != "passive" else "0"
-            w.writerow([s["name"].replace(" ", ""), s["name"], tabs.index(s["tab"]), s["row"], s["col"], s["req_level"], prereqs,
-                        status, kind, needs, eitr, s["mana_per_lvl"] if kind != "passive" else "0", text,
-                        "" if s["synergies"] == "none" else s["synergies"]])
+        w.writerow(["id", "name", "tab", "row", "col", "status", "kind", "needs", "eitr", "eitr_per_level", "description"])
+        for tab, (_, tab_skills) in enumerate(AMAZON):
+            assert len(tab_skills) == SKILLS_PER_TAB, "every tab has exactly nine skills (user, 2026-11-15)"
+            for i, (name, status, kind, needs, text) in enumerate(tab_skills):
+                source = d2.get(name)
+                costs = kind != "passive" and source is not None
+                w.writerow([name.replace(" ", ""), name, tab, i // SKILL_COLS + 1, i % SKILL_COLS + 1, status, kind, needs,
+                            source["mana_base"] if costs else "0", source["mana_per_lvl"] if costs else "0", text])
+                if status in ("v1", "reworked") and kind != "passive":
+                    built_active.append(name)
     per_level = {(r["skill"], r["value"]): r for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv"))}
     with open(os.path.join(OUT, "amazon_passives.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
@@ -259,7 +272,6 @@ def main():
         for skill_id, effect, (name, value), text in PASSIVES:
             row = per_level[(name, value)]
             w.writerow([skill_id, effect, text] + [row["l%d" % i] for i in range(1, 21)] + ["%s %s (%s)" % (name, value, row["source"])])
-    built_active = [s["name"] for s in skills if AMAZON[s["name"]][0] in ("v1", "reworked") and AMAZON[s["name"]][1] != "passive"]
     with open(os.path.join(OUT, "amazon_skill_values.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["id", "value", "unit"] + ["l%d" % i for i in range(1, 21)] + ["source"])

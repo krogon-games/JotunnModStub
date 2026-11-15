@@ -53,7 +53,7 @@ namespace CraftingOverhaul.Tests
             var built = Tree().Skills.Where(s => s.Built && s.Kind != "passive").ToList();
             Assert.Equal(built.Select(s => s.Id).OrderBy(x => x), v.SkillIds.OrderBy(x => x));
             // The bow skills and Inner Sight (C5) have their tooltip text; the spear skills come with C6.
-            foreach (var id in new[] { "MagicArrow", "FireArrow", "ColdArrow", "MultipleShot", "ExplodingArrow", "IceArrow", "FreezingArrow", "InnerSight" })
+            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight" })
             {
                 Assert.False(string.IsNullOrEmpty(ActiveSkillRules.Describe(id, v, 1, 1f, 25f)), id);
             }
@@ -66,9 +66,9 @@ namespace CraftingOverhaul.Tests
             var v = Values();
             Assert.Equal(2f, v.Get("MultipleShot", "arrows", 1));
             Assert.Equal(21f, v.Get("MultipleShot", "arrows", 20));
-            Assert.Equal(1f, v.Get("FireArrow", "fire_damage_min", 1));
-            Assert.Equal(70f, v.Get("FireArrow", "fire_damage_max", 20));
-            Assert.Equal(2f, v.Get("IceArrow", "freeze_s", 1));
+            Assert.Equal(40f, v.Get("FreezingArrow", "cold_damage_min", 1));
+            Assert.Equal(320f, v.Get("FreezingArrow", "cold_damage_max", 20));
+            Assert.Equal(2f, v.Get("FreezingArrow", "freeze_s", 1));
             Assert.Equal(3.3f, v.Get("FreezingArrow", "radius_yards", 5));
             Assert.Equal(84f, v.Get("InnerSight", "duration_s", 20));
             Assert.Equal(0f, v.Get("MultipleShot", "arrows", 0));
@@ -81,9 +81,9 @@ namespace CraftingOverhaul.Tests
         {
             var v = Values();
             var t = Tree();
-            // Magic Arrow (D2R): 1.5 at level 1, free from level 13.
-            Assert.Equal(1.5f, ActiveSkillRules.EitrCost(t.Find("MagicArrow"), v, 1));
-            Assert.Equal(0f, ActiveSkillRules.EitrCost(t.Find("MagicArrow"), v, 13));
+            // Freezing Arrow (D2R): 9 at level 1, +0.25 per level.
+            Assert.Equal(9f, ActiveSkillRules.EitrCost(t.Find("FreezingArrow"), v, 1));
+            Assert.Equal(13.75f, ActiveSkillRules.EitrCost(t.Find("FreezingArrow"), v, 20));
             Assert.Equal(4f, ActiveSkillRules.EitrCost(t.Find("MultipleShot"), v, 1));
             Assert.Equal(23f, ActiveSkillRules.EitrCost(t.Find("MultipleShot"), v, 20));
             Assert.Equal(0f, ActiveSkillRules.EitrCost(t.Find("Dodge"), v, 5));
@@ -125,7 +125,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void SlotsKeepOnlyLearnedSkills()
         {
-            var slots = ActiveSkillRules.ParseSlots("MagicArrow;InnerSight;;FireArrow");
+            var slots = ActiveSkillRules.ParseSlots("MultipleShot;InnerSight;;FreezingArrow");
             var levels = new System.Collections.Generic.Dictionary<string, int> { { "InnerSight", 3 } };
             Assert.Equal(new[] { "", "InnerSight", "", "" },
                 ActiveSkillRules.OnlyLearned(slots, id => levels.TryGetValue(id, out int l) ? l : 0));
@@ -135,12 +135,12 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void SlotsSaveAndPlace()
         {
-            var slots = ActiveSkillRules.ParseSlots("MagicArrow;;FireArrow");
-            Assert.Equal(new[] { "MagicArrow", "", "FireArrow", "" }, slots);
-            Assert.Equal("MagicArrow;;FireArrow;", ActiveSkillRules.FormatSlots(slots));
+            var slots = ActiveSkillRules.ParseSlots("MultipleShot;;FreezingArrow");
+            Assert.Equal(new[] { "MultipleShot", "", "FreezingArrow", "" }, slots);
+            Assert.Equal("MultipleShot;;FreezingArrow;", ActiveSkillRules.FormatSlots(slots));
             // A skill already in another slot moves.
-            Assert.Equal(new[] { "", "", "FireArrow", "MagicArrow" }, ActiveSkillRules.Place(slots, 3, "MagicArrow"));
-            Assert.Equal(new[] { "MagicArrow", "", "", "" }, ActiveSkillRules.Place(slots, 2, ""));
+            Assert.Equal(new[] { "", "", "FreezingArrow", "MultipleShot" }, ActiveSkillRules.Place(slots, 3, "MultipleShot"));
+            Assert.Equal(new[] { "MultipleShot", "", "", "" }, ActiveSkillRules.Place(slots, 2, ""));
             Assert.Equal(slots, ActiveSkillRules.Place(slots, 7, "InnerSight"));
             Assert.Equal(4, ActiveSkillRules.ParseSlots(null).Length);
         }
@@ -151,8 +151,8 @@ namespace CraftingOverhaul.Tests
             var t = Tree();
             Assert.Equal("Passive skills don't take a slot", ActiveSkillRules.SlotRefusal(t.Find("Dodge"), 3));
             Assert.Equal("Coming later", ActiveSkillRules.SlotRefusal(t.Find("Strafe"), 0));
-            Assert.Equal("Not learned yet", ActiveSkillRules.SlotRefusal(t.Find("MagicArrow"), 0));
-            Assert.Equal("", ActiveSkillRules.SlotRefusal(t.Find("MagicArrow"), 1));
+            Assert.Equal("Not learned yet", ActiveSkillRules.SlotRefusal(t.Find("MultipleShot"), 0));
+            Assert.Equal("", ActiveSkillRules.SlotRefusal(t.Find("MultipleShot"), 1));
             Assert.Equal("Unknown skill", ActiveSkillRules.SlotRefusal(null, 1));
         }
 
@@ -160,7 +160,7 @@ namespace CraftingOverhaul.Tests
         public void SlotStateChecksWeaponThenEitr()
         {
             var t = Tree();
-            var bow = t.Find("FireArrow");
+            var bow = t.Find("MultipleShot");
             var s = ActiveSkillRules.State(bow, "", 50f, 3f);
             Assert.False(s.Usable);
             Assert.Equal("weapon", s.Blocked);
@@ -173,7 +173,7 @@ namespace CraftingOverhaul.Tests
             // A cast skill needs no weapon.
             Assert.True(ActiveSkillRules.State(t.Find("InnerSight"), "", 5f, 5f).Usable);
             // A free skill works with no eitr at all.
-            Assert.True(ActiveSkillRules.State(t.Find("MagicArrow"), "bow", 0f, 0f).Usable);
+            Assert.True(ActiveSkillRules.State(bow, "bow", 0f, 0f).Usable);
         }
 
         [Fact]
@@ -199,22 +199,17 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void ConversionIsClamped()
-        {
-            Assert.Equal(5f, ActiveSkillRules.Converted(100f, 5f));
-            Assert.Equal(100f, ActiveSkillRules.Converted(100f, 150f));
-            Assert.Equal(0f, ActiveSkillRules.Converted(100f, -5f));
-        }
-
-        [Fact]
         public void TooltipsUseValheimNumbers()
         {
             var v = Values();
-            Assert.Equal("Adds 10–40 fire damage; 3% of the physical damage becomes fire", ActiveSkillRules.Describe("FireArrow", v, 1, 10f, 25f));
+            Assert.Equal("Explodes on impact: 400–500 frost damage within 3 m, freezing for 2 s (bosses are only slowed)",
+                ActiveSkillRules.Describe("FreezingArrow", v, 1, 10f, 25f));
             Assert.Equal("Fires 2 arrows in a fan for one arrow, each at 75% damage", ActiveSkillRules.Describe("MultipleShot", v, 1, 10f, 25f));
             Assert.Contains("3 m", ActiveSkillRules.Describe("FreezingArrow", v, 1, 1f, 25f));
             Assert.Contains("5% more damage for 8 s", ActiveSkillRules.Describe("InnerSight", v, 1, 1f, ActiveSkillRules.InnerSightPercent(1, 5f, 1f)));
-            Assert.Null(ActiveSkillRules.Describe("FireArrow", v, 0, 1f, 25f));
+            Assert.Null(ActiveSkillRules.Describe("MultipleShot", v, 0, 1f, 25f));
+            // A removed skill has no text.
+            Assert.Null(ActiveSkillRules.Describe("FireArrow", v, 1, 1f, 25f));
         }
 
         [Fact]
@@ -223,7 +218,7 @@ namespace CraftingOverhaul.Tests
             // User 2026-11-13: per skill, on by default; a weapon skill goes on right click.
             var t = Tree();
             var inner = t.Find("InnerSight");
-            var fire = t.Find("FireArrow");
+            var fire = t.Find("MultipleShot");
             Assert.True(ActiveSkillRules.CanQuickCast(inner));
             Assert.False(ActiveSkillRules.CanQuickCast(fire));
             Assert.False(ActiveSkillRules.CanQuickCast(t.Find("Dodge")));

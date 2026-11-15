@@ -42,9 +42,14 @@ namespace Orlog.Content
             return TableFor(Attributes.ClassOf(player));
         }
 
+        /// <summary>
+        ///     The character's points per skill. Points saved in a skill its class no longer has (the 2026-11-15 overhaul
+        ///     removed some) are left out, which hands them back as unspent; the next spend saves without them.
+        /// </summary>
         public static Dictionary<string, int> Points(Player player)
         {
-            return SkillRules.Parse(player && player.m_customData.TryGetValue(PointsKey, out string saved) ? saved : "");
+            var saved = SkillRules.Parse(player && player.m_customData.TryGetValue(PointsKey, out string text) ? text : "");
+            return SkillRules.KnownOnly(saved, player ? TableOf(player) : null);
         }
 
         public const string BossKillsKey = "orlog_boss_kills";
@@ -83,9 +88,9 @@ namespace Orlog.Content
         }
 
         /// <summary>Why a point can't go into <paramref name="skill" /> for the local player, "" if it can.</summary>
-        public static string SpendBlocked(Player player, SkillTable table, SkillTable.Skill skill)
+        public static string SpendBlocked(Player player, SkillTable.Skill skill)
         {
-            return SkillRules.SpendBlocked(table, skill, Progress.GetLevel(player), Points(player), Unspent(player),
+            return SkillRules.SpendBlocked(skill, Progress.GetLevel(player), Points(player), Unspent(player),
                 OrlogConfig.MaxSkillPoints.Value, OrlogConfig.SkillPace.Value);
         }
 
@@ -102,7 +107,7 @@ namespace Orlog.Content
             {
                 return "Unknown skill";
             }
-            string blocked = SpendBlocked(player, table, skill);
+            string blocked = SpendBlocked(player, skill);
             if (blocked.Length > 0)
             {
                 return blocked;

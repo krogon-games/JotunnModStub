@@ -12,14 +12,15 @@ using UnityEngine.UI;
 namespace CraftingOverhaul.Classes
 {
     /// <summary>
-    ///     The skills panel (brief §2.4, §2.5), redesigned 2026-10-31 after the user found the first versions "not
-    ///     acceptable": Diablo 2's layout on the game's own panel. Left: the character box (level, XP, stat points and the
-    ///     four attributes with + buttons) and the skill details pane (the hovered or selected skill: name, rank, kind,
-    ///     cost, what it does now and next, why it's locked, a Learn button). Right: the class's three tabs, the tree on a
-    ///     bronze-rimmed tablet (medallions with a points badge, no names; tier rows; short straight paths, glowing
-    ///     eitr-blue once learned), and the four skill slots. Click a skill to select it, double-click or Learn to spend a
-    ///     point, drag it onto a slot here or on the HUD's skill cross. Every position comes from
-    ///     <see cref="SkillsPanelLayout" />, which <c>tools/preview_skills_panel.py</c> also draws from.
+    ///     The skills panel (brief §2.4, §2.5). Skill cards since 2026-11-15 (the skill tree overhaul; Krogon's mock-up
+    ///     <c>docs/images/skills_panel_cards_mockup.webp</c>, drawn in the rest of the UI's style). Left: the character box
+    ///     (level, XP, stat points and the four attributes with + buttons) and the skill details pane (the hovered or
+    ///     selected skill: name, rank, kind, cost, what it does now and next). Right: the class's three tabs, the tab's
+    ///     nine skills as cards on a bronze-rimmed tablet (medallion, name, rank, a rank bar; no tiers or paths, since any
+    ///     skill can be learned from level 1), and a strip with the four skill slots and the Learn button. Click a card to
+    ///     select it, double-click or Learn to spend a point, drag it onto a slot here or on the HUD's skill cross. Every
+    ///     position comes from <see cref="SkillsPanelLayout" /> and <see cref="SkillCardsLayout" />, which
+    ///     <c>tools/preview_skills_panel.py</c> also draws from.
     ///     Opened with <see cref="ModConfig.SkillsPanelKey" /> (the Skills button on the inventory was removed 2026-11-09, user: it clashed with the inventory tabs; its place is to be decided); everything shown and
     ///     every action goes through <see cref="ClassesSource" />.
     /// </summary>
@@ -30,16 +31,17 @@ namespace CraftingOverhaul.Classes
         /// <summary>Icon inset on a medallion, as a share of its size: the icons carry their own margin (make_skill_icons.py).</summary>
         private const float IconInset = 0.06f;
 
-        // Path colours (mirrored in tools/preview_skills_panel.py).
-        private static readonly Color Groove = new Color(0f, 0f, 0f, 0.55f);
-        private static readonly Color PathDim = new Color(0.47f, 0.36f, 0.24f, 0.9f);
-        private static readonly Color PathLit = new Color(0.85f, 0.95f, 1f);
-        private static readonly Color Divider = new Color(0.66f, 0.47f, 0.24f, 0.24f);
-        private static readonly Color SelectedRing = new Color(1f, 0.94f, 0.78f, 1f);
+        // Card colours (mirrored in tools/preview_skills_panel.py).
+        private static readonly Color Divider = new Color(0.66f, 0.47f, 0.24f, 0.4f);
+        /// <summary>The selected card's gold glow, as the mock-up's.</summary>
+        private static readonly Color SelectedGlow = new Color(1f, 0.78f, 0.36f, 1f);
+        /// <summary>How bright a card's wood is: full once learned, dimmer before, dark for skills that come later.</summary>
+        private const float CardLearned = 1f;
+        private const float CardNotLearned = 0.8f;
+        private const float CardLater = 0.5f;
 
         private static RectTransform _root;
-        private static RectTransform _linesRoot;
-        private static RectTransform _tilesRoot;
+        private static RectTransform _cardsRoot;
         private static Text _title;
         private static Text _skillPoints;
         private static Text _message;
@@ -75,8 +77,8 @@ namespace CraftingOverhaul.Classes
         private static string _hovered = "";
         private static readonly List<SkillView> Skills = new List<SkillView>();
         private static readonly Dictionary<string, SkillView> ById = new Dictionary<string, SkillView>(StringComparer.Ordinal);
-        private static readonly Dictionary<string, Image> SelectionRings = new Dictionary<string, Image>(StringComparer.Ordinal);
-        private static readonly List<GameObject> TreeObjects = new List<GameObject>();
+        private static readonly Dictionary<string, Image> SelectionGlows = new Dictionary<string, Image>(StringComparer.Ordinal);
+        private static readonly List<GameObject> CardObjects = new List<GameObject>();
         private static float _messageUntil;
 
         public static bool IsOpen => _root && _root.gameObject.activeSelf;
@@ -152,7 +154,7 @@ namespace CraftingOverhaul.Classes
             BuildCharacter();
             BuildDetails();
             BuildTabs();
-            BuildTree();
+            BuildCards();
             BuildSlots();
 
             _message = UiKit.Text("Message", _root, 15, new Color(1f, 0.6f, 0.5f), TextAnchor.MiddleCenter);
@@ -244,17 +246,6 @@ namespace CraftingOverhaul.Classes
             _detailsText.lineSpacing = 1.05f;
             Place(_detailsText.rectTransform, SkillsPanelLayout.DetailsText);
 
-            var learn = SkillsPanelLayout.Learn;
-            _learn = UiKit.Button("Learn", box, new Vector2(learn.Width, learn.Height), () =>
-            {
-                string id = DetailsSkill();
-                if (id.Length > 0)
-                {
-                    SpendSkill(id);
-                }
-            });
-            Place((RectTransform)_learn.transform, learn);
-            _learnLabel = _learn.GetComponentInChildren<Text>();
         }
 
         private static void BuildTabs()
@@ -280,41 +271,44 @@ namespace CraftingOverhaul.Classes
             }
         }
 
-        private static void BuildTree()
+        private static void BuildCards()
         {
-            // The tablet: a dark well in a bronze, riveted rim, like the slots.
+            // The tablet: a dark well in a bronze, riveted rim, like the slots; the cards lie on it.
             var tablet = UiKit.Image("Tablet", _root, SheetArt.Tile, Image.Type.Sliced);
             if (!tablet.sprite)
             {
                 tablet.color = new Color(0.08f, 0.07f, 0.06f, 0.9f);
             }
             Place(tablet.rectTransform, SkillsPanelLayout.Tablet);
-
-            var tree = UiKit.Rect("Tree", _root);
-            Place(tree, SkillsPanelLayout.Tree);
-            for (int row = 1; row <= SkillTreeLayout.Rows; row++)
-            {
-                float centre = SkillTreeLayout.RowCentre(row);
-                var label = UiKit.Text("Tier" + row, tree, 14, UiKit.LightDim, TextAnchor.MiddleCenter);
-                UiKit.SetText(label, "Lv " + SkillTreeLayout.TierLevels[row - 1]);
-                Place(label.rectTransform, new SheetRect(0f, centre - 10f, SkillTreeLayout.LabelWidth - 8f, 20f));
-                if (row > 1)
-                {
-                    var divider = UiKit.Image("Divider" + row, tree, null);
-                    divider.color = Divider;
-                    float y = centre - SkillTreeLayout.RowPitch / 2f;
-                    Place(divider.rectTransform, new SheetRect(SkillTreeLayout.LabelWidth, y, SkillTreeLayout.GridWidth - SkillTreeLayout.LabelWidth - 8f, 1f));
-                }
-            }
-            // Paths under the medallions.
-            _linesRoot = UiKit.Rect("Paths", tree);
-            UiKit.Stretch(_linesRoot);
-            _tilesRoot = UiKit.Rect("Skills", tree);
-            UiKit.Stretch(_tilesRoot);
+            _cardsRoot = UiKit.Rect("Cards", _root);
+            Place(_cardsRoot, SkillsPanelLayout.Cards);
         }
 
         private static void BuildSlots()
         {
+            // The strip under the tablet: the slots on the left, Learn on the right (the mock-up's bottom bar).
+            var strip = UiKit.Inset("SlotsStrip", _root).rectTransform;
+            Place(strip, SkillsPanelLayout.SlotsRow);
+            var divider = UiKit.Image("SlotsDivider", _root, null);
+            divider.color = Divider;
+            Place(divider.rectTransform, SkillsPanelLayout.SlotsDivider);
+
+            var learn = SkillsPanelLayout.Learn;
+            _learn = UiKit.Button("Learn", _root, new Vector2(learn.Width, learn.Height), () =>
+            {
+                string id = DetailsSkill();
+                if (id.Length > 0)
+                {
+                    SpendSkill(id);
+                }
+            });
+            Place((RectTransform)_learn.transform, learn);
+            _learnLabel = _learn.GetComponentInChildren<Text>();
+            if (_learnLabel)
+            {
+                FitText(_learnLabel, 12, 18);
+            }
+
             var labelRect = SkillsPanelLayout.SlotsLabel;
             var label = UiKit.Text("SlotsLabel", _root, 20, UiKit.Gold, TextAnchor.MiddleLeft);
             UiKit.SetText(label, "Skill slots");
@@ -407,7 +401,7 @@ namespace CraftingOverhaul.Classes
                     ById[skill.Id] = skill;
                 }
             }
-            var shown = SkillTreeLayout.Visible(Skills, _tab);
+            var shown = SkillCardsLayout.Visible(Skills, _tab);
             if (!ById.TryGetValue(_selected, out var current) || current.Tab != _tab)
             {
                 // Start on the first skill a point can go into, else the first of the tab.
@@ -420,7 +414,7 @@ namespace CraftingOverhaul.Classes
                     }
                 }
             }
-            RebuildTree(shown);
+            RebuildCards(shown);
 
             string bar = ClassesSource.SkillBar();
             for (int i = 0; i < Slots.Length; i++)
@@ -436,118 +430,101 @@ namespace CraftingOverhaul.Classes
             ShowDetails();
         }
 
-        /// <summary>Rebuilds the shown tab's medallions and paths (a few dozen objects, only when something changed).</summary>
-        private static void RebuildTree(List<SkillView> shown)
+        /// <summary>Rebuilds the shown tab's cards (nine, a handful of objects each, only when something changed).</summary>
+        private static void RebuildCards(List<SkillView> shown)
         {
-            foreach (var go in TreeObjects)
+            foreach (var go in CardObjects)
             {
                 UnityEngine.Object.Destroy(go);
             }
-            TreeObjects.Clear();
-            SelectionRings.Clear();
-
-            // Paths: a dark groove; a learned prerequisite's path carries an eitr-blue light, like a rune (mock-up D).
-            var lines = SkillTreeLayout.Lines(shown);
-            foreach (var line in lines)
-            {
-                AddPath(line, null, Groove, 6f);
-            }
-            for (int pass = 0; pass < 2; pass++)
-            {
-                foreach (var line in lines)
-                {
-                    bool learned = ById.TryGetValue(line.From, out var from) && from.Points > 0;
-                    if (learned != (pass == 1))
-                    {
-                        continue;
-                    }
-                    if (learned)
-                    {
-                        AddPath(line, SheetArt.GlowLine, new Color(UiKit.Rune.r, UiKit.Rune.g, UiKit.Rune.b, 0.55f), 12f);
-                    }
-                    AddPath(line, null, learned ? PathLit : PathDim, 2f);
-                }
-            }
+            CardObjects.Clear();
+            SelectionGlows.Clear();
             foreach (var skill in shown)
             {
-                TreeObjects.Add(BuildSkill(skill));
+                CardObjects.Add(BuildCard(skill));
             }
             UpdateSelection();
         }
 
-        private static void AddPath(TreeLine line, Sprite sprite, Color colour, float thickness)
+        /// <summary>The glow colour of a skill's medallion: gold when maxed, eitr-blue once learned, green when a point can go in.</summary>
+        private static Color GlowColour(CardState state)
         {
-            var image = UiKit.Image("Path", _linesRoot, sprite);
-            image.color = colour;
-            var rt = image.rectTransform;
-            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = new Vector2(line.Length, thickness);
-            rt.anchoredPosition = new Vector2((line.X1 + line.X2) / 2f, -(line.Y1 + line.Y2) / 2f);
-            rt.localRotation = Quaternion.Euler(0f, 0f, line.AngleDegrees);
-            TreeObjects.Add(image.gameObject);
+            return state == CardState.Maxed ? UiKit.Gold : state == CardState.Learned ? UiKit.Rune : UiKit.CanSpend;
         }
 
         /// <summary>
-        ///     A skill as a round bronze medallion (mock-up D): an eitr-blue glow once it has points (gold when maxed), green
-        ///     when a point can be spent; greyed when locked, darker when it comes later; its points in a badge.
+        ///     A skill as a card (Krogon's mock-up, 2026-11-15): a small panel of the game's own wood with the skill's round
+        ///     bronze medallion, its name, its rank and, once it has points, a rank bar. The medallion glows eitr-blue once
+        ///     learned (gold when maxed), green when a point can go in; the card is dimmer before it's learned and dark
+        ///     for a skill that comes later. The selected card has a gold glow around it.
         /// </summary>
-        private static GameObject BuildSkill(SkillView skill)
+        private static GameObject BuildCard(SkillView skill)
         {
-            SkillTreeLayout.TilePosition(skill.Row, skill.Col, out float x, out float y);
-            float size = SkillTreeLayout.Tile;
-            var root = UiKit.Rect("Skill_" + skill.Id, _tilesRoot);
-            Place(root, new SheetRect(x, y, size, size));
-            bool locked = skill.Later || (skill.Points == 0 && !skill.CanSpend);
-            float glowSize = size * SheetArt.GlowRingScale;
+            var state = SkillCardsLayout.StateOf(skill);
+            bool later = state == CardState.Later;
+            bool learned = state == CardState.Learned || state == CardState.Maxed;
+            var root = UiKit.Rect("Skill_" + skill.Id, _cardsRoot);
+            Place(root, SkillCardsLayout.Card(skill.Row, skill.Col));
 
-            var ring = UiKit.Image("Selected", root, SheetArt.GlowRing);
-            ring.color = SelectedRing;
-            UiKit.Place(ring.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(glowSize * 1.12f, glowSize * 1.12f));
-            ring.enabled = false;
-            SelectionRings[skill.Id] = ring;
+            var selected = UiKit.Image("Selected", root, SheetArt.GlowBox, Image.Type.Sliced);
+            selected.color = SelectedGlow;
+            UiKit.Stretch(selected.rectTransform, -SheetArt.GlowBoxInset);
+            selected.enabled = false;
+            SelectionGlows[skill.Id] = selected;
 
-            if (!skill.Later && (skill.Points > 0 || skill.CanSpend))
+            var card = UiKit.Image("Card", root, null, Image.Type.Simple, true);
+            SheetArt.StyleAsGamePanel(card);
+            float wood = later ? CardLater : learned ? CardLearned : CardNotLearned;
+            card.color = new Color(card.color.r * wood, card.color.g * wood, card.color.b * wood, card.color.a);
+            UiKit.Stretch(card.rectTransform);
+
+            var iconRect = SkillCardsLayout.Icon;
+            if (state != CardState.Later && state != CardState.NotLearned)
             {
                 var glow = UiKit.Image("Glow", root, SheetArt.GlowRing);
-                Color c = skill.Maxed ? UiKit.Gold : skill.Points > 0 ? UiKit.Rune : UiKit.CanSpend;
+                Color c = GlowColour(state);
                 glow.color = new Color(c.r, c.g, c.b, 0.75f);
-                UiKit.Place(glow.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(glowSize, glowSize));
+                float glowSize = iconRect.Width * SheetArt.GlowRingScale;
+                Place(glow.rectTransform, new SheetRect(iconRect.X + iconRect.Width / 2f - glowSize / 2f, iconRect.Y + iconRect.Height / 2f - glowSize / 2f, glowSize, glowSize));
             }
-
-            var medallion = UiKit.Image("Medallion", root, SheetArt.Medallion, Image.Type.Simple, true);
+            var medallion = UiKit.Image("Medallion", root, SheetArt.Medallion);
             medallion.color = !medallion.sprite ? new Color(0.08f, 0.07f, 0.06f, 0.9f)
-                : skill.Later ? new Color(0.45f, 0.43f, 0.41f) : locked ? new Color(0.72f, 0.7f, 0.68f) : Color.white;
-            UiKit.Stretch(medallion.rectTransform);
-
+                : later ? new Color(0.45f, 0.43f, 0.41f) : learned ? Color.white : new Color(0.82f, 0.8f, 0.78f);
+            Place(medallion.rectTransform, iconRect);
             var icon = UiKit.Image("Icon", medallion.rectTransform, ClassesSource.SkillIcon(skill.Id));
             icon.preserveAspect = true;
             icon.enabled = icon.sprite;
-            icon.color = skill.Later ? new Color(0.37f, 0.37f, 0.37f, 1f) : locked ? new Color(0.65f, 0.65f, 0.65f, 1f) : Color.white;
-            UiKit.Stretch(icon.rectTransform, size * IconInset);
+            icon.color = later ? new Color(0.37f, 0.37f, 0.37f, 1f) : learned ? Color.white : new Color(0.8f, 0.8f, 0.8f, 1f);
+            UiKit.Stretch(icon.rectTransform, iconRect.Width * IconInset);
 
-            if (!skill.Later)
+            var name = UiKit.Text("Name", root, 20, later ? UiKit.LightDim : learned ? UiKit.Gold : UiKit.Light, TextAnchor.MiddleCenter);
+            FitText(name, 13, 20);
+            UiKit.SetText(name, skill.Name);
+            Place(name.rectTransform, SkillCardsLayout.Name);
+            var rank = UiKit.Text("Rank", root, 15, state == CardState.CanLearn ? UiKit.CanSpend : learned ? UiKit.Light : UiKit.LightDim, TextAnchor.MiddleCenter);
+            UiKit.SetText(rank, SkillCardsLayout.RankLabel(skill));
+            Place(rank.rectTransform, SkillCardsLayout.Rank);
+
+            if (learned)
             {
-                // Points badge at the bottom right: a dark disc in a bronze ring.
-                var rim = UiKit.Image("BadgeRim", root, SheetArt.Disc);
-                rim.color = new Color(0.66f, 0.47f, 0.24f);
-                UiKit.Place(rim.rectTransform, new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(-6f, 6f), new Vector2(24f, 24f));
-                var badge = UiKit.Image("Badge", rim.rectTransform, SheetArt.Disc);
-                badge.color = new Color(0.06f, 0.05f, 0.04f, 0.96f);
-                UiKit.Stretch(badge.rectTransform, 2f);
-                var points = UiKit.Text("Points", badge.rectTransform, 13, skill.CanSpend ? UiKit.CanSpend : UiKit.Light, TextAnchor.MiddleCenter, false);
-                UiKit.Stretch(points.rectTransform);
-                UiKit.SetText(points, skill.Points.ToString());
+                var bar = UiKit.Image("RankBar", root, SheetArt.Bar, Image.Type.Sliced);
+                Place(bar.rectTransform, SkillCardsLayout.RankBar);
+                var fill = UiKit.Image("Fill", bar.rectTransform, SheetArt.BarFill);
+                fill.color = state == CardState.Maxed ? UiKit.Gold : UiKit.Xp;
+                fill.type = Image.Type.Filled;
+                fill.fillMethod = Image.FillMethod.Horizontal;
+                fill.fillAmount = SkillCardsLayout.RankFill(skill);
+                UiKit.Stretch(fill.rectTransform, 2f);
             }
 
-            var view = medallion.gameObject.AddComponent<SkillTileView>();
+            var view = card.gameObject.AddComponent<SkillTileView>();
             view.SkillId = skill.Id;
             return root.gameObject;
         }
 
         private static void UpdateSelection()
         {
-            foreach (var pair in SelectionRings)
+            foreach (var pair in SelectionGlows)
             {
                 if (pair.Value)
                 {
@@ -576,22 +553,24 @@ namespace CraftingOverhaul.Classes
                 _detailsIcon.enabled = false;
                 _detailsGlow.enabled = false;
                 _learn.interactable = false;
+                UiKit.SetText(_learnLabel, "Learn");
                 return;
             }
-            bool locked = skill.Later || (skill.Points == 0 && !skill.CanSpend);
+            var state = SkillCardsLayout.StateOf(skill);
+            bool learned = state == CardState.Learned || state == CardState.Maxed;
             _detailsIcon.sprite = ClassesSource.SkillIcon(skill.Id);
             _detailsIcon.enabled = _detailsIcon.sprite;
-            _detailsIcon.color = skill.Later ? new Color(0.37f, 0.37f, 0.37f) : locked ? new Color(0.65f, 0.65f, 0.65f) : Color.white;
-            _detailsMedallion.color = skill.Later ? new Color(0.45f, 0.43f, 0.41f) : locked ? new Color(0.72f, 0.7f, 0.68f) : Color.white;
-            Color glow = skill.Maxed ? UiKit.Gold : skill.Points > 0 ? UiKit.Rune : UiKit.CanSpend;
-            _detailsGlow.enabled = _detailsGlow.sprite && !skill.Later && (skill.Points > 0 || skill.CanSpend);
+            _detailsIcon.color = skill.Later ? new Color(0.37f, 0.37f, 0.37f) : learned ? Color.white : new Color(0.8f, 0.8f, 0.8f);
+            _detailsMedallion.color = skill.Later ? new Color(0.45f, 0.43f, 0.41f) : learned ? Color.white : new Color(0.82f, 0.8f, 0.78f);
+            Color glow = GlowColour(state);
+            _detailsGlow.enabled = _detailsGlow.sprite && state != CardState.Later && state != CardState.NotLearned;
             _detailsGlow.color = new Color(glow.r, glow.g, glow.b, 0.75f);
 
             UiKit.SetText(_detailsName, skill.Name);
             string rank = skill.Later ? "Coming later" : "Rank " + skill.Points + " / " + skill.MaxPoints +
                                                          (skill.Level != skill.Points ? "  (level " + skill.Level + ")" : "");
             UiKit.SetText(_detailsRank, rank);
-            var kind = new StringBuilder(KindLabel(skill.Kind)).Append("  ·  level ").Append(skill.ReqLevel);
+            var kind = new StringBuilder(KindLabel(skill.Kind));
             if (skill.EitrCost > 0f)
             {
                 kind.Append("  ·  ").Append(skill.EitrCost.ToString("0.#", CultureInfo.InvariantCulture)).Append(" eitr");
@@ -622,6 +601,7 @@ namespace CraftingOverhaul.Classes
             UiKit.SetText(_detailsText, text.ToString().TrimEnd('\n'));
 
             // The button says why a point can't go in (play-test 2026-10-31: the reason was cut off at the bottom of the text).
+            _learn.gameObject.SetActive(true);
             _learn.interactable = skill.CanSpend;
             string label = skill.CanSpend ? "Learn  (+1 rank)" : skill.Maxed ? "Mastered" : skill.Later ? "Coming later"
                 : !string.IsNullOrEmpty(skill.SpendBlocked) ? "<color=#FF9A80>" + skill.SpendBlocked + "</color>" : "Learn";
@@ -903,8 +883,8 @@ namespace CraftingOverhaul.Classes
                 _selected = "";
                 _hovered = "";
                 _skillIds = new string[0];
-                TreeObjects.Clear();
-                SelectionRings.Clear();
+                CardObjects.Clear();
+                SelectionGlows.Clear();
             }
         }
 

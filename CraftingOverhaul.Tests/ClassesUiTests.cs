@@ -16,16 +16,15 @@ namespace CraftingOverhaul.Tests
         public void SkillInfoParsesBackWithEveryField()
         {
             // The brief's example answer (classes-ui-brief.md §3, GetSkillInfoJson).
-            string json = new JsonOut().Add("id", "MultipleShot").Add("name", "Multiple Shot").Add("tab", 0L).Add("row", 2L).Add("col", 2L)
-                .Add("reqLevel", 6L).Add("prereqs", "MagicArrow").Add("kind", "attack").Add("status", "v1").Add("maxPoints", 20L)
+            string json = new JsonOut().Add("id", "MultipleShot").Add("name", "Multiple Shot").Add("tab", 0L).Add("row", 2L).Add("col", 1L)
+                .Add("kind", "attack").Add("status", "v1").Add("maxPoints", 20L)
                 .Add("points", 3L).Add("level", 5L).Add("canSpend", true).Add("spendBlocked", "").Add("description", "Fires 4 arrows in a fan")
                 .Add("nextDescription", "Fires 5 arrows in a fan").Add("eitrCost", 5f).ToString();
             var view = SkillView.Parse(json);
             Assert.Equal("Multiple Shot", view.Name);
             Assert.Equal(0, view.Tab);
             Assert.Equal(2, view.Row);
-            Assert.Equal(2, view.Col);
-            Assert.Equal(new[] { "MagicArrow" }, view.Prereqs);
+            Assert.Equal(1, view.Col);
             Assert.Equal("attack", view.Kind);
             Assert.Equal(3, view.Points);
             Assert.True(view.CanSpend);
@@ -34,64 +33,75 @@ namespace CraftingOverhaul.Tests
             Assert.Null(SkillView.Parse("{\"name\":\"No id\"}"));
         }
         [Fact]
-        public void TreeShowsTenSkillsPerTabInTheirTierAndCol()
+        public void EveryTabShowsNineCardsThreeByThree()
         {
+            // Krogon, 2026-11-15: exactly nine skills per tab, as cards.
             var skills = AllSkills();
             for (int tab = 0; tab < 3; tab++)
             {
-                var shown = SkillTreeLayout.Visible(skills, tab);
-                Assert.Equal(10, shown.Count);
-                Assert.Equal(shown.Count, shown.Select(s => s.Row * 10 + s.Col).Distinct().Count());
-                Assert.All(shown, s => Assert.Equal(SkillTreeLayout.TierLevels[s.Row - 1], s.ReqLevel));
+                var shown = SkillCardsLayout.Visible(skills, tab);
+                Assert.Equal(9, shown.Count);
+                Assert.Equal(9, shown.Select(s => s.Row * 10 + s.Col).Distinct().Count());
+                Assert.All(shown, s => Assert.InRange(s.Row, 1, SkillCardsLayout.Rows));
+                Assert.All(shown, s => Assert.InRange(s.Col, 1, SkillCardsLayout.Cols));
             }
-            SkillTreeLayout.TilePosition(1, 1, out float x0, out float y0);
-            SkillTreeLayout.TilePosition(6, 3, out float x1, out float y1);
-            // Medallions are centred in their cells, clear of the tier labels and inside the grid.
-            float margin = (SkillTreeLayout.ColPitch - SkillTreeLayout.Tile) / 2f;
-            Assert.Equal(SkillTreeLayout.LabelWidth + margin, x0, 3);
-            Assert.Equal((SkillTreeLayout.RowPitch - SkillTreeLayout.Tile) / 2f, y0, 3);
-            Assert.Equal(SkillTreeLayout.GridWidth - margin - SkillTreeLayout.Tile, x1, 3);
-            Assert.Equal(SkillTreeLayout.GridHeight - (SkillTreeLayout.RowPitch - SkillTreeLayout.Tile) / 2f - SkillTreeLayout.Tile, y1, 3);
+            // The bow tab reads in his order, row by row.
+            Assert.Equal(new[] { "Forked Lightning", "Wind Lance", "Snipe", "Multiple Shot", "Strafe", "Freezing Arrow", "Immolation Arrow", "Venom Strike", "Shackle Shot" },
+                SkillCardsLayout.Visible(skills, 0).OrderBy(s => s.Row * 10 + s.Col).Select(s => s.Name));
         }
 
         [Fact]
-        public void LinesRunFromEachPrerequisiteDownToItsSkill()
+        public void CardsFillTheGridWithoutOverlapping()
         {
-            var skills = AllSkills();
-            var bow = SkillTreeLayout.Visible(skills, 0);
-            var lines = SkillTreeLayout.Lines(bow);
-            // Bow tab prerequisites: Multiple Shot←Magic Arrow; Exploding←Fire, Multiple; Ice←Cold; Guided←Cold, Multiple;
-            // Strafe←Guided; Immolation←Exploding; Freezing←Ice: 9 lines.
-            Assert.Equal(9, lines.Count);
-            Assert.All(lines, l => Assert.True(l.Y2 > l.Y1));
-            // Same column: straight down from the rim of one medallion to the rim of the next.
-            var straight = lines.Single(l => l.From == "MagicArrow" && l.To == "MultipleShot");
-            Assert.Equal(straight.X1, straight.X2, 3);
-            Assert.Equal(-90f, straight.AngleDegrees, 3);
-            Assert.Equal(SkillTreeLayout.RowPitch - SkillTreeLayout.Tile - 2f * SkillTreeLayout.PathGap, straight.Length, 3);
-            // Another column: aimed from centre to centre, starting and ending just outside the rims.
-            var slanted = lines.Single(l => l.From == "MultipleShot" && l.To == "ExplodingArrow");
-            SkillTreeLayout.CentrePosition(2, 2, out float ax, out float ay);
-            SkillTreeLayout.CentrePosition(3, 3, out float bx, out float by);
-            float rim = SkillTreeLayout.Tile / 2f + SkillTreeLayout.PathGap;
-            Assert.Equal(rim, Distance(ax, ay, slanted.X1, slanted.Y1), 3);
-            Assert.Equal(rim, Distance(bx, by, slanted.X2, slanted.Y2), 3);
-            Assert.True(slanted.X2 > slanted.X1 && slanted.Y2 > slanted.Y1);
-        }
-
-        private static float Distance(float x1, float y1, float x2, float y2)
-        {
-            return (float)System.Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            var first = SkillCardsLayout.Card(1, 1);
+            var last = SkillCardsLayout.Card(3, 3);
+            Assert.Equal(0f, first.X);
+            Assert.Equal(0f, first.Y);
+            Assert.Equal(SkillCardsLayout.GridWidth, last.X + last.Width, 3);
+            Assert.Equal(SkillCardsLayout.GridHeight, last.Y + last.Height, 3);
+            var next = SkillCardsLayout.Card(1, 2);
+            var below = SkillCardsLayout.Card(2, 1);
+            Assert.Equal(SkillCardsLayout.Gap, next.X - (first.X + first.Width), 3);
+            Assert.Equal(SkillCardsLayout.Gap, below.Y - (first.Y + first.Height), 3);
+            // Everything on a card sits inside it, top to bottom: medallion, name, rank, rank bar.
+            var parts = new[] { SkillCardsLayout.Icon, SkillCardsLayout.Name, SkillCardsLayout.Rank, SkillCardsLayout.RankBar };
+            float y = 0f;
+            foreach (var part in parts)
+            {
+                Assert.True(part.X >= 0f && part.X + part.Width <= SkillCardsLayout.CardWidth);
+                Assert.True(part.Y >= y && part.Y + part.Height <= SkillCardsLayout.CardHeight);
+                y = part.Y + part.Height;
+            }
         }
 
         [Fact]
-        public void DroppedSkillsLeaveAnEmptyPlaceAndNoLines()
+        public void CardStatesAndRankLines()
+        {
+            var skill = new SkillView { Id = "A", Status = "v1", MaxPoints = 20, Points = 0, CanSpend = false };
+            Assert.Equal(CardState.NotLearned, SkillCardsLayout.StateOf(skill));
+            Assert.Equal("Not learned", SkillCardsLayout.RankLabel(skill));
+            Assert.Equal(0f, SkillCardsLayout.RankFill(skill));
+            skill.CanSpend = true;
+            Assert.Equal(CardState.CanLearn, SkillCardsLayout.StateOf(skill));
+            skill.Points = 3;
+            Assert.Equal(CardState.Learned, SkillCardsLayout.StateOf(skill));
+            Assert.Equal("Rank 3 / 20", SkillCardsLayout.RankLabel(skill));
+            Assert.Equal(0.15f, SkillCardsLayout.RankFill(skill), 3);
+            skill.Points = 20;
+            Assert.Equal(CardState.Maxed, SkillCardsLayout.StateOf(skill));
+            Assert.Equal(1f, SkillCardsLayout.RankFill(skill));
+            skill.Status = "later";
+            skill.Points = 0;
+            Assert.Equal(CardState.Later, SkillCardsLayout.StateOf(skill));
+            Assert.Equal("Coming later", SkillCardsLayout.RankLabel(skill));
+        }
+
+        [Fact]
+        public void DroppedSkillsLeaveAnEmptyPlace()
         {
             var skills = AllSkills();
             skills.Single(x => x.Id == "Dodge").Status = "dropped";
-            var magic = SkillTreeLayout.Visible(skills, 1);
-            Assert.Equal(9, magic.Count);
-            Assert.DoesNotContain(SkillTreeLayout.Lines(magic), l => l.From == "Dodge");
+            Assert.Equal(8, SkillCardsLayout.Visible(skills, 1).Count);
         }
 
         [Fact]
