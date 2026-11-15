@@ -38,7 +38,8 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 | Attributes / EitrStart, EitrPerLevel, EitrPerEnergy | 15, 1.5, 1.5 | The class eitr pool |
 | Attributes / DamagePerStrength, DamagePerDexterity | 1, 1 | % damage per point |
 | Skills / SkillDamageMultiplier | 1 | Multiplies the damage skills add |
-| Skills / InnerSightDamageTaken | 25 | % more damage enemies under Inner Sight take |
+| Skills / InnerSightDamageBase | 5 | % more damage enemies under Inner Sight take at skill level 1 |
+| Skills / InnerSightDamagePerLevel | 1 | Inner Sight's extra % per level above 1 (24% at 20, no cap) |
 | Skill Keys / SkillButton, BlockKey | Mouse1, none | The skill button (right click) and block's key: set one, or a character with a class can't block (per player) |
 | Skill Keys / Slot1Key … Slot4Key | F1 … F4 | The four skill slots (per player) |
 

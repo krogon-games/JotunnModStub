@@ -71,15 +71,23 @@ namespace Orlog.Content
             CastSkills.RegisterStatusEffects();
         }
 
-        /// <summary>The freeze and Inner Sight's mark last the seconds carried in the hit's skill level (see where they're added).</summary>
+        /// <summary>
+        ///     The freeze and Inner Sight's mark last the seconds carried in the skill level (see where they're added);
+        ///     Inner Sight's mark also takes its extra damage % from the item level.
+        /// </summary>
         [HarmonyPatch(typeof(StatusEffect), nameof(StatusEffect.SetLevel))]
         private static class Duration
         {
-            private static void Postfix(StatusEffect __instance, float skillLevel)
+            private static void Postfix(StatusEffect __instance, int itemLevel, float skillLevel)
             {
                 if (__instance && skillLevel > 0f && (__instance.NameHash() == FreezeHash || __instance.NameHash() == CastSkills.InnerSightHash))
                 {
                     __instance.m_ttl = skillLevel;
+                }
+                // Inner Sight's % arrives as the item level (hundredths of a %); see CastSkills.Cast.
+                if (__instance is CastSkills.InnerSightMark mark)
+                {
+                    mark.ExtraDamagePercent = itemLevel / 100f;
                 }
             }
         }

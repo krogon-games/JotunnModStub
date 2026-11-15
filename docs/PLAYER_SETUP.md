@@ -128,7 +128,8 @@ The dedicated server needs, in its own BepInEx install:
 | `4 - Orlog Stone` | `StoneGap` | 3 | Metres between the Eikthyr trophy stone and the Orlog stone behind it |
 | `4 - Orlog Stone` | `StoneTurn` | 0 | Degrees to turn the stone if it faces the wrong way |
 | `5 - Skills` | `SkillDamageMultiplier` | 1 | Multiplies the damage skills add (fire, frost, explosions, Magic Arrow) |
-| `5 - Skills` | `InnerSightDamageTaken` | 25 | % more damage enemies under Inner Sight take |
+| `5 - Skills` | `InnerSightDamageBase` | 5 | % more damage enemies under Inner Sight take at skill level 1 |
+| `5 - Skills` | `InnerSightDamagePerLevel` | 1 | Inner Sight's extra % per level above 1 (24% at level 20, no cap) |
 
 - **Orlog's keys (each player's own, in `com.krogongames.orlog.cfg` → `6 - Skill Keys`).** Only for a character with a class; keyboard and mouse only:
 

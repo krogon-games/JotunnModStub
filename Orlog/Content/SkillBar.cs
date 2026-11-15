@@ -83,7 +83,13 @@ namespace Orlog.Content
         public static string Describe(Player player, string skillId, int level)
         {
             return ActiveSkillRules.Describe(skillId, ValuesFor(Attributes.ClassOf(player)), level, DamageScaleFor(player),
-                OrlogConfig.InnerSightDamageTaken.Value);
+                InnerSightPercent(level));
+        }
+
+        /// <summary>Inner Sight's extra damage taken at a skill level, in % (admin settings).</summary>
+        public static float InnerSightPercent(int level)
+        {
+            return ActiveSkillRules.InnerSightPercent(level, OrlogConfig.InnerSightDamageBase.Value, OrlogConfig.InnerSightDamagePerLevel.Value);
         }
 
         /// <summary><c>bow</c> for a bow or crossbow in hand, <c>spear</c> for a spear, else "".</summary>

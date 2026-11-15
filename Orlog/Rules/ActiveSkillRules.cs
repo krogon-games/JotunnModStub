@@ -349,6 +349,16 @@ namespace Orlog.Rules
         ///     The tooltip line of an active skill at a level, with Valheim numbers (<paramref name="scale" /> = the damage
         ///     scale at the character's level × the admin's multiplier), or null if the skill has no text here.
         /// </summary>
+        /// <summary>
+        ///     Inner Sight's extra damage taken, in %: <paramref name="basePercent" /> at level 1 plus
+        ///     <paramref name="perLevel" /> for each level above it, with no cap, so +skills can raise it past 20's
+        ///     (Krogon, 2026-11-15: "start at 5% and add 1% per level"; 5% → 24% at 20).
+        /// </summary>
+        public static float InnerSightPercent(int level, float basePercent, float perLevel)
+        {
+            return level < 1 ? 0f : Math.Max(0f, basePercent + perLevel * (level - 1));
+        }
+
         public static string Describe(string id, SkillValueTable v, int level, float scale, float innerSightPercent)
         {
             if (v == null || level < 1)

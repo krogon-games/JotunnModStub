@@ -33,7 +33,8 @@ namespace Orlog
         public static ConfigEntry<float> DamagePerDexterity;
 
         public static ConfigEntry<float> SkillDamageMultiplier;
-        public static ConfigEntry<float> InnerSightDamageTaken;
+        public static ConfigEntry<float> InnerSightDamageBase;
+        public static ConfigEntry<float> InnerSightDamagePerLevel;
 
         public static ConfigEntry<UnityEngine.KeyCode> SkillButton;
         public static ConfigEntry<UnityEngine.KeyCode> BlockKey;
@@ -107,9 +108,12 @@ namespace Orlog
                 AdminOnly("Multiplies the damage skills add (fire, frost, explosions, Magic Arrow). 1 = D2's ratio of skill damage to bow " +
                           "damage (Orlog/Data/skill_damage_scale.csv). Proposed 2026-11-11, waiting for the user's approval.",
                     new AcceptableValueRange<float>(0f, 10f)));
-            InnerSightDamageTaken = config.Bind(SkillSection, "InnerSightDamageTaken", 25f,
-                AdminOnly("% more damage enemies under Inner Sight take. 25 = the game's own 'slightly weak' step (Claude's interim " +
-                          "choice, 2026-11-11: D2 lowers defence instead, which Valheim lacks).", new AcceptableValueRange<float>(0f, 200f)));
+            InnerSightDamageBase = config.Bind(SkillSection, "InnerSightDamageBase", 5f,
+                AdminOnly("% more damage enemies under Inner Sight take at skill level 1 (user, 2026-11-15).",
+                    new AcceptableValueRange<float>(0f, 200f)));
+            InnerSightDamagePerLevel = config.Bind(SkillSection, "InnerSightDamagePerLevel", 1f,
+                AdminOnly("Inner Sight's extra % per skill level above 1, no cap (user, 2026-11-15: 5% at level 1, 24% at 20).",
+                    new AcceptableValueRange<float>(0f, 50f)));
 
             // Keys, per player (class-design.md §4; user 2026-10-30: right click is the skill button, block moves, both rebindable).
             SkillButton = config.Bind(KeySection, "SkillButton", UnityEngine.KeyCode.Mouse1,

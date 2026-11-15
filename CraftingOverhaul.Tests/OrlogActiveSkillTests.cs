@@ -113,6 +113,16 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void InnerSightGrowsOnePercentPerLevel()
+        {
+            Assert.Equal(0f, ActiveSkillRules.InnerSightPercent(0, 5f, 1f));
+            Assert.Equal(5f, ActiveSkillRules.InnerSightPercent(1, 5f, 1f));
+            Assert.Equal(14f, ActiveSkillRules.InnerSightPercent(10, 5f, 1f));
+            Assert.Equal(24f, ActiveSkillRules.InnerSightPercent(20, 5f, 1f));
+            Assert.Equal(27f, ActiveSkillRules.InnerSightPercent(23, 5f, 1f)); // +skills later: no cap
+        }
+
+        [Fact]
         public void SlotsKeepOnlyLearnedSkills()
         {
             var slots = ActiveSkillRules.ParseSlots("MagicArrow;InnerSight;;FireArrow");
@@ -203,7 +213,7 @@ namespace CraftingOverhaul.Tests
             Assert.Equal("Adds 10–40 fire damage; 3% of the physical damage becomes fire", ActiveSkillRules.Describe("FireArrow", v, 1, 10f, 25f));
             Assert.Equal("Fires 2 arrows in a fan for one arrow, each at 75% damage", ActiveSkillRules.Describe("MultipleShot", v, 1, 10f, 25f));
             Assert.Contains("3 m", ActiveSkillRules.Describe("FreezingArrow", v, 1, 1f, 25f));
-            Assert.Contains("25% more damage for 8 s", ActiveSkillRules.Describe("InnerSight", v, 1, 1f, 25f));
+            Assert.Contains("5% more damage for 8 s", ActiveSkillRules.Describe("InnerSight", v, 1, 1f, ActiveSkillRules.InnerSightPercent(1, 5f, 1f)));
             Assert.Null(ActiveSkillRules.Describe("FireArrow", v, 0, 1f, 25f));
         }
 

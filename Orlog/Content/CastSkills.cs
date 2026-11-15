@@ -9,7 +9,8 @@ namespace Orlog.Content
     /// <summary>
     ///     Skills cast from their slot's hotkey (roadmap C5). Inner Sight: every enemy within the skill's radius is marked
     ///     for the skill's duration (<see cref="InnerSightName" />, a status effect on the creature, added through the game's
-    ///     own message so the creature owner's game has it) and takes <c>InnerSightDamageTaken</c>% more damage there. The
+    ///     own message so the creature owner's game has it) and takes more damage there: 5% at level 1, +1% per level
+    ///     (<c>InnerSightDamageBase</c>, <c>InnerSightDamagePerLevel</c>); the % travels as the mark's item level. The
     ///     caster sees the marked creatures glow (a light on their own game only). Plays the game's "gpower" animation;
     ///     that animation's event (<c>CharacterAnimEvent.GPower</c>) would also switch on the Forsaken power
     ///     (<c>Player.ActivateGuardianPower</c>), so <see cref="NoPowerFromCast" /> skips that while our gesture plays.
@@ -30,11 +31,23 @@ namespace Orlog.Content
 
         public static void RegisterStatusEffects()
         {
-            var mark = ScriptableObject.CreateInstance<SE_Stats>();
+            var mark = ScriptableObject.CreateInstance<InnerSightMark>();
             mark.name = InnerSightName;
             mark.m_name = "Inner Sight";
             mark.m_ttl = 8f;
             ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(mark, false));
+        }
+
+        /// <summary>Inner Sight's mark; the game copies status effects field by field, so each mark keeps its own %.</summary>
+        internal sealed class InnerSightMark : SE_Stats
+        {
+            public float ExtraDamagePercent;
+        }
+
+        /// <summary>The % sent in the mark's item level (an int), in hundredths so admin settings like 0.5 per level survive.</summary>
+        public static int ToItemLevel(float percent)
+        {
+            return Mathf.RoundToInt(percent * 100f);
         }
 
         public static void Cast(Player player, Rules.SkillTable.Skill skill, int level, float cost)
@@ -68,7 +81,8 @@ namespace Orlog.Content
                     continue;
                 }
                 // The seconds travel as the skill level; Duration (BowSkills) sets the time from it.
-                target.GetSEMan().AddStatusEffect(InnerSightHash, true, 0, seconds);
+                // The % travels as the item level; Duration (BowSkills) stores it on the mark.
+                target.GetSEMan().AddStatusEffect(InnerSightHash, true, ToItemLevel(SkillBar.InnerSightPercent(level)), seconds);
                 Glow.Add(target, seconds);
                 marked++;
             }
@@ -120,10 +134,10 @@ namespace Orlog.Content
                 }
                 Safe.Run("apply Inner Sight", () =>
                 {
-                    var seman = __instance.GetSEMan();
-                    if (seman != null && seman.HaveStatusEffect(InnerSightHash))
+                    var mark = __instance.GetSEMan()?.GetStatusEffect(InnerSightHash) as InnerSightMark;
+                    if (mark && mark.ExtraDamagePercent > 0f)
                     {
-                        __1.ApplyModifier(1f + OrlogConfig.InnerSightDamageTaken.Value / 100f);
+                        __1.ApplyModifier(1f + mark.ExtraDamagePercent / 100f);
                     }
                 });
             }
