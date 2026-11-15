@@ -161,6 +161,21 @@
 1. [ ] `spawn Troll` (Black Forest) or any big creature: Freezing Arrow in its chest → frost damage and the freeze on it; Exploding Arrow in its chest → fire damage. Send the `Orlog: FreezingArrow` / `ExplodingArrow` lines.
 2. [ ] Inner Sight: did the Forsaken power still show (its icon or cooldown) when you cast? And does your power key still use it?
 
+### Your feedback (2026-11-15, build `44857df`, the log and a screenshot)
+- **Blast arrows: "That works now."** The log: every Freezing and Exploding Arrow in the troll's head or body "found 1 ($enemy_troll), struck 1". Passed; the log lines are removed.
+- **Respec:** "When the character does a respec and has no learnt skills, the previous skills the player put on the skill cross still remain there… Its only visual, pressing the hotkey or using right mouse button does not make the skill work."
+- **F2** "opens this stat window" (the screenshot: the game's network-stats panel). "We need the F1 F2 F3 F4 buttons for skills."
+- The skill tree overhaul (recorded in the handoff's decisions).
+
+### What changed after the feedback
+- **Respec:** it now empties the four slots and the skill button; a slot whose skill has no points also shows empty (cleans a character respecced earlier).
+- **F2:** the game's own F2 toggles its network-stats panel (`ConnectPanel`). For a character with a class, plain F2 is the skill slot's now; **Ctrl+F2** still opens the panel. With Ctrl held, F1–F4 don't use slots (Ctrl+F1 and Ctrl+F3 are the game's mouse capture and hide-the-HUD).
+
+### Re-test
+1. [ ] **Respec:** skills on the cross, then `orlog_respec` → the cross is empty. `orlog_skill InnerSight`, drag it onto a slot again → it works.
+2. [ ] **F2:** with a class, F2 uses slot 2 and no stats panel opens. Ctrl+F2 opens the panel, Ctrl+F2 again closes it.
+3. [ ] **Inner Sight:** did the Forsaken power still show (its icon or cooldown) when you cast? Does your power key still use it?
+
 ### Your feedback
 
 (none yet)

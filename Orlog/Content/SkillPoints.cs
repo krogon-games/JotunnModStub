@@ -118,6 +118,7 @@ namespace Orlog.Content
         public static void Respec(Player player)
         {
             player.m_customData.Remove(PointsKey);
+            SkillBar.ClearSlots(player);
             Progress.NotifyChanged();
         }
     }

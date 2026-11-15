@@ -143,6 +143,23 @@ namespace Orlog.Rules
             return slots;
         }
 
+        /// <summary>
+        ///     The slots with every skill the character has no points in emptied (after a respec the cross kept the old
+        ///     skills: Krogon, 2026-11-15).
+        /// </summary>
+        public static string[] OnlyLearned(string[] slots, Func<string, int> levelOf)
+        {
+            var result = ParseSlots(FormatSlots(slots));
+            for (int i = 0; i < Slots; i++)
+            {
+                if (result[i].Length > 0 && levelOf(result[i]) < 1)
+                {
+                    result[i] = "";
+                }
+            }
+            return result;
+        }
+
         public static string FormatSlots(string[] slots)
         {
             return string.Join(";", Enumerable.Range(0, Slots).Select(i => slots != null && i < slots.Length ? slots[i] ?? "" : ""));

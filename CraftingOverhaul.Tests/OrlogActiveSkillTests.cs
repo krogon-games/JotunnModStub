@@ -113,6 +113,16 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void SlotsKeepOnlyLearnedSkills()
+        {
+            var slots = ActiveSkillRules.ParseSlots("MagicArrow;InnerSight;;FireArrow");
+            var levels = new System.Collections.Generic.Dictionary<string, int> { { "InnerSight", 3 } };
+            Assert.Equal(new[] { "", "InnerSight", "", "" },
+                ActiveSkillRules.OnlyLearned(slots, id => levels.TryGetValue(id, out int l) ? l : 0));
+            Assert.Equal(new[] { "", "", "", "" }, ActiveSkillRules.OnlyLearned(slots, id => 0));
+        }
+
+        [Fact]
         public void SlotsSaveAndPlace()
         {
             var slots = ActiveSkillRules.ParseSlots("MagicArrow;;FireArrow");

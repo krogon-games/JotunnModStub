@@ -272,20 +272,9 @@ namespace Orlog.Content
         [HarmonyPatch(typeof(Projectile), nameof(Projectile.OnHit))]
         private static class Impact
         {
-            private static void Prefix(Projectile __instance, Collider collider, Vector3 hitPoint)
+            private static void Prefix(Projectile __instance)
             {
                 s_hitting = __instance;
-                // Diagnostic (Krogon, 2026-11-15: Freezing Arrow only bursts on the ground, not on a creature): what each
-                // blast arrow hits. Remove once the cause is found.
-                var tag = __instance ? __instance.GetComponent<ShotTag>() : null;
-                if (tag != null && IsBlast(tag))
-                {
-                    var hitObject = collider ? Projectile.FindHitObject(collider) : null;
-                    var character = hitObject ? hitObject.GetComponent<Character>() : null;
-                    Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} hits {(collider ? collider.name : "nothing")} " +
-                                          $"({(character ? "creature " + character.m_name : hitObject ? hitObject.name : "no object")}) at {hitPoint}" +
-                                          $"{(tag.Exploded ? ", already burst" : "")}.");
-                }
             }
 
             private static void Postfix(Projectile __instance, Collider collider, Vector3 hitPoint)
@@ -303,15 +292,9 @@ namespace Orlog.Content
                 });
             }
 
-            private static System.Exception Finalizer(System.Exception __exception)
+            private static void Finalizer()
             {
                 s_hitting = null;
-                if (__exception != null)
-                {
-                    // Diagnostic: an error inside the game's hit (ours or another mod's) skips the burst.
-                    Jotunn.Logger.LogWarning($"Orlog: an arrow's hit stopped with an error before its burst: {__exception}");
-                }
-                return __exception;
             }
         }
 
@@ -376,13 +359,11 @@ namespace Orlog.Content
         {
             if (!owner || owner != Player.m_localPlayer)
             {
-                Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} doesn't burst: its shooter isn't you on this game.");
                 return;
             }
             var v = SkillBar.ValuesFor(Attributes.ClassOf(Player.m_localPlayer));
             if (v == null)
             {
-                Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} doesn't burst: no skill values for your class.");
                 return;
             }
             bool fire = tag.SkillId == "ExplodingArrow";
@@ -390,19 +371,12 @@ namespace Orlog.Content
             float freeze = fire ? 0f : v.Get(tag.SkillId, "freeze_s", tag.Level);
             ImpactEffect(fire ? "StaffFireball" : "StaffIceShards", fire ? "ArrowFire" : "ArrowFrost", point);
             CharactersInBlast(point, radius, struck, s_inRange);
-            // Diagnostic (see Impact.Prefix): who the burst finds and why each is skipped.
-            var report = new System.Text.StringBuilder();
-            int hitCount = 0;
             foreach (var target in s_inRange)
             {
-                string skip = !target ? "gone" : target == owner ? "you" : target.IsPlayer() ? "a player" : target.IsDead() ? "dead"
-                    : !BaseAI.IsEnemy(owner, target) ? "not an enemy" : null;
-                report.Append(target ? target.m_name : "?").Append(skip == null ? "" : " (skipped: " + skip + ")").Append(", ");
-                if (skip != null)
+                if (!target || target == owner || target.IsPlayer() || target.IsDead() || !BaseAI.IsEnemy(owner, target))
                 {
                     continue;
                 }
-                hitCount++;
                 var hit = new HitData();
                 if (fire)
                 {
@@ -425,8 +399,6 @@ namespace Orlog.Content
                 hit.SetAttacker(owner);
                 target.Damage(hit);
             }
-            Jotunn.Logger.LogInfo($"Orlog: {tag.SkillId} bursts at {point}, radius {radius:0.0} m: found {s_inRange.Count} " +
-                                  $"({report.ToString().TrimEnd(',', ' ')}), struck {hitCount}.");
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -94,9 +95,18 @@ namespace Orlog.Content
 
         // ------------------------------------------------------------ slots
 
+        /// <summary>The skills in the four slots; a skill without points (after a respec) reads as an empty slot.</summary>
         public static string[] Slots(Player player)
         {
-            return ActiveSkillRules.ParseSlots(player && player.m_customData.TryGetValue(SlotsKey, out string saved) ? saved : "");
+            var saved = ActiveSkillRules.ParseSlots(player && player.m_customData.TryGetValue(SlotsKey, out string text) ? text : "");
+            return player ? ActiveSkillRules.OnlyLearned(saved, id => LevelOf(player, id)) : saved;
+        }
+
+        /// <summary>A respec empties the slots and the skill button (the skills are unlearned); quick cast choices stay.</summary>
+        public static void ClearSlots(Player player)
+        {
+            player.m_customData.Remove(SlotsKey);
+            player.m_customData.Remove(SelectedKey);
         }
 
         /// <summary>The skills this character turned quick cast off for (user, 2026-11-13: on by default).</summary>
@@ -332,6 +342,51 @@ namespace Orlog.Content
             }
         }
 
+        private static bool CtrlHeld()
+        {
+            return KeyHeld(KeyCode.LeftControl) || KeyHeld(KeyCode.RightControl);
+        }
+
+        /// <summary>
+        ///     The game's F2 toggles its network-stats panel (<c>ConnectPanel.Update</c>). While F2 is a skill slot key and the
+        ///     character has a class, plain F2 is the slot's; Ctrl+F2 still opens the panel (Krogon, 2026-11-15: "We need the
+        ///     F1 F2 F3 F4 buttons for skills").
+        /// </summary>
+        [HarmonyPatch(typeof(ConnectPanel), nameof(ConnectPanel.Update))]
+        private static class NoStatsPanelOnSlotKey
+        {
+            private static void Prefix(ConnectPanel __instance, out bool __state)
+            {
+                __state = __instance.m_root && __instance.m_root.gameObject.activeSelf;
+            }
+
+            private static void Postfix(ConnectPanel __instance, bool __state)
+            {
+                Safe.Run("keep F2 for a skill slot", () =>
+                {
+                    if (!__instance.m_root || __instance.m_root.gameObject.activeSelf == __state || CtrlHeld()
+                        || !ZInput.GetKeyDown(KeyCode.F2) || !IsSlotKey(KeyCode.F2)
+                        || !Player.m_localPlayer || Attributes.ClassOf(Player.m_localPlayer) == null)
+                    {
+                        return;
+                    }
+                    __instance.m_root.gameObject.SetActive(__state);
+                });
+            }
+        }
+
+        private static bool IsSlotKey(KeyCode key)
+        {
+            foreach (var entry in OrlogConfig.SlotKeys)
+            {
+                if (entry != null && entry.Value == key)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>Called every frame: the slot hotkeys.</summary>
         public static void Tick()
         {
@@ -343,7 +398,8 @@ namespace Orlog.Content
             for (int i = 0; i < ActiveSkillRules.Slots; i++)
             {
                 var key = OrlogConfig.SlotKeys[i].Value;
-                if (!KeyPressed(key))
+                // Ctrl+F1/F2/F3 stay the game's own (mouse capture, the F2 network panel, hiding the HUD).
+                if (!KeyPressed(key) || CtrlHeld())
                 {
                     continue;
                 }
