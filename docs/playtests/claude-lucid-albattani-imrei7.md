@@ -174,7 +174,11 @@
 ### Re-test
 1. [ ] **Respec:** skills on the cross, then `orlog_respec` → the cross is empty. `orlog_skill InnerSight`, drag it onto a slot again → it works.
 2. [ ] **F2:** with a class, F2 uses slot 2 and no stats panel opens. Ctrl+F2 opens the panel, Ctrl+F2 again closes it.
-3. [ ] **Inner Sight:** did the Forsaken power still show (its icon or cooldown) when you cast? Does your power key still use it?
+3. [x] **Inner Sight:** passed on the phone page (the round 3 step "Inner Sight without the Forsaken power").
+
+### Phone page marks (read 2026-11-15, afternoon)
+- **Passed:** round 3 both steps (Inner Sight without the Forsaken power; blast arrows); round 2 steps 6 (Multiple Shot), 7 (wrong weapon), 8 (out of eitr), 12 (Inner Sight), 12b (quick cast), 13 (tooltips), 15 (damage feel; no note), plus 1–3 from before; round 1 step 2.
+- **Not marked yet:** round 1 steps 1, 3–12; round 2 steps 4, 5, 9, 10, 11, 13a, 14, 16.
 
 ### Your feedback
 
