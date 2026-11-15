@@ -191,6 +191,6 @@ Fire, Cold and Ice Arrow may go in the skill overhaul (next round): their steps 
 
 ### Final play-test (2026-11-15, phone page, read the same afternoon)
 - **Round 1 (passives): all 12 steps passed.**
-- **Round 2:** passed 1, 2, 3, 6, 7, 8, 11, 12, 12b, 13, 13a, 15, 16. **Skipped** 4 (Magic Arrow without arrows), 5 (Fire Arrow), 9 (Cold and Ice Arrow), 10 (Exploding Arrow on a group): "doesnt matter, will rework skill later". **Not marked:** 14 (boss points).
+- **Round 2:** passed 1, 2, 3, 6, 7, 8, 11, 12, 12b, 13, 13a, 15, 16. **Skipped** 4 (Magic Arrow without arrows), 5 (Fire Arrow), 9 (Cold and Ice Arrow), 10 (Exploding Arrow on a group): "doesnt matter, will rework skill later". 14 (boss points) passed in chat: "yes boss points worked, second Eikthyr gave nothing." **The round has passed** (single player); this branch's steps are off the phone page, the multiplayer ones stay in `PLAYTEST.md` → 2j.
 - **Round 3 and re-tests:** passed: Inner Sight without the Forsaken power, blast arrows on a troll, respec clears the cross, F2, Inner Sight 5% → 24%, boss XP on Eikthyr. **Skipped:** the block default ("i think we will create a UI keybindings overhaul later on. so players can rebind whatever keys they want").
 - Also marked the same day, other rounds on the page (for the coordinator): `backpack-rows`, `odin-2`, `stat-steal`, `ui-oneclick`, `ui-buildstamp` passed; `stat-skill-56` skipped.
