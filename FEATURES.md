@@ -224,7 +224,7 @@ The saved-file format and the per-frame slicing are covered by unit tests (`Biom
 
 **Known issues:**
 - **Play-test 2026-11-15 (1.0.21, single player): background loading and the saved file passed.** No freeze after spawning; the first load worked in the background for 28.4 s using 1.2 s of game time over 2,695 frames (longest frame 87 ms), with the same 970 items and 39,595 sources as before; the second load used the saved file in 12 ms; biomes unchanged. Measured: the location and room loading was the freeze (13.5 of 13.6 s when run all at once; every other collector under 20 ms).
-- `co_biome refresh` (and `co_dump`) still run all at once: about 14 s of pause (13.6 s on 2026-11-15).
+- `co_biome refresh` (and `co_dump`) still run all at once: about 14 s of pause (13.6 s on 2026-11-15). Kept on purpose (Krogon, 2026-11-15: an admin command, rarely used).
 - The saved file can be stale if another mod changes what a prefab drops through its own settings without a version change; the key doesn't read inside prefabs. Run `co_biome refresh` after changing such a setting.
 - Items only obtainable in ways the collectors don't read will go unplaced (e.g. things only given by quests or events). `co_dump` lists them in `biome_unresolved.csv`.
 - **First in-game dump (1.0.20, 2026-10-26):** 747 items placed. The key materials all landed in the right biome: iron Swamp, silver Mountain, black metal Plains, eitr Mistlands, flametal Ashlands, and 117 Deep North items. Problems found, fixed in the next build, awaiting a new dump:

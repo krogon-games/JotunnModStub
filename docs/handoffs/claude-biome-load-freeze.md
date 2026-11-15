@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Fixing feedback** (play-test passed 2026-11-15; one open question on `co_biome refresh`).
+**Ready to merge** once `/handoff` has run (play-test passed 2026-11-15; no fixes needed).
 
 ## Purpose
 
@@ -26,12 +26,14 @@ Built and passed in the play-test:
 Measured 2026-11-15: the location and room loading was the freeze (13.5 of 13.6 s run all at once; every other collector under 20 ms).
 
 Known issues:
-- `co_biome refresh` (and `co_dump`) still run all at once: a 14 s pause. Krogon to decide whether that matters (open question).
+- `co_biome refresh` (and `co_dump`) still run all at once: a 14 s pause. Kept on purpose (Krogon, 2026-11-15).
 - The saved file can go stale if a mod changes drops inside a prefab through its own settings without a version change; `co_biome refresh` fixes it.
 
 ## Decisions
 
-No decisions by Krogon yet on this branch. The task came with its goal and options (background work, saved result, faster solver); both of the first two were built, the solver was left as it was (it now runs off the main thread).
+1. **2026-11-15: `co_biome refresh` keeps running all at once** (about a 14 s pause): "Leave it". It's an admin command, rarely used; only the load after spawning works in the background.
+
+The task came with its goal and options (background work, saved result, faster solver); the first two were built, the solver was left as it was (it now runs off the main thread).
 
 ## Playtest
 
@@ -39,13 +41,13 @@ Checklist: [`docs/playtests/claude-biome-load-freeze.md`](../playtests/claude-bi
 
 ## Open questions for Krogon
 
-1. `co_biome refresh` pauses the game for about 14 s: leave it (an admin command, rarely used), or make it work in the background like at spawn?
+None.
 
 ## Next steps
 
 1. ~~Krogon play-tests the checklist.~~ Passed 2026-11-15.
-2. Krogon answers the refresh question; if "background", build it and re-test step 5.
-3. Take the `bio-` steps off the phone page once the round is final; run `/handoff`, then a PR into `master`.
+2. ~~The refresh question.~~ Leave it (2026-11-15).
+3. ~~Take the `bio-` steps off the phone page.~~ Done 2026-11-15. Run `/handoff`, then a PR into `master`.
 
 ## Checks
 
@@ -57,6 +59,6 @@ Checklist: [`docs/playtests/claude-biome-load-freeze.md`](../playtests/claude-bi
 
 ## Merge notes
 
-- Not ready to merge yet: play-test passed; waiting on the refresh question, then `/handoff`.
+- Ready to merge after `/handoff` (play-test passed, nothing left to fix).
 - **Gameplay changed: version bump needed at merge** for CraftingOverhaul (code only; no data or assets).
 - Shared files touched: `FEATURES.md` (changelog, two table rows, biome section), `docs/CURRENT_STATE.md` (one line under known issues), `docs/ARCHITECTURE.md` (biome bullet, pattern 9), `CraftingOverhaul/CraftingOverhaul.cs` (one line in `Awake`), `CraftingOverhaul/RecipeList/RecipeListOrganizer.cs`.
