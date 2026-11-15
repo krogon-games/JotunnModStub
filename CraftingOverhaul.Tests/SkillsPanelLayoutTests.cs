@@ -57,6 +57,12 @@ namespace CraftingOverhaul.Tests
             {
                 Assert.True(Inside(Rects["attributePlus" + i], Rects["character"]));
                 Assert.True(Inside(Rects["attributeName" + i], Rects["character"]));
+                // The icon sits left of the name and the "what it gives" line; that line stops short of the + button.
+                Assert.True(Inside(Rects["attributeIcon" + i], Rects["character"]));
+                Assert.True(Rects["attributeIcon" + i].X < Rects["attributeName" + i].X);
+                Assert.Equal(Rects["attributeName" + i].X, Rects["attributeEffect" + i].X);
+                Assert.False(Overlap(Rects["attributeEffect" + i], Rects["attributePlus" + i]));
+                Assert.False(Overlap(Rects["attributeName" + i], Rects["attributeValue" + i]));
                 Assert.False(Overlap(Rects["attributeValue" + i], Rects["attributePlus" + i]));
             }
             foreach (var name in new[] { "detailsIcon", "detailsName", "detailsRank", "detailsKind", "detailsText" })

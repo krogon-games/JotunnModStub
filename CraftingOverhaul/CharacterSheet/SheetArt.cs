@@ -81,6 +81,15 @@ namespace CraftingOverhaul.CharacterSheet
             return string.IsNullOrEmpty(id) ? null : Get(id, Vector4.zero, false, SkillsPrefix, false);
         }
 
+        /// <summary>
+        ///     An attribute's icon for the skills panel (<c>strength</c>, <c>dexterity</c>, <c>vitality</c>, <c>energy</c>;
+        ///     <c>Assets/Skills/Strength.rgba</c> and so on, made by <c>tools/make_skill_icons.py</c>), or null.
+        /// </summary>
+        public static Sprite AttributeIcon(string attribute)
+        {
+            return string.IsNullOrEmpty(attribute) ? null : SkillIcon(char.ToUpperInvariant(attribute[0]) + attribute.Substring(1));
+        }
+
         private const string SkillsPrefix = "CraftingOverhaul.Assets.Skills.";
 
         private static Sprite Get(string name, Vector4 border, bool repeat = false, string prefix = ResourcePrefix, bool warnMissing = true)

@@ -121,7 +121,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | Bow and Crossbow | Forked Lightning | New (user): "The arrow hits an enemy, then lightning forks outward from their body toward nearby enemies." Details to agree | later |
 | | Wind Lance | New (user): "a charged elemental attack that turns your arrow into a javelin, and shoots it straight with no arrow drop like other arrow. It travels fast and in a straight line, forcing and knocking enemies back… may need some more tweaking". Details to agree | later |
 | | Snipe | New (user): "Charge a powerful shot, increasing damage the longer the charge. Drains stamina while charging and slowly zooms in on the target." Details to agree | later |
-| | Multiple Shot | One shot splits into several arrows in a fan; uses one arrow | v1 |
+| | Multishot | Diablo 2's Multiple Shot, renamed (user, 2026-11-15): one shot splits into several arrows in a fan; uses one arrow | v1 |
 | | Strafe | A volley of arrows at several nearby targets | later |
 | | Freezing Arrow | Frost damage and a short freeze in an area on impact; bosses only slowed | v1 |
 | | Immolation Arrow | Explodes in fire on impact and leaves a burning patch on the ground (Exploding Arrow's removed blast code is its start) | later |

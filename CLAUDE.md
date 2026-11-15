@@ -30,6 +30,7 @@ File names: `<branch>` is the branch name with `/` replaced by `-` (e.g. `claude
 | File | Use it for |
 |---|---|
 | [`STATUS.md`](STATUS.md) | Where every branch stands, what's half-finished, what's waiting on the user, the top priorities. Coordinator only |
+| [`AGENTS.md`](AGENTS.md) | When the user says "use subagents": which model gets which kind of work, and how the main session checks it (user, 2026-11-15) |
 | [`docs/handoffs/`](docs/handoffs/README.md) | Each branch's handoff: stage, the user's decisions, open questions, next steps, merge notes |
 | [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) | What's verified, built, broken, waiting on the user, and the next tasks |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | The plan for the current stretch: each session's tasks in order, the questions to ask the user first, where sessions meet. **Read your session's part before starting** |

@@ -214,9 +214,12 @@ def render(layout, tab, out):
     text(d, (x, y + h / 2), "690 / 1205 XP", 14, LIGHT_DIM, "lm")
     x, y, w, h = r("statPoints")
     text(d, (x, y + h / 2), "Stat points: 5", 16, CAN_SPEND, "lm")
-    attrs = [("Strength", 20, "+20% melee damage"), ("Dexterity", 40, "+40% bow damage"), ("Vitality", 25, "+75 health"),
-             ("Energy", 15, "+22 eitr")]
+    attrs = [("Strength", 20, "+0% melee and thrown damage"), ("Dexterity", 25, "+0% bow and crossbow damage"),
+             ("Vitality", 20, "+0 health, +0 stamina"), ("Energy", 15, "+0 eitr")]
     for i, (name, value, effect) in enumerate(attrs):
+        x, y, w, h = r("attributeIcon%d" % i)
+        paste(canvas, sized(art(name, ICONS), w, h), x, y)
+        d = ImageDraw.Draw(canvas)
         x, y, w, h = r("attributeName%d" % i)
         text(d, (x, y + h / 2), name, 18, LIGHT, "lm")
         x, y, w, h = r("attributeValue%d" % i)

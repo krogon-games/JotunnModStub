@@ -60,6 +60,7 @@ Step-by-step session for all of these: [`PLAYTEST.md`](PLAYTEST.md).
 
 | Item | What to check |
 |---|---|
+| **Multishot and attribute icons** (2026-11-15, `claude/laughing-mccarthy-fnz0to`, after the overhaul's passed play-test): Multiple Shot is named Multishot (the id and saved points unchanged); the skills panel's four attributes have icons | `docs/playtests/claude-laughing-mccarthy-fnz0to.md` → second round, 3 steps (and the phone page) |
 | **The Amazon in multiplayer** (branch `claude/lucid-albattani-imrei7`): passives, skill bar, bow skills, Inner Sight, boss points and boss XP passed alone (below, *Verified*); with another player's game running the creatures, not tried | `PLAYTEST.md` → Session 2, 2j |
 | **Riftforge shards, shattering and Affix Splinters in multiplayer** (2026-11-11, merged in PR #61; Corruption 0.7.0; #29): passed alone (below, *Verified*); trading splinters and corrupted gear between players, and two players at one Riftforge, not tried | `PLAYTEST.md` → Session 2, 2i |
 | **Six inventory tabs and the Forge tab in multiplayer** (2026-11-10, merged in PR #59; Corruption 0.6.0, CraftingOverhaul 0.3.0; #30): passed alone (below, *Verified*); with other players not tried | `PLAYTEST.md` → Session 2, 2h |

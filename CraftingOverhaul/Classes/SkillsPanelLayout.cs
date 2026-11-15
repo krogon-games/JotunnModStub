@@ -138,8 +138,19 @@ namespace CraftingOverhaul.Classes
         public static SheetRect XpText => new SheetRect(BoxPadding, 64f, LeftWidth - 2f * BoxPadding, 18f);
         public static SheetRect StatPoints => new SheetRect(BoxPadding, 86f, LeftWidth - 2f * BoxPadding, 20f);
 
-        public static SheetRect AttributeName(int i) => new SheetRect(BoxPadding, AttributesTop + i * AttributeRowHeight, 150f, 22f);
-        public static SheetRect AttributeEffect(int i) => new SheetRect(BoxPadding, AttributesTop + i * AttributeRowHeight + 21f, 220f, 17f);
+        /// <summary>
+        ///     The attribute's icon, left of its name (Krogon's mock-up, 2026-11-15). The art fills about three quarters of
+        ///     its square (make_skill_icons.py's content circle), so the square hangs a little into the box's padding and
+        ///     the drawing itself lines up with the text above.
+        /// </summary>
+        public const float AttributeIconSize = 42f;
+        public const float AttributeTextX = BoxPadding + 34f;
+
+        public static SheetRect AttributeIcon(int i) =>
+            new SheetRect(BoxPadding - 7f, AttributesTop + i * AttributeRowHeight + (AttributeRowHeight - AttributeIconSize) / 2f - 1f, AttributeIconSize, AttributeIconSize);
+
+        public static SheetRect AttributeName(int i) => new SheetRect(AttributeTextX, AttributesTop + i * AttributeRowHeight, 140f, 22f);
+        public static SheetRect AttributeEffect(int i) => new SheetRect(AttributeTextX, AttributesTop + i * AttributeRowHeight + 21f, 214f, 17f);
 
         public static SheetRect AttributeValue(int i) =>
             new SheetRect(LeftWidth - BoxPadding - PlusSize - 12f - 60f, AttributesTop + i * AttributeRowHeight, 60f, 22f);
@@ -200,6 +211,7 @@ namespace CraftingOverhaul.Classes
             AddIn("statPoints", character, StatPoints);
             for (int i = 0; i < 4; i++)
             {
+                AddIn("attributeIcon" + i, character, AttributeIcon(i));
                 AddIn("attributeName" + i, character, AttributeName(i));
                 AddIn("attributeEffect" + i, character, AttributeEffect(i));
                 AddIn("attributeValue" + i, character, AttributeValue(i));

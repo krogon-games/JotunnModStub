@@ -119,7 +119,7 @@ namespace Orlog.Rules
         /// <summary>One D2 yard in metres.</summary>
         public const float MetresPerYard = 0.9144f;
 
-        /// <summary>Multiple Shot's fan: 5° between arrows, at most 60° in all (agreed by Krogon, 2026-11-15).</summary>
+        /// <summary>Multishot's fan: 5° between arrows, at most 60° in all (agreed by Krogon, 2026-11-15).</summary>
         public const float FanSpacing = 5f;
         public const float FanMax = 60f;
 
@@ -312,7 +312,7 @@ namespace Orlog.Rules
             return (d2Min + (d2Max - d2Min) * Math.Max(0f, Math.Min(1f, roll))) * scale;
         }
 
-        /// <summary>Multiple Shot's angle for arrow <paramref name="index" /> of <paramref name="count" />, centred on the aim.</summary>
+        /// <summary>Multishot's angle for arrow <paramref name="index" /> of <paramref name="count" />, centred on the aim.</summary>
         public static float FanAngle(int index, int count, float spacing = FanSpacing, float max = FanMax)
         {
             if (count <= 1)

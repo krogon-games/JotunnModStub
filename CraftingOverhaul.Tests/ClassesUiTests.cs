@@ -16,12 +16,12 @@ namespace CraftingOverhaul.Tests
         public void SkillInfoParsesBackWithEveryField()
         {
             // The brief's example answer (classes-ui-brief.md §3, GetSkillInfoJson).
-            string json = new JsonOut().Add("id", "MultipleShot").Add("name", "Multiple Shot").Add("tab", 0L).Add("row", 2L).Add("col", 1L)
+            string json = new JsonOut().Add("id", "MultipleShot").Add("name", "Multishot").Add("tab", 0L).Add("row", 2L).Add("col", 1L)
                 .Add("kind", "attack").Add("status", "v1").Add("maxPoints", 20L)
                 .Add("points", 3L).Add("level", 5L).Add("canSpend", true).Add("spendBlocked", "").Add("description", "Fires 4 arrows in a fan")
                 .Add("nextDescription", "Fires 5 arrows in a fan").Add("eitrCost", 5f).ToString();
             var view = SkillView.Parse(json);
-            Assert.Equal("Multiple Shot", view.Name);
+            Assert.Equal("Multishot", view.Name);
             Assert.Equal(0, view.Tab);
             Assert.Equal(2, view.Row);
             Assert.Equal(1, view.Col);
@@ -46,7 +46,7 @@ namespace CraftingOverhaul.Tests
                 Assert.All(shown, s => Assert.InRange(s.Col, 1, SkillCardsLayout.Cols));
             }
             // The bow tab reads in his order, row by row.
-            Assert.Equal(new[] { "Forked Lightning", "Wind Lance", "Snipe", "Multiple Shot", "Strafe", "Freezing Arrow", "Immolation Arrow", "Venom Strike", "Shackle Shot" },
+            Assert.Equal(new[] { "Forked Lightning", "Wind Lance", "Snipe", "Multishot", "Strafe", "Freezing Arrow", "Immolation Arrow", "Venom Strike", "Shackle Shot" },
                 SkillCardsLayout.Visible(skills, 0).OrderBy(s => s.Row * 10 + s.Col).Select(s => s.Name));
         }
 

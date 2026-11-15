@@ -14,7 +14,7 @@ namespace CraftingOverhaul.Classes
     /// <summary>
     ///     The skills panel (brief §2.4, §2.5). Skill cards since 2026-11-15 (the skill tree overhaul; Krogon's mock-up
     ///     <c>docs/images/skills_panel_cards_mockup.webp</c>, drawn in the rest of the UI's style). Left: the character box
-    ///     (level, XP, stat points and the four attributes with + buttons) and the skill details pane (the hovered or
+    ///     (level, XP, stat points and the four attributes, each with its icon, what it gives and a + button) and the skill details pane (the hovered or
     ///     selected skill: name, rank, kind, cost, what it does now and next). Right: the class's three tabs, the tab's
     ///     nine skills as cards on a bronze-rimmed tablet (medallion, name, rank, a rank bar; no tiers or paths, since any
     ///     skill can be learned from level 1), and a strip with the four skill slots and the Learn button. Click a card to
@@ -203,6 +203,10 @@ namespace CraftingOverhaul.Classes
 
             for (int i = 0; i < Attributes.Length; i++)
             {
+                var attributeIcon = UiKit.Image("Icon" + i, box, SheetArt.AttributeIcon(Attributes[i]));
+                attributeIcon.preserveAspect = true;
+                attributeIcon.enabled = attributeIcon.sprite;
+                Place(attributeIcon.rectTransform, SkillsPanelLayout.AttributeIcon(i));
                 AttributeNames[i] = UiKit.Text("Attribute" + i, box, 18, UiKit.Light, TextAnchor.MiddleLeft);
                 Place(AttributeNames[i].rectTransform, SkillsPanelLayout.AttributeName(i));
                 AttributeValues[i] = UiKit.Text("Value" + i, box, 18, UiKit.Light, TextAnchor.MiddleRight);

@@ -52,3 +52,20 @@ Nothing: no step failed, so there was nothing to fix.
 ### Final play-test (2026-11-15)
 
 **Passed** (single player): the first pass stands as the final one, since nothing changed after it. Not covered: anything with two players (nothing new for the group evening), and the seven bow skills that don't work yet. The round's steps are off the phone page.
+
+## Round: the Multishot name and the attribute icons (2026-11-15)
+
+Two small changes Krogon asked for after the round above passed.
+
+**Build:** the three DLLs from this branch again (a newer commit in the log lines than the first round's).
+**Setup:** as above. What it should look like: `docs/images/skills_panel_preview.png`.
+
+### Checklist
+
+1. [ ] Press `K` → each attribute row has an icon left of its name: an arm (Strength), crossed arrows (Dexterity), a heart (Vitality), a bolt (Energy). The "what it gives" line is still under each name and doesn't run into the + button.
+2. [ ] The bow tab's card and the details pane say **Multishot**. Your points in it are still there, a slot that held it still does, and it still fires its fan from the skill button.
+3. [ ] F5 shows no red errors.
+
+### Your feedback
+
+(not yet)

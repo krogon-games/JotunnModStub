@@ -1050,6 +1050,52 @@ def icon_amazon(cv):
         line=1.0)
 
 
+# ---------------------------------------------------------------- attributes
+
+# The four attributes' icons for the skills panel's character box (Krogon's mock-up, 2026-11-15: an arm, crossed
+# arrows, a heart, a bolt), in the panel's gold; shown small and without a medallion, so each is one bold shape.
+
+def icon_strength(cv):
+    """A flexed arm."""
+    shoulder, elbow, wrist = V(22, 66), V(61, 70), V(63, 38)
+    upper = m_stroke([shoulder, lerp(shoulder, elbow, 0.5) + V(0, -2), elbow], [17, 19, 13])
+    bicep = m_ellipse(lerp(shoulder, elbow, 0.5) + V(1, -9), 15, 10.5, 8)
+    fore = m_stroke([elbow, lerp(elbow, wrist, 0.5) + V(3, 0), wrist], [13, 14, 10])
+    fist = union(m_circle(wrist + V(-1, -8), 9.5), m_ellipse(wrist + V(-8, -8), 5.5, 6.5))
+    arm = union(upper, bicep, fore, m_circle(elbow, 7.5), fist, m_circle(shoulder, 8.5))
+    glow(cv, arm, GLOW_GOLD, 2.4, 0.9)
+    solid(cv, arm, GOLD, depth=2.4, bias=0.05)
+    crease = m_stroke(arc_points(lerp(shoulder, elbow, 0.5) + V(1, -9), 13, 20, 110, 16, ry=9), np.linspace(1.4, 0.3, 16))
+    flat(cv, crease * arm, hexc("#4a3410"), 0.55)
+
+
+def icon_dexterity(cv):
+    """Two crossed arrows."""
+    for tail, tip in (((24, 76), (76, 24)), ((76, 76), (24, 24))):
+        arrow(cv, tail, tip, shaft=4.2, head_len=19, head_w=17, fletch_len=15, fletch_w=7.5, head=GOLD, fletch=GOLD,
+              glow_colour=GLOW_GOLD, glow_r=2.4, glow_s=0.8)
+
+
+def icon_vitality(cv):
+    """A heart."""
+    heart = union(m_circle(V(37.5, 41), 15), m_circle(V(62.5, 41), 15),
+                  m_poly([V(23.6, 47), V(50, 80), V(76.4, 47), V(62, 36), V(50, 44), V(38, 36)]))
+    glow(cv, heart, GLOW_GOLD, 2.4, 0.9)
+    solid(cv, heart, GOLD, depth=3.0, bias=0.05)
+    flat(cv, blur(m_ellipse(V(35, 36), 5.5, 3.2, -35), 0.8), hexc("#FFF4C8"), 0.6)
+
+
+def icon_energy(cv):
+    """A bolt of eitr."""
+    boltm = m_poly([V(59, 15), V(31, 55), V(47, 55), V(39, 85), V(70, 42), V(54, 42), V(63, 15)])
+    glow(cv, boltm, GLOW_GOLD, 2.6, 1.0)
+    solid(cv, boltm, GOLD, depth=2.2, bias=0.1)
+
+
+ATTRIBUTE_ICONS = [("Strength", icon_strength), ("Dexterity", icon_dexterity), ("Vitality", icon_vitality),
+                   ("Energy", icon_energy)]
+
+
 # ---------------------------------------------------------------- registry
 
 # In the order of each tab's cards (tools/make_orlog_tables.py; Krogon's nine per tab, 2026-11-15).
@@ -1107,33 +1153,36 @@ def preview(icons):
     cols, pitch, margin = 9, 100, 20
     w = margin * 2 + cols * pitch
     row_h = 30 + 64 + 22 + 56 + 14
-    h = margin + len(TABS) * row_h + 30 + 64 + 22 + margin
+    h = margin + len(TABS) * row_h + 2 * (30 + 64 + 22) + margin
     sheet = Image.new("RGBA", (w, h), (0x3A, 0x2A, 0x1E, 255))
     d = ImageDraw.Draw(sheet)
     f_tab, f_name = font(15), font(10)
 
-    def put(name, size, cx, top):
-        sheet.alpha_composite(medallion.resize((size, size), Image.LANCZOS), (cx - size // 2, top))
+    def put(name, size, cx, top, framed=True):
+        if framed:
+            sheet.alpha_composite(medallion.resize((size, size), Image.LANCZOS), (cx - size // 2, top))
         sheet.alpha_composite(icons[name].resize((size, size), Image.LANCZOS), (cx - size // 2, top))
 
     y = margin
-    for tab, skills in TABS + [("Class", [CLASS_ICON])]:
+    for tab, skills in TABS + [("Class", [CLASS_ICON]), ("Attributes", ATTRIBUTE_ICONS)]:
         d.text((margin, y), tab, font=f_tab, fill=(232, 196, 106))
         y += 26
         for i, (name, _) in enumerate(skills):
             cx = margin + pitch * i + pitch // 2
-            put(name, 64, cx, y)
+            put(name, 64, cx, y, framed=tab != "Attributes")
             d.text((cx, y + 68), label(name), font=f_name, fill=(236, 226, 206), anchor="mt")
-            if tab != "Class":
+            if tab == "Attributes":
+                put(name, 28, cx + 44, y + 18, framed=False)
+            elif tab != "Class":
                 put(name, 48, cx, y + 86)
-        y += row_h - 26 if tab != "Class" else 0
+        y += row_h - 26 if tab not in ("Class", "Attributes") else 30 + 64 + 22 - 26
     sheet.save(PREVIEW)
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
     icons = {}
-    for _, skills in TABS + [("Class", [CLASS_ICON])]:
+    for _, skills in TABS + [("Class", [CLASS_ICON]), ("Attributes", ATTRIBUTE_ICONS)]:
         for name, draw in skills:
             img = render(draw)
             img.save(os.path.join(OUT, name + ".png"))

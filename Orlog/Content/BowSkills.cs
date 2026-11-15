@@ -13,7 +13,7 @@ namespace Orlog.Content
     ///     the shooter's game (<see cref="SkillButton" />). Numbers per skill level from
     ///     <c>Orlog/Data/amazon_skill_values.csv</c>; added damage in D2 points × <see cref="SkillBar.DamageScaleFor" />.
     ///     <list type="bullet">
-    ///         <item>Multiple Shot: several arrows in an even fan for one arrow, each at 75% damage.</item>
+    ///         <item>Multishot: several arrows in an even fan for one arrow, each at 75% damage.</item>
     ///         <item>Freezing Arrow: on impact, frost and a freeze (<see cref="FreezeName" />) on every enemy within the radius; bosses are only slowed by the frost.</item>
     ///     </list>
     ///     A shot's arrows carry a <see cref="ShotTag" />; impacts are handled on the shooter's game, which runs its projectiles.

@@ -90,7 +90,7 @@ AMAZON = [
         ("Forked Lightning", "later", "attack", "bow", "The arrow hits an enemy, then lightning forks from its body to nearby enemies"),
         ("Wind Lance", "later", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, knocking enemies back"),
         ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
-        ("Multiple Shot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
+        ("Multishot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
         ("Strafe", "later", "attack", "bow", "A volley of arrows at several nearby targets"),
         ("Freezing Arrow", "v1", "attack", "bow", "Frost damage and a short freeze in an area on impact; bosses are only slowed"),
         ("Immolation Arrow", "later", "attack", "bow", "Explodes in fire on impact and leaves a burning patch on the ground"),
@@ -120,6 +120,9 @@ AMAZON = [
         ("Lightning Fury", "later", "attack", "spear", "The javelin (a spectral copy) bursts into lightning bolts on impact"),
     ]),
 ]
+# Our name for a Diablo 2 skill where it differs (user, 2026-11-15: "Change the name to Multishot"). The id, the mana and
+# the per-level values stay the D2 skill's, so saved characters keep their points and slots.
+D2_NAMES = {"Multishot": "Multiple Shot"}
 SKILLS_PER_TAB = 9
 SKILL_COLS = 3
 
@@ -259,12 +262,13 @@ def main():
         for tab, (_, tab_skills) in enumerate(AMAZON):
             assert len(tab_skills) == SKILLS_PER_TAB, "every tab has exactly nine skills (user, 2026-11-15)"
             for i, (name, status, kind, needs, text) in enumerate(tab_skills):
-                source = d2.get(name)
+                d2_name = D2_NAMES.get(name, name)
+                source = d2.get(d2_name)
                 costs = kind != "passive" and source is not None
-                w.writerow([name.replace(" ", ""), name, tab, i // SKILL_COLS + 1, i % SKILL_COLS + 1, status, kind, needs,
+                w.writerow([d2_name.replace(" ", ""), name, tab, i // SKILL_COLS + 1, i % SKILL_COLS + 1, status, kind, needs,
                             source["mana_base"] if costs else "0", source["mana_per_lvl"] if costs else "0", text])
                 if status in ("v1", "reworked") and kind != "passive":
-                    built_active.append(name)
+                    built_active.append(d2_name)
     per_level = {(r["skill"], r["value"]): r for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv"))}
     with open(os.path.join(OUT, "amazon_passives.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")

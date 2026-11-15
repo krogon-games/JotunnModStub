@@ -56,11 +56,13 @@ namespace CraftingOverhaul.Tests
             {
                 Assert.Null(t.Find(gone));
             }
-            // Built: Multiple Shot and Freezing Arrow; Inner Sight and the five passives; the five spear skills whose
+            // Built: Multishot and Freezing Arrow; Inner Sight and the five passives; the five spear skills whose
             // numbers are in (they act with roadmap C6).
             Assert.Equal(13, t.Skills.Count(s => s.Built));
             Assert.Equal(14, t.Skills.Count(s => s.Status == "later"));
             Assert.Equal("reworked", t.Find("Penetrate").Status);
+            // Renamed (Krogon, 2026-11-15); the id stays, so saved points and slots still find it.
+            Assert.Equal("Multishot", t.Find("MultipleShot").Name);
         }
 
         [Fact]
@@ -114,7 +116,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void PointsInRemovedSkillsComeBack()
         {
-            // A character saved before the overhaul: 3 in Magic Arrow and 1 in Fire Arrow (both removed), 2 in Multiple Shot.
+            // A character saved before the overhaul: 3 in Magic Arrow and 1 in Fire Arrow (both removed), 2 in Multishot.
             var t = Amazon();
             var saved = SkillRules.Parse("MagicArrow:3;FireArrow:1;MultipleShot:2");
             var known = SkillRules.KnownOnly(saved, t);
@@ -142,7 +144,7 @@ namespace CraftingOverhaul.Tests
         public void EitrCostIsDiablo2sMana()
         {
             var t = Amazon();
-            // Arreat / D2R: Multiple Shot 4 mana at level 1, +1 per level; Decoy 19, -0.75 per level; never below 0.
+            // Arreat / D2R: Multishot 4 mana at level 1, +1 per level; Decoy 19, -0.75 per level; never below 0.
             Assert.Equal(4f, SkillRules.EitrCost(t.Find("MultipleShot"), 1), 3);
             Assert.Equal(8f, SkillRules.EitrCost(t.Find("MultipleShot"), 5), 3);
             Assert.Equal(19f, SkillRules.EitrCost(t.Find("Decoy"), 1), 3);
