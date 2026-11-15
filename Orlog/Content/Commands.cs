@@ -178,7 +178,7 @@ namespace Orlog.Content
         {
             public override string Name => "orlog_skill";
 
-            public override string Help => "Orlog: spend skill points, e.g. orlog_skill MagicArrow 2 (the skills panel does the same)";
+            public override string Help => "Orlog: spend skill points, e.g. orlog_skill MultipleShot 2 (the skills panel does the same)";
 
             public override void Run(string[] args)
             {
@@ -250,7 +250,7 @@ namespace Orlog.Content
         {
             public override string Name => "orlog_slot";
 
-            public override string Help => "Orlog: put a skill in a skill slot, e.g. orlog_slot 1 MagicArrow (orlog_slot 1 to clear; the skills panel does the same by dragging)";
+            public override string Help => "Orlog: put a skill in a skill slot, e.g. orlog_slot 1 MultipleShot (orlog_slot 1 to clear; the skills panel does the same by dragging)";
 
             public override void Run(string[] args)
             {

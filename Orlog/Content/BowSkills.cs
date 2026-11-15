@@ -13,13 +13,13 @@ namespace Orlog.Content
     ///     the shooter's game (<see cref="SkillButton" />). Numbers per skill level from
     ///     <c>Orlog/Data/amazon_skill_values.csv</c>; added damage in D2 points × <see cref="SkillBar.DamageScaleFor" />.
     ///     <list type="bullet">
-    ///         <item>Magic Arrow: needs no arrow (a copy of the cheapest arrow for the bow's ammo type flies instead), adds damage and turns part of the physical damage into spirit.</item>
-    ///         <item>Fire Arrow, Cold Arrow: add fire or frost and turn part of the physical damage into it.</item>
-    ///         <item>Multiple Shot: several arrows in an even fan for one arrow, each at 75% damage.</item>
-    ///         <item>Ice Arrow: adds frost and freezes the creature hit (<see cref="FreezeName" />); bosses are only slowed by the frost.</item>
-    ///         <item>Exploding Arrow, Freezing Arrow: on impact, fire or frost (and a freeze) on every enemy within the radius.</item>
+    ///         <item>Multishot: several arrows in an even fan for one arrow, each at 75% damage.</item>
+    ///         <item>Freezing Arrow: on impact, frost and a freeze (<see cref="FreezeName" />) on every enemy within the radius; bosses are only slowed by the frost.</item>
     ///     </list>
     ///     A shot's arrows carry a <see cref="ShotTag" />; impacts are handled on the shooter's game, which runs its projectiles.
+    ///     The skill tree overhaul (Krogon, 2026-11-15) removed Magic Arrow, Fire Arrow, Cold Arrow, Ice Arrow and Exploding
+    ///     Arrow with their patches (the last version with them: commit 6090e71; Exploding Arrow's fire blast is the start for
+    ///     Immolation Arrow).
     /// </summary>
     internal static class BowSkills
     {
@@ -30,7 +30,6 @@ namespace Orlog.Content
         private static SkillButton.Shot s_firing;
         private static int s_fanIndex;
         private static int s_fanCount;
-        private static Projectile s_hitting;
         private static readonly List<Character> s_inRange = new List<Character>();
 
         /// <summary>On a skill arrow: which skill shot it, at what level and damage scale.</summary>
@@ -89,88 +88,6 @@ namespace Orlog.Content
                 {
                     mark.ExtraDamagePercent = itemLevel / 100f;
                 }
-            }
-        }
-
-        // ------------------------------------------------------------ Magic Arrow: no arrow needed
-
-        /// <summary>The cheapest arrow (or bolt) for a weapon's ammo type, as a loose copy that is never in an inventory.</summary>
-        private static ItemDrop.ItemData FreeAmmo(ItemDrop.ItemData weapon)
-        {
-            string type = weapon?.m_shared?.m_ammoType;
-            if (string.IsNullOrEmpty(type) || !ObjectDB.instance)
-            {
-                return null;
-            }
-            var best = ObjectDB.instance.m_items
-                .Select(go => go ? go.GetComponent<ItemDrop>() : null)
-                .Where(d => d && d.m_itemData.m_shared.m_ammoType == type && d.m_itemData.m_shared.m_itemType == ItemDrop.ItemData.ItemType.Ammo
-                            && d.m_itemData.m_shared.m_attack.m_attackProjectile)
-                .OrderBy(d => d.m_itemData.m_shared.m_damages.GetTotalDamage())
-                .FirstOrDefault();
-            if (!best)
-            {
-                return null;
-            }
-            var copy = best.m_itemData.Clone();
-            copy.m_dropPrefab = best.gameObject;
-            copy.m_stack = 1;
-            return copy;
-        }
-
-        private static bool MagicArrowFor(Humanoid character)
-        {
-            return character && character == Player.m_localPlayer && SkillButton.IsPending("MagicArrow");
-        }
-
-        [HarmonyPatch(typeof(Attack), nameof(Attack.HaveAmmo))]
-        private static class HaveAmmo
-        {
-            private static bool Prefix(Humanoid character, ref bool __result)
-            {
-                if (!MagicArrowFor(character))
-                {
-                    return true;
-                }
-                __result = true;
-                return false;
-            }
-        }
-
-        [HarmonyPatch(typeof(Attack), nameof(Attack.EquipAmmoItem))]
-        private static class EquipAmmo
-        {
-            private static bool Prefix(Humanoid character, ItemDrop.ItemData weapon, ref bool __result)
-            {
-                // With no arrows at all the game's own code would fail; Magic Arrow needs none.
-                if (!MagicArrowFor(character) || character.GetInventory().GetAmmoItem(weapon.m_shared.m_ammoType) != null)
-                {
-                    return true;
-                }
-                __result = true;
-                return false;
-            }
-        }
-
-        [HarmonyPatch(typeof(Attack), nameof(Attack.UseAmmo))]
-        private static class UseAmmo
-        {
-            private static bool Prefix(Attack __instance, ref ItemDrop.ItemData ammoItem, ref bool __result)
-            {
-                var shot = SkillButton.For(__instance);
-                if (shot == null || shot.Skill.Id != "MagicArrow")
-                {
-                    return true;
-                }
-                var free = Safe.Try("make Magic Arrow's arrow", () => FreeAmmo(__instance.m_weapon), null);
-                if (free == null)
-                {
-                    return true;
-                }
-                ammoItem = free;
-                __instance.m_ammoItem = free;
-                __result = true;
-                return false;
             }
         }
 
@@ -235,21 +152,6 @@ namespace Orlog.Content
                 tag.Scale = shot.Scale;
                 switch (id)
                 {
-                    case "MagicArrow":
-                        hit.m_damage.m_pierce += v.Get(id, "damage_flat", level) * shot.Scale;
-                        Convert(ref hit.m_damage, v.Get(id, "phys_to_magic_pct", level), ref hit.m_damage.m_spirit);
-                        break;
-                    case "FireArrow":
-                        hit.m_damage.m_fire += Roll(v, id, "fire_damage", level, shot.Scale);
-                        Convert(ref hit.m_damage, v.Get(id, "phys_to_elemental_pct", level), ref hit.m_damage.m_fire);
-                        break;
-                    case "ColdArrow":
-                        hit.m_damage.m_frost += Roll(v, id, "cold_damage", level, shot.Scale);
-                        Convert(ref hit.m_damage, v.Get(id, "phys_to_elemental_pct", level), ref hit.m_damage.m_frost);
-                        break;
-                    case "IceArrow":
-                        hit.m_damage.m_frost += Roll(v, id, "cold_damage", level, shot.Scale);
-                        break;
                     case "MultipleShot":
                         hit.m_damage.Modify(v.Get(id, "weapon_damage_pct", level) / 100f);
                         velocity = Quaternion.AngleAxis(ActiveSkillRules.FanAngle(s_fanIndex++, s_fanCount), Vector3.up) * velocity;
@@ -263,28 +165,11 @@ namespace Orlog.Content
             return ActiveSkillRules.Damage(v.Get(id, kind + "_min", level), v.Get(id, kind + "_max", level), Random.value, scale);
         }
 
-        /// <summary>Moves a share of the physical damage (blunt, slash, pierce) into another type.</summary>
-        private static void Convert(ref HitData.DamageTypes d, float percent, ref float into)
-        {
-            float blunt = ActiveSkillRules.Converted(d.m_blunt, percent);
-            float slash = ActiveSkillRules.Converted(d.m_slash, percent);
-            float pierce = ActiveSkillRules.Converted(d.m_pierce, percent);
-            d.m_blunt -= blunt;
-            d.m_slash -= slash;
-            d.m_pierce -= pierce;
-            into += blunt + slash + pierce;
-        }
-
         // ------------------------------------------------------------ impacts
 
         [HarmonyPatch(typeof(Projectile), nameof(Projectile.OnHit))]
         private static class Impact
         {
-            private static void Prefix(Projectile __instance)
-            {
-                s_hitting = __instance;
-            }
-
             private static void Postfix(Projectile __instance, Collider collider, Vector3 hitPoint)
             {
                 var tag = __instance ? __instance.GetComponent<ShotTag>() : null;
@@ -299,32 +184,11 @@ namespace Orlog.Content
                     Explode(__instance.m_owner, tag, hitPoint, hitObject ? hitObject.GetComponent<Character>() : null);
                 });
             }
-
-            private static void Finalizer()
-            {
-                s_hitting = null;
-            }
         }
 
         private static bool IsBlast(ShotTag tag)
         {
-            return tag.SkillId == "ExplodingArrow" || tag.SkillId == "FreezingArrow";
-        }
-
-        /// <summary>Ice Arrow's direct hit freezes (not bosses), on the shooter's game before the hit is sent.</summary>
-        [HarmonyPatch(typeof(Character), nameof(Character.Damage))]
-        private static class DirectHit
-        {
-            private static void Prefix(Character __instance, HitData hit)
-            {
-                var tag = s_hitting ? s_hitting.GetComponent<ShotTag>() : null;
-                if (tag == null || tag.SkillId != "IceArrow" || hit == null || !__instance || __instance.IsPlayer() || __instance.IsBoss())
-                {
-                    return;
-                }
-                var v = SkillBar.ValuesFor(Attributes.ClassOf(Player.m_localPlayer));
-                AddFreeze(hit, v?.Get("IceArrow", "freeze_s", tag.Level) ?? 0f);
-            }
+            return tag.SkillId == "FreezingArrow";
         }
 
         /// <summary>The hit adds the freeze; the seconds travel in the hit's skill level (read in <see cref="Duration" />).</summary>
@@ -374,10 +238,9 @@ namespace Orlog.Content
             {
                 return;
             }
-            bool fire = tag.SkillId == "ExplodingArrow";
-            float radius = (fire ? ActiveSkillRules.ExplodingRadiusYards : v.Get(tag.SkillId, "radius_yards", tag.Level)) * ActiveSkillRules.MetresPerYard;
-            float freeze = fire ? 0f : v.Get(tag.SkillId, "freeze_s", tag.Level);
-            ImpactEffect(fire ? "StaffFireball" : "StaffIceShards", fire ? "ArrowFire" : "ArrowFrost", point);
+            float radius = v.Get(tag.SkillId, "radius_yards", tag.Level) * ActiveSkillRules.MetresPerYard;
+            float freeze = v.Get(tag.SkillId, "freeze_s", tag.Level);
+            ImpactEffect("StaffIceShards", "ArrowFrost", point);
             CharactersInBlast(point, radius, struck, s_inRange);
             foreach (var target in s_inRange)
             {
@@ -386,17 +249,10 @@ namespace Orlog.Content
                     continue;
                 }
                 var hit = new HitData();
-                if (fire)
+                hit.m_damage.m_frost = Roll(v, tag.SkillId, "cold_damage", tag.Level, tag.Scale);
+                if (!target.IsBoss())
                 {
-                    hit.m_damage.m_fire = Roll(v, tag.SkillId, "fire_damage", tag.Level, tag.Scale);
-                }
-                else
-                {
-                    hit.m_damage.m_frost = Roll(v, tag.SkillId, "cold_damage", tag.Level, tag.Scale);
-                    if (!target.IsBoss())
-                    {
-                        AddFreeze(hit, freeze);
-                    }
+                    AddFreeze(hit, freeze);
                 }
                 hit.m_point = target.GetCenterPoint();
                 hit.m_dir = (target.transform.position - point).normalized;
@@ -410,8 +266,8 @@ namespace Orlog.Content
         }
 
         /// <summary>
-        ///     The impact effect of a vanilla projectile, played where an arrow explodes: the staff's own (fireball, ice
-        ///     shards), else the elemental arrow's.
+        ///     The impact effect of a vanilla projectile, played where an arrow explodes: the staff's own (ice shards),
+        ///     else the elemental arrow's.
         /// </summary>
         private static void ImpactEffect(string item, string fallback, Vector3 point)
         {

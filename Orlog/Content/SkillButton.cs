@@ -36,8 +36,6 @@ namespace Orlog.Content
         /// <summary>The skill the next attack (or bow draw) is for, if the skill button started it.</summary>
         public static SkillTable.Skill Pending => s_pending != null && Time.time - s_pendingSince < 2f ? s_pending : null;
 
-        public static bool IsPending(string skillId) => Pending != null && Pending.Id == skillId;
-
         private static bool SamePath(string a, string b)
         {
             return !string.IsNullOrEmpty(a) && !string.IsNullOrEmpty(b) && string.Equals(a.Trim(), b.Trim(), System.StringComparison.OrdinalIgnoreCase);

@@ -32,8 +32,6 @@ namespace CraftingOverhaul.Tests
                 Tab = s.Tab,
                 Row = s.Row,
                 Col = s.Col,
-                ReqLevel = s.ReqLevel,
-                Prereqs = s.Prereqs,
                 Kind = s.Kind,
                 Status = s.Status,
                 MaxPoints = 20,

@@ -59,7 +59,12 @@ D2's item stat requirements are left out: Valheim gates gear by biome materials 
 
 ## 4. How skills work in Valheim
 
-- **Tree (decided, user 2026-10-30):** D2's three tabs of 10 per class, with D2's 20-point cap and synergies, read from a data table. Rules (can I put a point here, the effective level with +skills, synergy bonus) in pure, tested code. Two ideas taken from Diablo 4:
+- **Skill tabs, not trees (user, 2026-11-15; replaces the tree, tiers and prerequisites below; built, `FEATURES.md` → Skill tree and skill points):** "Skill will not need to branch anymore. Players will be able to learn whichever skill they want even at level 1." For the Amazon and every later class:
+  - **Three tabs of exactly nine skills each**, shown as cards three by three (the user's mock-up, `docs/images/skills_panel_cards_mockup.webp`).
+  - **No level tiers and no prerequisites.** Any built skill takes a point from level 1. Still D2's: 1 point per level, 20 per skill, and the pace, now counted from level 1 (a skill holds at most as many points as the character has levels).
+  - **A skill point should change how you use the weapon:** "We will also be getting rid of some of the cold and fire skills, spending a skill point should change how you use the bow, especially when ordinary ammunition already supplies fire and frost damage. Strafe and Multishot have clear identities; 'adds fire damage' doesn't have that same pull." Skills are no longer limited to Diablo 2's: new ones come from the user's ideas and other games (Shackle Shot is Dota 2's Windranger's).
+  - Synergies and the Diablo 4 ideas below (level tiers, upgrade choices) are not part of this; upgrade choices can come back later if wanted.
+- **Tree (decided, user 2026-10-30; replaced 2026-11-15, above):** D2's three tabs of 10 per class, with D2's 20-point cap and synergies, read from a data table. Rules (can I put a point here, the effective level with +skills, synergy bonus) in pure, tested code. Two ideas taken from Diablo 4:
   1. **Level tiers instead of prerequisite chains.** A skill opens at its D2 level (1/6/12/18/24/30). Its D2 prerequisites only count when they are built (status `v1` or `reworked`); a prerequisite that is `later` or `dropped` is skipped, so the dependent opens by level alone and no chain breaks. A dropped skill leaves an empty slot that a Valheim-flavoured skill can fill later.
   2. **Upgrade choices on the big skills, later:** at set point counts (for example 10 and 20) a signature skill offers one of two variants. That is where reworked skills get their Valheim twists without changing D2's layout.
 - **Why not one Diablo 4 tree:** our point economy is D2's (about 110 skill points by level 99, 20 per skill), which fits 30 skills in three themed tabs; D4's tree is built for about 60 points and skills capped at 5, so most of it would get filled and every character would end up alike.
@@ -108,6 +113,42 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 - **Skill use, simplified (user, 2026-11-12/13; replaces the spear lines above):** left click is always the weapon's attack; the game's own throw (middle mouse) stays exactly as it is; right click is the one skill button for every skill that needs a weapon, javelin and spear skills included. Quick cast per skill: a skill without a weapon casts from its slot key (toggle by right-clicking the slot; a gold shimmer shows it). **Gungnir's Throw** (user, 2026-11-13): a basic skill outside the tree like D2's Throw, for every class, no points; a ghost copy of the spear flies where the camera points and the spear never leaves the hand; stamina like the game's throw, the same damage. The javelin skills throw the same ghost copy. Block: its own rebindable key, blank by default for now.
 - **Skill button and bow skills (built 2026-11-11, `FEATURES.md` → Amazon skill bar and bow skills):** right click = skill button, block on the mouse's back button while the game's Block is right click, slot keys F1–F4 (D2's; free in Valheim and the group's mods). D2's per-level numbers; added damage × a per-level scale (Valheim bow + arrow of the level's biome ÷ D2's best bow by that level: proposed, waiting for the user). Interim choices: Multiple Shot's fan 5°/60°, Exploding Arrow's radius = Freezing Arrow's 3.3 yards, Inner Sight +25% damage taken.
 - **Passive rules (user, 2026-11-11; built, `FEATURES.md` → Amazon passives):** D2's chances unchanged; a crit doubles physical damage only, any weapon, creatures only, and stacks with the game's sneak attack and stagger bonuses; it shows the game's critical-hit effect. Dodge (close-range hits) and Avoid (projectiles) while standing still or attacking, Evade (any hit) while walking or running. Area blasts, breath, burning and poison ticks, falls and traps can't be avoided; no roll while blocking a hit the block takes. An avoided hit floats "Dodge", "Avoid" or "Evade" with a whoosh, no animation.
+
+**The Amazon's skills since the overhaul (user, 2026-11-15).** Nine per tab, in card order. Status: `v1` works (or, on the spear tab, has its numbers and waits for roadmap C6), `later` is shown as "Coming later".
+
+| Tab | Skill | Valheim version | Status |
+|---|---|---|---|
+| Bow and Crossbow | Forked Lightning | New (user): "The arrow hits an enemy, then lightning forks outward from their body toward nearby enemies." Details to agree | later |
+| | Wind Lance | New (user): "a charged elemental attack that turns your arrow into a javelin, and shoots it straight with no arrow drop like other arrow. It travels fast and in a straight line, forcing and knocking enemies back… may need some more tweaking". Details to agree | later |
+| | Snipe | New (user): "Charge a powerful shot, increasing damage the longer the charge. Drains stamina while charging and slowly zooms in on the target." Details to agree | later |
+| | Multishot | Diablo 2's Multiple Shot, renamed (user, 2026-11-15): one shot splits into several arrows in a fan; uses one arrow | v1 |
+| | Strafe | A volley of arrows at several nearby targets | later |
+| | Freezing Arrow | Frost damage and a short freeze in an area on impact; bosses only slowed | v1 |
+| | Immolation Arrow | Explodes in fire on impact and leaves a burning patch on the ground (Exploding Arrow's removed blast code is its start) | later |
+| | Venom Strike | New (user: a poison cloud): the arrow bursts into a poison cloud where it lands, poisoning everything that stands in it. Details to agree | later |
+| | Shackle Shot | New (user: "dota 2 windranger ability"): shackles the target to an enemy or a tree behind it, holding both; with nothing behind it, only briefly. Details to agree against Dota 2's | later |
+| Passive and Magic | Inner Sight | Cast: nearby enemies glow and take more damage for a while | v1 |
+| | Critical Strike | Chance to deal double physical damage | v1 |
+| | Penetrate | Chance for a hit to ignore the creature's resistance to its damage type (not immunity) | reworked |
+| | Dodge | Chance to avoid a melee hit while standing or attacking | v1 |
+| | Avoid | Chance to avoid a projectile while standing or attacking | v1 |
+| | Evade | Chance to avoid any hit while moving | v1 |
+| | Decoy | A tinted, standing copy of you that creatures attack instead | later |
+| | Valkyrie | A tinted copy of a player character that fights for you | later |
+| | Pierce | Chance for an arrow or javelin to pass through and hit the next enemy | later |
+| Javelin and Spear | Jab | A fast series of thrusts | v1 |
+| | Impale | One heavy thrust; wears the spear down faster | v1 |
+| | Fend | Thrusts at several nearby enemies in turn | later |
+| | Charged Strike | The thrust releases small lightning bolts around the target | later |
+| | Lightning Strike | The thrust releases chain lightning to nearby enemies | later |
+| | Lightning Bolt | The javelin turns into lightning: all its damage becomes lightning | v1 |
+| | Poison Javelin | The javelin leaves poison clouds along its path | v1 |
+| | Plague Javelin | A spreading poison cloud where the javelin lands | v1 |
+| | Lightning Fury | The javelin bursts into lightning bolts on impact | later |
+
+27 skills: 13 `v1` or `reworked`, 14 `later`. **Removed 2026-11-15:** Magic Arrow, Fire Arrow, Cold Arrow, Exploding Arrow, Ice Arrow, Guided Arrow (bow); Slow Missiles (passive and magic); Power Strike (spear: "adds lightning damage", the plain kind of skill). The spear tab's list can still change in its own round (roadmap C6, #41).
+
+**Before the overhaul (2026-10-30 to 2026-11-15), for the record:** Diablo 2's thirty skills.
 
 | Tab | Skill | Valheim version | Status |
 |---|---|---|---|
@@ -230,7 +271,7 @@ Reference images (Elden Ring): `docs/images/hud_reference_bars.jpg` (bars), `doc
 6. ~~Names~~ **Answered 2026-10-30:** D2's class and skill names; the class stone is the Orlog stone; the plugin name doesn't matter (working name Orlog).
 7. ~~Vanilla skills~~ **Answered 2026-10-30:** keep levelling by use.
 8. ~~Death penalty~~ **Answered 2026-10-30:** Valheim's own skill loss only; no XP loss.
-9. ~~Tree layout~~ **Answered 2026-10-30:** D2's three tabs, with level tiers instead of broken prerequisite chains and upgrade choices later (§4).
+9. ~~Tree layout~~ **Answered 2026-10-30:** D2's three tabs, with level tiers instead of broken prerequisite chains and upgrade choices later (§4). **Changed 2026-11-15:** no tree; three tabs of nine cards, any skill from level 1 (§4, §5).
 10. ~~Javelins~~ **Answered 2026-10-30:** spectral copy.
 11. ~~Penetrate~~ **Answered 2026-10-30:** ignore the creature's resistance to the hit. Open: immunity too?
 12. ~~Decoy and Valkyrie looks~~ **Answered 2026-10-30:** a tinted clone of the player character (feasibility to prove).

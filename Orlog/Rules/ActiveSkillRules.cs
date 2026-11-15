@@ -119,13 +119,7 @@ namespace Orlog.Rules
         /// <summary>One D2 yard in metres.</summary>
         public const float MetresPerYard = 0.9144f;
 
-        /// <summary>
-        ///     Exploding Arrow's blast radius in D2 yards. D2's tables give none (its explosion missile has no radius
-        ///     parameter); Claude's interim choice (2026-11-11): Freezing Arrow's 3.3 yards.
-        /// </summary>
-        public const float ExplodingRadiusYards = 3.3f;
-
-        /// <summary>Multiple Shot's fan (Claude's interim choice, 2026-11-11): 5° between arrows, at most 60° in all.</summary>
+        /// <summary>Multishot's fan: 5° between arrows, at most 60° in all (agreed by Krogon, 2026-11-15).</summary>
         public const float FanSpacing = 5f;
         public const float FanMax = 60f;
 
@@ -318,7 +312,7 @@ namespace Orlog.Rules
             return (d2Min + (d2Max - d2Min) * Math.Max(0f, Math.Min(1f, roll))) * scale;
         }
 
-        /// <summary>Multiple Shot's angle for arrow <paramref name="index" /> of <paramref name="count" />, centred on the aim.</summary>
+        /// <summary>Multishot's angle for arrow <paramref name="index" /> of <paramref name="count" />, centred on the aim.</summary>
         public static float FanAngle(int index, int count, float spacing = FanSpacing, float max = FanMax)
         {
             if (count <= 1)
@@ -327,12 +321,6 @@ namespace Orlog.Rules
             }
             float step = Math.Min(spacing, max / (count - 1));
             return (index - (count - 1) / 2f) * step;
-        }
-
-        /// <summary>The share of physical damage moved to another type (<paramref name="percent" />, clamped 0–100).</summary>
-        public static float Converted(float physical, float percent)
-        {
-            return physical * Math.Max(0f, Math.Min(100f, percent)) / 100f;
         }
 
         private static string N(float value)
@@ -346,10 +334,6 @@ namespace Orlog.Rules
         }
 
         /// <summary>
-        ///     The tooltip line of an active skill at a level, with Valheim numbers (<paramref name="scale" /> = the damage
-        ///     scale at the character's level × the admin's multiplier), or null if the skill has no text here.
-        /// </summary>
-        /// <summary>
         ///     Inner Sight's extra damage taken, in %: <paramref name="basePercent" /> at level 1 plus
         ///     <paramref name="perLevel" /> for each level above it, with no cap, so +skills can raise it past 20's
         ///     (Krogon, 2026-11-15: "start at 5% and add 1% per level"; 5% → 24% at 20).
@@ -359,6 +343,10 @@ namespace Orlog.Rules
             return level < 1 ? 0f : Math.Max(0f, basePercent + perLevel * (level - 1));
         }
 
+        /// <summary>
+        ///     The tooltip line of an active skill at a level, with Valheim numbers (<paramref name="scale" /> = the damage
+        ///     scale at the character's level × the admin's multiplier), or null if the skill has no text here.
+        /// </summary>
         public static string Describe(string id, SkillValueTable v, int level, float scale, float innerSightPercent)
         {
             if (v == null || level < 1)
@@ -367,19 +355,8 @@ namespace Orlog.Rules
             }
             switch (id)
             {
-                case "MagicArrow":
-                    return $"A magic arrow that needs none from your quiver: +{N(v.Get(id, "damage_flat", level) * scale)} damage, " +
-                           $"{N(v.Get(id, "phys_to_magic_pct", level))}% of the physical damage becomes spirit";
-                case "FireArrow":
-                    return $"Adds {Range(v, id, "fire_damage", level, scale)} fire damage; {N(v.Get(id, "phys_to_elemental_pct", level))}% of the physical damage becomes fire";
-                case "ColdArrow":
-                    return $"Adds {Range(v, id, "cold_damage", level, scale)} frost damage, which slows; {N(v.Get(id, "phys_to_elemental_pct", level))}% of the physical damage becomes frost";
                 case "MultipleShot":
                     return $"Fires {N(v.Get(id, "arrows", level))} arrows in a fan for one arrow, each at {N(v.Get(id, "weapon_damage_pct", level))}% damage";
-                case "ExplodingArrow":
-                    return $"Explodes on impact: {Range(v, id, "fire_damage", level, scale)} fire damage within {N(ExplodingRadiusYards * MetresPerYard)} m";
-                case "IceArrow":
-                    return $"Adds {Range(v, id, "cold_damage", level, scale)} frost damage and freezes for {N(v.Get(id, "freeze_s", level))} s (bosses are only slowed)";
                 case "FreezingArrow":
                     return $"Explodes on impact: {Range(v, id, "cold_damage", level, scale)} frost damage within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m, " +
                            $"freezing for {N(v.Get(id, "freeze_s", level))} s (bosses are only slowed)";

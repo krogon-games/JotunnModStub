@@ -48,6 +48,7 @@ Reference: `docs/images/hud_reference_skills.jpg` (four boxes in a cross). At th
 ### 2.4 Skills panel
 
 - Opened with a rebindable key (D2 uses T for the skill tree; pick a free default from Valheim's and the group's mods' bindings) and from the inventory.
+- **Changed 2026-11-15 (user's mock-up, `docs/images/skills_panel_cards_mockup.webp`; built):** each tab is **nine skill cards, 3 rows × 3 columns** (`row` 1–3, `col` 1–3), with no tiers and no prerequisite lines; a card shows the icon, the name, "Not learned" / "Rank 3 / 20" / "Coming later" and a rank bar; the selected skill's details stay in the left pane; the Learn button sits beside the skill slots under the cards. The two bullets below describe the tree it replaced.
 - **Three tabs** (the class's skill tabs, in order). Each tab is a grid of **6 rows × 3 columns**: rows are the level tiers 1, 6, 12, 18, 24, 30; each skill has its `row` and `col` (§3). Draw the prerequisite lines between skills that are linked (`prereqs`).
 - Each skill: icon, hard points (e.g. "3"), and its state: can spend, locked (level or prerequisite), maxed. Skills with status `later` show greyed as "coming later"; `dropped` skills aren't shown (their slot stays empty).
 - Unspent skill points shown on the panel. Click (or a + button) on a skill to spend a point; the answer says why when refused.
@@ -56,7 +57,7 @@ Reference: `docs/images/hud_reference_skills.jpg` (four boxes in a cross). At th
 
 ### 2.5 Attribute points
 
-- The four D2 attributes: Strength, Dexterity, Vitality, Energy, each with its value, what it gives (text from the API, e.g. "+12% bow damage") and a + button while there are unspent stat points.
+- The four D2 attributes: Strength, Dexterity, Vitality, Energy, each with its icon (user, 2026-11-15), its value, what it gives (text from the API, e.g. "+12% bow damage") and a + button while there are unspent stat points.
 - Suggestion: on the character sheet's stats parchment, which already shows the character's stats.
 
 ### 2.6 Class choice window (the Orlog stone)
@@ -82,7 +83,7 @@ A static class `Orlog.Api` in the Orlog assembly, found through `Chainloader.Plu
 | `string GetClassInfoJson(string classId)` | `{"id":"Amazon","name":"Amazon","description":"…","tab0":"Bow and Crossbow","tab1":"Passive and Magic","tab2":"Javelin and Spear"}` |
 | `Sprite GetClassIcon(string classId)` | The class icon, or null |
 | `string GetSkillIdsJson(string classId)` | Every skill id of the class, in table order: `["MagicArrow","FireArrow",…]`. **Real since 2026-11-01**, with `GetSkillInfoJson` and `SpendSkillPoint` (the Amazon's tree from `Orlog/Data/amazon_skills.csv`) |
-| `string GetSkillInfoJson(string skillId)` | `{"id":"MultipleShot","name":"Multiple Shot","tab":0,"row":2,"col":2,"reqLevel":6,"prereqs":"MagicArrow","kind":"attack","status":"v1","maxPoints":20,"points":3,"level":5,"canSpend":true,"spendBlocked":"","description":"Fires 4 arrows in a fan","nextDescription":"Fires 5 arrows in a fan","eitrCost":5}`. `prereqs`: skill ids joined by `+`, `""` for none. `kind`: `attack` (goes on the skill button), `cast` (casts on its hotkey) or `passive` (no slot). `status`: `v1`, `reworked`, `later`, `dropped`. `points`: hard points; `level`: effective level with +skills and synergies. `spendBlocked`: why a point can't be spent, `""` if it can |
+| `string GetSkillInfoJson(string skillId)` | **Changed 2026-11-15 (no version bump: callers default them): `reqLevel` and `prereqs` are gone with the tiers, and `row` and `col` are the card's place (1–3 each).** `{"id":"MultipleShot","name":"Multishot","tab":0,"row":2,"col":1,"kind":"attack","status":"v1","maxPoints":20,"points":3,"level":5,"canSpend":true,"spendBlocked":"","description":"Fires 4 arrows in a fan","nextDescription":"Fires 5 arrows in a fan","eitrCost":5}`. `kind`: `attack` (goes on the skill button), `cast` (casts on its hotkey) or `passive` (no slot). `status`: `v1`, `reworked`, `later`, `dropped`. `points`: hard points; `level`: effective level with +skills and synergies. `spendBlocked`: why a point can't be spent, `""` if it can |
 | `Sprite GetSkillIcon(string skillId)` | The skill icon, or null |
 | `string GetSkillBarJson()` | **Real since 2026-11-11** (Orlog C5, with `GetSlotStateJson` and `SetSkillSlot`; cooldowns are always 0 for now). Added 2026-11-13: `quick0`–`quick3` (true while the slot's skill quick casts: draw the shimmer) and `quickable0`–`quickable3` (true for a skill that needs no weapon). `{"slot0":"MultipleShot","slot1":"InnerSight","slot2":"","slot3":"FireArrow","key0":"1","key1":"2","key2":"3","key3":"4","skillButton":"Mouse 1","selected":0}`. `key*`: display labels of the slot hotkeys; `selected`: the slot on the skill button, `-1` for none |
 | `string GetSlotStateJson(int slot)` | `{"usable":false,"blocked":"weapon","needs":"bow","cooldown":1.2,"cooldownTotal":3,"eitrCost":5}`. `blocked`: `""`, `weapon`, `eitr` or `cooldown`. `needs` (optional, added 2026-10-31 by the UI session, no version bump): the weapon the skill needs, in a word the UI shows as "Need bow"; without it the UI says "Wrong weapon" |

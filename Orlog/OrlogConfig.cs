@@ -69,7 +69,8 @@ namespace Orlog
             MaxSkillPoints = config.Bind(LevelSection, "MaxSkillPoints", 20,
                 AdminOnly("Most points one skill can take (Diablo 2: 20).", new AcceptableValueRange<int>(1, 99)));
             SkillPace = config.Bind(LevelSection, "SkillPace", true,
-                AdminOnly("Diablo 2's pace: a skill takes one more point per character level past its required level."));
+                AdminOnly("Diablo 2's pace: a skill takes one more point per character level. Every skill opens at level 1, so a skill " +
+                          "holds at most as many points as the character has levels."));
 
             // Diablo 2's gains per level and per point (Orlog/Data/classes.csv) turned into Valheim numbers.
             HealthPerD2Life = config.Bind(AttributeSection, "HealthPerD2Life", 0.5f,

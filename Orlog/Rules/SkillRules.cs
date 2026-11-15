@@ -6,13 +6,18 @@ using System.Linq;
 namespace Orlog.Rules
 {
     /// <summary>
-    ///     A class's skill tree (<c>Orlog/Data/&lt;class&gt;_skills.csv</c>, made by <c>tools/make_orlog_tables.py</c>):
-    ///     Diablo 2's three tabs of ten with our status per skill. No game dependencies, so it is unit-tested.
+    ///     A class's skills (<c>Orlog/Data/&lt;class&gt;_skills.csv</c>, made by <c>tools/make_orlog_tables.py</c>): three
+    ///     tabs of exactly nine, each skill with its place on the tab's three-by-three card grid and our status. Not a
+    ///     tree since the overhaul (Krogon, 2026-11-15): no level tiers and no prerequisites, for every class. No game
+    ///     dependencies, so it is unit-tested.
     /// </summary>
     internal sealed class SkillTable
     {
-        /// <summary>D2's tiers: the required level of each tree row (row 1 = level 1 … row 6 = level 30).</summary>
-        public static readonly int[] TierLevels = { 1, 6, 12, 18, 24, 30 };
+        public const int Tabs = 3;
+        public const int Rows = 3;
+        public const int Cols = 3;
+        /// <summary>Every tab of every class holds exactly this many skills (Krogon, 2026-11-15).</summary>
+        public const int SkillsPerTab = Rows * Cols;
 
         private static readonly string[] Statuses = { "v1", "reworked", "later", "dropped" };
         private static readonly string[] Kinds = { "attack", "cast", "passive" };
@@ -24,8 +29,6 @@ namespace Orlog.Rules
             public int Tab;
             public int Row;
             public int Col;
-            public int ReqLevel;
-            public string[] Prereqs = new string[0];
             /// <summary><c>v1</c>, <c>reworked</c>, <c>later</c> or <c>dropped</c> (<c>class-design.md</c> §4).</summary>
             public string Status;
             /// <summary><c>attack</c> (on the skill button), <c>cast</c> (on its hotkey) or <c>passive</c> (no slot).</summary>
@@ -55,7 +58,7 @@ namespace Orlog.Rules
             var table = new SkillTable();
             var rows = Table.Read(csv, file, new[]
             {
-                "id", "name", "tab", "row", "col", "req_level", "prereqs", "status", "kind", "needs", "eitr", "eitr_per_level", "description"
+                "id", "name", "tab", "row", "col", "status", "kind", "needs", "eitr", "eitr_per_level", "description"
             }, errors);
             var places = new HashSet<string>();
             foreach (var row in rows)
@@ -67,8 +70,6 @@ namespace Orlog.Rules
                     Tab = Table.Int(row, "tab", errors),
                     Row = Table.Int(row, "row", errors),
                     Col = Table.Int(row, "col", errors),
-                    ReqLevel = Table.Int(row, "req_level", errors),
-                    Prereqs = row["prereqs"].Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).ToArray(),
                     Status = row["status"].Trim().ToLowerInvariant(),
                     Kind = row["kind"].Trim().ToLowerInvariant(),
                     Needs = row["needs"].Trim().ToLowerInvariant(),
@@ -89,13 +90,9 @@ namespace Orlog.Rules
                 {
                     errors.Add($"{file}: {skill.Id} has kind '{skill.Kind}' ({string.Join(", ", Kinds)}).");
                 }
-                if (skill.Tab < 0 || skill.Tab > 2 || skill.Row < 1 || skill.Row > 6 || skill.Col < 1 || skill.Col > 3)
+                if (skill.Tab < 0 || skill.Tab >= Tabs || skill.Row < 1 || skill.Row > Rows || skill.Col < 1 || skill.Col > Cols)
                 {
-                    errors.Add($"{file}: {skill.Id} is outside the tree (tab 0-2, row 1-6, col 1-3).");
-                }
-                else if (skill.ReqLevel != TierLevels[skill.Row - 1])
-                {
-                    errors.Add($"{file}: {skill.Id} needs level {skill.ReqLevel}, but row {skill.Row} is level {TierLevels[skill.Row - 1]}.");
+                    errors.Add($"{file}: {skill.Id} is outside the grid (tab 0-{Tabs - 1}, row 1-{Rows}, col 1-{Cols}).");
                 }
                 if (!places.Add($"{skill.Tab}/{skill.Row}/{skill.Col}"))
                 {
@@ -104,18 +101,22 @@ namespace Orlog.Rules
                 table._skills.Add(skill);
                 table._byId[skill.Id] = skill;
             }
-            foreach (var skill in table._skills)
+            for (int tab = 0; tab < Tabs && table._skills.Count > 0; tab++)
             {
-                foreach (var prereq in skill.Prereqs.Where(p => table.Find(p) == null))
+                int count = table._skills.Count(s => s.Tab == tab);
+                if (count != SkillsPerTab)
                 {
-                    errors.Add($"{file}: {skill.Id} needs '{prereq}', which isn't in the table.");
+                    errors.Add($"{file}: tab {tab} has {count} skills; every tab has exactly {SkillsPerTab}.");
                 }
             }
             return table;
         }
     }
 
-    /// <summary>Diablo 2's rules for spending skill points, with our tree rule. No game dependencies, so it is unit-tested.</summary>
+    /// <summary>
+    ///     The rules for spending skill points: Diablo 2's points and cap, any skill from level 1 (Krogon, 2026-11-15). No
+    ///     game dependencies, so it is unit-tested.
+    /// </summary>
     internal static class SkillRules
     {
         /// <summary>
@@ -164,13 +165,29 @@ namespace Orlog.Rules
         }
 
         /// <summary>
-        ///     Why a point can't go into <paramref name="skill" />, or "" if it can. In order: not built yet; at
-        ///     <paramref name="maxPoints" />; character level below the skill's tier; a built prerequisite without a point
-        ///     (a later or dropped prerequisite is skipped, <c>class-design.md</c> §4); with <paramref name="pace" />, D2's one
-        ///     more point per level past the required level; no points left.
+        ///     The saved points without the skills the class no longer has, so their points count as unspent again (the
+        ///     2026-11-15 overhaul removed skills characters had points in). A null table keeps everything.
         /// </summary>
-        public static string SpendBlocked(SkillTable table, SkillTable.Skill skill, int level, IDictionary<string, int> points,
-            int unspent, int maxPoints, bool pace)
+        public static Dictionary<string, int> KnownOnly(IDictionary<string, int> points, SkillTable table)
+        {
+            var known = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            foreach (var pair in points)
+            {
+                if (table == null || table.Find(pair.Key) != null)
+                {
+                    known[pair.Key] = pair.Value;
+                }
+            }
+            return known;
+        }
+
+        /// <summary>
+        ///     Why a point can't go into <paramref name="skill" />, or "" if it can. In order: not built yet; at
+        ///     <paramref name="maxPoints" />; with <paramref name="pace" />, D2's one more point per level (every skill opens
+        ///     at level 1, so a skill holds at most as many points as the character has levels); no points left. There are
+        ///     no level tiers and no prerequisites (Krogon, 2026-11-15).
+        /// </summary>
+        public static string SpendBlocked(SkillTable.Skill skill, int level, IDictionary<string, int> points, int unspent, int maxPoints, bool pace)
         {
             if (!skill.Built)
             {
@@ -181,21 +198,9 @@ namespace Orlog.Rules
             {
                 return "Maxed";
             }
-            if (level < skill.ReqLevel)
+            if (pace && have >= level)
             {
-                return "Needs level " + skill.ReqLevel.ToString(CultureInfo.InvariantCulture);
-            }
-            foreach (string id in skill.Prereqs)
-            {
-                var prereq = table.Find(id);
-                if (prereq != null && prereq.Built && PointsIn(points, prereq.Id) == 0)
-                {
-                    return "Needs " + prereq.Name;
-                }
-            }
-            if (pace && (long)have >= (long)level - skill.ReqLevel + 1)
-            {
-                return "Needs level " + ((long)skill.ReqLevel + have).ToString(CultureInfo.InvariantCulture);
+                return "Needs level " + ((long)have + 1).ToString(CultureInfo.InvariantCulture);
             }
             return unspent <= 0 ? "No skill points" : "";
         }

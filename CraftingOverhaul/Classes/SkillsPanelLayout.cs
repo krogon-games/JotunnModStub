@@ -4,14 +4,15 @@ using CraftingOverhaul.CharacterSheet;
 namespace CraftingOverhaul.Classes
 {
     /// <summary>
-    ///     Where everything in the skills panel goes (redesign 2026-10-31, after the user found the first versions "not
-    ///     acceptable"), in panel pixels from its top-left, y down. The panel and the preview image
+    ///     Where everything in the skills panel goes (redesign 2026-10-31; skill cards since 2026-11-15, after Krogon's
+    ///     mock-up <c>docs/images/skills_panel_cards_mockup.webp</c>), in panel pixels from its top-left, y down. The panel and the preview image
     ///     (<c>tools/preview_skills_panel.py</c>, fed by <see cref="Describe" />) both use these numbers, so the preview
     ///     shows what the game draws. Pure: no Unity, unit-tested.
     ///
     ///     Left column: the character box (level, XP, stat points, the four attributes) and under it the skill details
-    ///     pane (the hovered or selected skill: name, rank, cost, what it does now and next, why it's locked, Learn).
-    ///     Right column: the three tabs, the tree on a dark tablet (icons only, as Diablo 2's), and the four skill slots.
+    ///     pane (the hovered or selected skill: name, rank, cost, what it does now and next).
+    ///     Right column: the three tabs, the tab's nine skill cards on a dark tablet (<see cref="SkillCardsLayout" />),
+    ///     and a bottom strip with the four skill slots and the Learn button.
     /// </summary>
     internal static class SkillsPanelLayout
     {
@@ -28,6 +29,7 @@ namespace CraftingOverhaul.Classes
         public const float SlotGap = 18f;
         public const float SlotsHeight = 80f;
         public const float SlotsLabelWidth = 150f;
+        public const float LearnWidth = 260f;
 
         // Character box contents.
         public const float AttributesTop = 116f;
@@ -37,10 +39,10 @@ namespace CraftingOverhaul.Classes
 
         // Details pane contents.
         public const float DetailIcon = 72f;
-        public const float LearnHeight = 40f;
+        public const float LearnHeight = 44f;
 
         public static float RightX => Margin + LeftWidth + ColumnGap;
-        public static float RightWidth => SkillTreeLayout.GridWidth + 2f * TabletPadding;
+        public static float RightWidth => SkillCardsLayout.GridWidth + 2f * TabletPadding;
         public static float Width => RightX + RightWidth + Margin;
 
         /// <summary>
@@ -69,10 +71,11 @@ namespace CraftingOverhaul.Classes
         }
 
         public static SheetRect Tablet => new SheetRect(RightX, HeaderHeight + TabHeight + TabGap, RightWidth,
-            SkillTreeLayout.GridHeight + 2f * TabletPadding);
+            SkillCardsLayout.GridHeight + 2f * TabletPadding);
 
-        public static SheetRect Tree => new SheetRect(Tablet.X + TabletPadding, Tablet.Y + TabletPadding,
-            SkillTreeLayout.GridWidth, SkillTreeLayout.GridHeight);
+        /// <summary>The card grid on the tablet.</summary>
+        public static SheetRect Cards => new SheetRect(Tablet.X + TabletPadding, Tablet.Y + TabletPadding,
+            SkillCardsLayout.GridWidth, SkillCardsLayout.GridHeight);
 
         public static SheetRect SlotsRow => new SheetRect(RightX, Bottom(Tablet) + BoxGap, RightWidth, SlotsHeight);
 
@@ -105,14 +108,28 @@ namespace CraftingOverhaul.Classes
             }
         }
 
-        /// <summary>A skill slot in the row under the tablet, after its label.</summary>
+        /// <summary>A skill slot in the strip under the tablet, after its label.</summary>
         public static SheetRect Slot(int index)
         {
             var row = SlotsRow;
-            return new SheetRect(row.X + SlotsLabelWidth + index * (SlotSize + SlotGap), row.Y + 2f, SlotSize, SlotSize);
+            return new SheetRect(row.X + BoxPadding + SlotsLabelWidth + index * (SlotSize + SlotGap), row.Y + (row.Height - SlotSize) / 2f, SlotSize, SlotSize);
         }
 
-        public static SheetRect SlotsLabel => new SheetRect(SlotsRow.X + 4f, SlotsRow.Y + 2f, SlotsLabelWidth - 8f, SlotSize);
+        public static SheetRect SlotsLabel => new SheetRect(SlotsRow.X + BoxPadding, SlotsRow.Y + (SlotsRow.Height - SlotSize) / 2f, SlotsLabelWidth - 8f, SlotSize);
+
+        /// <summary>The Learn button, at the right end of the strip (the mock-up's place for it); it also says why a point can't go in.</summary>
+        public static SheetRect Learn => new SheetRect(SlotsRow.X + SlotsRow.Width - BoxPadding - LearnWidth, SlotsRow.Y + (SlotsRow.Height - LearnHeight) / 2f,
+            LearnWidth, LearnHeight);
+
+        /// <summary>A thin line between the slots and the Learn button.</summary>
+        public static SheetRect SlotsDivider
+        {
+            get
+            {
+                float left = Slot(3).X + SlotSize, right = Learn.X;
+                return new SheetRect((left + right) / 2f, SlotsRow.Y + 14f, 1f, SlotsRow.Height - 28f);
+            }
+        }
 
         // ---- inside the character box (relative to it)
 
@@ -121,8 +138,19 @@ namespace CraftingOverhaul.Classes
         public static SheetRect XpText => new SheetRect(BoxPadding, 64f, LeftWidth - 2f * BoxPadding, 18f);
         public static SheetRect StatPoints => new SheetRect(BoxPadding, 86f, LeftWidth - 2f * BoxPadding, 20f);
 
-        public static SheetRect AttributeName(int i) => new SheetRect(BoxPadding, AttributesTop + i * AttributeRowHeight, 150f, 22f);
-        public static SheetRect AttributeEffect(int i) => new SheetRect(BoxPadding, AttributesTop + i * AttributeRowHeight + 21f, 220f, 17f);
+        /// <summary>
+        ///     The attribute's icon, left of its name (Krogon's mock-up, 2026-11-15). The art fills about three quarters of
+        ///     its square (make_skill_icons.py's content circle), so the square hangs a little into the box's padding and
+        ///     the drawing itself lines up with the text above.
+        /// </summary>
+        public const float AttributeIconSize = 42f;
+        public const float AttributeTextX = BoxPadding + 34f;
+
+        public static SheetRect AttributeIcon(int i) =>
+            new SheetRect(BoxPadding - 7f, AttributesTop + i * AttributeRowHeight + (AttributeRowHeight - AttributeIconSize) / 2f - 1f, AttributeIconSize, AttributeIconSize);
+
+        public static SheetRect AttributeName(int i) => new SheetRect(AttributeTextX, AttributesTop + i * AttributeRowHeight, 140f, 22f);
+        public static SheetRect AttributeEffect(int i) => new SheetRect(AttributeTextX, AttributesTop + i * AttributeRowHeight + 21f, 214f, 17f);
 
         public static SheetRect AttributeValue(int i) =>
             new SheetRect(LeftWidth - BoxPadding - PlusSize - 12f - 60f, AttributesTop + i * AttributeRowHeight, 60f, 22f);
@@ -137,17 +165,15 @@ namespace CraftingOverhaul.Classes
         public static SheetRect DetailsRank => new SheetRect(DetailsName.X, DetailsName.Y + 30f, DetailsName.Width, 20f);
         public static SheetRect DetailsKind => new SheetRect(DetailsName.X, DetailsRank.Y + 20f, DetailsName.Width, 18f);
 
-        /// <summary>Description, next level and the lock reason, one block of wrapped text.</summary>
+        /// <summary>Description, next rank and how it's used, one block of wrapped text down to the bottom of the pane.</summary>
         public static SheetRect DetailsText
         {
             get
             {
                 float top = BoxPadding + DetailIcon + 14f;
-                return new SheetRect(BoxPadding, top, LeftWidth - 2f * BoxPadding, Details.Height - top - LearnHeight - 2f * BoxPadding);
+                return new SheetRect(BoxPadding, top, LeftWidth - 2f * BoxPadding, Details.Height - top - BoxPadding);
             }
         }
-
-        public static SheetRect Learn => new SheetRect(BoxPadding, Details.Height - BoxPadding - LearnHeight, LeftWidth - 2f * BoxPadding, LearnHeight);
 
         public static float Bottom(SheetRect r) => r.Y + r.Height;
 
@@ -168,8 +194,11 @@ namespace CraftingOverhaul.Classes
                 Add("tab" + i, Tab(i));
             }
             Add("tablet", Tablet);
-            Add("tree", Tree);
+            Add("cards", Cards);
+            Add("slotsRow", SlotsRow);
             Add("slotsLabel", SlotsLabel);
+            Add("slotsDivider", SlotsDivider);
+            Add("learn", Learn);
             for (int i = 0; i < 4; i++)
             {
                 Add("slot" + i, Slot(i));
@@ -182,6 +211,7 @@ namespace CraftingOverhaul.Classes
             AddIn("statPoints", character, StatPoints);
             for (int i = 0; i < 4; i++)
             {
+                AddIn("attributeIcon" + i, character, AttributeIcon(i));
                 AddIn("attributeName" + i, character, AttributeName(i));
                 AddIn("attributeEffect" + i, character, AttributeEffect(i));
                 AddIn("attributeValue" + i, character, AttributeValue(i));
@@ -194,7 +224,6 @@ namespace CraftingOverhaul.Classes
             AddIn("detailsRank", details, DetailsRank);
             AddIn("detailsKind", details, DetailsKind);
             AddIn("detailsText", details, DetailsText);
-            AddIn("learn", details, Learn);
             return list;
         }
     }

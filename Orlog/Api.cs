@@ -162,15 +162,13 @@ namespace Orlog
             }
             int points = SkillRules.PointsIn(SkillPoints.Points(player), skill.Id);
             int max = OrlogConfig.MaxSkillPoints.Value;
-            string blocked = SkillPoints.SpendBlocked(player, table, skill);
+            string blocked = SkillPoints.SpendBlocked(player, skill);
             var json = new StringBuilder("{");
             Field(json, "id", skill.Id);
             Field(json, "name", skill.Name);
             Field(json, "tab", skill.Tab);
             Field(json, "row", skill.Row);
             Field(json, "col", skill.Col);
-            Field(json, "reqLevel", skill.ReqLevel);
-            Field(json, "prereqs", string.Join("+", skill.Prereqs));
             Field(json, "kind", skill.Kind);
             Field(json, "status", skill.Status);
             Field(json, "maxPoints", max);

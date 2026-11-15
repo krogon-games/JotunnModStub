@@ -16,7 +16,7 @@
     <Compile Include="..\CraftingOverhaul\Biomes\SlicedWork.cs" Link="Linked\SlicedWork.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\SheetLayout.cs" Link="Linked\SheetLayout.cs" />
     <Compile Include="..\CraftingOverhaul\CharacterSheet\FlatJson.cs" Link="Linked\FlatJson.cs" />
-    <Compile Include="..\CraftingOverhaul\Classes\SkillTreeLayout.cs" Link="Linked\SkillTreeLayout.cs" />
+    <Compile Include="..\CraftingOverhaul\Classes\SkillCardsLayout.cs" Link="Linked\SkillCardsLayout.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\CooldownDisplay.cs" Link="Linked\CooldownDisplay.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\QuickCastShimmer.cs" Link="Linked\QuickCastShimmer.cs" />
     <Compile Include="..\CraftingOverhaul\Classes\SkillsPanelLayout.cs" Link="Linked\SkillsPanelLayout.cs" />

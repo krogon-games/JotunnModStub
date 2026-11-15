@@ -97,17 +97,12 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void HugeSkillPointsDontBreakTheSpendingCheck()
         {
-            // A level-30 skill holding int.MaxValue - 1 points: the pace rule's "needs level" (30 + points) doesn't wrap.
-            var errors = new List<string>();
-            var table = SkillTable.Parse(
-                "id,name,tab,row,col,req_level,prereqs,status,kind,needs,eitr,eitr_per_level,description\n" +
-                "Fury,Fury,0,6,1,30,,v1,attack,spear,2,0.25,A test skill.\n", "test.csv", errors);
-            Assert.Empty(errors);
-            var skill = table.Find("Fury");
+            // A skill holding int.MaxValue - 1 points: the pace rule's "needs level" (points + 1) doesn't wrap.
+            var skill = new SkillTable.Skill { Id = "Fury", Name = "Fury", Status = "v1", Kind = "attack", Needs = "spear" };
             var points = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase) { ["Fury"] = int.MaxValue - 1 };
-            Assert.Equal("Needs level 2147483676", SkillRules.SpendBlocked(table, skill, 30, points, 5, int.MaxValue, true));
-            Assert.Equal("Maxed", SkillRules.SpendBlocked(table, skill, 30, points, 5, 20, true));
-            Assert.Equal("No skill points", SkillRules.SpendBlocked(table, skill, 30, points, SkillRules.Unspent(30, 1, points), int.MaxValue, false));
+            Assert.Equal("Needs level 2147483647", SkillRules.SpendBlocked(skill, 30, points, 5, int.MaxValue, true));
+            Assert.Equal("Maxed", SkillRules.SpendBlocked(skill, 30, points, 5, 20, true));
+            Assert.Equal("No skill points", SkillRules.SpendBlocked(skill, 30, points, SkillRules.Unspent(30, 1, points), int.MaxValue, false));
         }
     }
 }
