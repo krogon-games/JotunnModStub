@@ -2,7 +2,7 @@
 
 Everything built but not yet tested in-game, in one place, in the order that makes a session quick. Tick items off in the phone log or tell Claude the result; Claude then updates `FEATURES.md` and `CURRENT_STATE.md`. Remove a section here once it's tested.
 
-**Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes. Last brought in line: 2026-11-15 (`claude/laughing-mccarthy-fnz0to`: its round "the skill tree overhaul and skill cards", ids `cards-1` to `cards-15`, was added and taken off again the same day after all 15 steps passed; so was its 3-step re-check (the Multishot name, attribute icons; ids `cards2-1` to `cards2-3`), passed the same evening; 2j's freeze step follows the removed skills); before that 2026-11-11 (the build check's version numbers, Session 2's 2g–2i, the two small checks of Session 1c); before that 2026-11-08. The rounds since 2026-11-05 keep their own solo checklist in `docs/playtests/<branch>.md`, and **every round's solo checklist also goes on the phone page while its round is open** (Krogon, 2026-11-11), so the page is always the place to tick; when the round's play-test has passed, its steps come off the page again.
+**Phone version:** [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht) (private to the user). Pass / Fail / Skip and notes are saved in the page's database (`results` collection, one document per step id) for Claude to read with `ArtifactData`. Keep its steps in line with this file when either changes. Last brought in line: 2026-11-15, evening (coordinator, after PR #68: the build checks expect Orlog 0.4.0 and CraftingOverhaul 0.5.0; Session 3c's eight steps passed on 2026-11-11 came off the page); before that the same day (`claude/laughing-mccarthy-fnz0to`: its round "the skill tree overhaul and skill cards", ids `cards-1` to `cards-15`, was added and taken off again the same day after all 15 steps passed; so was its 3-step re-check (the Multishot name, attribute icons; ids `cards2-1` to `cards2-3`), passed the same evening; 2j's freeze step follows the removed skills); before that 2026-11-11 (the build check's version numbers, Session 2's 2g–2i, the two small checks of Session 1c); before that 2026-11-08. The rounds since 2026-11-05 keep their own solo checklist in `docs/playtests/<branch>.md`, and **every round's solo checklist also goes on the phone page while its round is open** (Krogon, 2026-11-11), so the page is always the place to tick; when the round's play-test has passed, its steps come off the page again.
 
 **Results so far:** the first session (2026-10-28) passed boss essences, corrupted bosses, talismans, craft from chests with AdventureBackpacks, category headers, `co_biome` and config reload; maps and rips worked apart from two bugs, fixed and confirmed in a re-test. Details: `FEATURES.md`.
 
@@ -79,20 +79,20 @@ Build from **`master`** (merged; the loot branch is deleted). Give yourself the 
 
 ## Session 3c: gathering-tool affixes (loot step 3, about 20 minutes)
 
-Steps 2–4 passed 2026-11-08 (PR #55, including Veinbreaker's reset when the tool is unequipped), apart from Odin's Grace on a one-piece rock. Left: 1, that part of 4, and 5–14.
+Steps 2–4 passed 2026-11-08 (PR #55, including Veinbreaker's reset when the tool is unequipped). Steps 1, the rest of 4, and 5–10 **passed 2026-11-11** (phone log; written down here on 2026-11-15). Your note on 7, Splintering: "Yes, works, but i think i probably needs a little bigger radius/ hit detection range" (carried into the orb drops round, [#33](https://github.com/krogon-games/JotunnModStub/issues/33)). **Left: 11–14.**
 
 Build from **`master`** (merged; the loot branch is deleted). Roll tools with the affix you want (`co_loot rare PickaxeAntler`, `co_loot rare AxeFlint`, `co_loot magic PickaxeBronze`…), or `co_affix <id> 100` on the tool in your hand. These lines are no longer grey; the on-harvest ones (Bountiful, Artisan, Gemseeker's, Stonecutter's, Resinous, Forester's, Charring, Determined) are tested in Session 3d.
 
-1. **Prospector's** on a pickaxe: rocks and copper/tin take more hits off per swing than with a plain pickaxe of the same kind (watch the damage numbers).
+1. ~~**Prospector's** on a pickaxe: rocks and copper/tin take more hits off per swing than with a plain pickaxe of the same kind (watch the damage numbers).~~ Passed 2026-11-11.
 2. ~~**Veinbreaker's:** every 5th swing at rock or ore shows a bigger damage number.~~ Passed 2026-11-08.
 3. ~~**Seismic:** now and then a swing at a copper or tin deposit knocks off the chunks next to the one you hit too.~~ Passed 2026-11-08.
-4. **Odin's Grace:** ~~now and then a swing breaks the chunk you hit and every chunk touching it at once; iron (tier) still needs the right pickaxe~~ passed 2026-11-08 (deposits, tin, silver too hard for a lower pickaxe). Left: a single one-piece rock breaks in one hit.
-5. **Excavator's:** digging the ground with the pickaxe makes a deeper, wider hole than a plain one.
-6. **Lumberjack's / Timberfall / Rootbreaker** on an axe: standing trees / fallen logs / stumps take more damage per chop.
-7. **Splintering:** now and then a chop also damages the nearest other tree or log right next to you.
-8. **Fit:** now and then a swing costs no stamina (the bar doesn't drop). **Careful:** now and then a hit costs no durability.
-9. **Hushed:** creatures notice your chopping later (hard to see; just check nothing breaks).
-10. **Light:** the tool's weight in the tooltip is lower than a plain one's.
+4. **Odin's Grace:** ~~now and then a swing breaks the chunk you hit and every chunk touching it at once; iron (tier) still needs the right pickaxe~~ passed 2026-11-08 (deposits, tin, silver too hard for a lower pickaxe). ~~A single one-piece rock breaks in one hit.~~ Passed 2026-11-11.
+5. ~~**Excavator's:** digging the ground with the pickaxe makes a deeper, wider hole than a plain one.~~ Passed 2026-11-11.
+6. ~~**Lumberjack's / Timberfall / Rootbreaker** on an axe: standing trees / fallen logs / stumps take more damage per chop.~~ Passed 2026-11-11.
+7. ~~**Splintering:** now and then a chop also damages the nearest other tree or log right next to you.~~ Passed 2026-11-11 (its reach may need to be bigger: note above).
+8. ~~**Fit:** now and then a swing costs no stamina (the bar doesn't drop). **Careful:** now and then a hit costs no durability.~~ Passed 2026-11-11.
+9. ~~**Hushed:** creatures notice your chopping later (hard to see; just check nothing breaks).~~ Passed 2026-11-11.
+10. ~~**Light:** the tool's weight in the tooltip is lower than a plain one's.~~ Passed 2026-11-11.
 11. **Keen-eyed / Magnetic:** with the tool in hand, items on the ground fly to you from further away (Magnetic: 3–6 m; vanilla 2 m).
 12. **Swift:** the swing animation is visibly faster.
 13. **Scholar's:** Woodcutting or Pickaxes skill rises faster (Skills tab).
