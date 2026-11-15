@@ -12,10 +12,10 @@ Diablo 2-style classes for Valheim. Full design: `docs/class-design.md` in the r
 - "+N XP" in the top-left corner for each kill (can be turned off); "Level N" and the skill level-up effect on a new level.
 - **Attributes** (with a class; only the Amazon so far): spend 5 stat points per level on Strength (+1% melee and thrown damage each), Dexterity (+1% bow damage), Vitality (+1.5 health, +0.89 stamina) and Energy (+1.5 eitr). Each level also gives +1 health, +0.89 stamina and +1.5 eitr.
 - **Eitr without eitr food:** a class starts with 15 eitr, which vanilla regeneration refills.
-- **Skill tree:** the Amazon's 30 skills in Diablo 2's three tabs; spend 1 skill point per level on the 19 built ones (D2's rules: tiers, prerequisites, 20 points, one more per level past the requirement). Each boss's first kill gives bonus skill points (12 in all). The tooltips show each skill's numbers.
+- **Skills:** the Amazon's 27 skills in three tabs of nine; spend 1 skill point per level on the 13 built ones. Any skill can be learned from level 1: no tiers, no prerequisites (at most 20 points per skill, and no more points in one skill than you have levels). Each boss's first kill gives bonus skill points (12 in all). The tooltips show each skill's numbers.
 - **Passives:** Critical Strike (double physical damage), Dodge, Avoid and Evade (a creature's hit misses), Penetrate (ignores resistances, not immunities), with Diablo 2's chances.
 - **Skill slots and the skill button:** drag skills into four slots; F1–F4 choose one, right click fires it (hold to draw the bow). Block has a key of its own (`BlockKey`, the mouse's back side button by default). Skills without a weapon cast straight from their key (quick cast; right-click the slot to toggle). Skills cost eitr.
-- **Bow skills:** Magic Arrow (needs no arrows), Fire, Cold and Ice Arrow, Multiple Shot, Exploding and Freezing Arrow. **Inner Sight** marks nearby enemies: they take more damage.
+- **Bow skills:** Multiple Shot and Freezing Arrow work; Forked Lightning, Wind Lance, Snipe, Strafe, Immolation Arrow, Venom Strike and Shackle Shot are coming. **Inner Sight** marks nearby enemies: they take more damage.
 
 - **The Orlog stone** in the spawn area, among the boss trophy stones: use it to choose your class (only the Amazon so far). With CraftingOverhaul a window opens; without it, use the stone twice.
 

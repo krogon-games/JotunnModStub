@@ -1,22 +1,28 @@
 # Handoff: `claude/laughing-mccarthy-fnz0to`
 
-**Written:** 2026-11-15 (round started). Level with `master`; no pull request yet.
+**Written:** 2026-11-15 (the round's build is done; `/handoff` not run yet). Ahead of `master`, 0 behind; no pull request yet.
 
 ## Stage
 
-**Building.**
+**Waiting for Krogon's playtest.**
 
 ## Purpose
 
-The Amazon's skill tree overhaul ([#66](https://github.com/krogon-games/JotunnModStub/issues/66)): no branching, any skill from level 1, a new bow skill list, and the skills panel redrawn as skill cards from Krogon's mock-up (`docs/images/skills_panel_cards_mockup.webp`).
+The Amazon's skill tree overhaul ([#66](https://github.com/krogon-games/JotunnModStub/issues/66)): no branching, any skill from level 1, nine skills per tab with a new bow list, and the skills panel redrawn as skill cards from Krogon's mock-up (`docs/images/skills_panel_cards_mockup.webp`).
 
 ## Done
 
-Nothing yet.
+Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-Nothing built yet.
+Built, untested (detail in `FEATURES.md` → Skill tree and skill points, Classes UI, Amazon skill bar and bow skills):
+- **Rules (Orlog):** no tiers or prerequisites; exactly nine skills per tab (the table refuses any other count); points in removed skills are handed back; `reqLevel` and `prereqs` left the API.
+- **Removed with their code and four Harmony patches:** Magic, Fire, Cold, Ice and Exploding Arrow (last commit with them: `6090e71`; Exploding Arrow's blast is the start for Immolation Arrow). Also gone from the lists: Guided Arrow, Slow Missiles, Power Strike.
+- **Panel (CraftingOverhaul):** nine cards per tab, Learn beside the slots, 1148 × 690; five new placeholder icons; previews `docs/images/skills_panel_preview*.png`.
+- **Seven bow skills don't work yet** ("Coming later"): Forked Lightning, Wind Lance, Snipe, Strafe, Immolation Arrow, Venom Strike, Shackle Shot. The five new ones have no eitr cost until agreed.
+- **Claude's choices, open to change:** the name stays "Multiple Shot"; D2's pace stays (a skill holds at most as many points as you have levels); the attribute rows keep their "what it gives" lines and have no icons (the mock-up has icons, no lines); the card order on the passive and spear tabs; the rank bar is the XP bar's purple; unlearned cards that can take a point show "Not learned" in green.
+- **Can't be judged outside the game:** the cards use the game's own panel background; the preview uses a look-alike.
 
 ## Decisions
 
@@ -34,23 +40,29 @@ Nothing built yet.
 
 ## Playtest
 
-Nothing to test yet.
+`docs/playtests/claude-laughing-mccarthy-fnz0to.md`: 15 solo steps (old character's points handed back, the look, learning from level 1, slots, the skills that stay, the log). Also on the phone page (ids `cards-1` to `cards-15`, at the top). No feedback yet.
 
 ## Open questions for Krogon
 
-1. "Multi Shot" or "Multiple Shot" (today's name, kept until he says)?
-2. Every new skill's details (cost, damage, range, Wind Lance's and Snipe's charge, Shackle Shot against Dota 2's), in the round that builds them.
+1. "Multi Shot" or "Multiple Shot"?
+2. Attribute icons as in the mock-up, and keep or drop the "what it gives" lines?
+3. Every new skill's details (cost, damage, range, Wind Lance's and Snipe's charge, Shackle Shot against Dota 2's), in the round that builds them.
 
 ## Next steps
 
-1. Krogon's answers.
-2. Build the cards panel and the new tree rules; show a preview image.
-3. Play-test checklist (file and phone page).
+1. Krogon's play-test; fix what he finds; final play-test.
+2. `/handoff`, pull request into `master`.
+3. Next rounds: the seven bow skills, a few at a time, each after its details are agreed; then C6 (#41).
 
 ## Checks
 
-Not run yet.
+- Build: PASS (573 tests; Orlog and CraftingOverhaul build).
+- Version: gameplay changed: version bump needed at merge (Orlog, CraftingOverhaul). The branch changed no version.
+- Multiplayer sync: not checked yet (`/handoff`). The skill table is compiled into the DLL; everyone needs the same build.
+- Assets and names: five new icon files, eight removed (`CraftingOverhaul/Assets/Skills/`); no new tokens.
+- FEATURES.md: updated in the same commits.
+- In-game: needs Krogon's playtest.
 
 ## Merge notes
 
-**Ready to merge: no** (nothing built).
+**Ready to merge: no** (not play-tested). **Gameplay changed: version bump needed at merge: Orlog, CraftingOverhaul.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`. `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj`: one linked file renamed (`SkillTreeLayout.cs` → `SkillCardsLayout.cs`).

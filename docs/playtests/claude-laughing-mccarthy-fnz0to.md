@@ -1,0 +1,46 @@
+# Play-tests: `claude/laughing-mccarthy-fnz0to`
+
+## Round: the skill tree overhaul and the skill cards panel (2026-11-15)
+
+**Build:** the three DLLs from this branch. The log lines should read `Orlog 0.3.0 loaded (build: claude/laughing-mccarthy-fnz0to <commit>)` and `CraftingOverhaul 0.4.0 loaded (build: claude/laughing-mccarthy-fnz0to <commit>)` (the versions are raised when it merges).
+**Setup:** single player, a test world, the group's mods loaded. F5, `devcommands`. Use the character you tested the Amazon with last time (step 1 needs its old skill points). `orlog_class Amazon` if it has no class.
+
+What it should look like: `docs/images/skills_panel_preview.png` (bow tab), `skills_panel_preview_passive.png`, `skills_panel_preview_spear.png`.
+
+### Checklist
+
+**Your old character**
+
+1. [ ] Before opening anything, type `orlog_info` → the Skills line no longer lists Magic Arrow, Fire Arrow, Cold Arrow, Ice Arrow or Exploding Arrow, and the points you had in them are back in "skill points to spend". A skill slot that held one of them is empty on the skill cross. (Skip if the character never had points in those.)
+
+**The look**
+
+2. [ ] Press `K` → the skills panel opens, wider than before. Left side as before (level, XP, attributes, the skill's details). Right side: three tabs, **nine cards, three by three**, and under them a strip with the four skill slots on the left and the **Learn** button on the right. No tier rows ("Lv 1 … Lv 30"), no lines between skills.
+3. [ ] Bow and Crossbow reads, row by row: Forked Lightning, Wind Lance, Snipe / Multiple Shot, Strafe, Freezing Arrow / Immolation Arrow, Venom Strike, Shackle Shot. Seven of them are darker and say "Coming later"; Multiple Shot and Freezing Arrow are the two that can be learned. Every card has an icon.
+4. [ ] Passive and Magic: Inner Sight, Critical Strike, Penetrate / Dodge, Avoid, Evade / Decoy, Valkyrie, Pierce. Javelin and Spear: Jab, Impale, Fend / Charged Strike, Lightning Strike, Lightning Bolt / Poison Javelin, Plague Javelin, Lightning Fury.
+5. [ ] **Your verdict on the look:** do the cards fit the rest of the UI? Is every name readable (none cut off or running into the rank line)? Does the cards' wood background look right in game? A screenshot of anything that looks off helps.
+
+**Learning: any skill from level 1**
+
+6. [ ] `orlog_respec`, then `orlog_level 2` → "Skill points: 1" at the top right; the cards that can be learned say "Not learned" in green and their icons glow green.
+7. [ ] Click **Freezing Arrow** (it needed level 30 before) → a gold glow around the card, its details on the left, and the button at the bottom right says "Learn (+1 rank)". Click it → the card says "Rank 1 / 20" with a purple bar, turns brighter, and its icon glows blue. No "Needs level …" or "Needs Ice Arrow".
+8. [ ] With no points left, click Multiple Shot → the button says "No skill points" in red and can't be pressed; the unlearned cards say "Not learned" in grey.
+9. [ ] Click Forked Lightning (or any "Coming later" card) → its details say what it will do and "Not in the game yet"; the button says "Coming later".
+10. [ ] `orlog_level 30`. **Double-click** Multiple Shot → it gains a rank each time (double-click = Learn). Then `orlog_skill Dodge 20` → on the Passive and Magic tab Dodge says "Rank 20 / 20" with a full gold bar and a gold glow; the button says "Mastered".
+11. [ ] Point at a card without clicking → the left pane shows that skill; move away → it shows the selected card again.
+
+**Slots and the skills that stay**
+
+12. [ ] Drag the Multiple Shot card onto slot F1 in the strip, and Freezing Arrow onto F2 → their icons appear there and on the skill cross. Drag Dodge → "Passive skills don't take a slot". Drag Strafe → "Coming later". Right-click a slot → it empties; drag the skill back.
+13. [ ] Close the panel, take a bow, press F1 and hold right click → Multiple Shot fires its fan as before. F2 → Freezing Arrow bursts and freezes as before.
+14. [ ] Inner Sight still casts from its slot key, and a learned passive still triggers (`orlog_passive dodge 100`, let a greyling hit you while standing still → "Dodge").
+
+**Log**
+
+15. [ ] F5 shows no red errors; `BepInEx/LogOutput.log` has no "Orlog could not …" or "CraftingOverhaul could not …" lines.
+
+**With another player:** nothing new. The removed skills leave fewer two-player checks in `PLAYTEST.md` → Session 2, 2j.
+
+### Your feedback
+
+(not yet)
