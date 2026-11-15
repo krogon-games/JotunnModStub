@@ -253,12 +253,12 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 3. **A** puts splinters in a shared chest; **B** takes them → unchanged.
 4. **A and B at one Riftforge**, each shattering and corrupting their own gear → no mix-ups; each one's "Don't warn me again" choice is their own.
 
-**2j. The Amazon's passives (2026-11-11, branch `claude/lucid-albattani-imrei7`; solo steps in [`playtests/claude-lucid-albattani-imrei7.md`](playtests/claude-lucid-albattani-imrei7.md)).** A is an Amazon (`orlog_class Amazon`); the creature must be run by **B's** game (B reaches it first and stays nearer).
+**2j. The Amazon's passives and skills (2026-11-11, merged in PR #64; solo steps in [`playtests/claude-lucid-albattani-imrei7.md`](playtests/claude-lucid-albattani-imrei7.md)).** A is an Amazon (`orlog_class Amazon`); the creature must be run by **B's** game (B reaches it first and stays nearer).
 1. **A** finds a creature whose hits show grey numbers (resisted), types `orlog_passive penetrate 100` and hits it → white, bigger numbers, as alone.
 2. **A** types `orlog_passive crit 100` and hits a creature B's game runs → about twice the damage; A sees the critical-hit effect.
 3. **A** types `orlog_passive dodge 100`, `orlog_passive avoid 100`, `orlog_passive evade 100` and fights a troll (or a greydwarf group) B's game runs → punches and thrown rocks are dodged, avoided or evaded; the troll's **ground slam still hurts**.
 4. **A** shoots Ice Arrow and Freezing Arrow at creatures B's game runs → they freeze (can't move) for the skill's seconds; Exploding Arrow damages a group B's game runs.
-5. **A** casts Inner Sight near creatures B's game runs → A sees them glow; **B's** hits on them also do about a quarter more damage.
+5. **A** casts Inner Sight near creatures B's game runs → A sees them glow; **B's** hits on them also do more damage (5% more at skill level 1, 24% at level 20; your decision of 2026-11-15).
 6. **A and B** kill a boss together (both within 70 m) → both get "First victory over this foe" and the skill points (a classless B gets them once a class is chosen).
 
 ### Part 3: a rip run (about 45 minutes)

@@ -19,7 +19,7 @@ Related: [`docs/DECISIONS.md`](docs/DECISIONS.md) (every decision you've made) �
 | `master` | The shared, play-tested base. **Versions: Corruption 0.7.0, CraftingOverhaul 0.4.0, Orlog 0.3.0** (CraftingOverhaul and Orlog bumped 2026-11-15 for PRs #64 and #65, Corruption 2026-11-11 for PR #61) | — | — | — |
 | `claude/biome-load-freeze` | CraftingOverhaul: no freeze after spawning (biome detection saved to a file, otherwise worked out in the background) | Merged (PR #65, 2026-11-15) | 0 / 0 | Done. **Safe to delete** |
 | `claude/lucid-albattani-imrei7` | Orlog: the Amazon's passives, skill bar, bow skills, Inner Sight, boss points and boss XP; classes UI demo removed | Merged (PR #64, 2026-11-15) | 0 / 0 | Done. **Safe to delete** |
-| `claude/keen-mccarthy-jmh5tb` | Coordinator: the two merges, the version bump, this file, the decisions, the issues | Merged (pushed straight to `master`, 2026-11-15) | 0 / 0 | Done. **Safe to delete** |
+| `claude/keen-mccarthy-jmh5tb` | Coordinator: the two merges, the version bump, this file, the decisions, the issues, the phone page | Merged (`master` moved forward to it, 2026-11-15; no pull request of its own) | 0 / 0 | Done. **Safe to delete** |
 | `claude/relaxed-cray-8dkrr2` | The previous coordinator: status review, the phone play-test page, the solo-on-server checklist. Documents only, no game code | Merged (PRs #62 and #63, 2026-11-11) | 0 / 0 (everything is in `master`) | Done. **Safe to delete** (still on GitHub) |
 
 Checked 2026-11-15: no open pull requests after the merge; four `claude/…` branches are still on GitHub and all four are fully in `master`. Cloud sessions can't delete branches; you do it on GitHub (Branches → the bin icon).
