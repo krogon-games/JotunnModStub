@@ -1,6 +1,6 @@
 # Handoff: `claude/lucid-albattani-imrei7`
 
-**Written:** 2026-11-13 by `/handoff`. 20 commits ahead of `master`, 0 behind. No pull request yet.
+**Written:** 2026-11-13 by `/handoff`, extended 2026-11-15 with the last play-test bugs (Krogon allowed a longer handoff for this big session). 22 commits ahead of `master`, 0 behind. No pull request yet.
 
 ## Stage
 
@@ -22,6 +22,13 @@ Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
 - **One world load hung** (log lost); every load freezes ~20 s in biome detection (older; `claude/biome-load-freeze`).
 - **Not built:** the respec item and boss XP (C4); Gungnir's Throw and the spear skills (C6).
 - **For the coordinator (on `master`):** `STATUS.md` (agreed at the start, decision 2; feature branches don't touch it) and #38 / the demo item of #50 at merge. The #26 comment with the loot 3c marks is posted by this `/handoff`.
+
+- **Bugs found in play (2026-11-15, Krogon), first job next session** (detail and first steps: the play-test file's last feedback):
+  1. **Freezing Arrow does no damage when it hits a creature directly,** only when it lands on the ground next to it. Exploding Arrow uses the same code (`BowSkills.Impact` → `Explode`), so it is likely broken the same way. Cause unknown: add a log line first.
+  2. **Inner Sight (quick cast, F1) also fires the Forsaken power.** Likely the `gpower` animation trigger in `CastSkills.Cast`, whose animation event activates the power. Use another animation or block the power during our cast.
+- **Still untested in game:** passives (round 1), Magic Arrow without arrows, Fire/Cold/Ice Arrow damage and freeze, Multiple Shot's fan, eitr costs, quick cast toggle and shimmer, boss points, the per-weapon right-click memory, the new panel size.
+- **Useful for the next session:** commands in `Orlog/README.md` (`orlog_level`, `orlog_skill`, `orlog_slot`, `orlog_passive`, `orlog_info`, `orlog_respec`); Krogon's logs show every ignored skill key with its reason; the game code is decompiled with `ilspycmd` from `/opt/valheim-standin/valheim_Data/Managed/assembly_valheim.dll` (1.0.14; set `DOTNET_ROLL_FORWARD=Major`). The group's mods' code was read from Thunderstore downloads (EAQS 3.1.3, AB 2.4.6, PlantEasily 2.3.1).
+- **Krogon's setup notes:** the classes UI demo is gone (an old `Demo` line in CraftingOverhaul's config does nothing); his block works on a keyboard key, while his mouse software sends the side button only on release; `BlockKey` is blank by default.
 
 ## Decisions
 
@@ -58,6 +65,7 @@ Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
 13. **2026-11-13: make the skills panel bigger** ("please enlarge the skills panel window, its hard to read"), then **10% smaller than that** ("Skills panel is much better now. maybe even tone it down by 10%"): it fills 79% of the screen's height (or 83% of its width); `SkillsPanelSize` fixes a size.
 14. **2026-11-13: block on the mouse's side button is the mouse software, not the mod** ("block holds fine on another key, it's my mouse software").
 15. **2026-11-13: wrap up; the play-test waits for a fresh session** ("Save the playtesting for another session so its fresh").
+16. **2026-11-15: end the session; the play-test and bug fixes continue in the next session,** with a longer handoff allowed ("Ill allow you to increase the limit on the handoff to make sure everything important carries accross").
 
 
 ## Playtest
@@ -75,7 +83,7 @@ Rounds 1 and 2 in `docs/playtests/claude-lucid-albattani-imrei7.md` and on the p
 
 ## Next steps
 
-1. Krogon's play-test; fix what fails.
+1. **Fix the two bugs above** (Freezing/Exploding Arrow on a creature hit; Inner Sight firing the Forsaken power), then Krogon's play-test of rounds 1 and 2; fix what fails.
 2. His answers; then boss XP and the respec item.
 3. C6: Gungnir's Throw, spear and javelin skills.
 

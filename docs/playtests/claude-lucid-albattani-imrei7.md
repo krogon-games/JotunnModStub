@@ -128,3 +128,8 @@
 - **Skills panel:** "much better now. maybe even tone it down by 10%." → the panel now fills 79% of the screen's height (or 83% of its width), 10% smaller. Not re-checked in game.
 - The rest of the play-test (rounds 1 and 2) waits for a fresh session (Krogon).
 
+### Your feedback (2026-11-15, end of session; bugs for the next session)
+- **Freezing Arrow** "dealing damage only when it hits the ground next to the enemy, not if the freezing arrow hits the enemy hitbox instead." Not explained yet. Exploding Arrow shares the code (`BowSkills.Impact` postfix on `Projectile.OnHit` → `Explode`), so it likely has the same bug. First step next session: log whether `Explode` runs on a creature hit, how many targets `Character.GetCharactersInRange` finds and whether `BaseAI.IsEnemy` lets them through; then check whether the game's hit path for a creature hit returns or destroys the arrow before our postfix, or ignores a second hit on the same creature in the same frame.
+- **Inner Sight on F1 with quick cast "uses the boss power as well."** Likely cause: `CastSkills.Cast` plays the game's `gpower` animation trigger, whose animation event activates the Forsaken power. Fix next session: another animation (an emote, or a vanilla attack trigger without that event), or skip `Player.ActivateGuardianPower` while our cast plays; check in the 1.0.14 code which method the animation event calls.
+- Krogon: the play-test and bug fixes continue in the next session.
+
