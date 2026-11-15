@@ -33,6 +33,37 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void BossXpFollowsDiablo2sActBosses()
+        {
+            var b = Biomes();
+            // Andariel 916 / 97 and Baal 6460 / 97 (data/d2-reference/act_bosses.csv); the others in between, rising.
+            Assert.Equal(9.4f, b.BossXpMultiplier("Eikthyr"), 2);
+            var order = b.All.OrderBy(x => x.BossLevel).Select(x => x.BossXp).ToArray();
+            Assert.Equal(new[] { 9.4f, 13.8f, 17.8f, 20.6f, 25.9f, 33.7f, 48.9f, 66.6f }, order);
+            Assert.Equal(1f, b.BossXpMultiplier("Boar"));
+            Assert.Equal(1f, b.BossXpMultiplier(null));
+        }
+
+        [Fact]
+        public void KallsPhasesShareHisXpOnce()
+        {
+            var b = Biomes();
+            float whole = b.BossXpMultiplier("FrozenKing") + b.BossXpMultiplier("FrozenKing_p2") + b.BossXpMultiplier("FrozenKing_p3");
+            Assert.Equal(66.6f, whole, 1);
+            // By base health (game dump: 10000, 7000, 30000): the last phase the most.
+            Assert.True(b.BossXpMultiplier("FrozenKing_p3") > b.BossXpMultiplier("FrozenKing"));
+        }
+
+        [Fact]
+        public void BadBossXpIsReported()
+        {
+            var errors = new List<string>();
+            BiomeLevels.Parse("biome,min_level,max_level,health_min,health_max,boss_level,bosses,boss_xp,boss_xp_shares\n" +
+                              "Meadows,1,4,5,20,5,A;B,0.5,0.5;0.2\n", errors);
+            Assert.Equal(2, errors.Count);
+        }
+
+        [Fact]
         public void KallsThreePhasesAreOneBoss()
         {
             var b = Biomes();

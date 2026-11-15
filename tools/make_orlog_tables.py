@@ -57,6 +57,28 @@ MAX_LEVEL = 99
 # Skill points for a character's first kill of each biome's boss, in GUIDE order (user, 2026-11-11: D2's 12 quest points,
 # 1 each for the first four bosses, 2 each for the last four).
 BOSS_SKILL_POINTS = [1, 1, 1, 1, 2, 2, 2, 2]
+# Boss XP (user, 2026-11-15: "follow diablo 2 style"): a boss gives ×N an ordinary creature of its level, N = a D2 act
+# boss's Exp ÷ an ordinary monster's (median 97, data/d2-reference/README.md). D2 has 5 act bosses, Valheim 8: the first
+# and last match, the others are read off the line through D2's five by position.
+D2_ORDINARY_EXP = 97
+
+
+def boss_xp_multipliers():
+    exp = [float(r["exp"]) for r in sorted(read_csv(os.path.join(ROOT, "data", "d2-reference", "act_bosses.csv")),
+                                            key=lambda r: int(r["act"]))]
+    d2 = [e / D2_ORDINARY_EXP for e in exp]
+    result = []
+    for i in range(len(GUIDE)):
+        p = i * (len(d2) - 1) / (len(GUIDE) - 1)
+        a = min(int(p), len(d2) - 2)
+        result.append(round(d2[a] + (d2[a + 1] - d2[a]) * (p - a), 1))
+    return result
+
+
+def boss_xp_shares(bosses, health):
+    """A boss with several phases (Kall) shares its XP by each phase's base health, so the whole fight pays it once."""
+    total = sum(health[b] for b in bosses)
+    return ";".join(str(round(health[b] / total, 3)) for b in bosses)
 # The Amazon's skills in Valheim (docs/class-design.md §5): status, kind (attack = on the skill button, cast = on its
 # hotkey, passive = no slot), the weapon it needs, and what it does here.
 AMAZON = {
@@ -189,12 +211,16 @@ def main():
     spans = biome_spans()
     with open(os.path.join(OUT, "biome_levels.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["biome", "min_level", "max_level", "health_min", "health_max", "boss_level", "bosses", "boss_skill_points"])
+        w.writerow(["biome", "min_level", "max_level", "health_min", "health_max", "boss_level", "bosses", "boss_skill_points",
+                    "boss_xp", "boss_xp_shares"])
+        boss_xp = boss_xp_multipliers()
+        health = {r["prefab"]: float(r["health"]) for r in read_csv(os.path.join(DUMP, "creatures.csv"))}
         previous = 1
         for i, (biome, bosses, boss_level) in enumerate(GUIDE):
             lo, hi = spans[biome]
             # Creatures fill the range up to one below the boss; the next biome starts at the boss's level.
-            w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses), BOSS_SKILL_POINTS[i]])
+            w.writerow([biome, previous, boss_level - 1, int(lo), int(hi), boss_level, ";".join(bosses), BOSS_SKILL_POINTS[i],
+                        boss_xp[i], boss_xp_shares(bosses, health)])
             previous = boss_level
     classes = read_csv(os.path.join(ROOT, "data", "d2-reference", "classes.csv"))
     with open(os.path.join(OUT, "classes.csv"), "w", newline="", encoding="utf-8") as f:

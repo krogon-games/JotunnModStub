@@ -177,6 +177,8 @@
 3. [x] **Inner Sight:** passed on the phone page (the round 3 step "Inner Sight without the Forsaken power").
 4. [ ] **Inner Sight grows** (Krogon's numbers, 2026-11-15): `orlog_respec`, `orlog_skill InnerSight` once → tooltip "5% more damage", next level 6%; at level 20 → 24%.
 
+5. [ ] **Boss XP** (built 2026-11-15): note your XP (`orlog_info`) at about level 5, `spawn Eikthyr` and kill him alone → about a third of a level ("+N XP", about 9 times what a level-5 creature gives). Block on the mouse's back side button: set `BlockKey` = `Mouse4` in your config (yours keeps the old blank), shield in hand → the back button blocks, the forward one doesn't.
+
 Fire, Cold and Ice Arrow may go in the skill overhaul (next round): their steps (round 2 steps 5 and 9) can be skipped.
 
 ### Phone page marks (read 2026-11-15, afternoon)

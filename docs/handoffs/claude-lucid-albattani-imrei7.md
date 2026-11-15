@@ -93,6 +93,7 @@ Detail in `FEATURES.md`. Read in the cloud's 1.0.14 game code.
    | Kall Fimbulbringer | 90 | ×66.6 | 11% | 6% |
 
    Compared: classic WoW gives a dungeon boss ×2.5 an ordinary creature (elite in a dungeon, `data/wow-reference/README.md`); WoW Forever (launched 2026-11-04) keeps Classic's pace (Blizzard's beta data: 20.5 h to level 20 against Classic's 20.4 h) and raised dungeon kill XP by about 20–50% (guide sites, unconfirmed); no source found for its elite or boss multiplier.
+29. **2026-11-15: the D2 boss XP list above is approved** ("approve the D2 boss XP list, build it"). Built: `biome_levels.csv` → `boss_xp` and `boss_xp_shares` (Kall's three phases share his ×66.6 by base health, so the whole fight pays it once: Claude's reading of "follow diablo 2", where a boss is one kill).
 
 
 ## Playtest

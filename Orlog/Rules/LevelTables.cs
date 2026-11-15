@@ -158,11 +158,19 @@ namespace Orlog.Rules
             public string[] Bosses;
             /// <summary>Skill points for a character's first kill of this biome's boss (user, 2026-11-11; 0 when the table has none).</summary>
             public int BossSkillPoints;
+            /// <summary>
+            ///     How many ordinary creatures of its level the boss is worth in XP (D2's act bosses; user, 2026-11-15); 1
+            ///     when the table has none.
+            /// </summary>
+            public float BossXp = 1f;
+            /// <summary>Each boss prefab's share of <see cref="BossXp" /> (Kall's phases by base health); 1 for a single boss.</summary>
+            public float[] BossXpShares;
         }
 
         private readonly Dictionary<string, Biome> _biomes = new Dictionary<string, Biome>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, int> _bosses = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, Biome> _bossBiome = new Dictionary<string, Biome>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, float> _bossXp = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
 
         public IEnumerable<Biome> All => _biomes.Values;
 
@@ -191,6 +199,26 @@ namespace Orlog.Rules
                     // Optional column (added 2026-11-11 for roadmap C4).
                     BossSkillPoints = row.ContainsKey("boss_skill_points") && row["boss_skill_points"].Trim().Length > 0 ? Table.Int(row, "boss_skill_points", errors) : 0
                 };
+                // Optional columns (added 2026-11-15 for the boss XP).
+                if (row.ContainsKey("boss_xp") && row["boss_xp"].Trim().Length > 0)
+                {
+                    biome.BossXp = Table.Float(row, "boss_xp", errors);
+                }
+                string shares = row.ContainsKey("boss_xp_shares") ? row["boss_xp_shares"].Trim() : "";
+                biome.BossXpShares = shares.Length == 0
+                    ? biome.Bosses.Select(_ => 1f / Math.Max(1, biome.Bosses.Length)).ToArray()
+                    : shares.Split(';').Select(x => float.TryParse(x.Trim(), System.Globalization.NumberStyles.Float,
+                        System.Globalization.CultureInfo.InvariantCulture, out float v) ? v : -1f).ToArray();
+                if (biome.BossXp < 1f)
+                {
+                    errors.Add($"biome_levels.csv: {biome.Name}'s boss_xp must be at least 1.");
+                }
+                if (biome.BossXpShares.Length != biome.Bosses.Length || biome.BossXpShares.Any(x => x < 0f)
+                    || Math.Abs(biome.BossXpShares.Sum() - 1f) > 0.01f)
+                {
+                    errors.Add($"biome_levels.csv: {biome.Name} needs one boss_xp_shares number per boss, adding up to 1.");
+                    biome.BossXpShares = biome.Bosses.Select(_ => 1f / Math.Max(1, biome.Bosses.Length)).ToArray();
+                }
                 if (biome.Name.Length == 0 || result._biomes.ContainsKey(biome.Name))
                 {
                     errors.Add($"biome_levels.csv: biome '{biome.Name}' is empty or listed twice.");
@@ -205,13 +233,23 @@ namespace Orlog.Rules
                     errors.Add($"biome_levels.csv: {biome.Name} needs 0 < health_min <= health_max.");
                 }
                 result._biomes[biome.Name] = biome;
-                foreach (var boss in biome.Bosses)
+                for (int i = 0; i < biome.Bosses.Length; i++)
                 {
+                    string boss = biome.Bosses[i];
                     result._bosses[boss] = biome.BossLevel;
                     result._bossBiome[boss] = biome;
+                    result._bossXp[boss] = biome.BossXp * biome.BossXpShares[i];
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        ///     The XP multiplier of a creature: a listed boss's (its biome's <c>boss_xp</c> × its phase's share), else 1.
+        /// </summary>
+        public float BossXpMultiplier(string prefab)
+        {
+            return prefab != null && _bossXp.TryGetValue(prefab, out float xp) ? xp : 1f;
         }
 
         /// <summary>The boss's level from the levelling guide, or 0 if <paramref name="prefab" /> isn't a listed boss.</summary>
