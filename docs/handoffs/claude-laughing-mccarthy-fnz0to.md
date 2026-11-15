@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest.**
+**Play-test passed; `/handoff` and the pull request are left.**
 
 ## Purpose
 
@@ -12,11 +12,11 @@ The Amazon's skill tree overhaul ([#66](https://github.com/krogon-games/JotunnMo
 
 ## Done
 
-Nothing confirmed in game yet.
+Krogon's single-player play-test passed (2026-11-15, all 15 steps, no notes): points in removed skills handed back; nine cards per tab; any skill from level 1; the Learn button and its refusals; a maxed skill; slots; Multiple Shot, Freezing Arrow, Inner Sight and a passive still work; no errors.
 
 ## Half-done and known issues
 
-Built, untested (detail in `FEATURES.md` → Skill tree and skill points, Classes UI, Amazon skill bar and bow skills):
+Built and passed alone (detail in `FEATURES.md` → Skill tree and skill points, Classes UI, Amazon skill bar and bow skills):
 - **Rules (Orlog):** no tiers or prerequisites; exactly nine skills per tab (the table refuses any other count); points in removed skills are handed back; `reqLevel` and `prereqs` left the API.
 - **Removed with their code and four Harmony patches:** Magic, Fire, Cold, Ice and Exploding Arrow (last commit with them: `6090e71`; Exploding Arrow's blast is the start for Immolation Arrow). Also gone from the lists: Guided Arrow, Slow Missiles, Power Strike.
 - **Panel (CraftingOverhaul):** nine cards per tab, Learn beside the slots, 1148 × 690; five new placeholder icons; previews `docs/images/skills_panel_preview*.png`.
@@ -37,10 +37,11 @@ Built, untested (detail in `FEATURES.md` → Skill tree and skill points, Classe
 9. **2026-11-15: Power Strike leaves the Javelin and Spear tab** ("Power Strike"). Its 9: Jab, Impale, Fend, Charged Strike, Lightning Strike, Poison Javelin, Lightning Bolt, Plague Javelin, Lightning Fury (the rest can still change in the spear round, #41).
 10. **2026-11-15: Snipe, in Krogon's words:** "Charge a powerful shot, increasing damage the longer the charge. Drains stamina while charging and slowly zooms in on the target."
 11. **2026-11-15: Venom Strike is a poison cloud** ("Poison cloud": the arrow bursts into a poison cloud where it lands, poisoning everything that stands in it).
+12. **2026-11-15: the play-test passed and the look is approved** ("i filled out the playtest for this session. im really happy with it. well done!"; all 15 steps Pass on the phone page). The cards panel and the new rules stand as built, Claude's own choices included (listed above), unless he says otherwise.
 
 ## Playtest
 
-`docs/playtests/claude-laughing-mccarthy-fnz0to.md`: 15 solo steps (old character's points handed back, the look, learning from level 1, slots, the skills that stay, the log). Also on the phone page (ids `cards-1` to `cards-15`, at the top). No feedback yet.
+`docs/playtests/claude-laughing-mccarthy-fnz0to.md`: **passed** (2026-11-15, single player, all 15 steps, no notes; nothing to fix, so it is also the final play-test). Its steps are off the phone page. Nothing new for two players.
 
 ## Open questions for Krogon
 
@@ -50,8 +51,8 @@ Built, untested (detail in `FEATURES.md` → Skill tree and skill points, Classe
 
 ## Next steps
 
-1. Krogon's play-test; fix what he finds; final play-test.
-2. `/handoff`, pull request into `master`.
+1. `/handoff`, then a pull request into `master`.
+2. Coordinator at merge: version bump (Orlog, CraftingOverhaul), `STATUS.md`, `DECISIONS.md` (decisions 1–12), close #66, update #41 and #44 (their lists changed).
 3. Next rounds: the seven bow skills, a few at a time, each after its details are agreed; then C6 (#41).
 
 ## Checks
@@ -61,8 +62,8 @@ Built, untested (detail in `FEATURES.md` → Skill tree and skill points, Classe
 - Multiplayer sync: not checked yet (`/handoff`). The skill table is compiled into the DLL; everyone needs the same build.
 - Assets and names: five new icon files, eight removed (`CraftingOverhaul/Assets/Skills/`); no new tokens.
 - FEATURES.md: updated in the same commits.
-- In-game: needs Krogon's playtest.
+- In-game: PASSED in Krogon's single-player play-test (2026-11-15); two players untested (nothing new).
 
 ## Merge notes
 
-**Ready to merge: no** (not play-tested). **Gameplay changed: version bump needed at merge: Orlog, CraftingOverhaul.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`. `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj`: one linked file renamed (`SkillTreeLayout.cs` → `SkillCardsLayout.cs`).
+**Ready to merge: after `/handoff`** (play-test passed; its checks not run yet). **Gameplay changed: version bump needed at merge: Orlog, CraftingOverhaul.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`, `docs/classes-ui-brief.md`. `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj`: one linked file renamed (`SkillTreeLayout.cs` → `SkillCardsLayout.cs`).
