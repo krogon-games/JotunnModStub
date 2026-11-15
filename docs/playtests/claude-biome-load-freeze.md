@@ -8,12 +8,12 @@
 **Setup:** single player, any world, your usual mods. Recipe grouping set to **By biome** (the button right of the recipe search box). The first time, there is no saved file yet; to repeat the first-time test later, delete `BepInEx/cache/CraftingOverhaul.biomes.txt` with the game closed.
 
 ### Checklist
-1. [ ] **No freeze:** load the world. As soon as you appear, walk and turn the camera → no long freeze (before, about 20 s). Note any short stutters in the first minute.
-2. [ ] **List while it works:** straight after spawning, open a workbench → the recipes are in the game's normal order with no biome headers. Keep it open → after a while it switches to biome headers by itself. Roughly how long did that take?
-3. [ ] **Biomes still right:** the headers look as before (e.g. bronze items under Black Forest, iron under Swamp, silver under Mountain). In the console (F5), `co_biome Bronze` → "Bronze: BlackForest" with the explanation underneath.
-4. [ ] **Saved file:** quit to the main menu, load the world again, open the workbench → biome headers straight away.
-5. [ ] **Refresh:** in the console, `co_biome refresh` → a short pause, then "Biomes recalculated."; the headers are still right.
-6. [ ] **Log:** send me these lines from `BepInEx/LogOutput.log`: the ones starting `Working out item biomes`, `Resolved biomes for` and `Loaded biomes for`. No red errors from CraftingOverhaul.
+1. [x] **No freeze:** load the world. As soon as you appear, walk and turn the camera → no long freeze (before, about 20 s). Note any short stutters in the first minute.
+2. [x] **List while it works:** straight after spawning, open a workbench → the recipes are in the game's normal order with no biome headers. Keep it open → after a while it switches to biome headers by itself. Roughly how long did that take?
+3. [x] **Biomes still right:** the headers look as before (e.g. bronze items under Black Forest, iron under Swamp, silver under Mountain). In the console (F5), `co_biome Bronze` → "Bronze: BlackForest" with the explanation underneath.
+4. [x] **Saved file:** quit to the main menu, load the world again, open the workbench → biome headers straight away.
+5. [x] **Refresh:** in the console, `co_biome refresh` → a short pause, then "Biomes recalculated."; the headers are still right.
+6. [x] **Log:** send me these lines from `BepInEx/LogOutput.log`: the ones starting `Working out item biomes`, `Resolved biomes for` and `Loaded biomes for`. No red errors from CraftingOverhaul.
 
 ### Your feedback (2026-11-15)
 Build `claude/biome-load-freeze d73a4cf`, Valheim 1.0.21, from the phone page and `LogOutput.log`.

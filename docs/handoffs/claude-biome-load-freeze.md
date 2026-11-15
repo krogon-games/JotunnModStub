@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest.**
+**Fixing feedback** (play-test passed 2026-11-15; one open question on `co_biome refresh`).
 
 ## Purpose
 
@@ -16,7 +16,7 @@ Remove the 18–22 s freeze right after spawning (Krogon's 1.0.21 logs, 2026-11-
 
 ## Half-done and known issues
 
-Built, untested:
+Built and passed in the play-test:
 - **Saved result:** the solved biomes go to `BepInEx/cache/CraftingOverhaul.biomes.txt` with a key (game version, mods and versions, this DLL's build, overrides, a fingerprint of items, recipes, prefabs and building costs, vegetation, locations, spawn tables). A matching key → used at once on the next load.
 - **Background work** when there's no match: the collectors run as small steps, about 4 ms per frame; location and room prefabs load with `SoftReference.LoadAsync`, 4 at a time, and are released after reading; the solver runs on a thread-pool thread. The recipe list keeps the game's order without biome headers until it's ready, then refreshes by itself.
 - `co_biome` and `co_dump` finish any background work on the spot; `co_biome refresh` ignores and rewrites the saved file.
