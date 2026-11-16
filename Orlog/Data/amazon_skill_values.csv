@@ -3,8 +3,6 @@ MultipleShot,mana_cost,flat,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,2
 MultipleShot,arrows,count,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,arreat
 MultipleShot,weapon_damage_pct,%,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,arreat
 FreezingArrow,mana_cost,flat,9,9.25,9.5,9.75,10,10.25,10.5,10.75,11,11.25,11.5,11.75,12,12.25,12.5,12.75,13,13.25,13.5,13.75,d2r-differs
-FreezingArrow,cold_damage_min,flat,40,50,60,70,80,90,100,110,125,140,155,170,185,200,215,230,250,270,290,310,arreat
-FreezingArrow,cold_damage_max,flat,50,60,70,80,90,100,110,120,135,150,165,180,195,210,225,240,260,280,300,320,arreat
 FreezingArrow,freeze_s,s,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,arreat
 FreezingArrow,radius_yards,yards,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,arreat
 FreezingArrow,attack_rating_pct,%,40,49,58,67,76,85,94,103,112,121,130,139,148,157,166,175,184,193,202,211,arreat
@@ -36,9 +34,9 @@ PlagueJavelin,poison_damage_max,flat,42,65,90,118,148,181,216,254,323,397,476,56
 PlagueJavelin,poison_duration_s,s,3,3.2,3.4,3.6,3.8,4,4.2,4.4,4.6,4.8,5,5.2,5.4,5.6,5.8,6,6.2,6.4,6.6,6.8,d2r-differs
 PlagueJavelin,attack_rating_pct,%,30,39,48,57,66,75,84,93,102,111,120,129,138,147,156,165,174,183,192,201,arreat
 PlagueJavelin,casting_delay_s,s,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,d2r-differs
+FreezingArrow,blast_damage_pct,%,50,55,61,66,71,76,82,87,92,97,103,108,113,118,124,129,134,139,145,150,user 2026-11-16
 ForkedLightning,mana_cost,flat,4,4.25,4.5,4.75,5,5.25,5.5,5.75,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,Charged Strike mana_cost (d2r)
-ForkedLightning,lightning_damage_min,flat,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,Charged Strike lightning_damage_min (arreat)
-ForkedLightning,lightning_damage_max,flat,30,42,54,66,78,90,102,114,130,146,162,178,194,210,226,242,262,282,302,322,Charged Strike lightning_damage_max (arreat)
+ForkedLightning,fork_damage_pct,%,25,29,33,37,41,45,49,53,57,61,64,68,72,76,80,84,88,92,96,100,user 2026-11-16
 ForkedLightning,forks,count,3,3,3,3,4,4,4,4,4,5,5,5,5,5,6,6,6,6,6,7,Charged Strike bolts (arreat)
 ForkedLightning,reach_m,m,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,user 2026-11-16
 WindLance,mana_cost,flat,8,7.75,7.5,7.25,7,6.75,6.5,6.25,6,5.75,5.5,5.25,5,4.75,4.5,4.25,4,3.75,3.5,3.25,Guided Arrow mana_cost (d2r)

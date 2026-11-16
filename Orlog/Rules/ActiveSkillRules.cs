@@ -58,49 +58,6 @@ namespace Orlog.Rules
         }
     }
 
-    /// <summary>
-    ///     How many Valheim damage points one Diablo 2 damage point of a skill is worth, per character level
-    ///     (<c>Orlog/Data/skill_damage_scale.csv</c>: the best Valheim bow and arrow of that level's biome ÷ the best D2 bow
-    ///     by that level, so a skill adds as much compared with the bow's own damage as in D2).
-    /// </summary>
-    internal sealed class DamageScale
-    {
-        private readonly SortedDictionary<int, float> _byLevel = new SortedDictionary<int, float>();
-
-        public int Count => _byLevel.Count;
-
-        /// <summary>The scale at a character level (clamped to the table's levels; 1 for an empty table).</summary>
-        public float At(int level)
-        {
-            if (_byLevel.Count == 0)
-            {
-                return 1f;
-            }
-            if (_byLevel.TryGetValue(level, out float scale))
-            {
-                return scale;
-            }
-            return level < _byLevel.Keys.First() ? _byLevel.Values.First() : _byLevel.Values.Last();
-        }
-
-        public static DamageScale Parse(string csv, string file, List<string> errors)
-        {
-            var table = new DamageScale();
-            foreach (var row in Table.Read(csv, file, new[] { "level", "scale" }, errors))
-            {
-                int level = Table.Int(row, "level", errors);
-                float scale = Table.Float(row, "scale", errors);
-                if (level < 1 || scale <= 0f || table._byLevel.ContainsKey(level))
-                {
-                    errors.Add($"{file}: level {level} has scale {scale} or is listed twice.");
-                    continue;
-                }
-                table._byLevel[level] = scale;
-            }
-            return table;
-        }
-    }
-
     /// <summary>Why a skill slot can't be used right now (<c>classes-ui-brief.md</c> §3, <c>GetSlotStateJson</c>).</summary>
     internal struct SlotState
     {
@@ -306,10 +263,14 @@ namespace Orlog.Rules
             return SkillRules.EitrCost(skill, level);
         }
 
-        /// <summary>A random value between D2's min and max damage (<paramref name="roll" /> 0–1), in Valheim points.</summary>
-        public static float Damage(float d2Min, float d2Max, float roll, float scale)
+        /// <summary>
+        ///     The damage a skill adds, as a share of the shot's own damage (bow + arrow, as the game worked it out for
+        ///     this shot): <paramref name="percent" /> from the values table × the admin's multiplier. Krogon, 2026-11-16
+        ///     (#72): "All scale off the weapon"; Diablo 2's fixed points and the table that converted them are gone.
+        /// </summary>
+        public static float ShareOfShot(float shotDamage, float percent, float multiplier = 1f)
         {
-            return (d2Min + (d2Max - d2Min) * Math.Max(0f, Math.Min(1f, roll))) * scale;
+            return Math.Max(0f, shotDamage) * Math.Max(0f, percent) / 100f * Math.Max(0f, multiplier);
         }
 
         /// <summary>Multishot's angle for arrow <paramref name="index" /> of <paramref name="count" />, centred on the aim.</summary>
@@ -469,9 +430,10 @@ namespace Orlog.Rules
             return value.ToString("0.#", CultureInfo.InvariantCulture);
         }
 
-        private static string Range(SkillValueTable v, string id, string kind, int level, float scale)
+        /// <summary>A skill's share of the shot's damage as the tooltip shows it: the table's % × the admin's multiplier.</summary>
+        private static string Share(SkillValueTable v, string id, string value, int level, float multiplier)
         {
-            return N(v.Get(id, kind + "_min", level) * scale) + "–" + N(v.Get(id, kind + "_max", level) * scale);
+            return N(ShareOfShot(100f, v.Get(id, value, level), multiplier)) + "%";
         }
 
         /// <summary>
@@ -485,10 +447,10 @@ namespace Orlog.Rules
         }
 
         /// <summary>
-        ///     The tooltip line of an active skill at a level, with Valheim numbers (<paramref name="scale" /> = the damage
-        ///     scale at the character's level × the admin's multiplier), or null if the skill has no text here.
+        ///     The tooltip line of an active skill at a level (<paramref name="damageMultiplier" /> = the admin's
+        ///     <c>SkillDamageMultiplier</c>, applied to the shares of the shot's damage), or null if the skill has no text here.
         /// </summary>
-        public static string Describe(string id, SkillValueTable v, int level, float scale, float innerSightPercent)
+        public static string Describe(string id, SkillValueTable v, int level, float damageMultiplier, float innerSightPercent)
         {
             if (v == null || level < 1)
             {
@@ -499,11 +461,11 @@ namespace Orlog.Rules
                 case "MultipleShot":
                     return $"Fires {N(v.Get(id, "arrows", level))} arrows in a fan for one arrow, each at {N(v.Get(id, "weapon_damage_pct", level))}% damage";
                 case "FreezingArrow":
-                    return $"Explodes on impact: {Range(v, id, "cold_damage", level, scale)} frost damage within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m, " +
+                    return $"Explodes on impact: frost damage equal to {Share(v, id, "blast_damage_pct", level, damageMultiplier)} of the shot's damage within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m, " +
                            $"freezing for {N(v.Get(id, "freeze_s", level))} s (bosses are only slowed)";
                 case "ForkedLightning":
                     return $"Lightning strikes the enemy the arrow hits and forks to up to {N(v.Get(id, "forks", level))} other enemies within {N(v.Get(id, "reach_m", level))} m: " +
-                           $"{Range(v, id, "lightning_damage", level, scale)} lightning damage each";
+                           $"each strike deals {Share(v, id, "fork_damage_pct", level, damageMultiplier)} of the shot's damage as lightning";
                 case "WindLance":
                     return $"Hold {N(v.Get(id, "hold_s", level))} s past full draw, then release: a gust of wind {N(v.Get(id, "width_m", level) * 2f)} m wide at {N(v.Get(id, "weapon_damage_pct", level))}% damage " +
                            $"rushes {N(v.Get(id, "range_m", level))} m at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed, along the ground and through every enemy, " +

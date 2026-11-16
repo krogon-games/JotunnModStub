@@ -38,14 +38,6 @@ namespace CraftingOverhaul.Tests
             return t;
         }
 
-        private static DamageScale Scale()
-        {
-            var errors = new List<string>();
-            var t = DamageScale.Parse(Data("skill_damage_scale.csv"), "skill_damage_scale.csv", errors);
-            Assert.True(errors.Count == 0, string.Join("\n", errors));
-            return t;
-        }
-
         [Fact]
         public void EveryBuiltActiveSkillHasValuesAndText()
         {
@@ -66,8 +58,6 @@ namespace CraftingOverhaul.Tests
             var v = Values();
             Assert.Equal(2f, v.Get("MultipleShot", "arrows", 1));
             Assert.Equal(21f, v.Get("MultipleShot", "arrows", 20));
-            Assert.Equal(40f, v.Get("FreezingArrow", "cold_damage_min", 1));
-            Assert.Equal(320f, v.Get("FreezingArrow", "cold_damage_max", 20));
             Assert.Equal(2f, v.Get("FreezingArrow", "freeze_s", 1));
             Assert.Equal(3.3f, v.Get("FreezingArrow", "radius_yards", 5));
             Assert.Equal(84f, v.Get("InnerSight", "duration_s", 20));
@@ -92,24 +82,43 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void DamageScaleKeepsD2sRatioToTheBow()
+        public void SkillDamageIsAShareOfTheShot()
         {
-            var s = Scale();
-            Assert.Equal(99, s.Count);
-            // Level 1: crude bow 22 + fire arrow 33 (game dump) over D2's short bow 1-4 (2.5).
-            Assert.Equal(22f, s.At(1), 2);
-            Assert.Equal(s.At(1), s.At(-5));
-            Assert.Equal(s.At(99), s.At(150));
-            Assert.All(Enumerable.Range(1, 99), l => Assert.True(s.At(l) > 0f));
-        }
-
-        [Fact]
-        public void DamageRollsBetweenMinAndMaxAndScales()
-        {
-            Assert.Equal(10f, ActiveSkillRules.Damage(1f, 4f, 0f, 10f));
-            Assert.Equal(40f, ActiveSkillRules.Damage(1f, 4f, 1f, 10f));
-            Assert.Equal(25f, ActiveSkillRules.Damage(1f, 4f, 0.5f, 10f));
-            Assert.Equal(40f, ActiveSkillRules.Damage(1f, 4f, 7f, 10f));
+            // Krogon, 2026-11-16 (#72): "All scale off the weapon". Freezing Arrow's blast "50% at level 1, 150% at 20";
+            // each of Forked Lightning's forks "25% at level 1, 100% at 20"; even steps between, whole numbers.
+            var v = Values();
+            Assert.Equal(50f, v.Get("FreezingArrow", "blast_damage_pct", 1));
+            Assert.Equal(97f, v.Get("FreezingArrow", "blast_damage_pct", 10));
+            Assert.Equal(150f, v.Get("FreezingArrow", "blast_damage_pct", 20));
+            Assert.Equal(25f, v.Get("ForkedLightning", "fork_damage_pct", 1));
+            Assert.Equal(61f, v.Get("ForkedLightning", "fork_damage_pct", 10));
+            Assert.Equal(100f, v.Get("ForkedLightning", "fork_damage_pct", 20));
+            foreach (var row in new[] { new[] { "FreezingArrow", "blast_damage_pct" }, new[] { "ForkedLightning", "fork_damage_pct" } })
+            {
+                for (int level = 2; level <= 20; level++)
+                {
+                    Assert.True(v.Get(row[0], row[1], level) > v.Get(row[0], row[1], level - 1), row[0] + " level " + level);
+                }
+            }
+            // Diablo 2's fixed damage points of the built skills are gone from the table.
+            foreach (string gone in new[] { "cold_damage_min", "cold_damage_max" })
+            {
+                Assert.False(v.Has("FreezingArrow", gone), gone);
+            }
+            foreach (string gone in new[] { "lightning_damage_min", "lightning_damage_max" })
+            {
+                Assert.False(v.Has("ForkedLightning", gone), gone);
+            }
+            // A crude bow and a wood arrow (22 + 22 pierce, game dump): a level-1 fork is 11, a level-1 blast 22.
+            Assert.Equal(11f, ActiveSkillRules.ShareOfShot(44f, v.Get("ForkedLightning", "fork_damage_pct", 1)), 3);
+            Assert.Equal(22f, ActiveSkillRules.ShareOfShot(44f, v.Get("FreezingArrow", "blast_damage_pct", 1)), 3);
+            Assert.Equal(44f, ActiveSkillRules.ShareOfShot(44f, 100f), 3);
+            // The admin's multiplier scales it; nothing goes below zero.
+            Assert.Equal(22f, ActiveSkillRules.ShareOfShot(44f, 25f, 2f), 3);
+            Assert.Equal(0f, ActiveSkillRules.ShareOfShot(44f, 25f, 0f));
+            Assert.Equal(0f, ActiveSkillRules.ShareOfShot(-5f, 25f));
+            Assert.Equal(0f, ActiveSkillRules.ShareOfShot(44f, -25f));
+            Assert.Equal(0f, ActiveSkillRules.ShareOfShot(44f, 25f, -1f));
         }
 
         [Fact]
@@ -207,9 +216,6 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(3f, v.Get("ForkedLightning", "forks", 1));
             Assert.Equal(4f, v.Get("ForkedLightning", "forks", 5));
             Assert.Equal(7f, v.Get("ForkedLightning", "forks", 20));
-            Assert.Equal(1f, v.Get("ForkedLightning", "lightning_damage_min", 1));
-            Assert.Equal(30f, v.Get("ForkedLightning", "lightning_damage_max", 1));
-            Assert.Equal(322f, v.Get("ForkedLightning", "lightning_damage_max", 20));
             Assert.Equal(4f, v.Get("ForkedLightning", "reach_m", 1));
             Assert.Equal(4f, v.Get("ForkedLightning", "reach_m", 20));
             Assert.Equal(4f, ActiveSkillRules.EitrCost(t.Find("ForkedLightning"), v, 1));
@@ -351,14 +357,18 @@ namespace CraftingOverhaul.Tests
         public void TooltipsUseValheimNumbers()
         {
             var v = Values();
-            Assert.Equal("Explodes on impact: 400–500 frost damage within 3 m, freezing for 2 s (bosses are only slowed)",
-                ActiveSkillRules.Describe("FreezingArrow", v, 1, 10f, 25f));
+            Assert.Equal("Explodes on impact: frost damage equal to 50% of the shot's damage within 3 m, freezing for 2 s (bosses are only slowed)",
+                ActiveSkillRules.Describe("FreezingArrow", v, 1, 1f, 25f));
+            Assert.Contains("150% of the shot's damage", ActiveSkillRules.Describe("FreezingArrow", v, 20, 1f, 25f));
+            // The admin's multiplier shows in the share (and only there).
+            Assert.Contains("100% of the shot's damage", ActiveSkillRules.Describe("FreezingArrow", v, 1, 2f, 25f));
             Assert.Equal("Fires 2 arrows in a fan for one arrow, each at 75% damage", ActiveSkillRules.Describe("MultipleShot", v, 1, 10f, 25f));
             Assert.Contains("3 m", ActiveSkillRules.Describe("FreezingArrow", v, 1, 1f, 25f));
             Assert.Contains("5% more damage for 8 s", ActiveSkillRules.Describe("InnerSight", v, 1, 1f, ActiveSkillRules.InnerSightPercent(1, 5f, 1f)));
             Assert.Null(ActiveSkillRules.Describe("MultipleShot", v, 0, 1f, 25f));
-            Assert.Equal("Lightning strikes the enemy the arrow hits and forks to up to 3 other enemies within 4 m: 10–300 lightning damage each",
-                ActiveSkillRules.Describe("ForkedLightning", v, 1, 10f, 25f));
+            Assert.Equal("Lightning strikes the enemy the arrow hits and forks to up to 3 other enemies within 4 m: each strike deals 25% of the shot's damage as lightning",
+                ActiveSkillRules.Describe("ForkedLightning", v, 1, 1f, 25f));
+            Assert.Contains("100% of the shot's damage", ActiveSkillRules.Describe("ForkedLightning", v, 20, 1f, 25f));
             Assert.Equal("Hold 1.5 s past full draw, then release: a gust of wind 1.5 m wide at 100% damage rushes 50 m at 2× an arrow's speed, " +
                          "along the ground and through every enemy, staggering them and knocking them back (force 100). Released early: a normal shot, no eitr",
                 ActiveSkillRules.Describe("WindLance", v, 1, 10f, 25f));
@@ -399,9 +409,6 @@ namespace CraftingOverhaul.Tests
             var errors = new List<string>();
             SkillValueTable.Parse(header + "A,x," + row + "\nA,x," + row + "\n", "v.csv", errors);
             Assert.Contains(errors, e => e.Contains("listed twice"));
-            errors.Clear();
-            DamageScale.Parse("level,scale\n1,2\n1,3\n2,0\n", "s.csv", errors);
-            Assert.Equal(2, errors.Count);
         }
     }
 }

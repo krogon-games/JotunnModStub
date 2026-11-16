@@ -1,10 +1,10 @@
 # Handoff: `claude/magical-babbage-slwwpn`
 
-**Written:** 2026-11-16, at the start of the round (not yet by `/handoff`). Level with `master`. No pull request yet.
+**Written:** 2026-11-16, during the round (not yet by `/handoff`). Ahead of `master`, 0 behind. No pull request yet.
 
 ## Stage
 
-**Building.**
+**Waiting for Krogon's playtest.**
 
 ## Purpose
 
@@ -12,11 +12,17 @@ The skill damage round ([#72](https://github.com/krogon-games/JotunnModStub/issu
 
 ## Done
 
-Nothing yet.
+Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-Nothing built yet.
+Built, untested (detail in `FEATURES.md` → Amazon skill bar and bow skills):
+- **Skill damage scales off the weapon.** Freezing Arrow's frost blast deals 50% → 150% of the shot's own damage and each of Forked Lightning's forks 25% → 100% (whole percentages per skill level, rising evenly). Multishot and Wind Lance already worked this way and are unchanged.
+- **The damage scale is removed:** `Orlog/Data/skill_damage_scale.csv`, its code, its generator and its two tests. `SkillDamageMultiplier` (admin, default 1) now multiplies the blast's and the forks' share.
+- **Assumption, not checked in the game's code this round** (no copy to read in this session): the damage the game hands over as the arrow is made already includes the draw and the Bows skill. Wind Lance and Multishot rely on the same number and passed their play-tests. Each forked shot and each blast writes its sums to the log, so the play-test shows it.
+- **Claude's choices, open to change:** every fork of one shot deals the same damage (no separate roll per fork); "the shot's damage" adds up every damage type of bow and arrow (a fire arrow's fire counts); a half-drawn shot gives weaker forks and a weaker blast.
+- **The spear skills' table rows still hold Diablo 2's damage points** (Poison Javelin, Lightning Bolt, Plague Javelin; not built). Their shares are for the spear round (#41).
+- No Harmony patch added, changed or removed. Nothing tried with two players.
 
 ## Decisions
 
@@ -28,21 +34,28 @@ Nothing built yet.
 
 ## Playtest
 
-Nothing to test yet. Carried over from PR #71: Forked Lightning's steps `r16-7` (a troll with greylings at its feet) and `r16-8` (rank 20 with nine brutes).
+`docs/playtests/claude-magical-babbage-slwwpn.md`: 12 steps (`r72-1` … `r72-12`), also the first section of the phone page. They include Forked Lightning's two steps left over from PR #71 (`r72-6`: rank 20 with nine brutes; `r72-7`: a troll with greylings). No feedback yet.
 
 ## Open questions for Krogon
 
-None right now.
+1. After the play-test: do the two skills feel right at skill level 1 and at 20 (step `r72-12`)?
+2. Still open from PR #71: should large roots stop a Wind Lance?
 
 ## Next steps
 
-1. Build: tables, rules, tooltips, tests, docs.
-2. Play-test checklist (file and phone page), with `r16-7` and `r16-8`.
+1. Krogon play-tests; Claude reads his marks from the phone page and fixes what he finds.
+2. Final play-test, then `/handoff` and a pull request into `master`.
+3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–5), close #72.
+4. Next classes rounds (#70, then #41): each new skill's share of the weapon's damage is agreed there.
 
 ## Checks
 
-Not run yet.
+Run during the round (2026-11-16), not yet by `/handoff`:
+- Build: PASS (588 tests; Orlog and CraftingOverhaul build, 0 errors).
+- Version: gameplay changed: version bump needed at merge (Orlog). The branch changed no version.
+- In-game: needs Krogon's playtest.
+- The others: not run yet (`/handoff` runs them).
 
 ## Merge notes
 
-Not ready to merge: nothing built.
+**Not ready to merge:** waiting for Krogon's play-test. **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`. One data table deleted: `Orlog/Data/skill_damage_scale.csv`.

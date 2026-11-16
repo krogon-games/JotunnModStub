@@ -11,12 +11,14 @@ namespace Orlog.Content
     /// <summary>
     ///     The Amazon's bow skills (roadmap C5; <c>class-design.md</c> §5), applied to the arrows a skill attack fires on
     ///     the shooter's game (<see cref="SkillButton" />). Numbers per skill level from
-    ///     <c>Orlog/Data/amazon_skill_values.csv</c>; added damage in D2 points × <see cref="SkillBar.DamageScaleFor" />.
+    ///     <c>Orlog/Data/amazon_skill_values.csv</c>. Skill damage scales off the weapon (Krogon, 2026-11-16, #72): a
+    ///     blast or a fork deals a share of the shot's own damage (<see cref="ShotTag.ShotDamage" />), never fixed points.
     ///     <list type="bullet">
     ///         <item>Multishot: several arrows in an even fan for one arrow, each at 75% damage.</item>
-    ///         <item>Freezing Arrow: on impact, frost and a freeze (<see cref="FreezeName" />) on every enemy within the radius; bosses are only slowed by the frost.</item>
+    ///         <item>Freezing Arrow: on impact, frost (50% → 150% of the shot's damage) and a freeze (<see cref="FreezeName" />) on every enemy within the radius; bosses are only slowed by the frost.</item>
     ///         <item>Forked Lightning (user 2026-11-16): the arrow hits as usual; the struck enemy takes one fork of lightning and
-    ///         forks go to the nearest other enemies within reach of its body (Charged Strike's numbers).</item>
+    ///         forks go to the nearest other enemies within reach of its body (Charged Strike's fork counts and eitr; each fork
+    ///         25% → 100% of the shot's damage as lightning).</item>
     ///         <item>Wind Lance (user 2026-11-16): a charged shot (<see cref="SkillButton" />) flown by <see cref="WindLance" />.</item>
     ///     </list>
     ///     A shot's arrows carry a <see cref="ShotTag" />; impacts are handled on the shooter's game, which runs its projectiles.
@@ -35,12 +37,17 @@ namespace Orlog.Content
         private static int s_fanCount;
         private static readonly List<Character> s_inRange = new List<Character>();
 
-        /// <summary>On a skill arrow: which skill shot it, at what level and damage scale.</summary>
+        /// <summary>On a skill arrow: which skill shot it, at what level, and the shot's own damage.</summary>
         internal sealed class ShotTag : MonoBehaviour
         {
             public string SkillId;
             public int Level;
-            public float Scale;
+            /// <summary>
+            ///     The shot's own damage as the game worked it out when the arrow was made: bow + arrow, every damage
+            ///     type added up (tool damage left out), after the draw, the bow skill, Dexterity and status effects.
+            ///     The skills' shares are taken from this.
+            /// </summary>
+            public float ShotDamage;
             public bool Exploded;
         }
 
@@ -154,7 +161,7 @@ namespace Orlog.Content
                 var tag = projectile.gameObject.AddComponent<ShotTag>();
                 tag.SkillId = id;
                 tag.Level = level;
-                tag.Scale = shot.Scale;
+                tag.ShotDamage = TotalDamage(hit.m_damage);
                 switch (id)
                 {
                     case "MultipleShot":
@@ -168,9 +175,16 @@ namespace Orlog.Content
             }
         }
 
-        private static float Roll(SkillValueTable v, string id, string kind, int level, float scale)
+        /// <summary>A hit's damage with every combat type added up (chop and pickaxe damage left out).</summary>
+        private static float TotalDamage(HitData.DamageTypes d)
         {
-            return ActiveSkillRules.Damage(v.Get(id, kind + "_min", level), v.Get(id, kind + "_max", level), Random.value, scale);
+            return d.m_damage + d.m_blunt + d.m_slash + d.m_pierce + d.m_fire + d.m_frost + d.m_lightning + d.m_poison + d.m_spirit;
+        }
+
+        /// <summary>The damage a skill arrow adds: the table's share (<paramref name="value" />, in %) of the shot's own damage.</summary>
+        private static float Share(SkillValueTable v, ShotTag tag, string value)
+        {
+            return ActiveSkillRules.ShareOfShot(tag.ShotDamage, v.Get(tag.SkillId, value, tag.Level), SkillBar.DamageMultiplier());
         }
 
         // ------------------------------------------------------------ impacts
@@ -267,8 +281,10 @@ namespace Orlog.Content
             }
             float radius = v.Get(tag.SkillId, "radius_yards", tag.Level) * ActiveSkillRules.MetresPerYard;
             float freeze = v.Get(tag.SkillId, "freeze_s", tag.Level);
+            float frost = Share(v, tag, "blast_damage_pct");
             ImpactEffect("StaffIceShards", "ArrowFrost", point);
             CharactersInBlast(point, radius, struck, s_inRange);
+            int caught = 0;
             foreach (var target in s_inRange)
             {
                 if (!target || target == owner || target.IsPlayer() || target.IsDead() || !BaseAI.IsEnemy(owner, target))
@@ -276,7 +292,8 @@ namespace Orlog.Content
                     continue;
                 }
                 var hit = new HitData();
-                hit.m_damage.m_frost = Roll(v, tag.SkillId, "cold_damage", tag.Level, tag.Scale);
+                hit.m_damage.m_frost = frost;
+                caught++;
                 if (!target.IsBoss())
                 {
                     AddFreeze(hit, freeze);
@@ -290,6 +307,9 @@ namespace Orlog.Content
                 hit.SetAttacker(owner);
                 target.Damage(hit);
             }
+            // For the play-test (2026-11-16, #72): the numbers behind a blast.
+            Jotunn.Logger.LogInfo($"Orlog: Freezing Arrow (level {tag.Level}): the shot's damage {tag.ShotDamage:0.#}, blast " +
+                                  $"{v.Get(tag.SkillId, "blast_damage_pct", tag.Level):0.#}% = {frost:0.#} frost on {caught} enemies within {radius:0.#} m.");
         }
 
         // ------------------------------------------------------------ Forked Lightning
@@ -299,7 +319,7 @@ namespace Orlog.Content
 
         /// <summary>
         ///     The struck enemy takes one fork; forks go to the nearest other enemies within reach of its body, one each
-        ///     (user 2026-11-16). Each fork rolls its own lightning damage.
+        ///     (user 2026-11-16). Each fork deals the same share of the shot's damage as lightning (#72).
         /// </summary>
         private static void Fork(Character owner, ShotTag tag, Character struck)
         {
@@ -310,6 +330,8 @@ namespace Orlog.Content
             }
             int forks = Mathf.RoundToInt(v.Get(tag.SkillId, "forks", tag.Level));
             float reach = v.Get(tag.SkillId, "reach_m", tag.Level);
+            float lightning = Share(v, tag, "fork_damage_pct");
+            int struckCount = 0;
             Vector3 from = struck.GetCenterPoint();
             // Body to body: the gap between the struck enemy's collider and the other's.
             s_forkCandidates.Clear();
@@ -327,7 +349,8 @@ namespace Orlog.Content
             }
             if (!struck.IsDead())
             {
-                ForkHit(owner, tag, v, struck, from, from);
+                ForkHit(owner, lightning, struck, from, from);
+                struckCount++;
             }
             else
             {
@@ -335,14 +358,19 @@ namespace Orlog.Content
             }
             foreach (int i in ActiveSkillRules.ForkTargets(s_forkDistances, reach, forks))
             {
-                ForkHit(owner, tag, v, s_forkCandidates[i], from, s_forkCandidates[i].GetCenterPoint());
+                ForkHit(owner, lightning, s_forkCandidates[i], from, s_forkCandidates[i].GetCenterPoint());
+                struckCount++;
             }
+            // For the play-test (2026-11-16, #72): the numbers behind a shot's forks.
+            Jotunn.Logger.LogInfo($"Orlog: Forked Lightning (level {tag.Level}): the shot's damage {tag.ShotDamage:0.#}, each fork " +
+                                  $"{v.Get(tag.SkillId, "fork_damage_pct", tag.Level):0.#}% = {lightning:0.#} lightning, {struckCount} enemies struck " +
+                                  $"(up to {forks} others within {reach:0.#} m).");
         }
 
-        private static void ForkHit(Character owner, ShotTag tag, SkillValueTable v, Character target, Vector3 from, Vector3 to)
+        private static void ForkHit(Character owner, float lightning, Character target, Vector3 from, Vector3 to)
         {
             var hit = new HitData();
-            hit.m_damage.m_lightning = Roll(v, tag.SkillId, "lightning_damage", tag.Level, tag.Scale);
+            hit.m_damage.m_lightning = lightning;
             hit.m_point = to;
             hit.m_dir = (to - from).sqrMagnitude > 0.01f ? (to - from).normalized : Vector3.up;
             hit.m_ranged = true;
