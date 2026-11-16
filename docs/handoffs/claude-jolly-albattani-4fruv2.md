@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest** of Forked Lightning's last two steps (or his word that they can wait); Wind Lance's rework has passed.
+**Waiting for Krogon's playtest** of one step (the lance through a bush); everything else has passed or is his to leave.
 
 ## Purpose
 
@@ -55,25 +55,23 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 
 ## Playtest
 
-`docs/playtests/claude-jolly-albattani-4fruv2.md`. Round 1: Forked Lightning's steps 1–6 passed, Wind Lance failed. **Round 2: Wind Lance passed, all 15 steps** (build `9fc528b`; his log had no errors). Still on the phone page: Forked Lightning's `r16-7` (a troll with greylings) and `r16-8` (rank 20); the passed steps are off.
+`docs/playtests/claude-jolly-albattani-4fruv2.md`. Round 1: Forked Lightning's steps 1–6 passed, Wind Lance failed. Round 2: Wind Lance passed, all 15 steps (build `9fc528b`; no errors in his log). **Round 3: one step on the phone page, `r16c-1`** (a lance through a bush; a tree and a rock still stop it; send the log, which lists the plants).
 
 ## Open questions for Krogon
 
-1. Forked Lightning's last two steps: test them, or leave them for the balancing session?
-2. From his log: a lance aimed down more steeply than 38° at close enemies ends at the ground at once, after striking them (twice in 13 shots). Should a steep dive level out and run on too? And should bushes let the gust through (one lance ended at `Bush01`)?
-3. Forked Lightning's balance and the damage scale at low levels (a later session, his word).
-4. The other five bow skills' details, in the rounds that build them.
+1. Forked Lightning's balance and the damage scale at low levels, with its last two steps (a troll with greylings; rank 20): a later session, his word.
+2. The other five bow skills' details, in the rounds that build them.
 
 ## Next steps
 
-1. Krogon's answers to open questions 1 and 2 (a small fix round if he wants the dive or the bushes changed).
+1. Krogon rebuilds and tries the bush step.
 2. `/handoff`, then a pull request into `master`.
-3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–22), update #70 (two of seven done), a task for the damage-scale balancing.
+3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–25), update #70 (two of seven done), a task for Forked Lightning's balancing and the damage scale (with its two open steps).
 
 ## Checks
 
-2026-11-16, after the rework: 588 tests pass; Orlog builds; no version changed; `FEATURES.md`, `mod-compatibility.md` (one new patch: `Hud.UpdateCrosshair` postfix; the `Projectile.OnHit` prefix is gone), the data README and the design docs updated. In-game: needs Krogon's playtest. (`/handoff` runs the full list at the end.)
+2026-11-16, after the bush change: 589 tests pass; Orlog builds; no version changed; `FEATURES.md`, the play-test file and the state docs updated. In-game: Wind Lance passed (15 steps); the bush change needs Krogon's playtest. (`/handoff` runs the full list at the end.)
 
 ## Merge notes
 
-**Not ready to merge yet:** Wind Lance's final play-test passed; Forked Lightning's last two steps are unmarked and two small questions are open (above). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).
+**Not ready to merge yet:** one play-test step is open (the lance through a bush). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).

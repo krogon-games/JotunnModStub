@@ -120,8 +120,16 @@ Build tested: `Orlog 0.4.0 loaded (build: claude/jolly-albattani-4fruv2 9fc528b)
 
 ### What changed after the feedback
 
-Nothing yet. Asked: whether a steep dive should level out too instead of ending at the ground, and whether bushes should let the gust through.
+Krogon's answers (handoff decisions 23–25): a steep downward shot: "Leave it as it is"; bushes: "Pass through bushes"; Forked Lightning's two steps: "Leave them for the balancing session".
+
+- **Bushes and other small plants let the gust through, unharmed:** the world's vegetation that the game doesn't class as a tree and that drops only what trees drop (`Bush01`, `shrub_2`, …), anything that can be picked, and saplings and crops still growing. The log lists them once ("Wind Lance passes through N kinds of small plants: …"). Trees (young thin ones too), logs, stumps, rocks and buildings still stop it.
+
+## Round 3: one check (2026-11-16)
+
+**Build:** pull the branch again and rebuild (a newer commit than `9fc528b`).
+
+1. [ ] (`r16c-1`) Fire a charged Wind Lance through a bush (the low round Meadows bushes, a berry bush): it flies on behind it and the bush is unharmed. Fire one into a tree and a rock: it still stops. Send `BepInEx/LogOutput.log` before starting the game again (it now lists the plants the lance passes through).
 
 ### Final play-test
 
-- Wind Lance: passed (2026-11-16, all 15 steps). Forked Lightning: steps 1–6 passed; `r16-7` and `r16-8` open; balance for a later session.
+- Wind Lance: passed (2026-11-16, all 15 steps); the bush change after it has one step open (round 3). Forked Lightning: steps 1–6 passed; `r16-7` and `r16-8` go to its balancing session (Krogon's choice).

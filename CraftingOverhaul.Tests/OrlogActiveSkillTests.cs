@@ -329,6 +329,25 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void TheLancePassesThroughBushesButNotTreesOrRocks()
+        {
+            // Krogon, 2026-11-16: "Pass through bushes" (a Bush01 had stopped a lance). What trees and logs drop, as the
+            // game dump lists it; the things below are rows of data/game-dump-1.0.20/destructibles.csv.
+            var treeDrops = new HashSet<string> { "Wood", "FineWood", "Resin", "BeechSeeds", "FirCone", "Frostwood" };
+            // Bush01, shrub_2: not a tree to the game, drop wood.
+            Assert.True(ActiveSkillRules.IsSmallPlant(false, new[] { "Wood" }, treeDrops));
+            // Beech_small1, FirTree_small, a stump: the game's own type says tree.
+            Assert.False(ActiveSkillRules.IsSmallPlant(true, new[] { "Wood", "Resin" }, treeDrops));
+            // Rock_7 drops stone; a bare rock or cliff drops nothing.
+            Assert.False(ActiveSkillRules.IsSmallPlant(false, new[] { "Stone" }, treeDrops));
+            Assert.False(ActiveSkillRules.IsSmallPlant(false, new string[0], treeDrops));
+            // Wood and something else (a barrel of loot): not a plant.
+            Assert.False(ActiveSkillRules.IsSmallPlant(false, new[] { "Wood", "Coins" }, treeDrops));
+            Assert.False(ActiveSkillRules.IsSmallPlant(false, null, treeDrops));
+            Assert.False(ActiveSkillRules.IsSmallPlant(false, new[] { "Wood" }, null));
+        }
+
+        [Fact]
         public void TooltipsUseValheimNumbers()
         {
             var v = Values();

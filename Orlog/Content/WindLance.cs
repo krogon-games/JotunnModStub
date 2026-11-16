@@ -37,6 +37,93 @@ namespace Orlog.Content
 
         private static readonly List<RaycastHit> s_hits = new List<RaycastHit>();
 
+        // ------------------------------------------------------------ small plants
+
+        private static HashSet<string> s_smallPlants;
+
+        /// <summary>
+        ///     The prefabs of the world's small plants, which a lance passes through without harming them (Krogon,
+        ///     2026-11-16; a bush had stopped one in his play-test): of the vegetation the game grows in the world
+        ///     (<c>ZoneSystem.m_vegetation</c>), the breakable things the game doesn't class as trees and that drop only
+        ///     what trees drop (<see cref="ActiveSkillRules.IsSmallPlant" />). Worked out once per world, from the
+        ///     game's data, and listed in the log.
+        /// </summary>
+        private static HashSet<string> SmallPlants()
+        {
+            if (s_smallPlants != null)
+            {
+                return s_smallPlants;
+            }
+            var plants = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (!ZNetScene.instance || !ZoneSystem.instance)
+            {
+                return plants;
+            }
+            s_smallPlants = plants;
+            Safe.Run("list the small plants a Wind Lance passes through", () =>
+            {
+                var treeDrops = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var prefab in ZNetScene.instance.m_prefabs)
+                {
+                    if (!prefab)
+                    {
+                        continue;
+                    }
+                    var tree = prefab.GetComponent<TreeBase>();
+                    var log = prefab.GetComponent<TreeLog>();
+                    AddDrops(tree ? tree.m_dropWhenDestroyed : null, treeDrops);
+                    AddDrops(log ? log.m_dropWhenDestroyed : null, treeDrops);
+                }
+                var drops = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var vegetation in ZoneSystem.instance.m_vegetation)
+                {
+                    var prefab = vegetation != null ? vegetation.m_prefab : null;
+                    var destructible = prefab ? prefab.GetComponent<Destructible>() : null;
+                    if (!destructible)
+                    {
+                        continue;
+                    }
+                    drops.Clear();
+                    var dropper = prefab.GetComponent<DropOnDestroyed>();
+                    AddDrops(dropper ? dropper.m_dropWhenDestroyed : null, drops);
+                    if (ActiveSkillRules.IsSmallPlant(destructible.m_destructibleType == DestructibleType.Tree, drops, treeDrops))
+                    {
+                        plants.Add(prefab.name);
+                    }
+                }
+                var names = new List<string>(plants);
+                names.Sort(StringComparer.OrdinalIgnoreCase);
+                Jotunn.Logger.LogInfo($"Orlog: Wind Lance passes through {names.Count} kinds of small plants (and anything that can be picked or is still growing): {string.Join(", ", names)}.");
+            });
+            return plants;
+        }
+
+        private static void AddDrops(DropTable table, HashSet<string> into)
+        {
+            if (table == null || table.m_drops == null)
+            {
+                return;
+            }
+            foreach (var drop in table.m_drops)
+            {
+                if (drop.m_item)
+                {
+                    into.Add(drop.m_item.name);
+                }
+            }
+        }
+
+        /// <summary>A bush or other small plant: one of <see cref="SmallPlants" />, something that can be picked, or a sapling or crop still growing.</summary>
+        private static bool IsSmallPlant(Collider collider)
+        {
+            var hitObject = Projectile.FindHitObject(collider);
+            if (!hitObject)
+            {
+                return false;
+            }
+            return hitObject.GetComponent<Pickable>() || hitObject.GetComponent<Plant>() || SmallPlants().Contains(Utils.GetPrefabName(hitObject));
+        }
+
         // ------------------------------------------------------------ the launch
 
         /// <summary>
@@ -250,8 +337,9 @@ namespace Orlog.Content
                     Sorted(Physics.RaycastAll(from, line / lineLength, lineLength, Projectile.s_rayMaskSolids));
                     foreach (var hit in s_hits)
                     {
-                        // Creatures never stop it (enemies are struck below, friends are passed), nor do the fallen.
-                        if (!hit.collider || CharacterOf(hit.collider) || hit.collider.GetComponentInParent<Ragdoll>())
+                        // Creatures never stop it (enemies are struck below, friends are passed), nor do the fallen,
+                        // nor bushes and other small plants.
+                        if (!hit.collider || CharacterOf(hit.collider) || hit.collider.GetComponentInParent<Ragdoll>() || IsSmallPlant(hit.collider))
                         {
                             continue;
                         }

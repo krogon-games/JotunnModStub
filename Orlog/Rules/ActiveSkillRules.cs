@@ -417,6 +417,31 @@ namespace Orlog.Rules
         }
 
         /// <summary>
+        ///     Whether a breakable thing growing in the world is a small plant a Wind Lance passes through (Krogon,
+        ///     2026-11-16: "Pass through bushes"; trees, logs, rocks and buildings still stop it). Told from the game's own
+        ///     data: the game doesn't class it as a tree (its destructible type), and everything it drops is something
+        ///     trees drop (wood and the like), so not a rock. Something that drops nothing isn't one (the game's bare
+        ///     rocks and cliffs drop nothing too).
+        /// </summary>
+        public static bool IsSmallPlant(bool gameCallsItATree, IEnumerable<string> drops, ICollection<string> treeDrops)
+        {
+            if (gameCallsItATree || drops == null || treeDrops == null)
+            {
+                return false;
+            }
+            bool any = false;
+            foreach (string drop in drops)
+            {
+                if (string.IsNullOrEmpty(drop) || !treeDrops.Contains(drop))
+                {
+                    return false;
+                }
+                any = true;
+            }
+            return any;
+        }
+
+        /// <summary>
         ///     Forked Lightning's targets: of the enemies at these distances from the struck enemy's body, the nearest
         ///     <paramref name="forks" /> within <paramref name="reach" />, nearest first (their indexes). One fork each.
         /// </summary>
