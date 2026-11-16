@@ -11,6 +11,11 @@ namespace Orlog.Content
     ///     shoots as usual; the attack it starts is marked as a skill attack and pays the skill's eitr
     ///     (<c>Humanoid.StartAttack</c>). With no skill chosen, the skill button does nothing (user 2026-11-11). Keyboard and
     ///     mouse only; with a gamepad nothing changes.
+    ///     <para>
+    ///         A charged skill (Wind Lance; user 2026-11-16) must be held past full draw for its hold time
+    ///         (<c>hold_s</c>); released earlier it is a normal shot and costs nothing. A crossbow has no draw: the skill
+    ///         button holds its shot back until the release, and the hold counts from the press.
+    ///     </para>
     /// </summary>
     internal static class SkillButton
     {
@@ -29,6 +34,10 @@ namespace Orlog.Content
         private static bool s_wasHeld;
         private static bool s_wasBlockHeld;
         private static float s_lastRefusal;
+        /// <summary>A charged skill: the seconds held past full draw, whether that is enough, and (crossbow) a shot held back until the release.</summary>
+        private static float s_charge;
+        private static bool s_chargeReady;
+        private static bool s_heldBack;
 
         /// <summary>The local player's current skill attack, if its attack is still the one running.</summary>
         public static Shot Current { get; private set; }
@@ -72,11 +81,23 @@ namespace Orlog.Content
                 if (!SkillBar.TakesInput(player))
                 {
                     s_wasHeld = false;
+                    s_heldBack = false;
                     return;
                 }
                 bool held = SkillBar.KeyHeld(OrlogConfig.SkillButton.Value);
                 bool pressed = held && !s_wasHeld;
+                bool released = !held && s_wasHeld;
                 s_wasHeld = held;
+                if (released)
+                {
+                    // A crossbow's charged shot was held back: the release fires it (charged or not: StartAttack decides).
+                    if (s_heldBack && s_pending != null)
+                    {
+                        s_pendingSince = Time.time;
+                        attack = true;
+                    }
+                    s_heldBack = false;
+                }
 
                 // Block: the game's key, unless it is the skill button; then our block key.
                 bool ourBlock = SkillBar.KeyHeld(OrlogConfig.BlockKey.Value);
@@ -146,11 +167,54 @@ namespace Orlog.Content
                 {
                     s_pending = skill;
                 }
+                if (pressed)
+                {
+                    s_charge = 0f;
+                    s_chargeReady = false;
+                }
                 s_pendingSince = Time.time;
-                attack |= pressed;
-                attackHold = true;
                 block = false;
                 blockHold = false;
+                if (ActiveSkillRules.Charges(skill.Id))
+                {
+                    Charge(player, skill, pressed, ref attack, ref attackHold);
+                    return;
+                }
+                attack |= pressed;
+                attackHold = true;
+            }
+
+            /// <summary>The skill button is held on a charged skill: count the hold past full draw and mark it ready.</summary>
+            private static void Charge(Player player, SkillTable.Skill skill, bool pressed, ref bool attack, ref bool attackHold)
+            {
+                var weapon = player.GetCurrentWeapon();
+                bool draws = weapon != null && weapon.m_shared.m_attack != null && weapon.m_shared.m_attack.m_bowDraw;
+                if (draws)
+                {
+                    // A bow: the game draws it as usual; the hold counts once it is fully drawn, and starts again if the
+                    // draw is lost (out of stamina).
+                    attack |= pressed;
+                    attackHold = true;
+                    s_charge = player.GetAttackDrawPercentage() >= 1f ? s_charge + Time.deltaTime : 0f;
+                }
+                else
+                {
+                    // A crossbow: no draw. Hold the shot back until the release; the hold counts while it is loaded.
+                    s_heldBack = true;
+                    attack = false;
+                    attackHold = false;
+                    bool loaded = weapon != null && (weapon.m_shared.m_attack == null || !weapon.m_shared.m_attack.m_requiresReload || player.IsWeaponLoaded());
+                    s_charge = loaded ? s_charge + Time.deltaTime : 0f;
+                }
+                var values = SkillBar.ValuesFor(Attributes.ClassOf(player));
+                float hold = values?.Get(skill.Id, "hold_s", SkillBar.LevelOf(player, skill.Id)) ?? 0f;
+                bool ready = ActiveSkillRules.ChargeReady(s_charge, hold);
+                if (ready)
+                {
+                    // The glow lasts while this keeps being called; the sound plays the moment the charge is ready.
+                    BowSkills.ChargeReadyCue(player, !s_chargeReady);
+                }
+                s_chargeReady = ready;
             }
         }
 
@@ -174,6 +238,17 @@ namespace Orlog.Content
                 Safe.Run("start a skill attack", () =>
                 {
                     var player = (Player)__instance;
+                    // A charged skill released before it was ready: a normal shot, no eitr (user 2026-11-16).
+                    if (ActiveSkillRules.Charges(skill.Id))
+                    {
+                        bool ready = s_chargeReady;
+                        s_chargeReady = false;
+                        s_charge = 0f;
+                        if (!ready)
+                        {
+                            return;
+                        }
+                    }
                     float cost = SkillBar.CostOf(player, skill);
                     if (cost > 0f && !player.HaveEitr(cost))
                     {

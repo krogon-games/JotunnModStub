@@ -53,7 +53,7 @@ namespace CraftingOverhaul.Tests
             var built = Tree().Skills.Where(s => s.Built && s.Kind != "passive").ToList();
             Assert.Equal(built.Select(s => s.Id).OrderBy(x => x), v.SkillIds.OrderBy(x => x));
             // The bow skills and Inner Sight (C5) have their tooltip text; the spear skills come with C6.
-            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight" })
+            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight", "ForkedLightning", "WindLance" })
             {
                 Assert.False(string.IsNullOrEmpty(ActiveSkillRules.Describe(id, v, 1, 1f, 25f)), id);
             }
@@ -199,6 +199,82 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void ForkedLightningTakesChargedStrikesNumbers()
+        {
+            // Krogon, 2026-11-16: "Charged Strike's"; forks reach "4 m".
+            var v = Values();
+            var t = Tree();
+            Assert.Equal(3f, v.Get("ForkedLightning", "forks", 1));
+            Assert.Equal(4f, v.Get("ForkedLightning", "forks", 5));
+            Assert.Equal(7f, v.Get("ForkedLightning", "forks", 20));
+            Assert.Equal(1f, v.Get("ForkedLightning", "lightning_damage_min", 1));
+            Assert.Equal(30f, v.Get("ForkedLightning", "lightning_damage_max", 1));
+            Assert.Equal(322f, v.Get("ForkedLightning", "lightning_damage_max", 20));
+            Assert.Equal(4f, v.Get("ForkedLightning", "reach_m", 1));
+            Assert.Equal(4f, v.Get("ForkedLightning", "reach_m", 20));
+            Assert.Equal(4f, ActiveSkillRules.EitrCost(t.Find("ForkedLightning"), v, 1));
+            Assert.Equal(8.75f, ActiveSkillRules.EitrCost(t.Find("ForkedLightning"), v, 20));
+            Assert.True(t.Find("ForkedLightning").Built);
+            Assert.Equal("", ActiveSkillRules.SlotRefusal(t.Find("ForkedLightning"), 1));
+        }
+
+        [Fact]
+        public void WindLanceTakesGuidedArrowsNumbers()
+        {
+            // Krogon, 2026-11-16: "Guided Arrow's numbers"; the push "Grows with skill level" (100 to 200); "3 seconds"
+            // past full draw; "Twice as fast"; "50 m".
+            var v = Values();
+            var t = Tree();
+            Assert.Equal(100f, v.Get("WindLance", "weapon_damage_pct", 1));
+            Assert.Equal(107f, v.Get("WindLance", "weapon_damage_pct", 2));
+            Assert.Equal(233f, v.Get("WindLance", "weapon_damage_pct", 20));
+            Assert.Equal(100f, v.Get("WindLance", "knockback", 1));
+            Assert.Equal(200f, v.Get("WindLance", "knockback", 20));
+            for (int level = 2; level <= 20; level++)
+            {
+                Assert.True(v.Get("WindLance", "knockback", level) > v.Get("WindLance", "knockback", level - 1), "level " + level);
+            }
+            Assert.Equal(3f, v.Get("WindLance", "hold_s", 1));
+            Assert.Equal(200f, v.Get("WindLance", "speed_pct", 1));
+            Assert.Equal(50f, v.Get("WindLance", "range_m", 20));
+            Assert.Equal(8f, ActiveSkillRules.EitrCost(t.Find("WindLance"), v, 1));
+            Assert.Equal(3.25f, ActiveSkillRules.EitrCost(t.Find("WindLance"), v, 20));
+            Assert.True(t.Find("WindLance").Built);
+        }
+
+        [Fact]
+        public void OnlyWindLanceChargesAndItIsReadyAfterItsHold()
+        {
+            Assert.True(ActiveSkillRules.Charges("WindLance"));
+            Assert.False(ActiveSkillRules.Charges("ForkedLightning"));
+            Assert.False(ActiveSkillRules.Charges("MultipleShot"));
+            Assert.False(ActiveSkillRules.Charges(null));
+            Assert.False(ActiveSkillRules.ChargeReady(0f, 3f));
+            Assert.False(ActiveSkillRules.ChargeReady(2.99f, 3f));
+            Assert.True(ActiveSkillRules.ChargeReady(3f, 3f));
+            Assert.True(ActiveSkillRules.ChargeReady(10f, 3f));
+            // No hold time: ready at once.
+            Assert.True(ActiveSkillRules.ChargeReady(0f, 0f));
+        }
+
+        [Fact]
+        public void ForksGoToTheNearestEnemiesWithinReach()
+        {
+            // Five enemies at these distances from the struck one; reach 4 m.
+            var distances = new List<float> { 3.5f, 9f, 1f, 4f, 2f };
+            Assert.Equal(new[] { 2, 4, 0 }, ActiveSkillRules.ForkTargets(distances, 4f, 3));
+            // More forks than enemies in reach: everyone in reach, once each (4 m itself counts).
+            Assert.Equal(new[] { 2, 4, 0, 3 }, ActiveSkillRules.ForkTargets(distances, 4f, 7));
+            Assert.Equal(new[] { 2 }, ActiveSkillRules.ForkTargets(distances, 4f, 1));
+            // Nobody in reach, no forks, or no list: none.
+            Assert.Empty(ActiveSkillRules.ForkTargets(distances, 0.5f, 3));
+            Assert.Empty(ActiveSkillRules.ForkTargets(distances, 4f, 0));
+            Assert.Empty(ActiveSkillRules.ForkTargets(null, 4f, 3));
+            // Equal distances keep their order.
+            Assert.Equal(new[] { 0, 1 }, ActiveSkillRules.ForkTargets(new List<float> { 2f, 2f, 2f }, 4f, 2));
+        }
+
+        [Fact]
         public void TooltipsUseValheimNumbers()
         {
             var v = Values();
@@ -208,6 +284,13 @@ namespace CraftingOverhaul.Tests
             Assert.Contains("3 m", ActiveSkillRules.Describe("FreezingArrow", v, 1, 1f, 25f));
             Assert.Contains("5% more damage for 8 s", ActiveSkillRules.Describe("InnerSight", v, 1, 1f, ActiveSkillRules.InnerSightPercent(1, 5f, 1f)));
             Assert.Null(ActiveSkillRules.Describe("MultipleShot", v, 0, 1f, 25f));
+            Assert.Equal("Lightning strikes the enemy the arrow hits and forks to up to 3 other enemies within 4 m: 10–300 lightning damage each",
+                ActiveSkillRules.Describe("ForkedLightning", v, 1, 10f, 25f));
+            Assert.Equal("Hold 3 s past full draw, then release: a lance of wind at 100% damage flies 50 m dead straight at 2× an arrow's speed, " +
+                         "through every enemy, knocking them back (force 100). Released early: a normal shot, no eitr",
+                ActiveSkillRules.Describe("WindLance", v, 1, 10f, 25f));
+            Assert.Contains("233% damage", ActiveSkillRules.Describe("WindLance", v, 20, 1f, 25f));
+            Assert.Contains("up to 7 other enemies", ActiveSkillRules.Describe("ForkedLightning", v, 20, 1f, 25f));
             // A removed skill has no text.
             Assert.Null(ActiveSkillRules.Describe("FireArrow", v, 1, 1f, 25f));
         }

@@ -22,7 +22,8 @@ Outputs:
   data/d2-reference/amazon_levels.csv (Arreat Summit; D2R the same), with the tooltip text. Penetrate takes Critical
   Strike's curve (user, 2026-11-11: D2's Penetrate raises attack rating, which Valheim doesn't have).
 - Orlog/Data/amazon_skill_values.csv: the per-level values (1-20) of the Amazon's built active skills, unchanged from
-  data/d2-reference/amazon_levels.csv (D2R where it differs from classic: user 2026-11-11), keyed by skill id.
+  data/d2-reference/amazon_levels.csv (D2R where it differs from classic: user 2026-11-11), keyed by skill id. A skill
+  D2 doesn't have (Forked Lightning, Wind Lance) takes the numbers the user agreed for it (NEW_SKILLS).
 - Orlog/Data/skill_damage_scale.csv: per character level, how many Valheim damage points one Diablo 2 damage point of a
   skill is worth. It keeps D2's ratio of skill damage to bow damage: the best Valheim bow plus the best arrow obtainable
   in the biome of that level (game dump: items.csv and biome_items.csv, quality 1) divided by the average damage of
@@ -83,12 +84,12 @@ def boss_xp_shares(bosses):
 # no level tiers, no prerequisites, exactly nine skills per tab, shown as cards three by three in the order below.
 # Each: name, status, kind (attack = on the skill button, cast = on its hotkey, passive = no slot), the weapon it needs,
 # what it does here. A skill Diablo 2 also has (the same name in data/d2-reference/amazon.csv) takes D2's mana as its
-# eitr cost; a new one (Forked Lightning, Wind Lance, Snipe, Venom Strike, Shackle Shot) has no cost until the user
-# agrees its numbers in the round that builds it.
+# eitr cost; a new one takes the numbers the user agreed for it (NEW_SKILLS below), and one not agreed yet (Snipe, Venom
+# Strike, Shackle Shot) has no cost until the round that builds it.
 AMAZON = [
     ("Bow and Crossbow", [
-        ("Forked Lightning", "later", "attack", "bow", "The arrow hits an enemy, then lightning forks from its body to nearby enemies"),
-        ("Wind Lance", "later", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, knocking enemies back"),
+        ("Forked Lightning", "v1", "attack", "bow", "The arrow hits an enemy, then lightning forks from its body to nearby enemies"),
+        ("Wind Lance", "v1", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, passing through enemies and knocking them back"),
         ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
         ("Multishot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
         ("Strafe", "later", "attack", "bow", "A volley of arrows at several nearby targets"),
@@ -125,6 +126,58 @@ AMAZON = [
 D2_NAMES = {"Multishot": "Multiple Shot"}
 SKILLS_PER_TAB = 9
 SKILL_COLS = 3
+
+# Skills Diablo 2 doesn't have, with the numbers the user agreed (2026-11-16, docs/handoffs/claude-jolly-albattani-4fruv2.md).
+# name -> the D2 skill whose mana it takes (eitr, 1:1), then its rows of amazon_skill_values.csv:
+#   (value, unit, ("d2", D2 skill, D2 value, add)) copies that row of data/d2-reference/amazon_levels.csv, plus `add`;
+#   (value, unit, ("flat", number)) is the same at every level;
+#   (value, unit, ("line", level 1, level 20)) rises evenly from level 1 to level 20, to whole numbers.
+NEW_SKILLS = {
+    # Decisions 3-5: Charged Strike's numbers ("Charged Strike's"), forks reach 4 m ("4 m"), and the struck enemy
+    # takes one fork itself.
+    "Forked Lightning": ("Charged Strike", [
+        ("mana_cost", "flat", ("d2", "Charged Strike", "mana_cost", 0)),
+        ("lightning_damage_min", "flat", ("d2", "Charged Strike", "lightning_damage_min", 0)),
+        ("lightning_damage_max", "flat", ("d2", "Charged Strike", "lightning_damage_max", 0)),
+        ("forks", "count", ("d2", "Charged Strike", "bolts", 0)),
+        ("reach_m", "m", ("flat", 4)),
+    ]),
+    # Decisions 6-12: Guided Arrow's numbers ("Guided Arrow's numbers": the arrow's own damage, +7% per level, D2R);
+    # the push from 100 (the Staff of Embers' m_attackForce) to 200 (the iron sledge's; game dump item_details.csv)
+    # ("Grows with skill level"); 3 s of holding past full draw ("3 seconds"); twice a fully drawn arrow's speed
+    # ("Twice as fast"); gone after 50 m ("50 m").
+    "Wind Lance": ("Guided Arrow", [
+        ("mana_cost", "flat", ("d2", "Guided Arrow", "mana_cost", 0)),
+        ("weapon_damage_pct", "%", ("d2", "Guided Arrow", "damage_pct", 100)),
+        ("knockback", "flat", ("line", 100, 200)),
+        ("hold_s", "s", ("flat", 3)),
+        ("speed_pct", "%", ("flat", 200)),
+        ("range_m", "m", ("flat", 50)),
+    ]),
+}
+
+
+def number(value):
+    """A number as the tables write it: whole when it is whole."""
+    return str(int(value)) if float(value) == int(value) else ("%g" % value)
+
+
+def new_skill_rows(name, per_level):
+    """The amazon_skill_values.csv rows of a skill in NEW_SKILLS."""
+    rows = []
+    for value, unit, rule in NEW_SKILLS[name][1]:
+        if rule[0] == "d2":
+            source = per_level[(rule[1], rule[2])]
+            levels = [number(float(source["l%d" % i]) + rule[3]) for i in range(1, 21)]
+            note = "%s %s (%s)%s" % (rule[1], rule[2], source["source"], " +%d" % rule[3] if rule[3] else "")
+        elif rule[0] == "flat":
+            levels = [number(rule[1])] * 20
+            note = "user 2026-11-16"
+        else:
+            levels = [number(round(rule[1] + (rule[2] - rule[1]) * (i - 1) / 19.0)) for i in range(1, 21)]
+            note = "user 2026-11-16"
+        rows.append([name.replace(" ", ""), value, unit] + levels + [note])
+    return rows
 
 # The Amazon's passives (roadmap C3; user decisions 2026-11-11): skill id -> (effect, the amazon_levels.csv row whose
 # per-level chances it takes, tooltip text with {0} for the chance).
@@ -263,7 +316,7 @@ def main():
             assert len(tab_skills) == SKILLS_PER_TAB, "every tab has exactly nine skills (user, 2026-11-15)"
             for i, (name, status, kind, needs, text) in enumerate(tab_skills):
                 d2_name = D2_NAMES.get(name, name)
-                source = d2.get(d2_name)
+                source = d2.get(NEW_SKILLS[name][0]) if name in NEW_SKILLS else d2.get(d2_name)
                 costs = kind != "passive" and source is not None
                 w.writerow([d2_name.replace(" ", ""), name, tab, i // SKILL_COLS + 1, i % SKILL_COLS + 1, status, kind, needs,
                             source["mana_base"] if costs else "0", source["mana_per_lvl"] if costs else "0", text])
@@ -280,8 +333,11 @@ def main():
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["id", "value", "unit"] + ["l%d" % i for i in range(1, 21)] + ["source"])
         for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv")):
-            if r["skill"] in built_active:
+            if r["skill"] in built_active and r["skill"] not in NEW_SKILLS:
                 w.writerow([r["skill"].replace(" ", ""), r["value"], r["unit"]] + [r["l%d" % i] for i in range(1, 21)] + [r["source"]])
+        for name in NEW_SKILLS:
+            if name in built_active:
+                w.writerows(new_skill_rows(name, per_level))
     write_damage_scale()
     print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv, amazon_skills.csv, amazon_passives.csv, "
           "amazon_skill_values.csv and skill_damage_scale.csv to", OUT)

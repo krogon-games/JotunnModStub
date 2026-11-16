@@ -260,6 +260,7 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 4. **A** shoots Freezing Arrow at a group of creatures B's game runs → they take frost damage and freeze (can't move) for the skill's seconds. (Ice Arrow and Exploding Arrow were removed by the skill tree overhaul, 2026-11-15, `claude/laughing-mccarthy-fnz0to`.)
 5. **A** casts Inner Sight near creatures B's game runs → A sees them glow; **B's** hits on them also do more damage (5% more at skill level 1, 24% at level 20; your decision of 2026-11-15).
 6. **A and B** kill a boss together (both within 70 m) → both get "First victory over this foe" and the skill points (a classless B gets them once a class is chosen).
+7. **(2026-11-16, `claude/jolly-albattani-4fruv2`; solo steps in [`playtests/claude-jolly-albattani-4fruv2.md`](playtests/claude-jolly-albattani-4fruv2.md))** **A** shoots Forked Lightning at one of a group of creatures B's game runs → the struck creature and those next to it take lightning damage; B sees the bursts (the lines of light show only for A). **A** fires a charged Wind Lance through a line of creatures B's game runs → each is hit and pushed back; B sees a fast arrow.
 
 ### Part 3: a rip run (about 45 minutes)
 

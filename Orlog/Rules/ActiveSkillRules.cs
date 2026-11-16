@@ -323,6 +323,46 @@ namespace Orlog.Rules
             return (index - (count - 1) / 2f) * step;
         }
 
+        // ------------------------------------------------------------ Wind Lance and Forked Lightning (user, 2026-11-16)
+
+        /// <summary>A skill whose shot must be charged: held on the skill button past full draw (Wind Lance).</summary>
+        public static bool Charges(string skillId)
+        {
+            return string.Equals(skillId, "WindLance", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        ///     Whether a charged shot is ready: held for <paramref name="holdSeconds" /> after the bow reached full draw
+        ///     (a crossbow has no draw, so from the press). A skill with no hold time is ready at once.
+        /// </summary>
+        public static bool ChargeReady(float heldPastFullDraw, float holdSeconds)
+        {
+            return holdSeconds <= 0f || heldPastFullDraw >= holdSeconds;
+        }
+
+        /// <summary>
+        ///     Forked Lightning's targets: of the enemies at these distances from the struck enemy's body, the nearest
+        ///     <paramref name="forks" /> within <paramref name="reach" />, nearest first (their indexes). One fork each.
+        /// </summary>
+        public static List<int> ForkTargets(IList<float> distances, float reach, int forks)
+        {
+            var result = new List<int>();
+            if (distances == null || forks < 1)
+            {
+                return result;
+            }
+            for (int i = 0; i < distances.Count; i++)
+            {
+                if (distances[i] <= reach)
+                {
+                    result.Add(i);
+                }
+            }
+            // Nearest first; equal distances keep their order.
+            var ordered = result.OrderBy(i => distances[i]).ThenBy(i => i).Take(forks).ToList();
+            return ordered;
+        }
+
         private static string N(float value)
         {
             return value.ToString("0.#", CultureInfo.InvariantCulture);
@@ -360,6 +400,13 @@ namespace Orlog.Rules
                 case "FreezingArrow":
                     return $"Explodes on impact: {Range(v, id, "cold_damage", level, scale)} frost damage within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m, " +
                            $"freezing for {N(v.Get(id, "freeze_s", level))} s (bosses are only slowed)";
+                case "ForkedLightning":
+                    return $"Lightning strikes the enemy the arrow hits and forks to up to {N(v.Get(id, "forks", level))} other enemies within {N(v.Get(id, "reach_m", level))} m: " +
+                           $"{Range(v, id, "lightning_damage", level, scale)} lightning damage each";
+                case "WindLance":
+                    return $"Hold {N(v.Get(id, "hold_s", level))} s past full draw, then release: a lance of wind at {N(v.Get(id, "weapon_damage_pct", level))}% damage flies " +
+                           $"{N(v.Get(id, "range_m", level))} m dead straight at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed, through every enemy, " +
+                           $"knocking them back (force {N(v.Get(id, "knockback", level))}). Released early: a normal shot, no eitr";
                 case "InnerSight":
                     return $"Enemies within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m glow and take {N(innerSightPercent)}% more damage for {N(v.Get(id, "duration_s", level))} s";
                 default:
