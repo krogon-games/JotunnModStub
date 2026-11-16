@@ -128,8 +128,19 @@ Krogon's answers (handoff decisions 23–25): a steep downward shot: "Leave it a
 
 **Build:** pull the branch again and rebuild (a newer commit than `9fc528b`).
 
-1. [ ] (`r16c-1`) Fire a charged Wind Lance through a bush (the low round Meadows bushes, a berry bush): it flies on behind it and the bush is unharmed. Fire one into a tree and a rock: it still stops. Send `BepInEx/LogOutput.log` before starting the game again (it now lists the plants the lance passes through).
+1. [x] (`r16c-1`) Fire a charged Wind Lance through a bush (the low round Meadows bushes, a berry bush): it flies on behind it and the bush is unharmed. Fire one into a tree and a rock: it still stops. Send `BepInEx/LogOutput.log` before starting the game again (it now lists the plants the lance passes through).
 
 ### Final play-test
 
 - Wind Lance: passed (2026-11-16, all 15 steps); the bush change after it has one step open (round 3). Forked Lightning: steps 1–6 passed; `r16-7` and `r16-8` go to its balancing session (Krogon's choice).
+
+### Your feedback (2026-11-16, late evening)
+
+Build tested: `Orlog 0.4.0 loaded (build: claude/jolly-albattani-4fruv2 00c7b57)`.
+
+- `r16c-1`: **passed** (phone page; "done, passed.").
+- **The log:** no errors. Three lances: one flew its 50 m along the ground; one struck an enemy and ended at a rock (`Rock_7`) after 32 m; one ended at a birch (`Birch1`) after 14 m. The list it wrote: "Wind Lance passes through 11 kinds of small plants …: BlueberryBush, Bush01, Bush01_deepnorth, Bush01_heath, Crow, Greydwarf_Root, HugeRoot1, LingonberryBush, RaspberryBush, shrub_2, shrub_2_heath." Three of those aren't small plants (a crow and two kinds of large root); the gust passes them harmlessly. Left as it is unless he wants it changed.
+
+### Final play-test (the round)
+
+- **Passed.** Wind Lance: 15 steps (build `9fc528b`) and the bush check (build `00c7b57`). Forked Lightning: steps 1–6; its last two steps and its balance go to a later session (his choice).

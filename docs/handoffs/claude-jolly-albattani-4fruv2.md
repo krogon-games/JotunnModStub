@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest** of one step (the lance through a bush); everything else has passed or is his to leave.
+**Ready to merge**, once `/handoff` has run its checks (Krogon's final play-test passed).
 
 ## Purpose
 
@@ -12,7 +12,7 @@ The first two of the Amazon's seven bow skills still to build ([#70](https://git
 
 ## Done
 
-- **Wind Lance (reworked) passed** Krogon's single-player play-test, all 15 steps (2026-11-16, build `9fc528b`): the 1.5 s hold on the draw circle ("yes"), the look, through enemies and along the ground, what stops it, a troll, rank 20, fire arrows, a crossbow, the older skills, no errors.
+- **Wind Lance passed** Krogon's single-player play-tests (2026-11-16): the rework's 15 steps (build `9fc528b`) and the bush check (build `00c7b57`).
 - **Forked Lightning works** (steps 1–6 passed the same day).
 
 ## Half-done and known issues
@@ -23,6 +23,7 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 - **Claude's choices, open to change:** the gust runs 0.75 m above the ground and follows slopes up to 38° (the slope a player can stand on, game code); it skips creatures that are neutral until attacked; the look's sizes and colours; the circle narrows to 0.06 and turns pale blue; a crossbow charges with no stamina cost; Forked Lightning's struck-enemy fork is on top of the 3 → 7.
 - Other players see the lance as a fast arrow without the wind, and the forks without the lines.
 - **Subagents:** the look was built by a Sonnet helper (read and checked by the main session); the Opus review of the flight code stopped at a usage limit, so the main session reviewed it against the game's code itself (one bug found and fixed: a crossbow's charged shot left as a plain bolt).
+- **The small-plant list has three odd members** (his log): a crow and two kinds of large root (`Greydwarf_Root`, `HugeRoot1`) also drop only wood, so the gust passes them, harmlessly.
 - Five bow skills still say "Coming later": Snipe, Strafe, Immolation Arrow, Venom Strike, Shackle Shot.
 
 ## Decisions
@@ -52,26 +53,27 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 23. **2026-11-16: a steep downward shot still ends at the ground** ("Leave it as it is": a lance aimed down more steeply than 38° strikes the dirt, after hitting the enemies right there), over "always level out".
 24. **2026-11-16: bushes and small plants let the gust through** ("Pass through bushes": bushes, saplings and other small plants no longer stop it and are not damaged; trees, logs, rocks and buildings still stop it).
 25. **2026-11-16: Forked Lightning's last two steps go to the balancing session** ("Leave them for the balancing session": a troll with greylings at its feet; rank 20 with nine brutes); this round can be merged without them.
+26. **2026-11-16 (late evening): the bush check passed** ("done, passed."; `r16c-1` Pass on the phone page; build `00c7b57`). The round's play-tests are complete.
 
 ## Playtest
 
-`docs/playtests/claude-jolly-albattani-4fruv2.md`. Round 1: Forked Lightning's steps 1–6 passed, Wind Lance failed. Round 2: Wind Lance passed, all 15 steps (build `9fc528b`; no errors in his log). **Round 3: one step on the phone page, `r16c-1`** (a lance through a bush; a tree and a rock still stop it; send the log, which lists the plants).
+`docs/playtests/claude-jolly-albattani-4fruv2.md`: **passed.** Round 1: Forked Lightning's steps 1–6 passed, Wind Lance failed. Round 2: Wind Lance passed, all 15 steps. Round 3: the lance through a bush passed. Nothing of this round is left on the phone page.
 
 ## Open questions for Krogon
 
 1. Forked Lightning's balance and the damage scale at low levels, with its last two steps (a troll with greylings; rank 20): a later session, his word.
-2. The other five bow skills' details, in the rounds that build them.
+2. The log's list of what a lance passes through includes a crow and two kinds of large root (`Greydwarf_Root`, `HugeRoot1`): leave, or make large roots stop it?
+3. The other five bow skills' details, in the rounds that build them.
 
 ## Next steps
 
-1. Krogon rebuilds and tries the bush step.
-2. `/handoff`, then a pull request into `master`.
-3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–25), update #70 (two of seven done), a task for Forked Lightning's balancing and the damage scale (with its two open steps).
+1. `/handoff` (the full checks), then a pull request into `master`.
+2. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–26), update #70 (two of seven done), a task for Forked Lightning's balancing and the damage scale (with its two open steps).
 
 ## Checks
 
-2026-11-16, after the bush change: 589 tests pass; Orlog builds; no version changed; `FEATURES.md`, the play-test file and the state docs updated. In-game: Wind Lance passed (15 steps); the bush change needs Krogon's playtest. (`/handoff` runs the full list at the end.)
+2026-11-16, late evening: 589 tests pass; Orlog builds; no version changed; docs updated. In-game: PASSED in Krogon's single-player play-tests (Wind Lance: 15 steps and the bush check; Forked Lightning: steps 1–6); two players untested. (`/handoff` runs the full list.)
 
 ## Merge notes
 
-**Not ready to merge yet:** one play-test step is open (the lance through a bush). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).
+**Ready to merge once `/handoff` has run:** the final play-test passed and everything is pushed; the branch was level with `master` at the round's start (`/handoff` checks again). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).
