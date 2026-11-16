@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest.**
+**Building** (three more bow skills; the skill damage remake waits for Krogon's playtest).
 
 ## Purpose
 
@@ -31,6 +31,11 @@ Built, untested (detail in `FEATURES.md` → Amazon skill bar and bow skills):
 3. **2026-11-16: every damage skill scales off the weapon** ("All scale off the weapon"): a remake in which each damage skill deals a percentage of the shot's own damage (bow + arrow), growing with skill level; Diablo 2's fixed damage points and the conversion table (`skill_damage_scale.csv`) go away; the bow and spear skills still to build follow the same rule. Chosen over "keep fixed numbers, fix the table" and "only tone down the worst". Each skill's percentages: to be proposed and approved.
 4. **2026-11-16: Freezing Arrow's frost blast deals 50% of the shot's damage at skill level 1, 150% at 20** ("50% at level 1, 150% at 20", over 100% → 233%, Wind Lance's, and 75% → 200%). The arrow's own hit on its target stays as it is; the 3 m radius and the 2-second freeze are unchanged.
 5. **2026-11-16: each of Forked Lightning's forks deals 25% of the shot's damage at skill level 1, 100% at 20** ("25% at level 1, 100% at 20", over Diablo 2's ratio to Freezing Arrow and 50% → 150%). The fork counts (3 → 7 others, plus one on the struck enemy) and the 4 m reach are unchanged.
+6. **2026-11-16: the round grows: start building the other Amazon skills, with subagents** ("I don't have a chance to play test at the moment, but we should make use of the five hour session limit. Start building out the other Amazon skills use sub agents.").
+7. **2026-11-16: three bow skills now, on this branch** ("Only three bow skills": Strafe, Immolation Arrow and Venom Strike; Snipe and Shackle Shot wait for another round), over all five and over "bow skills, then spear skills".
+8. **2026-11-16: Strafe's arrows each deal 75% of the shot's damage** ("75% of your shot each", Multishot's share; over 50% → 100% and Diablo 2's 105% → 200%). As put in the question: on release one arrow from the quiver becomes a volley, each arrow flying by itself at a different enemy in front of the player within 16.5 m (Inner Sight's reach); Diablo 2's counts (up to 5 enemies at skill level 1, 10 from level 6; at least 2 arrows, 7 at level 20, shared between few enemies); 11 eitr.
+9. **2026-11-16: Immolation Arrow: blast 25% → 100% of the shot's damage, burning ground 10% → 30% a second** ("Blast 25%→100%, fire 10%→30% a second", over a 50% → 150% blast and over a 25% → 75% patch). As put in the question: the blast reaches 3 m, the ground burns for 4 seconds (Diablo 2's) and hurts enemies standing in it every second; eitr 6 + 0.25 per level (Diablo 2's).
+10. **2026-11-16: Venom Strike's cloud poisons for 25% → 100% of the shot's damage** ("25% at level 1, 100% at 20", over 50% → 150% and 100% → 233%). As put in the question: a cloud 3 m in every direction hangs for 4 seconds where the arrow lands; everything inside is poisoned (damage over time) and re-poisoned each second it stays; no blast; the arrow hits as usual.
 
 ## Playtest
 
