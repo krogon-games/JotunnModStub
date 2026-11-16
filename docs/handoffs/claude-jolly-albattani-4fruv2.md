@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest.**
+**Fixing feedback.**
 
 ## Purpose
 
@@ -37,6 +37,10 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 10. **2026-11-16: the extra hold is 3 seconds** after full draw (Krogon's own number, "3 seconds", over the offered 0.5, 1 and 1.5 s). Stamina keeps draining at the bow's rate while holding; a sound and a glow mark the lance as ready; released earlier it is a normal arrow and costs no eitr (Claude's proposal in the question, not objected to).
 11. **2026-11-16: the lance flies twice as fast** as a fully drawn arrow from the same bow ("Twice as fast", over 1.5× and 3×).
 12. **2026-11-16: the lance fades after 50 m** ("50 m", over 30 m and no limit).
+13. **2026-11-16: fix Wind Lance before the rest of the play-test** ("theres a few more steps to playtest but lets fix windlance first. it feels underwhelming"). His report: "It doesnt seem to penetrate targets, i was trying my best to line greylings up in a line and then shoot the first one and get the ones behind him too but only the first one got damaged. I think out of a dozen shots, only 1 of them pushed the enemy back."
+14. **2026-11-16: Wind Lance's look: wind swirling tightly around a bigger arrow** ("when you release the charged shot, from the players perspective it just looks like a mostly normal arrow. It could have wind particles around the arrow like a tornado. This is a shot from elden ring, i would make it much tighter around the arrow. and make the arrow bigger in size"; his picture: `docs/images/wind_lance_reference.webp`).
+15. **2026-11-16: Forked Lightning works but is far too strong at level 1; balancing is for another session** ("The forked lightning works well it seems… Altough it does way too much damage at level 1. I spawned 5 level 5 greylings and almost one shot all of them with 1 arrow. Thats way too strong. we can make a balancing pass another session, just letting you know it works but is too strong").
+16. **2026-11-16: subagents may be used for this fix** ("use subagents and whatever tools required").
 
 ## Playtest
 

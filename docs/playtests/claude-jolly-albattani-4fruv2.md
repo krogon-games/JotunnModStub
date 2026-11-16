@@ -50,6 +50,15 @@ Both skills were written without the game's code open this time, so steps 9 (the
 
 21. [ ] F5 shows no red errors; `BepInEx/LogOutput.log` has no "Orlog could not …" lines.
 
-### Your feedback
+### Your feedback (2026-11-16)
 
-(not tested yet)
+Build tested: `Orlog 0.4.0 loaded (build: claude/jolly-albattani-4fruv2 b7f9297)` (the log you sent; it is from a later two-minute start, so it holds no lines from the test itself, and no errors).
+
+- Steps 1–6 (the cards; Forked Lightning on a group, alone, on a miss): **passed** (phone page).
+- **Forked Lightning:** "The forked lightning works well it seems, i tested it before windlance. Altough it does way too much damage at level 1. I spawned 5 level 5 greylings and almost one shot all of them with 1 arrow. Thats way too strong. we can make a balancing pass another session, just letting you know it works but is too strong."
+- **Wind Lance (steps 9, 11, 14, 19): failed.** "Windlance feels underwhelming in look and feel. Maybe because it didnt quite come through in the game as we imagined. It doesnt seem to penetrate targets, i was trying my best to line greylings up in a line and then shoot the first one and get the ones behind him too but only the first one got damaged. I think out of a dozen shots, only 1 of them pushed the enemy back." "when you release the charged shot, from the players perspective it just looks like a mostly normal arrow. It could have wind particles around the arrow like a tornado. This is a shot from elden ring, i would make it much tighter around the arrow. and make the arrow bigger in size." (picture: `docs/images/wind_lance_reference.webp`)
+- "theres a few more steps to playtest but lets fix windlance first."
+
+### What changed after the feedback
+
+(being fixed)
