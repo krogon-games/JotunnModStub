@@ -49,6 +49,9 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 20. **2026-11-16: the gust is 0.75 m wide each side of its centre line** ("0.75 m each side", over 0.5 m, 1 m and arrow-thin).
 21. **2026-11-16: the knockback stays 100 → 200 and every enemy it passes through is staggered** ("Keep 100 to 200, add stagger"; bosses excepted, as offered in the question), over 200 → 400.
 22. **2026-11-16 (evening): Wind Lance's rework passed** (all 15 steps Pass on the phone page; on "is 1.5 seconds right, is the circle clear enough?": "yes"; "see playtest results and log").
+23. **2026-11-16: a steep downward shot still ends at the ground** ("Leave it as it is": a lance aimed down more steeply than 38° strikes the dirt, after hitting the enemies right there), over "always level out".
+24. **2026-11-16: bushes and small plants let the gust through** ("Pass through bushes": bushes, saplings and other small plants no longer stop it and are not damaged; trees, logs, rocks and buildings still stop it).
+25. **2026-11-16: Forked Lightning's last two steps go to the balancing session** ("Leave them for the balancing session": a troll with greylings at its feet; rank 20 with nine brutes); this round can be merged without them.
 
 ## Playtest
 
