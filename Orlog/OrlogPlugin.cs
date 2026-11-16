@@ -16,7 +16,7 @@ namespace Orlog
     {
         public const string PluginGUID = "com.krogongames.orlog";
         public const string PluginName = "Orlog";
-        public const string PluginVersion = "0.4.0";
+        public const string PluginVersion = "0.5.0";
 
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;
