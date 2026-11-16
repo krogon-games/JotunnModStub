@@ -36,6 +36,7 @@ Built, untested (detail in `FEATURES.md` → Amazon skill bar and bow skills):
 8. **2026-11-16: Strafe's arrows each deal 75% of the shot's damage** ("75% of your shot each", Multishot's share; over 50% → 100% and Diablo 2's 105% → 200%). As put in the question: on release one arrow from the quiver becomes a volley, each arrow flying by itself at a different enemy in front of the player within 16.5 m (Inner Sight's reach); Diablo 2's counts (up to 5 enemies at skill level 1, 10 from level 6; at least 2 arrows, 7 at level 20, shared between few enemies); 11 eitr.
 9. **2026-11-16: Immolation Arrow: blast 25% → 100% of the shot's damage, burning ground 10% → 30% a second** ("Blast 25%→100%, fire 10%→30% a second", over a 50% → 150% blast and over a 25% → 75% patch). As put in the question: the blast reaches 3 m, the ground burns for 4 seconds (Diablo 2's) and hurts enemies standing in it every second; eitr 6 + 0.25 per level (Diablo 2's).
 10. **2026-11-16: Venom Strike's cloud poisons for 25% → 100% of the shot's damage** ("25% at level 1, 100% at 20", over 50% → 150% and 100% → 233%). As put in the question: a cloud 3 m in every direction hangs for 4 seconds where the arrow lands; everything inside is poisoned (damage over time) and re-poisoned each second it stays; no blast; the arrow hits as usual.
+11. **2026-11-16: Venom Strike costs 7 eitr, +0.5 per level** ("7, +0.5 per level", Diablo 2's Plague Javelin's; over Poison Javelin's 4 + 0.25 and Immolation Arrow's 6 + 0.25).
 
 ## Playtest
 
