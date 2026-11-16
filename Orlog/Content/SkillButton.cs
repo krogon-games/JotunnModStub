@@ -98,6 +98,7 @@ namespace Orlog.Content
                 bool pressed = held && !s_wasHeld;
                 bool released = !held && s_wasHeld;
                 s_wasHeld = held;
+                bool firesHeldBack = false;
                 if (released)
                 {
                     // A crossbow's charged shot was held back: the release fires it (charged or not: StartAttack decides).
@@ -105,6 +106,7 @@ namespace Orlog.Content
                     {
                         s_pendingSince = Time.time;
                         attack = true;
+                        firesHeldBack = true;
                     }
                     s_heldBack = false;
                 }
@@ -124,8 +126,9 @@ namespace Orlog.Content
                     blockHold |= ourBlock;
                 }
 
-                // A normal attack (the game's attack button) clears a skill that never fired.
-                if (attack && !held)
+                // A normal attack (the game's attack button) clears a skill that never fired; the shot we release
+                // ourselves (a crossbow's held-back charged shot) is the skill's own.
+                if (attack && !held && !firesHeldBack)
                 {
                     s_pending = null;
                 }

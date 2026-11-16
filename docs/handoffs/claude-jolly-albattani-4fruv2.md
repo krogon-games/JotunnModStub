@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Fixing feedback.**
+**Waiting for Krogon's playtest** (round 2: Wind Lance reworked).
 
 ## Purpose
 
@@ -12,15 +12,16 @@ The first two of the Amazon's seven bow skills still to build ([#70](https://git
 
 ## Done
 
-Nothing confirmed in game yet.
+**Forked Lightning works** in Krogon's single-player play-test (2026-11-16; steps 1–6 passed: the cards, a group, alone, a miss). Two of its steps are still open (a troll with greylings; rank 20), and its balance (below).
 
 ## Half-done and known issues
 
 Detail in `FEATURES.md` → Amazon skill bar and bow skills.
-- **Forked Lightning and Wind Lance are built, untested in-game** (577 tests pass, the three plugins build). Only Orlog's code changed.
-- **Written without the game's code open:** the cloud session wasn't allowed to install the decompiler this time, so both skills rest on how `Projectile.FixedUpdate`, `Projectile.OnHit` and the bow draw worked when read in earlier sessions. The riskiest part: the lance flying on after an enemy (a `Projectile.OnHit` prefix skips the game's hit).
-- **Claude's choices, open to change:** the struck enemy's fork is on top of the 3 → 7 forks to others; the lance's look (the arrow drawn larger, pale trail and light) and sounds (the game's perfect-block ring for "ready", the dodge whoosh on release); a crossbow charges by holding 3 s with the bolt held back, no stamina cost; stamina while holding is the bow's own hold drain; the bow skill rises once per lance.
-- Other players see the lance as a fast arrow and the forks as bursts without the lines.
+- **Wind Lance failed its first play-test and is reworked, untested:** it flies itself (`Orlog/Content/WindLance.cs`) as a gust 0.75 m each side that runs along the ground, strikes every enemy once, staggers (not bosses) and pushes them; 1.5 s hold shown on the bow's draw circle; a wind look (`WindLanceLook.cs`, preview `docs/images/wind_lance_preview.png`). Read against the game's code (1.0.14 bodies, decompiled this session).
+- **Forked Lightning is far too strong at level 1** (Krogon): it follows the damage scale (×22 at character level 1); balancing is for another session (decision 15).
+- **Claude's choices, open to change:** the gust runs 0.75 m above the ground and follows slopes up to 38° (the slope a player can stand on, game code); it skips creatures that are neutral until attacked; the look's sizes and colours; the circle narrows to 0.06 and turns pale blue; a crossbow charges with no stamina cost; Forked Lightning's struck-enemy fork is on top of the 3 → 7.
+- Other players see the lance as a fast arrow without the wind, and the forks without the lines.
+- **Subagents:** the look was built by a Sonnet helper (read and checked by the main session); the Opus review of the flight code stopped at a usage limit, so the main session reviewed it against the game's code itself (one bug found and fixed: a crossbow's charged shot left as a plain bolt).
 - Five bow skills still say "Coming later": Snipe, Strafe, Immolation Arrow, Venom Strike, Shackle Shot.
 
 ## Decisions
@@ -49,24 +50,25 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 
 ## Playtest
 
-`docs/playtests/claude-jolly-albattani-4fruv2.md`: 21 solo steps (the cards, Forked Lightning, Wind Lance, feel, older skills, log), also the first section of the phone page (ids `r16-1` … `r16-21`). One two-player step added to `PLAYTEST.md` → Session 2, 2j (step 7). No feedback yet.
+`docs/playtests/claude-jolly-albattani-4fruv2.md`. Round 1 (21 steps): steps 1–6 passed; Wind Lance failed (his words are in the file). **Round 2 (17 steps, ids `r16b-1` … `r16b-15`, `r16-7`, `r16-8`) is on the phone page** as its first section: the charge and its circle, the look, through enemies and along the ground, the rest and the log, and the two Forked Lightning steps left. He should send `LogOutput.log` before starting the game again (each lance writes two lines).
 
 ## Open questions for Krogon
 
-1. After the play-test: does 3 seconds past full draw feel right with the stamina it costs? The lance's look and sounds? The lightning's look?
-2. The other five bow skills' details, in the rounds that build them.
+1. After round 2: is 1.5 s right? Is the draw circle clear? Is the look the tornado he had in mind?
+2. Forked Lightning's balance and the damage scale at low levels (a later session, his word).
+3. The other five bow skills' details, in the rounds that build them.
 
 ## Next steps
 
-1. Krogon builds from this branch and runs the 21 steps (phone page).
-2. Fix what the play-test finds; final play-test.
+1. Krogon pulls the branch, rebuilds and runs round 2 (phone page).
+2. Fix what it finds; final play-test.
 3. `/handoff`, then a pull request into `master`.
-4. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–12), update #70 (two of seven done).
+4. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–21), update #70 (two of seven done), a task for the damage-scale balancing.
 
 ## Checks
 
-2026-11-16, after the build: 577 tests pass; Orlog, CraftingOverhaul and Corruption build; no version changed; `FEATURES.md`, `mod-compatibility.md` and the data README updated. In-game: needs Krogon's playtest. (`/handoff` runs the full list at the end.)
+2026-11-16, after the rework: 588 tests pass; Orlog builds; no version changed; `FEATURES.md`, `mod-compatibility.md` (one new patch: `Hud.UpdateCrosshair` postfix; the `Projectile.OnHit` prefix is gone), the data README and the design docs updated. In-game: needs Krogon's playtest. (`/handoff` runs the full list at the end.)
 
 ## Merge notes
 
-**Not ready to merge** (no play-test yet). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`.
+**Not ready to merge** (round 2 not play-tested). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).
