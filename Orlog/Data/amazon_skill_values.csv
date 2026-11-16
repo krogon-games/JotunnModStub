@@ -36,3 +36,15 @@ PlagueJavelin,poison_damage_max,flat,42,65,90,118,148,181,216,254,323,397,476,56
 PlagueJavelin,poison_duration_s,s,3,3.2,3.4,3.6,3.8,4,4.2,4.4,4.6,4.8,5,5.2,5.4,5.6,5.8,6,6.2,6.4,6.6,6.8,d2r-differs
 PlagueJavelin,attack_rating_pct,%,30,39,48,57,66,75,84,93,102,111,120,129,138,147,156,165,174,183,192,201,arreat
 PlagueJavelin,casting_delay_s,s,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,d2r-differs
+ForkedLightning,mana_cost,flat,4,4.25,4.5,4.75,5,5.25,5.5,5.75,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,Charged Strike mana_cost (d2r)
+ForkedLightning,lightning_damage_min,flat,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,Charged Strike lightning_damage_min (arreat)
+ForkedLightning,lightning_damage_max,flat,30,42,54,66,78,90,102,114,130,146,162,178,194,210,226,242,262,282,302,322,Charged Strike lightning_damage_max (arreat)
+ForkedLightning,forks,count,3,3,3,3,4,4,4,4,4,5,5,5,5,5,6,6,6,6,6,7,Charged Strike bolts (arreat)
+ForkedLightning,reach_m,m,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,user 2026-11-16
+WindLance,mana_cost,flat,8,7.75,7.5,7.25,7,6.75,6.5,6.25,6,5.75,5.5,5.25,5,4.75,4.5,4.25,4,3.75,3.5,3.25,Guided Arrow mana_cost (d2r)
+WindLance,weapon_damage_pct,%,100,107,114,121,128,135,142,149,156,163,170,177,184,191,198,205,212,219,226,233,Guided Arrow damage_pct (d2r-differs) +100
+WindLance,knockback,flat,100,105,111,116,121,126,132,137,142,147,153,158,163,168,174,179,184,189,195,200,user 2026-11-16
+WindLance,hold_s,s,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,user 2026-11-16
+WindLance,width_m,m,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,user 2026-11-16
+WindLance,speed_pct,%,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,user 2026-11-16
+WindLance,range_m,m,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,user 2026-11-16

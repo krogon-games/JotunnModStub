@@ -118,8 +118,8 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 
 | Tab | Skill | Valheim version | Status |
 |---|---|---|---|
-| Bow and Crossbow | Forked Lightning | New (user): "The arrow hits an enemy, then lightning forks outward from their body toward nearby enemies." Details to agree | later |
-| | Wind Lance | New (user): "a charged elemental attack that turns your arrow into a javelin, and shoots it straight with no arrow drop like other arrow. It travels fast and in a straight line, forcing and knocking enemies back… may need some more tweaking". Details to agree | later |
+| Bow and Crossbow | Forked Lightning | New (user): "The arrow hits an enemy, then lightning forks outward from their body toward nearby enemies." **Agreed and built 2026-11-16:** Diablo 2's Charged Strike's numbers (3 → 7 forks, its lightning damage, eitr 4 + 0.25 per level); a fork reaches 4 m from the struck enemy's body; the struck enemy always takes one fork itself | v1 |
+| | Wind Lance | New (user): "a charged elemental attack that turns your arrow into a javelin, and shoots it straight with no arrow drop like other arrow. It travels fast and in a straight line, forcing and knocking enemies back… may need some more tweaking". **Agreed and built 2026-11-16, reworked the same day after the first play-test:** hold 1.5 s past full draw (first 3 s; released early: a normal arrow, no eitr), shown on the bow's draw circle, which keeps narrowing and changes colour; a gust 0.75 m wide each side that strikes every enemy it touches at full damage, staggers them (not bosses) and pushes them back, 100 → 200 with skill level; it runs along the ground and water instead of stopping there (trees, rocks, buildings and steep hillsides stop it); Diablo 2's Guided Arrow's numbers (the arrow's own damage 100% → 233%, eitr 8 − 0.25 per level); twice an arrow's speed; gone after 50 m; wind spiralling tightly round a larger arrow (`docs/images/wind_lance_preview.png`) | v1 |
 | | Snipe | New (user): "Charge a powerful shot, increasing damage the longer the charge. Drains stamina while charging and slowly zooms in on the target." Details to agree | later |
 | | Multishot | Diablo 2's Multiple Shot, renamed (user, 2026-11-15): one shot splits into several arrows in a fan; uses one arrow | v1 |
 | | Strafe | A volley of arrows at several nearby targets | later |
@@ -146,7 +146,7 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | | Plague Javelin | A spreading poison cloud where the javelin lands | v1 |
 | | Lightning Fury | The javelin bursts into lightning bolts on impact | later |
 
-27 skills: 13 `v1` or `reworked`, 14 `later`. **Removed 2026-11-15:** Magic Arrow, Fire Arrow, Cold Arrow, Exploding Arrow, Ice Arrow, Guided Arrow (bow); Slow Missiles (passive and magic); Power Strike (spear: "adds lightning damage", the plain kind of skill). The spear tab's list can still change in its own round (roadmap C6, #41).
+27 skills: 15 `v1` or `reworked`, 12 `later` (Forked Lightning and Wind Lance moved to `v1` on 2026-11-16). **Removed 2026-11-15:** Magic Arrow, Fire Arrow, Cold Arrow, Exploding Arrow, Ice Arrow, Guided Arrow (bow); Slow Missiles (passive and magic); Power Strike (spear: "adds lightning damage", the plain kind of skill). The spear tab's list can still change in its own round (roadmap C6, #41).
 
 **Before the overhaul (2026-10-30 to 2026-11-15), for the record:** Diablo 2's thirty skills.
 

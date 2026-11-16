@@ -56,10 +56,10 @@ namespace CraftingOverhaul.Tests
             {
                 Assert.Null(t.Find(gone));
             }
-            // Built: Multishot and Freezing Arrow; Inner Sight and the five passives; the five spear skills whose
-            // numbers are in (they act with roadmap C6).
-            Assert.Equal(13, t.Skills.Count(s => s.Built));
-            Assert.Equal(14, t.Skills.Count(s => s.Status == "later"));
+            // Built: Multishot, Freezing Arrow, Forked Lightning and Wind Lance (the last two 2026-11-16); Inner Sight and
+            // the five passives; the five spear skills whose numbers are in (they act with roadmap C6).
+            Assert.Equal(15, t.Skills.Count(s => s.Built));
+            Assert.Equal(12, t.Skills.Count(s => s.Status == "later"));
             Assert.Equal("reworked", t.Find("Penetrate").Status);
             // Renamed (Krogon, 2026-11-15); the id stays, so saved points and slots still find it.
             Assert.Equal("Multishot", t.Find("MultipleShot").Name);
@@ -151,8 +151,14 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(4.75f, SkillRules.EitrCost(t.Find("Decoy"), 20), 3);
             Assert.Equal(0f, SkillRules.EitrCost(t.Find("Decoy"), 40), 3);
             Assert.Equal(0f, SkillRules.EitrCost(t.Find("Dodge"), 5), 3);
-            // The new skills have no cost until their numbers are agreed.
-            Assert.Equal(0f, SkillRules.EitrCost(t.Find("WindLance"), 1), 3);
+            // A new skill has no cost until its numbers are agreed.
+            Assert.Equal(0f, SkillRules.EitrCost(t.Find("Snipe"), 1), 3);
+            // Agreed 2026-11-16: Forked Lightning costs what Charged Strike does (4, +0.25 per level), Wind Lance what
+            // Guided Arrow does (8, -0.25 per level).
+            Assert.Equal(4f, SkillRules.EitrCost(t.Find("ForkedLightning"), 1), 3);
+            Assert.Equal(8.75f, SkillRules.EitrCost(t.Find("ForkedLightning"), 20), 3);
+            Assert.Equal(8f, SkillRules.EitrCost(t.Find("WindLance"), 1), 3);
+            Assert.Equal(3.25f, SkillRules.EitrCost(t.Find("WindLance"), 20), 3);
         }
 
         [Fact]
