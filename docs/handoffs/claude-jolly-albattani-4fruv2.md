@@ -41,6 +41,11 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 14. **2026-11-16: Wind Lance's look: wind swirling tightly around a bigger arrow** ("when you release the charged shot, from the players perspective it just looks like a mostly normal arrow. It could have wind particles around the arrow like a tornado. This is a shot from elden ring, i would make it much tighter around the arrow. and make the arrow bigger in size"; his picture: `docs/images/wind_lance_reference.webp`).
 15. **2026-11-16: Forked Lightning works but is far too strong at level 1; balancing is for another session** ("The forked lightning works well it seems… Altough it does way too much damage at level 1. I spawned 5 level 5 greylings and almost one shot all of them with 1 arrow. Thats way too strong. we can make a balancing pass another session, just letting you know it works but is too strong").
 16. **2026-11-16: subagents may be used for this fix** ("use subagents and whatever tools required").
+17. **2026-11-16: the hold is 1.5 seconds, not 3** (replaces decision 10's number): "I suspect it was my error for not holding the charge long enough. I tested again and it works fine now, the charge is LOOONG. lets reduce it to 1.5 seconds."
+18. **2026-11-16: the charge needs an indicator on the bow's own draw circle:** "Also we need an indicator of some kind. Just like the yellow circle narrows in normally when you do a charge on the bow, it should continue to narrow in and maybe turn a different colour?"
+19. **2026-11-16: the ground no longer stops the lance; it runs along it** ("Run along the ground": where it would dig in, it levels out and rushes on just above the ground and over water, following gentle slopes, to its 50 m; trees, rocks, buildings and steep hillsides still stop it; shot at something in the air it flies straight). Replaces decision 7's "stops at terrain".
+20. **2026-11-16: the gust is 0.75 m wide each side of its centre line** ("0.75 m each side", over 0.5 m, 1 m and arrow-thin).
+21. **2026-11-16: the knockback stays 100 → 200 and every enemy it passes through is staggered** ("Keep 100 to 200, add stagger"; bosses excepted, as offered in the question), over 200 → 400.
 
 ## Playtest
 
