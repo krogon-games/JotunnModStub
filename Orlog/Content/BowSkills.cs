@@ -17,9 +17,7 @@ namespace Orlog.Content
     ///         <item>Freezing Arrow: on impact, frost and a freeze (<see cref="FreezeName" />) on every enemy within the radius; bosses are only slowed by the frost.</item>
     ///         <item>Forked Lightning (user 2026-11-16): the arrow hits as usual; the struck enemy takes one fork of lightning and
     ///         forks go to the nearest other enemies within reach of its body (Charged Strike's numbers).</item>
-    ///         <item>Wind Lance (user 2026-11-16): a charged shot (<see cref="SkillButton" />). The arrow flies dead straight at a
-    ///         multiple of its speed, through every enemy (each hit once, at full damage, with the skill's knockback), and
-    ///         is gone after its range; terrain, trees and buildings stop it as they stop an arrow.</item>
+    ///         <item>Wind Lance (user 2026-11-16): a charged shot (<see cref="SkillButton" />) flown by <see cref="WindLance" />.</item>
     ///     </list>
     ///     A shot's arrows carry a <see cref="ShotTag" />; impacts are handled on the shooter's game, which runs its projectiles.
     ///     The skill tree overhaul (Krogon, 2026-11-15) removed Magic Arrow, Fire Arrow, Cold Arrow, Ice Arrow and Exploding
@@ -44,35 +42,8 @@ namespace Orlog.Content
             public int Level;
             public float Scale;
             public bool Exploded;
-            /// <summary>Wind Lance: the creatures it has passed through (each is hit once), and whether the shot raised the bow skill yet.</summary>
-            public readonly HashSet<Character> Pierced = new HashSet<Character>();
-            public bool RaisedSkill;
         }
 
-        /// <summary>Wind Lance: the lance is gone once it has flown its range (on the shooter's game, which runs it).</summary>
-        internal sealed class LanceFlight : MonoBehaviour
-        {
-            public Vector3 From;
-            public float Range;
-
-            private void Update()
-            {
-                if (Range <= 0f || (transform.position - From).sqrMagnitude < Range * Range)
-                {
-                    return;
-                }
-                var view = GetComponent<ZNetView>();
-                if (view && view.IsValid() && view.IsOwner() && ZNetScene.instance)
-                {
-                    enabled = false;
-                    ZNetScene.instance.Destroy(gameObject);
-                }
-            }
-        }
-
-        /// <summary>The lance's look: the arrow drawn longer and thicker (Claude's choice; no new model), pale, with a light.</summary>
-        private static readonly Vector3 LanceSize = new Vector3(2f, 2f, 3f);
-        private static readonly Color WindColour = new Color(0.8f, 0.95f, 1f);
         private static readonly Color LightningColour = new Color(0.7f, 0.85f, 1f);
 
         // ------------------------------------------------------------ the freeze status effect
@@ -191,92 +162,10 @@ namespace Orlog.Content
                         velocity = Quaternion.AngleAxis(ActiveSkillRules.FanAngle(s_fanIndex++, s_fanCount), Vector3.up) * velocity;
                         break;
                     case "WindLance":
-                        hit.m_damage.Modify(v.Get(id, "weapon_damage_pct", level) / 100f);
-                        hit.m_pushForce = v.Get(id, "knockback", level);
-                        velocity *= v.Get(id, "speed_pct", level) / 100f;
-                        projectile.m_gravity = 0f;
-                        var flight = projectile.gameObject.AddComponent<LanceFlight>();
-                        flight.From = projectile.transform.position;
-                        flight.Range = v.Get(id, "range_m", level);
-                        DressLance(projectile);
-                        // The wind: the game's dodge whoosh, at the shooter.
-                        Player.m_localPlayer.m_dodgeEffects.Create(Player.m_localPlayer.transform.position, Quaternion.identity);
+                        WindLance.Launch(projectile, level, v, ref velocity, hit);
                         break;
                 }
             }
-        }
-
-        /// <summary>Makes a skill arrow look like a lance of wind (on the shooter's game only; other players see a fast arrow).</summary>
-        private static void DressLance(Projectile projectile)
-        {
-            projectile.transform.localScale = Vector3.Scale(projectile.transform.localScale, LanceSize);
-            foreach (var trail in projectile.GetComponentsInChildren<TrailRenderer>(true))
-            {
-                trail.widthMultiplier *= LanceSize.x;
-                trail.startColor = WindColour;
-                trail.endColor = new Color(WindColour.r, WindColour.g, WindColour.b, 0f);
-            }
-            var glow = new GameObject("Orlog_LanceGlow");
-            glow.transform.SetParent(projectile.transform, false);
-            var light = glow.AddComponent<Light>();
-            light.type = LightType.Point;
-            light.color = WindColour;
-            light.range = 4f;
-            light.intensity = 2f;
-        }
-
-        // ------------------------------------------------------------ Wind Lance: the charge cue
-
-        /// <summary>A pale light at the bow hand while a charged shot is ready, on the shooter's game; it goes out when the cue stops.</summary>
-        private sealed class ChargeGlow : MonoBehaviour
-        {
-            public float Until;
-
-            private void Update()
-            {
-                if (Time.time > Until)
-                {
-                    Destroy(gameObject);
-                }
-            }
-        }
-
-        private static ChargeGlow s_chargeGlow;
-
-        /// <summary>
-        ///     The charged shot is ready: a light at the bow hand for as long as this is called every frame, and on the
-        ///     first call the game's perfect-block ring as the "ready" sound.
-        /// </summary>
-        public static void ChargeReadyCue(Player player, bool first)
-        {
-            if (!player)
-            {
-                return;
-            }
-            Safe.Run("show the charge cue", () =>
-            {
-                Transform hand = player.m_visEquipment ? player.m_visEquipment.m_leftHand : null;
-                if (!s_chargeGlow)
-                {
-                    var go = new GameObject("Orlog_ChargeGlow");
-                    go.transform.SetParent(hand ? hand : player.transform, false);
-                    if (!hand)
-                    {
-                        go.transform.position = player.GetCenterPoint();
-                    }
-                    var light = go.AddComponent<Light>();
-                    light.type = LightType.Point;
-                    light.color = WindColour;
-                    light.range = 3f;
-                    light.intensity = 3f;
-                    s_chargeGlow = go.AddComponent<ChargeGlow>();
-                }
-                s_chargeGlow.Until = Time.time + 0.25f;
-                if (first)
-                {
-                    player.m_perfectBlockEffect.Create(hand ? hand.position : player.GetCenterPoint(), Quaternion.identity);
-                }
-            });
         }
 
         private static float Roll(SkillValueTable v, string id, string kind, int level, float scale)
@@ -289,29 +178,6 @@ namespace Orlog.Content
         [HarmonyPatch(typeof(Projectile), nameof(Projectile.OnHit))]
         private static class Impact
         {
-            /// <summary>
-            ///     Wind Lance passes through enemies: the lance hits the enemy itself here and the game's own hit (which
-            ///     would stop the arrow) is skipped. Anything else (terrain, trees, buildings, players, tamed animals) is
-            ///     left to the game.
-            /// </summary>
-            private static bool Prefix(Projectile __instance, Collider collider, Vector3 hitPoint)
-            {
-                var tag = __instance ? __instance.GetComponent<ShotTag>() : null;
-                if (tag == null || tag.SkillId != "WindLance" || !collider)
-                {
-                    return true;
-                }
-                try
-                {
-                    return !PassThrough(__instance, tag, collider, hitPoint);
-                }
-                catch (System.Exception ex)
-                {
-                    Safe.Report("pass a Wind Lance through an enemy", ex);
-                    return true;
-                }
-            }
-
             private static void Postfix(Projectile __instance, Collider collider, Vector3 hitPoint)
             {
                 var tag = __instance ? __instance.GetComponent<ShotTag>() : null;
@@ -345,51 +211,6 @@ namespace Orlog.Content
                     });
                 }
             }
-        }
-
-        // ------------------------------------------------------------ Wind Lance: through every enemy
-
-        /// <summary>
-        ///     True when the lance met an enemy and flies on (the game's own hit is skipped): the enemy takes the lance's
-        ///     hit once, as the game's arrow hit would give it. False leaves the hit to the game.
-        /// </summary>
-        private static bool PassThrough(Projectile lance, ShotTag tag, Collider collider, Vector3 hitPoint)
-        {
-            var owner = lance.m_owner;
-            var hitObject = Projectile.FindHitObject(collider);
-            var target = hitObject ? hitObject.GetComponent<Character>() : null;
-            if (!target || !owner || owner != Player.m_localPlayer || target == owner || target.IsPlayer() || !BaseAI.IsEnemy(owner, target))
-            {
-                return false;
-            }
-            if (target.IsDead() || !tag.Pierced.Add(target))
-            {
-                return true;
-            }
-            var hit = new HitData();
-            hit.m_hitCollider = collider;
-            hit.m_damage = lance.m_damage;
-            hit.m_pushForce = lance.m_attackForce;
-            hit.m_backstabBonus = lance.m_backstabBonus;
-            hit.m_point = hitPoint;
-            hit.m_dir = lance.m_vel.sqrMagnitude > 0.01f ? lance.m_vel.normalized : lance.transform.forward;
-            hit.m_statusEffectHash = lance.m_statusEffectHash;
-            hit.m_skillLevel = owner.GetSkillLevel(lance.m_skill);
-            hit.m_dodgeable = lance.m_dodgeable;
-            hit.m_blockable = lance.m_blockable;
-            hit.m_ranged = true;
-            hit.m_skill = lance.m_skill;
-            hit.m_hitType = HitData.HitType.PlayerHit;
-            hit.SetAttacker(owner);
-            target.Damage(hit);
-            lance.m_hitEffects.Create(hitPoint, Quaternion.identity);
-            // The bow skill rises once per lance, as for one arrow.
-            if (!tag.RaisedSkill && owner is Player player)
-            {
-                tag.RaisedSkill = true;
-                player.RaiseSkill(lance.m_skill, lance.m_raiseSkillAmount);
-            }
-            return true;
         }
 
         private static bool IsBlast(ShotTag tag)

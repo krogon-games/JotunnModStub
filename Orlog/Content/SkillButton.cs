@@ -38,6 +38,16 @@ namespace Orlog.Content
         private static float s_charge;
         private static bool s_chargeReady;
         private static bool s_heldBack;
+        /// <summary>For the draw circle: when the charge was last counted, its hold time, and whether the weapon draws like a bow.</summary>
+        private static float s_chargeSeen = -10f;
+        private static float s_chargeHold;
+        private static bool s_chargeDraws;
+
+        /// <summary>How far the charged shot being held has come (0 to 1), or -1 when none is being held.</summary>
+        public static float ChargeProgress => Time.time - s_chargeSeen < 0.1f ? ActiveSkillRules.ChargeProgress(s_charge, s_chargeHold) : -1f;
+
+        /// <summary>Whether the weapon charging draws like a bow (the game shows its draw circle) or not (a crossbow).</summary>
+        public static bool ChargeDraws => s_chargeDraws;
 
         /// <summary>The local player's current skill attack, if its attack is still the one running.</summary>
         public static Shot Current { get; private set; }
@@ -208,11 +218,14 @@ namespace Orlog.Content
                 }
                 var values = SkillBar.ValuesFor(Attributes.ClassOf(player));
                 float hold = values?.Get(skill.Id, "hold_s", SkillBar.LevelOf(player, skill.Id)) ?? 0f;
+                s_chargeSeen = Time.time;
+                s_chargeHold = hold;
+                s_chargeDraws = draws;
                 bool ready = ActiveSkillRules.ChargeReady(s_charge, hold);
                 if (ready)
                 {
-                    // The glow lasts while this keeps being called; the sound plays the moment the charge is ready.
-                    BowSkills.ChargeReadyCue(player, !s_chargeReady);
+                    // The wind at the bow lasts while this keeps being called; the sound plays the moment the charge is ready.
+                    WindLance.ReadyCue(player, !s_chargeReady);
                 }
                 s_chargeReady = ready;
             }
@@ -246,6 +259,7 @@ namespace Orlog.Content
                         s_charge = 0f;
                         if (!ready)
                         {
+                            Jotunn.Logger.LogInfo("Orlog: " + skill.Name + " released before its charge was ready: a normal shot.");
                             return;
                         }
                     }

@@ -340,6 +340,82 @@ namespace Orlog.Rules
             return holdSeconds <= 0f || heldPastFullDraw >= holdSeconds;
         }
 
+        /// <summary>How far a charged shot's hold has come, 0 to 1 (1 with no hold time).</summary>
+        public static float ChargeProgress(float heldPastFullDraw, float holdSeconds)
+        {
+            return holdSeconds <= 0f ? 1f : Math.Max(0f, Math.Min(1f, heldPastFullDraw / holdSeconds));
+        }
+
+        /// <summary>
+        ///     The bow's draw circle while a charged shot is held (Krogon, 2026-11-16: "Just like the yellow circle
+        ///     narrows in normally when you do a charge on the bow, it should continue to narrow in and maybe turn a
+        ///     different colour"). The game shrinks the circle from 1 to <see cref="DrawCircleEnd" /> over the draw
+        ///     (<c>Hud.UpdateCrosshair</c>); the charge shrinks it on to <see cref="ChargeCircleEnd" /> (our choice). A
+        ///     crossbow has no draw, so its circle runs the whole way from 1 during the hold.
+        /// </summary>
+        public const float DrawCircleEnd = 0.15f;
+        public const float ChargeCircleEnd = 0.06f;
+
+        public static float ChargeCircleScale(float progress, bool bowDraws)
+        {
+            float from = bowDraws ? DrawCircleEnd : 1f;
+            float t = Math.Max(0f, Math.Min(1f, progress));
+            return from + (ChargeCircleEnd - from) * t;
+        }
+
+        /// <summary>What the ground does to a Wind Lance on its next step.</summary>
+        public enum LanceGround
+        {
+            /// <summary>It flies on straight, clear of the ground.</summary>
+            Free,
+            /// <summary>It runs along the ground (or water) at its floor height.</summary>
+            Skim,
+            /// <summary>The ground is in its way (a dive or a rise steeper than it can follow): it flies on straight and strikes it.</summary>
+            Blocked
+        }
+
+        /// <summary>
+        ///     The steepest ground a Wind Lance follows, in degrees: the slope a player can stand on before sliding
+        ///     (<c>Character.GetSlideAngle</c>: 38 for players, game code).
+        /// </summary>
+        public const float LanceMaxSlopeDegrees = 38f;
+
+        /// <summary>
+        ///     Where the ground lets a Wind Lance go on its next step (Krogon, 2026-11-16: "Run along the ground": where
+        ///     it would dig in, it levels out and rushes on just above the ground, following gentle slopes; steep
+        ///     hillsides still stop it; shot at something in the air it flies straight).
+        ///     <paramref name="y" /> is its height now, <paramref name="straightNextY" /> its height after a straight
+        ///     step, <paramref name="floorY" /> the lowest it may fly at the next spot (ground or water plus the gust's
+        ///     half width), <paramref name="flatStep" /> the step's horizontal length. A lance in free flight that would
+        ///     dip under the floor starts skimming, unless it dives, or the ground rises, more steeply than
+        ///     <paramref name="maxSlopeDegrees" />. A skimming lance follows the floor up and down, at most that steeply.
+        /// </summary>
+        public static LanceGround LanceGroundStep(bool skimming, float y, float straightNextY, float floorY, float flatStep, float maxSlopeDegrees, out float nextY)
+        {
+            float reach = Math.Max(0f, (float)Math.Tan(maxSlopeDegrees * Math.PI / 180.0) * flatStep);
+            if (!skimming)
+            {
+                nextY = straightNextY;
+                if (straightNextY >= floorY)
+                {
+                    return LanceGround.Free;
+                }
+                if (y - straightNextY > reach || floorY - y > reach)
+                {
+                    return LanceGround.Blocked;
+                }
+                nextY = floorY;
+                return LanceGround.Skim;
+            }
+            if (floorY - y > reach)
+            {
+                nextY = y;
+                return LanceGround.Blocked;
+            }
+            nextY = Math.Max(floorY, y - reach);
+            return LanceGround.Skim;
+        }
+
         /// <summary>
         ///     Forked Lightning's targets: of the enemies at these distances from the struck enemy's body, the nearest
         ///     <paramref name="forks" /> within <paramref name="reach" />, nearest first (their indexes). One fork each.
@@ -404,9 +480,9 @@ namespace Orlog.Rules
                     return $"Lightning strikes the enemy the arrow hits and forks to up to {N(v.Get(id, "forks", level))} other enemies within {N(v.Get(id, "reach_m", level))} m: " +
                            $"{Range(v, id, "lightning_damage", level, scale)} lightning damage each";
                 case "WindLance":
-                    return $"Hold {N(v.Get(id, "hold_s", level))} s past full draw, then release: a lance of wind at {N(v.Get(id, "weapon_damage_pct", level))}% damage flies " +
-                           $"{N(v.Get(id, "range_m", level))} m dead straight at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed, through every enemy, " +
-                           $"knocking them back (force {N(v.Get(id, "knockback", level))}). Released early: a normal shot, no eitr";
+                    return $"Hold {N(v.Get(id, "hold_s", level))} s past full draw, then release: a gust of wind {N(v.Get(id, "width_m", level) * 2f)} m wide at {N(v.Get(id, "weapon_damage_pct", level))}% damage " +
+                           $"rushes {N(v.Get(id, "range_m", level))} m at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed, along the ground and through every enemy, " +
+                           $"staggering them and knocking them back (force {N(v.Get(id, "knockback", level))}). Released early: a normal shot, no eitr";
                 case "InnerSight":
                     return $"Enemies within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m glow and take {N(innerSightPercent)}% more damage for {N(v.Get(id, "duration_s", level))} s";
                 default:

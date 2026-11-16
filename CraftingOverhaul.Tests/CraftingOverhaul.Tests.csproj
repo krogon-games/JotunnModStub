@@ -65,6 +65,7 @@
     <Compile Include="..\Orlog\Rules\SkillRules.cs" Link="Linked\Orlog\SkillRules.cs" />
     <Compile Include="..\Orlog\Rules\PassiveRules.cs" Link="Linked\Orlog\PassiveRules.cs" />
     <Compile Include="..\Orlog\Rules\ActiveSkillRules.cs" Link="Linked\Orlog\ActiveSkillRules.cs" />
+    <Compile Include="..\Orlog\Rules\WindSwirlRules.cs" Link="Linked\Orlog\WindSwirlRules.cs" />
   </ItemGroup>
 
   <ItemGroup>

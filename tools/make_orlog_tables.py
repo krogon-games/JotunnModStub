@@ -144,13 +144,16 @@ NEW_SKILLS = {
     ]),
     # Decisions 6-12: Guided Arrow's numbers ("Guided Arrow's numbers": the arrow's own damage, +7% per level, D2R);
     # the push from 100 (the Staff of Embers' m_attackForce) to 200 (the iron sledge's; game dump item_details.csv)
-    # ("Grows with skill level"); 3 s of holding past full draw ("3 seconds"); twice a fully drawn arrow's speed
-    # ("Twice as fast"); gone after 50 m ("50 m").
+    # ("Grows with skill level"; kept after the play-test, with a stagger added: "Keep 100 to 200, add stagger");
+    # twice a fully drawn arrow's speed ("Twice as fast"); gone after 50 m ("50 m").
+    # After the first play-test (decisions 17 and 20): 1.5 s of holding past full draw ("lets reduce it to 1.5
+    # seconds"; it was 3), and a gust 0.75 m wide each side of its centre line ("0.75 m each side").
     "Wind Lance": ("Guided Arrow", [
         ("mana_cost", "flat", ("d2", "Guided Arrow", "mana_cost", 0)),
         ("weapon_damage_pct", "%", ("d2", "Guided Arrow", "damage_pct", 100)),
         ("knockback", "flat", ("line", 100, 200)),
-        ("hold_s", "s", ("flat", 3)),
+        ("hold_s", "s", ("flat", 1.5)),
+        ("width_m", "m", ("flat", 0.75)),
         ("speed_pct", "%", ("flat", 200)),
         ("range_m", "m", ("flat", 50)),
     ]),
