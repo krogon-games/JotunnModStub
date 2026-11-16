@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest** (round 2: Wind Lance reworked).
+**Waiting for Krogon's playtest** of Forked Lightning's last two steps (or his word that they can wait); Wind Lance's rework has passed.
 
 ## Purpose
 
@@ -12,12 +12,13 @@ The first two of the Amazon's seven bow skills still to build ([#70](https://git
 
 ## Done
 
-**Forked Lightning works** in Krogon's single-player play-test (2026-11-16; steps 1–6 passed: the cards, a group, alone, a miss). Two of its steps are still open (a troll with greylings; rank 20), and its balance (below).
+- **Wind Lance (reworked) passed** Krogon's single-player play-test, all 15 steps (2026-11-16, build `9fc528b`): the 1.5 s hold on the draw circle ("yes"), the look, through enemies and along the ground, what stops it, a troll, rank 20, fire arrows, a crossbow, the older skills, no errors.
+- **Forked Lightning works** (steps 1–6 passed the same day).
 
 ## Half-done and known issues
 
 Detail in `FEATURES.md` → Amazon skill bar and bow skills.
-- **Wind Lance failed its first play-test and is reworked, untested:** it flies itself (`Orlog/Content/WindLance.cs`) as a gust 0.75 m each side that runs along the ground, strikes every enemy once, staggers (not bosses) and pushes them; 1.5 s hold shown on the bow's draw circle; a wind look (`WindLanceLook.cs`, preview `docs/images/wind_lance_preview.png`). Read against the game's code (1.0.14 bodies, decompiled this session).
+- **Wind Lance failed its first play-test, was reworked, and the rework passed (Done, above):** it flies itself (`Orlog/Content/WindLance.cs`) as a gust 0.75 m each side that runs along the ground, strikes every enemy once, staggers (not bosses) and pushes them; 1.5 s hold shown on the bow's draw circle; a wind look (`WindLanceLook.cs`, preview `docs/images/wind_lance_preview.png`). Read against the game's code (1.0.14 bodies, decompiled this session).
 - **Forked Lightning is far too strong at level 1** (Krogon): it follows the damage scale (×22 at character level 1); balancing is for another session (decision 15).
 - **Claude's choices, open to change:** the gust runs 0.75 m above the ground and follows slopes up to 38° (the slope a player can stand on, game code); it skips creatures that are neutral until attacked; the look's sizes and colours; the circle narrows to 0.06 and turns pale blue; a crossbow charges with no stamina cost; Forked Lightning's struck-enemy fork is on top of the 3 → 7.
 - Other players see the lance as a fast arrow without the wind, and the forks without the lines.
@@ -47,23 +48,24 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 19. **2026-11-16: the ground no longer stops the lance; it runs along it** ("Run along the ground": where it would dig in, it levels out and rushes on just above the ground and over water, following gentle slopes, to its 50 m; trees, rocks, buildings and steep hillsides still stop it; shot at something in the air it flies straight). Replaces decision 7's "stops at terrain".
 20. **2026-11-16: the gust is 0.75 m wide each side of its centre line** ("0.75 m each side", over 0.5 m, 1 m and arrow-thin).
 21. **2026-11-16: the knockback stays 100 → 200 and every enemy it passes through is staggered** ("Keep 100 to 200, add stagger"; bosses excepted, as offered in the question), over 200 → 400.
+22. **2026-11-16 (evening): Wind Lance's rework passed** (all 15 steps Pass on the phone page; on "is 1.5 seconds right, is the circle clear enough?": "yes"; "see playtest results and log").
 
 ## Playtest
 
-`docs/playtests/claude-jolly-albattani-4fruv2.md`. Round 1 (21 steps): steps 1–6 passed; Wind Lance failed (his words are in the file). **Round 2 (17 steps, ids `r16b-1` … `r16b-15`, `r16-7`, `r16-8`) is on the phone page** as its first section: the charge and its circle, the look, through enemies and along the ground, the rest and the log, and the two Forked Lightning steps left. He should send `LogOutput.log` before starting the game again (each lance writes two lines).
+`docs/playtests/claude-jolly-albattani-4fruv2.md`. Round 1: Forked Lightning's steps 1–6 passed, Wind Lance failed. **Round 2: Wind Lance passed, all 15 steps** (build `9fc528b`; his log had no errors). Still on the phone page: Forked Lightning's `r16-7` (a troll with greylings) and `r16-8` (rank 20); the passed steps are off.
 
 ## Open questions for Krogon
 
-1. After round 2: is 1.5 s right? Is the draw circle clear? Is the look the tornado he had in mind?
-2. Forked Lightning's balance and the damage scale at low levels (a later session, his word).
-3. The other five bow skills' details, in the rounds that build them.
+1. Forked Lightning's last two steps: test them, or leave them for the balancing session?
+2. From his log: a lance aimed down more steeply than 38° at close enemies ends at the ground at once, after striking them (twice in 13 shots). Should a steep dive level out and run on too? And should bushes let the gust through (one lance ended at `Bush01`)?
+3. Forked Lightning's balance and the damage scale at low levels (a later session, his word).
+4. The other five bow skills' details, in the rounds that build them.
 
 ## Next steps
 
-1. Krogon pulls the branch, rebuilds and runs round 2 (phone page).
-2. Fix what it finds; final play-test.
-3. `/handoff`, then a pull request into `master`.
-4. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–21), update #70 (two of seven done), a task for the damage-scale balancing.
+1. Krogon's answers to open questions 1 and 2 (a small fix round if he wants the dive or the bushes changed).
+2. `/handoff`, then a pull request into `master`.
+3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–22), update #70 (two of seven done), a task for the damage-scale balancing.
 
 ## Checks
 
@@ -71,4 +73,4 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 
 ## Merge notes
 
-**Not ready to merge** (round 2 not play-tested). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).
+**Not ready to merge yet:** Wind Lance's final play-test passed; Forked Lightning's last two steps are unmarked and two small questions are open (above). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).

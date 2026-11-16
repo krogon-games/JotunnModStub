@@ -80,36 +80,48 @@ Krogon's answers the same day (handoff decisions 17–21): "I suspect it was my 
 
 **Wind Lance: the charge and its circle**
 
-1. [ ] (`r16b-1`) Slot F2 (Wind Lance), bow in hand. Hold right click: the yellow circle narrows as usual. **Keep holding: the circle keeps narrowing and turns pale blue.** After 1.5 seconds it turns bright and pulses, a ring sounds, and wind swirls at your bow hand.
-2. [ ] (`r16b-2`) Let go while the circle is still narrowing (before it pulses): a normal arrow, and no eitr is used.
-3. [ ] (`r16b-3`) Let go once it pulses: the lance fires with a whoosh and eitr drops by 8. **Your verdict:** is 1.5 seconds right, with the stamina it costs? Is the circle clear enough?
+1. [x] (`r16b-1`) Slot F2 (Wind Lance), bow in hand. Hold right click: the yellow circle narrows as usual. **Keep holding: the circle keeps narrowing and turns pale blue.** After 1.5 seconds it turns bright and pulses, a ring sounds, and wind swirls at your bow hand.
+2. [x] (`r16b-2`) Let go while the circle is still narrowing (before it pulses): a normal arrow, and no eitr is used.
+3. [x] (`r16b-3`) Let go once it pulses: the lance fires with a whoosh and eitr drops by 8. **Your verdict:** is 1.5 seconds right, with the stamina it costs? Is the circle clear enough?
 
 **Wind Lance: the look**
 
-4. [ ] (`r16b-4`) **The look.** The arrow is about three times as large with a bright streak; wind spirals tightly round it; a corkscrew of wind hangs along its path for a moment after it has passed; a ring of wind opens at the bow. Is this the tornado you had in mind? What should change (size, tightness, brightness, how long the trail hangs)? A screenshot or clip helps a lot.
+4. [x] (`r16b-4`) **The look.** The arrow is about three times as large with a bright streak; wind spirals tightly round it; a corkscrew of wind hangs along its path for a moment after it has passed; a ring of wind opens at the bow. Is this the tornado you had in mind? What should change (size, tightness, brightness, how long the trail hangs)? A screenshot or clip helps a lot.
 
 **Wind Lance: through enemies and along the ground**
 
-5. [ ] (`r16b-5`) `spawn Greyling 5`, let them run at you, aim at the nearest and fire a charged lance: **every one in its path, or within about a step either side of it, is hit, reels (staggers) and is pushed back**, with a puff of wind at each. You no longer need them in a perfect line.
-6. [ ] (`r16b-6`) On flat land, aim at the ground some metres in front of you and fire: the gust does not stop in the dirt; it levels out and runs along the ground (the trail shows it) for its 50 m.
-7. [ ] (`r16b-7`) From a shore, fire out across the water: it runs over the water. Up or down a gentle slope: it follows the ground.
-8. [ ] (`r16b-8`) It still stops at a tree, a big rock and a building wall, at a steep hillside or cliff, and when you shoot steeply into the ground at your feet.
-9. [ ] (`r16b-9`) Aim well above the horizon (at a bird or the sky): it flies straight and is gone after about 50 m.
-10. [ ] (`r16b-10`) A troll: it is hit and reels, but barely moves. A boar or greyling is thrown back. (If you have a boss handy: it is hit but does not reel.)
+5. [x] (`r16b-5`) `spawn Greyling 5`, let them run at you, aim at the nearest and fire a charged lance: **every one in its path, or within about a step either side of it, is hit, reels (staggers) and is pushed back**, with a puff of wind at each. You no longer need them in a perfect line.
+6. [x] (`r16b-6`) On flat land, aim at the ground some metres in front of you and fire: the gust does not stop in the dirt; it levels out and runs along the ground (the trail shows it) for its 50 m.
+7. [x] (`r16b-7`) From a shore, fire out across the water: it runs over the water. Up or down a gentle slope: it follows the ground.
+8. [x] (`r16b-8`) It still stops at a tree, a big rock and a building wall, at a steep hillside or cliff, and when you shoot steeply into the ground at your feet.
+9. [x] (`r16b-9`) Aim well above the horizon (at a bird or the sky): it flies straight and is gone after about 50 m.
+10. [x] (`r16b-10`) A troll: it is hit and reels, but barely moves. A boar or greyling is thrown back. (If you have a boss handy: it is hit but does not reel.)
 
 **Wind Lance: the rest, and the log**
 
-11. [ ] (`r16b-11`) `orlog_level 50`, then `orlog_skill WindLance 19` (rank 20): the details say 233% damage, force 200, cost 3.25 eitr; the gust clearly hits and pushes harder than at rank 1.
-12. [ ] (`r16b-12`) With fire arrows in the quiver, the gust still sets what it hits on fire.
-13. [ ] (`r16b-13`) Crossbow in hand (loaded; `spawn CrossbowArbalest`, `spawn BoltBone 50`), F2: hold right click: nothing fires while you hold, and a circle appears and narrows; after 1.5 seconds it pulses; release: the bolt leaves as a lance. Released before that: a normal bolt, no eitr.
-14. [ ] (`r16b-14`) Multishot, Freezing Arrow and Forked Lightning still work from their slots; switching with F1–F4 changes what right click fires; a normal left-click shot is a normal arrow.
-15. [ ] (`r16b-15`) F5 shows no red errors. **Before you start the game again**, send `BepInEx/LogOutput.log`: each lance now writes "Wind Lance fired …" and "Wind Lance flew N m, struck K enemies, ended at …", which tells me exactly what happened (the next start of the game overwrites the file).
+11. [x] (`r16b-11`) `orlog_level 50`, then `orlog_skill WindLance 19` (rank 20): the details say 233% damage, force 200, cost 3.25 eitr; the gust clearly hits and pushes harder than at rank 1.
+12. [x] (`r16b-12`) With fire arrows in the quiver, the gust still sets what it hits on fire.
+13. [x] (`r16b-13`) Crossbow in hand (loaded; `spawn CrossbowArbalest`, `spawn BoltBone 50`), F2: hold right click: nothing fires while you hold, and a circle appears and narrows; after 1.5 seconds it pulses; release: the bolt leaves as a lance. Released before that: a normal bolt, no eitr.
+14. [x] (`r16b-14`) Multishot, Freezing Arrow and Forked Lightning still work from their slots; switching with F1–F4 changes what right click fires; a normal left-click shot is a normal arrow.
+15. [x] (`r16b-15`) F5 shows no red errors. **Before you start the game again**, send `BepInEx/LogOutput.log`: each lance now writes "Wind Lance fired …" and "Wind Lance flew N m, struck K enemies, ended at …", which tells me exactly what happened (the next start of the game overwrites the file).
 
 **Forked Lightning: two steps left**
 
 16. [ ] (`r16-7`) Left over from round 1. A troll with greylings at its feet (`spawn Troll 1`, `spawn Greyling 3`), slot F1 (Forked Lightning): shoot the troll's body: the greylings touching or beside it are struck (the 4 m counts from its body, not its feet).
 17. [ ] (`r16-8`) Left over from round 1. `orlog_skill ForkedLightning 19` (rank 20): the details say "up to 7 other enemies" and cost 8.75 eitr; `spawn Greydwarf_Elite 9`, shoot one in the middle: the one you hit and up to seven of the others within reach are struck (never more than seven others).
 
-### Your feedback
+### Your feedback (2026-11-16, evening)
 
-(not tested yet)
+Build tested: `Orlog 0.4.0 loaded (build: claude/jolly-albattani-4fruv2 9fc528b)`, Valheim 1.0.21 (the log he sent).
+
+- **Wind Lance, steps 1–15 (`r16b-1` … `r16b-15`): all passed** on the phone page. His one note, on step 3 (is 1.5 seconds right, is the circle clear enough?): "yes". His message: "see playtest results and log."
+- **Forked Lightning's two steps (`r16-7`, `r16-8`): not marked.**
+- **The log:** no errors and no "Orlog could not …" lines. 13 lances, all at rank 20; 4 early releases, each a normal shot. The wind is drawn with `Sprites/Default`. A bow's lance flies at 100 m/s, a crossbow's at 400 m/s. Most flew their 50 m along the ground; one ended at a bush (`Bush01`) after 32 m, one at a rock (`Rock_7`) after 48 m. **Two ended at the ground at once ("flew 0 m, struck 2 enemies, ended at Terrain"; "flew 0 m, struck 1 enemy, ended at Terrain")**: with enemies right beside him he aimed down more steeply than the 38° the lance follows, so it struck the ground (as built), after hitting them.
+
+### What changed after the feedback
+
+Nothing yet. Asked: whether a steep dive should level out too instead of ending at the ground, and whether bushes should let the gust through.
+
+### Final play-test
+
+- Wind Lance: passed (2026-11-16, all 15 steps). Forked Lightning: steps 1–6 passed; `r16-7` and `r16-8` open; balance for a later session.
