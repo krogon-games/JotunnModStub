@@ -1,29 +1,29 @@
 # Handoff: `claude/jolly-albattani-4fruv2`
 
-**Written:** 2026-11-16 (during the round; `/handoff` rewrites this at the end). Ahead of `master`, 0 behind. No pull request yet.
+**Written:** 2026-11-16 by `/handoff`. 15 commits ahead of `master` with this one, 0 behind. No pull request yet.
 
 ## Stage
 
-**Ready to merge**, once `/handoff` has run its checks (Krogon's final play-test passed).
+**Ready to merge.**
 
 ## Purpose
 
-The first two of the Amazon's seven bow skills still to build ([#70](https://github.com/krogon-games/JotunnModStub/issues/70)): **Forked Lightning** and **Wind Lance**.
+The first two of the Amazon's seven bow skills still to build ([#70](https://github.com/krogon-games/JotunnModStub/issues/70)): Forked Lightning and Wind Lance.
 
 ## Done
 
-- **Wind Lance passed** Krogon's single-player play-tests (2026-11-16): the rework's 15 steps (build `9fc528b`) and the bush check (build `00c7b57`).
-- **Forked Lightning works** (steps 1–6 passed the same day).
+Krogon's single-player play-tests (2026-11-16):
+- **Wind Lance:** the rework's 15 steps (build `9fc528b`), then the bush check (build `00c7b57`; "done, passed.").
+- **Forked Lightning:** steps 1–6 ("works well it seems").
 
 ## Half-done and known issues
 
 Detail in `FEATURES.md` → Amazon skill bar and bow skills.
-- **Wind Lance failed its first play-test, was reworked, and the rework passed (Done, above):** it flies itself (`Orlog/Content/WindLance.cs`) as a gust 0.75 m each side that runs along the ground, strikes every enemy once, staggers (not bosses) and pushes them; 1.5 s hold shown on the bow's draw circle; a wind look (`WindLanceLook.cs`, preview `docs/images/wind_lance_preview.png`). Read against the game's code (1.0.14 bodies, decompiled this session).
-- **Forked Lightning is far too strong at level 1** (Krogon): it follows the damage scale (×22 at character level 1); balancing is for another session (decision 15).
-- **Claude's choices, open to change:** the gust runs 0.75 m above the ground and follows slopes up to 38° (the slope a player can stand on, game code); it skips creatures that are neutral until attacked; the look's sizes and colours; the circle narrows to 0.06 and turns pale blue; a crossbow charges with no stamina cost; Forked Lightning's struck-enemy fork is on top of the 3 → 7.
-- Other players see the lance as a fast arrow without the wind, and the forks without the lines.
-- **Subagents:** the look was built by a Sonnet helper (read and checked by the main session); the Opus review of the flight code stopped at a usage limit, so the main session reviewed it against the game's code itself (one bug found and fixed: a crossbow's charged shot left as a plain bolt).
-- **The small-plant list has three odd members** (his log): a crow and two kinds of large root (`Greydwarf_Root`, `HugeRoot1`) also drop only wood, so the gust passes them, harmlessly.
+- **Forked Lightning is far too strong at level 1** (the damage scale, ×22 at character level 1). Its balance and its last two steps (a troll with greylings; rank 20) wait for a later session.
+- **The small-plant list has three odd members** (his log): a crow and two kinds of large root (`Greydwarf_Root`, `HugeRoot1`) drop only wood too, so the gust passes them, harmlessly.
+- **Claude's choices, open to change:** the gust runs 0.75 m above the ground and follows slopes up to 38°; it skips creatures that are neutral until attacked; the look's sizes and colours; the draw circle narrows to 0.06 and turns pale blue; a crossbow charges with no stamina cost; Forked Lightning's struck-enemy fork is on top of the 3 → 7.
+- Other players see the lance as a fast arrow without the wind, and the forks without the lines. Nothing was tried with two players (`PLAYTEST.md` → Session 2, 2j step 7).
+- Subagents: a Sonnet helper built the look (checked by the main session); the Opus review stopped at a usage limit, so the main session reviewed the flight against the game's code itself.
 - Five bow skills still say "Coming later": Snipe, Strafe, Immolation Arrow, Venom Strike, Shackle Shot.
 
 ## Decisions
@@ -57,23 +57,29 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 
 ## Playtest
 
-`docs/playtests/claude-jolly-albattani-4fruv2.md`: **passed.** Round 1: Forked Lightning's steps 1–6 passed, Wind Lance failed. Round 2: Wind Lance passed, all 15 steps. Round 3: the lance through a bush passed. Nothing of this round is left on the phone page.
+`docs/playtests/claude-jolly-albattani-4fruv2.md`: **passed.** Round 1: Forked Lightning's steps 1–6 passed, Wind Lance failed. Round 2: Wind Lance reworked, all 15 steps passed. Round 3: the lance through a bush passed. Nothing of this round is left on the phone page.
 
 ## Open questions for Krogon
 
-1. Forked Lightning's balance and the damage scale at low levels, with its last two steps (a troll with greylings; rank 20): a later session, his word.
-2. The log's list of what a lance passes through includes a crow and two kinds of large root (`Greydwarf_Root`, `HugeRoot1`): leave, or make large roots stop it?
+1. Forked Lightning's balance and the damage scale at low levels, with its two open steps: a later session (his word).
+2. Should large roots stop the lance (they are on its pass-through list)?
 3. The other five bow skills' details, in the rounds that build them.
 
 ## Next steps
 
-1. `/handoff` (the full checks), then a pull request into `master`.
-2. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–26), update #70 (two of seven done), a task for Forked Lightning's balancing and the damage scale (with its two open steps).
+1. Pull request into `master`; Krogon merges.
+2. Coordinator: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–26), update #70 (two of seven done), a task for Forked Lightning's balance and the damage scale.
+3. Next classes round, new branch: more of #70's bow skills, or the balancing pass.
 
 ## Checks
 
-2026-11-16, late evening: 589 tests pass; Orlog builds; no version changed; docs updated. In-game: PASSED in Krogon's single-player play-tests (Wind Lance: 15 steps and the bush check; Forked Lightning: steps 1–6); two players untested. (`/handoff` runs the full list.)
+- Build: PASS (589 tests; Orlog builds, 0 errors).
+- Version: gameplay changed: version bump needed at merge (Orlog). The branch changed no version.
+- Multiplayer sync: PASS, read in code, not tested (no new setting, message or saved key; hits and the stagger go through the game's own messages; the look is local; the skill tables are compiled in and sync through the version bump).
+- Assets and names: PASS (no new data file; new code files are picked up by the project; `StaffLightning` is in the game dump; no new text tokens).
+- FEATURES.md: PASS (patch list matches the code: one new `Hud.UpdateCrosshair` postfix).
+- In-game: PASSED in Krogon's single-player play-tests (above); two players untested.
 
 ## Merge notes
 
-**Ready to merge once `/handoff` has run:** the final play-test passed and everything is pushed; the branch was level with `master` at the round's start (`/handoff` checks again). **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).
+**Ready to merge: yes** (final play-test passed, no check failed, level with `master`, pushed). **Gameplay changed: version bump needed at merge: Orlog.** No other remote branch has unmerged commits. Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/mod-compatibility.md`, `docs/class-design.md`; also `CraftingOverhaul.Tests/CraftingOverhaul.Tests.csproj` (one linked file).
