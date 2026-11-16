@@ -2,6 +2,8 @@
 
 **Written:** 2026-11-16 by `/handoff`. 16 commits ahead of `master` with this one, 0 behind. No pull request yet.
 
+**Coordinator update (2026-11-16):** PR #71 was **merged** into `master` on Krogon's word ("testing passed, merge it"). The coordinator raised Orlog to **0.5.0** (PR #73), copied decisions 1–26 into `docs/DECISIONS.md`, kept #70 open for the five bow skills left ("keep #70 open") and opened #72 for skill damage: the balancing pass, Forked Lightning's last two steps, and Krogon's note that all skills' damage may be remade, perhaps scaling off the equipped weapon. The phone page has the new version number and the two-player step. The branch is fully in `master` and safe to delete; the next classes round starts a new branch from `master`.
+
 ## Stage
 
 **Ready to merge.**
