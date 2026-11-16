@@ -5,7 +5,9 @@
 **Build:** the three DLLs from this branch (only Orlog changed). The log line should read `Orlog 0.4.0 loaded (build: claude/jolly-albattani-4fruv2 <commit>)` (the version is raised when it merges).
 **Setup:** single player, a test world, the group's mods loaded. F5, `devcommands`, `god` helps. `orlog_class Amazon` if the character has no class, then `orlog_level 30` (about 58 eitr). A bow and arrows (`spawn BowFineWood`, `spawn ArrowFlint 100`); for step 17 also `spawn ArrowFire 20`, for step 18 `spawn CrossbowArbalest` and `spawn BoltBone 50`.
 
-Both skills were written without the game's code open this time, so step 9 (the lance flies on through an enemy) and step 7 (the 3-second hold) are the ones most likely to show a problem. If one fails, tell me what you saw and send `BepInEx/LogOutput.log`.
+Both skills were written without the game's code open this time, so steps 9 (the 3-second hold) and 11 (the lance flying on through enemies) are the ones most likely to show a problem. If one fails, tell me what you saw and send `BepInEx/LogOutput.log`.
+
+**Phone page:** the same 21 steps are the first section of the [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht), "This round: Forked Lightning and Wind Lance" (step ids `r16-1` … `r16-21`).
 
 ### Checklist
 
