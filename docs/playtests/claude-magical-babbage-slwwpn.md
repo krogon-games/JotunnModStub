@@ -43,3 +43,47 @@ This round was written without the game's code open. The thing most likely to be
 ### Your feedback
 
 (waiting)
+
+## Round: Strafe, Immolation Arrow and Venom Strike (2026-11-16)
+
+**Build:** the three DLLs from this branch (only Orlog changed). The log line should read `Orlog 0.5.0 loaded (build: claude/magical-babbage-slwwpn <commit>)` (the version is raised when it merges).
+**Setup:** the same as the first round: single player, a test world, the group's mods loaded. F5, `devcommands`, `god` helps. `orlog_class Amazon` if the character has no class, then `orlog_level 30`. `raiseskill Bows 100`. The starter bow: `spawn Bow`, `spawn ArrowWood 100`. The two rounds can be done in one sitting.
+
+**What's new:** three more bow skills. **Strafe:** one arrow becomes a volley, each arrow flying straight at a different enemy you can see within 16.5 m, at 75% of the shot's damage. **Immolation Arrow:** explodes where it hits (fire, 25% of the shot's damage at level 1, 100% at 20) and the ground burns for 4 seconds (10% a second at level 1, 30% at 20). **Venom Strike:** a poison cloud hangs where it lands for 4 seconds and poisons everything in it (25% of the shot's damage at level 1, 100% at 20). Eitr: 11, 6 + 0.25 per level, 7 + 0.5 per level. The ring on the ground and the glow are a first version with no new art; tell me how they look. This was written without the game's code open, so the numbers and the aim are the likeliest things to be off: send `BepInEx/LogOutput.log` (every volley, blast and area writes a line with its numbers).
+
+**Phone page:** the same 14 steps are the second section of the [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht), "This round: Strafe, Immolation Arrow and Venom Strike" (step ids `r70-1` … `r70-14`).
+
+### Checklist
+
+**The cards**
+
+1. [ ] (`r70-1`) Press `K`, Bow and Crossbow tab: Strafe, Immolation Arrow and Venom Strike no longer say "Coming later" (Snipe and Shackle Shot still do). Their details read: Strafe "Fires a volley for one arrow: up to 5 enemies in view within 16.5 m each get an arrow flying straight at them, at 75% damage; at least 2 arrows, shared out when there are fewer enemies" (11 eitr); Immolation Arrow "Explodes on impact: fire damage equal to 25% of the shot's damage within 3 m; the ground there burns for 4 s, dealing 10% of the shot's damage each second to enemies in it" (6 eitr); Venom Strike "Bursts into a poison cloud reaching 3 m around where it lands for 4 s: everything in it is poisoned for 25% of the shot's damage, again each second it stays" (7 eitr).
+2. [ ] (`r70-2`) Learn one rank of each and drag them onto slots.
+
+**Strafe**
+
+3. [ ] (`r70-3`) `spawn Greydwarf_Elite 4`, back off about 10 m so all four are on screen, press Strafe's slot key, hold right click to a full draw and release → four arrows leave at once, one flying straight at each brute. Each hit is a little weaker than a normal arrow (about 30 with the starter bow). One arrow leaves the quiver. Eitr drops by 11.
+4. [ ] (`r70-4`) One enemy alone → two arrows, both at it.
+5. [ ] (`r70-5`) With no enemy on screen (or all further than about 16 m) → two arrows fly where you aim, like normal arrows.
+6. [ ] (`r70-6`) With enemies in front of you and behind you → only the ones you can see on screen get an arrow.
+7. [ ] (`r70-7`) `orlog_skill Strafe 19` (rank 20) → the details say "up to 10 enemies" and "at least 7 arrows". `spawn Greyling 12` in front of you → ten of them get an arrow each. A troll alone (`spawn Troll 1`) takes seven arrows.
+
+**Immolation Arrow**
+
+8. [ ] (`r70-8`) `spawn Greydwarf_Elite 4`, shoot one → the arrow hits as usual and there is a burst of fire. Every brute within 3 m takes a fire number about a quarter of the arrow's (about 10 with the starter bow) and burns. Then for 4 seconds an orange ring and glow mark the burning ground and the brutes standing in it take a small fire hit each second (about 4). One that walks out stops being hit. Eitr drops by 6.
+9. [ ] (`r70-9`) Shoot the ground between a group → the blast and the burning ground appear there.
+10. [ ] (`r70-10`) `orlog_skill ImmolationArrow 19` → the details say 100% and 30%. The blast is about as hard as the arrow itself.
+
+**Venom Strike**
+
+11. [ ] (`r70-11`) `spawn Greydwarf_Elite 4`, shoot one (or the ground between them) → the arrow hits as usual. A green ring and glow hang there for 4 seconds. Everything inside is poisoned (green numbers ticking down, about 10 in all with the starter bow). A creature that walks in during the 4 seconds is poisoned too. Eitr drops by 7.
+12. [ ] (`r70-12`) `orlog_skill VenomStrike 19` → the details say 100% and cost 16.5 eitr. The poison is clearly stronger.
+
+**Safety and your verdict**
+
+13. [ ] (`r70-13`) Stand in your own burning ground and poison cloud → you take no damage (a tamed animal neither).
+14. [ ] (`r70-14`) Your verdict: do the three skills feel right at skill level 1 and at 20, and how do the ring, the glow and the effect each second look and sound? No red error lines in the console (F5). Send `BepInEx/LogOutput.log` if anything looks off.
+
+### Your feedback
+
+(waiting)
