@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Asking Krogon questions.**
+**Building.**
 
 ## Purpose
 
@@ -31,7 +31,8 @@ None yet.
 9. **2026-11-17: the arrows carry the arrow's own damage** ("The arrow's own damage"): fire, frost and poison arrows keep their element, as with the other bow skills; over physical only.
 10. **2026-11-17: you walk slowly while firing** ("Walk slowly"), at the game's slowed pace for a drawn bow; over standing still and moving freely.
 11. **2026-11-17: stamina drains while firing, like holding a drawn bow** ("Like a drawn bow"), on top of the eitr; over no stamina.
-12. **2026-11-17: the eitr cost gets more expensive per level** (his own answer: "get more expensive per level."), over the same at every level and getting cheaper. How much: being asked.
+12. **2026-11-17: the eitr cost gets more expensive per level** (his own answer: "get more expensive per level."), over the same at every level and getting cheaper. How much: decision 14.
+14. **2026-11-17: both parts of the cost grow a little** ("Both grow a little"): the start 10 at skill level 1 → 15 at 20 (+0.25 a level, Immolation Arrow's pace), the drain 3 → 5 eitr a second; over only the drain growing and only the start growing.
 13. **2026-11-17: the arrows fly like normal arrows** ("Like normal arrows"): normal flight and drop, as from a fully drawn shot; over straight with a little spread and dead straight.
 
 ## Playtest
@@ -40,12 +41,11 @@ Nothing to test yet.
 
 ## Open questions for Krogon
 
-Being asked: how much more the eitr cost is per level.
+None for now.
 
 ## Next steps
 
-1. Finish the questions.
-2. Build the new Strafe; tests; docs; play-test checklist on the phone page.
+1. Build the new Strafe; tests; docs; play-test checklist on the phone page.
 
 ## Checks
 
