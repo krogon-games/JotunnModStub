@@ -366,19 +366,7 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(7, t.Skills.Count(s => s.Tab == 0 && s.Built));
             Assert.Equal(2, t.Skills.Count(s => s.Tab == 0 && !s.Built));
 
-            // Strafe: D2's counts and mana, 75% of the shot each, 16.5 m; no D2 damage rows.
-            foreach (int level in new[] { 1, 10, 20 })
-            {
-                Assert.Equal(11f, v.Get("Strafe", "mana_cost", level));
-                Assert.Equal(75f, v.Get("Strafe", "weapon_damage_pct", level));
-                Assert.Equal(16.5f, v.Get("Strafe", "range_m", level));
-            }
-            Assert.Equal(5f, v.Get("Strafe", "max_targets", 1));
-            Assert.Equal(10f, v.Get("Strafe", "max_targets", 20));
-            Assert.Equal(2f, v.Get("Strafe", "min_arrows", 1));
-            Assert.Equal(7f, v.Get("Strafe", "min_arrows", 20));
-            Assert.Equal(30f, v.Get("Strafe", "attack_rating_pct", 1));
-            Assert.False(v.Has("Strafe", "damage_pct"));
+            // Strafe: remade 2026-11-17 (Rapid Fire); its own test below.
 
             // Immolation Arrow: blast 25 -> 100, burn 10 -> 30 a second, 3 m, burns 4 s.
             Assert.Equal(25f, v.Get("ImmolationArrow", "blast_damage_pct", 1));
@@ -423,8 +411,6 @@ namespace CraftingOverhaul.Tests
         {
             var v = Values();
             var t = Tree();
-            Assert.Equal(11f, ActiveSkillRules.EitrCost(t.Find("Strafe"), v, 1));
-            Assert.Equal(11f, ActiveSkillRules.EitrCost(t.Find("Strafe"), v, 20));
             Assert.Equal(6f, ActiveSkillRules.EitrCost(t.Find("ImmolationArrow"), v, 1));
             Assert.Equal(10.75f, ActiveSkillRules.EitrCost(t.Find("ImmolationArrow"), v, 20));
             Assert.Equal(7f, ActiveSkillRules.EitrCost(t.Find("VenomStrike"), v, 1));
@@ -446,34 +432,77 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void StrafeSharesTheVolleyOutOverTheNearestEnemies()
+        public void StrafeIsRapidFireWithTheAgreedNumbers()
         {
-            // No enemies: the arrows fly straight (-1), at least one.
-            Assert.Equal(new[] { -1, -1 }, ActiveSkillRules.StrafeTargets(new float[0], 5, 2));
-            Assert.Equal(new[] { -1 }, ActiveSkillRules.StrafeTargets(new float[0], 5, 0));
-            Assert.Equal(new[] { -1, -1 }, ActiveSkillRules.StrafeTargets(null, 5, 2));
-            // 3 enemies, max 5, min 2: three arrows, one each, nearest the aim first.
-            Assert.Equal(new[] { 1, 2, 0 }, ActiveSkillRules.StrafeTargets(new[] { 30f, 5f, 10f }, 5, 2));
-            // One enemy, min 2: both arrows at it.
-            Assert.Equal(new[] { 0, 0 }, ActiveSkillRules.StrafeTargets(new[] { 12f }, 5, 2));
-            // 7 enemies, max 5, min 2: five arrows at the five smallest angles.
-            Assert.Equal(new[] { 3, 6, 1, 5, 0 }, ActiveSkillRules.StrafeTargets(new[] { 40f, 20f, 70f, 1f, 80f, 30f, 10f }, 5, 2));
-            // 2 enemies, min 7: seven arrows alternating.
-            Assert.Equal(new[] { 0, 1, 0, 1, 0, 1, 0 }, ActiveSkillRules.StrafeTargets(new[] { 3f, 9f }, 5, 7));
-            // Equal angles keep their order.
-            Assert.Equal(new[] { 0, 1, 2 }, ActiveSkillRules.StrafeTargets(new[] { 7f, 7f, 7f }, 5, 1));
-            Assert.Equal(new[] { 0, 1 }, ActiveSkillRules.StrafeTargets(new[] { 7f, 7f, 7f }, 2, 1));
-            // Max targets below 1 counts as 1.
-            Assert.Equal(new[] { 1, 1 }, ActiveSkillRules.StrafeTargets(new[] { 9f, 2f }, 0, 2));
+            // Krogon, 2026-11-17 (docs/handoffs/claude-elegant-maxwell-e7ys9o.md, decisions 1-14): Diablo 3's Rapid Fire.
+            var v = Values();
+            var t = Tree();
+            Assert.True(t.Find("Strafe").Built);
+            // Start cost 10 -> 15, drain 3 -> 5 a second, 25% -> 50% of the shot per arrow, 6 arrows and 1 from the quiver a second.
+            Assert.Equal(10f, ActiveSkillRules.EitrCost(t.Find("Strafe"), v, 1));
+            Assert.Equal(15f, ActiveSkillRules.EitrCost(t.Find("Strafe"), v, 20));
+            Assert.Equal(3f, v.Get("Strafe", "eitr_per_s", 1));
+            Assert.Equal(5f, v.Get("Strafe", "eitr_per_s", 20));
+            Assert.Equal(25f, v.Get("Strafe", "weapon_damage_pct", 1));
+            Assert.Equal(50f, v.Get("Strafe", "weapon_damage_pct", 20));
+            for (int level = 1; level <= 20; level++)
+            {
+                Assert.Equal(6f, v.Get("Strafe", "arrows_per_s", level));
+                Assert.Equal(3f, v.Get("Strafe", "crossbow_per_s", level));
+                Assert.Equal(1f, v.Get("Strafe", "ammo_per_s", level));
+                if (level > 1)
+                {
+                    Assert.True(v.Get("Strafe", "weapon_damage_pct", level) > v.Get("Strafe", "weapon_damage_pct", level - 1), "damage level " + level);
+                    Assert.True(v.Get("Strafe", "mana_cost", level) >= v.Get("Strafe", "mana_cost", level - 1), "cost level " + level);
+                    Assert.True(v.Get("Strafe", "eitr_per_s", level) >= v.Get("Strafe", "eitr_per_s", level - 1), "drain level " + level);
+                }
+            }
+            // The volley's rows (Diablo 2's) are gone.
+            foreach (var gone in new[] { "max_targets", "min_arrows", "attack_rating_pct", "range_m", "damage_pct" })
+            {
+                Assert.False(v.Has("Strafe", gone), gone);
+            }
+        }
+
+        [Fact]
+        public void StrafeStreamsSixArrowsASecond()
+        {
+            Assert.Equal(0, ActiveSkillRules.StreamDue(-0.1f, 6f));
+            Assert.Equal(1, ActiveSkillRules.StreamDue(0f, 6f));
+            Assert.Equal(1, ActiveSkillRules.StreamDue(0.16f, 6f));
+            Assert.Equal(2, ActiveSkillRules.StreamDue(1f / 6f, 6f));
+            Assert.Equal(6, ActiveSkillRules.StreamDue(0.84f, 6f));
+            Assert.Equal(7, ActiveSkillRules.StreamDue(1f, 6f));
+            Assert.Equal(13, ActiveSkillRules.StreamDue(2f, 6f));
+            // A crossbow: 3 a second (Krogon, 2026-11-17), and one bolt a second from the quiver: bolts 0, 3, 6.
+            Assert.Equal(4, ActiveSkillRules.StreamDue(1f, 3f));
+            Assert.Equal(new[] { 0, 3, 6 }, Enumerable.Range(0, 9).Where(i => ActiveSkillRules.StreamTakesAmmo(i, 3f, 1f)).ToArray());
+            // No rate: only the first.
+            Assert.Equal(1, ActiveSkillRules.StreamDue(5f, 0f));
+        }
+
+        [Fact]
+        public void StrafeTakesOneArrowASecondFromTheQuiver()
+        {
+            // 6 a second, 1 from the quiver: arrows 0, 6, 12, 18 take one.
+            var taking = Enumerable.Range(0, 20).Where(i => ActiveSkillRules.StreamTakesAmmo(i, 6f, 1f)).ToArray();
+            Assert.Equal(new[] { 0, 6, 12, 18 }, taking);
+            // 2 a second from the quiver: every third arrow.
+            Assert.Equal(new[] { 0, 3, 6, 9 }, Enumerable.Range(0, 12).Where(i => ActiveSkillRules.StreamTakesAmmo(i, 6f, 2f)).ToArray());
+            // No ammo rate: only the first; no stream rate: every arrow.
+            Assert.Equal(new[] { 0 }, Enumerable.Range(0, 12).Where(i => ActiveSkillRules.StreamTakesAmmo(i, 6f, 0f)).ToArray());
+            Assert.True(ActiveSkillRules.StreamTakesAmmo(5, 0f, 1f));
+            Assert.False(ActiveSkillRules.StreamTakesAmmo(-1, 6f, 1f));
         }
 
         [Fact]
         public void NewBowSkillTooltips()
         {
             var v = Values();
-            Assert.Equal("Fires a volley for one arrow: up to 5 enemies in view within 16.5 m each get an arrow flying straight at them, " +
-                         "at 75% damage; at least 2 arrows, shared out when there are fewer enemies", ActiveSkillRules.Describe("Strafe", v, 1, 10f, 25f));
-            Assert.Contains("up to 10 enemies", ActiveSkillRules.Describe("Strafe", v, 20, 1f, 25f));
+            Assert.Equal("Hold to rapid-fire: after one full draw, fires 6 arrows a second where you aim for as long as you hold (a loaded crossbow: 3 bolts a second), " +
+                         "each at 25% damage. Costs 10 eitr to start and 3 eitr a second while firing; uses 1 arrow or bolt a second; you walk and lose stamina as with a drawn bow",
+                ActiveSkillRules.Describe("Strafe", v, 1, 10f, 25f));
+            Assert.Contains("each at 50% damage. Costs 15 eitr to start and 5 eitr a second", ActiveSkillRules.Describe("Strafe", v, 20, 1f, 25f));
             Assert.Equal("Explodes on impact: fire damage equal to 25% of the shot's damage within 3 m; " +
                          "the ground there burns for 4 s, dealing 10% of the shot's damage each second to enemies in it",
                 ActiveSkillRules.Describe("ImmolationArrow", v, 1, 1f, 25f));

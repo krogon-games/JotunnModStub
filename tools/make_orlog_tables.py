@@ -90,7 +90,7 @@ AMAZON = [
         ("Wind Lance", "v1", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, passing through enemies and knocking them back"),
         ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
         ("Multishot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
-        ("Strafe", "v1", "attack", "bow", "One arrow becomes a volley: each arrow flies by itself at a different enemy in view"),
+        ("Strafe", "v1", "attack", "bow", "Hold to rapid-fire: the bow draws once (a crossbow needs only to be loaded), then keeps firing where you aim for as long as you hold"),
         ("Freezing Arrow", "v1", "attack", "bow", "Frost damage and a short freeze in an area on impact; bosses are only slowed"),
         ("Immolation Arrow", "v1", "attack", "bow", "Explodes in fire on impact and leaves the ground burning"),
         ("Venom Strike", "v1", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
@@ -156,6 +156,21 @@ NEW_SKILLS = {
         ("speed_pct", "%", ("flat", 200)),
         ("range_m", "m", ("flat", 50)),
     ]),
+    # Strafe, remade after Diablo 3's Rapid Fire (user, 2026-11-17, docs/handoffs/claude-elegant-maxwell-e7ys9o.md,
+    # decisions 1-14; it replaced the volley of decision 8 in claude-magical-babbage-slwwpn.md). Hold the skill button:
+    # the bow draws once, then fires while held ("Draw once, then rapid fire"), "6 a second", each arrow "25% -> 50% at
+    # level 20" of the shot's damage, the quiver losing "One per second". Eitr: 10 to start and 3 a second while
+    # firing (Rapid Fire's "10 initially, and an additional 3 while channeling", "3 eitr per second"), both growing
+    # ("Both grow a little": start 10 -> 15, drain 3 -> 5 at level 20). Not a D2 skill any more: no D2 rows, own eitr.
+    "Strafe": (None, [
+        ("mana_cost", "flat", ("line", 10, 15, "2026-11-17")),
+        ("eitr_per_s", "flat", ("line", 3, 5, "2026-11-17")),
+        ("weapon_damage_pct", "%", ("line", 25, 50, "2026-11-17")),
+        ("arrows_per_s", "count", ("flat", 6, "2026-11-17")),
+        # Crossbows too (decisions 15-16): "Fewer, same share", 3 bolts a second.
+        ("crossbow_per_s", "count", ("flat", 3, "2026-11-17")),
+        ("ammo_per_s", "count", ("flat", 1, "2026-11-17")),
+    ]),
     # Venom Strike is the user's own skill (2026-11-16, docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 10 and 11):
     # "25% at level 1, 100% at 20"; eitr "7, +0.5 per level" = Plague Javelin's mana. A poison cloud 3 m in every
     # direction hangs for 4 seconds where the arrow lands; everything inside is poisoned and re-poisoned each second.
@@ -176,12 +191,6 @@ WEAPON_SHARES = {
     "Freezing Arrow": (["cold_damage_min", "cold_damage_max"], [
         ("blast_damage_pct", "%", ("line", 50, 150)),
     ]),
-    # Strafe (decision 8): "75% of your shot each". On release one arrow from the quiver becomes a volley, each arrow
-    # flying by itself at a different enemy in view within 16.5 m; D2's counts (max_targets, min_arrows) and mana stay.
-    "Strafe": (["damage_pct", "weapon_damage_pct"], [
-        ("weapon_damage_pct", "%", ("flat", 75)),
-        ("range_m", "m", ("flat", 16.5)),
-    ]),
     # Immolation Arrow (decision 9): "Blast 25%->100%, fire 10%->30% a second". Explodes in fire on impact within 3 m,
     # then the ground there burns for 4 seconds (D2's burn_duration_s, kept) and hurts enemies in it every second.
     "Immolation Arrow": (["explosion_fire_damage_min", "explosion_fire_damage_max", "burn_fire_dps_min", "burn_fire_dps_max"], [
@@ -197,6 +206,14 @@ def number(value):
     return str(int(value)) if float(value) == int(value) else ("%g" % value)
 
 
+def own_eitr(name):
+    """A new skill with no D2 skill behind its cost (NEW_SKILLS[name][0] is None): its eitr at level 1 and the average
+    rise per level, from its own mana_cost row (the row is what the game uses; these columns are only a fallback)."""
+    rule = [r for v, _, r in NEW_SKILLS[name][1] if v == "mana_cost"][0]
+    first, last = (rule[1], rule[1]) if rule[0] == "flat" else (rule[1], rule[2])
+    return {"mana_base": number(first), "mana_per_lvl": number(round((last - first) / 19.0, 3))}
+
+
 def new_skill_rows(name, per_level, rules=None):
     """The amazon_skill_values.csv rows of a skill in NEW_SKILLS (or the given rules, for WEAPON_SHARES)."""
     rows = []
@@ -207,10 +224,10 @@ def new_skill_rows(name, per_level, rules=None):
             note = "%s %s (%s)%s" % (rule[1], rule[2], source["source"], " +%d" % rule[3] if rule[3] else "")
         elif rule[0] == "flat":
             levels = [number(rule[1])] * 20
-            note = "user 2026-11-16"
+            note = "user " + (rule[2] if len(rule) > 2 else "2026-11-16")
         else:
             levels = [number(round(rule[1] + (rule[2] - rule[1]) * (i - 1) / 19.0)) for i in range(1, 21)]
-            note = "user 2026-11-16"
+            note = "user " + (rule[3] if len(rule) > 3 else "2026-11-16")
         rows.append([name.replace(" ", ""), value, unit] + levels + [note])
     return rows
 
@@ -346,7 +363,7 @@ def main():
             assert len(tab_skills) == SKILLS_PER_TAB, "every tab has exactly nine skills (user, 2026-11-15)"
             for i, (name, status, kind, needs, text) in enumerate(tab_skills):
                 d2_name = D2_NAMES.get(name, name)
-                source = d2.get(NEW_SKILLS[name][0]) if name in NEW_SKILLS else d2.get(d2_name)
+                source = (own_eitr(name) if NEW_SKILLS[name][0] is None else d2.get(NEW_SKILLS[name][0])) if name in NEW_SKILLS else d2.get(d2_name)
                 costs = kind != "passive" and source is not None
                 w.writerow([d2_name.replace(" ", ""), name, tab, i // SKILL_COLS + 1, i % SKILL_COLS + 1, status, kind, needs,
                             source["mana_base"] if costs else "0", source["mana_per_lvl"] if costs else "0", text])

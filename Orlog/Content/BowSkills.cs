@@ -20,9 +20,8 @@ namespace Orlog.Content
     ///         forks go to the nearest other enemies within reach of its body (Charged Strike's fork counts and eitr; each fork
     ///         25% → 100% of the shot's damage as lightning).</item>
     ///         <item>Wind Lance (user 2026-11-16): a charged shot (<see cref="SkillButton" />) flown by <see cref="WindLance" />.</item>
-    ///         <item>Strafe (Krogon, 2026-11-16): one arrow becomes a volley, each arrow flying by itself at a different enemy in
-    ///         front of you (in view of the camera, within range), each a share of the shot (the pure choice of targets is
-    ///         <see cref="ActiveSkillRules.StrafeTargets" />).</item>
+    ///         <item>Strafe: remade after Diablo 3's Rapid Fire (Krogon, 2026-11-17): hold to keep firing after one full draw
+    ///         (<see cref="Strafe" />); each arrow of the stream is cut to its share here. The volley of 2026-11-16 is removed.</item>
     ///         <item>Immolation Arrow (Krogon, 2026-11-16): a fire blast on impact like Freezing Arrow's, then the ground there
     ///         burns and hurts enemies standing in it every second (<see cref="GroundArea" />).</item>
     ///         <item>Venom Strike (Krogon, 2026-11-16): the arrow hits as usual and a poison cloud hangs where it landed,
@@ -43,10 +42,6 @@ namespace Orlog.Content
         private static int s_fanIndex;
         private static int s_fanCount;
         private static readonly List<Character> s_inRange = new List<Character>();
-        // Strafe: the volley's targets (index into s_strafeCandidates, -1 = straight ahead), one per arrow.
-        private static readonly List<Character> s_strafeCandidates = new List<Character>();
-        private static readonly List<float> s_strafeAngles = new List<float>();
-        private static List<int> s_strafeTargets;
 
         /// <summary>On a skill arrow: which skill shot it, at what level, and the shot's own damage.</summary>
         internal sealed class ShotTag : MonoBehaviour
@@ -122,7 +117,7 @@ namespace Orlog.Content
             private static void Prefix(Attack __instance, out int __state)
             {
                 __state = __instance.m_projectiles;
-                s_firing = SkillButton.For(__instance);
+                s_firing = SkillButton.For(__instance) ?? Strafe.ShotFor(__instance);
                 s_fanIndex = 0;
                 s_fanCount = 1;
                 if (s_firing != null && s_firing.Skill.Id == "MultipleShot")
@@ -131,19 +126,12 @@ namespace Orlog.Content
                     s_fanCount = Mathf.Max(1, Mathf.RoundToInt(values?.Get("MultipleShot", "arrows", s_firing.Level) ?? 1f));
                     __instance.m_projectiles = s_fanCount;
                 }
-                else if (s_firing != null && s_firing.Skill.Id == "Strafe")
-                {
-                    Safe.Run("choose Strafe's targets", () => PlanStrafe(__instance));
-                }
             }
 
             private static void Finalizer(Attack __instance, int __state)
             {
                 __instance.m_projectiles = __state;
                 s_firing = null;
-                s_strafeTargets = null;
-                s_strafeCandidates.Clear();
-                s_strafeAngles.Clear();
             }
         }
 
@@ -190,98 +178,16 @@ namespace Orlog.Content
                         WindLance.Launch(projectile, level, v, ref velocity, hit);
                         break;
                     case "Strafe":
-                        // If the volley couldn't be planned the shot stays one normal arrow, at its full damage.
-                        if (s_strafeTargets != null)
-                        {
-                            hit.m_damage.Modify(v.Get(id, "weapon_damage_pct", level) / 100f);
-                            AimStrafe(projectile, ref velocity);
-                        }
+                        // Each arrow of the stream: its share of the shot (25% -> 50%, Krogon 2026-11-17). Its push and the
+                        // Bows skill it trains shrink with it (Claude's choice), so 6 arrows a second don't push six times
+                        // as hard or train the skill six times as fast as single shots.
+                        float share = v.Get(id, "weapon_damage_pct", level) / 100f;
+                        hit.m_damage.Modify(share);
+                        hit.m_pushForce *= share;
+                        hit.m_skillRaiseAmount *= share;
                         break;
                 }
             }
-        }
-
-        /// <summary>
-        ///     Strafe, at release: the enemies in front (in view of the camera, within range) and the one each arrow of the
-        ///     volley flies at (<see cref="ActiveSkillRules.StrafeTargets" />); the burst fires one arrow per entry.
-        /// </summary>
-        private static void PlanStrafe(Attack attack)
-        {
-            var player = Player.m_localPlayer;
-            var v = SkillBar.ValuesFor(Attributes.ClassOf(player));
-            if (!player || v == null)
-            {
-                return;
-            }
-            const string id = "Strafe";
-            int level = s_firing.Level;
-            float range = v.Get(id, "range_m", level);
-            int maxTargets = Mathf.RoundToInt(v.Get(id, "max_targets", level));
-            int minArrows = Mathf.RoundToInt(v.Get(id, "min_arrows", level));
-            s_strafeCandidates.Clear();
-            s_strafeAngles.Clear();
-            var camera = Utils.GetMainCamera();
-            if (camera)
-            {
-                Vector3 eye = camera.transform.position;
-                Vector3 centre = player.GetCenterPoint();
-                foreach (var c in Character.GetAllCharacters())
-                {
-                    if (!c || c == player || c.IsPlayer() || c.IsDead() || !BaseAI.IsEnemy(player, c))
-                    {
-                        continue;
-                    }
-                    Vector3 at = c.GetCenterPoint();
-                    if ((at - centre).sqrMagnitude > range * range)
-                    {
-                        continue;
-                    }
-                    // The camera sits behind the player: an enemy between the two is on screen but behind the bow.
-                    if (Vector3.Dot(at - centre, camera.transform.forward) <= 0f)
-                    {
-                        continue;
-                    }
-                    Vector3 view = camera.WorldToViewportPoint(at);
-                    if (view.z <= 0f || view.x < 0f || view.x > 1f || view.y < 0f || view.y > 1f)
-                    {
-                        continue;
-                    }
-                    s_strafeCandidates.Add(c);
-                    s_strafeAngles.Add(Vector3.Angle(camera.transform.forward, at - eye));
-                }
-            }
-            s_strafeTargets = ActiveSkillRules.StrafeTargets(s_strafeAngles, maxTargets, minArrows);
-            attack.m_projectiles = Mathf.Max(1, s_strafeTargets.Count);
-            Jotunn.Logger.LogInfo($"Orlog: Strafe (level {level}): {s_strafeTargets.Count} arrows at {s_strafeCandidates.Count} enemies in view " +
-                                  $"within {range:0.#} m (up to {maxTargets} enemies, at least {minArrows} arrows), each " +
-                                  $"{v.Get(id, "weapon_damage_pct", level):0.#}% of the shot.");
-        }
-
-        /// <summary>Points the next arrow of a Strafe volley at its enemy, flying straight; an arrow with none flies as the game made it.</summary>
-        private static void AimStrafe(Projectile projectile, ref Vector3 velocity)
-        {
-            int index = s_fanIndex++;
-            if (s_strafeTargets == null || index < 0 || index >= s_strafeTargets.Count)
-            {
-                return;
-            }
-            int which = s_strafeTargets[index];
-            if (which < 0 || which >= s_strafeCandidates.Count)
-            {
-                return;
-            }
-            var target = s_strafeCandidates[which];
-            if (!target || target.IsDead())
-            {
-                return;
-            }
-            Vector3 direction = target.GetCenterPoint() - projectile.transform.position;
-            if (direction.sqrMagnitude < 0.0001f || velocity.sqrMagnitude < 0.0001f)
-            {
-                return;
-            }
-            velocity = direction.normalized * velocity.magnitude;
-            projectile.m_gravity = 0f;
         }
 
         /// <summary>A hit's damage with every combat type added up (chop and pickaxe damage left out).</summary>

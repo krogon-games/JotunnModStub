@@ -16,6 +16,10 @@ namespace Orlog.Content
     ///         (<c>hold_s</c>); released earlier it is a normal shot and costs nothing. A crossbow has no draw: the skill
     ///         button holds its shot back until the release, and the hold counts from the press.
     ///     </para>
+    ///     <para>
+    ///         Strafe (Krogon, 2026-11-17) streams arrows from full draw while held and pays as it goes (<see cref="Strafe" />);
+    ///         released before full draw it is a normal shot and costs nothing.
+    ///     </para>
     /// </summary>
     internal static class SkillButton
     {
@@ -69,7 +73,7 @@ namespace Orlog.Content
         [HarmonyPatch(typeof(Player), nameof(Player.SetControls))]
         private static class Controls
         {
-            private static void Prefix(Player __instance, ref bool attack, ref bool attackHold, ref bool block, ref bool blockHold)
+            private static void Prefix(Player __instance, ref bool attack, ref bool attackHold, ref bool block, ref bool blockHold, ref bool run)
             {
                 if (__instance != Player.m_localPlayer || !Progress.Ready || Attributes.ClassOf(__instance) == null)
                 {
@@ -78,6 +82,11 @@ namespace Orlog.Content
                 try
                 {
                     Apply(__instance, ref attack, ref attackHold, ref block, ref blockHold);
+                    // A crossbow's Strafe stream: no running, as with a drawn bow (Krogon, 2026-11-17).
+                    if (Strafe.NoRunning)
+                    {
+                        run = false;
+                    }
                 }
                 catch (System.Exception ex)
                 {
@@ -89,6 +98,10 @@ namespace Orlog.Content
             {
                 if (!SkillBar.TakesInput(player))
                 {
+                    if (Strafe.HoldsRelease)
+                    {
+                        Strafe.Release(player);
+                    }
                     s_wasHeld = false;
                     s_heldBack = false;
                     return;
@@ -100,6 +113,8 @@ namespace Orlog.Content
                 bool firesHeldBack = false;
                 if (released)
                 {
+                    // Strafe: after a stream, letting go cancels the draw (the game shoots nothing more).
+                    Strafe.Release(player);
                     // A crossbow's charged shot was held back: the release fires it (charged or not: StartAttack decides).
                     if (s_heldBack && s_pending != null)
                     {
@@ -136,6 +151,26 @@ namespace Orlog.Content
                     return;
                 }
                 var skill = SkillBar.SelectedSkill(player);
+                if (Strafe.HoldsRelease)
+                {
+                    if (skill == null || skill.Id != Strafe.Id)
+                    {
+                        Strafe.Release(player);
+                    }
+                    else
+                    {
+                        // A stream runs (or stopped during this hold): keep holding; it pays its own eitr as it goes.
+                        s_pendingSince = Time.time;
+                        block = false;
+                        blockHold = false;
+                        // A bow stays drawn; a crossbow's own shot stays held back.
+                        bool crossbow = Strafe.IsCrossbow(player.GetCurrentWeapon());
+                        attack &= !crossbow;
+                        attackHold = !crossbow;
+                        Strafe.Hold(player, skill);
+                        return;
+                    }
+                }
                 if (skill == null)
                 {
                     if (pressed)
@@ -192,8 +227,21 @@ namespace Orlog.Content
                     Charge(player, skill, pressed, ref attack, ref attackHold);
                     return;
                 }
+                if (skill.Id == Strafe.Id && Strafe.IsCrossbow(player.GetCurrentWeapon()))
+                {
+                    // A crossbow: hold its own shot back; the stream starts once it is loaded (Krogon, 2026-11-17).
+                    attack = false;
+                    attackHold = false;
+                    Strafe.Hold(player, skill);
+                    return;
+                }
                 attack |= pressed;
                 attackHold = true;
+                if (skill.Id == Strafe.Id)
+                {
+                    // At full draw the stream starts (Krogon, 2026-11-17).
+                    Strafe.Hold(player, skill);
+                }
             }
 
             /// <summary>The skill button is held on a charged skill: count the hold past full draw and mark it ready.</summary>
@@ -264,6 +312,12 @@ namespace Orlog.Content
                             Jotunn.Logger.LogInfo("Orlog: " + skill.Name + " released before its charge was ready: a normal shot.");
                             return;
                         }
+                    }
+                    // Strafe let go before full draw (a stream never starts the game's attack): a normal shot, no eitr.
+                    if (skill.Id == Strafe.Id)
+                    {
+                        Jotunn.Logger.LogInfo("Orlog: Strafe released before full draw: a normal shot.");
+                        return;
                     }
                     float cost = SkillBar.CostOf(player, skill);
                     if (cost > 0f && !player.HaveEitr(cost))
