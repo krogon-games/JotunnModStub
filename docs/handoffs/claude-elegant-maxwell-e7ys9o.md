@@ -1,25 +1,26 @@
 # Handoff: `claude/elegant-maxwell-e7ys9o`
 
-**Written:** 2026-11-17, at the start of the round. Restarted from `master` (`a7e0764`) after the coordinator's PR #75 merged; 0 behind. No pull request yet.
+**Written:** 2026-11-17 by `/handoff`. Restarted from `master` (`a7e0764`) after the coordinator's PR #75; 13 commits ahead with this one, 0 behind. No pull request yet.
 
 ## Stage
 
-**Waiting for Krogon's playtest.**
+**Ready to merge.**
 
 ## Purpose
 
-Remake Strafe as a Diablo 3 Rapid Fire-style skill: hold the skill button and the bow keeps firing at where you aim, instead of Diablo 2's volley at several enemies (Multishot already covers that). Earlier in this session, on the same branch: the coordinator's merge of PR #74 and its paperwork (PR #75, merged).
+Strafe remade as Diablo 3's Rapid Fire (Krogon's idea), replacing Diablo 2's volley. Earlier on this branch: the coordinator's PR #75 (merged).
 
 ## Done
 
-Nothing confirmed in game yet this round.
+Krogon's single-player play-test (2026-11-17, build `afcb420`, Valheim 1.0.21): "absolutely loving it", then `/handoff` (decision 20). His log shows the agreed rates: a bow streams 6 arrows a second from full draw, a loaded crossbow 3 bolts; one from the quiver a second; 25% → 50% of the shot each; 10 → 15 eitr to start, 3 → 5 a second.
 
 ## Half-done and known issues
 
-- **Built, untested:** Strafe as rapid fire, with bows and (decisions 15–18) crossbows (`Orlog/Content/Strafe.cs`; numbers in `amazon_skill_values.csv`; rules `StreamDue`, `StreamTakesAmmo`, tested; 595 tests). Written with the game's 1.0.14 code open (decompiled on Krogon's word, "yes, decompile the game's code for this"; the first try was refused by the session's safety check, and the tool needed .NET roll-forward). New patch: `Humanoid.StartAttack` prefix.
-- Claude's choices, open to change: each arrow's push and Bows-skill training shrink with its share; the bow wears once a second (with the quiver's arrow); let go before full draw = one normal arrow, no eitr (as Wind Lance); a crossbow's stream doesn't recoil each bolt; a crossbow's stamina drain is the game's bows' draw drain (the most common value), held-bow rules; the bow stays in its drawn pose while the arrows leave it.
-- Rounding (Claude's slip in decision 14's question: "10 → 15 (+0.25 a level)" doesn't add up; 10 + 0.25 × 19 = 14.75): the table follows the endpoints, in whole numbers: start 10, 10, 11 … 15; drain 3 (levels 1–5), 4 (6–15), 5 (16–20).
-- Not tried with two players (`PLAYTEST.md` → Session 2, 2j step 8, updated).
+- Built on the game's 1.0.14 code (decompiled on Krogon's word). New patch: `Humanoid.StartAttack` prefix (`Orlog/Content/Strafe.cs`).
+- Not marked one by one, only covered by decision 20: running out of eitr, arrows or stamina; blocking; the crossbow while reloading; rank 20; the damage numbers.
+- Claude's choices, open to change: push and skill training shrink with each arrow's share; the bow wears once a second; let go early = a normal arrow, no eitr; no recoil per crossbow bolt; a crossbow drains the bows' held-draw stamina.
+- Rounding (Claude's slip in decision 14's question): the table follows its endpoints in whole numbers: start 10 … 15, drain 3, 4 (from level 6), 5 (from 16).
+- Not tried with two players (`PLAYTEST.md` → Session 2, 2j step 8).
 
 ## Decisions
 
@@ -41,26 +42,32 @@ Nothing confirmed in game yet this round.
 16. **2026-11-17: a crossbow streams 3 bolts a second, each the same share as a bow's arrow** ("Fewer, same share": 25% → 50% of a normal bolt), over the bow's 6 a second and over 6 a second at half the share. With a crossbow the stream starts as soon as the button is held with a loaded crossbow (no draw), as put in the question.
 17. **2026-11-17: a streaming crossbow slows your walk and drains stamina like the bow** ("Like the bow"), over normal walking with eitr only.
 18. **2026-11-17: when the crossbow stream stops the crossbow is empty and reloads** ("Empty, reloads"), as after any crossbow shot; over staying loaded.
-19. **2026-11-17: first play-test of the rapid fire: "absolutely loving it"** (with his log, build `afcb420`). Only `rf-1` is marked on the phone page; the log shows bow and crossbow streams at the agreed rates. Whether the rest of the checklist passed: asked.
+19. **2026-11-17: first play-test of the rapid fire: "absolutely loving it"** (with his log, build `afcb420`). Only `rf-1` is marked on the phone page; the log shows bow and crossbow streams at the agreed rates. Whether the rest of the checklist passed: asked (decision 20).
+20. **2026-11-17: the round passed; end the session.** Asked whether the steps the log doesn't show worked ("If they're fine, type `/handoff`"), Krogon typed `/handoff`. Taken as his word that the round passed; those steps weren't marked one by one.
 
 ## Playtest
 
-`docs/playtests/claude-elegant-maxwell-e7ys9o.md`: round "Strafe as rapid fire", 15 steps, also on the phone page (`rf-1` … `rf-15`). Waiting for Krogon.
+`docs/playtests/claude-elegant-maxwell-e7ys9o.md`: "Strafe as rapid fire", 15 steps: **passed** (decisions 19–20). Its steps are off the phone page; the two-player step stays (`mpe-2j-8`).
 
 ## Open questions for Krogon
 
-2. Carried over: should the burning ground's and the cloud's hits count for Corruption's on-hit affixes? Should large roots stop a Wind Lance?
+1. Carried over: should the burning ground's and the cloud's hits count for Corruption's on-hit affixes? Should large roots stop a Wind Lance?
 
 ## Next steps
 
-1. Krogon's play-test; fix what he finds.
-2. `/handoff`, then the pull request.
+1. Pull request into `master`; the coordinator raises Orlog's version.
+2. Coordinator: `STATUS.md`, `DECISIONS.md` (decisions 1–20; decision 1 replaces `claude-magical-babbage-slwwpn.md` decision 8), update #70.
 3. Next classes round: Snipe and Shackle Shot (#70).
 
 ## Checks
 
-Not run yet.
+- Build: PASS (595 tests; Orlog, Corruption, CraftingOverhaul build, 0 errors).
+- Version: gameplay changed: version bump needed at merge (Orlog). The branch changed no version.
+- Multiplayer sync: PASS, read in code, not tested (nothing new to sync; the arrows are the game's own).
+- Assets and names: PASS (CSVs embedded by wildcard; nothing new).
+- FEATURES.md: PASS.
+- In-game: PASSED in Krogon's single-player play-test ("absolutely loving it"; decision 20); two players untested.
 
 ## Merge notes
 
-Not ready. Gameplay will change: version bump needed at merge (Orlog).
+**Ready to merge: yes** (play-test passed, no check failed, level with `master`, pushed). **Gameplay changed: version bump needed at merge: Orlog.** The only other remote branch, `claude/magical-babbage-slwwpn`, is fully in `master`. Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ARCHITECTURE.md`, `docs/class-design.md`, `docs/mod-compatibility.md`.

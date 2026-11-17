@@ -54,3 +54,7 @@ What the log shows (read by Claude, not marked by Krogon):
 - Let go early (`rf-5`): "Strafe released before full draw: a normal shot."
 - Crossbow (`rf-12`): two streams, 20 bolts in 6.5 s with 7 from the quiver, 12 in 4.0 s with 4: 3 a second, one a second. The held-bow stamina drain it used: the bows' draw drain 14 (9 bows share it), halved.
 - Not in the log, so not known: a stream stopped by running out of eitr, arrows or stamina, or by blocking (`rf-7`, `rf-9`, `rf-10`, `rf-11`); the crossbow while reloading (`rf-13`); rank 20 (`rf-14`); the damage numbers (`rf-4`, `rf-6`). No errors from our mods.
+
+### Final play-test (2026-11-17)
+
+**Passed.** Krogon typed `/handoff` after Claude asked whether the steps the log doesn't show (running out of eitr, arrows or stamina; blocking; the crossbow while reloading; rank 20; the damage numbers) worked, with "if they're fine, type `/handoff`". Taken as his word that they did; they weren't marked one by one. The round's steps are off the phone page; the two-player step stays (`PLAYTEST.md` → Session 2, 2j step 8).
