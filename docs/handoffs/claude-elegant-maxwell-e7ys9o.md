@@ -2,9 +2,11 @@
 
 **Written:** 2026-11-17 by `/handoff`. Restarted from `master` (`a7e0764`) after the coordinator's PR #75; 12 commits ahead, 0 behind. No pull request yet.
 
+**Coordinator update (2026-11-17):** merged into `master` as **PR #76** on Krogon's word ("Merge branch claude/elegant-maxwell-e7ys9o into master using a pull request"). `master` was already in the branch (no conflicts). The coordinator raised Orlog to **0.7.0** (on this branch, the PR's last commit), copied decisions 1–20 into `docs/DECISIONS.md` (decision 1 replaces `claude-magical-babbage-slwwpn.md` decision 8) and updated #70 (still open for Snipe and Shackle Shot). The phone page's build checks expect Orlog 0.7.0. The branch is fully in `master` and safe to delete; the next classes round starts a new branch from `master`.
+
 ## Stage
 
-**Ready to merge.**
+**Merged** (PR #76, 2026-11-17).
 
 ## Purpose
 
@@ -55,8 +57,8 @@ Krogon's single-player play-test (2026-11-17, build `afcb420`, Valheim 1.0.21): 
 
 ## Next steps
 
-1. Pull request into `master`; the coordinator raises Orlog's version.
-2. Coordinator: `STATUS.md`, `DECISIONS.md` (decisions 1–20; decision 1 replaces `claude-magical-babbage-slwwpn.md` decision 8), update #70.
+1. ~~Pull request into `master`; the coordinator raises Orlog's version.~~ Done (PR #76, Orlog 0.7.0).
+2. ~~Coordinator: `STATUS.md`, `DECISIONS.md`, update #70.~~ Done 2026-11-17.
 3. Next classes round: Snipe and Shackle Shot (#70).
 
 ## Checks
