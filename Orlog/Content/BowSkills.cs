@@ -20,9 +20,8 @@ namespace Orlog.Content
     ///         forks go to the nearest other enemies within reach of its body (Charged Strike's fork counts and eitr; each fork
     ///         25% → 100% of the shot's damage as lightning).</item>
     ///         <item>Wind Lance (user 2026-11-16): a charged shot (<see cref="SkillButton" />) flown by <see cref="WindLance" />.</item>
-    ///         <item>Strafe: remade after Diablo 3's Rapid Fire (Krogon, 2026-11-17): hold to keep firing after one full draw.
-    ///         The stream is not wired up yet (branch claude/elegant-maxwell-e7ys9o): for now it fires one normal arrow. The
-    ///         volley of 2026-11-16 is removed.</item>
+    ///         <item>Strafe: remade after Diablo 3's Rapid Fire (Krogon, 2026-11-17): hold to keep firing after one full draw
+    ///         (<see cref="Strafe" />); each arrow of the stream is cut to its share here. The volley of 2026-11-16 is removed.</item>
     ///         <item>Immolation Arrow (Krogon, 2026-11-16): a fire blast on impact like Freezing Arrow's, then the ground there
     ///         burns and hurts enemies standing in it every second (<see cref="GroundArea" />).</item>
     ///         <item>Venom Strike (Krogon, 2026-11-16): the arrow hits as usual and a poison cloud hangs where it landed,
@@ -118,7 +117,7 @@ namespace Orlog.Content
             private static void Prefix(Attack __instance, out int __state)
             {
                 __state = __instance.m_projectiles;
-                s_firing = SkillButton.For(__instance);
+                s_firing = SkillButton.For(__instance) ?? Strafe.ShotFor(__instance);
                 s_fanIndex = 0;
                 s_fanCount = 1;
                 if (s_firing != null && s_firing.Skill.Id == "MultipleShot")
@@ -177,6 +176,15 @@ namespace Orlog.Content
                         break;
                     case "WindLance":
                         WindLance.Launch(projectile, level, v, ref velocity, hit);
+                        break;
+                    case "Strafe":
+                        // Each arrow of the stream: its share of the shot (25% -> 50%, Krogon 2026-11-17). Its push and the
+                        // Bows skill it trains shrink with it (Claude's choice), so 6 arrows a second don't push six times
+                        // as hard or train the skill six times as fast as single shots.
+                        float share = v.Get(id, "weapon_damage_pct", level) / 100f;
+                        hit.m_damage.Modify(share);
+                        hit.m_pushForce *= share;
+                        hit.m_skillRaiseAmount *= share;
                         break;
                 }
             }

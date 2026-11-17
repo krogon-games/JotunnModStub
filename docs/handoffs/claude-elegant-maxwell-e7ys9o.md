@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Building.**
+**Waiting for Krogon's playtest.**
 
 ## Purpose
 
@@ -12,13 +12,14 @@ Remake Strafe as a Diablo 3 Rapid Fire-style skill: hold the skill button and th
 
 ## Done
 
-Nothing built yet this round.
+Nothing confirmed in game yet this round.
 
 ## Half-done and known issues
 
-- Built: Strafe's numbers (`amazon_skill_values.csv`, made by `tools/make_orlog_tables.py`), card text, and the stream's timing rules with tests (595 tests); the old volley is removed. **Not built: the firing in the game** (keeping the bow drawn and firing 6 a second, the eitr drain, the quiver). Until then Strafe fires one normal arrow.
-- Blocked: reading the game's own bow code (`ilspycmd` on the stand-in's `assembly_valheim.dll`) was refused by the session's safety check; asked Krogon.
+- **Built, untested:** Strafe as rapid fire (`Orlog/Content/Strafe.cs`; numbers in `amazon_skill_values.csv`; rules `StreamDue`, `StreamTakesAmmo`, tested; 595 tests). Written with the game's 1.0.14 code open (decompiled on Krogon's word, "yes, decompile the game's code for this"; the first try was refused by the session's safety check, and the tool needed .NET roll-forward). New patch: `Humanoid.StartAttack` prefix.
+- Claude's choices, open to change: each arrow's push and Bows-skill training shrink with its share; the bow wears once a second (with the quiver's arrow); let go before full draw = one normal arrow, no eitr (as Wind Lance); bows only (a crossbow shoots a normal bolt); the bow stays in its drawn pose while the arrows leave it.
 - Rounding (Claude's slip in decision 14's question: "10 → 15 (+0.25 a level)" doesn't add up; 10 + 0.25 × 19 = 14.75): the table follows the endpoints, in whole numbers: start 10, 10, 11 … 15; drain 3 (levels 1–5), 4 (6–15), 5 (16–20).
+- Not tried with two players (`PLAYTEST.md` → Session 2, 2j step 8, updated).
 
 ## Decisions
 
@@ -39,15 +40,18 @@ Nothing built yet this round.
 
 ## Playtest
 
-Nothing to test yet.
+`docs/playtests/claude-elegant-maxwell-e7ys9o.md`: round "Strafe as rapid fire", 14 steps, also on the phone page (`rf-1` … `rf-14`). Waiting for Krogon.
 
 ## Open questions for Krogon
 
-None for now.
+1. Strafe on crossbows too? (Bows only for now.)
+2. Carried over: should the burning ground's and the cloud's hits count for Corruption's on-hit affixes? Should large roots stop a Wind Lance?
 
 ## Next steps
 
-1. Build the new Strafe; tests; docs; play-test checklist on the phone page.
+1. Krogon's play-test; fix what he finds.
+2. `/handoff`, then the pull request.
+3. Next classes round: Snipe and Shackle Shot (#70).
 
 ## Checks
 

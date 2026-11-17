@@ -136,6 +136,11 @@ Full 1.0.14 game code (method bodies, not just signatures) comes from the NuGet 
 - `ItemDrop.ItemData.m_customData` exists in 1.0 and is saved with the item (planned storage for affixes).
 - Trinket and Utility slots exist (`Humanoid.m_trinketItem`, `m_utilityItem`).
 
+**Bows (1.0.14 code, decompiled 2026-11-17)**
+- `Player.UpdateAttackBowDraw` draws while attack is held (`m_attackDrawTime` grows; stamina drains at the bow's draw rate, half once fully drawn; the drawn bow slows walking via `IsDrawingBow`) and shoots only when the hold ends (`StartAttack`), and only if stamina and eitr are left. Draw time -1 means "wait for the release, then reset" with no shot. Holding a drawn bow therefore never shoots by itself.
+- `Attack.FireProjectileBurst` is self-contained once the attack has its character, weapon and draw (`Attack.StartWithoutAnimation` sets them): it reads the current aim, makes the arrow from `m_ammoItem` and takes no ammo. Ammo is taken in `Attack.OnAttackTrigger` (`UseAmmo`), which also wears the weapon and plays the release effect. Strafe's rapid fire uses this.
+- A projectile trains the shooter's skill by its hit's `m_skillRaiseAmount` for each hit that does damage (`Projectile.OnHit`).
+
 **Creatures and AI**
 - `BaseAI.IsEnemy(Character, Character)` decides both targeting and whether attacks hit, including the player's own attacks, so a patch must only change the creature-asking-about-player direction.
 - `EnemyHud` only has star icons for 2 levels (`m_level2`, `m_level3`); 3-star creatures need a HUD patch.
