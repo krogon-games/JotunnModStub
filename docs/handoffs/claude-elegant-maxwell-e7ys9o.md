@@ -1,6 +1,6 @@
 # Handoff: `claude/elegant-maxwell-e7ys9o`
 
-**Written:** 2026-11-17 by `/handoff`. Restarted from `master` (`a7e0764`) after the coordinator's PR #75; 13 commits ahead with this one, 0 behind. No pull request yet.
+**Written:** 2026-11-17 by `/handoff`. Restarted from `master` (`a7e0764`) after the coordinator's PR #75; 12 commits ahead, 0 behind. No pull request yet.
 
 ## Stage
 
