@@ -25,6 +25,10 @@ None yet.
 3. **2026-11-17: the name stays "Strafe"** ("Keep \"Strafe\""), with the same id, so spent points and slots stay.
 4. **2026-11-17: the bow draws once as usual, then rapid-fires while held** ("Draw once, then rapid fire"), over firing at once with no draw.
 5. **2026-11-17: the channel drains 3 eitr per second** ("3 eitr per second"), on top of 10 eitr to start; over 3 eitr per arrow.
+6. **2026-11-17: 6 arrows a second** while firing ("6 a second"), over 4 and 8.
+7. **2026-11-17: each arrow deals 25% of the shot's damage at skill level 1, 50% at 20** ("25% → 50% at level 20"), growing evenly; over 25% at every level and 25% → 75%.
+8. **2026-11-17: the quiver loses one arrow per second of firing** ("One per second"), not one per arrow, nor only the first.
+9. **2026-11-17: the arrows carry the arrow's own damage** ("The arrow's own damage"): fire, frost and poison arrows keep their element, as with the other bow skills; over physical only.
 
 ## Playtest
 
@@ -32,7 +36,7 @@ Nothing to test yet.
 
 ## Open questions for Krogon
 
-Being asked: fire rate, damage growth with level, arrows used, moving while firing, the arrow's own damage type.
+Being asked: moving while firing, stamina, whether the eitr cost changes with level, aim and spread.
 
 ## Next steps
 
