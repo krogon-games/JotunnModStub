@@ -82,18 +82,18 @@ def boss_xp_shares(bosses):
 # no level tiers, no prerequisites, exactly nine skills per tab, shown as cards three by three in the order below.
 # Each: name, status, kind (attack = on the skill button, cast = on its hotkey, passive = no slot), the weapon it needs,
 # what it does here. A skill Diablo 2 also has (the same name in data/d2-reference/amazon.csv) takes D2's mana as its
-# eitr cost; a new one takes the numbers the user agreed for it (NEW_SKILLS below), and one not agreed yet (Snipe, Venom
-# Strike, Shackle Shot) has no cost until the round that builds it.
+# eitr cost; a new one takes the numbers the user agreed for it (NEW_SKILLS below), and one not agreed yet (Snipe,
+# Shackle Shot) has no cost until the round that builds it.
 AMAZON = [
     ("Bow and Crossbow", [
         ("Forked Lightning", "v1", "attack", "bow", "The arrow hits an enemy, then lightning forks from its body to nearby enemies"),
         ("Wind Lance", "v1", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, passing through enemies and knocking them back"),
         ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
         ("Multishot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
-        ("Strafe", "later", "attack", "bow", "A volley of arrows at several nearby targets"),
+        ("Strafe", "v1", "attack", "bow", "One arrow becomes a volley: each arrow flies by itself at a different enemy in view"),
         ("Freezing Arrow", "v1", "attack", "bow", "Frost damage and a short freeze in an area on impact; bosses are only slowed"),
-        ("Immolation Arrow", "later", "attack", "bow", "Explodes in fire on impact and leaves a burning patch on the ground"),
-        ("Venom Strike", "later", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
+        ("Immolation Arrow", "v1", "attack", "bow", "Explodes in fire on impact and leaves the ground burning"),
+        ("Venom Strike", "v1", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
         ("Shackle Shot", "later", "attack", "bow", "Shackles the target to an enemy or a tree behind it, holding both in place; with nothing behind it, only briefly"),
     ]),
     ("Passive and Magic", [
@@ -156,6 +156,15 @@ NEW_SKILLS = {
         ("speed_pct", "%", ("flat", 200)),
         ("range_m", "m", ("flat", 50)),
     ]),
+    # Venom Strike is the user's own skill (2026-11-16, docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 10 and 11):
+    # "25% at level 1, 100% at 20"; eitr "7, +0.5 per level" = Plague Javelin's mana. A poison cloud 3 m in every
+    # direction hangs for 4 seconds where the arrow lands; everything inside is poisoned and re-poisoned each second.
+    "Venom Strike": ("Plague Javelin", [
+        ("mana_cost", "flat", ("d2", "Plague Javelin", "mana_cost", 0)),
+        ("cloud_damage_pct", "%", ("line", 25, 100)),
+        ("cloud_duration_s", "s", ("flat", 4)),
+        ("radius_m", "m", ("flat", 3)),
+    ]),
 }
 
 
@@ -166,6 +175,19 @@ WEAPON_SHARES = {
     # Decision 4: the frost blast deals "50% at level 1, 150% at 20" of the shot's damage.
     "Freezing Arrow": (["cold_damage_min", "cold_damage_max"], [
         ("blast_damage_pct", "%", ("line", 50, 150)),
+    ]),
+    # Strafe (decision 8): "75% of your shot each". On release one arrow from the quiver becomes a volley, each arrow
+    # flying by itself at a different enemy in view within 16.5 m; D2's counts (max_targets, min_arrows) and mana stay.
+    "Strafe": (["damage_pct", "weapon_damage_pct"], [
+        ("weapon_damage_pct", "%", ("flat", 75)),
+        ("range_m", "m", ("flat", 16.5)),
+    ]),
+    # Immolation Arrow (decision 9): "Blast 25%->100%, fire 10%->30% a second". Explodes in fire on impact within 3 m,
+    # then the ground there burns for 4 seconds (D2's burn_duration_s, kept) and hurts enemies in it every second.
+    "Immolation Arrow": (["explosion_fire_damage_min", "explosion_fire_damage_max", "burn_fire_dps_min", "burn_fire_dps_max"], [
+        ("blast_damage_pct", "%", ("line", 25, 100)),
+        ("burn_damage_pct", "%", ("line", 10, 30)),
+        ("radius_m", "m", ("flat", 3)),
     ]),
 }
 

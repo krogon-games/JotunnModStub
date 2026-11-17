@@ -20,6 +20,13 @@ namespace Orlog.Content
     ///         forks go to the nearest other enemies within reach of its body (Charged Strike's fork counts and eitr; each fork
     ///         25% → 100% of the shot's damage as lightning).</item>
     ///         <item>Wind Lance (user 2026-11-16): a charged shot (<see cref="SkillButton" />) flown by <see cref="WindLance" />.</item>
+    ///         <item>Strafe (Krogon, 2026-11-16): one arrow becomes a volley, each arrow flying by itself at a different enemy in
+    ///         front of you (in view of the camera, within range), each a share of the shot (the pure choice of targets is
+    ///         <see cref="ActiveSkillRules.StrafeTargets" />).</item>
+    ///         <item>Immolation Arrow (Krogon, 2026-11-16): a fire blast on impact like Freezing Arrow's, then the ground there
+    ///         burns and hurts enemies standing in it every second (<see cref="GroundArea" />).</item>
+    ///         <item>Venom Strike (Krogon, 2026-11-16): the arrow hits as usual and a poison cloud hangs where it landed,
+    ///         poisoning everything inside every second (<see cref="GroundArea" />).</item>
     ///     </list>
     ///     A shot's arrows carry a <see cref="ShotTag" />; impacts are handled on the shooter's game, which runs its projectiles.
     ///     The skill tree overhaul (Krogon, 2026-11-15) removed Magic Arrow, Fire Arrow, Cold Arrow, Ice Arrow and Exploding
@@ -36,6 +43,10 @@ namespace Orlog.Content
         private static int s_fanIndex;
         private static int s_fanCount;
         private static readonly List<Character> s_inRange = new List<Character>();
+        // Strafe: the volley's targets (index into s_strafeCandidates, -1 = straight ahead), one per arrow.
+        private static readonly List<Character> s_strafeCandidates = new List<Character>();
+        private static readonly List<float> s_strafeAngles = new List<float>();
+        private static List<int> s_strafeTargets;
 
         /// <summary>On a skill arrow: which skill shot it, at what level, and the shot's own damage.</summary>
         internal sealed class ShotTag : MonoBehaviour
@@ -120,12 +131,19 @@ namespace Orlog.Content
                     s_fanCount = Mathf.Max(1, Mathf.RoundToInt(values?.Get("MultipleShot", "arrows", s_firing.Level) ?? 1f));
                     __instance.m_projectiles = s_fanCount;
                 }
+                else if (s_firing != null && s_firing.Skill.Id == "Strafe")
+                {
+                    Safe.Run("choose Strafe's targets", () => PlanStrafe(__instance));
+                }
             }
 
             private static void Finalizer(Attack __instance, int __state)
             {
                 __instance.m_projectiles = __state;
                 s_firing = null;
+                s_strafeTargets = null;
+                s_strafeCandidates.Clear();
+                s_strafeAngles.Clear();
             }
         }
 
@@ -171,8 +189,90 @@ namespace Orlog.Content
                     case "WindLance":
                         WindLance.Launch(projectile, level, v, ref velocity, hit);
                         break;
+                    case "Strafe":
+                        hit.m_damage.Modify(v.Get(id, "weapon_damage_pct", level) / 100f);
+                        AimStrafe(projectile, ref velocity);
+                        break;
                 }
             }
+        }
+
+        /// <summary>
+        ///     Strafe, at release: the enemies in front (in view of the camera, within range) and the one each arrow of the
+        ///     volley flies at (<see cref="ActiveSkillRules.StrafeTargets" />); the burst fires one arrow per entry.
+        /// </summary>
+        private static void PlanStrafe(Attack attack)
+        {
+            var player = Player.m_localPlayer;
+            var v = SkillBar.ValuesFor(Attributes.ClassOf(player));
+            if (!player || v == null)
+            {
+                return;
+            }
+            const string id = "Strafe";
+            int level = s_firing.Level;
+            float range = v.Get(id, "range_m", level);
+            int maxTargets = Mathf.RoundToInt(v.Get(id, "max_targets", level));
+            int minArrows = Mathf.RoundToInt(v.Get(id, "min_arrows", level));
+            s_strafeCandidates.Clear();
+            s_strafeAngles.Clear();
+            var camera = Utils.GetMainCamera();
+            if (camera)
+            {
+                Vector3 eye = camera.transform.position;
+                Vector3 centre = player.GetCenterPoint();
+                foreach (var c in Character.GetAllCharacters())
+                {
+                    if (!c || c == player || c.IsPlayer() || c.IsDead() || !BaseAI.IsEnemy(player, c))
+                    {
+                        continue;
+                    }
+                    Vector3 at = c.GetCenterPoint();
+                    if ((at - centre).sqrMagnitude > range * range)
+                    {
+                        continue;
+                    }
+                    Vector3 view = camera.WorldToViewportPoint(at);
+                    if (view.z <= 0f || view.x < 0f || view.x > 1f || view.y < 0f || view.y > 1f)
+                    {
+                        continue;
+                    }
+                    s_strafeCandidates.Add(c);
+                    s_strafeAngles.Add(Vector3.Angle(camera.transform.forward, at - eye));
+                }
+            }
+            s_strafeTargets = ActiveSkillRules.StrafeTargets(s_strafeAngles, maxTargets, minArrows);
+            attack.m_projectiles = Mathf.Max(1, s_strafeTargets.Count);
+            Jotunn.Logger.LogInfo($"Orlog: Strafe (level {level}): {s_strafeTargets.Count} arrows at {s_strafeCandidates.Count} enemies in view " +
+                                  $"within {range:0.#} m (up to {maxTargets} enemies, at least {minArrows} arrows), each " +
+                                  $"{v.Get(id, "weapon_damage_pct", level):0.#}% of the shot.");
+        }
+
+        /// <summary>Points the next arrow of a Strafe volley at its enemy, flying straight; an arrow with none flies as the game made it.</summary>
+        private static void AimStrafe(Projectile projectile, ref Vector3 velocity)
+        {
+            int index = s_fanIndex++;
+            if (s_strafeTargets == null || index < 0 || index >= s_strafeTargets.Count)
+            {
+                return;
+            }
+            int which = s_strafeTargets[index];
+            if (which < 0 || which >= s_strafeCandidates.Count)
+            {
+                return;
+            }
+            var target = s_strafeCandidates[which];
+            if (!target || target.IsDead())
+            {
+                return;
+            }
+            Vector3 direction = target.GetCenterPoint() - projectile.transform.position;
+            if (direction.sqrMagnitude < 0.0001f || velocity.sqrMagnitude < 0.0001f)
+            {
+                return;
+            }
+            velocity = direction.normalized * velocity.magnitude;
+            projectile.m_gravity = 0f;
         }
 
         /// <summary>A hit's damage with every combat type added up (chop and pickaxe damage left out).</summary>
@@ -199,7 +299,12 @@ namespace Orlog.Content
                 {
                     return;
                 }
-                if (IsBlast(tag))
+                if (tag.SkillId == "VenomStrike")
+                {
+                    tag.Exploded = true;
+                    Safe.Run("start Venom Strike's cloud", () => StartCloud(__instance.m_owner, tag, hitPoint));
+                }
+                else if (IsBlast(tag))
                 {
                     tag.Exploded = true;
                     Safe.Run("explode a skill arrow", () =>
@@ -229,7 +334,7 @@ namespace Orlog.Content
 
         private static bool IsBlast(ShotTag tag)
         {
-            return tag.SkillId == "FreezingArrow";
+            return tag.SkillId == "FreezingArrow" || tag.SkillId == "ImmolationArrow";
         }
 
         /// <summary>The hit adds the freeze; the seconds travel in the hit's skill level (read in <see cref="Duration" />).</summary>
@@ -247,7 +352,7 @@ namespace Orlog.Content
         ///     the radius, and always the creature the arrow struck. The game's <c>Character.GetCharactersInRange</c>
         ///     measures to the feet, so a blast on a troll's chest, 5 m up, missed the troll (Krogon's log, 2026-11-15).
         /// </summary>
-        private static void CharactersInBlast(Vector3 point, float radius, Character struck, List<Character> into)
+        internal static void CharactersInBlast(Vector3 point, float radius, Character struck, List<Character> into)
         {
             into.Clear();
             if (struck)
@@ -279,10 +384,20 @@ namespace Orlog.Content
             {
                 return;
             }
-            float radius = v.Get(tag.SkillId, "radius_yards", tag.Level) * ActiveSkillRules.MetresPerYard;
-            float freeze = v.Get(tag.SkillId, "freeze_s", tag.Level);
+            bool fire = tag.SkillId == "ImmolationArrow";
+            float radius = fire
+                ? v.Get(tag.SkillId, "radius_m", tag.Level)
+                : v.Get(tag.SkillId, "radius_yards", tag.Level) * ActiveSkillRules.MetresPerYard;
+            float freeze = fire ? 0f : v.Get(tag.SkillId, "freeze_s", tag.Level);
             float frost = Share(v, tag, "blast_damage_pct");
-            ImpactEffect("StaffIceShards", "ArrowFrost", point);
+            if (fire)
+            {
+                ImpactEffect("StaffFireball", "ArrowFire", point);
+            }
+            else
+            {
+                ImpactEffect("StaffIceShards", "ArrowFrost", point);
+            }
             CharactersInBlast(point, radius, struck, s_inRange);
             int caught = 0;
             foreach (var target in s_inRange)
@@ -292,9 +407,16 @@ namespace Orlog.Content
                     continue;
                 }
                 var hit = new HitData();
-                hit.m_damage.m_frost = frost;
+                if (fire)
+                {
+                    hit.m_damage.m_fire = frost;
+                }
+                else
+                {
+                    hit.m_damage.m_frost = frost;
+                }
                 caught++;
-                if (!target.IsBoss())
+                if (!fire && !target.IsBoss())
                 {
                     AddFreeze(hit, freeze);
                 }
@@ -308,8 +430,31 @@ namespace Orlog.Content
                 target.Damage(hit);
             }
             // For the play-test (2026-11-16, #72): the numbers behind a blast.
-            Jotunn.Logger.LogInfo($"Orlog: Freezing Arrow (level {tag.Level}): the shot's damage {tag.ShotDamage:0.#}, blast " +
-                                  $"{v.Get(tag.SkillId, "blast_damage_pct", tag.Level):0.#}% = {frost:0.#} frost on {caught} enemies within {radius:0.#} m.");
+            Jotunn.Logger.LogInfo($"Orlog: {(fire ? "Immolation Arrow" : "Freezing Arrow")} (level {tag.Level}): the shot's damage {tag.ShotDamage:0.#}, blast " +
+                                  $"{v.Get(tag.SkillId, "blast_damage_pct", tag.Level):0.#}% = {frost:0.#} {(fire ? "fire" : "frost")} on {caught} enemies within {radius:0.#} m.");
+            if (fire)
+            {
+                // Then the ground there burns (Krogon, 2026-11-16): the first hit a second after the impact.
+                GroundArea.Begin(owner, "Immolation Arrow", tag.Level, point, radius, v.Get(tag.SkillId, "burn_duration_s", tag.Level),
+                    Share(v, tag, "burn_damage_pct"), false, false, tag.ShotDamage, v.Get(tag.SkillId, "burn_damage_pct", tag.Level));
+            }
+        }
+
+        /// <summary>Venom Strike: a poison cloud where the arrow landed, first hit at once (Krogon, 2026-11-16).</summary>
+        private static void StartCloud(Character owner, ShotTag tag, Vector3 point)
+        {
+            if (!owner || owner != Player.m_localPlayer)
+            {
+                return;
+            }
+            var v = SkillBar.ValuesFor(Attributes.ClassOf(Player.m_localPlayer));
+            if (v == null)
+            {
+                return;
+            }
+            GroundArea.Begin(owner, "Venom Strike", tag.Level, point, v.Get(tag.SkillId, "radius_m", tag.Level),
+                v.Get(tag.SkillId, "cloud_duration_s", tag.Level), Share(v, tag, "cloud_damage_pct"), true, true,
+                tag.ShotDamage, v.Get(tag.SkillId, "cloud_damage_pct", tag.Level));
         }
 
         // ------------------------------------------------------------ Forked Lightning
@@ -395,7 +540,7 @@ namespace Orlog.Content
         ///     A fork of lightning drawn from the struck enemy to another, for a moment (on the shooter's game only; the
         ///     burst at each enemy is the game's own effect and shows for everyone).
         /// </summary>
-        private sealed class ForkLine : MonoBehaviour
+        internal sealed class ForkLine : MonoBehaviour
         {
             private const float Seconds = 0.25f;
             private static Material s_material;
@@ -459,7 +604,7 @@ namespace Orlog.Content
             }
 
             /// <summary>A plain unlit material from a shader every Unity build has; without one the fork has no line.</summary>
-            private static Material Material()
+            internal static Material Material()
             {
                 if (s_material || s_noMaterial)
                 {
@@ -492,7 +637,7 @@ namespace Orlog.Content
         ///     The impact effect of a vanilla projectile, played where an arrow explodes: the staff's own (ice shards,
         ///     lightning), else the elemental arrow's. False when neither has one.
         /// </summary>
-        private static bool ImpactEffect(string item, string fallback, Vector3 point)
+        internal static bool ImpactEffect(string item, string fallback, Vector3 point)
         {
             foreach (string name in new[] { item, fallback })
             {

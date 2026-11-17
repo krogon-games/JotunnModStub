@@ -45,7 +45,7 @@ namespace CraftingOverhaul.Tests
             var built = Tree().Skills.Where(s => s.Built && s.Kind != "passive").ToList();
             Assert.Equal(built.Select(s => s.Id).OrderBy(x => x), v.SkillIds.OrderBy(x => x));
             // The bow skills and Inner Sight (C5) have their tooltip text; the spear skills come with C6.
-            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight", "ForkedLightning", "WindLance" })
+            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight", "ForkedLightning", "WindLance", "Strafe", "ImmolationArrow", "VenomStrike" })
             {
                 Assert.False(string.IsNullOrEmpty(ActiveSkillRules.Describe(id, v, 1, 1f, 25f)), id);
             }
@@ -159,7 +159,7 @@ namespace CraftingOverhaul.Tests
         {
             var t = Tree();
             Assert.Equal("Passive skills don't take a slot", ActiveSkillRules.SlotRefusal(t.Find("Dodge"), 3));
-            Assert.Equal("Coming later", ActiveSkillRules.SlotRefusal(t.Find("Strafe"), 0));
+            Assert.Equal("Coming later", ActiveSkillRules.SlotRefusal(t.Find("Snipe"), 0));
             Assert.Equal("Not learned yet", ActiveSkillRules.SlotRefusal(t.Find("MultipleShot"), 0));
             Assert.Equal("", ActiveSkillRules.SlotRefusal(t.Find("MultipleShot"), 1));
             Assert.Equal("Unknown skill", ActiveSkillRules.SlotRefusal(null, 1));
@@ -351,6 +351,139 @@ namespace CraftingOverhaul.Tests
             Assert.False(ActiveSkillRules.IsSmallPlant(false, new[] { "Wood", "Coins" }, treeDrops));
             Assert.False(ActiveSkillRules.IsSmallPlant(false, null, treeDrops));
             Assert.False(ActiveSkillRules.IsSmallPlant(false, new[] { "Wood" }, null));
+        }
+
+        [Fact]
+        public void StrafeImmolationArrowAndVenomStrikeAreBuiltWithTheAgreedNumbers()
+        {
+            // Krogon, 2026-11-16 (docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 7-11).
+            var v = Values();
+            var t = Tree();
+            foreach (var id in new[] { "Strafe", "ImmolationArrow", "VenomStrike" })
+            {
+                Assert.True(t.Find(id).Built, id);
+            }
+            Assert.Equal(7, t.Skills.Count(s => s.Tab == 0 && s.Built));
+            Assert.Equal(2, t.Skills.Count(s => s.Tab == 0 && !s.Built));
+
+            // Strafe: D2's counts and mana, 75% of the shot each, 16.5 m; no D2 damage rows.
+            foreach (int level in new[] { 1, 10, 20 })
+            {
+                Assert.Equal(11f, v.Get("Strafe", "mana_cost", level));
+                Assert.Equal(75f, v.Get("Strafe", "weapon_damage_pct", level));
+                Assert.Equal(16.5f, v.Get("Strafe", "range_m", level));
+            }
+            Assert.Equal(5f, v.Get("Strafe", "max_targets", 1));
+            Assert.Equal(10f, v.Get("Strafe", "max_targets", 20));
+            Assert.Equal(2f, v.Get("Strafe", "min_arrows", 1));
+            Assert.Equal(7f, v.Get("Strafe", "min_arrows", 20));
+            Assert.Equal(30f, v.Get("Strafe", "attack_rating_pct", 1));
+            Assert.False(v.Has("Strafe", "damage_pct"));
+
+            // Immolation Arrow: blast 25 -> 100, burn 10 -> 30 a second, 3 m, burns 4 s.
+            Assert.Equal(25f, v.Get("ImmolationArrow", "blast_damage_pct", 1));
+            Assert.Equal(100f, v.Get("ImmolationArrow", "blast_damage_pct", 20));
+            Assert.Equal(61f, v.Get("ImmolationArrow", "blast_damage_pct", 10));
+            Assert.Equal(10f, v.Get("ImmolationArrow", "burn_damage_pct", 1));
+            Assert.Equal(30f, v.Get("ImmolationArrow", "burn_damage_pct", 20));
+            Assert.Equal(19f, v.Get("ImmolationArrow", "burn_damage_pct", 10));
+            foreach (int level in new[] { 1, 10, 20 })
+            {
+                Assert.Equal(3f, v.Get("ImmolationArrow", "radius_m", level));
+                Assert.Equal(4f, v.Get("ImmolationArrow", "burn_duration_s", level));
+            }
+            foreach (var gone in new[] { "explosion_fire_damage_min", "explosion_fire_damage_max", "burn_fire_dps_min", "burn_fire_dps_max" })
+            {
+                Assert.False(v.Has("ImmolationArrow", gone), gone);
+            }
+
+            // Venom Strike: cloud 25 -> 100 a second, 4 s, 3 m.
+            Assert.Equal(25f, v.Get("VenomStrike", "cloud_damage_pct", 1));
+            Assert.Equal(100f, v.Get("VenomStrike", "cloud_damage_pct", 20));
+            Assert.Equal(61f, v.Get("VenomStrike", "cloud_damage_pct", 10));
+            foreach (int level in new[] { 1, 10, 20 })
+            {
+                Assert.Equal(4f, v.Get("VenomStrike", "cloud_duration_s", level));
+                Assert.Equal(3f, v.Get("VenomStrike", "radius_m", level));
+            }
+
+            // The share rows rise every level.
+            foreach (var row in new[] { "ImmolationArrow|blast_damage_pct", "ImmolationArrow|burn_damage_pct", "VenomStrike|cloud_damage_pct" })
+            {
+                var parts = row.Split('|');
+                for (int level = 2; level <= 20; level++)
+                {
+                    Assert.True(v.Get(parts[0], parts[1], level) > v.Get(parts[0], parts[1], level - 1), row + " level " + level);
+                }
+            }
+        }
+
+        [Fact]
+        public void NewBowSkillsCostEitrFromD2sMana()
+        {
+            var v = Values();
+            var t = Tree();
+            Assert.Equal(11f, ActiveSkillRules.EitrCost(t.Find("Strafe"), v, 1));
+            Assert.Equal(11f, ActiveSkillRules.EitrCost(t.Find("Strafe"), v, 20));
+            Assert.Equal(6f, ActiveSkillRules.EitrCost(t.Find("ImmolationArrow"), v, 1));
+            Assert.Equal(10.75f, ActiveSkillRules.EitrCost(t.Find("ImmolationArrow"), v, 20));
+            Assert.Equal(7f, ActiveSkillRules.EitrCost(t.Find("VenomStrike"), v, 1));
+            Assert.Equal(16.5f, ActiveSkillRules.EitrCost(t.Find("VenomStrike"), v, 20));
+        }
+
+        [Fact]
+        public void AreaTicksCountOneHitEverySecond()
+        {
+            Assert.Equal(4, ActiveSkillRules.AreaTicks(4f));
+            Assert.Equal(4, ActiveSkillRules.AreaTicks(4f, 1f));
+            Assert.Equal(2, ActiveSkillRules.AreaTicks(4f, 2f));
+            Assert.Equal(3, ActiveSkillRules.AreaTicks(3.5f, 1f));
+            Assert.Equal(0, ActiveSkillRules.AreaTicks(0f));
+            Assert.Equal(0, ActiveSkillRules.AreaTicks(-4f));
+            Assert.Equal(0, ActiveSkillRules.AreaTicks(4f, 0f));
+            Assert.Equal(0, ActiveSkillRules.AreaTicks(4f, -1f));
+            Assert.Equal(1f, ActiveSkillRules.AreaInterval);
+        }
+
+        [Fact]
+        public void StrafeSharesTheVolleyOutOverTheNearestEnemies()
+        {
+            // No enemies: the arrows fly straight (-1), at least one.
+            Assert.Equal(new[] { -1, -1 }, ActiveSkillRules.StrafeTargets(new float[0], 5, 2));
+            Assert.Equal(new[] { -1 }, ActiveSkillRules.StrafeTargets(new float[0], 5, 0));
+            Assert.Equal(new[] { -1, -1 }, ActiveSkillRules.StrafeTargets(null, 5, 2));
+            // 3 enemies, max 5, min 2: three arrows, one each, nearest the aim first.
+            Assert.Equal(new[] { 1, 2, 0 }, ActiveSkillRules.StrafeTargets(new[] { 30f, 5f, 10f }, 5, 2));
+            // One enemy, min 2: both arrows at it.
+            Assert.Equal(new[] { 0, 0 }, ActiveSkillRules.StrafeTargets(new[] { 12f }, 5, 2));
+            // 7 enemies, max 5, min 2: five arrows at the five smallest angles.
+            Assert.Equal(new[] { 3, 6, 1, 5, 0 }, ActiveSkillRules.StrafeTargets(new[] { 40f, 20f, 70f, 1f, 80f, 30f, 10f }, 5, 2));
+            // 2 enemies, min 7: seven arrows alternating.
+            Assert.Equal(new[] { 0, 1, 0, 1, 0, 1, 0 }, ActiveSkillRules.StrafeTargets(new[] { 3f, 9f }, 5, 7));
+            // Equal angles keep their order.
+            Assert.Equal(new[] { 0, 1, 2 }, ActiveSkillRules.StrafeTargets(new[] { 7f, 7f, 7f }, 5, 1));
+            Assert.Equal(new[] { 0, 1 }, ActiveSkillRules.StrafeTargets(new[] { 7f, 7f, 7f }, 2, 1));
+            // Max targets below 1 counts as 1.
+            Assert.Equal(new[] { 1, 1 }, ActiveSkillRules.StrafeTargets(new[] { 9f, 2f }, 0, 2));
+        }
+
+        [Fact]
+        public void NewBowSkillTooltips()
+        {
+            var v = Values();
+            Assert.Equal("Fires a volley for one arrow: up to 5 enemies in view within 16.5 m each get an arrow flying straight at them, " +
+                         "at 75% damage; at least 2 arrows, shared out when there are fewer enemies", ActiveSkillRules.Describe("Strafe", v, 1, 10f, 25f));
+            Assert.Contains("up to 10 enemies", ActiveSkillRules.Describe("Strafe", v, 20, 1f, 25f));
+            Assert.Equal("Explodes on impact: fire damage equal to 25% of the shot's damage within 3 m; " +
+                         "the ground there burns for 4 s, dealing 10% of the shot's damage each second to enemies in it",
+                ActiveSkillRules.Describe("ImmolationArrow", v, 1, 1f, 25f));
+            Assert.Contains("100%", ActiveSkillRules.Describe("ImmolationArrow", v, 20, 1f, 25f));
+            Assert.Contains("30%", ActiveSkillRules.Describe("ImmolationArrow", v, 20, 1f, 25f));
+            Assert.Contains("20% of the shot's damage each second", ActiveSkillRules.Describe("ImmolationArrow", v, 1, 2f, 25f));
+            Assert.Equal("Bursts into a poison cloud reaching 3 m around where it lands for 4 s: " +
+                         "everything in it is poisoned for 25% of the shot's damage, again each second it stays",
+                ActiveSkillRules.Describe("VenomStrike", v, 1, 1f, 25f));
+            Assert.Contains("100%", ActiveSkillRules.Describe("VenomStrike", v, 20, 1f, 25f));
         }
 
         [Fact]

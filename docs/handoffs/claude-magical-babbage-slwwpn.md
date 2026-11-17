@@ -1,14 +1,14 @@
 # Handoff: `claude/magical-babbage-slwwpn`
 
-**Written:** 2026-11-16, during the round (not yet by `/handoff`). Ahead of `master`, 0 behind. No pull request yet.
+**Written:** 2026-11-17, during the round (not yet by `/handoff`). Ahead of `master`, 0 behind. No pull request yet.
 
 ## Stage
 
-**Building** (three more bow skills; the skill damage remake waits for Krogon's playtest).
+**Waiting for Krogon's playtest** (two checklists: the skill damage remake, and three new bow skills).
 
 ## Purpose
 
-The skill damage round ([#72](https://github.com/krogon-games/JotunnModStub/issues/72)): remake how the Amazon's skills work out their damage, so low levels stop being far too strong, and finish Forked Lightning's last two play-test steps.
+The skill damage round ([#72](https://github.com/krogon-games/JotunnModStub/issues/72)): remake how the Amazon's skills work out their damage, and finish Forked Lightning's last two play-test steps. Widened by Krogon on 2026-11-16 to three of the bow skills still to build ([#70](https://github.com/krogon-games/JotunnModStub/issues/70)): Strafe, Immolation Arrow and Venom Strike.
 
 ## Done
 
@@ -17,12 +17,12 @@ Nothing confirmed in game yet.
 ## Half-done and known issues
 
 Built, untested (detail in `FEATURES.md` → Amazon skill bar and bow skills):
-- **Skill damage scales off the weapon.** Freezing Arrow's frost blast deals 50% → 150% of the shot's own damage and each of Forked Lightning's forks 25% → 100% (whole percentages per skill level, rising evenly). Multishot and Wind Lance already worked this way and are unchanged.
-- **The damage scale is removed:** `Orlog/Data/skill_damage_scale.csv`, its code, its generator and its two tests. `SkillDamageMultiplier` (admin, default 1) now multiplies the blast's and the forks' share.
-- **Assumption, not checked in the game's code this round** (no copy to read in this session): the damage the game hands over as the arrow is made already includes the draw and the Bows skill. Wind Lance and Multishot rely on the same number and passed their play-tests. Each forked shot and each blast writes its sums to the log, so the play-test shows it.
-- **Claude's choices, open to change:** every fork of one shot deals the same damage (no separate roll per fork); "the shot's damage" adds up every damage type of bow and arrow (a fire arrow's fire counts); a half-drawn shot gives weaker forks and a weaker blast.
-- **The spear skills' table rows still hold Diablo 2's damage points** (Poison Javelin, Lightning Bolt, Plague Javelin; not built). Their shares are for the spear round (#41).
-- No Harmony patch added, changed or removed. Nothing tried with two players.
+- **Skill damage scales off the weapon (#72).** Freezing Arrow's frost blast deals 50% → 150% of the shot's own damage, each of Forked Lightning's forks 25% → 100%. The damage scale table, its code, generator and tests are removed; `SkillDamageMultiplier` multiplies the skills' shares.
+- **Strafe, Immolation Arrow and Venom Strike (#70)**, built by subagents (tables and rules; game code; docs), checked by the main session (tests, builds, every diff read). No Harmony patch added: three existing ones do more. The burning ground and the poison cloud are a new small object on the shooter's game (`Orlog/Content/GroundArea.cs`).
+- **Written without the game's code open** (no copy to read in this session; installing the decompiler was blocked). Assumed, to be shown by the play-test and the new log lines: the damage the game hands over as the arrow is made includes the draw and the Bows skill; fire hits add up and poison hits refresh; the vanilla effects named for the fire and poison areas exist.
+- **Claude's choices, open to change:** every fork of one shot deals the same; a half-drawn shot gives weaker skill damage; Strafe picks enemies on screen, nearest the aim first, with no check for walls in the way and no lead on a running enemy; the areas' look (a ring, a glow, a vanilla effect each second); area hits don't train the Bows skill.
+- **Not built:** Snipe and Shackle Shot (still "Coming later"); Immolation Arrow's Diablo 2 casting delay (no cooldowns yet). The spear skills' table rows still hold Diablo 2's damage points (#41).
+- Nothing tried with two players.
 
 ## Decisions
 
@@ -40,28 +40,33 @@ Built, untested (detail in `FEATURES.md` → Amazon skill bar and bow skills):
 
 ## Playtest
 
-`docs/playtests/claude-magical-babbage-slwwpn.md`: 12 steps (`r72-1` … `r72-12`), also the first section of the phone page. They include Forked Lightning's two steps left over from PR #71 (`r72-6`: rank 20 with nine brutes; `r72-7`: a troll with greylings). No feedback yet.
+`docs/playtests/claude-magical-babbage-slwwpn.md`, both rounds also on the phone page (its first two sections):
+1. Skill damage: 12 steps (`r72-1` … `r72-12`), with Forked Lightning's two steps left over from PR #71 (`r72-6`, `r72-7`).
+2. Strafe, Immolation Arrow, Venom Strike: 14 steps (`r70-1` … `r70-14`).
+
+No feedback yet.
 
 ## Open questions for Krogon
 
-1. After the play-test: do the two skills feel right at skill level 1 and at 20 (step `r72-12`)?
+1. After the play-tests: do the skills feel right at skill level 1 and at 20 (`r72-12`, `r70-14`), and is the areas' look good enough?
 2. Still open from PR #71: should large roots stop a Wind Lance?
+3. Snipe's and Shackle Shot's details, in their round.
 
 ## Next steps
 
-1. Krogon play-tests; Claude reads his marks from the phone page and fixes what he finds.
+1. Krogon play-tests both rounds; Claude reads his marks from the phone page and fixes what he finds.
 2. Final play-test, then `/handoff` and a pull request into `master`.
-3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–5), close #72.
-4. Next classes rounds (#70, then #41): each new skill's share of the weapon's damage is agreed there.
+3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–11), close #72, update #70 (two bow skills left).
+4. Next classes rounds: Snipe and Shackle Shot (#70), then the spear skills (#41); each new skill's share of the weapon's damage is agreed there.
 
 ## Checks
 
-Run during the round (2026-11-16), not yet by `/handoff`:
-- Build: PASS (588 tests; Orlog and CraftingOverhaul build, 0 errors).
+Run during the round, not yet by `/handoff`:
+- Build: PASS (593 tests; Orlog and CraftingOverhaul build, 0 errors).
 - Version: gameplay changed: version bump needed at merge (Orlog). The branch changed no version.
 - In-game: needs Krogon's playtest.
 - The others: not run yet (`/handoff` runs them).
 
 ## Merge notes
 
-**Not ready to merge:** waiting for Krogon's play-test. **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`. One data table deleted: `Orlog/Data/skill_damage_scale.csv`.
+**Not ready to merge:** waiting for Krogon's play-test. **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`. One data table deleted: `Orlog/Data/skill_damage_scale.csv`. One new code file: `Orlog/Content/GroundArea.cs`.

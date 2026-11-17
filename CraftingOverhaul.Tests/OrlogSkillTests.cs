@@ -56,10 +56,11 @@ namespace CraftingOverhaul.Tests
             {
                 Assert.Null(t.Find(gone));
             }
-            // Built: Multishot, Freezing Arrow, Forked Lightning and Wind Lance (the last two 2026-11-16); Inner Sight and
+            // Built: Multishot, Freezing Arrow, Forked Lightning and Wind Lance (the last two 2026-11-16), Strafe, Immolation Arrow
+            // and Venom Strike (2026-11-16); Inner Sight and
             // the five passives; the five spear skills whose numbers are in (they act with roadmap C6).
-            Assert.Equal(15, t.Skills.Count(s => s.Built));
-            Assert.Equal(12, t.Skills.Count(s => s.Status == "later"));
+            Assert.Equal(18, t.Skills.Count(s => s.Built));
+            Assert.Equal(9, t.Skills.Count(s => s.Status == "later"));
             Assert.Equal("reworked", t.Find("Penetrate").Status);
             // Renamed (Krogon, 2026-11-15); the id stays, so saved points and slots still find it.
             Assert.Equal("Multishot", t.Find("MultipleShot").Name);
