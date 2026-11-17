@@ -12,7 +12,7 @@ namespace Orlog.Content
     ///     Slots are saved in the character's custom data (<c>orlog_slots</c>, <c>id0;id1;id2;id3</c>); the slot on the skill
     ///     button is remembered per weapon kind (<c>orlog_selected</c>, <c>bow:0;spear:2</c>; user 2026-11-11). Each slot's
     ///     hotkey puts an attack skill on the skill button or casts a cast skill. The numbers come from
-    ///     <c>Orlog/Data/&lt;class&gt;_skill_values.csv</c> and <c>skill_damage_scale.csv</c>.
+    ///     <c>Orlog/Data/&lt;class&gt;_skill_values.csv</c>.
     /// </summary>
     internal static class SkillBar
     {
@@ -21,7 +21,6 @@ namespace Orlog.Content
         public const string QuickCastOffKey = "orlog_quickcast_off";
 
         private static readonly Dictionary<string, SkillValueTable> Values = new Dictionary<string, SkillValueTable>(System.StringComparer.OrdinalIgnoreCase);
-        private static DamageScale s_scale;
 
         // ------------------------------------------------------------ data
 
@@ -43,17 +42,6 @@ namespace Orlog.Content
             return table;
         }
 
-        public static DamageScale Scale()
-        {
-            if (s_scale == null)
-            {
-                var errors = new List<string>();
-                s_scale = DamageScale.Parse(Progress.ReadData("skill_damage_scale.csv"), "skill_damage_scale.csv", errors);
-                Report(errors);
-            }
-            return s_scale;
-        }
-
         private static void Report(List<string> errors)
         {
             foreach (var error in errors)
@@ -62,10 +50,13 @@ namespace Orlog.Content
             }
         }
 
-        /// <summary>D2 damage points → Valheim points for the player: the scale at their level × the admin's multiplier.</summary>
-        public static float DamageScaleFor(Player player)
+        /// <summary>
+        ///     The admin's multiplier on the damage skills add as a share of the shot (Freezing Arrow's blast, Forked
+        ///     Lightning's forks). Skill damage scales off the weapon since 2026-11-16 (Krogon, #72).
+        /// </summary>
+        public static float DamageMultiplier()
         {
-            return Scale().At(Progress.GetLevel(player)) * OrlogConfig.SkillDamageMultiplier.Value;
+            return Mathf.Max(0f, OrlogConfig.SkillDamageMultiplier.Value);
         }
 
         /// <summary>The player's level in a skill (the hard points: no +skills yet).</summary>
@@ -82,7 +73,7 @@ namespace Orlog.Content
         /// <summary>The tooltip line of an active skill at a level, or null.</summary>
         public static string Describe(Player player, string skillId, int level)
         {
-            return ActiveSkillRules.Describe(skillId, ValuesFor(Attributes.ClassOf(player)), level, DamageScaleFor(player),
+            return ActiveSkillRules.Describe(skillId, ValuesFor(Attributes.ClassOf(player)), level, DamageMultiplier(),
                 InnerSightPercent(level));
         }
 

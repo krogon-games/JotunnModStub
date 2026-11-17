@@ -321,7 +321,7 @@ namespace Orlog.Content
                 $"; skill button {OrlogConfig.SkillButton.Value}, block {OrlogConfig.BlockKey.Value}.");
             Console.instance.Print("Passives: " + string.Join(", ", new[] { "crit", "penetrate", "dodge", "avoid", "evade" }
                 .Select(e => $"{e} {Passives.Chance(player, e):0.#}%{(Passives.HasTestChance(e) ? " (test)" : "")}")) +
-                $"; skill damage ×{SkillBar.DamageScaleFor(player):0.##} per D2 point.");
+                $"; skill damage multiplier ×{SkillBar.DamageMultiplier():0.##} (the skills' shares of the shot's damage).");
             var kills = SkillPoints.BossKills(player);
             Console.instance.Print($"Boss first kills: {(kills.Count > 0 ? string.Join(", ", kills) : "none yet")} (+{SkillPoints.BossBonus(player)} skill points).");
         }

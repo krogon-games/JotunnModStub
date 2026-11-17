@@ -58,49 +58,6 @@ namespace Orlog.Rules
         }
     }
 
-    /// <summary>
-    ///     How many Valheim damage points one Diablo 2 damage point of a skill is worth, per character level
-    ///     (<c>Orlog/Data/skill_damage_scale.csv</c>: the best Valheim bow and arrow of that level's biome ÷ the best D2 bow
-    ///     by that level, so a skill adds as much compared with the bow's own damage as in D2).
-    /// </summary>
-    internal sealed class DamageScale
-    {
-        private readonly SortedDictionary<int, float> _byLevel = new SortedDictionary<int, float>();
-
-        public int Count => _byLevel.Count;
-
-        /// <summary>The scale at a character level (clamped to the table's levels; 1 for an empty table).</summary>
-        public float At(int level)
-        {
-            if (_byLevel.Count == 0)
-            {
-                return 1f;
-            }
-            if (_byLevel.TryGetValue(level, out float scale))
-            {
-                return scale;
-            }
-            return level < _byLevel.Keys.First() ? _byLevel.Values.First() : _byLevel.Values.Last();
-        }
-
-        public static DamageScale Parse(string csv, string file, List<string> errors)
-        {
-            var table = new DamageScale();
-            foreach (var row in Table.Read(csv, file, new[] { "level", "scale" }, errors))
-            {
-                int level = Table.Int(row, "level", errors);
-                float scale = Table.Float(row, "scale", errors);
-                if (level < 1 || scale <= 0f || table._byLevel.ContainsKey(level))
-                {
-                    errors.Add($"{file}: level {level} has scale {scale} or is listed twice.");
-                    continue;
-                }
-                table._byLevel[level] = scale;
-            }
-            return table;
-        }
-    }
-
     /// <summary>Why a skill slot can't be used right now (<c>classes-ui-brief.md</c> §3, <c>GetSlotStateJson</c>).</summary>
     internal struct SlotState
     {
@@ -306,10 +263,14 @@ namespace Orlog.Rules
             return SkillRules.EitrCost(skill, level);
         }
 
-        /// <summary>A random value between D2's min and max damage (<paramref name="roll" /> 0–1), in Valheim points.</summary>
-        public static float Damage(float d2Min, float d2Max, float roll, float scale)
+        /// <summary>
+        ///     The damage a skill adds, as a share of the shot's own damage (bow + arrow, as the game worked it out for
+        ///     this shot): <paramref name="percent" /> from the values table × the admin's multiplier. Krogon, 2026-11-16
+        ///     (#72): "All scale off the weapon"; Diablo 2's fixed points and the table that converted them are gone.
+        /// </summary>
+        public static float ShareOfShot(float shotDamage, float percent, float multiplier = 1f)
         {
-            return (d2Min + (d2Max - d2Min) * Math.Max(0f, Math.Min(1f, roll))) * scale;
+            return Math.Max(0f, shotDamage) * Math.Max(0f, percent) / 100f * Math.Max(0f, multiplier);
         }
 
         /// <summary>Multishot's angle for arrow <paramref name="index" /> of <paramref name="count" />, centred on the aim.</summary>
@@ -464,14 +425,66 @@ namespace Orlog.Rules
             return ordered;
         }
 
+        // ------------------------------------------------------------ Strafe, Immolation Arrow and Venom Strike (user, 2026-11-16)
+
+        /// <summary>
+        ///     Seconds between the hits of an area on the ground (Immolation Arrow's burning ground, Venom Strike's cloud):
+        ///     Krogon, 2026-11-16, "every second".
+        /// </summary>
+        public const float AreaInterval = 1f;
+
+        /// <summary>
+        ///     How many times an area on the ground hits what stands in it: one hit every <paramref name="interval" /> seconds
+        ///     for <paramref name="duration" /> seconds (4 s at 1 s = 4). 0 when either is not positive.
+        /// </summary>
+        public static int AreaTicks(float duration, float interval = AreaInterval)
+        {
+            if (duration <= 0f || interval <= 0f)
+            {
+                return 0;
+            }
+            return (int)Math.Floor(duration / interval + 1e-4f);
+        }
+
+        /// <summary>
+        ///     Strafe: which enemy each arrow of the volley flies at (Krogon, 2026-11-16: one arrow becomes a volley, each
+        ///     arrow flying by itself at a different enemy in view; Diablo 2's counts). <paramref name="angles" /> holds, for
+        ///     each candidate enemy (already limited to those in view and in range by the caller), its angle in degrees from
+        ///     the aim. The targets are the <paramref name="maxTargets" /> candidates nearest the aim (equal angles keep their
+        ///     order); the volley has max(<paramref name="minArrows" />, targets) arrows, at least 1; arrow i flies at target
+        ///     (i mod targets), so spare arrows are shared out in order. With no candidates the arrows (max(minArrows, 1))
+        ///     fly straight along the aim. Returns one entry per arrow: the candidate's index in <paramref name="angles" />, or -1.
+        /// </summary>
+        public static List<int> StrafeTargets(IList<float> angles, int maxTargets, int minArrows)
+        {
+            int count = angles == null ? 0 : angles.Count;
+            var result = new List<int>();
+            if (count == 0)
+            {
+                for (int i = 0; i < Math.Max(minArrows, 1); i++)
+                {
+                    result.Add(-1);
+                }
+                return result;
+            }
+            var targets = Enumerable.Range(0, count).OrderBy(i => angles[i]).ThenBy(i => i).Take(Math.Max(maxTargets, 1)).ToList();
+            int arrows = Math.Max(Math.Max(minArrows, 1), targets.Count);
+            for (int i = 0; i < arrows; i++)
+            {
+                result.Add(targets[i % targets.Count]);
+            }
+            return result;
+        }
+
         private static string N(float value)
         {
             return value.ToString("0.#", CultureInfo.InvariantCulture);
         }
 
-        private static string Range(SkillValueTable v, string id, string kind, int level, float scale)
+        /// <summary>A skill's share of the shot's damage as the tooltip shows it: the table's % × the admin's multiplier.</summary>
+        private static string Share(SkillValueTable v, string id, string value, int level, float multiplier)
         {
-            return N(v.Get(id, kind + "_min", level) * scale) + "–" + N(v.Get(id, kind + "_max", level) * scale);
+            return N(ShareOfShot(100f, v.Get(id, value, level), multiplier)) + "%";
         }
 
         /// <summary>
@@ -485,10 +498,10 @@ namespace Orlog.Rules
         }
 
         /// <summary>
-        ///     The tooltip line of an active skill at a level, with Valheim numbers (<paramref name="scale" /> = the damage
-        ///     scale at the character's level × the admin's multiplier), or null if the skill has no text here.
+        ///     The tooltip line of an active skill at a level (<paramref name="damageMultiplier" /> = the admin's
+        ///     <c>SkillDamageMultiplier</c>, applied to the shares of the shot's damage), or null if the skill has no text here.
         /// </summary>
-        public static string Describe(string id, SkillValueTable v, int level, float scale, float innerSightPercent)
+        public static string Describe(string id, SkillValueTable v, int level, float damageMultiplier, float innerSightPercent)
         {
             if (v == null || level < 1)
             {
@@ -499,15 +512,24 @@ namespace Orlog.Rules
                 case "MultipleShot":
                     return $"Fires {N(v.Get(id, "arrows", level))} arrows in a fan for one arrow, each at {N(v.Get(id, "weapon_damage_pct", level))}% damage";
                 case "FreezingArrow":
-                    return $"Explodes on impact: {Range(v, id, "cold_damage", level, scale)} frost damage within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m, " +
+                    return $"Explodes on impact: frost damage equal to {Share(v, id, "blast_damage_pct", level, damageMultiplier)} of the shot's damage within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m, " +
                            $"freezing for {N(v.Get(id, "freeze_s", level))} s (bosses are only slowed)";
                 case "ForkedLightning":
                     return $"Lightning strikes the enemy the arrow hits and forks to up to {N(v.Get(id, "forks", level))} other enemies within {N(v.Get(id, "reach_m", level))} m: " +
-                           $"{Range(v, id, "lightning_damage", level, scale)} lightning damage each";
+                           $"each strike deals {Share(v, id, "fork_damage_pct", level, damageMultiplier)} of the shot's damage as lightning";
                 case "WindLance":
                     return $"Hold {N(v.Get(id, "hold_s", level))} s past full draw, then release: a gust of wind {N(v.Get(id, "width_m", level) * 2f)} m wide at {N(v.Get(id, "weapon_damage_pct", level))}% damage " +
                            $"rushes {N(v.Get(id, "range_m", level))} m at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed, along the ground and through every enemy, " +
                            $"staggering them and knocking them back (force {N(v.Get(id, "knockback", level))}). Released early: a normal shot, no eitr";
+                case "Strafe":
+                    return $"Fires a volley for one arrow: up to {N(v.Get(id, "max_targets", level))} enemies in view within {N(v.Get(id, "range_m", level))} m each get an arrow flying straight at them, " +
+                           $"at {N(v.Get(id, "weapon_damage_pct", level))}% damage; at least {N(v.Get(id, "min_arrows", level))} arrows, shared out when there are fewer enemies";
+                case "ImmolationArrow":
+                    return $"Explodes on impact: fire damage equal to {Share(v, id, "blast_damage_pct", level, damageMultiplier)} of the shot's damage within {N(v.Get(id, "radius_m", level))} m; " +
+                           $"the ground there burns for {N(v.Get(id, "burn_duration_s", level))} s, dealing {Share(v, id, "burn_damage_pct", level, damageMultiplier)} of the shot's damage each second to enemies in it";
+                case "VenomStrike":
+                    return $"Bursts into a poison cloud reaching {N(v.Get(id, "radius_m", level))} m around where it lands for {N(v.Get(id, "cloud_duration_s", level))} s: " +
+                           $"everything in it is poisoned for {Share(v, id, "cloud_damage_pct", level, damageMultiplier)} of the shot's damage, again each second it stays";
                 case "InnerSight":
                     return $"Enemies within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m glow and take {N(innerSightPercent)}% more damage for {N(v.Get(id, "duration_s", level))} s";
                 default:

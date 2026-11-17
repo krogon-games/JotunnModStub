@@ -104,10 +104,11 @@ namespace Orlog
                 AdminOnly("Degrees added to the stone's turn (it copies the Eikthyr stone's turn). 180 turns it round if it faces the wrong way.",
                     new AcceptableValueRange<float>(-180f, 180f)));
 
-            // Skills (roadmap C5). Damage: D2's numbers × Orlog/Data/skill_damage_scale.csv × this.
+            // Skills (roadmap C5). Since 2026-11-16 (Krogon, #72) skill damage is a share of the shot's own damage
+            // (Orlog/Data/amazon_skill_values.csv, the ..._pct rows) × this.
             SkillDamageMultiplier = config.Bind(SkillSection, "SkillDamageMultiplier", 1f,
-                AdminOnly("Multiplies the damage skills add (fire, frost, explosions, Magic Arrow). 1 = D2's ratio of skill damage to bow " +
-                          "damage (Orlog/Data/skill_damage_scale.csv). Proposed 2026-11-11, waiting for the user's approval.",
+                AdminOnly("Multiplies the damage skills add as a share of the shot's own damage (Freezing Arrow's frost blast, Forked " +
+                          "Lightning's forks). 1 = the shares in Orlog/Data/amazon_skill_values.csv (Krogon, 2026-11-16).",
                     new AcceptableValueRange<float>(0f, 10f)));
             InnerSightDamageBase = config.Bind(SkillSection, "InnerSightDamageBase", 5f,
                 AdminOnly("% more damage enemies under Inner Sight take at skill level 1 (user, 2026-11-15).",

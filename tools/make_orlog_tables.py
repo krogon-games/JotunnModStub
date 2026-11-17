@@ -21,14 +21,12 @@ Outputs:
 - Orlog/Data/amazon_passives.csv: the chance per skill level (1-20) of the Amazon's passives, from
   data/d2-reference/amazon_levels.csv (Arreat Summit; D2R the same), with the tooltip text. Penetrate takes Critical
   Strike's curve (user, 2026-11-11: D2's Penetrate raises attack rating, which Valheim doesn't have).
-- Orlog/Data/amazon_skill_values.csv: the per-level values (1-20) of the Amazon's built active skills, unchanged from
+- Orlog/Data/amazon_skill_values.csv: the per-level values (1-20) of the Amazon's built active skills, from
   data/d2-reference/amazon_levels.csv (D2R where it differs from classic: user 2026-11-11), keyed by skill id. A skill
   D2 doesn't have (Forked Lightning, Wind Lance) takes the numbers the user agreed for it (NEW_SKILLS).
-- Orlog/Data/skill_damage_scale.csv: per character level, how many Valheim damage points one Diablo 2 damage point of a
-  skill is worth. It keeps D2's ratio of skill damage to bow damage: the best Valheim bow plus the best arrow obtainable
-  in the biome of that level (game dump: items.csv and biome_items.csv, quality 1) divided by the average damage of
-  the best D2 bow that drops by that level (data/d2-reference/bows.csv, bows and Amazon bows; available from the
-  higher of item level and required level). Proposed 2026-11-11, waiting for the user's approval.
+  Skill damage scales off the weapon (user, 2026-11-16, issue #72): a skill's damage is a share of the shot's own
+  damage (bow + arrow), in a `..._pct` row; Diablo 2's fixed damage points of a built skill are left out
+  (WEAPON_SHARES). The table that turned D2 points into Valheim points (skill_damage_scale.csv) is gone.
 - Orlog/Data/biome_levels.csv: each biome's creature level range (from the guide) and the health span of the creatures
   the world spawns there without a boss key (from the dump). Creatures get their level inside the range by health.
 
@@ -84,18 +82,18 @@ def boss_xp_shares(bosses):
 # no level tiers, no prerequisites, exactly nine skills per tab, shown as cards three by three in the order below.
 # Each: name, status, kind (attack = on the skill button, cast = on its hotkey, passive = no slot), the weapon it needs,
 # what it does here. A skill Diablo 2 also has (the same name in data/d2-reference/amazon.csv) takes D2's mana as its
-# eitr cost; a new one takes the numbers the user agreed for it (NEW_SKILLS below), and one not agreed yet (Snipe, Venom
-# Strike, Shackle Shot) has no cost until the round that builds it.
+# eitr cost; a new one takes the numbers the user agreed for it (NEW_SKILLS below), and one not agreed yet (Snipe,
+# Shackle Shot) has no cost until the round that builds it.
 AMAZON = [
     ("Bow and Crossbow", [
         ("Forked Lightning", "v1", "attack", "bow", "The arrow hits an enemy, then lightning forks from its body to nearby enemies"),
         ("Wind Lance", "v1", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, passing through enemies and knocking them back"),
         ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
         ("Multishot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
-        ("Strafe", "later", "attack", "bow", "A volley of arrows at several nearby targets"),
+        ("Strafe", "v1", "attack", "bow", "One arrow becomes a volley: each arrow flies by itself at a different enemy in view"),
         ("Freezing Arrow", "v1", "attack", "bow", "Frost damage and a short freeze in an area on impact; bosses are only slowed"),
-        ("Immolation Arrow", "later", "attack", "bow", "Explodes in fire on impact and leaves a burning patch on the ground"),
-        ("Venom Strike", "later", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
+        ("Immolation Arrow", "v1", "attack", "bow", "Explodes in fire on impact and leaves the ground burning"),
+        ("Venom Strike", "v1", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
         ("Shackle Shot", "later", "attack", "bow", "Shackles the target to an enemy or a tree behind it, holding both in place; with nothing behind it, only briefly"),
     ]),
     ("Passive and Magic", [
@@ -137,8 +135,9 @@ NEW_SKILLS = {
     # takes one fork itself.
     "Forked Lightning": ("Charged Strike", [
         ("mana_cost", "flat", ("d2", "Charged Strike", "mana_cost", 0)),
-        ("lightning_damage_min", "flat", ("d2", "Charged Strike", "lightning_damage_min", 0)),
-        ("lightning_damage_max", "flat", ("d2", "Charged Strike", "lightning_damage_max", 0)),
+        # 2026-11-16, issue #72 (docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 3 and 5): each fork deals a
+        # share of the shot's damage, "25% at level 1, 100% at 20", instead of Charged Strike's 1-30 to 1-322 points.
+        ("fork_damage_pct", "%", ("line", 25, 100)),
         ("forks", "count", ("d2", "Charged Strike", "bolts", 0)),
         ("reach_m", "m", ("flat", 4)),
     ]),
@@ -157,6 +156,39 @@ NEW_SKILLS = {
         ("speed_pct", "%", ("flat", 200)),
         ("range_m", "m", ("flat", 50)),
     ]),
+    # Venom Strike is the user's own skill (2026-11-16, docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 10 and 11):
+    # "25% at level 1, 100% at 20"; eitr "7, +0.5 per level" = Plague Javelin's mana. A poison cloud 3 m in every
+    # direction hangs for 4 seconds where the arrow lands; everything inside is poisoned and re-poisoned each second.
+    "Venom Strike": ("Plague Javelin", [
+        ("mana_cost", "flat", ("d2", "Plague Javelin", "mana_cost", 0)),
+        ("cloud_damage_pct", "%", ("line", 25, 100)),
+        ("cloud_duration_s", "s", ("flat", 4)),
+        ("radius_m", "m", ("flat", 3)),
+    ]),
+}
+
+
+# Diablo 2 skills whose damage is a share of the shot's own damage instead of D2's fixed points (user, 2026-11-16, issue
+# #72: "All scale off the weapon"; docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 3 and 4).
+# name -> (the D2 rows left out, the rows added: as in NEW_SKILLS).
+WEAPON_SHARES = {
+    # Decision 4: the frost blast deals "50% at level 1, 150% at 20" of the shot's damage.
+    "Freezing Arrow": (["cold_damage_min", "cold_damage_max"], [
+        ("blast_damage_pct", "%", ("line", 50, 150)),
+    ]),
+    # Strafe (decision 8): "75% of your shot each". On release one arrow from the quiver becomes a volley, each arrow
+    # flying by itself at a different enemy in view within 16.5 m; D2's counts (max_targets, min_arrows) and mana stay.
+    "Strafe": (["damage_pct", "weapon_damage_pct"], [
+        ("weapon_damage_pct", "%", ("flat", 75)),
+        ("range_m", "m", ("flat", 16.5)),
+    ]),
+    # Immolation Arrow (decision 9): "Blast 25%->100%, fire 10%->30% a second". Explodes in fire on impact within 3 m,
+    # then the ground there burns for 4 seconds (D2's burn_duration_s, kept) and hurts enemies in it every second.
+    "Immolation Arrow": (["explosion_fire_damage_min", "explosion_fire_damage_max", "burn_fire_dps_min", "burn_fire_dps_max"], [
+        ("blast_damage_pct", "%", ("line", 25, 100)),
+        ("burn_damage_pct", "%", ("line", 10, 30)),
+        ("radius_m", "m", ("flat", 3)),
+    ]),
 }
 
 
@@ -165,10 +197,10 @@ def number(value):
     return str(int(value)) if float(value) == int(value) else ("%g" % value)
 
 
-def new_skill_rows(name, per_level):
-    """The amazon_skill_values.csv rows of a skill in NEW_SKILLS."""
+def new_skill_rows(name, per_level, rules=None):
+    """The amazon_skill_values.csv rows of a skill in NEW_SKILLS (or the given rules, for WEAPON_SHARES)."""
     rows = []
-    for value, unit, rule in NEW_SKILLS[name][1]:
+    for value, unit, rule in (rules if rules is not None else NEW_SKILLS[name][1]):
         if rule[0] == "d2":
             source = per_level[(rule[1], rule[2])]
             levels = [number(float(source["l%d" % i]) + rule[3]) for i in range(1, 21)]
@@ -192,11 +224,6 @@ PASSIVES = [
      "{0}% chance for a hit to ignore the creature's resistances (not immunities)"),
     ("Evade", "evade", ("Evade", "evade_chance"), "{0}% chance to evade any hit while walking or running"),
 ]
-
-# The damage types a hit adds up (game dump items.csv columns), for the Valheim side of the damage scale.
-DAMAGE_COLUMNS = ["blunt", "slash", "pierce", "fire", "frost", "lightning", "poison", "spirit"]
-# Biome order as the game dump writes it in biome_items.csv (Ashlands there, AshLands in Heightmap.Biome).
-DUMP_BIOME = {"AshLands": "Ashlands"}
 
 # Each class's line in the class choice window (the classes UI demo's text, seen in the play-tests since 2026-10-30;
 # moved here when the demo was removed, user 2026-11-13). Classes without one show none.
@@ -336,53 +363,16 @@ def main():
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["id", "value", "unit"] + ["l%d" % i for i in range(1, 21)] + ["source"])
         for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv")):
-            if r["skill"] in built_active and r["skill"] not in NEW_SKILLS:
+            if r["skill"] in built_active and r["skill"] not in NEW_SKILLS and r["value"] not in WEAPON_SHARES.get(r["skill"], ([], []))[0]:
                 w.writerow([r["skill"].replace(" ", ""), r["value"], r["unit"]] + [r["l%d" % i] for i in range(1, 21)] + [r["source"]])
+        for name, (_, added) in WEAPON_SHARES.items():
+            if name in built_active:
+                w.writerows(new_skill_rows(name, per_level, added))
         for name in NEW_SKILLS:
             if name in built_active:
                 w.writerows(new_skill_rows(name, per_level))
-    write_damage_scale()
-    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv, amazon_skills.csv, amazon_passives.csv, "
-          "amazon_skill_values.csv and skill_damage_scale.csv to", OUT)
-
-
-def write_damage_scale():
-    items = {r["prefab"]: r for r in read_csv(os.path.join(DUMP, "items.csv"))}
-    by_biome = {}
-    for r in read_csv(os.path.join(DUMP, "biome_items.csv")):
-        by_biome.setdefault(r["biome"], []).append(r["item"])
-
-    def total(prefab):
-        return sum(float(items[prefab][c] or 0) for c in DAMAGE_COLUMNS)
-
-    # Best bow and best arrow obtainable by each biome (earlier biomes' gear counts too). Crossbows use bolts and
-    # "Uncooked" casts aren't weapons, so both are left out.
-    best, bow, arrow = {}, 0.0, 0.0
-    for biome, _, _ in GUIDE:
-        for prefab in by_biome.get(DUMP_BIOME.get(biome, biome), []):
-            if prefab not in items:
-                continue
-            kind = items[prefab]["type"]
-            if kind == "Bow" and not prefab.startswith("Crossbow") and "Uncooked" not in prefab:
-                bow = max(bow, total(prefab))
-            elif kind == "Ammo" and prefab.startswith("Arrow"):
-                arrow = max(arrow, total(prefab))
-        best[biome] = (bow, arrow)
-    d2_bows = [(max(int(r["item_level"]), int(r["level_req"])), (float(r["min_damage"]) + float(r["max_damage"])) / 2, r["name"])
-               for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "bows.csv")) if r["type"] in ("bow", "abow")]
-    biome_of = []
-    previous = 1
-    for biome, _, boss_level in GUIDE:
-        biome_of.append((previous, boss_level - 1, biome))
-        previous = boss_level
-    with open(os.path.join(OUT, "skill_damage_scale.csv"), "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f, lineterminator="\n")
-        w.writerow(["level", "biome", "valheim_bow_arrow", "d2_bow", "d2_bow_name", "scale"])
-        for level in range(1, MAX_LEVEL + 1):
-            biome = next((b for lo, hi, b in biome_of if lo <= level <= hi), GUIDE[-1][0])
-            valheim = sum(best[biome])
-            d2 = max((b for b in d2_bows if b[0] <= level), key=lambda b: b[1])
-            w.writerow([level, biome, valheim, d2[1], d2[2], round(valheim / d2[1], 3)])
+    print("Wrote levels.csv, creature_xp.csv, biome_levels.csv, classes.csv, amazon_skills.csv, amazon_passives.csv "
+          "and amazon_skill_values.csv to", OUT)
 
 
 if __name__ == "__main__":

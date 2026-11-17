@@ -19,13 +19,12 @@ namespace Orlog.Content
     /// </summary>
     internal static class SkillButton
     {
-        /// <summary>A skill attack: the attack, the skill and its level, the damage scale when it started.</summary>
+        /// <summary>A skill attack: the attack, the skill and its level.</summary>
         internal sealed class Shot
         {
             public Attack Attack;
             public SkillTable.Skill Skill;
             public int Level;
-            public float Scale;
         }
 
         /// <summary>The skill being drawn or held on the skill button (until its attack starts).</summary>
@@ -277,8 +276,7 @@ namespace Orlog.Content
                     {
                         Attack = player.m_currentAttack,
                         Skill = skill,
-                        Level = SkillBar.LevelOf(player, skill.Id),
-                        Scale = SkillBar.DamageScaleFor(player)
+                        Level = SkillBar.LevelOf(player, skill.Id)
                     };
                 });
             }
