@@ -17,7 +17,7 @@ Nothing confirmed in game yet this round.
 ## Half-done and known issues
 
 - **Built, untested:** Strafe as rapid fire (`Orlog/Content/Strafe.cs`; numbers in `amazon_skill_values.csv`; rules `StreamDue`, `StreamTakesAmmo`, tested; 595 tests). Written with the game's 1.0.14 code open (decompiled on Krogon's word, "yes, decompile the game's code for this"; the first try was refused by the session's safety check, and the tool needed .NET roll-forward). New patch: `Humanoid.StartAttack` prefix.
-- Claude's choices, open to change: each arrow's push and Bows-skill training shrink with its share; the bow wears once a second (with the quiver's arrow); let go before full draw = one normal arrow, no eitr (as Wind Lance); bows only (a crossbow shoots a normal bolt); the bow stays in its drawn pose while the arrows leave it.
+- Claude's choices, open to change: each arrow's push and Bows-skill training shrink with its share; the bow wears once a second (with the quiver's arrow); let go before full draw = one normal arrow, no eitr (as Wind Lance); the bow stays in its drawn pose while the arrows leave it.
 - Rounding (Claude's slip in decision 14's question: "10 → 15 (+0.25 a level)" doesn't add up; 10 + 0.25 × 19 = 14.75): the table follows the endpoints, in whole numbers: start 10, 10, 11 … 15; drain 3 (levels 1–5), 4 (6–15), 5 (16–20).
 - Not tried with two players (`PLAYTEST.md` → Session 2, 2j step 8, updated).
 
@@ -35,8 +35,9 @@ Nothing confirmed in game yet this round.
 10. **2026-11-17: you walk slowly while firing** ("Walk slowly"), at the game's slowed pace for a drawn bow; over standing still and moving freely.
 11. **2026-11-17: stamina drains while firing, like holding a drawn bow** ("Like a drawn bow"), on top of the eitr; over no stamina.
 12. **2026-11-17: the eitr cost gets more expensive per level** (his own answer: "get more expensive per level."), over the same at every level and getting cheaper. How much: decision 14.
-14. **2026-11-17: both parts of the cost grow a little** ("Both grow a little"): the start 10 at skill level 1 → 15 at 20 (+0.25 a level, Immolation Arrow's pace), the drain 3 → 5 eitr a second; over only the drain growing and only the start growing.
 13. **2026-11-17: the arrows fly like normal arrows** ("Like normal arrows"): normal flight and drop, as from a fully drawn shot; over straight with a little spread and dead straight.
+14. **2026-11-17: both parts of the cost grow a little** ("Both grow a little"): the start 10 at skill level 1 → 15 at 20 (+0.25 a level, Immolation Arrow's pace), the drain 3 → 5 eitr a second; over only the drain growing and only the start growing.
+15. **2026-11-17: Strafe works with crossbows too** ("Crossbows as well"), not bows only (Claude had built it for bows only and asked). How a crossbow streams: being asked.
 
 ## Playtest
 
@@ -44,7 +45,7 @@ Nothing confirmed in game yet this round.
 
 ## Open questions for Krogon
 
-1. Strafe on crossbows too? (Bows only for now.)
+1. How Strafe streams with a crossbow (decision 15): being asked.
 2. Carried over: should the burning ground's and the cloud's hits count for Corruption's on-hit affixes? Should large roots stop a Wind Lance?
 
 ## Next steps
