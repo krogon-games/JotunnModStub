@@ -37,7 +37,10 @@ Nothing confirmed in game yet this round.
 12. **2026-11-17: the eitr cost gets more expensive per level** (his own answer: "get more expensive per level."), over the same at every level and getting cheaper. How much: decision 14.
 13. **2026-11-17: the arrows fly like normal arrows** ("Like normal arrows"): normal flight and drop, as from a fully drawn shot; over straight with a little spread and dead straight.
 14. **2026-11-17: both parts of the cost grow a little** ("Both grow a little"): the start 10 at skill level 1 → 15 at 20 (+0.25 a level, Immolation Arrow's pace), the drain 3 → 5 eitr a second; over only the drain growing and only the start growing.
-15. **2026-11-17: Strafe works with crossbows too** ("Crossbows as well"), not bows only (Claude had built it for bows only and asked). How a crossbow streams: being asked.
+15. **2026-11-17: Strafe works with crossbows too** ("Crossbows as well"), not bows only (Claude had built it for bows only and asked). How: decisions 16–18.
+16. **2026-11-17: a crossbow streams 3 bolts a second, each the same share as a bow's arrow** ("Fewer, same share": 25% → 50% of a normal bolt), over the bow's 6 a second and over 6 a second at half the share. With a crossbow the stream starts as soon as the button is held with a loaded crossbow (no draw), as put in the question.
+17. **2026-11-17: a streaming crossbow slows your walk and drains stamina like the bow** ("Like the bow"), over normal walking with eitr only.
+18. **2026-11-17: when the crossbow stream stops the crossbow is empty and reloads** ("Empty, reloads"), as after any crossbow shot; over staying loaded.
 
 ## Playtest
 
@@ -45,7 +48,6 @@ Nothing confirmed in game yet this round.
 
 ## Open questions for Krogon
 
-1. How Strafe streams with a crossbow (decision 15): being asked.
 2. Carried over: should the burning ground's and the cloud's hits count for Corruption's on-hit affixes? Should large roots stop a Wind Lance?
 
 ## Next steps
