@@ -2,9 +2,11 @@
 
 **Written:** 2026-11-17 by `/handoff`. 9 commits ahead of `master` with this one, 0 behind. No pull request yet.
 
+**Coordinator update (2026-11-17):** merged into `master` as **PR #74** on Krogon's word ("Merge branch claude/magical-babbage-slwwpn into master using a pull request"). The coordinator raised Orlog to **0.6.0** (on this branch, the PR's last commit), copied decisions 1–12 into `docs/DECISIONS.md`, closed #72 and updated #70 (two left: Snipe and Shackle Shot). The phone page's build checks expect Orlog 0.6.0. The branch is fully in `master` and safe to delete; the next classes round starts a new branch from `master`.
+
 ## Stage
 
-**Ready to merge.**
+**Merged** (PR #74, 2026-11-17).
 
 ## Purpose
 
@@ -52,8 +54,8 @@ Detail in `FEATURES.md` → Amazon skill bar and bow skills.
 
 ## Next steps
 
-1. Pull request into `master`; Krogon merges.
-2. Coordinator: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–12), close #72, update #70 (two left).
+1. ~~Pull request into `master`; Krogon merges.~~ Done (PR #74).
+2. ~~Coordinator: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–12), close #72, update #70 (two left).~~ Done (Orlog 0.6.0).
 3. Next classes rounds: Snipe and Shackle Shot (#70), then the spear skills (#41).
 
 ## Checks
