@@ -41,6 +41,7 @@ Nothing confirmed in game yet this round.
 16. **2026-11-17: a crossbow streams 3 bolts a second, each the same share as a bow's arrow** ("Fewer, same share": 25% → 50% of a normal bolt), over the bow's 6 a second and over 6 a second at half the share. With a crossbow the stream starts as soon as the button is held with a loaded crossbow (no draw), as put in the question.
 17. **2026-11-17: a streaming crossbow slows your walk and drains stamina like the bow** ("Like the bow"), over normal walking with eitr only.
 18. **2026-11-17: when the crossbow stream stops the crossbow is empty and reloads** ("Empty, reloads"), as after any crossbow shot; over staying loaded.
+19. **2026-11-17: first play-test of the rapid fire: "absolutely loving it"** (with his log, build `afcb420`). Only `rf-1` is marked on the phone page; the log shows bow and crossbow streams at the agreed rates. Whether the rest of the checklist passed: asked.
 
 ## Playtest
 

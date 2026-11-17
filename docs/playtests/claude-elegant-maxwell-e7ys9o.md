@@ -45,6 +45,12 @@ This time I read the game's own bow code first, so it's built on how the game re
 14. [ ] (`rf-14`) `orlog_skill Strafe 19` → the details say "each at 50% damage", "Costs 15 eitr to start and 5 eitr a second while firing", and the card's cost is 15. Each arrow hits the troll about half as hard as a full normal shot.
 15. [ ] (`rf-15`) Your verdict: is this the machine gun you had in mind? Are 6 a second, the damage and the cost right? Is anything about the look or sound off (the bow stays in its drawn pose while the arrows leave it)?
 
-### Your feedback
+### Your feedback (2026-11-17)
 
-(none yet)
+Krogon, with his log (build `afcb420`, Valheim 1.0.21): **"absolutely loving it"**. On the phone page only `rf-1` (the card) is marked, Pass.
+
+What the log shows (read by Claude, not marked by Krogon):
+- Bow (`rf-3`, `rf-8`): five streams at level 1, all ended by letting go; 30 arrows in 4.9 s with 5 from the quiver, 17 in 2.8 s with 3, 17 in 2.7 s with 3, 22 in 3.5 s with 4, 13 in 2.1 s with 3: 6 a second and one from the quiver a second. Eitr 10 to start plus about 3 a second (24.6 for 4.9 s).
+- Let go early (`rf-5`): "Strafe released before full draw: a normal shot."
+- Crossbow (`rf-12`): two streams, 20 bolts in 6.5 s with 7 from the quiver, 12 in 4.0 s with 4: 3 a second, one a second. The held-bow stamina drain it used: the bows' draw drain 14 (9 bows share it), halved.
+- Not in the log, so not known: a stream stopped by running out of eitr, arrows or stamina, or by blocking (`rf-7`, `rf-9`, `rf-10`, `rf-11`); the crossbow while reloading (`rf-13`); rank 20 (`rf-14`); the damage numbers (`rf-4`, `rf-6`). No errors from our mods.
