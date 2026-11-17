@@ -16,7 +16,9 @@ Nothing built yet this round.
 
 ## Half-done and known issues
 
-None yet.
+- Built: Strafe's numbers (`amazon_skill_values.csv`, made by `tools/make_orlog_tables.py`), card text, and the stream's timing rules with tests (595 tests); the old volley is removed. **Not built: the firing in the game** (keeping the bow drawn and firing 6 a second, the eitr drain, the quiver). Until then Strafe fires one normal arrow.
+- Blocked: reading the game's own bow code (`ilspycmd` on the stand-in's `assembly_valheim.dll`) was refused by the session's safety check; asked Krogon.
+- Rounding (Claude's slip in decision 14's question: "10 → 15 (+0.25 a level)" doesn't add up; 10 + 0.25 × 19 = 14.75): the table follows the endpoints, in whole numbers: start 10, 10, 11 … 15; drain 3 (levels 1–5), 4 (6–15), 5 (16–20).
 
 ## Decisions
 

@@ -3,7 +3,7 @@ ForkedLightning,Forked Lightning,0,1,1,v1,attack,bow,4,0.25,"The arrow hits an e
 WindLance,Wind Lance,0,1,2,v1,attack,bow,8,-0.25,"A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, passing through enemies and knocking them back"
 Snipe,Snipe,0,1,3,later,attack,bow,0,0,"Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"
 MultipleShot,Multishot,0,2,1,v1,attack,bow,4,1,One shot splits into several arrows in a fan; uses one arrow
-Strafe,Strafe,0,2,2,v1,attack,bow,11,0,One arrow becomes a volley: each arrow flies by itself at a different enemy in view
+Strafe,Strafe,0,2,2,v1,attack,bow,10,0.263,"Hold to rapid-fire: the bow draws once, then keeps firing arrows where you aim for as long as you hold"
 FreezingArrow,Freezing Arrow,0,2,3,v1,attack,bow,9,0.25,Frost damage and a short freeze in an area on impact; bosses are only slowed
 ImmolationArrow,Immolation Arrow,0,3,1,v1,attack,bow,6,0.25,Explodes in fire on impact and leaves the ground burning
 VenomStrike,Venom Strike,0,3,2,v1,attack,bow,7,0.5,"The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"

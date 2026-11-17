@@ -447,33 +447,43 @@ namespace Orlog.Rules
         }
 
         /// <summary>
-        ///     Strafe: which enemy each arrow of the volley flies at (Krogon, 2026-11-16: one arrow becomes a volley, each
-        ///     arrow flying by itself at a different enemy in view; Diablo 2's counts). <paramref name="angles" /> holds, for
-        ///     each candidate enemy (already limited to those in view and in range by the caller), its angle in degrees from
-        ///     the aim. The targets are the <paramref name="maxTargets" /> candidates nearest the aim (equal angles keep their
-        ///     order); the volley has max(<paramref name="minArrows" />, targets) arrows, at least 1; arrow i flies at target
-        ///     (i mod targets), so spare arrows are shared out in order. With no candidates the arrows (max(minArrows, 1))
-        ///     fly straight along the aim. Returns one entry per arrow: the candidate's index in <paramref name="angles" />, or -1.
+        ///     Strafe, remade after Diablo 3's Rapid Fire (Krogon, 2026-11-17): once the bow is fully drawn and the skill
+        ///     button is still held, arrows stream out at <paramref name="perSecond" /> a second. How many arrows of the
+        ///     stream are due after <paramref name="firingSeconds" /> seconds of firing: the first at once, then one each
+        ///     1 / <paramref name="perSecond" /> seconds (6 a second: 1 at 0 s, 6 by 0.84 s, 7 at 1 s). 0 before the stream
+        ///     starts (negative time); with no rate, only the first.
         /// </summary>
-        public static List<int> StrafeTargets(IList<float> angles, int maxTargets, int minArrows)
+        public static int StreamDue(float firingSeconds, float perSecond)
         {
-            int count = angles == null ? 0 : angles.Count;
-            var result = new List<int>();
-            if (count == 0)
+            if (firingSeconds < 0f)
             {
-                for (int i = 0; i < Math.Max(minArrows, 1); i++)
-                {
-                    result.Add(-1);
-                }
-                return result;
+                return 0;
             }
-            var targets = Enumerable.Range(0, count).OrderBy(i => angles[i]).ThenBy(i => i).Take(Math.Max(maxTargets, 1)).ToList();
-            int arrows = Math.Max(Math.Max(minArrows, 1), targets.Count);
-            for (int i = 0; i < arrows; i++)
+            if (perSecond <= 0f)
             {
-                result.Add(targets[i % targets.Count]);
+                return 1;
             }
-            return result;
+            return (int)Math.Floor(firingSeconds * perSecond + 1e-4f) + 1;
+        }
+
+        /// <summary>
+        ///     Strafe: whether arrow <paramref name="index" /> of the stream (0 = the first) takes an arrow from the quiver,
+        ///     at <paramref name="ammoPerSecond" /> from the quiver a second while <paramref name="arrowsPerSecond" /> fly
+        ///     (Krogon, 2026-11-17: "One per second"). The first always does; after it, the one that starts each new
+        ///     second's share (6 a second, 1 from the quiver: arrows 0, 6, 12 …). With no stream rate every arrow does.
+        /// </summary>
+        public static bool StreamTakesAmmo(int index, float arrowsPerSecond, float ammoPerSecond)
+        {
+            if (index <= 0 || arrowsPerSecond <= 0f)
+            {
+                return index >= 0;
+            }
+            if (ammoPerSecond <= 0f)
+            {
+                return false;
+            }
+            float at = index / arrowsPerSecond, before = (index - 1) / arrowsPerSecond;
+            return StreamDue(at, ammoPerSecond) > StreamDue(before, ammoPerSecond);
         }
 
         private static string N(float value)
@@ -522,8 +532,9 @@ namespace Orlog.Rules
                            $"rushes {N(v.Get(id, "range_m", level))} m at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed, along the ground and through every enemy, " +
                            $"staggering them and knocking them back (force {N(v.Get(id, "knockback", level))}). Released early: a normal shot, no eitr";
                 case "Strafe":
-                    return $"Fires a volley for one arrow: up to {N(v.Get(id, "max_targets", level))} enemies in view within {N(v.Get(id, "range_m", level))} m each get an arrow flying straight at them, " +
-                           $"at {N(v.Get(id, "weapon_damage_pct", level))}% damage; at least {N(v.Get(id, "min_arrows", level))} arrows, shared out when there are fewer enemies";
+                    return $"Hold to rapid-fire: after one full draw, fires {N(v.Get(id, "arrows_per_s", level))} arrows a second where you aim for as long as you hold, " +
+                           $"each at {N(v.Get(id, "weapon_damage_pct", level))}% damage. Costs {N(v.Get(id, "mana_cost", level))} eitr to start and {N(v.Get(id, "eitr_per_s", level))} eitr a second while firing; " +
+                           $"uses {N(v.Get(id, "ammo_per_s", level))} arrow a second from the quiver; drains stamina like a drawn bow";
                 case "ImmolationArrow":
                     return $"Explodes on impact: fire damage equal to {Share(v, id, "blast_damage_pct", level, damageMultiplier)} of the shot's damage within {N(v.Get(id, "radius_m", level))} m; " +
                            $"the ground there burns for {N(v.Get(id, "burn_duration_s", level))} s, dealing {Share(v, id, "burn_damage_pct", level, damageMultiplier)} of the shot's damage each second to enemies in it";
