@@ -29,6 +29,10 @@ None yet.
 7. **2026-11-17: each arrow deals 25% of the shot's damage at skill level 1, 50% at 20** ("25% → 50% at level 20"), growing evenly; over 25% at every level and 25% → 75%.
 8. **2026-11-17: the quiver loses one arrow per second of firing** ("One per second"), not one per arrow, nor only the first.
 9. **2026-11-17: the arrows carry the arrow's own damage** ("The arrow's own damage"): fire, frost and poison arrows keep their element, as with the other bow skills; over physical only.
+10. **2026-11-17: you walk slowly while firing** ("Walk slowly"), at the game's slowed pace for a drawn bow; over standing still and moving freely.
+11. **2026-11-17: stamina drains while firing, like holding a drawn bow** ("Like a drawn bow"), on top of the eitr; over no stamina.
+12. **2026-11-17: the eitr cost gets more expensive per level** (his own answer: "get more expensive per level."), over the same at every level and getting cheaper. How much: being asked.
+13. **2026-11-17: the arrows fly like normal arrows** ("Like normal arrows"): normal flight and drop, as from a fully drawn shot; over straight with a little spread and dead straight.
 
 ## Playtest
 
@@ -36,7 +40,7 @@ Nothing to test yet.
 
 ## Open questions for Krogon
 
-Being asked: moving while firing, stamina, whether the eitr cost changes with level, aim and spread.
+Being asked: how much more the eitr cost is per level.
 
 ## Next steps
 
