@@ -15,34 +15,41 @@ This round was written without the game's code open. The thing most likely to be
 
 **The cards**
 
-1. [ ] (`r72-1`) Press `K`, Bow and Crossbow tab. Click **Forked Lightning** → its details read "Lightning strikes the enemy the arrow hits and forks to up to 3 other enemies within 4 m: each strike deals 25% of the shot's damage as lightning". Click **Freezing Arrow** → "Explodes on impact: frost damage equal to 50% of the shot's damage within 3 m, freezing for 2 s (bosses are only slowed)". No big fixed damage numbers anywhere.
-2. [ ] (`r72-2`) Learn one rank of each (`orlog_respec` first if your points are spent), drag Forked Lightning onto slot F1 and Freezing Arrow onto F2.
+1. [x] (`r72-1`) Press `K`, Bow and Crossbow tab. Click **Forked Lightning** → its details read "Lightning strikes the enemy the arrow hits and forks to up to 3 other enemies within 4 m: each strike deals 25% of the shot's damage as lightning". Click **Freezing Arrow** → "Explodes on impact: frost damage equal to 50% of the shot's damage within 3 m, freezing for 2 s (bosses are only slowed)". No big fixed damage numbers anywhere.
+2. [x] (`r72-2`) Learn one rank of each (`orlog_respec` first if your points are spent), drag Forked Lightning onto slot F1 and Freezing Arrow onto F2.
 
 **Forked Lightning**
 
-3. [ ] (`r72-3`) Your test from last time: `spawn Greyling 5 5` (five 4-star greylings, 100 health each). Starter bow and wood arrows, press F1, hold right click to a full draw and shoot one → the one you hit takes the arrow (about 40) and one small lightning number (about 10); three others next to it take about 10 lightning each. **None of them is close to dying from the lightning.**
-4. [ ] (`r72-4`) Shoot again without drawing fully (a quick tap of right click) → a weak arrow and weaker forks: the lightning numbers shrink with the arrow's.
-5. [ ] (`r72-5`) Swap to the Draugr fang bow with needle arrows and shoot a fresh group (`spawn Greydwarf_Elite 4`) at full draw → the arrow hits much harder, and so does each fork (still about a quarter of the arrow's number). A better bow makes the skill better.
-6. [ ] (`r72-6`) Rank 20, the step left over from last round (`r16-8`): `orlog_skill ForkedLightning 19` → the details say "up to 7 other enemies", "100% of the shot's damage" and cost 8.75 eitr. `spawn Greydwarf_Elite 9`, shoot one in the middle → the one you hit and up to seven of the others within reach are struck (never more than seven others), each fork about as hard as the arrow itself.
-7. [ ] (`r72-7`) The other step left over from last round (`r16-7`): a troll with greylings at its feet (`spawn Troll 1`, `spawn Greyling 3`), shoot the troll's body → the greylings touching or beside it are struck (the 4 m counts from its body, not its feet).
+3. [x] (`r72-3`) Your test from last time: `spawn Greyling 5 5` (five 4-star greylings, 100 health each). Starter bow and wood arrows, press F1, hold right click to a full draw and shoot one → the one you hit takes the arrow (about 40) and one small lightning number (about 10); three others next to it take about 10 lightning each. **None of them is close to dying from the lightning.**
+4. [x] (`r72-4`) Shoot again without drawing fully (a quick tap of right click) → a weak arrow and weaker forks: the lightning numbers shrink with the arrow's.
+5. [x] (`r72-5`) Swap to the Draugr fang bow with needle arrows and shoot a fresh group (`spawn Greydwarf_Elite 4`) at full draw → the arrow hits much harder, and so does each fork (still about a quarter of the arrow's number). A better bow makes the skill better.
+6. [x] (`r72-6`) Rank 20, the step left over from last round (`r16-8`): `orlog_skill ForkedLightning 19` → the details say "up to 7 other enemies", "100% of the shot's damage" and cost 8.75 eitr. `spawn Greydwarf_Elite 9`, shoot one in the middle → the one you hit and up to seven of the others within reach are struck (never more than seven others), each fork about as hard as the arrow itself.
+7. [x] (`r72-7`) The other step left over from last round (`r16-7`): a troll with greylings at its feet (`spawn Troll 1`, `spawn Greyling 3`), shoot the troll's body → the greylings touching or beside it are struck (the 4 m counts from its body, not its feet).
 
 **Freezing Arrow**
 
-8. [ ] (`r72-8`) Starter bow and wood arrows again. `spawn Greydwarf_Elite 4` (brutes, 150 health), press F2 and shoot one at full draw → the one you hit takes the arrow (about 40); it and every brute within 3 m also take a frost number about half the arrow's (about 20) and stand frozen for 2 seconds. Nobody dies from one shot. Eitr drops by 9.
-9. [ ] (`r72-9`) `orlog_skill FreezingArrow 19` (rank 20) → the details say "150% of the shot's damage"; shoot a fresh group → the frost number is about one and a half times the arrow's (about 60 with the starter bow).
+8. [x] (`r72-8`) Starter bow and wood arrows again. `spawn Greydwarf_Elite 4` (brutes, 150 health), press F2 and shoot one at full draw → the one you hit takes the arrow (about 40); it and every brute within 3 m also take a frost number about half the arrow's (about 20) and stand frozen for 2 seconds. Nobody dies from one shot. Eitr drops by 9.
+9. [x] (`r72-9`) `orlog_skill FreezingArrow 19` (rank 20) → the details say "150% of the shot's damage"; shoot a fresh group → the frost number is about one and a half times the arrow's (about 60 with the starter bow).
 
 **The rest still works**
 
-10. [ ] (`r72-10`) Put Multishot and Wind Lance on slots and fire each once → Multishot fans out its arrows, a charged Wind Lance flies through a group, both as before.
-11. [ ] (`r72-11`) No red error lines in the console (F5) while doing the steps above.
+10. [x] (`r72-10`) Put Multishot and Wind Lance on slots and fire each once → Multishot fans out its arrows, a charged Wind Lance flies through a group, both as before.
+11. [x] (`r72-11`) No red error lines in the console (F5) while doing the steps above.
 
 **Your verdict**
 
-12. [ ] (`r72-12`) How do the two skills feel now: at skill level 1 (steps 3 and 8), and at skill level 20 (steps 6 and 9)? Too weak, too strong, or about right? If a number should change, say which way and I'll change the table.
+12. [x] (`r72-12`) How do the two skills feel now: at skill level 1 (steps 3 and 8), and at skill level 20 (steps 6 and 9)? Too weak, too strong, or about right? If a number should change, say which way and I'll change the table.
 
-### Your feedback
+### Your feedback (2026-11-17)
 
-(waiting)
+- Steps 1–12 (`r72-1` … `r72-12`): **all Pass** on the phone page (marked 2026-11-17, no notes). In chat: "testing has passed."
+- Step 12, his verdict on how the two skills feel at skill level 1 and 20: Pass, no note.
+
+### What changed after the feedback
+- Nothing: no step failed.
+
+### Final play-test (2026-11-17)
+- Passed (single player). Forked Lightning's two steps left over from PR #71 (`r72-6`, `r72-7`) passed with it. Two players: not tried.
 
 ## Round: Strafe, Immolation Arrow and Venom Strike (2026-11-16)
 
@@ -57,33 +64,40 @@ This round was written without the game's code open. The thing most likely to be
 
 **The cards**
 
-1. [ ] (`r70-1`) Press `K`, Bow and Crossbow tab: Strafe, Immolation Arrow and Venom Strike no longer say "Coming later" (Snipe and Shackle Shot still do). Their details read: Strafe "Fires a volley for one arrow: up to 5 enemies in view within 16.5 m each get an arrow flying straight at them, at 75% damage; at least 2 arrows, shared out when there are fewer enemies" (11 eitr); Immolation Arrow "Explodes on impact: fire damage equal to 25% of the shot's damage within 3 m; the ground there burns for 4 s, dealing 10% of the shot's damage each second to enemies in it" (6 eitr); Venom Strike "Bursts into a poison cloud reaching 3 m around where it lands for 4 s: everything in it is poisoned for 25% of the shot's damage, again each second it stays" (7 eitr).
-2. [ ] (`r70-2`) Learn one rank of each and drag them onto slots.
+1. [x] (`r70-1`) Press `K`, Bow and Crossbow tab: Strafe, Immolation Arrow and Venom Strike no longer say "Coming later" (Snipe and Shackle Shot still do). Their details read: Strafe "Fires a volley for one arrow: up to 5 enemies in view within 16.5 m each get an arrow flying straight at them, at 75% damage; at least 2 arrows, shared out when there are fewer enemies" (11 eitr); Immolation Arrow "Explodes on impact: fire damage equal to 25% of the shot's damage within 3 m; the ground there burns for 4 s, dealing 10% of the shot's damage each second to enemies in it" (6 eitr); Venom Strike "Bursts into a poison cloud reaching 3 m around where it lands for 4 s: everything in it is poisoned for 25% of the shot's damage, again each second it stays" (7 eitr).
+2. [x] (`r70-2`) Learn one rank of each and drag them onto slots.
 
 **Strafe**
 
-3. [ ] (`r70-3`) `spawn Greydwarf_Elite 4`, back off about 10 m so all four are on screen, press Strafe's slot key, hold right click to a full draw and release → four arrows leave at once, one flying straight at each brute. Each hit is a little weaker than a normal arrow (about 30 with the starter bow). One arrow leaves the quiver. Eitr drops by 11.
-4. [ ] (`r70-4`) One enemy alone → two arrows, both at it.
-5. [ ] (`r70-5`) With no enemy on screen (or all further than about 16 m) → two arrows fly where you aim, like normal arrows.
-6. [ ] (`r70-6`) With enemies in front of you and behind you → only the ones you can see on screen get an arrow.
-7. [ ] (`r70-7`) `orlog_skill Strafe 19` (rank 20) → the details say "up to 10 enemies" and "at least 7 arrows". `spawn Greyling 12` in front of you → ten of them get an arrow each. A troll alone (`spawn Troll 1`) takes seven arrows.
+3. [x] (`r70-3`) `spawn Greydwarf_Elite 4`, back off about 10 m so all four are on screen, press Strafe's slot key, hold right click to a full draw and release → four arrows leave at once, one flying straight at each brute. Each hit is a little weaker than a normal arrow (about 30 with the starter bow). One arrow leaves the quiver. Eitr drops by 11.
+4. [x] (`r70-4`) One enemy alone → two arrows, both at it.
+5. [x] (`r70-5`) With no enemy on screen (or all further than about 16 m) → two arrows fly where you aim, like normal arrows.
+6. [x] (`r70-6`) With enemies in front of you and behind you → only the ones you can see on screen get an arrow.
+7. [x] (`r70-7`) `orlog_skill Strafe 19` (rank 20) → the details say "up to 10 enemies" and "at least 7 arrows". `spawn Greyling 12` in front of you → ten of them get an arrow each. A troll alone (`spawn Troll 1`) takes seven arrows.
 
 **Immolation Arrow**
 
-8. [ ] (`r70-8`) `spawn Greydwarf_Elite 4`, shoot one → the arrow hits as usual and there is a burst of fire. Every brute within 3 m takes a fire number about a quarter of the arrow's (about 10 with the starter bow) and burns. Then for 4 seconds an orange ring and glow mark the burning ground and the brutes standing in it take a small fire hit each second (about 4). One that walks out stops being hit. Eitr drops by 6.
-9. [ ] (`r70-9`) Shoot the ground between a group → the blast and the burning ground appear there.
-10. [ ] (`r70-10`) `orlog_skill ImmolationArrow 19` → the details say 100% and 30%. The blast is about as hard as the arrow itself.
+8. [x] (`r70-8`) `spawn Greydwarf_Elite 4`, shoot one → the arrow hits as usual and there is a burst of fire. Every brute within 3 m takes a fire number about a quarter of the arrow's (about 10 with the starter bow) and burns. Then for 4 seconds an orange ring and glow mark the burning ground and the brutes standing in it take a small fire hit each second (about 4). One that walks out stops being hit. Eitr drops by 6.
+9. [x] (`r70-9`) Shoot the ground between a group → the blast and the burning ground appear there.
+10. [x] (`r70-10`) `orlog_skill ImmolationArrow 19` → the details say 100% and 30%. The blast is about as hard as the arrow itself.
 
 **Venom Strike**
 
-11. [ ] (`r70-11`) `spawn Greydwarf_Elite 4`, shoot one (or the ground between them) → the arrow hits as usual. A green ring and glow hang there for 4 seconds. Everything inside is poisoned (green numbers ticking down, about 10 in all with the starter bow). A creature that walks in during the 4 seconds is poisoned too. Eitr drops by 7.
-12. [ ] (`r70-12`) `orlog_skill VenomStrike 19` → the details say 100% and cost 16.5 eitr. The poison is clearly stronger.
+11. [x] (`r70-11`) `spawn Greydwarf_Elite 4`, shoot one (or the ground between them) → the arrow hits as usual. A green ring and glow hang there for 4 seconds. Everything inside is poisoned (green numbers ticking down, about 10 in all with the starter bow). A creature that walks in during the 4 seconds is poisoned too. Eitr drops by 7.
+12. [x] (`r70-12`) `orlog_skill VenomStrike 19` → the details say 100% and cost 16.5 eitr. The poison is clearly stronger.
 
 **Safety and your verdict**
 
-13. [ ] (`r70-13`) Stand in your own burning ground and poison cloud → you take no damage (a tamed animal neither).
-14. [ ] (`r70-14`) Your verdict: do the three skills feel right at skill level 1 and at 20, and how do the ring, the glow and the effect each second look and sound? No red error lines in the console (F5). Send `BepInEx/LogOutput.log` if anything looks off.
+13. [x] (`r70-13`) Stand in your own burning ground and poison cloud → you take no damage (a tamed animal neither).
+14. [x] (`r70-14`) Your verdict: do the three skills feel right at skill level 1 and at 20, and how do the ring, the glow and the effect each second look and sound? No red error lines in the console (F5). Send `BepInEx/LogOutput.log` if anything looks off.
 
-### Your feedback
+### Your feedback (2026-11-17)
 
-(waiting)
+- Steps 1–14 (`r70-1` … `r70-14`): **all Pass** on the phone page (marked 2026-11-17, no notes). In chat: "testing has passed."
+- Step 14, his verdict on the feel and on the ring, glow and effects: Pass, no note. No log was sent.
+
+### What changed after the feedback
+- Nothing: no step failed. (Before his play-test, a code review led to three fixes: Strafe skips enemies behind the bow; the burning ground lies on the ground under the hit; a small arrow impact each second instead of an explosion. `FEATURES.md` → changelog, 2026-11-17.)
+
+### Final play-test (2026-11-17)
+- Passed (single player). Left open by the code review and not looked at separately (no log): the game's poison not adding up in the cloud, fire arriving as burning, Corruption's on-hit affixes on area hits. Two players: `PLAYTEST.md` → Session 2, 2j step 8.

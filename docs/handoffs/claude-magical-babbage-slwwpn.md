@@ -1,29 +1,29 @@
 # Handoff: `claude/magical-babbage-slwwpn`
 
-**Written:** 2026-11-17, during the round (not yet by `/handoff`). Ahead of `master`, 0 behind. No pull request yet.
+**Written:** 2026-11-17 by `/handoff`. 9 commits ahead of `master` with this one, 0 behind. No pull request yet.
 
 ## Stage
 
-**Waiting for Krogon's playtest** (two checklists: the skill damage remake, and three new bow skills).
+**Ready to merge.**
 
 ## Purpose
 
-The skill damage round ([#72](https://github.com/krogon-games/JotunnModStub/issues/72)): remake how the Amazon's skills work out their damage, and finish Forked Lightning's last two play-test steps. Widened by Krogon on 2026-11-16 to three of the bow skills still to build ([#70](https://github.com/krogon-games/JotunnModStub/issues/70)): Strafe, Immolation Arrow and Venom Strike.
+The skill damage round ([#72](https://github.com/krogon-games/JotunnModStub/issues/72)): remake how the Amazon's skills work out their damage. Widened by Krogon to three of the bow skills still to build ([#70](https://github.com/krogon-games/JotunnModStub/issues/70)): Strafe, Immolation Arrow and Venom Strike.
 
 ## Done
 
-Nothing confirmed in game yet.
+Krogon's single-player play-tests (2026-11-17, "testing has passed"; 26 steps, all Pass, no notes):
+- **Skill damage scales off the weapon:** Freezing Arrow's blast 50% → 150% and each of Forked Lightning's forks 25% → 100% of the shot's own damage; the damage scale table is gone. Forked Lightning's two steps left over from PR #71 passed with it.
+- **Strafe, Immolation Arrow and Venom Strike.**
 
 ## Half-done and known issues
 
-Built, untested (detail in `FEATURES.md` → Amazon skill bar and bow skills):
-- **Skill damage scales off the weapon (#72).** Freezing Arrow's frost blast deals 50% → 150% of the shot's own damage, each of Forked Lightning's forks 25% → 100%. The damage scale table, its code, generator and tests are removed; `SkillDamageMultiplier` multiplies the skills' shares.
-- **Strafe, Immolation Arrow and Venom Strike (#70)**, built by subagents (tables and rules; game code; docs), checked by the main session (tests, builds, every diff read). No Harmony patch added: three existing ones do more. The burning ground and the poison cloud are a new small object on the shooter's game (`Orlog/Content/GroundArea.cs`).
-- **Written without the game's code open** (no copy to read in this session; installing the decompiler was blocked). Assumed, to be shown by the play-test and the new log lines: the damage the game hands over as the arrow is made includes the draw and the Bows skill; fire hits add up and poison hits refresh; the vanilla effects named for the fire and poison areas exist.
-- **Code review of the three new skills (a second model, 2026-11-17).** Fixed: Strafe skipped no enemy behind the bow; the burning ground hung in the air after a hit on a tall creature; an explosion replayed every second. Left for the play-test (`FEATURES.md` → known issues): the game's poison doesn't add up (about one and a half doses over the cloud's 4 seconds, not four); fire arrives as burning over some seconds; Corruption's on-hit affixes run on every area hit with the weapon in hand; a Strafe volley on one enemy is up to seven arrows at 75%.
-- **Claude's choices, open to change:** every fork of one shot deals the same; a half-drawn shot gives weaker skill damage; Strafe picks enemies on screen, nearest the aim first, with no check for walls in the way and no lead on a running enemy; the areas' look (a ring, a glow, a vanilla effect each second); area hits don't train the Bows skill.
-- **Not built:** Snipe and Shackle Shot (still "Coming later"); Immolation Arrow's Diablo 2 casting delay (no cooldowns yet). The spear skills' table rows still hold Diablo 2's damage points (#41).
-- Nothing tried with two players.
+Detail in `FEATURES.md` → Amazon skill bar and bow skills.
+- **Left open by the code review, not looked at in the play-test (no log sent):** the game's poison doesn't add up in the cloud; fire arrives as burning; Corruption's on-hit affixes run on every area hit, with the weapon in hand (`docs/mod-compatibility.md`); a Strafe volley on one enemy is up to seven arrows at 75%.
+- Written without the game's code open (the decompiler couldn't be installed).
+- Claude's choices, open to change: Strafe has no check for walls and no lead; the areas' look.
+- Not built: Snipe, Shackle Shot; the spear skills' shares (#41).
+- Nothing tried with two players (`PLAYTEST.md` → Session 2, 2j step 8).
 
 ## Decisions
 
@@ -38,36 +38,33 @@ Built, untested (detail in `FEATURES.md` → Amazon skill bar and bow skills):
 9. **2026-11-16: Immolation Arrow: blast 25% → 100% of the shot's damage, burning ground 10% → 30% a second** ("Blast 25%→100%, fire 10%→30% a second", over a 50% → 150% blast and over a 25% → 75% patch). As put in the question: the blast reaches 3 m, the ground burns for 4 seconds (Diablo 2's) and hurts enemies standing in it every second; eitr 6 + 0.25 per level (Diablo 2's).
 10. **2026-11-16: Venom Strike's cloud poisons for 25% → 100% of the shot's damage** ("25% at level 1, 100% at 20", over 50% → 150% and 100% → 233%). As put in the question: a cloud 3 m in every direction hangs for 4 seconds where the arrow lands; everything inside is poisoned (damage over time) and re-poisoned each second it stays; no blast; the arrow hits as usual.
 11. **2026-11-16: Venom Strike costs 7 eitr, +0.5 per level** ("7, +0.5 per level", Diablo 2's Plague Javelin's; over Poison Javelin's 4 + 0.25 and Immolation Arrow's 6 + 0.25).
+12. **2026-11-17: both play-tests passed; end the session** ("testing has passed. lets move towards ending session"; typed with `/handoff`). On the phone page all 26 steps are marked Pass with no notes: `r72-1` … `r72-12` (skill damage) and `r70-1` … `r70-14` (Strafe, Immolation Arrow, Venom Strike).
 
 ## Playtest
 
-`docs/playtests/claude-magical-babbage-slwwpn.md`, both rounds also on the phone page (its first two sections):
-1. Skill damage: 12 steps (`r72-1` … `r72-12`), with Forked Lightning's two steps left over from PR #71 (`r72-6`, `r72-7`).
-2. Strafe, Immolation Arrow, Venom Strike: 14 steps (`r70-1` … `r70-14`).
-
-No feedback yet.
+`docs/playtests/claude-magical-babbage-slwwpn.md`: **passed**, both rounds (12 + 14 steps). The rounds' steps are off the phone page; the two-player step is on it (`mpe-2j-8`).
 
 ## Open questions for Krogon
 
-1. After the play-tests: do the skills feel right at skill level 1 and at 20 (`r72-12`, `r70-14`), and is the areas' look good enough?
+1. Should the burning ground's and the cloud's hits count for Corruption's on-hit affixes (life steal and the rest)?
 2. Still open from PR #71: should large roots stop a Wind Lance?
 3. Snipe's and Shackle Shot's details, in their round.
 
 ## Next steps
 
-1. Krogon play-tests both rounds; Claude reads his marks from the phone page and fixes what he finds.
-2. Final play-test, then `/handoff` and a pull request into `master`.
-3. Coordinator at merge: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–11), close #72, update #70 (two bow skills left).
-4. Next classes rounds: Snipe and Shackle Shot (#70), then the spear skills (#41); each new skill's share of the weapon's damage is agreed there.
+1. Pull request into `master`; Krogon merges.
+2. Coordinator: version bump (Orlog), `STATUS.md`, `DECISIONS.md` (decisions 1–12), close #72, update #70 (two left).
+3. Next classes rounds: Snipe and Shackle Shot (#70), then the spear skills (#41).
 
 ## Checks
 
-Run during the round, not yet by `/handoff`:
-- Build: PASS (593 tests; Orlog and CraftingOverhaul build, 0 errors).
+- Build: PASS (593 tests; Orlog builds, 0 errors).
 - Version: gameplay changed: version bump needed at merge (Orlog). The branch changed no version.
-- In-game: needs Krogon's playtest.
-- The others: not run yet (`/handoff` runs them).
+- Multiplayer sync: PASS, read in code, not tested (no new setting, message or saved key; hits use the game's own damage message).
+- Assets and names: PASS (CSVs embedded by wildcard; the four vanilla effect items are in the game dump; no new tokens).
+- FEATURES.md: PASS (no patch target added or removed).
+- In-game: PASSED in Krogon's single-player play-tests; two players untested.
 
 ## Merge notes
 
-**Not ready to merge:** waiting for Krogon's play-test. **Gameplay changed: version bump needed at merge: Orlog.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`. One data table deleted: `Orlog/Data/skill_damage_scale.csv`. One new code file: `Orlog/Content/GroundArea.cs`.
+**Ready to merge: yes** (final play-test passed, no check failed, level with `master`, pushed). **Gameplay changed: version bump needed at merge: Orlog.** No other remote branch has unmerged commits. Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`, `docs/mod-compatibility.md`.
