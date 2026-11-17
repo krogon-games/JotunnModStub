@@ -73,7 +73,11 @@ namespace Orlog.Content
         {
             Safe.Run("dress a ground area", () =>
             {
-                Effect();
+                // The cloud bursts with its own effect; the burning ground follows a blast that has just played one.
+                if (m_poison)
+                {
+                    Effect(true);
+                }
                 var light = gameObject.AddComponent<Light>();
                 light.type = LightType.Point;
                 light.color = AreaColour;
@@ -106,10 +110,16 @@ namespace Orlog.Content
             });
         }
 
-        /// <summary>The vanilla impact effect for the area's kind, logged once per session.</summary>
-        private void Effect()
+        /// <summary>
+        ///     A vanilla impact effect at the area: the cloud's burst at its start (the ooze bomb's), and at each later hit
+        ///     the small one of a poison or fire arrow (an explosion every second would be too much). The first one of each
+        ///     kind is logged, once per session.
+        /// </summary>
+        private void Effect(bool start)
         {
-            bool found = m_poison ? BowSkills.ImpactEffect("BombOoze", "ArrowPoison", m_point) : BowSkills.ImpactEffect("StaffFireball", "ArrowFire", m_point);
+            bool found = m_poison
+                ? (start ? BowSkills.ImpactEffect("BombOoze", "ArrowPoison", m_point) : BowSkills.ImpactEffect("ArrowPoison", null, m_point))
+                : BowSkills.ImpactEffect("ArrowFire", null, m_point);
             if (m_poison ? s_loggedPoison : s_loggedFire)
             {
                 return;
@@ -123,7 +133,7 @@ namespace Orlog.Content
                 s_loggedFire = true;
             }
             Jotunn.Logger.LogInfo(found
-                ? $"Orlog: the {(m_poison ? "poison cloud" : "burning ground")} plays the vanilla {(m_poison ? "BombOoze / ArrowPoison" : "StaffFireball / ArrowFire")} impact effect."
+                ? $"Orlog: the {(m_poison ? "poison cloud" : "burning ground")} plays the vanilla {(m_poison ? "BombOoze / ArrowPoison" : "ArrowFire")} impact effect."
                 : $"Orlog: no vanilla impact effect found for the {(m_poison ? "poison cloud" : "burning ground")}; it shows only its light and ring.");
         }
 
@@ -146,7 +156,7 @@ namespace Orlog.Content
                 Safe.Run("hurt enemies in a ground area", Hit);
                 if (m_hitsDone > 1 || !m_firstAtOnce)
                 {
-                    Safe.Run("show a ground area's hit", Effect);
+                    Safe.Run("show a ground area's hit", () => Effect(false));
                 }
             }
             if (m_light && m_duration > 0f)
@@ -180,6 +190,8 @@ namespace Orlog.Content
                 }
                 hit.m_point = target.GetCenterPoint();
                 hit.m_dir = Vector3.up;
+                // Marked as an area hit, like the blast's (Explode).
+                hit.m_radius = m_radius;
                 hit.m_ranged = true;
                 hit.m_skill = Skills.SkillType.Bows;
                 hit.m_skillRaiseAmount = 0f;

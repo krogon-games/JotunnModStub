@@ -190,8 +190,12 @@ namespace Orlog.Content
                         WindLance.Launch(projectile, level, v, ref velocity, hit);
                         break;
                     case "Strafe":
-                        hit.m_damage.Modify(v.Get(id, "weapon_damage_pct", level) / 100f);
-                        AimStrafe(projectile, ref velocity);
+                        // If the volley couldn't be planned the shot stays one normal arrow, at its full damage.
+                        if (s_strafeTargets != null)
+                        {
+                            hit.m_damage.Modify(v.Get(id, "weapon_damage_pct", level) / 100f);
+                            AimStrafe(projectile, ref velocity);
+                        }
                         break;
                 }
             }
@@ -229,6 +233,11 @@ namespace Orlog.Content
                     }
                     Vector3 at = c.GetCenterPoint();
                     if ((at - centre).sqrMagnitude > range * range)
+                    {
+                        continue;
+                    }
+                    // The camera sits behind the player: an enemy between the two is on screen but behind the bow.
+                    if (Vector3.Dot(at - centre, camera.transform.forward) <= 0f)
                     {
                         continue;
                     }
@@ -435,9 +444,33 @@ namespace Orlog.Content
             if (fire)
             {
                 // Then the ground there burns (Krogon, 2026-11-16): the first hit a second after the impact.
-                GroundArea.Begin(owner, "Immolation Arrow", tag.Level, point, radius, v.Get(tag.SkillId, "burn_duration_s", tag.Level),
+                GroundArea.Begin(owner, "Immolation Arrow", tag.Level, GroundBelow(point), radius, v.Get(tag.SkillId, "burn_duration_s", tag.Level),
                     Share(v, tag, "burn_damage_pct"), false, false, tag.ShotDamage, v.Get(tag.SkillId, "burn_damage_pct", tag.Level));
             }
+        }
+
+        /// <summary>
+        ///     The ground (or floor, rock, building) straight under a hit point: an arrow that struck a troll's chest or a
+        ///     flying creature leaves its burning ground below, not in the air. Creatures' own bodies are looked through;
+        ///     with nothing solid found under it, the point itself.
+        /// </summary>
+        private static Vector3 GroundBelow(Vector3 point)
+        {
+            // Start a little above, so a hit that is already on the ground finds that ground.
+            const float lift = 0.5f;
+            const float reach = 100f;
+            Vector3 found = point;
+            float nearest = float.MaxValue;
+            foreach (var below in Physics.RaycastAll(point + Vector3.up * lift, Vector3.down, reach, Projectile.s_rayMaskSolids))
+            {
+                if (!below.collider || below.collider.GetComponentInParent<Character>() || below.distance >= nearest)
+                {
+                    continue;
+                }
+                nearest = below.distance;
+                found = below.point;
+            }
+            return found;
         }
 
         /// <summary>Venom Strike: a poison cloud where the arrow landed, first hit at once (Krogon, 2026-11-16).</summary>
