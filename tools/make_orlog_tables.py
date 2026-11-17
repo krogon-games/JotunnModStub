@@ -90,7 +90,7 @@ AMAZON = [
         ("Wind Lance", "v1", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, passing through enemies and knocking them back"),
         ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
         ("Multishot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
-        ("Strafe", "v1", "attack", "bow", "Hold to rapid-fire: the bow draws once, then keeps firing arrows where you aim for as long as you hold"),
+        ("Strafe", "v1", "attack", "bow", "Hold to rapid-fire: the bow draws once (a crossbow needs only to be loaded), then keeps firing where you aim for as long as you hold"),
         ("Freezing Arrow", "v1", "attack", "bow", "Frost damage and a short freeze in an area on impact; bosses are only slowed"),
         ("Immolation Arrow", "v1", "attack", "bow", "Explodes in fire on impact and leaves the ground burning"),
         ("Venom Strike", "v1", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
@@ -167,6 +167,8 @@ NEW_SKILLS = {
         ("eitr_per_s", "flat", ("line", 3, 5, "2026-11-17")),
         ("weapon_damage_pct", "%", ("line", 25, 50, "2026-11-17")),
         ("arrows_per_s", "count", ("flat", 6, "2026-11-17")),
+        # Crossbows too (decisions 15-16): "Fewer, same share", 3 bolts a second.
+        ("crossbow_per_s", "count", ("flat", 3, "2026-11-17")),
         ("ammo_per_s", "count", ("flat", 1, "2026-11-17")),
     ]),
     # Venom Strike is the user's own skill (2026-11-16, docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 10 and 11):

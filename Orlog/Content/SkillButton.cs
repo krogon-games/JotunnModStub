@@ -73,7 +73,7 @@ namespace Orlog.Content
         [HarmonyPatch(typeof(Player), nameof(Player.SetControls))]
         private static class Controls
         {
-            private static void Prefix(Player __instance, ref bool attack, ref bool attackHold, ref bool block, ref bool blockHold)
+            private static void Prefix(Player __instance, ref bool attack, ref bool attackHold, ref bool block, ref bool blockHold, ref bool run)
             {
                 if (__instance != Player.m_localPlayer || !Progress.Ready || Attributes.ClassOf(__instance) == null)
                 {
@@ -82,6 +82,11 @@ namespace Orlog.Content
                 try
                 {
                     Apply(__instance, ref attack, ref attackHold, ref block, ref blockHold);
+                    // A crossbow's Strafe stream: no running, as with a drawn bow (Krogon, 2026-11-17).
+                    if (Strafe.NoRunning)
+                    {
+                        run = false;
+                    }
                 }
                 catch (System.Exception ex)
                 {
@@ -158,7 +163,10 @@ namespace Orlog.Content
                         s_pendingSince = Time.time;
                         block = false;
                         blockHold = false;
-                        attackHold = true;
+                        // A bow stays drawn; a crossbow's own shot stays held back.
+                        bool crossbow = Strafe.IsCrossbow(player.GetCurrentWeapon());
+                        attack &= !crossbow;
+                        attackHold = !crossbow;
                         Strafe.Hold(player, skill);
                         return;
                     }
@@ -217,6 +225,14 @@ namespace Orlog.Content
                 if (ActiveSkillRules.Charges(skill.Id))
                 {
                     Charge(player, skill, pressed, ref attack, ref attackHold);
+                    return;
+                }
+                if (skill.Id == Strafe.Id && Strafe.IsCrossbow(player.GetCurrentWeapon()))
+                {
+                    // A crossbow: hold its own shot back; the stream starts once it is loaded (Krogon, 2026-11-17).
+                    attack = false;
+                    attackHold = false;
+                    Strafe.Hold(player, skill);
                     return;
                 }
                 attack |= pressed;

@@ -16,8 +16,8 @@ Nothing confirmed in game yet this round.
 
 ## Half-done and known issues
 
-- **Built, untested:** Strafe as rapid fire (`Orlog/Content/Strafe.cs`; numbers in `amazon_skill_values.csv`; rules `StreamDue`, `StreamTakesAmmo`, tested; 595 tests). Written with the game's 1.0.14 code open (decompiled on Krogon's word, "yes, decompile the game's code for this"; the first try was refused by the session's safety check, and the tool needed .NET roll-forward). New patch: `Humanoid.StartAttack` prefix.
-- Claude's choices, open to change: each arrow's push and Bows-skill training shrink with its share; the bow wears once a second (with the quiver's arrow); let go before full draw = one normal arrow, no eitr (as Wind Lance); the bow stays in its drawn pose while the arrows leave it.
+- **Built, untested:** Strafe as rapid fire, with bows and (decisions 15–18) crossbows (`Orlog/Content/Strafe.cs`; numbers in `amazon_skill_values.csv`; rules `StreamDue`, `StreamTakesAmmo`, tested; 595 tests). Written with the game's 1.0.14 code open (decompiled on Krogon's word, "yes, decompile the game's code for this"; the first try was refused by the session's safety check, and the tool needed .NET roll-forward). New patch: `Humanoid.StartAttack` prefix.
+- Claude's choices, open to change: each arrow's push and Bows-skill training shrink with its share; the bow wears once a second (with the quiver's arrow); let go before full draw = one normal arrow, no eitr (as Wind Lance); a crossbow's stream doesn't recoil each bolt; a crossbow's stamina drain is the game's bows' draw drain (the most common value), held-bow rules; the bow stays in its drawn pose while the arrows leave it.
 - Rounding (Claude's slip in decision 14's question: "10 → 15 (+0.25 a level)" doesn't add up; 10 + 0.25 × 19 = 14.75): the table follows the endpoints, in whole numbers: start 10, 10, 11 … 15; drain 3 (levels 1–5), 4 (6–15), 5 (16–20).
 - Not tried with two players (`PLAYTEST.md` → Session 2, 2j step 8, updated).
 
@@ -44,7 +44,7 @@ Nothing confirmed in game yet this round.
 
 ## Playtest
 
-`docs/playtests/claude-elegant-maxwell-e7ys9o.md`: round "Strafe as rapid fire", 14 steps, also on the phone page (`rf-1` … `rf-14`). Waiting for Krogon.
+`docs/playtests/claude-elegant-maxwell-e7ys9o.md`: round "Strafe as rapid fire", 15 steps, also on the phone page (`rf-1` … `rf-15`). Waiting for Krogon.
 
 ## Open questions for Krogon
 

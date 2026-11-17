@@ -448,6 +448,7 @@ namespace CraftingOverhaul.Tests
             for (int level = 1; level <= 20; level++)
             {
                 Assert.Equal(6f, v.Get("Strafe", "arrows_per_s", level));
+                Assert.Equal(3f, v.Get("Strafe", "crossbow_per_s", level));
                 Assert.Equal(1f, v.Get("Strafe", "ammo_per_s", level));
                 if (level > 1)
                 {
@@ -473,6 +474,9 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(6, ActiveSkillRules.StreamDue(0.84f, 6f));
             Assert.Equal(7, ActiveSkillRules.StreamDue(1f, 6f));
             Assert.Equal(13, ActiveSkillRules.StreamDue(2f, 6f));
+            // A crossbow: 3 a second (Krogon, 2026-11-17), and one bolt a second from the quiver: bolts 0, 3, 6.
+            Assert.Equal(4, ActiveSkillRules.StreamDue(1f, 3f));
+            Assert.Equal(new[] { 0, 3, 6 }, Enumerable.Range(0, 9).Where(i => ActiveSkillRules.StreamTakesAmmo(i, 3f, 1f)).ToArray());
             // No rate: only the first.
             Assert.Equal(1, ActiveSkillRules.StreamDue(5f, 0f));
         }
@@ -495,8 +499,8 @@ namespace CraftingOverhaul.Tests
         public void NewBowSkillTooltips()
         {
             var v = Values();
-            Assert.Equal("Hold to rapid-fire: after one full draw, fires 6 arrows a second where you aim for as long as you hold, each at 25% damage. " +
-                         "Costs 10 eitr to start and 3 eitr a second while firing; uses 1 arrow a second from the quiver; drains stamina like a drawn bow",
+            Assert.Equal("Hold to rapid-fire: after one full draw, fires 6 arrows a second where you aim for as long as you hold (a loaded crossbow: 3 bolts a second), " +
+                         "each at 25% damage. Costs 10 eitr to start and 3 eitr a second while firing; uses 1 arrow or bolt a second; you walk and lose stamina as with a drawn bow",
                 ActiveSkillRules.Describe("Strafe", v, 1, 10f, 25f));
             Assert.Contains("each at 50% damage. Costs 15 eitr to start and 5 eitr a second", ActiveSkillRules.Describe("Strafe", v, 20, 1f, 25f));
             Assert.Equal("Explodes on impact: fire damage equal to 25% of the shot's damage within 3 m; " +

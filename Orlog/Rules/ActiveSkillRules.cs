@@ -532,9 +532,10 @@ namespace Orlog.Rules
                            $"rushes {N(v.Get(id, "range_m", level))} m at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed, along the ground and through every enemy, " +
                            $"staggering them and knocking them back (force {N(v.Get(id, "knockback", level))}). Released early: a normal shot, no eitr";
                 case "Strafe":
-                    return $"Hold to rapid-fire: after one full draw, fires {N(v.Get(id, "arrows_per_s", level))} arrows a second where you aim for as long as you hold, " +
-                           $"each at {N(v.Get(id, "weapon_damage_pct", level))}% damage. Costs {N(v.Get(id, "mana_cost", level))} eitr to start and {N(v.Get(id, "eitr_per_s", level))} eitr a second while firing; " +
-                           $"uses {N(v.Get(id, "ammo_per_s", level))} arrow a second from the quiver; drains stamina like a drawn bow";
+                    return $"Hold to rapid-fire: after one full draw, fires {N(v.Get(id, "arrows_per_s", level))} arrows a second where you aim for as long as you hold " +
+                           $"(a loaded crossbow: {N(v.Get(id, "crossbow_per_s", level))} bolts a second), each at {N(v.Get(id, "weapon_damage_pct", level))}% damage. " +
+                           $"Costs {N(v.Get(id, "mana_cost", level))} eitr to start and {N(v.Get(id, "eitr_per_s", level))} eitr a second while firing; " +
+                           $"uses {N(v.Get(id, "ammo_per_s", level))} arrow or bolt a second; you walk and lose stamina as with a drawn bow";
                 case "ImmolationArrow":
                     return $"Explodes on impact: fire damage equal to {Share(v, id, "blast_damage_pct", level, damageMultiplier)} of the shot's damage within {N(v.Get(id, "radius_m", level))} m; " +
                            $"the ground there burns for {N(v.Get(id, "burn_duration_s", level))} s, dealing {Share(v, id, "burn_damage_pct", level, damageMultiplier)} of the shot's damage each second to enemies in it";

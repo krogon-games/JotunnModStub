@@ -22,8 +22,16 @@ namespace Orlog.Content
     ///         the game shoots nothing more, and the game's own shot is held back while a stream runs
     ///         (<see cref="HoldRelease" />).
     ///     </para>
-    ///     Released before full draw, Strafe is a normal shot and costs no eitr (as Wind Lance released early). Bows only:
-    ///     a crossbow, which has no draw, shoots a normal bolt.
+    ///     Released before full draw, Strafe is a normal shot and costs no eitr (as Wind Lance released early).
+    ///     <para>
+    ///         Crossbows too (Krogon, 2026-11-17, decisions 15–18): with the skill button held the game's own shot is held
+    ///         back, and the stream starts as soon as the crossbow is loaded, <c>crossbow_per_s</c> bolts a second at the same
+    ///         share. A crossbow has no draw, so what a drawn bow does by itself is done here: no running (the controls'
+    ///         run is turned off, as <c>Humanoid.CheckRun</c> does for a drawn bow) and the held bow's stamina drain
+    ///         (<see cref="HeldBowDrain" />). Bolts that take from the quiver go through <c>Attack.UseAmmo</c> and
+    ///         <c>Attack.ProjectileAttackTriggered</c>, not <c>OnAttackTrigger</c>, which would unload the crossbow after the
+    ///         first bolt (and push you back each time); when the stream ends the crossbow is unloaded and reloads.
+    ///     </para>
     /// </summary>
     internal static class Strafe
     {
@@ -42,6 +50,9 @@ namespace Orlog.Content
         private static float s_rate;
         private static float s_ammoRate;
         private static float s_drain;
+        private static bool s_crossbow;
+        /// <summary>The game's bows' draw stamina drain (the most common one), found once; -1 until then.</summary>
+        private static float s_bowDrawDrain = -1f;
         /// <summary>A stream ran and stopped during this hold (out of eitr, arrows or stamina): nothing more until the release.</summary>
         private static bool s_stopped;
         /// <summary>Full draw was reached without the eitr to start: said once per hold.</summary>
@@ -49,6 +60,16 @@ namespace Orlog.Content
 
         /// <summary>True while arrows are streaming.</summary>
         public static bool Running => s_attack != null;
+
+        /// <summary>True while a crossbow streams: the player can't run (a drawn bow's rule).</summary>
+        public static bool NoRunning => s_attack != null && s_crossbow;
+
+        /// <summary>A crossbow: a weapon that reloads instead of drawing.</summary>
+        public static bool IsCrossbow(ItemDrop.ItemData weapon)
+        {
+            var attack = weapon?.m_shared.m_attack;
+            return attack != null && !attack.m_bowDraw && attack.m_requiresReload;
+        }
 
         /// <summary>True while a stream runs or has stopped during this hold: the game's own release shot is held back.</summary>
         public static bool HoldsRelease => s_attack != null || s_stopped;
@@ -72,7 +93,9 @@ namespace Orlog.Content
             var weapon = player.GetCurrentWeapon();
             if (s_attack == null)
             {
-                if (weapon != null && weapon.m_shared.m_attack != null && weapon.m_shared.m_attack.m_bowDraw && player.GetAttackDrawPercentage() >= 1f)
+                bool bowReady = weapon != null && weapon.m_shared.m_attack != null && weapon.m_shared.m_attack.m_bowDraw && player.GetAttackDrawPercentage() >= 1f;
+                bool crossbowReady = IsCrossbow(weapon) && player.IsWeaponLoaded() && !player.InMinorAction() && !player.InAttack();
+                if (bowReady || crossbowReady)
                 {
                     Begin(player, skill, weapon);
                 }
@@ -123,17 +146,29 @@ namespace Orlog.Content
                 return;
             }
             player.UseEitr(cost);
+            s_crossbow = IsCrossbow(weapon);
             s_attack = weapon.m_shared.m_attack.Clone();
+            if (s_crossbow)
+            {
+                // What Attack.StartWithoutAnimation sets, without its trigger (which would unload the crossbow).
+                s_attack.m_character = player;
+                s_attack.m_baseAI = null;
+                s_attack.m_body = player.m_body;
+                s_attack.m_visEquipment = player.m_visEquipment;
+                s_attack.m_weapon = weapon;
+                s_attack.m_attackDrawPercentage = 1f;
+                weapon.m_lastAttackTime = Time.time;
+            }
             s_shot = new SkillButton.Shot { Attack = s_attack, Skill = skill, Level = level };
             s_weapon = weapon;
             s_started = Time.time;
             s_fired = 0;
             s_fromQuiver = 0;
             s_eitrUsed = cost;
-            s_rate = v.Get(Id, "arrows_per_s", level);
+            s_rate = v.Get(Id, s_crossbow ? "crossbow_per_s" : "arrows_per_s", level);
             s_ammoRate = v.Get(Id, "ammo_per_s", level);
             s_drain = v.Get(Id, "eitr_per_s", level);
-            Jotunn.Logger.LogInfo($"Orlog: Strafe (level {level}) firing: {s_rate:0.#} arrows a second at {v.Get(Id, "weapon_damage_pct", level):0.#}% of the shot, " +
+            Jotunn.Logger.LogInfo($"Orlog: Strafe (level {level}) firing{(s_crossbow ? " a crossbow" : "")}: {s_rate:0.#} a second at {v.Get(Id, "weapon_damage_pct", level):0.#}% of the shot, " +
                                   $"{s_ammoRate:0.#} from the quiver a second; {cost:0.#} eitr paid, {s_drain:0.#} a second while firing.");
             FireNext(player);
         }
@@ -141,7 +176,8 @@ namespace Orlog.Content
         private static void Tick(Player player, ItemDrop.ItemData weapon)
         {
             // The draw was lost (blocking, staggered, a minor action) or the weapon changed.
-            if (weapon == null || weapon != s_weapon || !player.IsDrawingBow() || player.IsStaggering())
+            bool held = s_crossbow ? player.IsWeaponLoaded() && !player.IsBlocking() && !player.InMinorAction() : player.IsDrawingBow();
+            if (weapon == null || weapon != s_weapon || !held || player.IsStaggering())
             {
                 Stop(player, "the draw was lost");
                 return;
@@ -161,6 +197,11 @@ namespace Orlog.Content
             }
             player.UseEitr(drain);
             s_eitrUsed += drain;
+            if (s_crossbow)
+            {
+                // The drawn bow drains stamina by itself; a crossbow's stream drains the same (decision 17).
+                player.UseStamina(HeldBowDrain(player, s_weapon) * Time.fixedDeltaTime);
+            }
             int due = ActiveSkillRules.StreamDue(Time.time - s_started, s_rate);
             for (int n = 0; n < MaxCatchUp && s_attack != null && s_fired < due; n++)
             {
@@ -180,7 +221,21 @@ namespace Orlog.Content
                     Stop(player, "out of arrows");
                     return;
                 }
-                if (s_fired == 0)
+                if (s_crossbow)
+                {
+                    // OnAttackTrigger's own steps without its reload reset and recoil: the bolt, then the shot.
+                    if (!attack.UseAmmo(out attack.m_lastUsedAmmo))
+                    {
+                        Stop(player, "out of bolts");
+                        return;
+                    }
+                    if (attack.m_attackUseAdrenaline > 0f)
+                    {
+                        player.AddAdrenaline(attack.m_attackUseAdrenaline);
+                    }
+                    attack.ProjectileAttackTriggered();
+                }
+                else if (s_fired == 0)
                 {
                     attack.StartWithoutAnimation(player, player.m_body, player.m_visEquipment, s_weapon, 1f);
                 }
@@ -210,7 +265,16 @@ namespace Orlog.Content
         {
             float seconds = Time.time - s_started;
             Jotunn.Logger.LogInfo($"Orlog: Strafe stopped ({why}): {s_fired} arrows in {seconds:0.0} s, {s_fromQuiver} from the quiver, {s_eitrUsed:0.#} eitr.");
-            CancelDraw(player);
+            if (s_crossbow)
+            {
+                // Empty after the stream, as after any crossbow shot: the game reloads it (decision 18).
+                player.ResetLoadedWeapon();
+            }
+            else
+            {
+                CancelDraw(player);
+            }
+            s_crossbow = false;
             s_attack = null;
             s_shot = null;
             s_weapon = null;
@@ -233,6 +297,52 @@ namespace Orlog.Content
             {
                 player.m_zanim.SetBool(state, false);
             }
+        }
+
+        /// <summary>
+        ///     The stamina a fully drawn bow costs a second (<c>Player.UpdateAttackBowDraw</c>, 1.0.14): the bow's draw drain,
+        ///     less up to a third with skill (here the weapon's own skill), halved once fully drawn, then the gear's attack
+        ///     stamina modifier and status effects. A crossbow has no draw drain, so the game's bows' is used (the most
+        ///     common value among them, found once and logged).
+        /// </summary>
+        private static float HeldBowDrain(Player player, ItemDrop.ItemData weapon)
+        {
+            if (s_bowDrawDrain < 0f)
+            {
+                s_bowDrawDrain = 0f;
+                var counts = new System.Collections.Generic.Dictionary<float, int>();
+                foreach (var prefab in ObjectDB.instance.m_items)
+                {
+                    var shared = prefab ? prefab.GetComponent<ItemDrop>()?.m_itemData?.m_shared : null;
+                    var a = shared?.m_attack;
+                    if (a == null || !a.m_bowDraw || shared.m_skillType != Skills.SkillType.Bows || a.m_drawStaminaDrain <= 0f)
+                    {
+                        continue;
+                    }
+                    counts.TryGetValue(a.m_drawStaminaDrain, out int n);
+                    counts[a.m_drawStaminaDrain] = n + 1;
+                }
+                int best = 0;
+                foreach (var pair in counts)
+                {
+                    if (pair.Value > best || (pair.Value == best && pair.Key < s_bowDrawDrain))
+                    {
+                        best = pair.Value;
+                        s_bowDrawDrain = pair.Key;
+                    }
+                }
+                Jotunn.Logger.LogInfo($"Orlog: Strafe with a crossbow drains stamina as a drawn bow: the bows' draw drain {s_bowDrawDrain:0.##} ({best} bows of {counts.Count} values).");
+            }
+            float drain = s_bowDrawDrain;
+            if (drain <= 0f)
+            {
+                return 0f;
+            }
+            drain -= drain * 0.33f * player.GetSkillFactor(weapon.m_shared.m_skillType);
+            drain *= 0.5f;
+            drain += drain * player.GetEquipmentAttackStaminaModifier();
+            player.m_seman.ModifyAttackStaminaUsage(drain, ref drain);
+            return drain;
         }
 
         /// <summary>While a stream runs or has stopped during this hold, the game's own bow release starts no attack.</summary>
