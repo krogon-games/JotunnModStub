@@ -1,12 +1,13 @@
-Game version: 1.0.20
-CraftingOverhaul: 0.1.0
-Written: 2026-10-28 22:52:50
+Game version: 1.0.21
+CraftingOverhaul: 0.5.0
+Written: 2026-11-18 21:22:29
 Language: English
 
 Loaded plugins:
   com.jotunn.jotunn 2.30.2 (Jotunn)
-  com.krogongames.corruption 0.1.0 (Corruption)
-  com.krogongames.craftingoverhaul 0.1.0 (CraftingOverhaul)
+  com.krogongames.corruption 0.8.0 (Corruption)
+  com.krogongames.craftingoverhaul 0.5.0 (CraftingOverhaul)
+  com.krogongames.orlog 0.8.0 (Orlog)
   com.ValheimModding.YamlDotNetDetector 1.0.0 (YamlDotNet Detector)
   randyknapp.mods.equipmentandquickslots 3.1.3 (Equipment and Quick Slots)
   vapok.mods.adventurebackpacks 2.4.6 (Adventure Backpacks)

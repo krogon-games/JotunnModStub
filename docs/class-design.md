@@ -18,7 +18,7 @@ Researched 2026-10-30 from its Thunderstore page and source (https://github.com/
 - It patches many of the methods we patch or will patch (`Character.Damage`, `Character.RPC_Damage`, `InventoryGui.Awake/Show/Hide`, item tooltips, `CharacterDrop.GenerateDropList`, the enemy HUD) and replaces the HUD bars our character sheet reads from.
 - Its creature-level, level-gap damage and loot-removal rules overlap Corruption's own scaling (stars, rips, corrupted bosses).
 
-**Decided (user, 2026-10-30):** build our own levels, XP and D2 attributes, and don't run EpicMMOSystem alongside them. Take its proven pieces as reference: a geometric XP curve, XP per creature in a server-synced table, group sharing by distance, a respec item. Its per-creature XP values are a possible source for our XP numbers (an alternative is deriving XP from creature health in `data/game-dump-1.0.20/creatures.csv`).
+**Decided (user, 2026-10-30):** build our own levels, XP and D2 attributes, and don't run EpicMMOSystem alongside them. Take its proven pieces as reference: a geometric XP curve, XP per creature in a server-synced table, group sharing by distance, a respec item. Its per-creature XP values are a possible source for our XP numbers (an alternative is deriving XP from creature health in `data/game-dump-1.0.21/creatures.csv`).
 
 **Other class mods looked at** (none to depend on): Valheim Legends (12 classes, 3 abilities each; deprecated, no licence), CaptainSkillTree (weapon trees with Berserker and Paladin jobs, Whirlwind), AlmanacClasses (talent tree, custom animations; deprecated, no licence), Ways of the Gods (deprecated, no source), TalentTree, MagicHeim. Ideas worth copying: cooldowns as status effects (they show in the vanilla HUD), one ability bar that greys out skills the equipped weapon can't use, warcries cast as emotes (emotes already sync to other players), cost messages in the top-left.
 
@@ -99,7 +99,7 @@ In order of preference:
 
 ## 5. Amazon (first class)
 
-Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are vanilla weapon lines in almost every biome (bows from the Meadows to the Deep North; spears from the Meadows, except the Plains; crossbows from the Mistlands), and the game already has what several of her skills need (from `data/game-dump-1.0.20/`):
+Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are vanilla weapon lines in almost every biome (bows from the Meadows to the Deep North; spears from the Meadows, except the Plains; crossbows from the Mistlands), and the game already has what several of her skills need (from `data/game-dump-1.0.21/`):
 - Fire, frost, poison and silver (spirit) arrows: their damage and effects for Fire, Cold and Magic Arrow.
 - Status effects `Burning`, `Frost` (slow), `Poison`, `Lightning`, `Immobilized` (speed −1000, 5 s: a freeze) and `Tared` (speed −50%).
 - Staffs that fire several projectiles (`StaffIceShards`), explode (`StaffClusterbomb`) or throw lightning (`StaffLightning`): effects to reuse for Multiple Shot, Exploding Arrow and the lightning javelins.

@@ -57,7 +57,7 @@ The server owns all storage state. Clients only request actions and receive upda
 
 ## Notes from the codebase and game data (2026-10-27)
 
-**Answers from the Valheim 1.0.20 dump (`data/game-dump-1.0.20/`):**
+**Answers from the Valheim 1.0.20 dump (now `data/game-dump-1.0.21/`; the same in 1.0.21):**
 
 - **Traders: 3.** Haldor (`Vendor_BlackForest`, Black Forest), Hildir (`Hildir_camp`, Meadows) and the Bog Witch (`BogWitch_Camp`, Swamp).
 - **Chest costs** (`pieces.csv`):

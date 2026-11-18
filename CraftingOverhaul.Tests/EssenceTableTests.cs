@@ -37,7 +37,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void EveryBossIsABossInTheGameData()
         {
-            var bosses = new HashSet<string>(File.ReadLines(Path.Combine(RepoRoot(), "data", "game-dump-1.0.20", "creatures.csv"))
+            var bosses = new HashSet<string>(File.ReadLines(Path.Combine(RepoRoot(), "data", "game-dump-1.0.21", "creatures.csv"))
                 .Skip(1).Select(l => l.Split(',')).Where(c => c.Length > 5 && c[5] == "True").Select(c => c[0]));
             foreach (var e in ParseReal())
             {

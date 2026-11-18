@@ -34,12 +34,12 @@ namespace CraftingOverhaul.Tests
         private static string ItemsCsv()
         {
             string dir = System.AppContext.BaseDirectory;
-            while (dir != null && !System.IO.File.Exists(System.IO.Path.Combine(dir, "data", "game-dump-1.0.20", "items.csv")))
+            while (dir != null && !System.IO.File.Exists(System.IO.Path.Combine(dir, "data", "game-dump-1.0.21", "items.csv")))
             {
                 dir = System.IO.Path.GetDirectoryName(dir);
             }
             Assert.NotNull(dir);
-            return System.IO.Path.Combine(dir, "data", "game-dump-1.0.20", "items.csv");
+            return System.IO.Path.Combine(dir, "data", "game-dump-1.0.21", "items.csv");
         }
 
         private static float Bottom(SheetRect r)

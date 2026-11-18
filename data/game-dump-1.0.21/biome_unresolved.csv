@@ -7,4 +7,5 @@ CorruptionEssence_kall,Essence of Kall Fimbulbringer,0,CorruptionMap_DeepNorth
 CorruptionEssence_moder,Essence of Moder,0,CorruptionMap_Mountain
 CorruptionEssence_queen,Essence of the Queen,0,CorruptionMap_Mistlands
 CorruptionEssence_yagluth,Essence of Yagluth,0,CorruptionMap_Plains
-CorruptionShard,Corruption shard,0,CorruptionMap_Meadows; CorruptionMap_BlackForest; CorruptionMap_Swamp; CorruptionMap_Mountain; CorruptionMap_Plains; CorruptionMap_Mistlands; CorruptionMap_AshLands; CorruptionMap_DeepNorth
+CorruptionShard,Corruption shard,0,CorruptionMap_Meadows; CorruptionMap_BlackForest; CorruptionMap_Swamp; CorruptionMap_Mountain; CorruptionMap_Plains; CorruptionMap_Mistlands; CorruptionMap_AshLands; CorruptionMap_DeepNorth; CorruptedWishbone; CorruptedTrophyDeer; CorruptedAncientSeed; CorruptedWitheredBone; CorruptedDragonEgg; CorruptedGoblinTotem; CorruptedDvergrKey; CorruptedBell; CorruptedHatefulBlood
+HatefulBlood,Malicious Blood,0,CorruptedHatefulBlood
