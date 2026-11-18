@@ -1,10 +1,10 @@
 # Handoff: `claude/amazon-snipe-shackle-shot-m67buh`
 
-**Written:** 2026-11-18, at the start of the round. Started from `master` (`f2b0ca0`); no pull request yet.
+**Written:** 2026-11-18. Started from `master` (`f2b0ca0`), level with it; no pull request yet.
 
 ## Stage
 
-Asking Krogon questions.
+Waiting for Krogon's playtest.
 
 ## Purpose
 
@@ -16,7 +16,11 @@ Nothing play-tested yet.
 
 ## Half-done and known issues
 
-Nothing built yet.
+Built 2026-11-18, untested in-game (detail: `FEATURES.md` → Amazon skill bar and bow skills):
+- **Snipe** and **Shackle Shot** with decisions 2–18; **the area ticks skip Corruption's on-hit affixes** (decision 19). 601 tests; all three plugins build.
+- Written with the game's 1.0.14 code open (decompiled with `ilspycmd` 8.2, as `docs/ARCHITECTURE.md` describes). **New patch: `Character.CanMove` postfix** (the stun); Corruption's two `Character.Damage` prefixes changed in body only.
+- Claude's choices, open to change: Snipe's speed rises evenly with the charge; its extra stamina stops once the charge is full; mouse sensitivity unchanged while zoomed; Snipe's circle looks like Wind Lance's (no wind, a ring at full); the rope and swirls' look (shooter's game only); Dota's 23° read as each side of the line; the stun also carries Immobilized's speed so swimmers stop.
+- Limits: a re-shackle takes the new time (can cut a longer stun short); the anchor search is on the ground's plane; only standing trees count. Nothing tried with two players.
 
 ## Decisions
 
@@ -43,20 +47,17 @@ Nothing built yet.
 
 ## Playtest
 
-Not written yet: `docs/playtests/claude-amazon-snipe-shackle-shot-m67buh.md` once built.
+`docs/playtests/claude-amazon-snipe-shackle-shot-m67buh.md`: "Snipe and Shackle Shot", 22 steps, also the first section of the phone page (`sn-1` … `sn-10`, `sh-1` … `sh-10`, `dot-1`, `dot-2`). Not tried yet.
 
 ## Open questions for Krogon
 
-1. Snipe: the charge (how long, how the damage grows, the zoom, the stamina drain), eitr cost, damage share at levels 1 and 20, range.
-2. Shackle Shot: what it ties an enemy to, how long the hold lasts, bosses, eitr cost, damage share, range.
-3. Whether both skills work with crossbows too.
-4. Carried over: should the burning ground's and the poison cloud's hits count for Corruption's on-hit affixes? Should large roots stop a Wind Lance?
+1. None open; his play-test verdict on both skills (step `sh-10`).
 
 ## Next steps
 
-1. Ask the questions above, one at a time.
-2. Build both skills, with tests; update `FEATURES.md`, `docs/class-design.md` §5, `docs/CURRENT_STATE.md`.
-3. Write the play-test checklist here and on the phone page.
+1. Krogon's single-player play-test (22 steps); read his marks from the phone page and fix what fails.
+2. A two-player step for the group evening (`PLAYTEST.md` → Session 2, 2j) once the solo test passes.
+3. `/handoff`, then a pull request; the coordinator raises Orlog and Corruption at merge and closes #70.
 
 ## Checks
 
@@ -64,4 +65,4 @@ Not run yet (`/handoff` runs them).
 
 ## Merge notes
 
-Not ready to merge: nothing built yet.
+Not ready to merge: waiting for Krogon's play-test. **Gameplay changed: version bump needed at merge: Orlog and Corruption.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`, `docs/mod-compatibility.md`.
