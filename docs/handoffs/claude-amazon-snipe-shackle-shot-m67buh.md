@@ -29,6 +29,7 @@ Nothing built yet.
 7. **2026-11-18: Snipe zooms 3× at full charge** ("3× at full charge"): the view (the game's 65°) closes in slowly as the charge fills, to about 24° at full charge, with the game's own smooth camera zoom, and springs back when you shoot or let go (as put in the question). Over 2×, 1.5× and growing with skill level.
 8. **2026-11-18: Snipe drains stamina at the bow's drawing rate while charging** ("14 a second"): the game's bows drain 14 a second while drawing (Strafe's log, 2026-11-17; less with Bows skill, `ItemData.GetDrawStaminaDrain`) and halve it once fully drawn; during Snipe's charge it doesn't halve. About 49 stamina for a full level-1 charge, 21 at level 20. Over 7 a second (a drawn bow's) and 21 a second.
 9. **2026-11-18: Snipe costs 9 eitr, +0.25 per level** ("9, +0.25 per level", Diablo 2's Freezing Arrow's mana: 9 → 13.75 at level 20), over Guided Arrow's 8 − 0.25 and Diablo 2's Strafe's 11.
+10. **2026-11-18: Snipe's arrow flies faster with the charge** ("Faster with the charge"): up to twice a fully drawn arrow's speed at full charge (Wind Lance's `speed_pct` 200), a normal arrow's speed with no charge; still the game's own arrow and drop, so it drops less and reaches further. Over a normal arrow's flight and dead straight to 100 m. Claude's choice, open to change: the speed rises evenly with the charge (not on the damage's square curve), so the arc changes predictably.
 
 ## Playtest
 
