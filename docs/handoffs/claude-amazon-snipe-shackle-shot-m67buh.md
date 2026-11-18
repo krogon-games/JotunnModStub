@@ -1,10 +1,10 @@
 # Handoff: `claude/amazon-snipe-shackle-shot-m67buh`
 
-**Written:** 2026-11-18. Started from `master` (`f2b0ca0`), level with it; no pull request yet.
+**Written:** 2026-11-18 by `/handoff`. Started from `master` (`f2b0ca0`); 21 commits ahead with this one, 0 behind. No pull request yet.
 
 ## Stage
 
-Waiting for Krogon's playtest.
+Ready to merge.
 
 ## Purpose
 
@@ -12,15 +12,17 @@ The Amazon's last two bow skills, Snipe and Shackle Shot ([#70](https://github.c
 
 ## Done
 
-Nothing play-tested yet.
+Krogon's single-player play-test (2026-11-18): all 22 steps Pass on the phone page, no notes; "all playtesting is done and passed" (decision 21).
+- **Snipe:** a charged shot, 3.5 s → 1.5 s to full charge, 100% rising on a square curve to 150% → 300% of the shot, up to twice an arrow's speed, 3× zoom, stamina at the bow's drawing rate, 9 + 0.25 eitr; crossbows too.
+- **Shackle Shot:** 100% → 150% of the shot; ties the struck enemy to the nearest enemy or standing tree up to 8 m behind (23°), both stunned 1.75 s → 4 s (alone 0.6 s), bosses slowed; 9 + 0.25 eitr; crossbows too.
+- **The burning ground's and the cloud's ticks** trigger no Corruption on-hit affixes; the blast still does.
 
 ## Half-done and known issues
 
-Built 2026-11-18, untested in-game (detail: `FEATURES.md` → Amazon skill bar and bow skills):
-- **Snipe** and **Shackle Shot** with decisions 2–18; **the area ticks skip Corruption's on-hit affixes** (decision 19). 601 tests; all three plugins build.
+Detail: `FEATURES.md` → Amazon skill bar and bow skills.
 - Written with the game's 1.0.14 code open (decompiled with `ilspycmd` 8.2, as `docs/ARCHITECTURE.md` describes). **New patch: `Character.CanMove` postfix** (the stun); Corruption's two `Character.Damage` prefixes changed in body only.
 - Claude's choices, open to change: Snipe's speed rises evenly with the charge; its extra stamina stops once the charge is full; mouse sensitivity unchanged while zoomed; Snipe's circle looks like Wind Lance's (no wind, a ring at full); the rope and swirls' look (shooter's game only); Dota's 23° read as each side of the line; the stun also carries Immobilized's speed so swimmers stop.
-- Limits: a re-shackle takes the new time (can cut a longer stun short); the anchor search is on the ground's plane; only standing trees count. Nothing tried with two players.
+- Limits: a re-shackle takes the new time (can cut a longer stun short); the anchor search is on the ground's plane; only standing trees count. Nothing tried with two players (`PLAYTEST.md` → Session 2, 2j step 9).
 
 ## Decisions
 
@@ -44,25 +46,31 @@ Built 2026-11-18, untested in-game (detail: `FEATURES.md` → Amazon skill bar a
 18. **2026-11-18: both skills work with crossbows too, with the same numbers** ("Both work with crossbows"), over Shackle Shot only, Snipe only and bows only. As put in the question: Snipe on a loaded crossbow charges as Wind Lance does on one (hold right click, the bolt is held back while the charge, zoom and stamina drain build, fires on release); Shackle Shot is the crossbow's normal shot. A crossbow has no draw drain, so Snipe's charge drains the bows' drawing rate (14 a second, as Strafe's crossbow stream uses the bows' drain; Claude's reading of decision 8).
 19. **2026-11-18 (carried over from PR #74): Immolation Arrow's blast counts for Corruption's on-hit affixes as a hit of the bow; the burning ground's and the poison cloud's ticks trigger none** ("Blast counts, ticks don't"), as in Path of Exile, where damage over time never leeches or procs on-hit. Over "all count, as the bow's" and "none count". (Before: each tick used the affixes of the weapon in hand at that moment; the code review's find of 2026-11-17.)
 20. **2026-11-18 (carried over from PR #71): large roots don't stop a Wind Lance** ("Leave it as it is"): the gust keeps going through `HugeRoot1`, `Greydwarf_Root` and crows, unharmed, as since 2026-11-16; over "large roots stop it".
+21. **2026-11-18: the play-test passed; end the session** (typed with `/handoff`: "all playtesting is done and passed. wrap up session"). On the phone page all 22 steps are marked Pass with no notes (`sn-1` … `sn-10`, `sh-1` … `sh-10`, `dot-1`, `dot-2`).
 
 ## Playtest
 
-`docs/playtests/claude-amazon-snipe-shackle-shot-m67buh.md`: "Snipe and Shackle Shot", 22 steps, also the first section of the phone page (`sn-1` … `sn-10`, `sh-1` … `sh-10`, `dot-1`, `dot-2`). Not tried yet.
+`docs/playtests/claude-amazon-snipe-shackle-shot-m67buh.md`: "Snipe and Shackle Shot", 22 steps: **passed** (decision 21). Its steps are off the phone page again; the two-player step is on it (`mpe-2j-9`).
 
 ## Open questions for Krogon
 
-1. None open; his play-test verdict on both skills (step `sh-10`).
+1. None open. (His verdict step `sh-10` passed with no note, so the rope and swirls' look and Claude's other choices stand.)
 
 ## Next steps
 
-1. Krogon's single-player play-test (22 steps); read his marks from the phone page and fix what fails.
-2. A two-player step for the group evening (`PLAYTEST.md` → Session 2, 2j) once the solo test passes.
-3. `/handoff`, then a pull request; the coordinator raises Orlog and Corruption at merge and closes #70.
+1. Pull request into `master`; Krogon merges.
+2. Coordinator: raise Orlog and Corruption, `STATUS.md`, `DECISIONS.md` (decisions 1–21), close #70.
+3. Next classes round: C6, Gungnir's Throw and the spear and javelin skills (#41).
 
 ## Checks
 
-Not run yet (`/handoff` runs them).
+- Build: PASS (601 tests; Orlog, Corruption, CraftingOverhaul build, 0 errors).
+- Version: gameplay changed: version bump needed at merge (Orlog, Corruption). The branch changed no version.
+- Multiplayer sync: PASS, read in code, not tested. No new setting, message or saved key; the stun and slow go to the creature's owner through the game's own `SEMan.AddStatusEffect`, and every player has Orlog; the rope and swirls are local by design.
+- Assets and names: PASS (CSVs embedded by wildcard; `Harpooned`, `Immobilized`'s numbers and `TreeBase` are the game's own; no new `$` tokens).
+- FEATURES.md: PASS (the new `Character.CanMove` target is listed).
+- In-game: PASSED in Krogon's single-player play-test (decision 21); two players untested.
 
 ## Merge notes
 
-Not ready to merge: waiting for Krogon's play-test. **Gameplay changed: version bump needed at merge: Orlog and Corruption.** Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`, `docs/mod-compatibility.md`.
+**Ready to merge: yes** (play-test passed, no check failed, level with `master`, pushed). **Gameplay changed: version bump needed at merge: Orlog and Corruption.** The other remote branches (`claude/elegant-maxwell-e7ys9o`, `claude/modest-curie-y050l4`) have no unmerged commits. Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/GAME_DESIGN.md`, `docs/class-design.md`, `docs/mod-compatibility.md`.
