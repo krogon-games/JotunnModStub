@@ -1,10 +1,10 @@
 # Handoff: `claude/jolly-clarke-4kx6t6`
 
-Written 2026-11-18 (`/handoff`). Branch: 2 commits ahead of `master`, 0 behind; no PR yet.
+Written 2026-11-18 (`/handoff`). **Merged into `master` as PR #80 the same day** (no version change; #42 closed). The branch was then restarted from `master` for the coordinator's update.
 
 ## Stage
 
-Ready to merge.
+Merged (PR #80, 2026-11-18).
 
 ## Purpose
 
@@ -38,7 +38,7 @@ Nothing to play-test: no mod code, data table or asset changed. `docs/playtests/
 
 ## Next steps
 
-1. A PR into `master` that closes #42.
+1. Nothing: merged as PR #80, #42 closed.
 
 ## Checks
 
@@ -51,7 +51,5 @@ Nothing to play-test: no mod code, data table or asset changed. `docs/playtests/
 
 ## Merge notes
 
-- **Ready to merge: yes.** Nothing to play-test, every check passed or was skipped, up to date with `master`, pushed.
-- No version bump needed: no gameplay change (reference data, tests, tools, docs and two Corruption code comments).
-- No other remote branch has unmerged commits, so no overlap.
+- **Merged** (PR #80). No version bump: no gameplay change (two Corruption code comments only).
 - Shared docs touched: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/ROADMAP.md`, `CLAUDE.md`, the `/handoff` skill (dump path). A branch still reading `data/game-dump-1.0.20/` in a new test needs the path changed after merging this.
