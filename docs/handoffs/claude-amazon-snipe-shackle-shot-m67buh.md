@@ -23,6 +23,7 @@ Nothing built yet.
 1. **2026-11-18: this round is Snipe and Shackle Shot, both, on this branch** ("Yes, both skills"), with the two carried-over questions (area hits and Corruption's on-hit affixes; large roots and Wind Lance); over Snipe only and Shackle Shot only.
 2. **2026-11-18: Snipe's charge counts from full draw, the damage grows until the charge is full (let go any time), and the full charge gets quicker with skill level** ("Grows with skill level"), over a fixed 3 s (Wind Lance's first hold) and a fixed 1.5 s (Wind Lance's hold).
 3. **2026-11-18: a full Snipe charge takes 3.5 s at skill level 1 and 1.5 s at level 20** (his own answer: "3.5s lvl1 - 1.5s lvl 20"), over 3 → 1.5 s, 1.5 → 0.75 s and 4.5 → 1.5 s. Even steps between (Claude's assumption, as the other skills' tables).
+4. **2026-11-18: a fully charged Snipe deals 150% of the shot's own damage at skill level 1, 300% at 20** ("150% → 300%"), over 200% → 400%, Wind Lance's 100% → 233% and 300% → 600%.
 
 ## Playtest
 
