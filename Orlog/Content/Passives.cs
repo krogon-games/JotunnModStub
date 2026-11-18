@@ -140,7 +140,10 @@ namespace Orlog.Content
                 {
                     var player = Player.m_localPlayer;
                     var attacker = hit.GetAttacker();
-                    if (player && attacker == player && !__instance.IsPlayer() && hit.m_hitType == HitData.HitType.PlayerHit)
+                    // The player's own hits, and the burning ground's and poison cloud's ticks (typed as burning and
+                    // poison since 2026-11-18): Penetrate applies to those too; a tick has no physical damage to crit.
+                    if (player && attacker == player && !__instance.IsPlayer() &&
+                        (hit.m_hitType == HitData.HitType.PlayerHit || hit.m_hitType == HitData.HitType.Burning || hit.m_hitType == HitData.HitType.Poisoned))
                     {
                         OwnHit(player, __instance, hit);
                     }

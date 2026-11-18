@@ -26,6 +26,10 @@ namespace Orlog.Content
     ///         burns and hurts enemies standing in it every second (<see cref="GroundArea" />).</item>
     ///         <item>Venom Strike (Krogon, 2026-11-16): the arrow hits as usual and a poison cloud hangs where it landed,
     ///         poisoning everything inside every second (<see cref="GroundArea" />).</item>
+    ///         <item>Snipe (Krogon, 2026-11-18): a charged shot (<see cref="Snipe" />); its arrow's damage and speed grow
+    ///         with the charge it reached.</item>
+    ///         <item>Shackle Shot (Krogon, 2026-11-18): the arrow hits for its share, then shackles the enemy it struck
+    ///         (<see cref="ShackleShot" />).</item>
     ///     </list>
     ///     A shot's arrows carry a <see cref="ShotTag" />; impacts are handled on the shooter's game, which runs its projectiles.
     ///     The skill tree overhaul (Krogon, 2026-11-15) removed Magic Arrow, Fire Arrow, Cold Arrow, Ice Arrow and Exploding
@@ -86,6 +90,7 @@ namespace Orlog.Content
             freeze.m_name = "Frozen";
             ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(freeze, false));
             CastSkills.RegisterStatusEffects();
+            ShackleShot.RegisterStatusEffects();
         }
 
         /// <summary>
@@ -97,7 +102,8 @@ namespace Orlog.Content
         {
             private static void Postfix(StatusEffect __instance, int itemLevel, float skillLevel)
             {
-                if (__instance && skillLevel > 0f && (__instance.NameHash() == FreezeHash || __instance.NameHash() == CastSkills.InnerSightHash))
+                if (__instance && skillLevel > 0f && (__instance.NameHash() == FreezeHash || __instance.NameHash() == CastSkills.InnerSightHash ||
+                                                      ShackleShot.IsOurs(__instance.NameHash())))
                 {
                     __instance.m_ttl = skillLevel;
                 }
@@ -177,6 +183,24 @@ namespace Orlog.Content
                     case "WindLance":
                         WindLance.Launch(projectile, level, v, ref velocity, hit);
                         break;
+                    case "Snipe":
+                    {
+                        // The charge it reached (Krogon, 2026-11-18): 100% at no charge up a square curve to the full
+                        // share, and up to twice an arrow's speed.
+                        float charge = Mathf.Max(0f, shot.Charge);
+                        float damage = ActiveSkillRules.SnipeDamagePercent(charge, v.Get(id, "weapon_damage_pct", level));
+                        float speed = ActiveSkillRules.SnipeSpeedPercent(charge, v.Get(id, "speed_pct", level));
+                        hit.m_damage.Modify(damage / 100f);
+                        velocity *= speed / 100f;
+                        // The game's arrow: its drop falls with it, so a faster one drops less over the same distance.
+                        Jotunn.Logger.LogInfo($"Orlog: Snipe fired (rank {level}): charge {charge * 100f:0}%, {damage:0}% of the shot's damage " +
+                                              $"(the shot {tag.ShotDamage:0.#} → {TotalDamage(hit.m_damage):0.#}), {speed:0}% speed ({velocity.magnitude:0} m/s).");
+                        break;
+                    }
+                    case "ShackleShot":
+                        // The arrow's own hit: 100% -> 150% of the shot (Krogon, 2026-11-18); the shackle is on impact.
+                        hit.m_damage.Modify(v.Get(id, "weapon_damage_pct", level) / 100f);
+                        break;
                     case "Strafe":
                         // Each arrow of the stream: its share of the shot (25% -> 50%, Krogon 2026-11-17). Its push and the
                         // Bows skill it trains shrink with it (Claude's choice), so 6 arrows a second don't push six times
@@ -214,7 +238,16 @@ namespace Orlog.Content
                 {
                     return;
                 }
-                if (tag.SkillId == "VenomStrike")
+                if (tag.SkillId == ShackleShot.Id)
+                {
+                    tag.Exploded = true;
+                    Safe.Run("shackle with Shackle Shot", () =>
+                    {
+                        var hitObject = collider ? Projectile.FindHitObject(collider) : null;
+                        ShackleShot.Shackle(__instance.m_owner, tag, hitObject ? hitObject.GetComponent<Character>() : null);
+                    });
+                }
+                else if (tag.SkillId == "VenomStrike")
                 {
                     tag.Exploded = true;
                     Safe.Run("start Venom Strike's cloud", () => StartCloud(__instance.m_owner, tag, hitPoint));

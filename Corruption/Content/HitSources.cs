@@ -33,6 +33,17 @@ namespace Corruption.Content
             Tags.Add(hit, new Source { Item = item });
         }
 
+        /// <summary>
+        ///     Damage over time: a hit typed as burning or poison. The game's own burning and poison never pass through
+        ///     <c>Character.Damage</c>; Orlog's burning ground and poison cloud (Immolation Arrow, Venom Strike) send their
+        ///     ticks typed so. They trigger no on-hit affixes (Krogon, 2026-11-18: "Blast counts, ticks don't", as in Path
+        ///     of Exile, where damage over time never leeches or procs).
+        /// </summary>
+        public static bool IsDamageOverTime(HitData hit)
+        {
+            return hit != null && (hit.m_hitType == HitData.HitType.Burning || hit.m_hitType == HitData.HitType.Poisoned);
+        }
+
         /// <summary>The item <paramref name="hit" /> comes from, for the local player's own hits.</summary>
         public static ItemDrop.ItemData For(HitData hit, Player player)
         {

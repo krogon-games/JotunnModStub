@@ -15,6 +15,8 @@ namespace Orlog.Content
     ///         A charged skill (Wind Lance; user 2026-11-16) must be held past full draw for its hold time
     ///         (<c>hold_s</c>); released earlier it is a normal shot and costs nothing. A crossbow has no draw: the skill
     ///         button holds its shot back until the release, and the hold counts from the press.
+    ///         Snipe (Krogon, 2026-11-18) charges the same way over <c>charge_s</c>, but fires on any charge, its damage
+    ///         growing with it (<see cref="Snipe" />).
     ///     </para>
     ///     <para>
     ///         Strafe (Krogon, 2026-11-17) streams arrows from full draw while held and pays as it goes (<see cref="Strafe" />);
@@ -29,6 +31,8 @@ namespace Orlog.Content
             public Attack Attack;
             public SkillTable.Skill Skill;
             public int Level;
+            /// <summary>Snipe: how full its charge was at the release, 0 to 1 (-1 for other skills).</summary>
+            public float Charge = -1f;
         }
 
         /// <summary>The skill being drawn or held on the skill button (until its attack starts).</summary>
@@ -45,12 +49,16 @@ namespace Orlog.Content
         private static float s_chargeSeen = -10f;
         private static float s_chargeHold;
         private static bool s_chargeDraws;
+        private static string s_chargeSkill;
 
         /// <summary>How far the charged shot being held has come (0 to 1), or -1 when none is being held.</summary>
         public static float ChargeProgress => Time.time - s_chargeSeen < 0.1f ? ActiveSkillRules.ChargeProgress(s_charge, s_chargeHold) : -1f;
 
         /// <summary>Whether the weapon charging draws like a bow (the game shows its draw circle) or not (a crossbow).</summary>
         public static bool ChargeDraws => s_chargeDraws;
+
+        /// <summary>The skill whose charge is being held (while <see cref="ChargeProgress" /> is 0 or more).</summary>
+        public static string ChargingSkillId => s_chargeSkill;
 
         /// <summary>The local player's current skill attack, if its attack is still the one running.</summary>
         public static Shot Current { get; private set; }
@@ -249,13 +257,22 @@ namespace Orlog.Content
             {
                 var weapon = player.GetCurrentWeapon();
                 bool draws = weapon != null && weapon.m_shared.m_attack != null && weapon.m_shared.m_attack.m_bowDraw;
+                var values = SkillBar.ValuesFor(Attributes.ClassOf(player));
+                float hold = values?.Get(skill.Id, ActiveSkillRules.ChargeTimeValue(skill.Id), SkillBar.LevelOf(player, skill.Id)) ?? 0f;
+                bool snipe = ActiveSkillRules.IsSnipe(skill.Id);
                 if (draws)
                 {
                     // A bow: the game draws it as usual; the hold counts once it is fully drawn, and starts again if the
                     // draw is lost (out of stamina).
                     attack |= pressed;
                     attackHold = true;
-                    s_charge = player.GetAttackDrawPercentage() >= 1f ? s_charge + Time.deltaTime : 0f;
+                    bool fullDraw = player.GetAttackDrawPercentage() >= 1f;
+                    // Snipe: the bow's drawing rate of stamina while it charges (Krogon, 2026-11-18).
+                    if (fullDraw && snipe)
+                    {
+                        Snipe.ChargeStep(player, weapon, true, s_charge >= hold, Time.deltaTime);
+                    }
+                    s_charge = fullDraw ? s_charge + Time.deltaTime : 0f;
                 }
                 else
                 {
@@ -264,15 +281,24 @@ namespace Orlog.Content
                     attack = false;
                     attackHold = false;
                     bool loaded = weapon != null && (weapon.m_shared.m_attack == null || !weapon.m_shared.m_attack.m_requiresReload || player.IsWeaponLoaded());
-                    s_charge = loaded ? s_charge + Time.deltaTime : 0f;
+                    // Snipe on a crossbow pays the bows' drawing rate; out of stamina, its charge stops growing.
+                    bool stamina = !loaded || !snipe || Snipe.ChargeStep(player, weapon, false, s_charge >= hold, Time.deltaTime);
+                    s_charge = loaded ? (stamina ? s_charge + Time.deltaTime : s_charge) : 0f;
                 }
-                var values = SkillBar.ValuesFor(Attributes.ClassOf(player));
-                float hold = values?.Get(skill.Id, "hold_s", SkillBar.LevelOf(player, skill.Id)) ?? 0f;
                 s_chargeSeen = Time.time;
                 s_chargeHold = hold;
                 s_chargeDraws = draws;
+                s_chargeSkill = skill.Id;
                 bool ready = ActiveSkillRules.ChargeReady(s_charge, hold);
-                if (ready)
+                if (ready && snipe)
+                {
+                    // Snipe's charge is full: a ring sounds once (the circle pulses, Hud.UpdateCrosshair).
+                    if (!s_chargeReady)
+                    {
+                        Snipe.FullCue(player);
+                    }
+                }
+                else if (ready)
                 {
                     // The wind at the bow lasts while this keeps being called; the sound plays the moment the charge is ready.
                     WindLance.ReadyCue(player, !s_chargeReady);
@@ -301,15 +327,23 @@ namespace Orlog.Content
                 Safe.Run("start a skill attack", () =>
                 {
                     var player = (Player)__instance;
-                    // A charged skill released before it was ready: a normal shot, no eitr (user 2026-11-16).
+                    // A charged skill released before it was ready: a normal shot, no eitr (user 2026-11-16). Snipe fires
+                    // on any charge, with the charge it reached (Krogon, 2026-11-18).
+                    float charge = -1f;
                     if (ActiveSkillRules.Charges(skill.Id))
                     {
-                        bool ready = s_chargeReady;
+                        bool fires = ActiveSkillRules.ChargeFires(skill.Id, s_charge, s_chargeHold);
+                        if (ActiveSkillRules.IsSnipe(skill.Id))
+                        {
+                            charge = ActiveSkillRules.ChargeProgress(s_charge, s_chargeHold);
+                        }
                         s_chargeReady = false;
                         s_charge = 0f;
-                        if (!ready)
+                        if (!fires)
                         {
-                            Jotunn.Logger.LogInfo("Orlog: " + skill.Name + " released before its charge was ready: a normal shot.");
+                            Jotunn.Logger.LogInfo("Orlog: " + skill.Name + (ActiveSkillRules.IsSnipe(skill.Id)
+                                ? " released at full draw with no charge: a normal shot."
+                                : " released before its charge was ready: a normal shot."));
                             return;
                         }
                     }
@@ -330,7 +364,8 @@ namespace Orlog.Content
                     {
                         Attack = player.m_currentAttack,
                         Skill = skill,
-                        Level = SkillBar.LevelOf(player, skill.Id)
+                        Level = SkillBar.LevelOf(player, skill.Id),
+                        Charge = charge
                     };
                 });
             }

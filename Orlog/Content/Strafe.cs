@@ -303,9 +303,9 @@ namespace Orlog.Content
         ///     The stamina a fully drawn bow costs a second (<c>Player.UpdateAttackBowDraw</c>, 1.0.14): the bow's draw drain,
         ///     less up to a third with skill (here the weapon's own skill), halved once fully drawn, then the gear's attack
         ///     stamina modifier and status effects. A crossbow has no draw drain, so the game's bows' is used (the most
-        ///     common value among them, found once and logged).
+        ///     common value among them, found once and logged); a bow uses its own (for Snipe's extra drain).
         /// </summary>
-        private static float HeldBowDrain(Player player, ItemDrop.ItemData weapon)
+        internal static float HeldBowDrain(Player player, ItemDrop.ItemData weapon)
         {
             if (s_bowDrawDrain < 0f)
             {
@@ -331,9 +331,11 @@ namespace Orlog.Content
                         s_bowDrawDrain = pair.Key;
                     }
                 }
-                Jotunn.Logger.LogInfo($"Orlog: Strafe with a crossbow drains stamina as a drawn bow: the bows' draw drain {s_bowDrawDrain:0.##} ({best} bows of {counts.Count} values).");
+                Jotunn.Logger.LogInfo($"Orlog: a crossbow's Strafe stream and Snipe charge drain stamina as a bow: the bows' draw drain {s_bowDrawDrain:0.##} ({best} bows of {counts.Count} values).");
             }
-            float drain = s_bowDrawDrain;
+            // A bow uses its own draw drain (Snipe, 2026-11-18); a crossbow, which has none, the bows' (Strafe, Snipe).
+            var own = weapon?.m_shared?.m_attack;
+            float drain = own != null && own.m_bowDraw && own.m_drawStaminaDrain > 0f ? own.m_drawStaminaDrain : s_bowDrawDrain;
             if (drain <= 0f)
             {
                 return 0f;

@@ -389,7 +389,7 @@ namespace Corruption.Content
                 __state = null;
                 var player = Player.m_localPlayer;
                 if (hit == null || !player || __instance == player || ProcHits.Contains(hit) || hit.GetAttacker() != player ||
-                    !BaseAI.IsEnemy(player, __instance))
+                    HitSources.IsDamageOverTime(hit) || !BaseAI.IsEnemy(player, __instance))
                 {
                     return;
                 }

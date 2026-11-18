@@ -140,6 +140,13 @@ Full 1.0.14 game code (method bodies, not just signatures) comes from the NuGet 
 - `Player.UpdateAttackBowDraw` draws while attack is held (`m_attackDrawTime` grows; stamina drains at the bow's draw rate, half once fully drawn; the drawn bow slows walking via `IsDrawingBow`) and shoots only when the hold ends (`StartAttack`), and only if stamina and eitr are left. Draw time -1 means "wait for the release, then reset" with no shot. Holding a drawn bow therefore never shoots by itself.
 - `Attack.FireProjectileBurst` is self-contained once the attack has its character, weapon and draw (`Attack.StartWithoutAnimation` sets them): it reads the current aim, makes the arrow from `m_ammoItem` and takes no ammo. Ammo is taken in `Attack.OnAttackTrigger` (`UseAmmo`), which also wears the weapon and plays the release effect. Strafe's rapid fire uses this.
 - A projectile trains the shooter's skill by its hit's `m_skillRaiseAmount` for each hit that does damage (`Projectile.OnHit`).
+- Out of stamina while drawing, the game drops the draw and shoots nothing (`UpdateAttackBowDraw`: the release only shoots with stamina and eitr left). The draw drain is `ItemData.GetDrawStaminaDrain` (less up to a third with the bow's skill), halved at full draw (2026-11-18).
+
+**Creatures and the camera (1.0.14 code, decompiled 2026-11-18)**
+- `Character.CanMove` false stops walking and turning (`UpdateWalking`) and flying (`UpdateFlying`), and `Humanoid.StartAttack` refuses to start an attack; swimming (`UpdateSwimming`) reads only status-effect speed. Flying ignores status-effect speed, so the game's Immobilized (speed −1000) doesn't hold a flier. Shackle Shot's stun uses both.
+- `SEMan.AddStatusEffect` on a creature another game runs sends it to that game (`RPC_AddStatusEffect`); `RPC_Damage` likewise adds a hit's `m_statusEffectHash` on the owner. Status effects live only on the owner's game.
+- `GameCamera.SetTempFOV(target, inertia)` moves the view angle toward a target each frame (`UpdateFOV`); `m_fovBase` keeps the unzoomed angle (the game's fixed 65°; nothing sets it from the settings). Snipe's zoom uses it.
+- `SE_Harpooned` refuses bosses, and its rope (`LineConnect`) needs a networked object at each end, so a local look draws its own line.
 
 **Creatures and AI**
 - `BaseAI.IsEnemy(Character, Character)` decides both targeting and whether attacks hit, including the player's own attacks, so a patch must only change the creature-asking-about-player direction.

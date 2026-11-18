@@ -195,7 +195,9 @@ namespace Orlog.Content
                 hit.m_ranged = true;
                 hit.m_skill = Skills.SkillType.Bows;
                 hit.m_skillRaiseAmount = 0f;
-                hit.m_hitType = HitData.HitType.PlayerHit;
+                // Damage over time (Krogon, 2026-11-18, decision 19): typed as the game's own burning and poison, so
+                // Corruption's on-hit affixes (life steal, Skadi, Rallying, the procs) skip it. Penetrate still applies.
+                hit.m_hitType = m_poison ? HitData.HitType.Poisoned : HitData.HitType.Burning;
                 hit.SetAttacker(m_owner);
                 target.Damage(hit);
                 m_enemyHits++;
