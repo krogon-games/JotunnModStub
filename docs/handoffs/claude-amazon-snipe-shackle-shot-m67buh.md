@@ -24,6 +24,8 @@ Nothing built yet.
 2. **2026-11-18: Snipe's charge counts from full draw, the damage grows until the charge is full (let go any time), and the full charge gets quicker with skill level** ("Grows with skill level"), over a fixed 3 s (Wind Lance's first hold) and a fixed 1.5 s (Wind Lance's hold).
 3. **2026-11-18: a full Snipe charge takes 3.5 s at skill level 1 and 1.5 s at level 20** (his own answer: "3.5s lvl1 - 1.5s lvl 20"), over 3 → 1.5 s, 1.5 → 0.75 s and 4.5 → 1.5 s. Even steps between (Claude's assumption, as the other skills' tables).
 4. **2026-11-18: a fully charged Snipe deals 150% of the shot's own damage at skill level 1, 300% at 20** ("150% → 300%"), over 200% → 400%, Wind Lance's 100% → 233% and 300% → 600%.
+5. **2026-11-18: Snipe's damage climbs slowly at first and fastest near the end of the charge** ("Slow start, big finish"), over an even climb from 100% and an even climb with a minimum charge. The exact curve and what an early release costs: decision 6.
+6. **2026-11-18: Snipe's damage follows a square curve, and any charge fires Snipe and pays its eitr** ("Square curve; pay on any charge"): damage = 100% + (full share − 100%) × charge², where charge runs 0 → 1 over the charge time (level 1: 100% at full draw, 112% at half charge, 150% at full). Let go at full draw with no charge: a normal arrow, no eitr. Over paying only from a full charge and paying in proportion to the charge.
 
 ## Playtest
 
