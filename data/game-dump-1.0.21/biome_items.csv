@@ -47,7 +47,7 @@ KnifeFlint,Flint Knife,Meadows,False,Recipes,Recipe Recipe_KnifeFlint @ piece_wo
 KnifeWood,Wooden Knife,Meadows,False,Locations,Location ShipSetting01 > ShipSetting01 > Container
 Lantern_DN,Salvaged Lantern,Meadows,False,Vegetation,deepnorth_lantern_standing > DropOnDestroyed
 LeatherScraps,Leather Scraps,Meadows,False,Spawns,Boar > CharacterDrop
-MaceWood,Wooden Mace,Meadows,False,Locations,Location WoodVillage1 > Room > meadowsvillage_greathall > Container
+MaceWood,Wooden Mace,Meadows,False,Locations,Location CombatRuin01 > CombatRuin01 > Container
 Mushroom,Mushroom,Meadows,False,Vegetation,Pickable_Mushroom > Pickable
 NeckTail,Neck Tail,Meadows,False,Spawns,Neck > CharacterDrop
 NeckTailGrilled,Grilled Neck Tail,Meadows,False,Conversions,piece_cookingstation: NeckTail > NeckTailGrilled
@@ -150,14 +150,14 @@ MeadPoisonResist,Poison Resistance Mead,BlackForest,False,Conversions,fermenter:
 MeadStaminaMinor,Minor Stamina Mead,BlackForest,False,Conversions,fermenter: MeadBaseStaminaMinor > MeadStaminaMinor
 MeadTasty,Tasty Mead,BlackForest,False,Conversions,fermenter: MeadBaseTasty > MeadTasty
 MinceMeatSauce,Minced Meat Sauce,BlackForest,False,Recipes,Recipe Recipe_MinceMeatSauce @ piece_cauldron
-MushroomYellow,Yellow Mushroom,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_entrance_large > Pickable
+MushroomYellow,Yellow Mushroom,BlackForest,False,Locations,Location TrollCave02 > TrollCave02 > Pickable
 PickaxeBronze,Bronze Pickaxe,BlackForest,False,Recipes,Recipe Recipe_PickaxeBronze @ forge
 PineCone,Pine Cone,BlackForest,False,Vegetation,Pinetree_01 > Tree
 Pukeberries,Bukeperries,BlackForest,False,Spawns,Greydwarf_Shaman > CharacterDrop
 PulledBear,Pulled Bear,BlackForest,False,Recipes,Recipe Recipe_PulledBear @ piece_cauldron
 QueensJam,Queen's Jam,BlackForest,False,Recipes,Recipe Recipe_QueensJam @ piece_cauldron
 RoundLog,Corewood,BlackForest,False,Vegetation,Pinetree_01 > Tree > Log > Log
-Ruby,Ruby,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_Corridor3 > PickableItem
+Ruby,Ruby,BlackForest,False,Locations,Location TrollCave02 > TrollCave02 > PickableItem
 Sausages,Sausages,BlackForest,False,Recipes,Recipe Recipe_Sausages @ piece_cauldron
 ShieldBronzeBuckler,Bronze Buckler,BlackForest,False,Recipes,Recipe Recipe_ShieldBronzeBuckler @ forge
 SledgeStagbreaker,Stagbreaker,BlackForest,False,Recipes,Recipe Recipe_SledgeStagbreaker @ piece_workbench
@@ -187,8 +187,8 @@ TrophyGreydwarfShaman,Greydwarf Shaman Trophy,BlackForest,False,Spawns,Greydwarf
 TrophySkeletonHildir,Brenna Trophy,BlackForest,False,Locations,Location Hildir_crypt > Room > forestcrypt_chamber_hildir > CreatureSpawner > CharacterDrop
 TrophySkeletonPoison,Rancid Remains Trophy,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_new_BurialChamber02 > CreatureSpawner > CharacterDrop
 TrophyTheElder,The Elder Trophy,BlackForest,False,Locations,Location GDKing > GDKing > OfferingBowl > CharacterDrop
-Upgrader2Armor,Iron Protection Idol,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_room1 > Container
-Upgrader2Weapon,Iron Battle Idol,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_room1 > Container
+Upgrader2Armor,Iron Protection Idol,BlackForest,False,Locations,Location Ruin1 > Ruin1 > Container
+Upgrader2Weapon,Iron Battle Idol,BlackForest,False,Locations,Location Ruin1 > Ruin1 > Container
 YmirRemains,Ymir Flesh,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
 Abomination_attack1,Swing attack,Swamp,False,Spawns,Abomination > Creature attack Abomination
 Abomination_attack2,Slam attack,Swamp,False,Spawns,Abomination > Creature attack Abomination
@@ -486,7 +486,7 @@ TrophyGoblinBrute,Fuling Berserker Trophy,Plains,False,Spawns,GoblinBrute > Char
 TrophyGoblinBruteBrosBrute,Thungr Trophy,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > CharacterDrop
 TrophyGoblinBruteBrosShaman,Zil Trophy,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > CharacterDrop > CharacterDrop
 TrophyGoblinKing,Yagluth Trophy,Plains,False,Locations,Location GoblinKing > GoblinKing > OfferingBowl > CharacterDrop
-TrophyGoblinShaman,Fuling Shaman Trophy,Plains,False,Locations,Location GoblinCamp2 > Room > gobvill_bonfire > CreatureSpawner > CharacterDrop
+TrophyGoblinShaman,Fuling Shaman Trophy,Plains,False,Locations,Location GoblinHut02 > GoblinHut02 > CreatureSpawner > CharacterDrop
 TrophyGrowth,Growth Trophy,Plains,False,Locations,Location TarPit1 > TarPit1 > CreatureSpawner > CharacterDrop
 TrophyLox,Lox Trophy,Plains,False,Spawns,Lox > CharacterDrop
 TurretBolt,Black Metal Missile,Plains,False,Recipes,Recipe Recipe_TurretBolt @ piece_artisanstation
@@ -662,7 +662,7 @@ DyrnwynTipFragment,Dyrnwyn Tip Fragment,Ashlands,False,Locations,Location Placeo
 FaderDrop,Kindled Ribs,Ashlands,False,Locations,Location FaderLocation > FaderLocation > OfferingBowl > CharacterDrop
 FaderEmber,Embers,Ashlands,False,Producers,piece_EternalPyre > LuredFaderEmber > Pickable
 FeastAshlands_Material,Ashlands Gourmet Bowl,Ashlands,False,Recipes,Recipe Recipe_FeastAshlands @ piece_preptable
-Fiddleheadfern,Fiddlehead,Ashlands,False,Locations,Location FortressRuins > Room > CharredRuins15 > Pickable
+Fiddleheadfern,Fiddlehead,Ashlands,False,Locations,Location CharredTowerRuins1 > CharredTowerRuins1 > Pickable
 FierySvinstew,Fiery Svinstew,Ashlands,False,Recipes,Recipe Recipe_FierySvinstew @ piece_cauldron
 Fish11,Magmafish,Ashlands,False,Spawns,Fish11
 FishingBaitAshlands,Hot Fishing Bait,Ashlands,False,Recipes,Recipe Recipe_FishingBaitAshlands @ piece_preptable
@@ -759,7 +759,7 @@ AxeGold_FrostFire,Frostfire Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGold_Fr
 AxeGoldUncooked,Cast: Nord Axe,DeepNorth,False,Recipes,Recipe Recipe_AxeGoldUncooked @ blackforge
 BackpackDeepNorth,Frostbound Haversack,DeepNorth,False,Recipes,Recipe BackpackDeepNorth_Recipe_BlackForge @ blackforge
 BakedPoteitr,Baked Poteitr,DeepNorth,False,Conversions,piece_oven: BakedPoteitrUncooked > BakedPoteitr
-BakedPoteitrUncooked,Unbaked Poteitr,DeepNorth,False,Recipes,Recipe Recipe_BakedPoteitr @ piece_cauldron
+BakedPoteitrUncooked,Unbaked Poteitr,DeepNorth,False,Recipes,Recipe Recipe_BakedPoteitr @ piece_preptable
 Barka_Backslam,Barka Backslam,DeepNorth,False,Spawns,Barka > Creature attack Barka
 Barka_HeavySwing,Dragon claw left,DeepNorth,False,Spawns,Barka > Creature attack Barka
 Barka_SlamDrive,Dragon claw left,DeepNorth,False,Spawns,Barka > Creature attack Barka
@@ -802,7 +802,7 @@ CrownJewel,Crown Jewel,DeepNorth,False,Locations,Location DN_Bossroom > DN_Bossr
 ElakingHairBundle,Elaking Hair Bundle,DeepNorth,False,Spawns,Elaking > CharacterDrop
 FeastDeepNorth_Material,Northern Morning Fare,DeepNorth,False,Recipes,Recipe Recipe_FeastDeepNorth @ piece_preptable
 FeastOceans_Material,Sailor's Bounty,DeepNorth,False,Recipes,Recipe Recipe_FeastOceans @ piece_preptable
-FirConeFrost,Timberwood Cone,DeepNorth,False,Vegetation,SnowFirTree > Tree > Log > Log
+FirConeFrost,Timberwood Cone,DeepNorth,False,Vegetation,SnowFirTree > Tree
 Fish10,Northern Salmon,DeepNorth,False,Spawns,Fish10
 FishCooked,Cooked Fish,DeepNorth,False,Conversions,piece_cookingstation: FishRaw > FishCooked
 FishRaw,Raw Fish,DeepNorth,False,Recipes,Recipe Recipe_Fish1 @ piece_preptable
@@ -822,7 +822,7 @@ GemstoneGreen,Jade,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pick
 GemstoneRed,Bloodstone,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Pickable
 GlowWorm,Luminous Larva,DeepNorth,False,Locations,Location TheHole01 > Room > hole_corridors04_alt5 > Pickable
 Gold,Bloodgold,DeepNorth,False,Conversions,blastfurnace: GoldOre > Gold
-GoldOre,Petrified Tissue,DeepNorth,False,Locations,Location DN_gammeltrollFrac01 > DN_gammeltrollFrac01 > MineRock
+GoldOre,Petrified Tissue,DeepNorth,False,Spawns,Spawner_TrollFrost > CreatureSpawner > On death > Destructible > MineRock
 HelmetCrownofValheim,Crown of Valheim,DeepNorth,False,Recipes,Recipe Recipe_HelmetCrownOfValheim @ blackforge
 HelmetDNHeavy,Helmet of the Protector,DeepNorth,False,Recipes,Recipe Recipe_HelmetGold @ blackforge
 HelmetDNMage,Headdress of the Caller,DeepNorth,False,Recipes,Recipe Recipe_HelmetGoldMage @ piece_magetable
@@ -831,7 +831,7 @@ HelmetFishingHat,Fishing Hat,DeepNorth,False,Recipes,Recipe Recipe_HelmetFishing
 Ice,Ice,DeepNorth,False,Vegetation,ice1 > DropOnDestroyed
 Kale,Kale,DeepNorth,False,Producers,sapling_Kale > Pickable_Kale > Pickable
 KaleChips,Kale Chips,DeepNorth,False,Conversions,piece_oven: KaleChipsUncooked > KaleChips
-KaleChipsUncooked,Raw Kale Chips,DeepNorth,False,Recipes,Recipe Recipe_KaleChips @ piece_cauldron
+KaleChipsUncooked,Raw Kale Chips,DeepNorth,False,Recipes,Recipe Recipe_KaleChips @ piece_preptable
 KaleSeeds,Kale Seeds,DeepNorth,False,Vegetation,Pickable_SeedKale > Pickable
 KeysGoldUncooked,Cast: Intricate Key,DeepNorth,False,Recipes,Recipe Recipe_BloodGoldKeyUncooked @ blackforge
 KnifeGold,Nord Dagger,DeepNorth,False,Recipes,Recipe Recipe_KnifeGold @ blackforge
@@ -894,7 +894,7 @@ OozeMork,Dead Pulp,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Drop
 OrbFrostFire,Frostfire Essence,DeepNorth,False,Locations,Location NorthMemorialPlace > NorthMemorialPlace > OfferingBowl > CharacterDrop
 OrbThunderBlood,Thunderblood Essence,DeepNorth,False,Locations,Location NorthMemorialPlace > NorthMemorialPlace > OfferingBowl > CharacterDrop
 OvenPancake,Oven Pancake,DeepNorth,False,Conversions,piece_oven: OvenPancakeUncooked > OvenPancake
-OvenPancakeUncooked,Oven Pancake Batter,DeepNorth,False,Recipes,Recipe Recipe_OvenPancake @ piece_cauldron
+OvenPancakeUncooked,Oven Pancake Batter,DeepNorth,False,Recipes,Recipe Recipe_OvenPancake @ piece_preptable
 Pancakes,Pancakes,DeepNorth,False,Recipes,Recipe Recipe_Pancakes @ piece_cauldron
 Poteitr,Poteitr,DeepNorth,False,Producers,sapling_poteitr > Pickable_Poteitr > Pickable
 PoteitrSeeds,Seed Poteitr,DeepNorth,False,Locations,Location NorthVillage > Room > northvillage_granary > Container
@@ -967,5 +967,5 @@ TrophyMole,Eyeless One Trophy,DeepNorth,False,Locations,Location TheHole01 > Roo
 TrophyMoose,Moose Trophy,DeepNorth,False,Spawns,Moose > CharacterDrop
 TrophySeal,Seal Trophy,DeepNorth,False,Spawns,Seal > CharacterDrop
 TurretBoltBloodgold,Bloodgold Missile,DeepNorth,False,Recipes,Recipe Recipe_TurretBoltBloodGold @ piece_artisanstation
-Upgrader7Armor,Bloodgold Protection Idol,DeepNorth,False,Locations,Location NorthVillage > Room > northvillage_tower > Container
-Upgrader7Weapon,Bloodgold Battle Idol,DeepNorth,False,Locations,Location NorthVillage > Room > northvillage_tower > Container
+Upgrader7Armor,Bloodgold Protection Idol,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Container
+Upgrader7Weapon,Bloodgold Battle Idol,DeepNorth,False,Locations,Location MorkBorg > MorkBorg > Container

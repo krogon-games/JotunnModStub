@@ -93,7 +93,7 @@ namespace Corruption.Rules
 
         /// <summary>
         ///     Gemseeker's pool (user, 2026-10-28): the trader valuables Amber, Amber pearl and Ruby. Their biomes come
-        ///     from the 1.0.20 dump (<c>data/game-dump-1.0.20/biome_items.csv</c>): Amber and AmberPearl Meadows, Ruby
+        ///     from the game dump (<c>data/game-dump-1.0.21/biome_items.csv</c>, the same in 1.0.20): Amber and AmberPearl Meadows, Ruby
         ///     BlackForest. Parallel arrays: tuples would need System.ValueTuple.
         /// </summary>
         public static readonly string[] GemItems = { "Amber", "AmberPearl", "Ruby" };

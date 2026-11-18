@@ -39,7 +39,7 @@ The tasks below are tracked as **[GitHub issues](https://github.com/krogon-games
 | Priority | Issues |
 |---|---|
 | 1 high | #24 group evening · #25 release build · #26 play-test loot steps 3–4 · #27 small play-test leftovers · ~~#28 orb rules (decision)~~ closed · ~~#29 L5 Riftforge rules~~ closed (PR #58, PR #61) · ~~#30 U3 Riftforge window~~ closed (PR #59) · #31 R1 map tiers and affixes · ~~#32 C3 Amazon passives~~ closed (PR #64) · ~~#66 the Amazon's skill tree overhaul~~ closed (PR #68) |
-| 2 medium | #33 L4 orbs · #34 L6 uniques and ring slot · #35 L7 loot lock and beams · ~~#36 C4 boss points and respec~~ closed (PR #64; the respec item is #67) · ~~#37 C5 skill button and bow skills~~ closed (PR #64) · ~~#38 U2 real Orlog data~~ closed (PR #64) · #39 R3 + R2 elites and 3 stars · #40 R5 landing check and particles · #41 C6 spear and javelin skills · #42 fresh `co_dump` · #60 character stats sheet (caps) · ~~#70 the bow skills still to build~~ closed (all nine work: Forked Lightning and Wind Lance, PR #71; Strafe, Immolation Arrow and Venom Strike, PR #74; Strafe remade, PR #76; Snipe and Shackle Shot, PR #78) · ~~#72 skill damage~~ closed (PR #74: skills scale off the weapon) |
+| 2 medium | #33 L4 orbs · #34 L6 uniques and ring slot · #35 L7 loot lock and beams · ~~#36 C4 boss points and respec~~ closed (PR #64; the respec item is #67) · ~~#37 C5 skill button and bow skills~~ closed (PR #64) · ~~#38 U2 real Orlog data~~ closed (PR #64) · #39 R3 + R2 elites and 3 stars · #40 R5 landing check and particles · #41 C6 spear and javelin skills · #42 fresh `co_dump` (done on `claude/jolly-clarke-4kx6t6`, closes at merge) · #60 character stats sheet (caps) · ~~#70 the bow skills still to build~~ closed (all nine work: Forked Lightning and Wind Lance, PR #71; Strafe, Immolation Arrow and Venom Strike, PR #74; Strafe remade, PR #76; Snipe and Shackle Shot, PR #78) · ~~#72 skill damage~~ closed (PR #74: skills scale off the weapon) |
 | 3 later | #43 U4 recipe list · #44 C7 later Amazon skills · #45 R6 phase 8 · #46 storage and quests · #47 Orlog stone redesign · #48 Unity 6 · #49 L8 synced tables · #50 before a public release · #51 other classes · #52 parked ideas · #67 the respec item |
 
 ## 1. Where we stand
@@ -162,7 +162,7 @@ Follows `class-design.md` §8 (build order). Step 1 (levels, attributes) is done
 - `docs/GAME_DESIGN.md` → Tracks and status, and `CURRENT_STATE.md` → Not built: several rows lag behind the play-tests (talismans, essences, rips step B, classes). Bring them in line with `FEATURES.md`.
 - `PLAYTEST.md` → Session 2: fold `multiplayer-test.md` and every feature's multiplayer check (XP sharing, personal loot rolls, levels seen by others, pings, tints, tabs) into one evening's script for the group.
 - The release for the group: one build of the three DLLs from `master` (`publish.ps1` makes the packages on the user's PC) and an r2modman profile. The "before release" switches (`CURRENT_STATE.md`) stay on while developing.
-- `data/game-dump-1.0.20/` is from 1.0.20; the user now runs 1.0.21: a fresh `co_dump` when convenient (numbers are derived from the dump).
+- ~~`data/game-dump-1.0.20/` is from 1.0.20; the user now runs 1.0.21: a fresh `co_dump` when convenient (numbers are derived from the dump).~~ Done 2026-11-18 (`claude/jolly-clarke-4kx6t6`): `data/game-dump-1.0.21/`; nothing we derived changed.
 
 ## 7. Waiting on the user
 

@@ -1,6 +1,6 @@
 """Builds Corruption/Data/loot_bases.csv: the items monsters can drop as Magic or Rare loot.
 
-Reads the game dump (data/game-dump-1.0.20/items.csv and recipes.csv) and keeps every player-craftable item
+Reads the game dump (data/game-dump-1.0.21/items.csv and recipes.csv) and keeps every player-craftable item
 (an enabled recipe) that belongs to an affix item class. The class rules match LootBases.Classify in
 Corruption/Rules/LootBases.cs; a unit test checks the two agree on every dumped item.
 
@@ -9,7 +9,7 @@ Run from the repository root:  python3 tools/make_loot_bases.py
 import csv
 import os
 
-DUMP = os.path.join("data", "game-dump-1.0.20")
+DUMP = os.path.join("data", "game-dump-1.0.21")
 OUT = os.path.join("Corruption", "Data", "loot_bases.csv")
 
 # Biomes in progression order; items from any other biome (Ocean) are left out.

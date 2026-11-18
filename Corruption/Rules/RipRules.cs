@@ -47,7 +47,7 @@ namespace Corruption.Rules
 
         /// <summary>
         ///     The heart is at least this far from the landing spot (metres): the range of every boss army raid
-        ///     (<c>m_eventRange</c> 96 in <c>data/game-dump-1.0.20/events.csv</c>), so players land in quiet and the
+        ///     (<c>m_eventRange</c> 96 in <c>data/game-dump-1.0.21/events.csv</c>), so players land in quiet and the
         ///     waves start as they close in on the heart. A test checks the game data still agrees.
         /// </summary>
         public const float HeartMinDistance = 96f;

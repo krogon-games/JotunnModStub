@@ -359,6 +359,10 @@ veg_skull_Ashlands,80,0,None,0,2,1,CharredBone 1-1 w1
 VineAsh_sapling,1,0,Default,,,,
 VineGreen_sapling,1,0,Default,,,,
 volture_strawpile,50,0,Default,,,,
+WallSnow1,100,0,Default,,,,
+WallSnow2,100,0,Default,,,,
+WallSnow3,100,0,Default,,,,
+WallSnow4,100,0,Default,,,,
 widestone,1,0,Default,,,,
 widestone_2,1,0,Default,,,,
 YggaShoot_small1,20,4,Tree,2,3,1,Wood 1-1 w1; YggdrasilWood 1-1 w0.2
