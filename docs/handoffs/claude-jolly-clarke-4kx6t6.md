@@ -1,16 +1,18 @@
 # Handoff: `claude/jolly-clarke-4kx6t6`
 
-Written 2026-11-18. Branch: up to date with `master`; not pushed as a PR yet.
+Written 2026-11-18 (`/handoff`). Branch: 2 commits ahead of `master`, 0 behind; no PR yet.
 
 ## Stage
 
-Waiting for Krogon's go-ahead (nothing to play-test, see Playtest).
+Ready to merge.
 
 ## Purpose
 
 [#42](https://github.com/krogon-games/JotunnModStub/issues/42): replace the 1.0.20 game data with a fresh `co_dump` from Valheim 1.0.21 and check whether any number we derived from the game data changes.
 
 ## Done
+
+Nothing here needs testing in game (reference data only), so Done lists the finished work:
 
 - Krogon's `co_dump` (2026-11-18 21:22, 1.0.21, our three mods plus EquipmentAndQuickSlots and AdventureBackpacks) is now `data/game-dump-1.0.21/`, replacing `data/game-dump-1.0.20/` (git history keeps it). `biome_sources.csv` is left out, as before.
 - Compared file by file with 1.0.20 (`data/game-dump-1.0.21/README.md` lists every difference). Creatures, spawns, raids, chests, locations, altars, pieces and every vanilla item's numbers are unchanged. Game changes: three cauldron foods moved to the prep table; the mage hood's upgrade needs one moose trophy at every level; the snow troll's attacks are tool tier 4 (was 6); four new snow wall destructibles.
@@ -36,13 +38,20 @@ Nothing to play-test: no mod code, data table or asset changed. `docs/playtests/
 
 ## Next steps
 
-1. Krogon runs `/handoff`; then a PR into `master` that closes #42.
+1. A PR into `master` that closes #42 (Krogon asks for it, or the coordinator merges the branch).
 
 ## Checks
 
-Not run yet (`/handoff`). Tests: 601 pass.
+- Build: PASS (601 tests pass; Corruption builds against the stand-in game folder, 0 errors).
+- Version: SKIPPED for gameplay: the only shipped files changed are two code comments in Corruption (`Rules/HarvestRules.cs`, `Rules/RipRules.cs`, the dump path); no version changed on this branch.
+- Multiplayer sync: SKIPPED (nothing new to sync; read in code).
+- Assets, prefabs and names: SKIPPED (no new assets, prefabs or text).
+- FEATURES.md: PASS (changelog entry, the dump feature's known issues and date).
+- In-game: not needed (no behaviour changed).
 
 ## Merge notes
 
-- No version bump needed: no gameplay change (reference data, tests, tools and docs only).
+- **Ready to merge: yes.** Nothing to play-test, every check passed or was skipped, up to date with `master`, pushed.
+- No version bump needed: no gameplay change (reference data, tests, tools, docs and two Corruption code comments).
+- No other remote branch has unmerged commits, so no overlap.
 - Shared docs touched: `FEATURES.md` (changelog entry, the dump feature's known issues and date), `docs/CURRENT_STATE.md` (Last updated, Game line, two rows), `docs/ROADMAP.md` (#42 marked done), `CLAUDE.md` and `.claude/skills/handoff/SKILL.md` (dump path). A branch still reading `data/game-dump-1.0.20/` in a new test needs the path changed after merging this.
