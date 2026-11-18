@@ -27,6 +27,7 @@ Nothing built yet.
 5. **2026-11-18: Snipe's damage climbs slowly at first and fastest near the end of the charge** ("Slow start, big finish"), over an even climb from 100% and an even climb with a minimum charge. The exact curve and what an early release costs: decision 6.
 6. **2026-11-18: Snipe's damage follows a square curve, and any charge fires Snipe and pays its eitr** ("Square curve; pay on any charge"): damage = 100% + (full share − 100%) × charge², where charge runs 0 → 1 over the charge time (level 1: 100% at full draw, 112% at half charge, 150% at full). Let go at full draw with no charge: a normal arrow, no eitr. Over paying only from a full charge and paying in proportion to the charge.
 7. **2026-11-18: Snipe zooms 3× at full charge** ("3× at full charge"): the view (the game's 65°) closes in slowly as the charge fills, to about 24° at full charge, with the game's own smooth camera zoom, and springs back when you shoot or let go (as put in the question). Over 2×, 1.5× and growing with skill level.
+8. **2026-11-18: Snipe drains stamina at the bow's drawing rate while charging** ("14 a second"): the game's bows drain 14 a second while drawing (Strafe's log, 2026-11-17; less with Bows skill, `ItemData.GetDrawStaminaDrain`) and halve it once fully drawn; during Snipe's charge it doesn't halve. About 49 stamina for a full level-1 charge, 21 at level 20. Over 7 a second (a drawn bow's) and 21 a second.
 
 ## Playtest
 
