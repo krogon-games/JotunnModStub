@@ -2,6 +2,8 @@
 
 **Written:** 2026-11-01, after every session's branch was merged into `master` (PRs #1–#16; 225 tests pass). **For:** the user and the next round of Claude sessions. Each session reads its own part below before starting, then follows `CLAUDE.md` (branch from the latest `master`, one branch per session, PR when a feature is finished).
 
+**Update 2026-11-18 (classes session, `claude/amazon-snipe-shackle-shot-m67buh`, #70):** Snipe and Shackle Shot, the last two of C5b, are built with Krogon's numbers of the day (both with crossbows; decisions in the branch's handoff) and wait for his play-test. With them the bow tab's nine all work. Two carried-over questions are settled: the burning ground's and the cloud's ticks trigger no on-hit affixes (built), and large roots keep letting a Wind Lance through (no change). Next for classes after this round: C6, the spear and javelin skills (#41).
+
 **Update 2026-11-17, later (coordinator, after PR #76):** Strafe is remade as Diablo 3's Rapid Fire (Krogon's idea; bows and crossbows) and merged after passing his single-player play-test. Orlog is at 0.7.0. #70 still has **Snipe and Shackle Shot: the next classes round**, unchanged.
 
 **Update 2026-11-17 (coordinator, after PR #74):** the skill damage remake (#72, C5c) and Strafe, Immolation Arrow and Venom Strike (#70) are merged, after passing Krogon's single-player play-tests (26 steps, no notes). Orlog is at 0.6.0 (Corruption 0.7.0, CraftingOverhaul 0.5.0). **#72 is closed.** #70 stays open for its last two bow skills, **Snipe and Shackle Shot: the next classes round**; their damage is a share of the shot's, like the others'. After them C6, the spear and javelin skills (#41), on the same rule.

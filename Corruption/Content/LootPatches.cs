@@ -413,7 +413,7 @@ namespace Corruption.Content
     {
         private static void Prefix(HitData hit)
         {
-            if (hit == null || !Player.m_localPlayer || hit.GetAttacker() != Player.m_localPlayer)
+            if (hit == null || !Player.m_localPlayer || hit.GetAttacker() != Player.m_localPlayer || HitSources.IsDamageOverTime(hit))
             {
                 return;
             }

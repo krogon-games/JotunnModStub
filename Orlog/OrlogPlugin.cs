@@ -16,7 +16,7 @@ namespace Orlog
     {
         public const string PluginGUID = "com.krogongames.orlog";
         public const string PluginName = "Orlog";
-        public const string PluginVersion = "0.7.0";
+        public const string PluginVersion = "0.8.0";
 
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;
@@ -52,6 +52,7 @@ namespace Orlog
             _configWatcher?.Tick();
             OrlogStone.Tick();
             Safe.Run("read the skill slot keys", SkillBar.Tick);
+            Safe.Run("zoom for Snipe", Snipe.Tick);
         }
 
         private void OnDestroy()

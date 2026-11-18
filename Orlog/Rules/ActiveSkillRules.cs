@@ -286,10 +286,114 @@ namespace Orlog.Rules
 
         // ------------------------------------------------------------ Wind Lance and Forked Lightning (user, 2026-11-16)
 
-        /// <summary>A skill whose shot must be charged: held on the skill button past full draw (Wind Lance).</summary>
+        /// <summary>
+        ///     A skill whose shot is charged: held on the skill button past full draw (Wind Lance; Snipe since
+        ///     2026-11-18).
+        /// </summary>
         public static bool Charges(string skillId)
         {
-            return string.Equals(skillId, "WindLance", StringComparison.OrdinalIgnoreCase);
+            return string.Equals(skillId, "WindLance", StringComparison.OrdinalIgnoreCase) || IsSnipe(skillId);
+        }
+
+        public static bool IsSnipe(string skillId)
+        {
+            return string.Equals(skillId, "Snipe", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        ///     The values-table row with a charged skill's charge time: Wind Lance must be held <c>hold_s</c>; Snipe's
+        ///     charge fills over <c>charge_s</c>.
+        /// </summary>
+        public static string ChargeTimeValue(string skillId)
+        {
+            return IsSnipe(skillId) ? "charge_s" : "hold_s";
+        }
+
+        /// <summary>
+        ///     Whether a charged shot released now is the skill's shot (and pays its eitr), or a normal one for free.
+        ///     Wind Lance: only once its hold is complete (user, 2026-11-16). Snipe: any charge at all (Krogon,
+        ///     2026-11-18: "pay on any charge"); let go at full draw with no charge, it is a normal arrow.
+        /// </summary>
+        public static bool ChargeFires(string skillId, float heldPastFullDraw, float holdSeconds)
+        {
+            return IsSnipe(skillId) ? heldPastFullDraw > 0f : ChargeReady(heldPastFullDraw, holdSeconds);
+        }
+
+        // ------------------------------------------------------------ Snipe (Krogon, 2026-11-18)
+
+        /// <summary>
+        ///     Snipe's damage, in % of the shot's own, at a charge of <paramref name="charge" /> (0 to 1): a square curve
+        ///     from a normal arrow (100%) to the full share (decisions 5-6: "Slow start, big finish", "Square curve"),
+        ///     so half a charge gives a quarter of the extra.
+        /// </summary>
+        public static float SnipeDamagePercent(float charge, float fullPercent)
+        {
+            float c = Math.Max(0f, Math.Min(1f, charge));
+            return 100f + (fullPercent - 100f) * c * c;
+        }
+
+        /// <summary>
+        ///     Snipe's arrow speed, in % of a normal arrow's, at a charge (0 to 1): rising evenly to the full charge's
+        ///     (decision 10: "Faster with the charge"; evenly, not on the damage's curve, is Claude's choice).
+        /// </summary>
+        public static float SnipeSpeedPercent(float charge, float fullPercent)
+        {
+            float c = Math.Max(0f, Math.Min(1f, charge));
+            return 100f + (fullPercent - 100f) * c;
+        }
+
+        /// <summary>
+        ///     The camera's view angle, in degrees, for Snipe's zoom (decision 7: "3× at full charge"): things look
+        ///     <c>1 + (zoom − 1) × charge</c> times as close, so the zoom closes in evenly as the charge fills.
+        ///     A magnification m narrows a view of angle a to <c>2·atan(tan(a/2) / m)</c> (65° at 3× is about 24°).
+        /// </summary>
+        public static float ZoomFov(float baseFov, float zoom, float charge)
+        {
+            float c = Math.Max(0f, Math.Min(1f, charge));
+            float magnification = 1f + (Math.Max(1f, zoom) - 1f) * c;
+            double half = Math.Tan(baseFov * Math.PI / 360.0) / magnification;
+            return (float)(Math.Atan(half) * 360.0 / Math.PI);
+        }
+
+        // ------------------------------------------------------------ Shackle Shot (Krogon, 2026-11-18)
+
+        /// <summary>
+        ///     Shackle Shot's anchor (decisions 11 and 15, after Dota 2's Shackleshot): of the candidates (enemies and
+        ///     trees), given by their offset on the ground from the struck creature, the nearest one behind it, at most
+        ///     <paramref name="reach" /> away and within <paramref name="coneDegrees" /> of the line from the shooter
+        ///     through it (<paramref name="dirX" />, <paramref name="dirZ" />, on the ground). -1 when none is.
+        ///     On a tie, the earlier candidate wins (the caller lists enemies before trees).
+        /// </summary>
+        public static int ShackleAnchor(IList<float> offsetX, IList<float> offsetZ, float dirX, float dirZ, float reach, float coneDegrees)
+        {
+            float length = (float)Math.Sqrt(dirX * dirX + dirZ * dirZ);
+            if (offsetX == null || offsetZ == null || length < 1e-4f || reach <= 0f)
+            {
+                return -1;
+            }
+            dirX /= length;
+            dirZ /= length;
+            double cosCone = Math.Cos(Math.Max(0f, Math.Min(180f, coneDegrees)) * Math.PI / 180.0);
+            int best = -1;
+            float bestDistance = float.MaxValue;
+            int count = Math.Min(offsetX.Count, offsetZ.Count);
+            for (int i = 0; i < count; i++)
+            {
+                float x = offsetX[i], z = offsetZ[i];
+                float distance = (float)Math.Sqrt(x * x + z * z);
+                if (distance < 1e-3f || distance > reach)
+                {
+                    continue;
+                }
+                double cos = (x * dirX + z * dirZ) / distance;
+                if (cos < cosCone - 1e-6 || distance >= bestDistance)
+                {
+                    continue;
+                }
+                best = i;
+                bestDistance = distance;
+            }
+            return best;
         }
 
         /// <summary>
@@ -536,6 +640,14 @@ namespace Orlog.Rules
                            $"(a loaded crossbow: {N(v.Get(id, "crossbow_per_s", level))} bolts a second), each at {N(v.Get(id, "weapon_damage_pct", level))}% damage. " +
                            $"Costs {N(v.Get(id, "mana_cost", level))} eitr to start and {N(v.Get(id, "eitr_per_s", level))} eitr a second while firing; " +
                            $"uses {N(v.Get(id, "ammo_per_s", level))} arrow or bolt a second; you walk and lose stamina as with a drawn bow";
+                case "Snipe":
+                    return $"Hold past full draw to charge for up to {N(v.Get(id, "charge_s", level))} s, then release: the longer the charge, the harder and faster the arrow, " +
+                           $"up to {N(v.Get(id, "weapon_damage_pct", level))}% damage at {N(v.Get(id, "speed_pct", level) / 100f)}× an arrow's speed. " +
+                           $"The view zooms in up to {N(v.Get(id, "zoom_x", level))}× while charging, and stamina drains as while drawing. Released at full draw with no charge: a normal shot, no eitr";
+                case "ShackleShot":
+                    return $"The arrow deals {N(v.Get(id, "weapon_damage_pct", level))}% damage and shackles the enemy it hits to another enemy or a tree up to " +
+                           $"{N(v.Get(id, "reach_m", level))} m behind it: both are stunned for {N(v.Get(id, "shackle_s", level))} s (with nothing behind it, {N(v.Get(id, "alone_s", level))} s). " +
+                           "Bosses are only slowed";
                 case "ImmolationArrow":
                     return $"Explodes on impact: fire damage equal to {Share(v, id, "blast_damage_pct", level, damageMultiplier)} of the shot's damage within {N(v.Get(id, "radius_m", level))} m; " +
                            $"the ground there burns for {N(v.Get(id, "burn_duration_s", level))} s, dealing {Share(v, id, "burn_damage_pct", level, damageMultiplier)} of the shot's damage each second to enemies in it";

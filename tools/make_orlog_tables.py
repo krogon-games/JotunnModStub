@@ -82,19 +82,19 @@ def boss_xp_shares(bosses):
 # no level tiers, no prerequisites, exactly nine skills per tab, shown as cards three by three in the order below.
 # Each: name, status, kind (attack = on the skill button, cast = on its hotkey, passive = no slot), the weapon it needs,
 # what it does here. A skill Diablo 2 also has (the same name in data/d2-reference/amazon.csv) takes D2's mana as its
-# eitr cost; a new one takes the numbers the user agreed for it (NEW_SKILLS below), and one not agreed yet (Snipe,
-# Shackle Shot) has no cost until the round that builds it.
+# eitr cost; a new one takes the numbers the user agreed for it (NEW_SKILLS below), and one not agreed yet has no cost
+# until the round that builds it.
 AMAZON = [
     ("Bow and Crossbow", [
         ("Forked Lightning", "v1", "attack", "bow", "The arrow hits an enemy, then lightning forks from its body to nearby enemies"),
         ("Wind Lance", "v1", "attack", "bow", "A charged shot that turns the arrow into a javelin of wind: fast and dead straight with no drop, passing through enemies and knocking them back"),
-        ("Snipe", "later", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
+        ("Snipe", "v1", "attack", "bow", "Charge a powerful shot: the longer the charge, the more damage. Drains stamina while charging and slowly zooms in on the target"),
         ("Multishot", "v1", "attack", "bow", "One shot splits into several arrows in a fan; uses one arrow"),
         ("Strafe", "v1", "attack", "bow", "Hold to rapid-fire: the bow draws once (a crossbow needs only to be loaded), then keeps firing where you aim for as long as you hold"),
         ("Freezing Arrow", "v1", "attack", "bow", "Frost damage and a short freeze in an area on impact; bosses are only slowed"),
         ("Immolation Arrow", "v1", "attack", "bow", "Explodes in fire on impact and leaves the ground burning"),
         ("Venom Strike", "v1", "attack", "bow", "The arrow bursts into a poison cloud where it lands, poisoning everything that stands in it"),
-        ("Shackle Shot", "later", "attack", "bow", "Shackles the target to an enemy or a tree behind it, holding both in place; with nothing behind it, only briefly"),
+        ("Shackle Shot", "v1", "attack", "bow", "Shackles the target to an enemy or a tree behind it, stunning both; with nothing behind it, only briefly"),
     ]),
     ("Passive and Magic", [
         ("Inner Sight", "v1", "cast", "", "Nearby enemies glow and take more damage for a while"),
@@ -129,7 +129,8 @@ SKILL_COLS = 3
 # name -> the D2 skill whose mana it takes (eitr, 1:1), then its rows of amazon_skill_values.csv:
 #   (value, unit, ("d2", D2 skill, D2 value, add)) copies that row of data/d2-reference/amazon_levels.csv, plus `add`;
 #   (value, unit, ("flat", number)) is the same at every level;
-#   (value, unit, ("line", level 1, level 20)) rises evenly from level 1 to level 20, to whole numbers.
+#   (value, unit, ("line", level 1, level 20)) rises evenly from level 1 to level 20, to whole numbers;
+#   (value, unit, ("line", level 1, level 20, date, decimals)) the same, rounded to that many decimals.
 NEW_SKILLS = {
     # Decisions 3-5: Charged Strike's numbers ("Charged Strike's"), forks reach 4 m ("4 m"), and the struck enemy
     # takes one fork itself.
@@ -170,6 +171,33 @@ NEW_SKILLS = {
         # Crossbows too (decisions 15-16): "Fewer, same share", 3 bolts a second.
         ("crossbow_per_s", "count", ("flat", 3, "2026-11-17")),
         ("ammo_per_s", "count", ("flat", 1, "2026-11-17")),
+    ]),
+    # Snipe (user, 2026-11-18, docs/handoffs/claude-amazon-snipe-shackle-shot-m67buh.md, decisions 2-10): a charged
+    # shot whose charge counts from full draw and fills over "3.5s lvl1 - 1.5s lvl 20" (charge_s); its damage at full
+    # charge "150% -> 300%" of the shot's, climbing on a square curve from a normal arrow (100%) at no charge ("Slow
+    # start, big finish", "Square curve; pay on any charge"); "3x at full charge" zoom; up to twice an arrow's speed at
+    # full charge ("Faster with the charge", Wind Lance's speed_pct); eitr "9, +0.25 per level" = Freezing Arrow's
+    # mana. Its stamina drain (the bow's drawing rate, decision 8) comes from the game's bows, not a table.
+    "Snipe": ("Freezing Arrow", [
+        ("mana_cost", "flat", ("d2", "Freezing Arrow", "mana_cost", 0)),
+        ("weapon_damage_pct", "%", ("line", 150, 300, "2026-11-18")),
+        ("charge_s", "s", ("line", 3.5, 1.5, "2026-11-18", 1)),
+        ("zoom_x", "x", ("flat", 3, "2026-11-18")),
+        ("speed_pct", "%", ("flat", 200, "2026-11-18")),
+    ]),
+    # Shackle Shot, after Dota 2's Windranger's Shackleshot (user, 2026-11-18, same handoff, decisions 11-17): the
+    # struck creature is shackled to "Another enemy or a tree" behind it, within reach_m ("8 m", the game's harpoon
+    # line: Harpooned m_breakDistance) and cone_deg of the line from the shooter (Dota's shackle_angle 23); both are
+    # stunned for shackle_s ("1.75 s -> 4 s": Dota's stun_duration 1.75 at its level 1, 3.25 + its 0.75 s talent at
+    # our 20), or the struck one alone for alone_s (Dota's fail_stun_duration 0.6; Valve's hero data). Bosses are only
+    # slowed ("Bosses only slowed"). The arrow deals "100% -> 150%" of the shot's damage; eitr "9, +0.25 per level".
+    "Shackle Shot": ("Freezing Arrow", [
+        ("mana_cost", "flat", ("d2", "Freezing Arrow", "mana_cost", 0)),
+        ("weapon_damage_pct", "%", ("line", 100, 150, "2026-11-18")),
+        ("shackle_s", "s", ("line", 1.75, 4, "2026-11-18", 2)),
+        ("alone_s", "s", ("flat", 0.6, "2026-11-18")),
+        ("reach_m", "m", ("flat", 8, "2026-11-18")),
+        ("cone_deg", "deg", ("flat", 23, "2026-11-18")),
     ]),
     # Venom Strike is the user's own skill (2026-11-16, docs/handoffs/claude-magical-babbage-slwwpn.md, decisions 10 and 11):
     # "25% at level 1, 100% at 20"; eitr "7, +0.5 per level" = Plague Javelin's mana. A poison cloud 3 m in every
@@ -226,7 +254,9 @@ def new_skill_rows(name, per_level, rules=None):
             levels = [number(rule[1])] * 20
             note = "user " + (rule[2] if len(rule) > 2 else "2026-11-16")
         else:
-            levels = [number(round(rule[1] + (rule[2] - rule[1]) * (i - 1) / 19.0)) for i in range(1, 21)]
+            decimals = rule[4] if len(rule) > 4 else 0
+            levels = [number(round(rule[1] + (rule[2] - rule[1]) * (i - 1) / 19.0, decimals) if decimals else round(rule[1] + (rule[2] - rule[1]) * (i - 1) / 19.0))
+                      for i in range(1, 21)]
             note = "user " + (rule[3] if len(rule) > 3 else "2026-11-16")
         rows.append([name.replace(" ", ""), value, unit] + levels + [note])
     return rows

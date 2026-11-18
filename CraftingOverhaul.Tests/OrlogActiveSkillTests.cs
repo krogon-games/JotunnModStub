@@ -45,7 +45,7 @@ namespace CraftingOverhaul.Tests
             var built = Tree().Skills.Where(s => s.Built && s.Kind != "passive").ToList();
             Assert.Equal(built.Select(s => s.Id).OrderBy(x => x), v.SkillIds.OrderBy(x => x));
             // The bow skills and Inner Sight (C5) have their tooltip text; the spear skills come with C6.
-            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight", "ForkedLightning", "WindLance", "Strafe", "ImmolationArrow", "VenomStrike" })
+            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight", "ForkedLightning", "WindLance", "Strafe", "ImmolationArrow", "VenomStrike", "Snipe", "ShackleShot" })
             {
                 Assert.False(string.IsNullOrEmpty(ActiveSkillRules.Describe(id, v, 1, 1f, 25f)), id);
             }
@@ -159,7 +159,7 @@ namespace CraftingOverhaul.Tests
         {
             var t = Tree();
             Assert.Equal("Passive skills don't take a slot", ActiveSkillRules.SlotRefusal(t.Find("Dodge"), 3));
-            Assert.Equal("Coming later", ActiveSkillRules.SlotRefusal(t.Find("Snipe"), 0));
+            Assert.Equal("Coming later", ActiveSkillRules.SlotRefusal(t.Find("Decoy"), 0));
             Assert.Equal("Not learned yet", ActiveSkillRules.SlotRefusal(t.Find("MultipleShot"), 0));
             Assert.Equal("", ActiveSkillRules.SlotRefusal(t.Find("MultipleShot"), 1));
             Assert.Equal("Unknown skill", ActiveSkillRules.SlotRefusal(null, 1));
@@ -254,6 +254,9 @@ namespace CraftingOverhaul.Tests
         public void OnlyWindLanceChargesAndItIsReadyAfterItsHold()
         {
             Assert.True(ActiveSkillRules.Charges("WindLance"));
+            // Since 2026-11-18 Snipe charges too (its own test below).
+            Assert.True(ActiveSkillRules.Charges("Snipe"));
+            Assert.False(ActiveSkillRules.Charges("ShackleShot"));
             Assert.False(ActiveSkillRules.Charges("ForkedLightning"));
             Assert.False(ActiveSkillRules.Charges("MultipleShot"));
             Assert.False(ActiveSkillRules.Charges(null));
@@ -363,8 +366,8 @@ namespace CraftingOverhaul.Tests
             {
                 Assert.True(t.Find(id).Built, id);
             }
-            Assert.Equal(7, t.Skills.Count(s => s.Tab == 0 && s.Built));
-            Assert.Equal(2, t.Skills.Count(s => s.Tab == 0 && !s.Built));
+            // Since 2026-11-18 (Snipe, Shackle Shot) all nine of the bow tab are built.
+            Assert.Equal(9, t.Skills.Count(s => s.Tab == 0 && s.Built));
 
             // Strafe: remade 2026-11-17 (Rapid Fire); its own test below.
 
@@ -572,5 +575,127 @@ namespace CraftingOverhaul.Tests
             SkillValueTable.Parse(header + "A,x," + row + "\nA,x," + row + "\n", "v.csv", errors);
             Assert.Contains(errors, e => e.Contains("listed twice"));
         }
-    }
+    
+
+        // ------------------------------------------------------------ Snipe and Shackle Shot (Krogon, 2026-11-18)
+
+        [Fact]
+        public void SnipeAndShackleShotAreBuiltWithTheAgreedNumbers()
+        {
+            var t = Tree();
+            var v = Values();
+            Assert.True(t.Find("Snipe").Built);
+            Assert.True(t.Find("ShackleShot").Built);
+            // Decision 9 and 17: Freezing Arrow's mana, 9 + 0.25 per level.
+            foreach (var id in new[] { "Snipe", "ShackleShot" })
+            {
+                Assert.Equal(9f, ActiveSkillRules.EitrCost(t.Find(id), v, 1));
+                Assert.Equal(13.75f, ActiveSkillRules.EitrCost(t.Find(id), v, 20));
+            }
+            // Snipe, decisions 3, 4, 7 and 10: the charge 3.5 s -> 1.5 s, 150% -> 300% at full charge, 3x zoom, 2x speed.
+            Assert.Equal(3.5f, v.Get("Snipe", "charge_s", 1));
+            Assert.Equal(1.5f, v.Get("Snipe", "charge_s", 20));
+            Assert.Equal(150f, v.Get("Snipe", "weapon_damage_pct", 1));
+            Assert.Equal(300f, v.Get("Snipe", "weapon_damage_pct", 20));
+            Assert.Equal(3f, v.Get("Snipe", "zoom_x", 10));
+            Assert.Equal(200f, v.Get("Snipe", "speed_pct", 10));
+            // Shackle Shot, decisions 13, 15 and 16: 1.75 s -> 4 s, 0.6 s alone, 8 m behind in Dota's 23 degrees, 100% -> 150%.
+            Assert.Equal(1.75f, v.Get("ShackleShot", "shackle_s", 1));
+            Assert.Equal(4f, v.Get("ShackleShot", "shackle_s", 20));
+            Assert.Equal(0.6f, v.Get("ShackleShot", "alone_s", 20));
+            Assert.Equal(8f, v.Get("ShackleShot", "reach_m", 1));
+            Assert.Equal(23f, v.Get("ShackleShot", "cone_deg", 1));
+            Assert.Equal(100f, v.Get("ShackleShot", "weapon_damage_pct", 1));
+            Assert.Equal(150f, v.Get("ShackleShot", "weapon_damage_pct", 20));
+            for (int level = 2; level <= 20; level++)
+            {
+                Assert.True(v.Get("Snipe", "charge_s", level) < v.Get("Snipe", "charge_s", level - 1), "charge " + level);
+                Assert.True(v.Get("Snipe", "weapon_damage_pct", level) > v.Get("Snipe", "weapon_damage_pct", level - 1), "snipe " + level);
+                Assert.True(v.Get("ShackleShot", "shackle_s", level) > v.Get("ShackleShot", "shackle_s", level - 1), "shackle " + level);
+                Assert.True(v.Get("ShackleShot", "weapon_damage_pct", level) > v.Get("ShackleShot", "weapon_damage_pct", level - 1), "shackle damage " + level);
+            }
+        }
+
+        [Fact]
+        public void SnipeFiresOnAnyChargeWindLanceOnlyWhenReady()
+        {
+            Assert.Equal("charge_s", ActiveSkillRules.ChargeTimeValue("Snipe"));
+            Assert.Equal("hold_s", ActiveSkillRules.ChargeTimeValue("WindLance"));
+            // Decision 6: let go at full draw with no charge, a normal arrow; any charge, Snipe.
+            Assert.False(ActiveSkillRules.ChargeFires("Snipe", 0f, 3.5f));
+            Assert.True(ActiveSkillRules.ChargeFires("Snipe", 0.02f, 3.5f));
+            Assert.True(ActiveSkillRules.ChargeFires("Snipe", 9f, 3.5f));
+            Assert.False(ActiveSkillRules.ChargeFires("WindLance", 1.4f, 1.5f));
+            Assert.True(ActiveSkillRules.ChargeFires("WindLance", 1.5f, 1.5f));
+        }
+
+        [Fact]
+        public void SnipeDamageClimbsOnASquareCurveAndSpeedEvenly()
+        {
+            // Decisions 5-6: 100% at no charge, 112.5% at half (a quarter of the extra), the full share at full.
+            Assert.Equal(100f, ActiveSkillRules.SnipeDamagePercent(0f, 150f), 3);
+            Assert.Equal(112.5f, ActiveSkillRules.SnipeDamagePercent(0.5f, 150f), 3);
+            Assert.Equal(150f, ActiveSkillRules.SnipeDamagePercent(1f, 150f), 3);
+            Assert.Equal(300f, ActiveSkillRules.SnipeDamagePercent(1f, 300f), 3);
+            Assert.Equal(300f, ActiveSkillRules.SnipeDamagePercent(5f, 300f), 3);
+            Assert.Equal(100f, ActiveSkillRules.SnipeDamagePercent(-1f, 300f), 3);
+            // Decision 10: the speed rises evenly to twice an arrow's.
+            Assert.Equal(100f, ActiveSkillRules.SnipeSpeedPercent(0f, 200f), 3);
+            Assert.Equal(150f, ActiveSkillRules.SnipeSpeedPercent(0.5f, 200f), 3);
+            Assert.Equal(200f, ActiveSkillRules.SnipeSpeedPercent(1f, 200f), 3);
+        }
+
+        [Fact]
+        public void SnipeZoomsTo3xAtFullCharge()
+        {
+            // Decision 7: the game's 65 degrees; 3x at full charge is about 24 degrees, 2x (half charge) about 35.
+            Assert.Equal(65f, ActiveSkillRules.ZoomFov(65f, 3f, 0f), 2);
+            Assert.Equal(35.3f, ActiveSkillRules.ZoomFov(65f, 3f, 0.5f), 1);
+            Assert.Equal(24.0f, ActiveSkillRules.ZoomFov(65f, 3f, 1f), 1);
+            Assert.Equal(24.0f, ActiveSkillRules.ZoomFov(65f, 3f, 2f), 1);
+            // A zoom below 1 doesn't widen the view.
+            Assert.Equal(65f, ActiveSkillRules.ZoomFov(65f, 0.5f, 1f), 2);
+        }
+
+        [Fact]
+        public void ShackleAnchorIsTheNearestBehindInTheCone()
+        {
+            // The shooter looks along +Z through the struck creature; candidates are offsets from it on the ground.
+            var x = new List<float> { 0f, 0.5f, 3f, 0f, 0f };
+            var z = new List<float> { 6f, 3f, 3f, -2f, 9f };
+            // 0: 6 m straight behind; 1: 3 m, 9.5 degrees off; 2: 3 m, 45 degrees off; 3: in front; 4: beyond 8 m.
+            Assert.Equal(1, ActiveSkillRules.ShackleAnchor(x, z, 0f, 1f, 8f, 23f));
+            // A narrower cone leaves only the one straight behind.
+            Assert.Equal(0, ActiveSkillRules.ShackleAnchor(x, z, 0f, 1f, 8f, 5f));
+            // A shorter reach leaves none in the cone.
+            Assert.Equal(-1, ActiveSkillRules.ShackleAnchor(x, z, 0f, 1f, 2f, 23f));
+            // Nothing behind: shot from the other side, only the one 2 m "in front" is now behind.
+            Assert.Equal(3, ActiveSkillRules.ShackleAnchor(x, z, 0f, -1f, 8f, 23f));
+            // On a tie the earlier candidate (an enemy; trees are listed after) wins.
+            Assert.Equal(0, ActiveSkillRules.ShackleAnchor(new List<float> { 0f, 0f }, new List<float> { 4f, 4f }, 0f, 1f, 8f, 23f));
+            // No direction, no candidates: none.
+            Assert.Equal(-1, ActiveSkillRules.ShackleAnchor(x, z, 0f, 0f, 8f, 23f));
+            Assert.Equal(-1, ActiveSkillRules.ShackleAnchor(new List<float>(), new List<float>(), 0f, 1f, 8f, 23f));
+            // Exactly on the cone's edge counts.
+            float edge = (float)Math.Tan(23.0 * Math.PI / 180.0) * 5f;
+            Assert.Equal(0, ActiveSkillRules.ShackleAnchor(new List<float> { edge }, new List<float> { 5f }, 0f, 1f, 8f, 23f));
+        }
+
+        [Fact]
+        public void SnipeAndShackleShotTooltips()
+        {
+            var v = Values();
+            string snipe = ActiveSkillRules.Describe("Snipe", v, 1, 1f, 25f);
+            Assert.Contains("3.5 s", snipe);
+            Assert.Contains("150% damage", snipe);
+            Assert.Contains("3×", snipe);
+            Assert.Contains("300% damage", ActiveSkillRules.Describe("Snipe", v, 20, 1f, 25f));
+            string shackle = ActiveSkillRules.Describe("ShackleShot", v, 20, 1f, 25f);
+            Assert.Contains("150% damage", shackle);
+            Assert.Contains("8 m", shackle);
+            Assert.Contains("4 s", shackle);
+            Assert.Contains("0.6 s", shackle);
+            Assert.Contains("Bosses are only slowed", shackle);
+        }
+}
 }
