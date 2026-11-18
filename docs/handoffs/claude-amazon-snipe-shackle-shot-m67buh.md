@@ -4,7 +4,9 @@
 
 ## Stage
 
-Ready to merge.
+**Merged** (PR #78, 2026-11-18).
+
+**Coordinator update (2026-11-18):** merged into `master` as **PR #78** on Krogon's word ("Merge branch claude/amazon-snipe-shackle-shot-m67buh into master using a pull request"). `master` was already in the branch (no conflicts). The coordinator raised Orlog and Corruption to **0.8.0** (on this branch, the PR's last commit), copied decisions 1–21 into `docs/DECISIONS.md`, and #70 is closed (by the PR, with a closing note).
 
 ## Purpose
 
@@ -58,8 +60,8 @@ Detail: `FEATURES.md` → Amazon skill bar and bow skills.
 
 ## Next steps
 
-1. Pull request into `master`; Krogon merges.
-2. Coordinator: raise Orlog and Corruption, `STATUS.md`, `DECISIONS.md` (decisions 1–21), close #70.
+1. ~~Pull request into `master`; Krogon merges.~~ Done (PR #78).
+2. ~~Coordinator: raise Orlog and Corruption, `STATUS.md`, `DECISIONS.md` (decisions 1–21), close #70.~~ Done 2026-11-18 (Orlog 0.8.0, Corruption 0.8.0).
 3. Next classes round: C6, Gungnir's Throw and the spear and javelin skills (#41).
 
 ## Checks
