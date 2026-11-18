@@ -35,6 +35,7 @@ Nothing built yet.
 13. **2026-11-18: the shackle holds 1.75 s at skill level 1, 4 s at level 20, and 0.6 s when nothing is behind the target** ("1.75 s → 4 s, 0.6 s alone"): Dota 2's 1.75 s and 3.25 s with its +0.75 s talent folded into level 20, and its 0.6 s fail stun (Valve's hero data, `stun_duration`, `fail_stun_duration`, `special_bonus_unique_windranger_6`). Over Dota's 1.75 → 3.25 s and 2 → 4 s.
 14. **2026-11-18: bosses are only slowed by Shackle Shot** ("Bosses only slowed"), Freezing Arrow's rule: a boss in the shackle is slowed instead of held, for the same time; the other end of the shackle is held as usual. Over "bosses immune" (the game harpoon's rule) and "held for half the time".
 15. **2026-11-18: the shackle reaches 8 m behind the struck creature** ("8 m"), the game's harpoon line (`Harpooned`: `m_breakDistance` 8, game dump), at every level, inside Dota's 23° cone. Over Forked Lightning's 4 m and growing with level.
+16. **2026-11-18: Shackle Shot's arrow deals 100% of the shot's own damage at skill level 1, 150% at 20** ("100% → 150%"), to the struck creature only; the one behind takes no damage, only the hold (as put in the question). Over 100% at every level (closest to Dota 2, which deals none) and 50% → 100%.
 
 ## Playtest
 
