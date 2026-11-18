@@ -36,6 +36,7 @@ Nothing built yet.
 14. **2026-11-18: bosses are only slowed by Shackle Shot** ("Bosses only slowed"), Freezing Arrow's rule: a boss in the shackle is slowed instead of held, for the same time; the other end of the shackle is held as usual. Over "bosses immune" (the game harpoon's rule) and "held for half the time".
 15. **2026-11-18: the shackle reaches 8 m behind the struck creature** ("8 m"), the game's harpoon line (`Harpooned`: `m_breakDistance` 8, game dump), at every level, inside Dota's 23° cone. Over Forked Lightning's 4 m and growing with level.
 16. **2026-11-18: Shackle Shot's arrow deals 100% of the shot's own damage at skill level 1, 150% at 20** ("100% → 150%"), to the struck creature only; the one behind takes no damage, only the hold (as put in the question). Over 100% at every level (closest to Dota 2, which deals none) and 50% → 100%.
+17. **2026-11-18: Shackle Shot costs 9 eitr, +0.25 per level, with no cooldown** ("9, +0.25 per level", Diablo 2's Freezing Arrow's mana: 9 → 13.75 at level 20), over Ice Arrow's 4 + 0.25, Strafe's 11 and adding a cooldown.
 
 ## Playtest
 
