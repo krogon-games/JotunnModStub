@@ -1,0 +1,11 @@
+﻿orb,status,one_in,notes
+transmutation,approved,50,"PoE 20.831%. The scale's top: as common as a Magic item (drop_chances.csv)."
+augmentation,approved,77,"PoE 10.328% (76.7 on the scale)."
+alchemy,approved,172,"PoE 2.754% (171.6 on the scale)."
+regal,approved,830,"PoE 0.207% (831.3 on the scale; 830 as approved)."
+exalted,approved,1865,"PoE 0.055% (1864.7 on the scale). Drops from any kill, not only corrupted bosses and tier 3-4 rips (user, 2026-11-19)."
+divine,approved,2500,"PoE 0.034%. The scale's bottom: as rare as a Unique (drop_chances.csv)."
+annulment,approved,172,"Not in PoE's 2014 table; placed with Alchemy, both 'uncommon' in corruption-design.md (user, 2026-11-19)."
+chance,approved,112,"PoE 5.508% (112.5 on the scale)."
+jeweller,approved,,"Doesn't drop until sockets exist: the orb can't be used yet (user, 2026-11-19). Blank = never drops."
+mirror,approved,21400,"PoE 'under 0.001%': 0.001% gives 21452 on the scale, its most generous place (21400 as approved). Drops from any kill, not only corrupted Queen/Fader and tier 4 rips (user, 2026-11-19)."

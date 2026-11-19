@@ -11,6 +11,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
 | [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
 | [`splinter_looks.csv`](splinter_looks.csv) | How each Affix Splinter looks: per affix family (and pool: `gear`, `any`, `gathering`), its shape (`kind`: attack, elemental, defence, vitality, resistance, utility, mining, woodcutting, gathering) and `colour` (`#RRGGBB`). After editing, run `python tools/make_splinters.py` to remake the textures. The test checks every affix has a row |
+| [`orbs.csv`](orbs.csv) | Currency orbs: how often each drops, as "1 in N" per roll (kills, chests, Stonecutter's and Resinous); blank = never drops |
 | [`orb_chance.csv`](orb_chance.csv) | Orb of Chance: what a Normal item becomes (Magic, Rare, Unique), in percent; always Rare while no unique can come from the item |
 | [`loot_bases.csv`](loot_bases.csv) | Items monsters can drop as Magic or Rare loot, with their biome and affix classes. **Generated** from the game dump by `tools/make_loot_bases.py`; don't edit by hand |
 | [`loot_rules.csv`](loot_rules.csv) | Loot settings: chance of a previous-biome item, drop level, how many affixes Magic and Rare items get |
@@ -20,7 +21,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`rip_loot.csv`](rip_loot.csv) | Which vanilla chest a rip leaves, per biome, weighted by how often each appears in that biome |
 | [`offerings.csv`](offerings.csv) | Corrupted offerings: per boss, the vanilla item, how it's used (`altar`, `stand`, `door`), how many vanilla items one corrupted item takes (plus 1 shard), name and description |
 
-`essences.csv`, `maps.csv`, `rip_loot.csv`, `offerings.csv` and the loot tables (`affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`, since loot step 1) and `orb_chance.csv` (since 2026-11-08) are compiled into the mod: **rebuild after editing them**. The others (`affix_caps.csv`, `corruption_outcomes.csv`, `shattering.csv`) aren't loaded by the game yet. Later the server's copy of the loot tables will be the one everybody plays with. That way the group can rebalance without a new mod version.
+`essences.csv`, `maps.csv`, `rip_loot.csv`, `offerings.csv` and the loot tables (`affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`, since loot step 1) and `orb_chance.csv` (since 2026-11-08) and `orbs.csv` (since 2026-11-19) are compiled into the mod: **rebuild after editing them**. The others (`affix_caps.csv`, `corruption_outcomes.csv`, `shattering.csv`) aren't loaded by the game yet. Later the server's copy of the loot tables will be the one everybody plays with. That way the group can rebalance without a new mod version.
 
 ## How to edit
 
@@ -55,12 +56,23 @@ Every table has a `status` column: `approved` (the user agreed), `proposed` (awa
 |---|---|
 | `source` | A situation that changes drop chances, e.g. `star_2`, `rip_tier_3`, `scar`. Lowercase, digits, `_`. A **new** source needs code to detect it; changing numbers doesn't |
 | `magic`, `rare`, `unique` | Multiplier for that rarity: `2` doubles the chance, `0.5` halves it. **Blank = no change** |
+| `orb` | Multiplier for every currency orb (`orbs.csv`), the same way (2026-11-19: as gear for stars, rips and corruption zones; as uniques for dungeon chests and corrupted bosses) |
 | `status`, `notes` | As above |
 
 **How a drop chance is worked out:** base chance × the multiplier of every source that applies, capped at 100%.
 Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`scar`, magic and rare ×1.5, unique blank) has a Magic chance of 1/50 × 1.5 × 1.5 = 1 in about 22, and a unique chance of 1/2500 × 1.5 = 1 in about 1,667.
 
 **Roll rules (decided 2026-10-27):** each player near a kill rolls separately (personal loot). Magic and Rare roll separately, but if both succeed only the Rare drops. Uniques roll on their own, on top. Code: `DropTable.Roll` in `Corruption/Rules/DropTable.cs`.
+
+## orbs.csv
+
+| Column | Meaning |
+|---|---|
+| `orb` | One of the ten orb ids: `transmutation`, `augmentation`, `alchemy`, `regal`, `exalted`, `divine`, `annulment`, `chance`, `jeweller`, `mirror`. Each needs a row (the test checks) |
+| `one_in` | Base chance per roll as "1 in N", before the `orb` multipliers of `drop_modifiers.csv`. **Blank = never drops** (the Jeweller's Orb until sockets exist) |
+| `status`, `notes` | As above |
+
+**How orbs drop (user, 2026-11-19):** each roll, every orb rolls on its own (a roll can give several orbs or none). A kill rolls once per nearby player (a boss is one kill); a vanilla dungeon or location chest once when the game fills it (`dungeon_chest`); the rip chest once per player near the rip (`rip_tier_1`); Stonecutter's and Resinous roll once when they trigger on a harvest. The current numbers are Path of Exile's order (its leaked 2014 table) squeezed onto a log scale so that Transmutation = 1 in 50 (the Magic rate) and Divine = 1 in 2,500 (the Unique rate): about 7 orbs an hour per player at 125 kills an hour. Code: `OrbDropTable` in `Corruption/Rules/OrbDropTable.cs`; `co_orbroll` checks the rates in game.
 
 ## corruption_outcomes.csv
 
@@ -97,7 +109,7 @@ Built by `python3 tools/make_loot_bases.py` from `data/game-dump-1.0.21/items.cs
 
 | Column | Meaning |
 |---|---|
-| `setting` | `previous_biome_percent` (chance a drop comes from the biome before the creature's), `drop_quality` (upgrade level of dropped gear), `magic_1_affix_weight` / `magic_2_affix_weight` and `rare_3_affix_weight` / `rare_4_affix_weight` (how often each affix count rolls, compared with the other) |
+| `setting` | `previous_biome_percent` (chance a drop comes from the biome before the creature's), `drop_quality` (upgrade level of dropped gear), `magic_1_affix_weight` / `magic_2_affix_weight` and `rare_3_affix_weight` / `rare_4_affix_weight` (how often each affix count rolls, compared with the other), `splintering_reach_m` (how far Splintering's copied chop reaches from the spot hit, in metres) |
 | `value` | The number |
 | `status`, `notes` | As above |
 

@@ -23,6 +23,9 @@ namespace Corruption.Content
         public static LootRules Rules;
         public static Corruption.Rules.DropTable Drops;
 
+        /// <summary>The currency orb drop table (<c>orbs.csv</c>, Krogon 2026-11-19); its multipliers are <see cref="Drops" />' orb column.</summary>
+        public static OrbDropTable Orbs;
+
         /// <summary>Affix effects this build applies. Lines with other effects show in tooltips as not active yet.</summary>
         public static readonly HashSet<string> ActiveEffects = new HashSet<string>
         {
@@ -60,7 +63,7 @@ namespace Corruption.Content
         /// <summary>While true, the stat patches return vanilla numbers (used to work out an affix's bonus for tooltips).</summary>
         [System.ThreadStatic] public static bool Bypass;
 
-        public static bool Loaded => Bases != null && Rules != null && Drops != null && Affixes.Count > 0;
+        public static bool Loaded => Bases != null && Rules != null && Drops != null && Orbs != null && Affixes.Count > 0;
 
         /// <summary>Reads the tables. Problems are logged and switch loot off rather than rolling from broken data.</summary>
         public static void Load()
@@ -71,6 +74,7 @@ namespace Corruption.Content
             var rules = LootRules.Parse(DataFiles.Read("loot_rules.csv"), DataFiles.Read("rare_names.csv"), errors);
             var drops = Corruption.Rules.DropTable.Parse(DataFiles.Read("drop_chances.csv"), DataFiles.Read("drop_modifiers.csv"), errors);
             var caps = AffixCaps.Parse(DataFiles.Read("affix_caps.csv"), errors);
+            var orbs = OrbDropTable.Parse(DataFiles.Read("orbs.csv"), errors);
             if (errors.Count > 0)
             {
                 Jotunn.Logger.LogError("Loot tables have problems, so loot is off:\n" + string.Join("\n", errors));
@@ -81,7 +85,8 @@ namespace Corruption.Content
             Rules = rules;
             Drops = drops;
             Caps = caps;
-            Jotunn.Logger.LogInfo($"Loot: {Affixes.Count} affixes, {Bases.Bases.Count} base items.");
+            Orbs = orbs;
+            Jotunn.Logger.LogInfo($"Loot: {Affixes.Count} affixes, {Bases.Bases.Count} base items, {Orbs.OneIn.Count} orbs that drop.");
         }
 
         /// <summary>The item's rolled affixes, or null for a Normal item (or one whose saved affixes are unreadable).</summary>

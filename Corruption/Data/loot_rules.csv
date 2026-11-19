@@ -5,3 +5,4 @@ magic_1_affix_weight,approved,2,"Magic items: 1 affix twice as often as 2 (user,
 magic_2_affix_weight,approved,1,"Magic items: 2 affixes (1 in 3)."
 rare_3_affix_weight,approved,2,"Rare items: 3 affixes twice as often as 4 (user, 2026-10-29: fewer is likelier, 2 in 3)."
 rare_4_affix_weight,approved,1,"Rare items: 4 affixes (1 in 3)."
+splintering_reach_m,approved,4,"Splintering: the copied chop lands on the nearest other tree or log within this many metres of the spot hit (user, 2026-11-19: twice the axe's reach of about 2 m; before, the axe's own reach)."

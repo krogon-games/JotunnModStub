@@ -14,6 +14,12 @@ namespace Corruption.Rules
         /// <summary>Rarities with their own drop roll. Adding one also needs a column in the modifier table and code.</summary>
         public static readonly string[] Rarities = { "magic", "rare", "unique" };
 
+        /// <summary>
+        ///     The modifier table's column for currency orbs (<c>orbs.csv</c>, user 2026-11-19). Optional when parsing, so
+        ///     older copies of the table still load; the real table has it (tested).
+        /// </summary>
+        public const string OrbColumn = "orb";
+
         private static readonly string[] Statuses = { "approved", "proposed", "draft" };
 
         /// <summary>Rarity → base chance as "1 in N".</summary>
@@ -87,7 +93,7 @@ namespace Corruption.Rules
                         continue;
                     }
                     var multipliers = new Dictionary<string, float>();
-                    foreach (var rarity in Rarities)
+                    foreach (var rarity in header.Contains(OrbColumn) ? Rarities.Concat(new[] { OrbColumn }) : Rarities)
                     {
                         string value = Cell(rows[i], header, rarity);
                         if (value.Length == 0)
@@ -126,6 +132,23 @@ namespace Corruption.Rules
                 }
             }
             return (float)Math.Min(1.0, chance);
+        }
+
+        /// <summary>
+        ///     The product of every applying source's multiplier in this column (<c>magic</c>, <c>rare</c>, <c>unique</c>
+        ///     or <see cref="OrbColumn" />). Blank cells and unknown sources count as x1.
+        /// </summary>
+        public float Multiplier(string column, IEnumerable<string> sources)
+        {
+            double product = 1.0;
+            foreach (var source in sources ?? Enumerable.Empty<string>())
+            {
+                if (Modifiers.TryGetValue(source, out var multipliers) && multipliers.TryGetValue(column, out var multiplier))
+                {
+                    product *= multiplier;
+                }
+            }
+            return (float)product;
         }
 
         /// <summary>

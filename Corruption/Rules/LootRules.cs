@@ -14,7 +14,7 @@ namespace Corruption.Rules
         private static readonly string[] Settings =
         {
             "previous_biome_percent", "drop_quality", "magic_1_affix_weight", "magic_2_affix_weight", "rare_3_affix_weight",
-            "rare_4_affix_weight"
+            "rare_4_affix_weight", "splintering_reach_m"
         };
 
         private static readonly string[] Statuses = { "approved", "proposed", "draft" };
@@ -25,6 +25,9 @@ namespace Corruption.Rules
         public float PreviousBiomePercent;
         public int DropQuality = 1;
         public float Magic1Weight, Magic2Weight, Rare3Weight, Rare4Weight;
+
+        /// <summary>Splintering: how far from the spot hit the copied chop can find another tree or log, in metres (Krogon, 2026-11-19: 4).</summary>
+        public float SplinteringReach;
 
         /// <summary>List → words.</summary>
         public readonly Dictionary<string, List<string>> Names = new Dictionary<string, List<string>>();
@@ -69,6 +72,7 @@ namespace Corruption.Rules
             rules.Magic2Weight = Get("magic_2_affix_weight");
             rules.Rare3Weight = Get("rare_3_affix_weight");
             rules.Rare4Weight = Get("rare_4_affix_weight");
+            rules.SplinteringReach = Get("splintering_reach_m");
             if (values.Count == Settings.Length)
             {
                 if (rules.PreviousBiomePercent > 100f)

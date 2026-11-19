@@ -405,18 +405,20 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 
 ### The orbs
 
-| Orb | What it does | Drops from |
+| Orb | What it does | How often (user, 2026-11-19) |
 |---|---|---|
-| Orb of Transmutation | Normal → Magic with 1 affix | Common: rip waves, chests |
+| Orb of Transmutation | Normal → Magic with 1 affix | Common |
 | Orb of Augmentation | Adds an affix to a Magic item with 0 or 1; it stays Magic | Common |
 | Orb of Alchemy | Normal → Rare | Uncommon |
 | Regal Orb | Magic item with exactly 2 affixes → Rare, adding a third | Uncommon |
-| Exalted Orb | Adds an affix to a Rare with room | Rare: tier 3–4 rips, corrupted bosses |
+| Exalted Orb | Adds an affix to a Rare with room | Rare |
 | Divine Orb | Rerolls the numbers on existing affixes | Rare |
 | Orb of Annulment | Removes one random affix; the rarity never changes, even at 0 affixes | Uncommon |
 | Orb of Chance | Normal item becomes Magic 50%, Rare 30%, Unique 20%; always Rare when no unique can come from that item | Uncommon |
-| Jeweller's Orb | Adds a socket, up to a set maximum. Greyed out (can't be used) until sockets and runewords are designed | Uncommon |
-| Mirror of Kalandra | Makes an exact copy, corrupted items included; the copy can never be modified or mirrored; the original is unchanged | Extremely rare: tier 4 rips, corrupted Queen or Fader |
+| Jeweller's Orb | Adds a socket, up to a set maximum. Greyed out (can't be used) until sockets and runewords are designed | Doesn't drop until sockets exist |
+| Mirror of Kalandra | Makes an exact copy, corrupted items included; the copy can never be modified or mirrored; the original is unchanged | Extremely rare |
+
+**Where orbs drop (user, 2026-11-19, #33):** every orb can drop from all content: any creature kill (each nearby player rolls for themselves, as for gear; a boss is one kill), vanilla dungeon and location chests, the chest a rip heart leaves (once per player near the rip), and gathering with the Stonecutter's and Resinous affixes. Stars, rips, corrupted bosses and dungeon chests raise the chance. The rates follow Path of Exile's order, squeezed between our Magic rate (1 in 50 kills) and Unique rate (1 in 2,500). **Replaces** the earlier sources (Transmutation from rip waves and chests; Exalted only from tier 3–4 rips and corrupted bosses; the Mirror only from tier 4 rips and a corrupted Queen or Fader): "All orbs should have a chance to drop from all content." Live numbers: [`Corruption/Data/orbs.csv`](../Corruption/Data/orbs.csv) and the `orb` column of [`drop_modifiers.csv`](../Corruption/Data/drop_modifiers.csv).
 
 ### Rules
 

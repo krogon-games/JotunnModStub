@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Corruption.Content
 {
     /// <summary>
-    ///     Magic and Rare drops from kills. Runs on the machine that simulates the creature, where vanilla drops its loot.
+    ///     Magic and Rare drops, and currency orbs (<see cref="OrbDrops" />, 2026-11-19), from kills. Runs on the machine that simulates the creature, where vanilla drops its loot.
     ///     Personal loot (design): every player within the game's own "nearby players" range (the range it counts
     ///     players in to scale creature difficulty, <c>Game.m_difficultyScaleRange</c>) rolls separately.
     ///     Both of the game's death paths count: drops at once, and drops handed to the ragdoll (which turns the
@@ -92,6 +92,8 @@ namespace Corruption.Content
                     int players = DeathLoot.RollsFor(Nearby.Count);
                     for (int i = 0; i < players; i++)
                     {
+                        // Orbs: their own roll per player, beside the gear roll (Krogon, 2026-11-19: all content; a boss is one kill).
+                        OrbDrops.Drop(OrbDrops.Roll(sources), position);
                         foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
                         {
                             // Uniques come with a later step.
