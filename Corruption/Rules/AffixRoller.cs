@@ -44,7 +44,7 @@ namespace Corruption.Rules
                 var candidates = eligible.Where(a =>
                     (a.IsPrefix ? prefixes : suffixes) < limit &&
                     !picked.Any(p => p.IsPrefix == a.IsPrefix && p.Family == a.Family) &&
-                    a.Weight > 0f).ToList();
+                    a.Rolls).ToList();
                 if (candidates.Count == 0)
                 {
                     break;
@@ -87,7 +87,7 @@ namespace Corruption.Rules
             int suffixes = present.Count - prefixes;
             int limit = SideLimit(rarity);
             return table.Values.Where(a =>
-                a.Classes.Any(classes.Contains) && (a.Requires.Length == 0 || mechanics.Contains(a.Requires)) && a.Weight > 0f &&
+                a.Classes.Any(classes.Contains) && (a.Requires.Length == 0 || mechanics.Contains(a.Requires)) && a.Rolls &&
                 (a.IsPrefix ? prefixes : suffixes) < limit &&
                 !present.Any(p => p.IsPrefix == a.IsPrefix && p.Family == a.Family)).ToList();
         }

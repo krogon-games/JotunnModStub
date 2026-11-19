@@ -11,6 +11,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
 | [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
 | [`splinter_looks.csv`](splinter_looks.csv) | How each Affix Splinter looks: per affix family (and pool: `gear`, `any`, `gathering`), its shape (`kind`: attack, elemental, defence, vitality, resistance, utility, mining, woodcutting, gathering) and `colour` (`#RRGGBB`). After editing, run `python tools/make_splinters.py` to remake the textures. The test checks every affix has a row |
+| [`shipped_affixes.csv`](shipped_affixes.csv) | Every affix id and family the mod has ever had (a record, not read by the game): the tests check none disappears without a rename or a `retired` row |
 | [`orbs.csv`](orbs.csv) | Currency orbs: how often each drops, as "1 in N" per roll (kills, chests), and the odds of Hoardfinder's and of Hidden Riches' orb; blank = never drops |
 | [`orb_chance.csv`](orb_chance.csv) | Orb of Chance: what a Normal item becomes (Magic, Rare, Unique), in percent; always Rare while no unique can come from the item |
 | [`loot_bases.csv`](loot_bases.csv) | Items monsters can drop as Magic or Rare loot, with their biome and affix classes. **Generated** from the game dump by `tools/make_loot_bases.py`; don't edit by hand |
@@ -26,11 +27,13 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 ## How to edit
 
 1. Open the file in Excel, Google Sheets or LibreOffice (or edit it on GitHub).
-2. Change values, add or delete rows. Use a dot for decimals (`1.5`, not `1,5`).
+2. Change values, add or delete rows (but **never delete or rename a row of `affixes.csv`**: see below). Use a dot for decimals (`1.5`, not `1,5`).
 3. Save as **CSV UTF-8** (keeps names like Jötunn's intact).
 4. Run `dotnet test CraftingOverhaul.Tests` (or ask Claude to). The tests read the real files and list every mistake with its file and line.
 
-Every table has a `status` column: `approved` (the user agreed), `proposed` (awaiting review) or `draft` (starting numbers, untested).
+Every table has a `status` column: `approved` (the user agreed), `proposed` (awaiting review) or `draft` (starting numbers, untested). `affixes.csv` also takes `retired`: the affix no longer rolls anywhere (drops, orbs, shards), but gear and splinters that already have it still read and work.
+
+**Affixes players may have saved (2026-11-19):** an affix's `id` and `family` are stored on gear and splinters, so a row of `affixes.csv` is never deleted: set its status to `retired` instead. A rename goes into `Corruption/Rules/AffixRenames.cs` (old and new name), so saved items read the new one. [`shipped_affixes.csv`](shipped_affixes.csv) lists every id and family the mod has had; a new affix adds its id (and a new family) there, and the tests fail if one goes missing.
 
 ## affix_caps.csv
 

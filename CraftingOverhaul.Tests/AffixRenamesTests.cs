@@ -94,6 +94,53 @@ namespace CraftingOverhaul.Tests
             Assert.Equal("CorruptionAffixSplinter_tool_extra_stone", SplinterLooks.PrefabFor("gathering", "extra_stone"));
         }
 
+        private static List<string> Shipped(string kind)
+        {
+            return Csv.ReadRows(DataFile("shipped_affixes.csv")).Skip(1)
+                .Where(r => r.Count >= 2 && r[0].Trim() == kind).Select(r => r[1].Trim()).ToList();
+        }
+
+        /// <summary>
+        ///     The guard for later affix work (Krogon, 2026-11-19: "I just don't want these issues coming up in the future"):
+        ///     an id or family that was ever in the game is saved on players' gear and splinters, so it may never just
+        ///     disappear from affixes.csv.
+        /// </summary>
+        [Fact]
+        public void NoShippedAffixIdOrFamilyEverDisappears()
+        {
+            var affixes = RealAffixes();
+            var ids = new HashSet<string>(affixes.Select(a => a.Id));
+            var families = new HashSet<string>(affixes.Select(a => a.Family));
+            foreach (var id in Shipped("id"))
+            {
+                Assert.True(ids.Contains(AffixRenames.Id(id)),
+                    $"Affix id '{id}' was in the game but is gone from affixes.csv. Players may have it saved: if it was renamed, " +
+                    "add the old and new id to Corruption/Rules/AffixRenames.cs; if it should stop rolling, keep its row and set " +
+                    "its status to 'retired' (docs/ARCHITECTURE.md, code pattern 10).");
+            }
+            foreach (var family in Shipped("family"))
+            {
+                int i = System.Array.IndexOf(AffixRenames.OldFamilies, family);
+                string now = i >= 0 ? AffixRenames.NewFamilies[i] : family;
+                Assert.True(families.Contains(now),
+                    $"Affix family '{family}' was in the game but is gone from affixes.csv. Splinters are saved under it: if it " +
+                    "was renamed, add the old and new name to Corruption/Rules/AffixRenames.cs (docs/ARCHITECTURE.md, code pattern 10).");
+            }
+        }
+
+        [Fact]
+        public void EveryAffixIdAndFamilyIsOnTheShippedList()
+        {
+            // Adding an affix: add its id (and a new family) to Corruption/Data/shipped_affixes.csv, so the guard above covers it.
+            var shippedIds = new HashSet<string>(Shipped("id"));
+            var shippedFamilies = new HashSet<string>(Shipped("family"));
+            foreach (var affix in RealAffixes())
+            {
+                Assert.True(shippedIds.Contains(affix.Id), $"Add 'id,{affix.Id}' to Corruption/Data/shipped_affixes.csv.");
+                Assert.True(shippedFamilies.Contains(affix.Family), $"Add 'family,{affix.Family}' to Corruption/Data/shipped_affixes.csv.");
+            }
+        }
+
         [Fact]
         public void OtherIdsAreUnchanged()
         {
