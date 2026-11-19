@@ -25,16 +25,16 @@ namespace Corruption.Rules
         public float Gem;
 
         /// <summary>
-        ///     Hoardfinder's, <c>extra_stone</c> (the id kept so saved gear and splinters still load): chance a mining
+        ///     Hoardfinder's, <c>orb_find_mining</c> (was Stonecutter's, <c>extra_stone</c>): chance a mining
         ///     harvest (a rock or ore chunk the striker breaks) drops one orb (Krogon, 2026-11-19).
         /// </summary>
-        public float Stone;
+        public float MiningOrb;
 
         /// <summary>
-        ///     of Hidden Riches, <c>extra_resin</c> (the id kept likewise): chance a woodcutting harvest (a tree, log or stump the
+        ///     of Hidden Riches, <c>orb_find_woodcutting</c> (was Resinous, <c>extra_resin</c>): chance a woodcutting harvest (a tree, log or stump the
         ///     striker fells) drops one orb (Krogon, 2026-11-19).
         /// </summary>
-        public float Resin;
+        public float WoodcuttingOrb;
 
         /// <summary>Forester's, <c>tree_seed_drop</c>.</summary>
         public float Seed;
@@ -49,7 +49,7 @@ namespace Corruption.Rules
         public long Striker;
 
         public bool Any =>
-            Odin || Bounty > 0f || WoodBounty > 0f || Stamina > 0f || Ore > 0f || Gem > 0f || Stone > 0f || Resin > 0f ||
+            Odin || Bounty > 0f || WoodBounty > 0f || Stamina > 0f || Ore > 0f || Gem > 0f || MiningOrb > 0f || WoodcuttingOrb > 0f ||
             Seed > 0f || Charring > 0f;
 
         /// <summary>A copy without the one-strike Odin's Grace flag (for a deposit that replaces a broken rock).</summary>
@@ -199,7 +199,7 @@ namespace Corruption.Rules
                     result.Add(items.Seed);
                 }
             }
-            if (GatheringRules.Roll(woodcutting ? chances.Resin : chances.Stone, random))
+            if (GatheringRules.Roll(woodcutting ? chances.WoodcuttingOrb : chances.MiningOrb, random))
             {
                 var orb = items.FindOrb();
                 if (orb != null)

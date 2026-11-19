@@ -67,6 +67,8 @@ namespace Corruption.Rules
             {
                 return null;
             }
+            // Lines saved before an affix was renamed (AffixRenames) read as the new id.
+            ids = ids.Select(AffixRenames.Id).ToArray();
             return new Line { Ids = ids, Value = value, Corrupted = corrupted };
         }
 

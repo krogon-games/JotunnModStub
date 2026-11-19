@@ -14,7 +14,7 @@
 
 **A number to look at while you play:** at the best roll (5%), a copper deposit (about 30 chunks) gives about 1.5 orbs and every 5 trees about one; at 1%, one orb per 3 deposits. If that feels too small or too big, tell me.
 
-**Phone page:** the same steps are the first section of the [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht), "This round: orb drops" (step ids `orb-1` … `orb-11`).
+**Phone page:** the same steps are the first section of the [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht), "This round: orb drops" (step ids `orb-1` … `orb-12`).
 
 ### Checklist
 
@@ -37,12 +37,14 @@
 
 **Gathering**
 
-9. [ ] (`orb-9`) **Hoardfinder's** (was Stonecutter's): hold a pickaxe, `co_affix stonecutters 100` (the command still uses the old id) (100% only for the test; real tools roll 1–5%) → the tooltip reads "100% chance a rock or ore chunk you break drops an orb". Break a whole copper deposit → **every** chunk that breaks drops an orb, mostly Transmutation and Augmentation. No extra stone drops while you mine. Then `co_affix stonecutters 5` and break another deposit → one or two orbs. The pickaxe's name starts with "Hoardfinder's" (a Magic one: "Hoardfinder's Antler Pickaxe"). A pickaxe that rolled Stonecutter's before this build shows the new name and text too.
-10. [ ] (`orb-10`) **of Hidden Riches** (was Resinous, "of Resin"): hold an axe, `co_affix resinous 100` (the old id again) → the tooltip reads "100% chance a tree, log or stump you fell drops an orb". Fell a tree and chop up its logs and stump → **each** piece drops an orb along with its wood. No extra resin drops per hit. A Magic axe's name ends in "of Hidden Riches".
+9. [ ] (`orb-9`) **Hoardfinder's** (was Stonecutter's): hold a pickaxe, `co_affix hoardfinders 100` (100% only for the test; real tools roll 1–5%) → the tooltip reads "100% chance a rock or ore chunk you break drops an orb". Break a whole copper deposit → **every** chunk that breaks drops an orb, mostly Transmutation and Augmentation. No extra stone drops while you mine. Then `co_affix hoardfinders 5` and break another deposit → one or two orbs. The pickaxe's name starts with "Hoardfinder's" (a Magic one: "Hoardfinder's Antler Pickaxe"). A pickaxe that rolled Stonecutter's before this build shows the new name and text too.
+10. [ ] (`orb-10`) **of Hidden Riches** (was Resinous, "of Resin"): hold an axe, `co_affix hidden_riches 100` → the tooltip reads "100% chance a tree, log or stump you fell drops an orb". Fell a tree and chop up its logs and stump → **each** piece drops an orb along with its wood. No extra resin drops per hit. A Magic axe's name ends in "of Hidden Riches".
 
 **Splintering**
 
 11. [ ] (`orb-11`) Splintering: hold an axe, `co_affix splintering 100`. Chop a tree that has another tree about 3–4 m away → the other tree shakes and takes the same chop. A tree more than about 4 m away is never hit. Then send me `BepInEx/LogOutput.log`, even if everything passed.
+
+12. [ ] (`orb-12`) **Old saves:** if a world or character has a pickaxe or axe with the old Stonecutter's or Resinous, or a splinter of either, load it → the tool's name and line show Hoardfinder's / of Hidden Riches, and each splinter is still there and shows the new name. (Skip if you have none.)
 
 ### Your feedback
 

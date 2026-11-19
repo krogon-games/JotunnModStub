@@ -16,9 +16,9 @@ Nothing yet.
 
 ## Half-done and known issues
 
-Built 2026-11-19, untested in game (614 tests pass; Corruption builds against the stand-in game folder):
+Built 2026-11-19, untested in game (620 tests pass; Corruption builds against the stand-in game folder):
 - **Orb drops** (`OrbDrops.cs`, `OrbDropTable.cs`, `orbs.csv`, the `orb` column of `drop_modifiers.csv`): kills per nearby player; vanilla chests with default loot once when the game fills them (new `Container.AddDefaultItems` postfix); the rip chest once per player near the rip; `co_orbroll` to check rates.
-- **Stonecutter's and Resinous** (decision 11): a 1–5% chance per harvest of one orb, weighted like kills' orbs (the per-hit postfixes are gone). Tools rolled before keep their old 5–25% value until a Divine Orb rerolls it. Affix ids `extra_stone` / `extra_resin` kept so saved gear and splinters load.
+- **Hoardfinder's and of Hidden Riches** (were Stonecutter's and Resinous; decisions 11–13): a 1–5% chance per harvest of one orb, weighted like kills' orbs (the per-hit postfixes are gone). Ids `hoardfinders` / `hidden_riches`, families `orb_find_mining` / `orb_find_woodcutting`; saves with the old ids load through `AffixRenames`, and the two old splinter items stay registered. Tools rolled before keep their old 5–25% value until a Divine Orb rerolls it. 
 - **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
 
 Claude's interim choices (easy to change): the splinters of the two orb finders keep their stone-grey and resin-amber colours (`splinter_looks.csv`, `proposed`); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
@@ -41,7 +41,7 @@ Claude's interim choices (easy to change): the splinters of the two orb finders 
 
 ## Playtest
 
-`docs/playtests/claude-charming-dijkstra-sg16vv.md` (11 solo steps), also the first section of the phone page (`orb-1` … `orb-11`). Group steps: `PLAYTEST.md` → Session 2, 2k (and the page's `mpe-2k-1` … `mpe-2k-3`).
+`docs/playtests/claude-charming-dijkstra-sg16vv.md` (12 solo steps), also the first section of the phone page (`orb-1` … `orb-12`). Group steps: `PLAYTEST.md` → Session 2, 2k (and the page's `mpe-2k-1` … `mpe-2k-3`).
 
 ## Open questions for Krogon
 

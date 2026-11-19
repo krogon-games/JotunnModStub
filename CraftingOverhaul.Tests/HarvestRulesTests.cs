@@ -41,7 +41,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void AnEmptyDropIsNotAHarvest()
         {
-            var chances = new HarvestChances { Bounty = 100f, Stone = 100f, Resin = 100f };
+            var chances = new HarvestChances { Bounty = 100f, MiningOrb = 100f, WoodcuttingOrb = 100f };
             Assert.Empty(HarvestRules.Apply(new List<string>(), chances, false, Items(), Rolls()));
         }
 
@@ -88,7 +88,7 @@ namespace CraftingOverhaul.Tests
         public void HoardfindersDropsAnOrbOnAMiningHarvest()
         {
             // Krogon, 2026-11-19: "X% chance a rock or ore chunk you break drops an orb".
-            var chances = new HarvestChances { Stone = 25f };
+            var chances = new HarvestChances { MiningOrb = 25f };
             Assert.Equal(new[] { "CopperOre", "CorruptionOrb_Transmutation" },
                 HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items(), Rolls(0.24)));
             Assert.Equal(new[] { "CopperOre" }, HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items(), Rolls(0.25)));
@@ -98,7 +98,7 @@ namespace CraftingOverhaul.Tests
         public void HiddenRichesDropsAnOrbOnAWoodcuttingHarvest()
         {
             // Krogon, 2026-11-19: "X% chance a tree, log or stump you fell drops an orb".
-            var chances = new HarvestChances { Resin = 5f };
+            var chances = new HarvestChances { WoodcuttingOrb = 5f };
             Assert.Equal(new[] { "Wood", "CorruptionOrb_Transmutation" },
                 HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls(0.04)));
             Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls(0.05)));
@@ -108,8 +108,8 @@ namespace CraftingOverhaul.Tests
         public void EachOrbFinderOnlyRollsOnItsOwnKindOfHarvest()
         {
             // Hoardfinder's is a pickaxe affix and of Hidden Riches an axe affix: neither rolls on the other's harvest.
-            Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, new HarvestChances { Stone = 100f }, true, Items(), Rolls()));
-            Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { Resin = 100f }, false, Items(), Rolls()));
+            Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, new HarvestChances { MiningOrb = 100f }, true, Items(), Rolls()));
+            Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { WoodcuttingOrb = 100f }, false, Items(), Rolls()));
         }
 
         [Fact]
@@ -117,14 +117,14 @@ namespace CraftingOverhaul.Tests
         {
             var items = Items();
             items.FindOrb = () => null;
-            Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { Stone = 100f }, false, items, Rolls(0.0)));
+            Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { MiningOrb = 100f }, false, items, Rolls(0.0)));
         }
 
         [Fact]
         public void OrbsAreNotDoubledByBountifulOrTurnedIntoCoal()
         {
             // The orbs are added after Bountiful's copy; Charring only touches wood.
-            var chances = new HarvestChances { Bounty = 100f, Resin = 100f, Charring = 100f };
+            var chances = new HarvestChances { Bounty = 100f, WoodcuttingOrb = 100f, Charring = 100f };
             Assert.Equal(new[] { "Coal", "Coal", "CorruptionOrb_Transmutation" },
                 HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls(0.0, 0.0, 0.0, 0.0)));
         }

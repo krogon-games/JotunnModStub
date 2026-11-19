@@ -56,14 +56,24 @@ namespace Corruption.Content
             foreach (var look in looks.Looks)
             {
                 Safe.Run($"register the {look.Prefab}", () => RegisterOne(look.Prefab, look));
+                // A renamed family's old splinter item stays, with the new look, so splinters saved before still load
+                // (AffixRenames). New splinters always use the new name.
+                string old = AffixRenames.OldFamily(look.Family);
+                if (old != null)
+                {
+                    string legacy = SplinterLooks.PrefabFor(look.Pool, old);
+                    Safe.Run($"register the {legacy} (renamed)", () => RegisterOne(legacy, look, look.Prefab));
+                }
             }
             // One line that says whether the looks made it into the game (play-test 2026-11-10: every splinter looked alike).
             Jotunn.Logger.LogInfo($"Affix Splinters: {looks.Looks.Count} looks in the table, {_registered} items registered, " +
                                   $"{_models} with their own model, {_icons} icons rendered.");
         }
 
-        private static void RegisterOne(string prefabName, SplinterLooks.Look look)
+        /// <param name="assetName">The prefab whose texture it uses (a renamed family's old item uses the new one's); default its own.</param>
+        private static void RegisterOne(string prefabName, SplinterLooks.Look look, string assetName = null)
         {
+            assetName = assetName ?? prefabName;
             var item = new CustomItem(prefabName, BasePrefab, new ItemConfig
             {
                 Name = NameToken,
@@ -81,7 +91,7 @@ namespace Corruption.Content
                     {
                         Name = prefabName,
                         Mesh = $"splinter_{look.Kind}.obj",
-                        Albedo = prefabName + "_albedo.rgba",
+                        Albedo = assetName + "_albedo.rgba",
                         Emission = $"splinter_{look.Kind}_emission.rgba"
                     }, colour);
                 }

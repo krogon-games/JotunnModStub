@@ -137,8 +137,8 @@ namespace Corruption.Content
             pkg.Write(c.Stamina);
             pkg.Write(c.Ore);
             pkg.Write(c.Gem);
-            pkg.Write(c.Stone);
-            pkg.Write(c.Resin);
+            pkg.Write(c.MiningOrb);
+            pkg.Write(c.WoodcuttingOrb);
             pkg.Write(c.Seed);
             pkg.Write(c.Charring);
             pkg.Write(c.Odin);
@@ -149,7 +149,7 @@ namespace Corruption.Content
             return new HarvestChances
             {
                 Bounty = pkg.ReadSingle(), WoodBounty = pkg.ReadSingle(), Stamina = pkg.ReadSingle(), Ore = pkg.ReadSingle(),
-                Gem = pkg.ReadSingle(), Stone = pkg.ReadSingle(), Resin = pkg.ReadSingle(), Seed = pkg.ReadSingle(),
+                Gem = pkg.ReadSingle(), MiningOrb = pkg.ReadSingle(), WoodcuttingOrb = pkg.ReadSingle(), Seed = pkg.ReadSingle(),
                 Charring = pkg.ReadSingle(), Odin = pkg.ReadBool()
             };
         }
@@ -183,8 +183,8 @@ namespace Corruption.Content
                 Stamina = Loot.Total(tool, "stamina_percent_on_harvest"),
                 Ore = Loot.Total(tool, "extra_ore"),
                 Gem = Loot.Total(tool, "gem_find"),
-                Stone = Loot.Total(tool, "extra_stone"),
-                Resin = Loot.Total(tool, "extra_resin"),
+                MiningOrb = Loot.Total(tool, "orb_find_mining"),
+                WoodcuttingOrb = Loot.Total(tool, "orb_find_woodcutting"),
                 Seed = Loot.Total(tool, "tree_seed_drop"),
                 Charring = Loot.Total(tool, "wood_to_coal")
             };

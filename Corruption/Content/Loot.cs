@@ -42,8 +42,8 @@ namespace Corruption.Content
             "durability_save_chance", "hit_noise_reduction", "item_weight_reduction", "pickup_range", "pickup_radius_set",
             "attack_speed", "gathering_skill_xp",
             // Gathering tools, on harvest (2026-11-01): applied by the object's owner (LootHarvest), incl. Odin's Grace on trees.
-            "harvest_double_chance", "wood_double_chance", "stamina_percent_on_harvest", "extra_ore", "gem_find", "extra_stone",
-            "extra_resin", "tree_seed_drop", "wood_to_coal",
+            "harvest_double_chance", "wood_double_chance", "stamina_percent_on_harvest", "extra_ore", "gem_find", "orb_find_mining",
+            "orb_find_woodcutting", "tree_seed_drop", "wood_to_coal",
             // Proc and utility affixes (2026-11-01, LootProcs).
             "parry_buff_armour", "parry_buff_next_hit", "parry_buff_attack_speed", "parry_restore_stamina", "parry_lightning",
             "combo_shockwave", "frost_stacking", "attack_speed_on_kill", "heal_on_kill", "cheat_death", "forage_speed_boost"
