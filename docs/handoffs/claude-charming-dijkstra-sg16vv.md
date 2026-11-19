@@ -35,6 +35,7 @@ Claude's interim choices (easy to change): the affix names stay Stonecutter's / 
 8. **Splintering reaches 4 m** from the spot hit (2026-11-19), twice the axe's own reach of about 2 m (over 3 m and 6 m). Krogon's play-test note of 2026-11-11: "needs a little bigger radius/ hit detection range".
 9. **Stonecutter's becomes an orb finder** (2026-11-19): "X% chance a rock or ore chunk you break rolls the orb table", same 5–25% range, over the biome's special stone and double stone. **Replaces** "5–25% chance per hit of one stone" (2026-11-08) and ends its rework flag.
 10. **Resinous becomes an orb finder** (2026-11-19): "X% chance a tree, log or stump you fell rolls the orb table", same 5–25% range, over the biome's special wood and 5 resin per tree. **Replaces** "5–25% chance per hit of one resin" (2026-11-08) and ends its rework flag.
+11. **Stonecutter's and Resinous drop a guaranteed orb when they trigger** (2026-11-19, Krogon's idea after seeing the wording: "changing the wording to a guaranteed orb drop every x percentage … heavily weighted towards the more common orbs but still a chance to drop a higher rarity"). "X% chance a rock or ore chunk you break drops an orb" / "X% chance a tree, log or stump you fell drops an orb"; X rolls **1–5%** (over a flat 1%, 1–3% and 1–10%; the top is about one kill's worth of orbs, 5.6%). The orb is picked with the orb table's own odds (Transmutation 36% … Mirror about 1 in 1,200; never the Jeweller's). **Replaces** decisions 9–10's "rolls the orb table" and their 5–25% range.
 
 ## Playtest
 
