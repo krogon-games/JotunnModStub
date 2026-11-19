@@ -13,7 +13,7 @@ namespace Corruption.Content
     ///     content. Kills roll the orb table once per nearby player, beside the Magic and Rare roll (<see cref="LootDrops" />);
     ///     a vanilla dungeon or location chest rolls it once when the game fills it (<c>dungeon_chest</c>); the chest a
     ///     rip heart leaves rolls it once per player near the rip (<see cref="RipLoot" />); Stonecutter's and Resinous
-    ///     roll it on a harvest (<see cref="LootHarvest" />). Chances: <c>orbs.csv</c> times <c>drop_modifiers.csv</c>'s
+    ///     drop one orb picked with the table's odds when they trigger on a harvest (<see cref="LootHarvest" />). Chances: <c>orbs.csv</c> times <c>drop_modifiers.csv</c>'s
     ///     orb column (<see cref="OrbDropTable" />).
     /// </summary>
     internal static class OrbDrops
@@ -34,6 +34,20 @@ namespace Corruption.Content
                 return new List<string>();
             }
             return Loot.Orbs.Roll(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources), Random01);
+        }
+
+        /// <summary>
+        ///     Stonecutter's and Resinous: one orb, always, picked with the table's odds (<see cref="OrbDropTable.Pick" />).
+        ///     Null when the loot tables didn't load or loot is off.
+        /// </summary>
+        public static GameObject FindOne()
+        {
+            if (!Loot.Loaded || !CorruptionConfig.LootEnabled.Value)
+            {
+                return null;
+            }
+            string orb = Loot.Orbs.Pick(Random01);
+            return orb == null ? null : Prefabs(new[] { orb }).FirstOrDefault();
         }
 
         /// <summary>The orbs' item prefabs (orbs whose item is missing are left out, logged).</summary>

@@ -622,8 +622,8 @@ namespace Corruption.Content
                 IsWood = go => go && Wood.Contains(go.name),
                 IsOre = go => go && Ores.Contains(go.name),
                 Coal = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(CoalPrefab) : null,
-                // Stonecutter's and Resinous (Krogon, 2026-11-19): the orb table, rolled like a kill's with no sources.
-                RollOrbs = () => OrbDrops.Prefabs(OrbDrops.Roll(null))
+                // Stonecutter's and Resinous (Krogon, 2026-11-19): one guaranteed orb, weighted like kills' orbs.
+                FindOrb = OrbDrops.FindOne
             };
             if (woodcutting && table.m_drops != null)
             {

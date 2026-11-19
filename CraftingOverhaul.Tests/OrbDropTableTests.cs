@@ -134,6 +134,40 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void PickAlwaysGivesOneOrbWeightedByTheTablesOdds()
+        {
+            // Stonecutter's and Resinous (Krogon, 2026-11-19): a guaranteed orb, mostly the common ones.
+            var errors = new List<string>();
+            var table = OrbDropTable.Parse(Table("transmutation,approved,2\nregal,approved,6\n"), errors);
+            Assert.Empty(errors);
+            // Weights 1/2 and 1/6: transmutation takes the first three quarters of the roll, regal the last quarter.
+            Assert.Equal("transmutation", table.Pick(() => 0.0));
+            Assert.Equal("transmutation", table.Pick(() => 0.74));
+            Assert.Equal("regal", table.Pick(() => 0.76));
+            Assert.Equal("regal", table.Pick(() => 0.99999));
+        }
+
+        [Fact]
+        public void PickNeverGivesAnOrbThatDoesNotDrop()
+        {
+            var errors = new List<string>();
+            var none = OrbDropTable.Parse(Table(""), errors);
+            Assert.Null(none.Pick(() => 0.5));
+            var table = ParseReal();
+            var random = new Random(7);
+            var counts = OrbRules.Orbs.ToDictionary(o => o, o => 0);
+            for (int i = 0; i < 200000; i++)
+            {
+                counts[table.Pick(random.NextDouble)]++;
+            }
+            Assert.Equal(0, counts["jeweller"]);
+            // The real odds: Transmutation about 36%, Exalted about 1%, the Mirror about 1 in 1,200.
+            Assert.InRange(counts["transmutation"] / 200000.0, 0.35, 0.37);
+            Assert.InRange(counts["exalted"] / 200000.0, 0.008, 0.011);
+            Assert.InRange(counts["mirror"], 100, 240);
+        }
+
+        [Fact]
         public void TheRealRatesGiveTheExpectedPace()
         {
             // About 7 orbs an hour per player at 125 kills an hour (the pace drop_chances.csv's Unique rate assumes).

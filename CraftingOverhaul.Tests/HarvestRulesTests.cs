@@ -15,7 +15,7 @@ namespace CraftingOverhaul.Tests
                 IsOre = s => s == "CopperOre" || s == "TinOre",
                 Seed = seed,
                 Coal = "Coal",
-                RollOrbs = () => new List<string> { "CorruptionOrb_Transmutation" },
+                FindOrb = () => "CorruptionOrb_Transmutation",
                 Gems = new List<string>(gems)
             };
         }
@@ -85,9 +85,9 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void StonecuttersRollsTheOrbTableOnAMiningHarvest()
+        public void StonecuttersDropsAnOrbOnAMiningHarvest()
         {
-            // Krogon, 2026-11-19: "X% chance a rock or ore chunk you break rolls the orb table".
+            // Krogon, 2026-11-19: "X% chance a rock or ore chunk you break drops an orb".
             var chances = new HarvestChances { Stone = 25f };
             Assert.Equal(new[] { "CopperOre", "CorruptionOrb_Transmutation" },
                 HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items(), Rolls(0.24)));
@@ -95,9 +95,9 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void ResinousRollsTheOrbTableOnAWoodcuttingHarvest()
+        public void ResinousDropsAnOrbOnAWoodcuttingHarvest()
         {
-            // Krogon, 2026-11-19: "X% chance a tree, log or stump you fell rolls the orb table".
+            // Krogon, 2026-11-19: "X% chance a tree, log or stump you fell drops an orb".
             var chances = new HarvestChances { Resin = 5f };
             Assert.Equal(new[] { "Wood", "CorruptionOrb_Transmutation" },
                 HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls(0.04)));
@@ -113,10 +113,10 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void AnOrbRollThatGivesNothingAddsNothing()
+        public void NoOrbThatCanDropAddsNothing()
         {
             var items = Items();
-            items.RollOrbs = () => new List<string>();
+            items.FindOrb = () => null;
             Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { Stone = 100f }, false, items, Rolls(0.0)));
         }
 

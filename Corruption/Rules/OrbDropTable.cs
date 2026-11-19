@@ -99,6 +99,38 @@ namespace Corruption.Rules
         }
 
         /// <summary>
+        ///     One orb, always: picked with the table's own odds as weights (each orb's 1 / one_in), so the common orbs
+        ///     come most often and every orb that drops from kills can come. For Stonecutter's and Resinous (Krogon,
+        ///     2026-11-19: "a guaranteed orb … heavily weighted towards the more common orbs"). Null only when no orb drops.
+        /// </summary>
+        /// <param name="random">Returns a value in [0, 1).</param>
+        public string Pick(Func<double> random)
+        {
+            double total = OrbRules.Orbs.Sum(o => (double)Chance(o, 1f));
+            if (total <= 0.0)
+            {
+                return null;
+            }
+            double roll = random() * total;
+            string last = null;
+            foreach (var orb in OrbRules.Orbs)
+            {
+                double weight = Chance(orb, 1f);
+                if (weight <= 0.0)
+                {
+                    continue;
+                }
+                last = orb;
+                if (roll < weight)
+                {
+                    return orb;
+                }
+                roll -= weight;
+            }
+            return last;
+        }
+
+        /// <summary>
         ///     One roll of the table: each orb that can drop rolls on its own, in <see cref="OrbRules.Orbs" />' order.
         ///     Returns the orbs that drop (often none).
         /// </summary>

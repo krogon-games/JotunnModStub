@@ -16,12 +16,12 @@ Nothing yet.
 
 ## Half-done and known issues
 
-Built 2026-11-19, untested in game (612 tests pass; Corruption builds against the stand-in game folder):
+Built 2026-11-19, untested in game (614 tests pass; Corruption builds against the stand-in game folder):
 - **Orb drops** (`OrbDrops.cs`, `OrbDropTable.cs`, `orbs.csv`, the `orb` column of `drop_modifiers.csv`): kills per nearby player; vanilla chests with default loot once when the game fills them (new `Container.AddDefaultItems` postfix); the rip chest once per player near the rip; `co_orbroll` to check rates.
-- **Stonecutter's and Resinous** roll the orb table per harvest (the per-hit postfixes are gone). Affix ids `extra_stone` / `extra_resin` kept so saved gear and splinters load.
+- **Stonecutter's and Resinous** (decision 11): a 1–5% chance per harvest of one orb, weighted like kills' orbs (the per-hit postfixes are gone). Tools rolled before keep their old 5–25% value until a Divine Orb rerolls it. Affix ids `extra_stone` / `extra_resin` kept so saved gear and splinters load.
 - **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
 
-Claude's interim choices (easy to change): the affix names stay Stonecutter's / Resinous (the suffix still reads "of Resin"); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). Worth Krogon's eye: at a 25% roll, Stonecutter's gives an orb from about 1 in 70 broken pieces.
+Claude's interim choices (easy to change): the affix names stay Stonecutter's / Resinous (the suffix still reads "of Resin"); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
 
 ## Decisions
 

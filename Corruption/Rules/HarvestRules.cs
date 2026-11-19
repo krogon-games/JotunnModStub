@@ -26,13 +26,13 @@ namespace Corruption.Rules
 
         /// <summary>
         ///     Stonecutter's, <c>extra_stone</c> (the id kept so saved gear and splinters still load): chance a mining
-        ///     harvest (a rock or ore chunk the striker breaks) rolls the orb table (Krogon, 2026-11-19).
+        ///     harvest (a rock or ore chunk the striker breaks) drops one orb (Krogon, 2026-11-19).
         /// </summary>
         public float Stone;
 
         /// <summary>
         ///     Resinous, <c>extra_resin</c> (the id kept likewise): chance a woodcutting harvest (a tree, log or stump the
-        ///     striker fells) rolls the orb table (Krogon, 2026-11-19).
+        ///     striker fells) drops one orb (Krogon, 2026-11-19).
         /// </summary>
         public float Resin;
 
@@ -77,10 +77,10 @@ namespace Corruption.Rules
         public T Coal;
 
         /// <summary>
-        ///     One roll of the orb table (<see cref="OrbDropTable.Roll" />) as items, for Stonecutter's and Resinous; often
-        ///     empty. Rolled on the owner's game, where the harvest's drops spawn.
+        ///     The orb Stonecutter's or Resinous gives when it triggers: one, picked with the orb table's odds
+        ///     (<see cref="OrbDropTable.Pick" />); null if none can drop. Picked on the owner's game, where the harvest's drops spawn.
         /// </summary>
-        public Func<IList<T>> RollOrbs = () => new List<T>();
+        public Func<T> FindOrb = () => null;
 
         /// <summary>Gemseeker's pool for this deposit's biome (<see cref="HarvestRules.GemPool" />).</summary>
         public IList<T> Gems = new List<T>();
@@ -146,7 +146,7 @@ namespace Corruption.Rules
         ///         <item>Bountiful: everything in the vanilla list once more. Woodcutting Bountiful: its wood once more. Both can trigger (triple wood).</item>
         ///         <item>Mining (rocks and ore): Artisan adds 1 of the first ore that dropped, Gemseeker's 1 gem from the biome's pool (equally likely).</item>
         ///         <item>Woodcutting (trees, logs, stumps): Forester's adds 1 of the tree's own seed.</item>
-        ///         <item>Stonecutter's (mining) or Resinous (woodcutting): a chance the harvest also rolls the orb table and adds what it gives (Krogon, 2026-11-19).</item>
+        ///         <item>Stonecutter's (mining) or Resinous (woodcutting): a chance the harvest also drops one orb (Krogon, 2026-11-19).</item>
         ///         <item>Charring last: each wood item in the result rolls on its own and becomes coal (replaces the wood, user's choice).</item>
         ///     </list>
         /// </summary>
@@ -201,7 +201,11 @@ namespace Corruption.Rules
             }
             if (GatheringRules.Roll(woodcutting ? chances.Resin : chances.Stone, random))
             {
-                result.AddRange(items.RollOrbs());
+                var orb = items.FindOrb();
+                if (orb != null)
+                {
+                    result.Add(orb);
+                }
             }
             if (items.Coal != null && chances.Charring > 0f)
             {
