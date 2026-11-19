@@ -12,7 +12,7 @@ namespace Corruption.Content
     ///     Currency orbs dropping in normal play (#33, Krogon's decisions of 2026-11-19): every orb can drop from all
     ///     content. Kills roll the orb table once per nearby player, beside the Magic and Rare roll (<see cref="LootDrops" />);
     ///     a vanilla dungeon or location chest rolls it once when the game fills it (<c>dungeon_chest</c>); the chest a
-    ///     rip heart leaves rolls it once per player near the rip (<see cref="RipLoot" />); Stonecutter's and Resinous
+    ///     rip heart leaves rolls it once per player near the rip (<see cref="RipLoot" />); Hoardfinder's and of Hidden Riches
     ///     drop one orb picked with the table's odds when they trigger on a harvest (<see cref="LootHarvest" />). Chances: <c>orbs.csv</c> times <c>drop_modifiers.csv</c>'s
     ///     orb column (<see cref="OrbDropTable" />).
     /// </summary>
@@ -37,7 +37,7 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     Stonecutter's and Resinous: one orb, always, picked with the table's odds (<see cref="OrbDropTable.Pick" />).
+        ///     Hoardfinder's and of Hidden Riches: one orb, always, picked with the table's odds (<see cref="OrbDropTable.Pick" />).
         ///     Null when the loot tables didn't load or loot is off.
         /// </summary>
         public static GameObject FindOne()

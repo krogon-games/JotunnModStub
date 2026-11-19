@@ -136,7 +136,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void PickAlwaysGivesOneOrbWeightedByTheTablesOdds()
         {
-            // Stonecutter's and Resinous (Krogon, 2026-11-19): a guaranteed orb, mostly the common ones.
+            // Hoardfinder's and of Hidden Riches (Krogon, 2026-11-19): a guaranteed orb, mostly the common ones.
             var errors = new List<string>();
             var table = OrbDropTable.Parse(Table("transmutation,approved,2\nregal,approved,6\n"), errors);
             Assert.Empty(errors);

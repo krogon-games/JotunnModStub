@@ -1,6 +1,6 @@
 # Play-tests: `claude/charming-dijkstra-sg16vv`
 
-## Round: orb drops, Stonecutter's and Resinous as orb finders, Splintering's reach (2026-11-19)
+## Round: orb drops, Hoardfinder's and of Hidden Riches as orb finders, Splintering's reach (2026-11-19)
 
 **Build:** the three DLLs from this branch (only Corruption changed). The log line should read `Corruption 0.8.0 loaded (build: claude/charming-dijkstra-sg16vv <commit>)` (versions are raised when the branch merges).
 **Setup:** single player, a test world, the group's mods loaded. F5, `devcommands`, `god`. Best in the Black Forest (trees, copper, greydwarfs).
@@ -8,7 +8,7 @@
 **What's new (your decisions 3–10):**
 - **Orbs drop.** Every kill rolls for orbs, once for each player nearby (bosses too: a boss is one kill). Every orb but the Jeweller's can drop, Exalted and Mirror included. On average that's one orb every 18 kills, mostly Transmutation and Augmentation: about 7 an hour at a normal pace. Stars, rips and corrupted bosses raise the chance.
 - **Chests.** A vanilla dungeon or location chest rolls once when the game first creates it, at ×1.5. **Chests the world made before this build already have their loot, so they get no orbs.** The chest a rip heart leaves rolls once for each player near the rip.
-- **Stonecutter's** (pickaxe): "X% chance a rock or ore chunk you break drops an orb". **Resinous** (axe): "X% chance a tree, log or stump you fell drops an orb". X rolls 1–5% (your decision 11). When it triggers, one orb always drops: Transmutation 36% of the time, Augmentation 23%, Chance 16%, Alchemy and Annulment 10% each, Regal 2%, Exalted 1%, Divine 0.7%, the Mirror about 1 in 1,200. No more extra stone or resin per hit. A test tool rolled before this build keeps its old 5–25% number until a Divine Orb rerolls it.
+- **Hoardfinder's** (pickaxe, was Stonecutter's): "X% chance a rock or ore chunk you break drops an orb". **of Hidden Riches** (axe, was Resinous / "of Resin"): "X% chance a tree, log or stump you fell drops an orb". X rolls 1–5% (your decision 11). When it triggers, one orb always drops: Transmutation 36% of the time, Augmentation 23%, Chance 16%, Alchemy and Annulment 10% each, Regal 2%, Exalted 1%, Divine 0.7%, the Mirror about 1 in 1,200. No more extra stone or resin per hit. A test tool rolled before this build keeps its old 5–25% number until a Divine Orb rerolls it.
 - **Splintering** reaches 4 m from the spot you hit (it was the axe's own reach, about 2 m).
 - **New test command** `co_orbroll [rolls] [source …]`: rolls the orb table many times and prints the counts next to what's expected. It drops nothing.
 
@@ -37,8 +37,8 @@
 
 **Gathering**
 
-9. [ ] (`orb-9`) Stonecutter's: hold a pickaxe, `co_affix stonecutters 100` (100% only for the test; real tools roll 1–5%) → the tooltip reads "100% chance a rock or ore chunk you break drops an orb". Break a whole copper deposit → **every** chunk that breaks drops an orb, mostly Transmutation and Augmentation. No extra stone drops while you mine. Then `co_affix stonecutters 5` and break another deposit → one or two orbs. If you still have a pickaxe that rolled Stonecutter's before this build, its tooltip shows the new text.
-10. [ ] (`orb-10`) Resinous: hold an axe, `co_affix resinous 100` → the tooltip reads "100% chance a tree, log or stump you fell drops an orb". Fell a tree and chop up its logs and stump → **each** piece drops an orb along with its wood. No extra resin drops per hit.
+9. [ ] (`orb-9`) **Hoardfinder's** (was Stonecutter's): hold a pickaxe, `co_affix stonecutters 100` (the command still uses the old id) (100% only for the test; real tools roll 1–5%) → the tooltip reads "100% chance a rock or ore chunk you break drops an orb". Break a whole copper deposit → **every** chunk that breaks drops an orb, mostly Transmutation and Augmentation. No extra stone drops while you mine. Then `co_affix stonecutters 5` and break another deposit → one or two orbs. The pickaxe's name starts with "Hoardfinder's" (a Magic one: "Hoardfinder's Antler Pickaxe"). A pickaxe that rolled Stonecutter's before this build shows the new name and text too.
+10. [ ] (`orb-10`) **of Hidden Riches** (was Resinous, "of Resin"): hold an axe, `co_affix resinous 100` (the old id again) → the tooltip reads "100% chance a tree, log or stump you fell drops an orb". Fell a tree and chop up its logs and stump → **each** piece drops an orb along with its wood. No extra resin drops per hit. A Magic axe's name ends in "of Hidden Riches".
 
 **Splintering**
 

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Corruption.Content
 {
     /// <summary>
-    ///     On-harvest gathering affixes: both Bountifuls, Determined, Artisan, Gemseeker's, Stonecutter's, Resinous,
+    ///     On-harvest gathering affixes: both Bountifuls, Determined, Artisan, Gemseeker's, Hoardfinder's, of Hidden Riches,
     ///     Forester's, Charring, and Odin's Grace on trees (AFFIX_RULES.md → Gathering tool affixes).
     ///     <para>
     ///         Breaking and dropping happen on the object's owner, who can't see the striker's tool. So before each hit
@@ -622,7 +622,7 @@ namespace Corruption.Content
                 IsWood = go => go && Wood.Contains(go.name),
                 IsOre = go => go && Ores.Contains(go.name),
                 Coal = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(CoalPrefab) : null,
-                // Stonecutter's and Resinous (Krogon, 2026-11-19): one guaranteed orb, weighted like kills' orbs.
+                // Hoardfinder's and of Hidden Riches (Krogon, 2026-11-19): one guaranteed orb, weighted like kills' orbs.
                 FindOrb = OrbDrops.FindOne
             };
             if (woodcutting && table.m_drops != null)

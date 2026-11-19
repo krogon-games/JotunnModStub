@@ -11,7 +11,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
 | [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
 | [`splinter_looks.csv`](splinter_looks.csv) | How each Affix Splinter looks: per affix family (and pool: `gear`, `any`, `gathering`), its shape (`kind`: attack, elemental, defence, vitality, resistance, utility, mining, woodcutting, gathering) and `colour` (`#RRGGBB`). After editing, run `python tools/make_splinters.py` to remake the textures. The test checks every affix has a row |
-| [`orbs.csv`](orbs.csv) | Currency orbs: how often each drops, as "1 in N" per roll (kills, chests), and the odds of Stonecutter's and Resinous' orb; blank = never drops |
+| [`orbs.csv`](orbs.csv) | Currency orbs: how often each drops, as "1 in N" per roll (kills, chests), and the odds of Hoardfinder's and of Hidden Riches' orb; blank = never drops |
 | [`orb_chance.csv`](orb_chance.csv) | Orb of Chance: what a Normal item becomes (Magic, Rare, Unique), in percent; always Rare while no unique can come from the item |
 | [`loot_bases.csv`](loot_bases.csv) | Items monsters can drop as Magic or Rare loot, with their biome and affix classes. **Generated** from the game dump by `tools/make_loot_bases.py`; don't edit by hand |
 | [`loot_rules.csv`](loot_rules.csv) | Loot settings: chance of a previous-biome item, drop level, how many affixes Magic and Rare items get |
@@ -72,7 +72,7 @@ Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`sc
 | `one_in` | Base chance per roll as "1 in N", before the `orb` multipliers of `drop_modifiers.csv`. **Blank = never drops** (the Jeweller's Orb until sockets exist) |
 | `status`, `notes` | As above |
 
-**How orbs drop (user, 2026-11-19):** each roll, every orb rolls on its own (a roll can give several orbs or none). A kill rolls once per nearby player (a boss is one kill); a vanilla dungeon or location chest once when the game fills it (`dungeon_chest`); the rip chest once per player near the rip (`rip_tier_1`); Stonecutter's and Resinous don't roll it: when they trigger they drop one orb, picked with these odds as weights (`OrbDropTable.Pick`). The current numbers are Path of Exile's order (its leaked 2014 table) squeezed onto a log scale so that Transmutation = 1 in 50 (the Magic rate) and Divine = 1 in 2,500 (the Unique rate): about 7 orbs an hour per player at 125 kills an hour. Code: `OrbDropTable` in `Corruption/Rules/OrbDropTable.cs`; `co_orbroll` checks the rates in game.
+**How orbs drop (user, 2026-11-19):** each roll, every orb rolls on its own (a roll can give several orbs or none). A kill rolls once per nearby player (a boss is one kill); a vanilla dungeon or location chest once when the game fills it (`dungeon_chest`); the rip chest once per player near the rip (`rip_tier_1`); Hoardfinder's and of Hidden Riches don't roll it: when they trigger they drop one orb, picked with these odds as weights (`OrbDropTable.Pick`). The current numbers are Path of Exile's order (its leaked 2014 table) squeezed onto a log scale so that Transmutation = 1 in 50 (the Magic rate) and Divine = 1 in 2,500 (the Unique rate): about 7 orbs an hour per player at 125 kills an hour. Code: `OrbDropTable` in `Corruption/Rules/OrbDropTable.cs`; `co_orbroll` checks the rates in game.
 
 ## corruption_outcomes.csv
 

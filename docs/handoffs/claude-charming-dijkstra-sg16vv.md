@@ -21,7 +21,7 @@ Built 2026-11-19, untested in game (614 tests pass; Corruption builds against th
 - **Stonecutter's and Resinous** (decision 11): a 1–5% chance per harvest of one orb, weighted like kills' orbs (the per-hit postfixes are gone). Tools rolled before keep their old 5–25% value until a Divine Orb rerolls it. Affix ids `extra_stone` / `extra_resin` kept so saved gear and splinters load.
 - **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
 
-Claude's interim choices (easy to change): the affix names stay Stonecutter's / Resinous (the suffix still reads "of Resin"); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
+Claude's interim choices (easy to change): the splinters of the two orb finders keep their stone-grey and resin-amber colours (`splinter_looks.csv`, `proposed`); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
 
 ## Decisions
 

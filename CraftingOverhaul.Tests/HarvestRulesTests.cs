@@ -85,7 +85,7 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void StonecuttersDropsAnOrbOnAMiningHarvest()
+        public void HoardfindersDropsAnOrbOnAMiningHarvest()
         {
             // Krogon, 2026-11-19: "X% chance a rock or ore chunk you break drops an orb".
             var chances = new HarvestChances { Stone = 25f };
@@ -95,7 +95,7 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void ResinousDropsAnOrbOnAWoodcuttingHarvest()
+        public void HiddenRichesDropsAnOrbOnAWoodcuttingHarvest()
         {
             // Krogon, 2026-11-19: "X% chance a tree, log or stump you fell drops an orb".
             var chances = new HarvestChances { Resin = 5f };
@@ -107,7 +107,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void EachOrbFinderOnlyRollsOnItsOwnKindOfHarvest()
         {
-            // Stonecutter's is a pickaxe affix and Resinous an axe affix: neither rolls on the other's harvest.
+            // Hoardfinder's is a pickaxe affix and of Hidden Riches an axe affix: neither rolls on the other's harvest.
             Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, new HarvestChances { Stone = 100f }, true, Items(), Rolls()));
             Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { Resin = 100f }, false, Items(), Rolls()));
         }

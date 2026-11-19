@@ -100,7 +100,7 @@ namespace Corruption.Rules
 
         /// <summary>
         ///     One orb, always: picked with the table's own odds as weights (each orb's 1 / one_in), so the common orbs
-        ///     come most often and every orb that drops from kills can come. For Stonecutter's and Resinous (Krogon,
+        ///     come most often and every orb that drops from kills can come. For Hoardfinder's and of Hidden Riches (Krogon,
         ///     2026-11-19: "a guaranteed orb … heavily weighted towards the more common orbs"). Null only when no orb drops.
         /// </summary>
         /// <param name="random">Returns a value in [0, 1).</param>
