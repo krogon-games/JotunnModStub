@@ -4,7 +4,7 @@
 
 ## Stage
 
-Building.
+Waiting for Krogon's playtest.
 
 ## Purpose
 
@@ -16,7 +16,12 @@ Nothing yet.
 
 ## Half-done and known issues
 
-Nothing yet.
+Built 2026-11-19, untested in game (612 tests pass; Corruption builds against the stand-in game folder):
+- **Orb drops** (`OrbDrops.cs`, `OrbDropTable.cs`, `orbs.csv`, the `orb` column of `drop_modifiers.csv`): kills per nearby player; vanilla chests with default loot once when the game fills them (new `Container.AddDefaultItems` postfix); the rip chest once per player near the rip; `co_orbroll` to check rates.
+- **Stonecutter's and Resinous** roll the orb table per harvest (the per-hit postfixes are gone). Affix ids `extra_stone` / `extra_resin` kept so saved gear and splinters load.
+- **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
+
+Claude's interim choices (easy to change): the affix names stay Stonecutter's / Resinous (the suffix still reads "of Resin"); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). Worth Krogon's eye: at a 25% roll, Stonecutter's gives an orb from about 1 in 70 broken pieces.
 
 ## Decisions
 
@@ -33,7 +38,7 @@ Nothing yet.
 
 ## Playtest
 
-Nothing to test yet.
+`docs/playtests/claude-charming-dijkstra-sg16vv.md` (11 solo steps), also the first section of the phone page (`orb-1` … `orb-11`). Group steps: `PLAYTEST.md` → Session 2, 2k (and the page's `mpe-2k-1` … `mpe-2k-3`).
 
 ## Open questions for Krogon
 
@@ -41,9 +46,9 @@ None yet.
 
 ## Next steps
 
-1. Propose orb sources and rates from the game's drop tables; get Krogon's approval.
-2. Propose Splintering's new reach and the Stonecutter's/Resinous rework options.
-3. Build, test, write the play-test checklist (file and phone page).
+1. Krogon's solo play-test; fix what it finds.
+2. Final play-test, then `/handoff` and a PR into `master`.
+3. The group evening: Session 2, 2k.
 
 ## Checks
 
