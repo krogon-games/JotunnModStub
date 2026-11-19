@@ -4,7 +4,7 @@
 
 ## Stage
 
-Asking Krogon questions.
+Building.
 
 ## Purpose
 
@@ -28,6 +28,8 @@ Nothing yet.
 6. **A boss rolls the orb table once, like any kill** (2026-11-19), over "as many rolls as its XP is worth" and fixed boss orbs. Stars, rips and corrupted bosses change the chances as for gear.
 7. **Chests give orbs** (2026-11-19): vanilla dungeon and location chests roll the orb table once when the game fills them, at x1.5 (`drop_modifiers.csv` → `dungeon_chest`); the chest a rip heart leaves rolls once per player near the rip, at the rip multiplier.
 8. **Splintering reaches 4 m** from the spot hit (2026-11-19), twice the axe's own reach of about 2 m (over 3 m and 6 m). Krogon's play-test note of 2026-11-11: "needs a little bigger radius/ hit detection range".
+9. **Stonecutter's becomes an orb finder** (2026-11-19): "X% chance a rock or ore chunk you break rolls the orb table", same 5–25% range, over the biome's special stone and double stone. **Replaces** "5–25% chance per hit of one stone" (2026-11-08) and ends its rework flag.
+10. **Resinous becomes an orb finder** (2026-11-19): "X% chance a tree, log or stump you fell rolls the orb table", same 5–25% range, over the biome's special wood and 5 resin per tree. **Replaces** "5–25% chance per hit of one resin" (2026-11-08) and ends its rework flag.
 
 ## Playtest
 
@@ -35,7 +37,7 @@ Nothing to test yet.
 
 ## Open questions for Krogon
 
-Asked next: what Stonecutter's and Resinous become.
+None yet.
 
 ## Next steps
 
