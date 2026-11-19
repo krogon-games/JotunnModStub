@@ -8,7 +8,7 @@
 **What's new (your decisions 3–10):**
 - **Orbs drop.** Every kill rolls for orbs, once for each player nearby (bosses too: a boss is one kill). Every orb but the Jeweller's can drop, Exalted and Mirror included. On average that's one orb every 18 kills, mostly Transmutation and Augmentation: about 7 an hour at a normal pace. Stars, rips and corrupted bosses raise the chance.
 - **Chests.** A vanilla dungeon or location chest rolls once when the game first creates it, at ×1.5. **Chests the world made before this build already have their loot, so they get no orbs.** The chest a rip heart leaves rolls once for each player near the rip.
-- **Hoardfinder's** (pickaxe, was Stonecutter's): "X% chance a rock or ore chunk you break drops an orb". **of Hidden Riches** (axe, was Resinous / "of Resin"): "X% chance a tree, log or stump you fell drops an orb". X rolls 1–5% (your decision 11). When it triggers, one orb always drops: Transmutation 36% of the time, Augmentation 23%, Chance 16%, Alchemy and Annulment 10% each, Regal 2%, Exalted 1%, Divine 0.7%, the Mirror about 1 in 1,200. No more extra stone or resin per hit. A test tool rolled before this build keeps its old 5–25% number until a Divine Orb rerolls it.
+- **Hoardfinder's** (pickaxe, was Stonecutter's): "X% chance a rock or ore chunk you break drops an orb". **of Hidden Riches** (axe, was Resinous / "of Resin"): "X% chance a tree, log or stump you fell drops an orb". X rolls 1–5% (your decision 11). When it triggers, one orb always drops: Transmutation 36% of the time, Augmentation 23%, Chance 16%, Alchemy and Annulment 10% each, Regal 2%, Exalted 1%, Divine 0.2%, the Mirror about 1 in 1,200. No more extra stone or resin per hit. A test tool rolled before this build keeps its old 5–25% number until a Divine Orb rerolls it.
 - **Splintering** reaches 4 m from the spot you hit (it was the axe's own reach, about 2 m).
 - **New test command** `co_orbroll [rolls] [source …]`: rolls the orb table many times and prints the counts next to what's expected. It drops nothing.
 
@@ -21,7 +21,7 @@
 **Rates**
 
 1. [ ] (`orb-1`) Start the game and open `BepInEx/LogOutput.log` → it has `Loot: … affixes, … base items, 9 orbs that drop.` No red errors at startup.
-2. [ ] (`orb-2`) F5, `co_orbroll 100000` → ten lines, one per orb. Each count is close to its "expected" number: Transmutation about 2,000, Augmentation about 1,300, Divine about 40, Mirror about 5 (0–10 is normal). The Jeweller's Orb says "never drops".
+2. [ ] (`orb-2`) F5, `co_orbroll 100000` → ten lines, one per orb. Each count is close to its "expected" number: Transmutation about 2,000, Augmentation about 1,300, Divine about 10, Mirror about 5 (both 0–15 is normal). The Jeweller's Orb says "never drops".
 3. [ ] (`orb-3`) `co_orbroll 100000 star_2 rip_tier_1` → the first line says "orb multiplier x1.88", and every count is about 1.9 times step 2's.
 
 **Kills**

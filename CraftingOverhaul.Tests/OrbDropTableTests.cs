@@ -43,12 +43,12 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void TheRealTableMatchesKrogonsRates()
         {
-            // Decisions 4 and 5 (2026-11-19): PoE's order squeezed between 1 in 50 and 1 in 2,500.
+            // Decisions 4, 5 and 15 (2026-11-19): PoE's order squeezed between 1 in 50 and 1 in 2,500; the Divine then made rarer, 1 in 10,000.
             var table = ParseReal();
             var expected = new Dictionary<string, float>
             {
                 { "transmutation", 50 }, { "augmentation", 77 }, { "chance", 112 }, { "alchemy", 172 }, { "annulment", 172 },
-                { "regal", 830 }, { "exalted", 1865 }, { "divine", 2500 }, { "mirror", 21400 }
+                { "regal", 830 }, { "exalted", 1865 }, { "divine", 10000 }, { "mirror", 21400 }
             };
             Assert.Equal(expected.Keys.OrderBy(k => k), table.OneIn.Keys.OrderBy(k => k));
             foreach (var pair in expected)
@@ -113,7 +113,7 @@ namespace CraftingOverhaul.Tests
         {
             var table = ParseReal();
             Assert.Equal(1f / 50f, table.Chance("transmutation", 1f), 6);
-            Assert.Equal(1.5f / 2500f, table.Chance("divine", 1.5f), 8);
+            Assert.Equal(1.5f / 10000f, table.Chance("divine", 1.5f), 9);
             Assert.Equal(1f, table.Chance("transmutation", 100f));
         }
 
