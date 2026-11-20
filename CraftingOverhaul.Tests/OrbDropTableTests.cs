@@ -43,11 +43,11 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void TheRealTableMatchesKrogonsRates()
         {
-            // Decisions 4, 5 and 15 (2026-11-19): PoE's order squeezed between 1 in 50 and 1 in 2,500; the Divine then made rarer, 1 in 10,000.
+            // Decisions 4, 5, 15 and 16: PoE's order squeezed between 1 in 50 and 1 in 2,500; then the Divine made rarer (1 in 10,000) and Chance rarer than Alchemy (1 in 2,000).
             var table = ParseReal();
             var expected = new Dictionary<string, float>
             {
-                { "transmutation", 50 }, { "augmentation", 77 }, { "chance", 112 }, { "alchemy", 172 }, { "annulment", 172 },
+                { "transmutation", 50 }, { "augmentation", 77 }, { "chance", 2000 }, { "alchemy", 172 }, { "annulment", 172 },
                 { "regal", 830 }, { "exalted", 1865 }, { "divine", 10000 }, { "mirror", 21400 }
             };
             Assert.Equal(expected.Keys.OrderBy(k => k), table.OneIn.Keys.OrderBy(k => k));
@@ -161,19 +161,19 @@ namespace CraftingOverhaul.Tests
                 counts[table.Pick(random.NextDouble)]++;
             }
             Assert.Equal(0, counts["jeweller"]);
-            // The real odds: Transmutation about 36%, Exalted about 1%, the Mirror about 1 in 1,200.
-            Assert.InRange(counts["transmutation"] / 200000.0, 0.35, 0.37);
-            Assert.InRange(counts["exalted"] / 200000.0, 0.008, 0.011);
-            Assert.InRange(counts["mirror"], 100, 240);
+            // The real odds: Transmutation about 43%, Exalted about 1.1%, the Mirror about 1 in 1,000.
+            Assert.InRange(counts["transmutation"] / 200000.0, 0.415, 0.436);
+            Assert.InRange(counts["exalted"] / 200000.0, 0.0095, 0.0135);
+            Assert.InRange(counts["mirror"], 130, 270);
         }
 
         [Fact]
         public void TheRealRatesGiveTheExpectedPace()
         {
-            // About 7 orbs an hour per player at 125 kills an hour (the pace drop_chances.csv's Unique rate assumes).
+            // About 6 orbs an hour per player at 125 kills an hour (the pace drop_chances.csv's Unique rate assumes).
             var table = ParseReal();
             double perKill = OrbRules.Orbs.Sum(o => (double)table.Chance(o, 1f));
-            Assert.InRange(perKill * 125, 6.5, 7.5);
+            Assert.InRange(perKill * 125, 5.5, 6.3);
         }
     }
 }
