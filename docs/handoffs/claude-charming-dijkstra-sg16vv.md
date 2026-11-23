@@ -57,6 +57,10 @@ Krogon's answers to Claude's review of the gameplay loop (2026-11-23; the review
 27. **No session summary in the log** (point 9): "Let's just see how it played out and what the player feedback is."
 28. **Vanilla dungeon chests become a shard source** (point 10): "Then let's build it" (the design's rare chest source, never built).
 29. **The Riftforge's recipe is final** (point 10): "20 fine wood, 10 bronze nails, 5 surtling cores, 10 amber." Replaces the first-guess amounts (10 fine wood, 10 nails, 2 cores, plus 1 shard and Eikthyr's trophy).
+30. **Boss shards come on top** (2026-11-23, clarifying 21): every boss kill gives each nearby player 1 shard, plus the first-kill 1–3 and the corrupted boss's 3–5 as before (over replacing the first-kill bonus, or both).
+31. **A biome's map drops only once its boss is beaten** (2026-11-23, clarifying 19): monster map drops start once the world's first rip heart is destroyed, and a biome's map drops only after that biome's boss has been defeated in the world (over "any biome"). Keeps the rule that each biome's maps need its boss.
+32. **One map per rip chest** (2026-11-23, clarifying 18), not one per player: each rip pays back its map; monster drops and essences add more.
+33. **Dungeon chests hold a shard 1 time in 20** (2026-11-23, clarifying 28): 5%, the same as a 2-star creature (over 1 in 50 and 1 in 10), once per chest when the game fills it.
 
 ## Playtest
 
