@@ -20,6 +20,7 @@ Built 2026-11-19, untested in game (623 tests pass; Corruption builds against th
 - **Orb drops** (`OrbDrops.cs`, `OrbDropTable.cs`, `orbs.csv`, the `orb` column of `drop_modifiers.csv`): kills per nearby player; vanilla chests with default loot once when the game fills them (new `Container.AddDefaultItems` postfix); the rip chest once per player near the rip; `co_orbroll` to check rates.
 - **Hoardfinder's and of Hidden Riches** (were Stonecutter's and Resinous; decisions 11–13): a 1–5% chance per harvest of one orb, weighted like kills' orbs (the per-hit postfixes are gone). Ids `hoardfinders` / `hidden_riches`, families `orb_find_mining` / `orb_find_woodcutting`; saves with the old ids load through `AffixRenames`, and the two old splinter items stay registered. Tools rolled before keep their old 5–25% value until a Divine Orb rerolls it. 
 - **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
+- **Loop fixes (decisions 17–33, 2026-11-23):** maps named "{biome} map"; the rip chest holds one map of its biome and rolls Magic/Rare gear per player; destroying a rip heart sets the world key `corruption_rip_cleared`, after which creatures drop their biome's map 1 in 830 per player once that biome's boss is beaten (`MapDrops.cs`, `MapDropRules.cs`, `co_mapdrops`); every boss kill adds 1 shard per nearby player (`BossShardsPerPlayer`); corrupted bosses give each player one picked orb; dungeon chests hold a shard 1 in 20 (`DungeonChestShardChance`); Riftforge 20 fine wood, 10 nails, 5 cores, 10 amber. Issues: new #84 (explored-land fallback, decision 22), #35 raised to high (decision 23), notes on #31 and #33; ROADMAP, GAME_DESIGN and the design doc updated.
 
 Claude's interim choices (easy to change): the splinters of the two orb finders keep their stone-grey and resin-amber colours (`splinter_looks.csv`, `proposed`); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
 
@@ -64,7 +65,7 @@ Krogon's answers to Claude's review of the gameplay loop (2026-11-23; the review
 
 ## Playtest
 
-`docs/playtests/claude-charming-dijkstra-sg16vv.md` (12 solo steps), also the first section of the phone page (`orb-1` … `orb-12`). Group steps: `PLAYTEST.md` → Session 2, 2k (and the page's `mpe-2k-1` … `mpe-2k-3`).
+`docs/playtests/claude-charming-dijkstra-sg16vv.md` (19 solo steps), also the first section of the phone page (`orb-1` … `orb-12`, `loop-1` … `loop-7`). Group steps: `PLAYTEST.md` → Session 2, 2k (and the page's `mpe-2k-1` … `mpe-2k-3`).
 
 ## Open questions for Krogon
 

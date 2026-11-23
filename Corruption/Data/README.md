@@ -112,7 +112,7 @@ Built by `python3 tools/make_loot_bases.py` from `data/game-dump-1.0.21/items.cs
 
 | Column | Meaning |
 |---|---|
-| `setting` | `previous_biome_percent` (chance a drop comes from the biome before the creature's), `drop_quality` (upgrade level of dropped gear), `magic_1_affix_weight` / `magic_2_affix_weight` and `rare_3_affix_weight` / `rare_4_affix_weight` (how often each affix count rolls, compared with the other), `splintering_reach_m` (how far Splintering's copied chop reaches from the spot hit, in metres) |
+| `setting` | `previous_biome_percent` (chance a drop comes from the biome before the creature's), `drop_quality` (upgrade level of dropped gear), `magic_1_affix_weight` / `magic_2_affix_weight` and `rare_3_affix_weight` / `rare_4_affix_weight` (how often each affix count rolls, compared with the other), `splintering_reach_m` (how far Splintering's copied chop reaches from the spot hit, in metres), `map_drop_one_in` (a creature's map drop, 1 in N per player per kill; 0 = never) |
 | `value` | The number |
 | `status`, `notes` | As above |
 

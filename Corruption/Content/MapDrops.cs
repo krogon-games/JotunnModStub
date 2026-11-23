@@ -1,5 +1,7 @@
 using System.Linq;
 using Corruption.Rules;
+using Jotunn.Entities;
+using Jotunn.Managers;
 using UnityEngine;
 
 namespace Corruption.Content
@@ -69,6 +71,56 @@ namespace Corruption.Content
             }
             float multiplier = Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources);
             return MapDropRules.Roll(Loot.Rules.MapDropOneIn, multiplier, Random01) ? Prefab(map) : null;
+        }
+
+        public static void RegisterCommand()
+        {
+            CommandManager.Instance.AddConsoleCommand(new MapDropsCommand());
+        }
+
+        /// <summary>
+        ///     co_mapdrops: whether creatures where you stand can drop a map, and why not; then rolls the map drop many
+        ///     times (as an ordinary kill) and prints the count. Drops nothing.
+        /// </summary>
+        private sealed class MapDropsCommand : ConsoleCommand
+        {
+            public override string Name => "co_mapdrops";
+
+            public override string Help => "Corruption: co_mapdrops [rolls] - can creatures here drop a map, and how often (default 100000 rolls; drops nothing)";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var player = Player.m_localPlayer;
+                if (!player || !Loot.Loaded)
+                {
+                    Console.instance.Print(Loot.Loaded ? "co_mapdrops needs a loaded world." : "Loot tables didn't load; see the log.");
+                    return;
+                }
+                string biome = Loot.BiomeAt(player.transform.position);
+                var map = MapFor(biome);
+                bool cleared = RipCleared, boss = map != null && BossDefeated(map);
+                Console.instance.Print($"Biome here: {biome}. Map: {(map != null ? map.Name : "none for this biome")}. " +
+                                       $"A rip heart destroyed in this world: {(cleared ? "yes" : "no")}. " +
+                                       $"This biome's boss beaten: {(map == null ? "-" : boss ? "yes" : "no")}.");
+                if (!MapDropRules.CanDrop(cleared, map != null, boss))
+                {
+                    Console.instance.Print("So creatures here drop no maps yet.");
+                    return;
+                }
+                int rolls = args.Length > 0 && int.TryParse(args[0], out var n) ? Mathf.Clamp(n, 1, 1000000) : 100000;
+                int hits = 0;
+                for (int i = 0; i < rolls; i++)
+                {
+                    if (MapDropRules.Roll(Loot.Rules.MapDropOneIn, 1f, Random01))
+                    {
+                        hits++;
+                    }
+                }
+                float chance = MapDropRules.Chance(Loot.Rules.MapDropOneIn, 1f);
+                Console.instance.Print($"{rolls} rolls as an ordinary kill: {hits} maps (expected {chance * rolls:0.#}, 1 in {(chance > 0f ? 1f / chance : 0f):0}).");
+            }
         }
     }
 }

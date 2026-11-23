@@ -37,6 +37,7 @@ namespace Corruption
             Safe.Run("read the loot tables", Loot.Load);
             Safe.Run("add the co_loot command", Loot.Register);
             Safe.Run("add the co_orbroll command", OrbDrops.RegisterCommand);
+            Safe.Run("add the co_mapdrops command", MapDrops.RegisterCommand);
             Safe.Run("add the co_affix command", LootProcs.RegisterCommand);
             Safe.Run("add the co_tabs_damage command", InventoryTabs.RegisterCommand);
             Safe.Run("add the co_own command", LootHarvest.RegisterCommand);

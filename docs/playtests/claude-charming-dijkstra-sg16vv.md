@@ -14,7 +14,7 @@
 
 **A number to look at while you play:** at the best roll (5%), a copper deposit (about 30 chunks) gives about 1.5 orbs and every 5 trees about one; at 1%, one orb per 3 deposits. If that feels too small or too big, tell me.
 
-**Phone page:** the same steps are the first section of the [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht), "This round: orb drops" (step ids `orb-1` … `orb-12`).
+**Phone page:** the same steps are the first section of the [Corruption Play-test Log](https://claude.ai/artifact/PyN39Y8QGCDPVJA8mrxjht), "This round: orb drops" (step ids `orb-1` … `orb-12`, then `loop-1` … `loop-7`).
 
 ### Checklist
 
@@ -45,6 +45,16 @@
 11. [ ] (`orb-11`) Splintering: hold an axe, `co_affix splintering 100`. Chop a tree that has another tree about 3–4 m away → the other tree shakes and takes the same chop. A tree more than about 4 m away is never hit. Then send me `BepInEx/LogOutput.log`, even if everything passed.
 
 12. [ ] (`orb-12`) **Old saves:** if a world or character has a pickaxe or axe with the old Stonecutter's or Resinous, or a splinter of either, load it → the tool's name and line show Hoardfinder's / of Hidden Riches, and each splinter is still there and shows the new name. (Skip if you have none.)
+
+**Loop fixes (added 2026-11-23, your answers to the gameplay-loop review)**
+
+13. [ ] (`loop-1`) **Riftforge recipe:** hammer → Crafting → Riftforge: it costs **20 fine wood, 10 bronze nails, 5 surtling cores, 10 amber**, nothing else (no shard, no Eikthyr trophy).
+14. [ ] (`loop-2`) **Map names:** `spawn CorruptionMap_Meadows` → its name is **"Meadows map"** (not "Corrupted Meadows map"). The Riftforge's recipe list shows "Meadows map" too.
+15. [ ] (`loop-3`) **Boss shards:** `spawn Eikthyr` and kill him alone → besides his trophy and essence, his drops include at least 1 shard, every kill. In a world where he was never killed before, the first kill gives 2–4 (the old 1–3 plus your new 1).
+16. [ ] (`loop-4`) **Corrupted boss orb:** summon a corrupted Eikthyr (a Corrupted deer trophy at his altar, or `co_corrupt` near him) and kill him → **one orb always drops** (mostly Transmutation or Augmentation), plus 2–3 essences and 4–6 shards.
+17. [ ] (`loop-5`) **Rip chest:** use a Meadows map, clear the rip, destroy the heart, open the chest → it holds a **Meadows map**, plus shards and vanilla loot as before; now and then also a Magic or Rare item. The log has `Rip chest: added a CorruptionMap_Meadows` and `Rip chest: 1 gear roll(s), N item(s)`.
+18. [ ] (`loop-6`) **Map drops:** in the Meadows, after step 17 and with Eikthyr beaten, type `co_mapdrops` → "A rip heart destroyed in this world: yes. This biome's boss beaten: yes." and about 120 maps from 100,000 rolls (1 in 830). Then fly to the Black Forest and type it again: with the Elder never killed in this world it says "This biome's boss beaten: no … So creatures here drop no maps yet."
+19. [ ] (`loop-7`) **Dungeon chest shards:** with step 6's thirty `TreasureChest_meadows`, about 1 or 2 also hold a **shard** (none or 4 happens too); the log has a `Chest shards: 1 shard in …` line for each.
 
 ### Your feedback
 
