@@ -4,7 +4,7 @@
 
 ## Stage
 
-Waiting for Krogon's playtest.
+Building (Krogon's answers to the gameplay-loop review, 2026-11-23); the play-test waits for this.
 
 ## Purpose
 
@@ -41,6 +41,22 @@ Claude's interim choices (easy to change): the splinters of the two orb finders 
 14. **Old saves and later affix work: Claude decides** (2026-11-19; Krogon, asked whether new affixes with the old ones disabled would have been simpler, and then whether to keep or strip the old-save support: "I am not a developer. You are carrying the main role of developer. I just don't want these issues coming up in the future when we're doing any further affix work"). Claude's choice: keep the old-save support (`AffixRenames`, the two old splinter items) and add a guard: rows of `affixes.csv` are never deleted (a new `retired` status stops one rolling but keeps it readable), renames go through `AffixRenames`, and `shipped_affixes.csv` with two tests makes a missing id or family fail the tests with a plain fix-it message (`docs/ARCHITECTURE.md`, code pattern 10).
 15. **The Divine Orb is rarer: 1 in 10,000 kills** (2026-11-19; Krogon, after the per-biome table: "the projected divine orb drops are too common. They are super strong orbs and should be quite rare"), over 1 in 5,000 and 1 in 15,000: about one every 80 hours of fighting, a 10% chance of one by Bonemass. The Exalted stays 1 in 1,865 (Krogon: keep it); nothing else changes. **Replaces** decision 4's Divine (1 in 2,500); the other orbs keep decision 4's scale.
 16. **The Orb of Chance is rarer than Alchemy, permanently: 1 in 2,000 kills** (2026-11-20; Krogon: "make Chance rarer than Alchemy permanently. One in 2000 chance"). Why: while no uniques exist every Orb of Chance gives a Rare, the same as Alchemy, and it dropped more often (1 in 112 against 1 in 172); once uniques exist its 20% unique chance would also have outpaced unique drops. It now sits just below the Exalted (1 in 1,865). About 6 orbs an hour per player in all (was 7). **Replaces** decision 4's Chance (1 in 112).
+
+Krogon's answers to Claude's review of the gameplay loop (2026-11-23; the review's ten points, his words quoted):
+
+17. **Maps lose "Corrupted" in their name** (point 1): "Change name from 'corrupted {biome} map' to '{biome} map'. There is no need to include 'corrupted' right away", because corrupted maps come with the map tiers.
+18. **The rip chest always holds a map** (point 1): "Include a map in the loot at final chest when you kill the heart. Guaranteed drop."
+19. **Maps drop from monsters** (point 1): "Make the drop rate as common as a regal orb" (1 in 830); "Only enable the drop once the first rip heart / map has been completed/destroyed"; the map is always of the biome the drop rolls in ("If the drop rolls in meadows, it should be a meadows map … Never a different biome").
+20. **The Queen limit** (point 2) is solved by decisions 18–19: "same solution will fix this issue."
+21. **Every boss kill gives shards** (point 3): "Let's just make boss killing more rewarding overall. Guarantee a shard drop each boss kill. 1 per player."
+22. **Rips fall back to explored land** when no unexplored land of the biome is left (point 4): "Fall back to explored land that's far from any player built structures."
+23. **Personal loot moves up** (point 5): "Loot drops should be individual. Move up priority on this issue" (ROADMAP L7, #35).
+24. **No tooltip hint about saving rare orbs** (point 6): "overthinking it … Leave as is."
+25. **The rip chest rolls Magic and Rare gear** (point 7): other loot such as Magic and Rare gear should be able to roll in the chest; "if that's not correct, it should be implemented this way". (It wasn't: the rip chest had its vanilla loot, shards and orbs, no rolled gear.)
+26. **Corrupted bosses give each player a guaranteed orb** (point 8): "a guaranteed 1 roll per player using the existing drop table": each nearby player gets one orb, picked with orbs.csv's odds (as Hoardfinder's does). Normal bosses keep one ordinary roll (decision 6). **Replaces** decision 6 for corrupted bosses.
+27. **No session summary in the log** (point 9): "Let's just see how it played out and what the player feedback is."
+28. **Vanilla dungeon chests become a shard source** (point 10): "Then let's build it" (the design's rare chest source, never built).
+29. **The Riftforge's recipe is final** (point 10): "20 fine wood, 10 bronze nails, 5 surtling cores, 10 amber." Replaces the first-guess amounts (10 fine wood, 10 nails, 2 cores, plus 1 shard and Eikthyr's trophy).
 
 ## Playtest
 
