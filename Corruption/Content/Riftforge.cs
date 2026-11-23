@@ -28,13 +28,13 @@ namespace Corruption.Content
                 Category = "Crafting",
                 CraftingStation = CraftingStations.Workbench
             };
-            // Amounts are a first guess; tune during play-testing.
-            // At most 5: the build menu's cost display breaks (IndexOutOfRange every frame) with more.
-            config.AddRequirement("FineWood", 10);
-            config.AddRequirement(Texts.ShardPrefab, 1);
-            config.AddRequirement("TrophyEikthyr", 1);
+            // Krogon's final recipe (2026-11-23, decision 29): 20 fine wood, 10 bronze nails, 5 surtling cores, 10 amber.
+            // (Was a first guess: 10 fine wood, 1 shard, Eikthyr's trophy, 10 nails, 2 cores.) Fine wood and bronze
+            // keep it at the Black Forest stage. At most 5 ingredients: the build menu's cost display breaks with more.
+            config.AddRequirement("FineWood", 20);
             config.AddRequirement("BronzeNails", 10);
-            config.AddRequirement("SurtlingCore", 2);
+            config.AddRequirement("SurtlingCore", 5);
+            config.AddRequirement("Amber", 10);
 
             var piece = new CustomPiece(Texts.RiftforgePrefab, BasePrefab, config);
             if (piece.Piece.m_resources.Length > MaxPieceIngredients)

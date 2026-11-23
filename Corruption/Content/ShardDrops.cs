@@ -44,6 +44,14 @@ namespace Corruption.Content
                     ? Random.Range(CorruptionConfig.CorruptedShardsMin.Value, Mathf.Max(CorruptionConfig.CorruptedShardsMin.Value, CorruptionConfig.CorruptedShardsMax.Value) + 1)
                     : ShardRules.ShardsFor(isBoss, character.GetLevel(), alreadyDefeated, settings,
                         () => Random.value * 0.99999f);
+                if (isBoss)
+                {
+                    // Every boss kill: shards for each player nearby, on top (Krogon, 2026-11-23). "Nearby" is the game's
+                    // own nearby-players range, as for loot.
+                    var nearby = new List<Player>();
+                    Player.GetPlayersInRange(character.GetCenterPoint(), Game.instance ? Game.instance.m_difficultyScaleRange : 100f, nearby);
+                    shards += ShardRules.BossPerPlayer(nearby.Count, CorruptionConfig.BossShardsPerPlayer.Value);
+                }
                 if (shards <= 0)
                 {
                     return;

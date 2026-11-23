@@ -79,7 +79,8 @@ namespace Corruption.Content
                     {
                         sources.Add("rip_tier_1");
                     }
-                    if (character.IsBoss() && CorruptedBosses.IsCorrupted(character))
+                    bool corruptedBoss = character.IsBoss() && CorruptedBosses.IsCorrupted(character);
+                    if (corruptedBoss)
                     {
                         sources.Add("corrupted_boss");
                     }
@@ -92,8 +93,26 @@ namespace Corruption.Content
                     int players = DeathLoot.RollsFor(Nearby.Count);
                     for (int i = 0; i < players; i++)
                     {
-                        // Orbs: their own roll per player, beside the gear roll (Krogon, 2026-11-19: all content; a boss is one kill).
-                        OrbDrops.Drop(OrbDrops.Roll(sources), position);
+                        // Orbs: their own roll per player, beside the gear roll (Krogon, 2026-11-19: all content; a boss is
+                        // one kill). A corrupted boss gives each player one guaranteed orb instead (2026-11-23, decision 26).
+                        if (corruptedBoss)
+                        {
+                            var orb = OrbDrops.FindOne();
+                            if (orb)
+                            {
+                                OrbDrops.DropPrefab(orb, position);
+                            }
+                        }
+                        else
+                        {
+                            OrbDrops.Drop(OrbDrops.Roll(sources), position);
+                        }
+                        // A map of the biome it died in (2026-11-23, decisions 19 and 31), once the conditions are met.
+                        var map = MapDrops.Roll(biome, sources);
+                        if (map)
+                        {
+                            OrbDrops.DropPrefab(map, position);
+                        }
                         foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
                         {
                             // Uniques come with a later step.

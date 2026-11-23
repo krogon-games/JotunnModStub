@@ -49,6 +49,7 @@
     <Compile Include="..\Corruption\Rules\OrbRules.cs" Link="Linked\OrbRules.cs" />
     <Compile Include="..\Corruption\Rules\OrbDropTable.cs" Link="Linked\OrbDropTable.cs" />
     <Compile Include="..\Corruption\Rules\AffixRenames.cs" Link="Linked\AffixRenames.cs" />
+    <Compile Include="..\Corruption\Rules\MapDropRules.cs" Link="Linked\MapDropRules.cs" />
     <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />
     <Compile Include="..\Corruption\Rules\GatheringRules.cs" Link="Linked\GatheringRules.cs" />
     <Compile Include="..\Corruption\Rules\HarvestRules.cs" Link="Linked\HarvestRules.cs" />

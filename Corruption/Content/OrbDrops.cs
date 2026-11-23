@@ -74,15 +74,21 @@ namespace Corruption.Content
         {
             foreach (var prefab in Prefabs(orbs))
             {
-                var go = Object.Instantiate(prefab, position + Random.insideUnitSphere * 0.5f, Quaternion.Euler(0f, Random.Range(0, 360), 0f));
-                ItemDrop.OnCreateNew(go);
-                var body = go.GetComponent<Rigidbody>();
-                if (body)
-                {
-                    var push = Random.insideUnitSphere;
-                    push.y = Mathf.Abs(push.y);
-                    body.AddForce(push * 5f, ForceMode.VelocityChange);
-                }
+                DropPrefab(prefab, position);
+            }
+        }
+
+        /// <summary>Drops one item prefab at a position, scattered and pushed like a creature's drops.</summary>
+        public static void DropPrefab(GameObject prefab, Vector3 position)
+        {
+            var go = Object.Instantiate(prefab, position + Random.insideUnitSphere * 0.5f, Quaternion.Euler(0f, Random.Range(0, 360), 0f));
+            ItemDrop.OnCreateNew(go);
+            var body = go.GetComponent<Rigidbody>();
+            if (body)
+            {
+                var push = Random.insideUnitSphere;
+                push.y = Mathf.Abs(push.y);
+                body.AddForce(push * 5f, ForceMode.VelocityChange);
             }
         }
 
@@ -111,7 +117,8 @@ namespace Corruption.Content
 
         /// <summary>
         ///     A vanilla chest with its own loot (dungeons, locations, shipwrecks) filling itself, once, on its owner's
-        ///     game (<c>Container.Awake</c>): one roll of the orb table at the <c>dungeon_chest</c> multiplier. Chests
+        ///     game (<c>Container.Awake</c>): one roll of the orb table at the <c>dungeon_chest</c> multiplier, and a
+        ///     1-in-20 chance of a corruption shard (decision 33). Chests
         ///     players build have no default loot and are left alone.
         /// </summary>
         [HarmonyPatch(typeof(Container), nameof(Container.AddDefaultItems))]
@@ -124,6 +131,16 @@ namespace Corruption.Content
                 {
                     return;
                 }
+                Safe.Run("add a shard to a chest", () =>
+                {
+                    // Dungeon and location chests: a rare shard source (design; Krogon, 2026-11-23: 1 in 20).
+                    var shard = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(Texts.ShardPrefab) : null;
+                    if (shard && ShardRules.ChestShards(CorruptionConfig.DungeonChestShardChance.Value, Random01) > 0 &&
+                        __instance.GetInventory() != null && __instance.GetInventory().AddItem(shard, 1))
+                    {
+                        Jotunn.Logger.LogInfo($"Chest shards: 1 shard in {Utils.GetPrefabName(__instance.gameObject)}.");
+                    }
+                });
                 Safe.Run("add orbs to a chest", () =>
                 {
                     var orbs = Roll(new[] { "dungeon_chest" });
