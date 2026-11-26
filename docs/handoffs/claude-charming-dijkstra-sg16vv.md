@@ -80,6 +80,7 @@ None.
 1. A PR into `master` (Krogon asks for it, or the coordinator opens it).
 2. The group evening: Session 2, 2k.
 3. Later: the F2 network-panel leftover on 1.0.30.
+4. Later rounds, already on GitHub: [#84](https://github.com/krogon-games/JotunnModStub/issues/84) (ROADMAP R7: where a rip opens when its map points at land far from player buildings; decision 22) and [#35](https://github.com/krogon-games/JotunnModStub/issues/35) (ROADMAP L7: everyone gets their own loot; raised to high priority, decision 23).
 
 ## Checks
 
