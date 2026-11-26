@@ -165,7 +165,11 @@ namespace Corruption.Rules
         public static string ForOrb(string orbId) => string.IsNullOrEmpty(orbId) ? null : "orb_" + orbId.ToLowerInvariant();
     }
 
-    /// <summary>The settings of <c>Corruption/Data/personal_loot.csv</c>: the lock, the sound window and the beam look.</summary>
+    /// <summary>
+    ///     The settings of <c>Corruption/Data/personal_loot.csv</c>: the lock, the sound window and the beam look. One setting
+    ///     is checked and stored by <see cref="TrySet" />, which both the table parser and the live <c>co_personal look</c>
+    ///     command use, so their rules can't drift.
+    /// </summary>
     public sealed class PersonalLootSettings
     {
         public double LockSeconds, SoundWindowSeconds, RefreshSeconds, PulseSeconds;
@@ -173,13 +177,154 @@ namespace Corruption.Rules
         public float TallHeight, TallWidth, TallLightRange, TallLightIntensity;
         public float ShortHeight, ShortWidth, ShortLightRange, ShortLightIntensity;
 
+        /// <summary>The core's opacity at its middle, 0..1.</summary>
+        public float BeamAlpha;
+
+        /// <summary>How soft the beam's edges are: 0 = hard, 1 = fades out from the very middle.</summary>
+        public float EdgeSoftness;
+
+        /// <summary>The glow's width as a multiple of the core's width, and its opacity as a share of <see cref="BeamAlpha" />.</summary>
+        public float GlowWidth, GlowAlpha;
+
+        /// <summary>The smoke wisps: how many a second (0 = none), how long each lives, how big, how opaque.</summary>
+        public float SmokePerSecond, SmokeSeconds, SmokeSize, SmokeAlpha;
+
+        /// <summary>Wisp shape: sideways drift (a share of the beam's base width, per second), size at birth and at the end (x smoke_size), and the share of its life spent fading in (0..1, under 1).</summary>
+        public float SmokeDrift, SmokeStartScale, SmokeEndScale, SmokeFadeIn;
+
         private static readonly string[] Names =
         {
             "lock_seconds", "sound_window_seconds", "refresh_seconds",
             "tall_height", "tall_width", "tall_light_range", "tall_light_intensity",
             "short_height", "short_width", "short_light_range", "short_light_intensity",
-            "top_width_fraction", "pulse_seconds", "pulse_strength"
+            "top_width_fraction", "pulse_seconds", "pulse_strength",
+            "beam_alpha", "edge_softness", "glow_width", "glow_alpha",
+            "smoke_per_second", "smoke_seconds", "smoke_size", "smoke_alpha",
+            "smoke_drift", "smoke_start_scale", "smoke_end_scale", "smoke_fade_in"
         };
+
+        /// <summary>Every setting name, in table order.</summary>
+        public static string[] AllNames() => (string[])Names.Clone();
+
+        private static bool MoreThanZero(string name) =>
+            name == "lock_seconds" || name == "refresh_seconds" || name == "pulse_seconds" ||
+            name == "glow_width" || name == "smoke_seconds" || name == "smoke_size" ||
+            name == "smoke_start_scale" || name == "smoke_end_scale";
+
+        private static bool ZeroToOne(string name) =>
+            name == "top_width_fraction" || name == "pulse_strength" || name == "beam_alpha" || name == "edge_softness" ||
+            name == "glow_alpha" || name == "smoke_alpha" || name == "smoke_fade_in";
+
+        /// <summary>
+        ///     Checks and stores one setting. Returns false (and a plain message, with no table line in it) when the name is
+        ///     unknown or the value isn't a valid number in that setting's range; nothing changes then.
+        /// </summary>
+        public bool TrySet(string name, string value, out string error)
+        {
+            error = null;
+            name = (name ?? "").Trim().ToLowerInvariant();
+            string text = (value ?? "").Trim();
+            if (!Names.Contains(name))
+            {
+                error = "unknown setting.";
+                return false;
+            }
+            if (!double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double number) ||
+                double.IsNaN(number) || double.IsInfinity(number))
+            {
+                error = $"value '{text}' must be a number.";
+                return false;
+            }
+            if (number < 0)
+            {
+                error = $"value {text} can't be negative.";
+                return false;
+            }
+            if (number <= 0 && MoreThanZero(name))
+            {
+                error = "value must be more than 0.";
+                return false;
+            }
+            if (number > 1 && ZeroToOne(name))
+            {
+                error = $"value {text} must be between 0 and 1.";
+                return false;
+            }
+            if (name == "smoke_fade_in" && number >= 1)
+            {
+                error = $"value {text} must be between 0 and 1, and less than 1.";
+                return false;
+            }
+            float f = (float)number;
+            switch (name)
+            {
+                case "lock_seconds": LockSeconds = number; break;
+                case "sound_window_seconds": SoundWindowSeconds = number; break;
+                case "refresh_seconds": RefreshSeconds = number; break;
+                case "tall_height": TallHeight = f; break;
+                case "tall_width": TallWidth = f; break;
+                case "tall_light_range": TallLightRange = f; break;
+                case "tall_light_intensity": TallLightIntensity = f; break;
+                case "short_height": ShortHeight = f; break;
+                case "short_width": ShortWidth = f; break;
+                case "short_light_range": ShortLightRange = f; break;
+                case "short_light_intensity": ShortLightIntensity = f; break;
+                case "top_width_fraction": TopWidthFraction = f; break;
+                case "pulse_seconds": PulseSeconds = number; break;
+                case "pulse_strength": PulseStrength = f; break;
+                case "beam_alpha": BeamAlpha = f; break;
+                case "edge_softness": EdgeSoftness = f; break;
+                case "glow_width": GlowWidth = f; break;
+                case "glow_alpha": GlowAlpha = f; break;
+                case "smoke_per_second": SmokePerSecond = f; break;
+                case "smoke_seconds": SmokeSeconds = f; break;
+                case "smoke_size": SmokeSize = f; break;
+                case "smoke_alpha": SmokeAlpha = f; break;
+                case "smoke_drift": SmokeDrift = f; break;
+                case "smoke_start_scale": SmokeStartScale = f; break;
+                case "smoke_end_scale": SmokeEndScale = f; break;
+                case "smoke_fade_in": SmokeFadeIn = f; break;
+            }
+            return true;
+        }
+
+        /// <summary>A setting's current value; 0 for an unknown name.</summary>
+        public double Get(string name)
+        {
+            switch ((name ?? "").Trim().ToLowerInvariant())
+            {
+                case "lock_seconds": return LockSeconds;
+                case "sound_window_seconds": return SoundWindowSeconds;
+                case "refresh_seconds": return RefreshSeconds;
+                case "tall_height": return TallHeight;
+                case "tall_width": return TallWidth;
+                case "tall_light_range": return TallLightRange;
+                case "tall_light_intensity": return TallLightIntensity;
+                case "short_height": return ShortHeight;
+                case "short_width": return ShortWidth;
+                case "short_light_range": return ShortLightRange;
+                case "short_light_intensity": return ShortLightIntensity;
+                case "top_width_fraction": return TopWidthFraction;
+                case "pulse_seconds": return PulseSeconds;
+                case "pulse_strength": return PulseStrength;
+                case "beam_alpha": return BeamAlpha;
+                case "edge_softness": return EdgeSoftness;
+                case "glow_width": return GlowWidth;
+                case "glow_alpha": return GlowAlpha;
+                case "smoke_per_second": return SmokePerSecond;
+                case "smoke_seconds": return SmokeSeconds;
+                case "smoke_size": return SmokeSize;
+                case "smoke_alpha": return SmokeAlpha;
+                case "smoke_drift": return SmokeDrift;
+                case "smoke_start_scale": return SmokeStartScale;
+                case "smoke_end_scale": return SmokeEndScale;
+                case "smoke_fade_in": return SmokeFadeIn;
+                default: return 0.0;
+            }
+        }
+
+        /// <summary>A setting's value as text for a console line or a CSV row (the shortest form that reads back the same).</summary>
+        public string GetText(string name) => Get(name).ToString("0.######", CultureInfo.InvariantCulture);
 
         /// <summary>Parses the table. Every setting is required. Problems are added to <paramref name="errors" />.</summary>
         public static PersonalLootSettings Parse(string csv, List<string> errors)
@@ -199,7 +344,7 @@ namespace Corruption.Rules
                 errors.Add("personal_loot.csv: needs the columns 'setting' and 'value'.");
                 return settings;
             }
-            var values = new Dictionary<string, double>();
+            var seen = new HashSet<string>();
             for (int i = 1; i < rows.Count; i++)
             {
                 var row = rows[i];
@@ -210,57 +355,21 @@ namespace Corruption.Rules
                 string name = nameIndex < row.Count ? row[nameIndex].Trim().ToLowerInvariant() : "";
                 string text = valueIndex < row.Count ? row[valueIndex].Trim() : "";
                 string where = $"personal_loot.csv line {i + 1} ({name})";
-                if (!Names.Contains(name))
-                {
-                    errors.Add($"{where}: unknown setting.");
-                    continue;
-                }
-                if (values.ContainsKey(name))
+                if (Names.Contains(name) && !seen.Add(name))
                 {
                     errors.Add($"{where}: setting is listed twice.");
                     continue;
                 }
-                if (!double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double number))
+                if (!settings.TrySet(name, text, out string error))
                 {
-                    errors.Add($"{where}: value '{text}' must be a number.");
-                    continue;
+                    errors.Add($"{where}: {error}");
+                    seen.Add(name); // already reported: no extra "missing" line for it
                 }
-                if (number < 0)
-                {
-                    errors.Add($"{where}: value {text} can't be negative.");
-                    continue;
-                }
-                if (number <= 0 && (name == "lock_seconds" || name == "refresh_seconds" || name == "pulse_seconds"))
-                {
-                    errors.Add($"{where}: value must be more than 0.");
-                    continue;
-                }
-                if (number > 1 && (name == "top_width_fraction" || name == "pulse_strength"))
-                {
-                    errors.Add($"{where}: value {text} must be between 0 and 1.");
-                    continue;
-                }
-                values[name] = number;
             }
-            foreach (var name in Names.Where(n => !values.ContainsKey(n)))
+            foreach (var name in Names.Where(n => !seen.Contains(n)))
             {
                 errors.Add($"personal_loot.csv: missing setting '{name}'.");
             }
-            double V(string name) => values.TryGetValue(name, out var v) ? v : 0.0;
-            settings.LockSeconds = V("lock_seconds");
-            settings.SoundWindowSeconds = V("sound_window_seconds");
-            settings.RefreshSeconds = V("refresh_seconds");
-            settings.TallHeight = (float)V("tall_height");
-            settings.TallWidth = (float)V("tall_width");
-            settings.TallLightRange = (float)V("tall_light_range");
-            settings.TallLightIntensity = (float)V("tall_light_intensity");
-            settings.ShortHeight = (float)V("short_height");
-            settings.ShortWidth = (float)V("short_width");
-            settings.ShortLightRange = (float)V("short_light_range");
-            settings.ShortLightIntensity = (float)V("short_light_intensity");
-            settings.TopWidthFraction = (float)V("top_width_fraction");
-            settings.PulseSeconds = V("pulse_seconds");
-            settings.PulseStrength = (float)V("pulse_strength");
             return settings;
         }
     }

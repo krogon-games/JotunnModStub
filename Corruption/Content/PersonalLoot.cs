@@ -311,6 +311,9 @@ namespace Corruption.Content
                 "  co_personal sounds [filter]  - the game's sound names (filter = part of a name); with no filter, a short list of candidates\n" +
                 "  co_personal play <sound|default>  - play a sound here ('default' = the skill-up sound)\n" +
                 "  co_personal sound <row|tall> <sound|default>  - use that sound for one beam row (e.g. rare) or for every tall row, until you quit the game\n" +
+                "  co_personal look  - every beam look setting (personal_loot.csv) with its value now\n" +
+                "  co_personal look <setting> <value>  - change one until you quit the game; every beam is redrawn at once, and the line to send Claude is printed\n" +
+                "  co_personal look reset  - go back to the table's values\n" +
                 "Orb ids: " + string.Join(", ", OrbRules.Orbs) + " (see co_orbroll for the full list)";
 
             public override void Run(string[] args)
@@ -333,6 +336,7 @@ namespace Corruption.Content
                     case "sounds": Sounds(args); break;
                     case "play": Play(args); break;
                     case "sound": Sound(args); break;
+                    case "look": Look(args); break;
                     default: Print(HelpText); break;
                 }
             }
@@ -468,6 +472,45 @@ namespace Corruption.Content
                 }
                 Print($"Dropped {what} for {OwnerText(owner)}, beam: {row ?? "none"}, lock left: {System.Math.Min(seconds, Settings.LockSeconds):0.#} s." +
                       (other ? " You can't see it until the lock ends; use 'co_personal list' to find it." : ""));
+            }
+
+            private static void Look(string[] args)
+            {
+                if (args.Length == 1)
+                {
+                    var lines = new List<string>();
+                    foreach (var name in PersonalLootSettings.AllNames())
+                    {
+                        lines.Add($"  {name} = {Settings.GetText(name)}");
+                    }
+                    Print("personal_loot.csv settings now (change one with: co_personal look <setting> <value>; undo all with: co_personal look reset):\n" + string.Join("\n", lines.ToArray()));
+                    return;
+                }
+                if (args.Length == 2 && args[1].ToLowerInvariant() == "reset")
+                {
+                    var errors = new List<string>();
+                    var fresh = PersonalLootSettings.Parse(DataFiles.Read("personal_loot.csv"), errors);
+                    if (errors.Count > 0)
+                    {
+                        Print("Couldn't reload personal_loot.csv, so nothing changed:\n" + string.Join("\n", errors.ToArray()));
+                        return;
+                    }
+                    Settings = fresh;
+                    Print($"Back to the table's values. {PersonalLootView.RebuildAll()} beam(s) redrawn.");
+                    return;
+                }
+                if (args.Length != 3)
+                {
+                    Print("co_personal look  |  co_personal look <setting> <value>  |  co_personal look reset");
+                    return;
+                }
+                string name2 = args[1].ToLowerInvariant();
+                if (!Settings.TrySet(name2, args[2], out string error))
+                {
+                    Print($"{name2}: {error} (co_personal look lists the settings.)");
+                    return;
+                }
+                Print($"{PersonalLootView.RebuildAll()} beam(s) redrawn. Send Claude this line:\npersonal_loot.csv: {name2} = {Settings.GetText(name2)}");
             }
 
             private static void BeamRow(string[] args)
@@ -639,6 +682,8 @@ namespace Corruption.Content
         private readonly HashSet<Light> _hiddenLights = new HashSet<Light>();
         private GameObject _beam;
         private LineRenderer _line;
+        private LineRenderer _glow;
+        private Transform _smokeTransform;
         private Light _beamLight;
         private float _lightIntensity;
         private float _pulsePhase;
@@ -658,15 +703,35 @@ namespace Corruption.Content
         /// <summary>One material for every beam (the colour comes from each line's gradient), made when first needed.</summary>
         private static Material _sharedMaterial;
 
+        /// <summary>The soft-edged texture on that material (4 wide, 64 tall: the height runs across the beam) and the softness it was last drawn for.</summary>
+        private static Texture2D _edgeTexture;
+        private static float _edgeTextureSoftness = -1f;
+
+        /// <summary>The smoke wisps' material (the same shader with a soft round dot), made when first needed.</summary>
+        private static Material _smokeMaterial;
+
+        /// <summary>Every live view, for <see cref="RebuildAll" />.</summary>
+        private static readonly List<PersonalLootView> Views = new List<PersonalLootView>();
+
+        private const int EdgeTextureAcross = 64;
+        private const int EdgeTextureAlong = 4;
+        private const int DotTextureSize = 32;
+        private const int MaxSmokeParticles = 64;
+
         /// <summary>When a landing sound last played, so tall drops landing together don't pile their sounds up.</summary>
         private static float _lastLandingSound = -100f;
 
         private const float MinLandingSoundGap = 0.3f;
         private const float BeamMoveEpsilon = 0.01f;
-        private const float BeamBaseAlpha = 0.8f;
+
+        private void OnDestroy()
+        {
+            Views.Remove(this);
+        }
 
         private void Awake()
         {
+            Views.Add(this);
             Safe.Run("start a personal drop's view", () =>
             {
                 _drop = GetComponent<ItemDrop>();
@@ -709,19 +774,18 @@ namespace Corruption.Content
             _beam = new GameObject("CorruptionLootBeam") { hideFlags = HideFlags.DontSave };
             _beam.transform.SetParent(transform, false);
             _line = _beam.AddComponent<LineRenderer>();
-            if (!_sharedMaterial)
-            {
-                _sharedMaterial = new Material(shader) { hideFlags = HideFlags.DontSave };
-            }
-            _line.sharedMaterial = _sharedMaterial;
-            _line.useWorldSpace = true;
-            _line.positionCount = 2;
-            _line.alignment = LineAlignment.View;
+            EnsureSharedMaterials(shader, settings.EdgeSoftness);
             // Thick at the base, thinner towards the top (Krogon, 2026-11-26): the curve runs 1 -> fraction along the beam.
-            _line.widthMultiplier = width;
-            _line.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, settings.TopWidthFraction));
-            _line.shadowCastingMode = ShadowCastingMode.Off;
-            _line.receiveShadows = false;
+            var taper = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, settings.TopWidthFraction));
+            SetUpLine(_line, width, taper, 1);
+            if (settings.GlowAlpha > 0f)
+            {
+                // A wider, much fainter copy behind the core, so the beam reads as hazy light rather than a solid stick.
+                var glowObject = new GameObject("CorruptionLootBeamGlow") { hideFlags = HideFlags.DontSave };
+                glowObject.transform.SetParent(_beam.transform, false);
+                _glow = glowObject.AddComponent<LineRenderer>();
+                SetUpLine(_glow, width * settings.GlowWidth, taper, 0);
+            }
             _beamColour = colour;
             _lightIntensity = lightIntensity;
             _pulsePhase = Random.value; // each drop pulses on its own cycle
@@ -739,7 +803,201 @@ namespace Corruption.Content
                 light.intensity = lightIntensity;
                 light.shadows = LightShadows.None;
             }
+            BuildSmoke(width);
             PositionBeam(true);
+        }
+
+        private static void SetUpLine(LineRenderer line, float width, AnimationCurve taper, int sortingOrder)
+        {
+            line.sharedMaterial = _sharedMaterial;
+            line.useWorldSpace = true;
+            line.positionCount = 2;
+            line.alignment = LineAlignment.View;
+            line.widthMultiplier = width;
+            line.widthCurve = taper;
+            // Unity's LineRenderer maps the texture's x along the line and its y across the width; Stretch = once over the whole line.
+            line.textureMode = LineTextureMode.Stretch;
+            line.sortingOrder = sortingOrder;
+            line.shadowCastingMode = ShadowCastingMode.Off;
+            line.receiveShadows = false;
+        }
+
+        /// <summary>
+        ///     Makes the shared materials if they don't exist yet, and redraws the soft-edge texture when the softness
+        ///     changed (so <c>co_personal look edge_softness</c> shows at once without a new texture each time).
+        /// </summary>
+        private static void EnsureSharedMaterials(Shader shader, float softness)
+        {
+            if (!_edgeTexture)
+            {
+                _edgeTexture = new Texture2D(EdgeTextureAlong, EdgeTextureAcross, TextureFormat.RGBA32, false)
+                {
+                    wrapMode = TextureWrapMode.Clamp,
+                    filterMode = FilterMode.Bilinear,
+                    hideFlags = HideFlags.DontSave
+                };
+                _edgeTextureSoftness = -1f;
+            }
+            if (_edgeTextureSoftness != softness)
+            {
+                _edgeTextureSoftness = softness;
+                var pixels = new Color32[EdgeTextureAlong * EdgeTextureAcross];
+                for (int y = 0; y < EdgeTextureAcross; y++)
+                {
+                    byte alpha = (byte)Mathf.RoundToInt(255f * (float)PersonalLootRules.EdgeAlpha((y + 0.5) / EdgeTextureAcross, softness));
+                    for (int x = 0; x < EdgeTextureAlong; x++)
+                    {
+                        pixels[y * EdgeTextureAlong + x] = new Color32(255, 255, 255, alpha);
+                    }
+                }
+                _edgeTexture.SetPixels32(pixels);
+                _edgeTexture.Apply(false);
+            }
+            if (!_sharedMaterial)
+            {
+                _sharedMaterial = new Material(shader) { hideFlags = HideFlags.DontSave };
+            }
+            _sharedMaterial.mainTexture = _edgeTexture;
+            if (!_smokeMaterial)
+            {
+                // A soft round dot: white, fading from the middle (the same easing as the beam's edge at full softness).
+                var dot = new Texture2D(DotTextureSize, DotTextureSize, TextureFormat.RGBA32, false)
+                {
+                    wrapMode = TextureWrapMode.Clamp,
+                    filterMode = FilterMode.Bilinear,
+                    hideFlags = HideFlags.DontSave
+                };
+                var pixels = new Color32[DotTextureSize * DotTextureSize];
+                for (int y = 0; y < DotTextureSize; y++)
+                {
+                    for (int x = 0; x < DotTextureSize; x++)
+                    {
+                        float dx = (x + 0.5f) / DotTextureSize * 2f - 1f;
+                        float dy = (y + 0.5f) / DotTextureSize * 2f - 1f;
+                        float r = Mathf.Min(1f, Mathf.Sqrt(dx * dx + dy * dy));
+                        byte alpha = (byte)Mathf.RoundToInt(255f * (float)PersonalLootRules.EdgeAlpha(0.5 + 0.5 * r, 1.0));
+                        pixels[y * DotTextureSize + x] = new Color32(255, 255, 255, alpha);
+                    }
+                }
+                dot.SetPixels32(pixels);
+                dot.Apply(false);
+                _smokeMaterial = new Material(shader) { hideFlags = HideFlags.DontSave, mainTexture = dot };
+            }
+        }
+
+        /// <summary>
+        ///     A few soft wisps rising from the base to the top of the beam, fading as they go. Built switched off and
+        ///     switched on once configured (some settings can't change on a running system). A child of the beam, so it
+        ///     hides and shows with it. World space, so the wisps don't swing with the item.
+        /// </summary>
+        private void BuildSmoke(float width)
+        {
+            var settings = PersonalLoot.Settings;
+            if (settings.SmokePerSecond <= 0f)
+            {
+                return;
+            }
+            var smokeObject = new GameObject("CorruptionLootBeamSmoke") { hideFlags = HideFlags.DontSave };
+            smokeObject.SetActive(false);
+            smokeObject.transform.SetParent(_beam.transform, false);
+            _smokeTransform = smokeObject.transform;
+            // Short beams' wisps scale with the beam: short height / tall height (from the table, not a number here).
+            float sizeScale = _row.Tall || settings.TallHeight <= 0f ? 1f : settings.ShortHeight / settings.TallHeight;
+            float rise = _height / settings.SmokeSeconds;
+            float drift = width * settings.SmokeDrift;
+            var system = smokeObject.AddComponent<ParticleSystem>();
+            var main = system.main;
+            main.loop = true;
+            main.playOnAwake = true;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.scalingMode = ParticleSystemScalingMode.Local;
+            main.startLifetime = settings.SmokeSeconds;
+            main.startSpeed = 0f;
+            main.startSize = settings.SmokeSize * sizeScale;
+            main.startColor = Color.white;
+            main.gravityModifier = 0f;
+            main.maxParticles = Mathf.Clamp(Mathf.CeilToInt(settings.SmokePerSecond * settings.SmokeSeconds) + 2, 2, MaxSmokeParticles);
+            var emission = system.emission;
+            emission.enabled = true;
+            emission.rateOverTime = settings.SmokePerSecond;
+            var shape = system.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Circle; // flat, turned to lie level (see PositionBeam)
+            shape.radius = width * 0.5f;
+            var velocity = system.velocityOverLifetime;
+            velocity.enabled = true;
+            velocity.space = ParticleSystemSimulationSpace.World;
+            velocity.x = new ParticleSystem.MinMaxCurve(-drift, drift);
+            velocity.y = rise;
+            velocity.z = new ParticleSystem.MinMaxCurve(-drift, drift);
+            var colour = system.colorOverLifetime;
+            colour.enabled = true;
+            var gradient = new Gradient();
+            var alphaKeys = settings.SmokeFadeIn > 0f
+                ? new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(settings.SmokeAlpha, settings.SmokeFadeIn), new GradientAlphaKey(0f, 1f) }
+                : new[] { new GradientAlphaKey(settings.SmokeAlpha, 0f), new GradientAlphaKey(0f, 1f) };
+            gradient.SetKeys(
+                new[] { new GradientColorKey(_beamColour, 0f), new GradientColorKey(_beamColour, 1f) },
+                alphaKeys);
+            colour.color = new ParticleSystem.MinMaxGradient(gradient);
+            var size = system.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0f, settings.SmokeStartScale), new Keyframe(1f, settings.SmokeEndScale)));
+            var collision = system.collision;
+            collision.enabled = false;
+            var renderer = smokeObject.GetComponent<ParticleSystemRenderer>();
+            renderer.sharedMaterial = _smokeMaterial;
+            renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            renderer.sortingOrder = -1;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            smokeObject.SetActive(true);
+        }
+
+        /// <summary>
+        ///     Rebuilds the beam of every drop that has one, after a setting changed (<c>co_personal look</c>), so the new
+        ///     look shows at once.
+        /// </summary>
+        public static int RebuildAll()
+        {
+            int count = 0;
+            foreach (var view in Views.ToArray())
+            {
+                if (view && view.Rebuild())
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        private bool Rebuild()
+        {
+            if (_failed || _beam == null)
+            {
+                return false;
+            }
+            try
+            {
+                _beam.SetActive(false);
+                Destroy(_beam);
+                _beam = null;
+                _line = null;
+                _glow = null;
+                _beamLight = null;
+                _smokeTransform = null;
+                BuildBeam();
+                if (_hidden && _beam)
+                {
+                    _beam.SetActive(false);
+                }
+                return _beam != null;
+            }
+            catch (System.Exception ex)
+            {
+                Fail("rebuild a loot beam", ex);
+                return false;
+            }
         }
 
         /// <summary>Sets the beam's brightness (and its light's) for this moment of the slow pulse. The colour fades out towards the top.</summary>
@@ -747,8 +1005,13 @@ namespace Corruption.Content
         {
             var settings = PersonalLoot.Settings;
             float factor = PersonalLootRules.PulseFactor(Time.time, settings.PulseSeconds, settings.PulseStrength, _pulsePhase);
-            _line.startColor = new Color(_beamColour.r, _beamColour.g, _beamColour.b, BeamBaseAlpha * factor);
+            _line.startColor = new Color(_beamColour.r, _beamColour.g, _beamColour.b, settings.BeamAlpha * factor);
             _line.endColor = new Color(_beamColour.r, _beamColour.g, _beamColour.b, 0f);
+            if (_glow)
+            {
+                _glow.startColor = new Color(_beamColour.r, _beamColour.g, _beamColour.b, settings.BeamAlpha * settings.GlowAlpha * factor);
+                _glow.endColor = new Color(_beamColour.r, _beamColour.g, _beamColour.b, 0f);
+            }
             if (_beamLight)
             {
                 _beamLight.intensity = _lightIntensity * factor;
@@ -770,6 +1033,16 @@ namespace Corruption.Content
             _lastBeamPosition = bottom;
             _line.SetPosition(0, bottom);
             _line.SetPosition(1, bottom + Vector3.up * _height);
+            if (_glow)
+            {
+                _glow.SetPosition(0, bottom);
+                _glow.SetPosition(1, bottom + Vector3.up * _height);
+            }
+            if (_smokeTransform)
+            {
+                // The flat emitter circle faces along the object's z: turn it so it lies level and wisps start across the base.
+                _smokeTransform.SetPositionAndRotation(bottom, Quaternion.Euler(-90f, 0f, 0f));
+            }
             if (_beamLight)
             {
                 _beamLight.transform.position = bottom + Vector3.up * 0.2f;

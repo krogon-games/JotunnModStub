@@ -224,13 +224,145 @@ namespace CraftingOverhaul.Tests
         private const string AllSettings =
             "setting,value,notes\nlock_seconds,60,\nsound_window_seconds,5,\nrefresh_seconds,0.25,\ntall_height,10,\ntall_width,0.35,\n" +
             "tall_light_range,4,\ntall_light_intensity,1.5,\nshort_height,2.5,\nshort_width,0.15,\nshort_light_range,0,\nshort_light_intensity,0,\n" +
-            "top_width_fraction,0.25,\npulse_seconds,4,\npulse_strength,0.35,\n";
+            "top_width_fraction,0.25,\npulse_seconds,4,\npulse_strength,0.35,\n" +
+            "beam_alpha,0.45,\nedge_softness,0.6,\nglow_width,3,\nglow_alpha,0.12,\n" +
+            "smoke_per_second,3,\nsmoke_seconds,2.5,\nsmoke_size,0.35,\nsmoke_alpha,0.25,\n" +
+            "smoke_drift,0.5,\nsmoke_start_scale,0.7,\nsmoke_end_scale,1.4,\nsmoke_fade_in,0.15,\n";
 
         private static List<string> SettingErrors(string csv)
         {
             var errors = new List<string>();
             PersonalLootSettings.Parse(csv, errors);
             return errors;
+        }
+
+        [Fact]
+        public void TheRealSoftLookSettingsArePresentAndInRange()
+        {
+            var s = ParseSettingsReal();
+            Assert.InRange(s.BeamAlpha, 0.0001f, 1f);
+            Assert.InRange(s.EdgeSoftness, 0f, 1f);
+            Assert.True(s.GlowWidth > 0);
+            Assert.InRange(s.GlowAlpha, 0f, 1f);
+            Assert.True(s.SmokePerSecond >= 0);
+            Assert.True(s.SmokeSeconds > 0);
+            Assert.True(s.SmokeSize > 0);
+            Assert.InRange(s.SmokeAlpha, 0f, 1f);
+            Assert.True(s.SmokeDrift >= 0);
+            Assert.True(s.SmokeStartScale > 0);
+            Assert.True(s.SmokeEndScale > 0);
+            Assert.InRange(s.SmokeFadeIn, 0f, 0.9999f);
+        }
+
+        [Fact]
+        public void TrySetChecksTheSmokeShapeSettings()
+        {
+            var s = ParseSettingsReal();
+            Assert.True(s.TrySet("smoke_drift", "0", out _));
+            Assert.True(s.TrySet("smoke_fade_in", "0", out _));
+            Assert.True(s.TrySet("smoke_start_scale", "0.5", out _));
+            Assert.True(s.TrySet("smoke_end_scale", "2", out _));
+            Assert.Equal(2f, s.SmokeEndScale);
+            Assert.False(s.TrySet("smoke_fade_in", "1", out var error));
+            Assert.Contains("between 0 and 1", error);
+            Assert.False(s.TrySet("smoke_fade_in", "1.5", out error));
+            Assert.False(s.TrySet("smoke_drift", "-1", out error));
+            Assert.Contains("negative", error);
+            Assert.False(s.TrySet("smoke_start_scale", "0", out error));
+            Assert.Contains("more than 0", error);
+            Assert.False(s.TrySet("smoke_end_scale", "0", out error));
+            Assert.Contains("more than 0", error);
+            Assert.Contains(SettingErrors(AllSettings.Replace("smoke_fade_in,0.15", "smoke_fade_in,1")), e => e.Contains("between 0 and 1"));
+            Assert.Contains(SettingErrors(AllSettings.Replace("smoke_drift,0.5,\n", "")), e => e.Contains("missing setting 'smoke_drift'"));
+        }
+
+        [Fact]
+        public void TrySetAcceptsGoodValuesAndStoresThem()
+        {
+            var s = ParseSettingsReal();
+            Assert.True(s.TrySet("beam_alpha", "0.35", out var error));
+            Assert.Null(error);
+            Assert.Equal(0.35f, s.BeamAlpha);
+            Assert.True(s.TrySet(" Smoke_Per_Second ", " 0 ", out _));
+            Assert.Equal(0f, s.SmokePerSecond);
+            Assert.True(s.TrySet("pulse_seconds", "6.5", out _));
+            Assert.Equal(6.5, s.PulseSeconds);
+            Assert.Equal("0.35", s.GetText("beam_alpha"));
+        }
+
+        [Fact]
+        public void TrySetRejectsBadValuesWithTheParsersMessagesAndChangesNothing()
+        {
+            var s = ParseSettingsReal();
+            float before = s.BeamAlpha;
+            Assert.False(s.TrySet("beam_alpha", "1.5", out var error));
+            Assert.Contains("between 0 and 1", error);
+            Assert.False(s.TrySet("beam_alpha", "-0.1", out error));
+            Assert.Contains("negative", error);
+            Assert.False(s.TrySet("beam_alpha", "lots", out error));
+            Assert.Contains("number", error);
+            Assert.False(s.TrySet("beam_alpha", "NaN", out error));
+            Assert.Contains("number", error);
+            Assert.False(s.TrySet("smoke_seconds", "0", out error));
+            Assert.Contains("more than 0", error);
+            Assert.False(s.TrySet("glow_width", "0", out error));
+            Assert.Contains("more than 0", error);
+            Assert.False(s.TrySet("colour_boost", "1", out error));
+            Assert.Contains("unknown", error);
+            Assert.Equal(before, s.BeamAlpha);
+        }
+
+        [Fact]
+        public void ParseUsesTheSameRulesAsTrySet()
+        {
+            Assert.Contains(SettingErrors(AllSettings.Replace("edge_softness,0.6", "edge_softness,2")), e => e.Contains("between 0 and 1"));
+            Assert.Contains(SettingErrors(AllSettings.Replace("smoke_size,0.35", "smoke_size,0")), e => e.Contains("more than 0"));
+            Assert.Contains(SettingErrors(AllSettings.Replace("smoke_alpha,0.25,\n", "")), e => e.Contains("missing setting 'smoke_alpha'"));
+            Assert.Empty(SettingErrors(AllSettings.Replace("smoke_per_second,3", "smoke_per_second,0")));
+            foreach (var name in PersonalLootSettings.AllNames())
+            {
+                Assert.Contains(name + ",", AllSettings);
+            }
+        }
+
+        [Fact]
+        public void EdgeAlphaIsOneInTheMiddleAndZeroAtTheEdges()
+        {
+            foreach (var softness in new[] { 0.1, 0.6, 1.0 })
+            {
+                Assert.Equal(1.0, PersonalLootRules.EdgeAlpha(0.5, softness), 9);
+                Assert.Equal(0.0, PersonalLootRules.EdgeAlpha(0.0, softness), 9);
+                Assert.Equal(0.0, PersonalLootRules.EdgeAlpha(1.0, softness), 9);
+            }
+        }
+
+        [Fact]
+        public void EdgeAlphaIsSymmetricAndFallsMonotonicallyOutwards()
+        {
+            foreach (var softness in new[] { 0.3, 0.6, 1.0 })
+            {
+                double last = 1.0;
+                for (int i = 0; i <= 50; i++)
+                {
+                    double outward = i / 100.0; // 0 = middle, 0.5 = edge
+                    double right = PersonalLootRules.EdgeAlpha(0.5 + outward, softness);
+                    double left = PersonalLootRules.EdgeAlpha(0.5 - outward, softness);
+                    Assert.Equal(right, left, 9);
+                    Assert.InRange(right, 0.0, last + 1e-12);
+                    last = right;
+                }
+            }
+        }
+
+        [Fact]
+        public void EdgeAlphaWithNoSoftnessIsAHardEdgeAndFullSoftnessFadesFromTheMiddle()
+        {
+            Assert.Equal(1.0, PersonalLootRules.EdgeAlpha(0.02, 0.0));
+            Assert.Equal(1.0, PersonalLootRules.EdgeAlpha(0.5, 0.0));
+            Assert.Equal(1.0, PersonalLootRules.EdgeAlpha(0.98, 0.0));
+            Assert.True(PersonalLootRules.EdgeAlpha(0.55, 1.0) < 1.0);
+            Assert.Equal(1.0, PersonalLootRules.EdgeAlpha(0.55, 0.6)); // inside the solid middle
+            Assert.Equal(PersonalLootRules.EdgeAlpha(0.0, 0.6), PersonalLootRules.EdgeAlpha(-3.0, 0.6)); // out of range is clamped
         }
 
         [Fact]

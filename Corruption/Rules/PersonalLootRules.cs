@@ -52,6 +52,31 @@ namespace Corruption.Rules
             return (float)(1.0 - strength * (1.0 - wave));
         }
 
+        /// <summary>
+        ///     How opaque the beam is at a point across its width, as a share of its middle (a soft edge, Krogon, 2026-11-26:
+        ///     "too solid looking"). <paramref name="across01" /> runs 0..1 from one edge to the other (outside is clamped).
+        ///     Symmetric; 1 in the middle. <paramref name="softness" /> (0..1): 0 = a hard edge (1 all the way across);
+        ///     above 0 the fade starts at (1 - softness) of the way from the middle to the edge and eases (smoothstep) to 0
+        ///     exactly at the edges, so 1 starts fading from the very middle.
+        /// </summary>
+        public static double EdgeAlpha(double across01, double softness)
+        {
+            double a = Math.Max(0.0, Math.Min(1.0, across01));
+            double s = Math.Max(0.0, Math.Min(1.0, softness));
+            if (s <= 0.0)
+            {
+                return 1.0;
+            }
+            double t = Math.Abs(2.0 * a - 1.0); // 0 in the middle, 1 at the edges
+            double start = 1.0 - s;
+            if (t <= start)
+            {
+                return 1.0;
+            }
+            double u = (t - start) / s; // 0..1
+            return 1.0 - u * u * (3.0 - 2.0 * u);
+        }
+
         /// <summary>Seconds since the drop. Never negative: the network clock can step back (about 2 s) when the server corrects it.</summary>
         public static double AgeSeconds(long dropTicks, long nowTicks) => Math.Max(0.0, (nowTicks - dropTicks) / (double)TicksPerSecond);
 
