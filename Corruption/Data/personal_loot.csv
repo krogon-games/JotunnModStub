@@ -1,0 +1,12 @@
+setting,value,notes
+lock_seconds,60,"Design: corruption-design.md -> Loot and uniques -> Drops (only the roller can pick a drop up for the first 60 seconds, then anyone can)."
+sound_window_seconds,5,"The owner's game plays the sound only if it sees the drop within this many seconds of its drop time, so walking back to an old drop or reloading the area doesn't replay it. First guess: judge in the play-test."
+refresh_seconds,0.25,"How often each game re-checks a personal drop's lock (hide/show, beam). First guess: a quarter second keeps the reveal at 60 s prompt without a check every frame."
+tall_height,10,"First guess (visual): judge in the play-test with co_personal beams. (design: seen from about 50 m)"
+tall_width,0.35,"First guess (visual): judge in the play-test with co_personal beams."
+tall_light_range,4,"First guess (visual): judge in the play-test with co_personal beams."
+tall_light_intensity,1.5,"First guess (visual): judge in the play-test with co_personal beams."
+short_height,2.5,"First guess (visual): judge in the play-test with co_personal beams."
+short_width,0.15,"First guess (visual): judge in the play-test with co_personal beams."
+short_light_range,0,"First guess (visual): judge in the play-test with co_personal beams. 0 = no light; keeps many common drops cheap to draw."
+short_light_intensity,0,"First guess (visual): judge in the play-test with co_personal beams. 0 = no light; keeps many common drops cheap to draw."

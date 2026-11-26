@@ -25,6 +25,8 @@
     <Compile Include="..\Corruption\Rules\TalismanFamilies.cs" Link="Linked\TalismanFamilies.cs" />
     <Compile Include="..\Corruption\Rules\AffixTable.cs" Link="Linked\AffixTable.cs" />
     <Compile Include="..\Corruption\Rules\Csv.cs" Link="Linked\Csv.cs" />
+    <Compile Include="..\Corruption\Rules\PersonalLootRules.cs" Link="Linked\PersonalLootRules.cs" />
+    <Compile Include="..\Corruption\Rules\LootBeamTable.cs" Link="Linked\LootBeamTable.cs" />
     <Compile Include="..\Corruption\Rules\DropTable.cs" Link="Linked\DropTable.cs" />
     <Compile Include="..\Corruption\Rules\AffixCaps.cs" Link="Linked\AffixCaps.cs" />
     <Compile Include="..\Corruption\Rules\TalismanSlotRules.cs" Link="Linked\TalismanSlotRules.cs" />
