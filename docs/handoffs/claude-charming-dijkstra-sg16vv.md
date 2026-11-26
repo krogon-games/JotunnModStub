@@ -4,7 +4,7 @@
 
 ## Stage
 
-Building (Krogon's answers to the gameplay-loop review, 2026-11-23); the play-test waits for this.
+Play-tested: **all 19 solo steps passed** on Valheim 1.0.30 (Krogon, 2026-11-26), no fixes needed. Next: `/handoff` and a PR into `master`.
 
 ## Purpose
 
@@ -12,7 +12,7 @@ Loot round for [#33](https://github.com/krogon-games/JotunnModStub/issues/33): c
 
 ## Done
 
-Nothing yet.
+Everything below, play-tested alone on 2026-11-26 (all 19 steps passed, clean log): orb drops, the two orb finders, Splintering's 4 m reach, the loop fixes (maps as loot, boss and chest shards, the corrupted boss's orb, the Riftforge recipe), and the two 1.0.30 fixes. Not tried yet with the group: Session 2, 2k.
 
 ## Half-done and known issues
 
@@ -22,7 +22,7 @@ Built 2026-11-19, untested in game (623 tests pass; Corruption builds against th
 - **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
 - **Loop fixes (decisions 17–33, 2026-11-23):** maps named "{biome} map"; the rip chest holds one map of its biome and rolls Magic/Rare gear per player; destroying a rip heart sets the world key `corruption_rip_cleared`, after which creatures drop their biome's map 1 in 830 per player once that biome's boss is beaten (`MapDrops.cs`, `MapDropRules.cs`, `co_mapdrops`); every boss kill adds 1 shard per nearby player (`BossShardsPerPlayer`); corrupted bosses give each player one picked orb; dungeon chests hold a shard 1 in 20 (`DungeonChestShardChance`); Riftforge 20 fine wood, 10 nails, 5 cores, 10 amber. Issues: new #84 (explored-land fallback, decision 22), #35 raised to high (decision 23), notes on #31 and #33; ROADMAP, GAME_DESIGN and the design doc updated.
 
-**Valheim 1.0.30 (2026-11-26):** Steam updated the game. Krogon's first start: Orlog's `ConnectPanel.m_root` and CraftingOverhaul's `SoftReference.Name` are gone (fixed in code, untested); PlantEasily 2.3.1 is broken on 1.0.30 (not ours, disabled). **Krogon's build on Valheim 1.0.30's own files passed the same day** (fresh publicized assemblies; Orlog and Corruption compiled, CraftingOverhaul up to date, 0 errors): nothing in our code uses anything 1.0.30 removed at compile time. Left: what only shows at runtime (patches that fail to apply, fields read by name), to watch in the play-test's log.
+**Valheim 1.0.30 (2026-11-26):** Steam updated the game. Krogon's first start: Orlog's `ConnectPanel.m_root` and CraftingOverhaul's `SoftReference.Name` are gone (fixed in code, untested); PlantEasily 2.3.1 is broken on 1.0.30 (not ours, disabled). **Krogon's build on Valheim 1.0.30's own files passed the same day** (fresh publicized assemblies; Orlog and Corruption compiled, CraftingOverhaul up to date, 0 errors): nothing in our code uses anything 1.0.30 removed at compile time. The play-test's log (2026-11-26) then showed no errors at all: every patch applied, the biome scan worked. One leftover: 1.0.30's network panel has no `m_root`, so Orlog logs one warning and **F2 also opens the network panel** while using the skill slot (harmless; fixing it needs a look at 1.0.30's `ConnectPanel`, so a later round with a fresh `co_dump`).
 
 Claude's interim choices (easy to change): the splinters of the two orb finders keep their stone-grey and resin-amber colours (`splinter_looks.csv`, `proposed`); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
 
@@ -75,9 +75,9 @@ None yet.
 
 ## Next steps
 
-1. Krogon's solo play-test; fix what it finds.
-2. Final play-test, then `/handoff` and a PR into `master`.
-3. The group evening: Session 2, 2k.
+1. `/handoff`, then a PR into `master` (the solo play-test passed, nothing to fix).
+2. The group evening: Session 2, 2k.
+3. Later: the F2 network-panel leftover on 1.0.30 (above).
 
 ## Checks
 
