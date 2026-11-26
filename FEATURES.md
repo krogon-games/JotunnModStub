@@ -1270,7 +1270,7 @@ Also: while Forge is open, the station's list and description get a `CanvasGroup
 
 **Config:** no new options. `[Rips] ChestShardsMin`/`ChestShardsMax` keep their keys; their descriptions now say "the rip heart spills".
 
-**Network:** the `Corruption_HarvestChances` message now ends with the striker's player id (long), read only when it is there, so a striker on an older build still gets their harvest affixes (their orb is then unowned). Everyone and the server must still be on the same build: an older 0.9.0 game joins without a warning (Jötunn compares only the first two numbers) but shows everyone's locked drops and never locks its own.
+**Network:** the `Corruption_HarvestChances` message now ends with the striker's player id (long), read only when it is there, so a striker on an older build still gets their harvest affixes (their orb is then unowned). Everyone and the server must be on the same build: Corruption 0.10.0 (raised at the merge), so Jötunn, which compares the first two numbers, turns away an older 0.9.0 game (one would show everyone's locked drops and never lock its own).
 
 **Removed:** the rip chest (`RipLoot.SpawnChest` became `RipLoot.Spill`), `OrbDrops.PlacingRipChest` and its check in the `Container.AddDefaultItems` postfix.
 
