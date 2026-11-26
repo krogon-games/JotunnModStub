@@ -39,6 +39,18 @@ Nothing built yet. Read for the round: the design, the handoffs of the rips, orb
 6b. **Orbs put affixes on maps, exactly as on gear** (2026-11-26): "A". Transmutation: white → tier 2; Augmentation: tier 2 → 3; Alchemy, or Chance (always Rare, as no unique map exists): white → tier 4; Regal: tier 3 → 4; Exalted: tier 4 → 5; Annulment removes one random affix, so the map drops a tier; Divine does nothing (map affixes have no ranges); the Mirror of Kalandra copies a map, as it copies gear; the shard corrupts a full tier 5 map into tier 6 (decision 6). Map affixes have no prefix/suffix sides: any different affixes, up to the tier's count. Over "shards only" and "both". **Replaces** the design's "spend extra shards at the bench to roll modifiers onto a map … a reroll costing one more shard" and the 2026-11-01 proposal of 1 shard for 1–3 affixes (old questions 7 and 8 are settled by this).
 6c. **Corrupting a map never breaks it** (2026-11-26): "B. We should make corrupted only affixes that add fun and danger". A shard on a full tier 5 map always makes it tier 6, corrupted and locked (no orb changes it afterwards, as corrupted gear; the Mirror of Kalandra can still copy it, and the copy stays corrupted), following the design's "Rolling map affixes never bricks the map". Over "like gear" (25% destroyed / 25% nothing / 50% a 5th affix) and "always a 5th normal affix". Krogon's new idea: **corrupted-only map affixes** that add fun and danger.
 6d. **Corrupted-only affixes come in a later round** (2026-11-26): "Later round". This round a tier 6 map is corrupted and locked, and its tier alone sets its waves, stars, shards and drop rates; once corrupted-only affixes exist, every corrupted map gets one. Over "propose a short list now". Ideas Claude offered for the later list, none chosen: Haunted (the game's ghost weather), Undying (rip creatures rise once more), Fenrir's Hunt (wolves join every wave), Endless Night (always night, night-only creatures come).
+6e. **The tier table** (2026-11-26): "Table as proposed. Waves a". **Replaces decision 3's waves and stars** (made for tiers without affixes) and extends decision 4:
+
+    | Tier | Map | Waves | Guaranteed 2-stars | Heart shards | Drop rates | Heart gear (each player's roll) |
+    |---|---|---|---|---|---|---|
+    | 1 | white | ×2 (today) | none (about 1 in 10 by chance) | 1–4 | ×1.25 | by chance (about 1 in 27) |
+    | 2 | magic, 1 affix | ×2.5 | 1 in 4 | 2–6 | ×1.5 | at least Magic |
+    | 3 | magic, 2 affixes | ×3 | 1 in 2 | 3–8 | ×1.75 | at least Magic |
+    | 4 | rare, 3 affixes | ×3.5 | 3 in 4 | 4–10 | ×2 | at least Rare |
+    | 5 | rare, 4 affixes | ×4 | all | 5–12 | ×2.25 | at least Rare |
+    | 6 | corrupted | ×4.5 | all | 6–14 | ×2.5 | at least Rare |
+
+    Waves: +0.5 per tier (most alive at once and spawn speed; Black Forest 24 … 54; with Swarming doubling, up to 96 at tier 5 and 108 at tier 6), over +1 per tier and ×2 everywhere. Sources: drop rates = decision 4b; shards = 2026-11-01 for tiers 1–4, the same step (+1 lowest, +2 highest) for 5–6; 2-stars = decision 3's 1 in 4 at tier 2, +1 in 4 per tier (Claude's proposal); heart gear = decision 4B's tier 2 floor, "at least Rare" once the map is Rare (Claude's proposal); waves = Claude's proposal. 3-stars still wait for the elite design (#39). Every number goes in a data table, tunable without a rebuild.
 
 ## Playtest
 
