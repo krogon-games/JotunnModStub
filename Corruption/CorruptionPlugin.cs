@@ -48,6 +48,7 @@ namespace Corruption
             Safe.Run("read the Orb of Chance table", RiftforgeCrafting.Load);
             Safe.Run("read the corruption and shattering tables", RiftforgeCrafting.LoadForgeTables);
             Safe.Run("add the co_craft command", RiftforgeCrafting.RegisterCommand);
+            Safe.Run("add map rolling to the Riftforge", () => RiftforgeCrafting.Register(new MapForge()));
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
         }

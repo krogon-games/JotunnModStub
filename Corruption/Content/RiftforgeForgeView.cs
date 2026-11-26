@@ -707,7 +707,7 @@ namespace Corruption.Content
 
         // ------------------------------------------------------------ contents
 
-        /// <summary>The forge slot: the gear's icon, durability and quality; a gold frame while a pick can be used on it.</summary>
+        /// <summary>The forge slot: the gear's icon, durability and quality (a map's tier); a gold frame while a pick can be used on it.</summary>
         public static void SetSlot(ItemDrop.ItemData target, bool armed, string emptyTip)
         {
             if (!_slot || !_slot.m_icon)
@@ -732,10 +732,14 @@ namespace Corruption.Content
             }
             if (_slot.m_quality)
             {
-                _slot.m_quality.enabled = has && target.m_shared.m_maxQuality > 1;
-                if (_slot.m_quality.enabled)
+                // A map shows its tier in the quality's place, in its colour; gear its quality as before.
+                if (!MapTierBadge.Set(_slot, has ? target : null))
                 {
-                    _slot.m_quality.text = target.m_quality.ToString();
+                    _slot.m_quality.enabled = has && target.m_shared.m_maxQuality > 1;
+                    if (_slot.m_quality.enabled)
+                    {
+                        _slot.m_quality.text = target.m_quality.ToString();
+                    }
                 }
             }
             if (_slot.m_amount)

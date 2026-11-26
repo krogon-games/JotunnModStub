@@ -61,6 +61,7 @@ namespace Corruption
         public static ConfigEntry<bool> ShardCustomModel;
         public static ConfigEntry<bool> WarnBeforeCorrupting;
         public static ConfigEntry<bool> WarnBeforeShattering;
+        public static ConfigEntry<bool> WarnBeforeCorruptingMaps;
         public static ConfigEntry<float> ShardGlowIntensity;
         public static ConfigEntry<float> ShardGlowRange;
         public static ConfigEntry<string> RiftforgeColor;
@@ -170,6 +171,9 @@ namespace Corruption
                 "Off: a shard works with one click, like an orb.");
             WarnBeforeShattering = config.Bind(RiftforgeSection, "WarnBeforeShattering", true,
                 "Ask before gear is shattered into Affix Splinters (the item is always destroyed). Off: Shatter works with one press.");
+            WarnBeforeCorruptingMaps = config.Bind(RiftforgeSection, "WarnBeforeCorruptingMaps", true,
+                "Ask before a Corruption shard is used on a full tier 5 map (it never breaks, but it is locked as tier 6). " +
+                "Off: the shard works with one click.");
 
             // Visual only and per player, so not synced. Applied at startup: restart the game after changing.
             ShardBasePrefab = config.Bind(LookSection, "ShardBaseItem", "GemstoneRed",

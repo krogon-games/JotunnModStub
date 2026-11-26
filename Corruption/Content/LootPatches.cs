@@ -167,6 +167,23 @@ namespace Corruption.Content
 
         private static void Postfix(ItemDrop.ItemData item, int qualityLevel, float worldLevel, ref string __result)
         {
+            if (MapItems.Find(item) != null)
+            {
+                // A map (rips round, decision 11): the header, affixes, marks and what the tier gives. In the Forge tab
+                // (OmitAffixes) the bench shows the affixes, so the description has only the header and the tier lines.
+                string withMap = __result;
+                bool omit = OmitAffixes;
+                Safe.Run("add a map's tier and affixes to its tooltip", () =>
+                {
+                    string section = MapForge.Section(item, !omit, null);
+                    if (section.Length > 0)
+                    {
+                        withMap = withMap + "\n\n" + section;
+                    }
+                });
+                __result = withMap;
+                return;
+            }
             if (OmitAffixes)
             {
                 return;
@@ -328,7 +345,7 @@ namespace Corruption.Content
         }
     }
 
-    /// <summary>Inventory tooltips: the title shows the rolled name in its rarity colour.</summary>
+    /// <summary>Inventory tooltips: the title shows the rolled name in its rarity colour (a map's name in its tier's colour).</summary>
     [HarmonyPatch(typeof(InventoryGrid), nameof(InventoryGrid.CreateItemTooltip))]
     internal static class LootTooltipTitle
     {
@@ -336,7 +353,7 @@ namespace Corruption.Content
         {
             Safe.Run("colour a loot item's tooltip title", () =>
             {
-                string name = Loot.ColoredName(item);
+                string name = Loot.ColoredName(item) ?? MapForge.ColoredName(item);
                 if (name != null && tooltip)
                 {
                     tooltip.Set(name, item.GetTooltip(), __instance.m_tooltipAnchor);
@@ -363,7 +380,7 @@ namespace Corruption.Content
             Safe.Run("colour a loot item's hover text", () =>
             {
                 var item = __instance.m_itemData;
-                string name = Loot.ColoredName(item);
+                string name = Loot.ColoredName(item) ?? MapForge.ColoredName(item);
                 // The game localizes the hover text before returning it, so it starts with the translated base name.
                 string baseName = Localization.instance.Localize(item.m_shared.m_name);
                 if (name != null && result.StartsWith(baseName))
