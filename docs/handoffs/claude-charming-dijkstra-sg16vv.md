@@ -1,30 +1,32 @@
 # Handoff: `claude/charming-dijkstra-sg16vv`
 
-**Written:** 2026-11-19 (session start). Branch started from `master` at `cb49ad6`; no PR yet.
+**Written:** 2026-11-26 (`/handoff`). Started 2026-11-19 from `master` at `cb49ad6`; 24 commits ahead of `master`, 0 behind; no PR yet.
 
 ## Stage
 
-Play-tested: **all 19 solo steps passed** on Valheim 1.0.30 (Krogon, 2026-11-26), no fixes needed. Next: `/handoff` and a PR into `master`.
+Ready to merge.
 
 ## Purpose
 
-Loot round for [#33](https://github.com/krogon-games/JotunnModStub/issues/33): currency orbs drop in normal play (sources and rates in a new `orbs.csv`). Also carries Splintering's reach and the Stonecutter's/Resinous rework.
+Loot round for [#33](https://github.com/krogon-games/JotunnModStub/issues/33): currency orbs drop in normal play (rates in `orbs.csv`), plus Splintering's reach, the Stonecutter's/Resinous rework and Krogon's gameplay-loop fixes (decisions 17–33).
 
 ## Done
 
-Everything below, play-tested alone on 2026-11-26 (all 19 steps passed, clean log): orb drops, the two orb finders, Splintering's 4 m reach, the loop fixes (maps as loot, boss and chest shards, the corrupted boss's orb, the Riftforge recipe), and the two 1.0.30 fixes. Not tried yet with the group: Session 2, 2k.
+Passed Krogon's solo play-test on Valheim 1.0.30 (2026-11-26, all 19 steps, clean log):
+- **Orb drops:** kills (per nearby player), vanilla dungeon chests (once, when the game fills them), the rip chest (per player); `co_orbroll`.
+- **Hoardfinder's and of Hidden Riches** (were Stonecutter's and Resinous): a 1–5% chance per harvest of one orb. Old tools and splinters load with the new names (`AffixRenames`, the `retired` status, the `shipped_affixes.csv` guard).
+- **Splintering** reaches 4 m.
+- **Loop fixes:** maps named "{biome} map"; one map and per-player gear rolls in every rip chest; creatures drop their biome's map (1 in 830) after the world's first rip and that biome's boss (`co_mapdrops`); 1 boss shard per nearby player every kill; corrupted bosses give each player one orb; dungeon chests hold a shard 1 in 20; Riftforge recipe 20 fine wood, 10 bronze nails, 5 surtling cores, 10 amber.
+- **Valheim 1.0.30 fixes:** Orlog's F2 panel patch and CraftingOverhaul's Locations collector.
+
+GitHub: new #84 (explored-land fallback), #35 raised to high, notes on #31 and #33.
 
 ## Half-done and known issues
 
-Built 2026-11-19, untested in game (623 tests pass; Corruption builds against the stand-in game folder):
-- **Orb drops** (`OrbDrops.cs`, `OrbDropTable.cs`, `orbs.csv`, the `orb` column of `drop_modifiers.csv`): kills per nearby player; vanilla chests with default loot once when the game fills them (new `Container.AddDefaultItems` postfix); the rip chest once per player near the rip; `co_orbroll` to check rates.
-- **Hoardfinder's and of Hidden Riches** (were Stonecutter's and Resinous; decisions 11–13): a 1–5% chance per harvest of one orb, weighted like kills' orbs (the per-hit postfixes are gone). Ids `hoardfinders` / `hidden_riches`, families `orb_find_mining` / `orb_find_woodcutting`; saves with the old ids load through `AffixRenames`, and the two old splinter items stay registered. Tools rolled before keep their old 5–25% value until a Divine Orb rerolls it. 
-- **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
-- **Loop fixes (decisions 17–33, 2026-11-23):** maps named "{biome} map"; the rip chest holds one map of its biome and rolls Magic/Rare gear per player; destroying a rip heart sets the world key `corruption_rip_cleared`, after which creatures drop their biome's map 1 in 830 per player once that biome's boss is beaten (`MapDrops.cs`, `MapDropRules.cs`, `co_mapdrops`); every boss kill adds 1 shard per nearby player (`BossShardsPerPlayer`); corrupted bosses give each player one picked orb; dungeon chests hold a shard 1 in 20 (`DungeonChestShardChance`); Riftforge 20 fine wood, 10 nails, 5 cores, 10 amber. Issues: new #84 (explored-land fallback, decision 22), #35 raised to high (decision 23), notes on #31 and #33; ROADMAP, GAME_DESIGN and the design doc updated.
-
-**Valheim 1.0.30 (2026-11-26):** Steam updated the game. Krogon's first start: Orlog's `ConnectPanel.m_root` and CraftingOverhaul's `SoftReference.Name` are gone (fixed in code, untested); PlantEasily 2.3.1 is broken on 1.0.30 (not ours, disabled). **Krogon's build on Valheim 1.0.30's own files passed the same day** (fresh publicized assemblies; Orlog and Corruption compiled, CraftingOverhaul up to date, 0 errors): nothing in our code uses anything 1.0.30 removed at compile time. The play-test's log (2026-11-26) then showed no errors at all: every patch applied, the biome scan worked. One leftover: 1.0.30's network panel has no `m_root`, so Orlog logs one warning and **F2 also opens the network panel** while using the skill slot (harmless; fixing it needs a look at 1.0.30's `ConnectPanel`, so a later round with a fresh `co_dump`).
-
-Claude's interim choices (easy to change): the splinters of the two orb finders keep their stone-grey and resin-amber colours (`splinter_looks.csv`, `proposed`); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
+- **Not tried with the group:** Session 2, 2k (`PLAYTEST.md`).
+- **On 1.0.30, F2 also opens the network panel** while using the skill slot (the panel has no `m_root`; Orlog logs one warning). Harmless; needs a look at 1.0.30's `ConnectPanel` (a later round, with a fresh `co_dump`).
+- PlantEasily 2.3.1 is broken on 1.0.30 (not ours; Krogon disabled it).
+- Claude's interim choices (easy to change): the orb finders' splinters keep their stone-grey and resin-amber colours (`splinter_looks.csv`, `proposed`); orbs aren't locked to the player who rolled them (L7, #35); chests made before this build get no orbs.
 
 ## Decisions
 
@@ -67,22 +69,32 @@ Krogon's answers to Claude's review of the gameplay loop (2026-11-23; the review
 
 ## Playtest
 
-`docs/playtests/claude-charming-dijkstra-sg16vv.md` (19 solo steps), also the first section of the phone page (`orb-1` … `orb-12`, `loop-1` … `loop-7`). Group steps: `PLAYTEST.md` → Session 2, 2k (and the page's `mpe-2k-1` … `mpe-2k-3`).
+Solo: passed 2026-11-26, all 19 steps; feedback in `docs/playtests/claude-charming-dijkstra-sg16vv.md`. The steps are off the phone page. Group: `PLAYTEST.md` → Session 2, 2k (the page's `mpe-2k-1` … `mpe-2k-3`).
 
 ## Open questions for Krogon
 
-None yet.
+None.
 
 ## Next steps
 
-1. `/handoff`, then a PR into `master` (the solo play-test passed, nothing to fix).
+1. A PR into `master` (Krogon asks for it, or the coordinator opens it).
 2. The group evening: Session 2, 2k.
-3. Later: the F2 network-panel leftover on 1.0.30 (above).
+3. Later: the F2 network-panel leftover on 1.0.30.
 
 ## Checks
 
-Not run yet.
+Run 2026-11-26 by `/handoff`:
+- **Build: PASS.** `dotnet test CraftingOverhaul.Tests`: 629 passed, 0 failed. Corruption, Orlog and CraftingOverhaul build against the stand-in game folder (0 errors). Krogon's own build on Valheim 1.0.30's files: 0 errors.
+- **Version:** gameplay changed: version bump needed at merge (Corruption, Orlog, CraftingOverhaul). This branch changed no version.
+- **Multiplayer sync: PASS** (read in code, not tested). The new settings `BossShardsPerPlayer` and `DungeonChestShardChance` are admin-only. `corruption_rip_cleared` is a world global key (server-shared). Orbs, maps and shards drop as normal items or into chests on the owner's game. Tables ship in the DLL.
+- **Assets and names: PASS.** `orbs.csv` is embedded. The renamed splinter textures match the `Assets\Splinters\*.rgba` wildcard. `shipped_affixes.csv` is test-only.
+- **FEATURES.md: PASS**, updated with each change.
+- **In-game: PASS alone.** Krogon's marks on the phone page: all 19 steps pass; orb-1 and loop-7 confirmed from his log and his orb-6 note ("2 orbs of corruption and 2 orbs of transmutation found in 30 chests"). Group steps not tested.
 
 ## Merge notes
 
-Not ready: nothing built yet.
+**Ready to merge: yes.** The solo play-test passed and nothing needed fixing. No check failed. `master` is merged in (0 behind), and everything is pushed.
+- **Gameplay changed: version bump needed at merge: Corruption, Orlog, CraftingOverhaul** (Orlog's and CraftingOverhaul's only change is the 1.0.30 fix).
+- No other open branch with unmerged commits touches this branch's files.
+- Shared docs added to (keep both sides on conflict): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/ARCHITECTURE.md`, `docs/AFFIX_RULES.md`, `docs/mod-compatibility.md`, `README.MD`. Also `Corruption/CorruptionPlugin.cs` and `CorruptionConfig.cs`.
+- For `docs/DECISIONS.md`: decisions 1–33 above. Decision 3 replaces the design's Exalted/Mirror sources; decisions 15–16 change decision 4's Divine and Chance rates.
