@@ -94,3 +94,12 @@
 3. [ ] (`plg-3`) In daylight and from about 50 m → the tall beams are still easy to find.
 4. [ ] (`plg-4`) Kill `spawn Greyling 20` near the line of beams → the game runs as smoothly as without them; F5 shows no red errors. Send `BepInEx/LogOutput.log`.
 
+### Look test feedback (2026-11-26, phone page)
+
+- Steps `plg-1` … `plg-4`: passed. No `co_personal look` lines sent, so `personal_loot.csv` keeps its values. Step `pl-1` is now marked passed too.
+- Krogon: "playtest done. ready to finalise."
+
+### Final play-test (2026-11-26)
+
+- Passed alone on Valheim 1.0.30: every solo step of the round (`pl-1` … `pl-15`, `plf-1` … `plf-4` after the soft-beam change, `plg-1` … `plg-4`). Left for the group: `PLAYTEST.md` → Session 2, 2l (and Session 2-short step 4), including how the heart's shared loot is dealt between players.
+
