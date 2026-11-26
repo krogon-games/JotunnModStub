@@ -57,13 +57,13 @@ Solo: `docs/playtests/claude-personal-loot-beams-q5glnk.md` (15 steps, `pl-1` �
 
 ## Next steps
 
-1. Fix the beams' look (decisions 13–14).
-2. Krogon's final play-test, then the PR.
+1. Krogon's final play-test of the beams' new look (`docs/playtests/claude-personal-loot-beams-q5glnk.md` → Final play-test, `plf-1` … `plf-4`, also on the phone page); built 2026-11-26 (decisions 13–14).
+2. Then `/handoff` and the PR.
 3. Group checks (Session 2, 2l) at the next friend evening.
 
 ## Checks
 
-Not run yet (`/handoff` runs them). By hand on 2026-11-26: `dotnet test CraftingOverhaul.Tests` 684 passed; Corruption builds against the cloud stand-in.
+Not run yet (`/handoff` runs them). By hand on 2026-11-26: `dotnet test CraftingOverhaul.Tests` 690 passed; all three plugins build against the cloud stand-in; Krogon's 1.0.30 log of the solo play-test is clean (every patch applied).
 
 ## Merge notes
 
