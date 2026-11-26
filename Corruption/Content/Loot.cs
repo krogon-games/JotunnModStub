@@ -247,11 +247,11 @@ namespace Corruption.Content
             return item;
         }
 
-        /// <summary>Drops a new loot item at a position, like a creature drop.</summary>
-        public static ItemDrop Drop(ItemDrop.ItemData item, Vector3 position)
+        /// <summary>Drops a new loot item (a stack of <paramref name="amount" />) at a position, like a creature drop. Returns the drop (not tagged as personal).</summary>
+        public static ItemDrop Drop(ItemDrop.ItemData item, Vector3 position, int amount = 1)
         {
             var offset = Random.insideUnitSphere * 0.5f;
-            var drop = ItemDrop.DropItem(item, 1, position + offset, Quaternion.Euler(0f, Random.Range(0, 360), 0f));
+            var drop = ItemDrop.DropItem(item, amount, position + offset, Quaternion.Euler(0f, Random.Range(0, 360), 0f));
             var body = drop ? drop.GetComponent<Rigidbody>() : null;
             if (body)
             {

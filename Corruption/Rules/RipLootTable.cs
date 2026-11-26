@@ -6,8 +6,8 @@ using System.Linq;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     Reads <c>Corruption/Data/rip_loot.csv</c> (compiled into the DLL): which vanilla chests a rip's end chest can
-    ///     be, per biome, weighted by how often each appears in that biome. No game dependencies, so it is unit-tested.
+    ///     Reads <c>Corruption/Data/rip_loot.csv</c> (compiled into the DLL): which vanilla chest's loot a destroyed rip heart
+    ///     spills (the chest itself isn't placed), per biome, weighted by how often each appears in that biome. No game dependencies, so it is unit-tested.
     /// </summary>
     internal static class RipLootTable
     {

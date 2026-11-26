@@ -8,6 +8,9 @@ namespace Corruption.Content
     /// <summary>
     ///     Adds corruption shards to creature drops. Runs on the machine that simulates the creature, the same place
     ///     vanilla rolls its drops, so it works the same in single player, hosted and dedicated-server games.
+    ///     The shared shards stay in the creature's drop list (first-kill 1-3, corrupted boss 3-5, starred creatures, rip
+    ///     multipliers) and get a shared loot beam. The shards a boss kill gives each nearby player (Krogon, 2026-11-23)
+    ///     are not in the list: <see cref="DropBossShards" /> drops them, one stack per player, personal to that player.
     /// </summary>
     [HarmonyPatch(typeof(CharacterDrop), nameof(CharacterDrop.GenerateDropList))]
     internal static class ShardDrops
@@ -44,14 +47,6 @@ namespace Corruption.Content
                     ? Random.Range(CorruptionConfig.CorruptedShardsMin.Value, Mathf.Max(CorruptionConfig.CorruptedShardsMin.Value, CorruptionConfig.CorruptedShardsMax.Value) + 1)
                     : ShardRules.ShardsFor(isBoss, character.GetLevel(), alreadyDefeated, settings,
                         () => Random.value * 0.99999f);
-                if (isBoss)
-                {
-                    // Every boss kill: shards for each player nearby, on top (Krogon, 2026-11-23). "Nearby" is the game's
-                    // own nearby-players range, as for loot.
-                    var nearby = new List<Player>();
-                    Player.GetPlayersInRange(character.GetCenterPoint(), Game.instance ? Game.instance.m_difficultyScaleRange : 100f, nearby);
-                    shards += ShardRules.BossPerPlayer(nearby.Count, CorruptionConfig.BossShardsPerPlayer.Value);
-                }
                 if (shards <= 0)
                 {
                     return;
@@ -66,6 +61,56 @@ namespace Corruption.Content
             catch (System.Exception ex)
             {
                 Safe.Report("add corruption shards to drops", ex);
+            }
+        }
+
+        /// <summary>
+        ///     Every boss kill: <c>BossShardsPerPlayer</c> shards for each player near the boss, dropped at the boss, each
+        ///     stack locked to its player for the first seconds (<see cref="PersonalLoot" />). With nobody near, one roll's
+        ///     worth (<see cref="ShardRules.BossPerPlayer" />) with no owner. Needs no loot tables. Called once per death
+        ///     on the creature's owner (<c>LootDrops</c>, which knows both of the game's death paths).
+        /// </summary>
+        public static void DropBossShards(Vector3 position, List<Player> nearby, bool cheated)
+        {
+            int perPlayer = CorruptionConfig.BossShardsPerPlayer.Value;
+            var prefab = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(Texts.ShardPrefab) : null;
+            if (!prefab || perPlayer <= 0)
+            {
+                return;
+            }
+            if (nearby.Count == 0)
+            {
+                Drop(prefab, ShardRules.BossPerPlayer(0, perPlayer), position, 0L, cheated);
+                return;
+            }
+            foreach (var player in nearby)
+            {
+                if (player)
+                {
+                    Drop(prefab, perPlayer, position, player.GetPlayerID(), cheated);
+                }
+            }
+        }
+
+        /// <summary>Drops shards in stacks up to the item's stack size, scattered like a creature's drops, locked to <paramref name="owner" /> (0 = nobody); <paramref name="cheated" /> is the kill's flag.</summary>
+        private static void Drop(GameObject prefab, int count, Vector3 position, long owner, bool cheated)
+        {
+            var template = prefab.GetComponent<ItemDrop>();
+            if (!template)
+            {
+                return;
+            }
+            int stackSize = Mathf.Max(1, template.m_itemData.m_shared.m_maxStackSize);
+            while (count > 0)
+            {
+                int stack = Mathf.Min(count, stackSize);
+                var item = template.m_itemData.Clone();
+                item.m_dropPrefab = prefab;
+                item.m_worldLevel = (byte)Game.m_worldLevel;
+                // Like vanilla's drops: the stack carries the kill's cheated flag.
+                item.m_cheated = cheated;
+                PersonalLoot.Tag(Loot.Drop(item, position, stack), owner, LootBeamTable.Shard);
+                count -= stack;
             }
         }
 

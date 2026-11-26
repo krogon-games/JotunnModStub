@@ -20,6 +20,8 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`essences.csv`](essences.csv) | Boss essences: which boss drops which essence, how many per kill, its name, description and colours |
 | [`maps.csv`](maps.csv) | Maps: one per biome, its Riftforge recipe (shards, essence, material) and text |
 | [`rip_loot.csv`](rip_loot.csv) | Which vanilla chest a rip leaves, per biome, weighted by how often each appears in that biome |
+| [`loot_beams.csv`](loot_beams.csv) | Personal loot: the beam of light on every Corruption drop (colour, short or tall, landing sound) |
+| [`personal_loot.csv`](personal_loot.csv) | Personal loot settings: how long a drop is locked to its roller, the sound window, how often the lock is re-checked, the beam's size and light |
 | [`offerings.csv`](offerings.csv) | Corrupted offerings: per boss, the vanilla item, how it's used (`altar`, `stand`, `door`), how many vanilla items one corrupted item takes (plus 1 shard), name and description |
 
 `essences.csv`, `maps.csv`, `rip_loot.csv`, `offerings.csv` and the loot tables (`affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`, since loot step 1) and `orb_chance.csv` (since 2026-11-08) and `orbs.csv` (since 2026-11-19) are compiled into the mod: **rebuild after editing them**. The others (`affix_caps.csv`, `corruption_outcomes.csv`, `shattering.csv`) aren't loaded by the game yet. Later the server's copy of the loot tables will be the one everybody plays with. That way the group can rebalance without a new mod version.
@@ -158,3 +160,26 @@ How the current values were chosen (from the 1.0.20 game data, not guessed): sha
 | `chest` | A vanilla chest prefab, e.g. `TreasureChest_swamp`. The tests check it's a real container |
 | `weight` | How likely this chest is, relative to the biome's other rows. Worked out from the 1.0.20 dump: how many places in the biome's locations and dungeon rooms hold that chest |
 | `notes` | Where the row came from |
+
+## loot_beams.csv
+
+| Column | Meaning |
+|---|---|
+| `drop` | What drops: `magic`, `rare`, `unique` (gear), `shard`, `map`, or `orb_<id>` for each orb that drops (the Jeweller's Orb has no row until it does). Each needs exactly one row (the test checks) |
+| `colour` | The beam's colour, `#RRGGBB`. Magic and Rare use their item name colours, orbs are white, shards use the shard's red, maps are green |
+| `size` | `short` (small and faint, for common drops) or `tall` (bright, seen from about 50 m, for the rarer ones) |
+| `sound` | The sound played for the owner when the drop lands. Only `tall` rows have one. `default` = the game's skill-level-up sound (a placeholder until the sounds are picked by ear) |
+| `status`, `notes` | As above. Every value's source is in `notes` |
+
+Read by `LootBeamTable` in `Corruption/Rules/LootBeamTable.cs`. Edit numbers here, never in the docs.
+
+## personal_loot.csv
+
+| Setting | Meaning |
+|---|---|
+| `lock_seconds` | How long a drop is only for the player it was rolled for (design: 60). Then anyone can see and take it |
+| `sound_window_seconds` | The owner's game plays the landing sound only if it sees the drop within this many seconds of its drop time |
+| `refresh_seconds` | How often each game re-checks a personal drop's lock |
+| `tall_*`, `short_*` | The beam's `height` and `width` (metres) and its `light_range` and `light_intensity` (0 = no light), for tall and short beams |
+
+Columns: `setting`, `value`, `notes`. Every setting is required, none can be negative, and `lock_seconds` and `refresh_seconds` must be above 0. The beam-look numbers are first guesses to judge in the play-test. Read by `PersonalLootSettings` in `Corruption/Rules/LootBeamTable.cs`; the rules are in `PersonalLootRules.cs`. Edit numbers here, never in the docs.

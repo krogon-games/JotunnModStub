@@ -11,20 +11,15 @@ namespace Corruption.Content
     /// <summary>
     ///     Currency orbs dropping in normal play (#33, Krogon's decisions of 2026-11-19): every orb can drop from all
     ///     content. Kills roll the orb table once per nearby player, beside the Magic and Rare roll (<see cref="LootDrops" />);
-    ///     a vanilla dungeon or location chest rolls it once when the game fills it (<c>dungeon_chest</c>); the chest a
-    ///     rip heart leaves rolls it once per player near the rip (<see cref="RipLoot" />); Hoardfinder's and of Hidden Riches
+    ///     a vanilla dungeon or location chest rolls it once when the game fills it (<c>dungeon_chest</c>); the loot a
+    ///     destroyed rip heart spills rolls it once per player near the rip (<see cref="RipLoot" />); Hoardfinder's and of Hidden Riches
     ///     drop one orb picked with the table's odds when they trigger on a harvest (<see cref="LootHarvest" />). Chances: <c>orbs.csv</c> times <c>drop_modifiers.csv</c>'s
-    ///     orb column (<see cref="OrbDropTable" />).
+    ///     orb column (<see cref="OrbDropTable" />). Orbs from kills, rips and harvests are personal: the drop is tagged with the
+    ///     player it was rolled for and gets its loot beam (<see cref="PersonalLoot" />).
     /// </summary>
     internal static class OrbDrops
     {
         private static readonly System.Func<double> Random01 = () => Random.value * 0.99999f;
-
-        /// <summary>
-        ///     While true, a chest the game fills doesn't roll as a dungeon chest: the rip chest rolls its own orbs,
-        ///     per player, after it's placed.
-        /// </summary>
-        [System.ThreadStatic] public static bool PlacingRipChest;
 
         /// <summary>One roll of the orb table with these sources (null for none). Empty when the loot tables didn't load.</summary>
         public static List<string> Roll(IEnumerable<string> sources)
@@ -69,17 +64,23 @@ namespace Corruption.Content
             return prefabs;
         }
 
-        /// <summary>Drops the orbs at a position, scattered like a creature's drops.</summary>
-        public static void Drop(IEnumerable<string> orbs, Vector3 position)
+        /// <summary>Drops the orbs at a position, scattered like a creature's drops, each locked to <paramref name="owner" /> (0 = nobody) and with its beam.</summary>
+        public static void Drop(IEnumerable<string> orbs, Vector3 position, long owner = 0L)
         {
             foreach (var prefab in Prefabs(orbs))
             {
-                DropPrefab(prefab, position);
+                DropPersonal(prefab, position, owner);
             }
         }
 
-        /// <summary>Drops one item prefab at a position, scattered and pushed like a creature's drops.</summary>
-        public static void DropPrefab(GameObject prefab, Vector3 position)
+        /// <summary>Drops an orb or map prefab for one player (0 = nobody): scattered like a creature's drops, tagged with its owner and beam row.</summary>
+        public static ItemDrop DropPersonal(GameObject prefab, Vector3 position, long owner)
+        {
+            return PersonalLoot.Tag(DropPrefab(prefab, position), owner, PersonalLoot.BeamRowForPrefab(prefab.name));
+        }
+
+        /// <summary>Drops one item prefab at a position, scattered and pushed like a creature's drops. Returns the drop (not tagged).</summary>
+        public static ItemDrop DropPrefab(GameObject prefab, Vector3 position)
         {
             var go = Object.Instantiate(prefab, position + Random.insideUnitSphere * 0.5f, Quaternion.Euler(0f, Random.Range(0, 360), 0f));
             ItemDrop.OnCreateNew(go);
@@ -90,6 +91,7 @@ namespace Corruption.Content
                 push.y = Mathf.Abs(push.y);
                 body.AddForce(push * 5f, ForceMode.VelocityChange);
             }
+            return go.GetComponent<ItemDrop>();
         }
 
         /// <summary>Puts the orbs into a chest. Returns how many went in.</summary>
@@ -126,7 +128,7 @@ namespace Corruption.Content
         {
             private static void Postfix(Container __instance)
             {
-                if (PlacingRipChest || !__instance || __instance.m_defaultItems == null || __instance.m_defaultItems.m_drops == null ||
+                if (!__instance || __instance.m_defaultItems == null || __instance.m_defaultItems.m_drops == null ||
                     __instance.m_defaultItems.m_drops.Count == 0)
                 {
                     return;

@@ -1,15 +1,19 @@
 using System.Collections.Generic;
+using System.Linq;
 using Corruption.Rules;
 using UnityEngine;
 
 namespace Corruption.Content
 {
     /// <summary>
-    ///     The chest a destroyed rip heart leaves: one of the rip biome's own vanilla chests (from
-    ///     <c>Corruption/Data/rip_loot.csv</c>, weighted by how often each appears in that biome) with its normal loot,
-    ///     plus corruption shards (user: 1-3, 2026-10-28); per player near the rip one roll of the orb table and one
-    ///     Magic/Rare gear roll, at the rip multiplier (Krogon, 2026-11-19 and 2026-11-23); and one guaranteed map of the
-    ///     rip's biome (Krogon, 2026-11-23: each rip pays back its map).
+    ///     What a destroyed rip heart spills on the ground (no chest is placed any more; Krogon, 2026-11-26). Each player
+    ///     near the rip gets their own rolls, at the rip multiplier: one roll of the orb table and one Magic/Rare gear
+    ///     roll (2026-11-19 and 2026-11-23), locked to them for the first seconds. The shared part is dealt among those
+    ///     players (<see cref="PersonalLootRules.Deal" />): the vanilla loot of one of the rip biome's own chests (from
+    ///     <c>Corruption/Data/rip_loot.csv</c>, weighted by how often each appears in that biome), corruption shards
+    ///     (user: 1-3, 2026-10-28) and one guaranteed map of the rip's biome (2026-11-23: each rip pays back its map).
+    ///     Every dealt share is locked to the player it went to; an odd number may leave someone with less, which is fine.
+    ///     Shards and maps carry their loot beam.
     /// </summary>
     internal static class RipLoot
     {
@@ -26,64 +30,69 @@ namespace Corruption.Content
             }
         }
 
-        public static void SpawnChest(string biome, Vector3 heartPosition)
+        /// <summary>One thing in the shared part: how many units there are to deal, and what a unit is.</summary>
+        private sealed class SharedKind
         {
-            string chest = RipLootTable.Pick(s_chests, biome, () => Random.value * 0.99999f);
-            var prefab = chest != null ? ZNetScene.instance.GetPrefab(chest) : null;
-            if (!prefab)
-            {
-                Jotunn.Logger.LogWarning($"Rip loot: no chest for biome '{biome}' ({chest ?? "none in rip_loot.csv"}).");
-                return;
-            }
-            var position = heartPosition + new Vector3(-3f, 0f, 0f);
-            position.y = ZoneSystem.instance.GetGroundHeight(position);
-            // The chest fills its own vanilla loot when it's created on its owner's game (Container.Awake).
-            // Its vanilla filling doesn't roll as a dungeon chest: the rip's own orb rolls follow below.
-            GameObject instance;
-            OrbDrops.PlacingRipChest = true;
-            try
-            {
-                instance = Object.Instantiate(prefab, position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
-            }
-            finally
-            {
-                OrbDrops.PlacingRipChest = false;
-            }
-            Jotunn.Logger.LogInfo($"Rip chest {chest} placed at {position} for biome {biome}.");
-            var container = instance.GetComponent<Container>();
-            var shard = ObjectDB.instance.GetItemPrefab(Texts.ShardPrefab);
-            int min = CorruptionConfig.RipChestShardsMin.Value;
-            int shards = Random.Range(min, Mathf.Max(min, CorruptionConfig.RipChestShardsMax.Value) + 1);
-            if (container && shard && shards > 0)
-            {
-                container.GetInventory().AddItem(shard, shards);
-                Jotunn.Logger.LogInfo($"Rip chest: added {shards} corruption shards.");
-            }
-            else
-            {
-                Jotunn.Logger.LogWarning($"Rip chest: no shards added (container {(container ? "found" : "missing")}, shard item {(shard ? "found" : "missing")}).");
-            }
+            public ItemDrop.ItemData Item;
+            public int Units;
+            public string BeamRow;
+            public string Label;
+        }
+
+        /// <summary>What one player got, for the log.</summary>
+        private sealed class Seat
+        {
+            public long Owner;
+            public string Name = "nobody";
+            public readonly List<string> Orbs = new List<string>();
+            public readonly List<string> Gear = new List<string>();
+            public readonly List<string> Shared = new List<string>();
+        }
+
+        /// <summary>The heart was destroyed (on its owner's game): spill everything around it.</summary>
+        public static void Spill(string biome, Vector3 heartPosition)
+        {
             // "Players near the rip": the game's own nearby-players range, as for kills. Maps have no tiers yet: tier 1.
             var nearby = new List<Player>();
             Player.GetPlayersInRange(heartPosition, Game.instance ? Game.instance.m_difficultyScaleRange : 100f, nearby);
-            int rolls = DeathLoot.RollsFor(nearby.Count);
-            var sources = new[] { "rip_tier_1" };
-            Safe.Run("add orbs to the rip chest", () =>
+            Jotunn.Logger.LogInfo($"Rip loot: {nearby.Count} player(s) near the heart.");
+            var origin = heartPosition + Vector3.up;
+            int total = 0;
+            var seats = new List<Seat>();
+            for (int s = 0; s < System.Math.Max(1, nearby.Count); s++)
             {
-                var orbs = new List<string>();
-                for (int i = 0; i < rolls; i++)
+                var seat = new Seat();
+                if (s < nearby.Count && nearby[s])
                 {
-                    orbs.AddRange(OrbDrops.Roll(sources));
+                    seat.Owner = nearby[s].GetPlayerID();
+                    seat.Name = nearby[s].GetPlayerName();
                 }
-                int added = orbs.Count > 0 ? OrbDrops.AddTo(container, orbs) : 0;
-                Jotunn.Logger.LogInfo($"Rip chest: {rolls} orb roll(s), {added} orb(s) added" + (orbs.Count > 0 ? $" ({string.Join(", ", orbs)})." : "."));
-            });
-            Safe.Run("add gear to the rip chest", () =>
+                seats.Add(seat);
+            }
+
+            // Each player's own rolls.
+            Safe.Run("spill each player's orbs and gear", () =>
             {
-                // The same Magic/Rare roll as a kill, per player (Krogon, 2026-11-23); uniques come with ROADMAP L6.
-                var gear = new List<string>();
+                if (!Loot.Loaded || !CorruptionConfig.LootEnabled.Value)
+                {
+                    return;
+                }
+                var sources = new[] { "rip_tier_1" };
+                int rolls = DeathLoot.RollsFor(nearby.Count);
                 for (int i = 0; i < rolls; i++)
                 {
+                    var seat = seats[System.Math.Min(i, seats.Count - 1)];
+                    foreach (var orb in OrbDrops.Roll(sources))
+                    {
+                        var prefab = OrbDrops.Prefabs(new[] { orb }).FirstOrDefault();
+                        if (prefab)
+                        {
+                            OrbDrops.DropPersonal(prefab, origin, seat.Owner);
+                            seat.Orbs.Add(orb);
+                            total++;
+                        }
+                    }
+                    // The same Magic/Rare roll as a kill, per player (Krogon, 2026-11-23); uniques come with ROADMAP L6.
                     foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
                     {
                         if (rarity != "magic" && rarity != "rare")
@@ -93,39 +102,129 @@ namespace Corruption.Content
                         var item = Loot.Create(rarity, biome);
                         if (item != null)
                         {
-                            AddOrDrop(container, item, position);
-                            gear.Add(rarity);
+                            PersonalLoot.Tag(Loot.Drop(item, origin), seat.Owner, PersonalLoot.BeamRowFor(item));
+                            seat.Gear.Add(rarity);
+                            total++;
                         }
                     }
                 }
-                Jotunn.Logger.LogInfo($"Rip chest: {rolls} gear roll(s), {gear.Count} item(s)" + (gear.Count > 0 ? $" ({string.Join(", ", gear)})." : "."));
             });
-            Safe.Run("add the map to the rip chest", () =>
+
+            // The shared part, dealt among the players near the heart.
+            Safe.Run("deal the rip heart's shared loot", () =>
             {
-                var map = MapDrops.Prefab(MapDrops.MapFor(biome));
-                if (!map)
+                var kinds = SharedKinds(biome);
+                if (kinds.Count == 0)
                 {
-                    Jotunn.Logger.LogWarning($"Rip chest: no map item for biome '{biome}'.");
                     return;
                 }
-                var item = map.GetComponent<ItemDrop>().m_itemData.Clone();
-                item.m_dropPrefab = map;
-                item.m_stack = 1;
-                AddOrDrop(container, item, position);
-                Jotunn.Logger.LogInfo($"Rip chest: added a {map.name}.");
+                var dealt = PersonalLootRules.Deal(nearby.Count, kinds.Select(k => k.Units).ToList(), n => Random.Range(0, n));
+                for (int k = 0; k < kinds.Count; k++)
+                {
+                    for (int s = 0; s < seats.Count; s++)
+                    {
+                        int units = dealt[k][s];
+                        if (units <= 0)
+                        {
+                            continue;
+                        }
+                        total += DropUnits(kinds[k], units, origin, seats[s].Owner);
+                        seats[s].Shared.Add($"{units}x {kinds[k].Label}");
+                    }
+                }
             });
+
+            foreach (var seat in seats)
+            {
+                Jotunn.Logger.LogInfo($"Rip loot: player {seat.Name} ({seat.Owner}): {seat.Orbs.Count} orb(s) ({string.Join(", ", seat.Orbs.ToArray())}), " +
+                                      $"{seat.Gear.Count} gear ({string.Join(", ", seat.Gear.ToArray())}), shared: {(seat.Shared.Count > 0 ? string.Join(", ", seat.Shared.ToArray()) : "nothing")}.");
+            }
+            Jotunn.Logger.LogInfo($"Rip loot: spilled {total} drop(s) at {origin}.");
         }
 
-        /// <summary>Into the chest, or on the ground beside it when it's full: the chest's loot is never lost.</summary>
-        private static void AddOrDrop(Container container, ItemDrop.ItemData item, Vector3 position)
+        /// <summary>The shared part as kinds to deal: the chosen chest's vanilla loot, the shards, the one map.</summary>
+        private static List<SharedKind> SharedKinds(string biome)
         {
-            var inventory = container ? container.GetInventory() : null;
-            if (inventory != null && inventory.AddItem(item))
+            var kinds = new List<SharedKind>();
+            Safe.Run("roll the rip chest's vanilla loot", () =>
             {
-                return;
+                string chest = RipLootTable.Pick(s_chests, biome, () => Random.value * 0.99999f);
+                var prefab = chest != null && ZNetScene.instance ? ZNetScene.instance.GetPrefab(chest) : null;
+                var container = prefab ? prefab.GetComponent<Container>() : null;
+                if (!container)
+                {
+                    Jotunn.Logger.LogWarning($"Rip loot: no chest loot for biome '{biome}' ({(chest ?? "none in rip_loot.csv")}" +
+                                             (prefab && !container ? " has no Container" : "") + ").");
+                    return;
+                }
+                // The game reuses the list it returns, so it's copied at once.
+                var items = new List<ItemDrop.ItemData>(container.m_defaultItems.GetDropListItems());
+                foreach (var item in items)
+                {
+                    if (item != null && item.m_dropPrefab && item.m_stack > 0)
+                    {
+                        kinds.Add(new SharedKind
+                        {
+                            Item = item, Units = item.m_stack, BeamRow = PersonalLoot.BeamRowFor(item),
+                            Label = Localization.instance.Localize(item.m_shared.m_name)
+                        });
+                    }
+                }
+                Jotunn.Logger.LogInfo($"Rip loot: the {chest} gave {items.Count} kind(s) of vanilla loot.");
+            });
+            Safe.Run("roll the rip heart's shards", () =>
+            {
+                var shard = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(Texts.ShardPrefab) : null;
+                int min = CorruptionConfig.RipChestShardsMin.Value;
+                int shards = Random.Range(min, Mathf.Max(min, CorruptionConfig.RipChestShardsMax.Value) + 1);
+                if (shard && shards > 0)
+                {
+                    kinds.Add(new SharedKind { Item = FromPrefab(shard), Units = shards, BeamRow = LootBeamTable.Shard, Label = "corruption shard" });
+                }
+                else
+                {
+                    Jotunn.Logger.LogWarning($"Rip loot: no shards (shard item {(shard ? "found" : "missing")}, {shards} rolled).");
+                }
+            });
+            Safe.Run("find the rip heart's map", () =>
+            {
+                var map = MapDrops.Prefab(MapDrops.MapFor(biome));
+                if (map)
+                {
+                    kinds.Add(new SharedKind { Item = FromPrefab(map), Units = 1, BeamRow = LootBeamTable.Map, Label = map.name });
+                }
+                else
+                {
+                    Jotunn.Logger.LogWarning($"Rip loot: no map item for biome '{biome}'.");
+                }
+            });
+            return kinds;
+        }
+
+        private static ItemDrop.ItemData FromPrefab(GameObject prefab)
+        {
+            var item = prefab.GetComponent<ItemDrop>().m_itemData.Clone();
+            item.m_dropPrefab = prefab;
+            item.m_worldLevel = (byte)Game.m_worldLevel;
+            return item;
+        }
+
+        /// <summary>
+        ///     Drops <paramref name="units" /> of a kind for one owner: a stackable kind as stacks up to its stack size,
+        ///     anything else as separate drops. Returns how many drops were made.
+        /// </summary>
+        private static int DropUnits(SharedKind kind, int units, Vector3 origin, long owner)
+        {
+            int stackSize = System.Math.Max(1, kind.Item.m_shared.m_maxStackSize);
+            int made = 0;
+            while (units > 0)
+            {
+                int stack = System.Math.Min(units, stackSize);
+                PersonalLoot.Tag(Loot.Drop(kind.Item, origin, stack), owner, kind.BeamRow);
+                units -= stack;
+                made++;
             }
-            Loot.Drop(item, position + Vector3.up);
-            Jotunn.Logger.LogInfo($"Rip chest: full, {item.m_dropPrefab?.name} dropped beside it.");
+            return made;
         }
     }
 }
