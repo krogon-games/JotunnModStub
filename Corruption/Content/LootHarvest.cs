@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Corruption.Content
 {
     /// <summary>
-    ///     On-harvest gathering affixes: both Bountifuls, Determined, Artisan, Gemseeker's, Stonecutter's, Resinous,
+    ///     On-harvest gathering affixes: both Bountifuls, Determined, Artisan, Gemseeker's, Hoardfinder's, of Hidden Riches,
     ///     Forester's, Charring, and Odin's Grace on trees (AFFIX_RULES.md → Gathering tool affixes).
     ///     <para>
     ///         Breaking and dropping happen on the object's owner, who can't see the striker's tool. So before each hit
@@ -27,9 +27,7 @@ namespace Corruption.Content
         /// <summary>ZDO key: the tree a log or stump came from (Odin's Grace harvests every loaded piece with the same ID).</summary>
         private const string TreeIdKey = "Corruption_TreeId";
 
-        // The extra items the user's affixes name (AFFIX_RULES: "1 extra stone", "1 extra resin", wood "turns into coal").
-        private const string StonePrefab = "Stone";
-        private const string ResinPrefab = "Resin";
+        // The item Charring turns wood into (AFFIX_RULES: wood "turns into coal").
         private const string CoalPrefab = "Coal";
 
         private static readonly System.Func<double> Random01 = () => UnityEngine.Random.value * 0.99999f;
@@ -139,8 +137,8 @@ namespace Corruption.Content
             pkg.Write(c.Stamina);
             pkg.Write(c.Ore);
             pkg.Write(c.Gem);
-            pkg.Write(c.Stone);
-            pkg.Write(c.Resin);
+            pkg.Write(c.MiningOrb);
+            pkg.Write(c.WoodcuttingOrb);
             pkg.Write(c.Seed);
             pkg.Write(c.Charring);
             pkg.Write(c.Odin);
@@ -151,7 +149,7 @@ namespace Corruption.Content
             return new HarvestChances
             {
                 Bounty = pkg.ReadSingle(), WoodBounty = pkg.ReadSingle(), Stamina = pkg.ReadSingle(), Ore = pkg.ReadSingle(),
-                Gem = pkg.ReadSingle(), Stone = pkg.ReadSingle(), Resin = pkg.ReadSingle(), Seed = pkg.ReadSingle(),
+                Gem = pkg.ReadSingle(), MiningOrb = pkg.ReadSingle(), WoodcuttingOrb = pkg.ReadSingle(), Seed = pkg.ReadSingle(),
                 Charring = pkg.ReadSingle(), Odin = pkg.ReadBool()
             };
         }
@@ -185,8 +183,8 @@ namespace Corruption.Content
                 Stamina = Loot.Total(tool, "stamina_percent_on_harvest"),
                 Ore = Loot.Total(tool, "extra_ore"),
                 Gem = Loot.Total(tool, "gem_find"),
-                Stone = Loot.Total(tool, "extra_stone"),
-                Resin = Loot.Total(tool, "extra_resin"),
+                MiningOrb = Loot.Total(tool, "orb_find_mining"),
+                WoodcuttingOrb = Loot.Total(tool, "orb_find_woodcutting"),
                 Seed = Loot.Total(tool, "tree_seed_drop"),
                 Charring = Loot.Total(tool, "wood_to_coal")
             };
@@ -409,14 +407,6 @@ namespace Corruption.Content
 
             /// <summary>The hit this context belongs to (a nested hit on another object has its own).</summary>
             public HitData Hit;
-
-            /// <summary>The hit carries the tool's damage for this object: chop on wood, pickaxe on rock (read before resistances).</summary>
-            public bool RightTool;
-
-            /// <summary>The struck object's (or deposit part's) health; negative infinity once it's gone.</summary>
-            public System.Func<float> Health;
-
-            public float HealthBefore = float.NegativeInfinity;
         }
 
         private static Context _current;
@@ -453,8 +443,7 @@ namespace Corruption.Content
         ///     Starts the hit's context when its sender sent chances for this object and the hit is a player's
         ///     (<see cref="ByPlayer" />); returns the previous context.
         /// </summary>
-        private static Context Begin(ZNetView view, long sender, HitData hit, global::DropTable table, bool woodcutting, Vector3 position,
-            System.Func<float> health)
+        private static Context Begin(ZNetView view, long sender, HitData hit, global::DropTable table, bool woodcutting, Vector3 position)
         {
             var previous = _current;
             Safe.Run("start a harvest", () =>
@@ -472,60 +461,11 @@ namespace Corruption.Content
                 }
                 var context = new Context
                 {
-                    Chances = chances, Table = table, Woodcutting = woodcutting, Position = position, Hit = hit, Health = health,
-                    RightTool = woodcutting ? hit.m_damage.m_chop > 0f : hit.m_damage.m_pickaxe > 0f
+                    Chances = chances, Table = table, Woodcutting = woodcutting, Position = position, Hit = hit
                 };
-                context.HealthBefore = health();
                 _current = context;
             });
             return previous;
-        }
-
-        /// <summary>
-        ///     After the owner has applied a hit: Stonecutter's or Resinous roll once if the hit was valid (the right tool,
-        ///     and it did damage: the struck object or part lost health or broke). The extra stone or resin drops at the
-        ///     hit point, spawned by the owner like the object's own drops (Krogon, 2026-11-08).
-        /// </summary>
-        private static void AfterHit(HitData hit)
-        {
-            var context = _current;
-            if (context == null || !ReferenceEquals(context.Hit, hit) || context.Health == null)
-            {
-                return;
-            }
-            Safe.Run("roll Stonecutter's or Resinous", () =>
-            {
-                float after = context.Health();
-                PerHit(context.Chances, context.Woodcutting, context.RightTool, context.HealthBefore > 0f && after < context.HealthBefore, hit);
-            });
-        }
-
-        private static void PerHit(HarvestChances chances, bool woodcutting, bool rightTool, bool didDamage, HitData hit)
-        {
-            if (!ObjectDB.instance)
-            {
-                return;
-            }
-            var items = new HarvestItems<GameObject>
-            {
-                Stone = ObjectDB.instance.GetItemPrefab(StonePrefab),
-                Resin = ObjectDB.instance.GetItemPrefab(ResinPrefab)
-            };
-            var extra = HarvestRules.PerHit(chances, woodcutting, rightTool, didDamage, items, Random01);
-            if (!extra)
-            {
-                return;
-            }
-            // Just off the surface, towards the striker, so it doesn't spawn inside the rock or trunk.
-            var back = hit.m_dir.sqrMagnitude > 0.01f ? -hit.m_dir.normalized * 0.3f : Vector3.zero;
-            var go = Object.Instantiate(extra, hit.m_point + back + Vector3.up * 0.3f, Quaternion.Euler(0f, Random.Range(0, 360), 0f));
-            ItemDrop.OnCreateNew(go);
-        }
-
-        /// <summary>A ZDO-saved health, or negative infinity once the object is gone (it broke or was removed).</summary>
-        private static System.Func<float> SavedHealth(ZNetView view, int key, System.Func<float> fallback)
-        {
-            return () => view && view.IsValid() ? view.GetZDO().GetFloat(key, fallback()) : float.NegativeInfinity;
         }
 
         /// <summary>Odin's Grace on a tree, log or stump: takes the one-strike flag and harvests the whole tree. True when done.</summary>
@@ -543,11 +483,6 @@ namespace Corruption.Content
             try
             {
                 done = WholeTree.Harvest(piece, view, hit, chances);
-                if (done)
-                {
-                    // The strike harvested the tree: a damaging chop hit, so Resinous rolls once for it too.
-                    PerHit(chances, true, true, true, hit);
-                }
             }
             catch (System.Exception ex)
             {
@@ -571,12 +506,9 @@ namespace Corruption.Content
                     return false;
                 }
                 var tree = __instance;
-                __state = Begin(tree.m_nview, sender, hit, tree.m_dropWhenDestroyed, true, tree.transform.position,
-                    SavedHealth(tree.m_nview, ZDOVars.s_health, () => tree.m_health));
+                __state = Begin(tree.m_nview, sender, hit, tree.m_dropWhenDestroyed, true, tree.transform.position);
                 return true;
             }
-
-            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -592,12 +524,9 @@ namespace Corruption.Content
                     return false;
                 }
                 var log = __instance;
-                __state = Begin(log.m_nview, sender, hit, log.m_dropWhenDestroyed, true, log.transform.position,
-                    SavedHealth(log.m_nview, ZDOVars.s_health, () => 0f));
+                __state = Begin(log.m_nview, sender, hit, log.m_dropWhenDestroyed, true, log.transform.position);
                 return true;
             }
-
-            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -625,15 +554,9 @@ namespace Corruption.Content
                     return false;
                 }
                 var target = __instance;
-                // The default is vanilla's own: health grows with the world level (Destructible.RPC_Damage).
-                var saved = SavedHealth(target.m_nview, ZDOVars.s_health,
-                    () => target.m_health + Game.m_worldLevel * target.m_health * (Game.instance ? Game.instance.m_worldLevelMineHPMultiplier : 0f));
-                __state = Begin(target.m_nview, sender, hit, drops ? drops.m_dropWhenDestroyed : null, tree, target.transform.position,
-                    () => target.m_destroyed ? float.NegativeInfinity : saved());
+                __state = Begin(target.m_nview, sender, hit, drops ? drops.m_dropWhenDestroyed : null, tree, target.transform.position);
                 return true;
             }
-
-            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -641,15 +564,11 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(MineRock), nameof(MineRock.RPC_Hit))]
         private static class RockHit
         {
-            private static void Prefix(MineRock __instance, long sender, HitData hit, int hitAreaIndex, out Context __state)
+            private static void Prefix(MineRock __instance, long sender, HitData hit, out Context __state)
             {
                 var rock = __instance;
-                var saved = SavedHealth(rock.m_nview, ("Health" + hitAreaIndex).GetStableHashCode(), () => rock.GetHealth());
-                __state = Begin(rock.m_nview, sender, hit, rock.m_dropItems, false, rock.transform.position,
-                    () => rock.GetHitArea(hitAreaIndex) == null ? float.NegativeInfinity : saved());
+                __state = Begin(rock.m_nview, sender, hit, rock.m_dropItems, false, rock.transform.position);
             }
-
-            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -658,23 +577,12 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(MineRock5), nameof(MineRock5.RPC_Damage))]
         private static class DepositHit
         {
-            private static void Prefix(MineRock5 __instance, long sender, HitData hit, int hitAreaIndex, out Context __state)
+            private static void Prefix(MineRock5 __instance, long sender, HitData hit, out Context __state)
             {
                 var deposit = __instance;
-                __state = Begin(deposit.m_nview, sender, hit, deposit.m_dropItems, false, deposit.transform.position, () =>
-                {
-                    if (!deposit.m_nview || !deposit.m_nview.IsValid())
-                    {
-                        return float.NegativeInfinity;
-                    }
-                    deposit.LoadHealth();
-                    var area = deposit.GetHitArea(hitAreaIndex);
-                    return area == null ? float.NegativeInfinity : area.m_health;
-                });
+                __state = Begin(deposit.m_nview, sender, hit, deposit.m_dropItems, false, deposit.transform.position);
             }
 
-            /// <summary>Only the part struck counts for Stonecutter's: parts that fall for lack of support aren't hits.</summary>
-            private static void Postfix(HitData hit) => AfterHit(hit);
 
             private static void Finalizer(Context __state) => _current = __state;
         }
@@ -713,9 +621,9 @@ namespace Corruption.Content
             {
                 IsWood = go => go && Wood.Contains(go.name),
                 IsOre = go => go && Ores.Contains(go.name),
-                Stone = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(StonePrefab) : null,
-                Resin = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(ResinPrefab) : null,
-                Coal = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(CoalPrefab) : null
+                Coal = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(CoalPrefab) : null,
+                // Hoardfinder's and of Hidden Riches (Krogon, 2026-11-19): one guaranteed orb, weighted like kills' orbs.
+                FindOrb = OrbDrops.FindOne
             };
             if (woodcutting && table.m_drops != null)
             {

@@ -21,7 +21,11 @@ namespace Corruption.Rules
             "weight", "effect", "requires"
         };
 
-        private static readonly string[] Statuses = { "approved", "proposed", "draft" };
+        /// <summary>
+        ///     <c>retired</c> (2026-11-19): an affix that no longer rolls (drops, orbs, shards) but stays readable, because
+        ///     players may have it saved on gear or splinters. Never delete a row that was in the game; retire it.
+        /// </summary>
+        private static readonly string[] Statuses = { "approved", "proposed", "draft", "retired" };
         private static readonly string[] Sides = { "prefix", "suffix" };
         private static readonly string[] Units = { "%", "flat", "m", "levels", "minutes" };
 
@@ -56,6 +60,9 @@ namespace Corruption.Rules
             public string Unit;
             public bool LowerIsBetter;
             public float Weight;
+
+            /// <summary>Whether it can be rolled (drops, orbs, a shard's corrupted affix): not retired, weight above 0.</summary>
+            public bool Rolls => Status != "retired" && Weight > 0f;
             public string Effect;
             public string Requires;
             public HashSet<string> Classes = new HashSet<string>();

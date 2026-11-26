@@ -36,5 +36,22 @@ namespace Corruption.Rules
             float chance = level >= 3 ? settings.TwoStarChance : level == 2 ? settings.OneStarChance : 0f;
             return chance > 0f && random() < chance ? 1 : 0;
         }
+
+        /// <summary>
+        ///     The shards every boss kill adds for the players near it (Krogon, 2026-11-23, decisions 21 and 30): this many
+        ///     per player, on top of <see cref="ShardsFor" />'s first-kill shards and a corrupted boss's own; at least one
+        ///     player counts (the killer may be out of range of the game running the boss).
+        /// </summary>
+        public static int BossPerPlayer(int playersNearby, int perPlayer)
+        {
+            return perPlayer <= 0 ? 0 : perPlayer * Math.Max(1, playersNearby);
+        }
+
+        /// <summary>A vanilla chest with its own loot: 1 shard on a roll of <paramref name="chance" /> (0–1), else 0 (decision 33: 0.05).</summary>
+        /// <param name="random">Returns a value in [0, 1).</param>
+        public static int ChestShards(float chance, Func<double> random)
+        {
+            return chance > 0f && random() < chance ? 1 : 0;
+        }
     }
 }

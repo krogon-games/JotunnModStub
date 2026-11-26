@@ -75,7 +75,7 @@ namespace Corruption.Rules
             {
                 return new List<AffixTable.Affix>();
             }
-            return affixes.Values.Where(a => a.Weight > 0f && a.Classes.Any(item.Classes.Contains) &&
+            return affixes.Values.Where(a => a.Rolls && a.Classes.Any(item.Classes.Contains) &&
                                              (a.Requires.Length == 0 || item.Mechanics.Contains(a.Requires))).ToList();
         }
 

@@ -354,22 +354,50 @@ namespace Orlog.Content
         [HarmonyPatch(typeof(ConnectPanel), nameof(ConnectPanel.Update))]
         private static class NoStatsPanelOnSlotKey
         {
+            // Read by name, not compiled in: Valheim 1.0.30 removed ConnectPanel.m_root, and a compiled-in field that's
+            // gone throws on every frame (play-test 2026-11-26). Without it, F2 opens the panel as well as using the slot.
+            private static readonly System.Reflection.FieldInfo RootField = AccessTools.Field(typeof(ConnectPanel), "m_root");
+            private static bool s_reported;
+
+            private static GameObject Root(ConnectPanel panel)
+            {
+                if (RootField == null)
+                {
+                    if (!s_reported)
+                    {
+                        s_reported = true;
+                        Jotunn.Logger.LogWarning("Orlog: this Valheim version's network panel (ConnectPanel) has no m_root; " +
+                                                 "F2 will open it as well as using the skill slot.");
+                    }
+                    return null;
+                }
+                var root = RootField.GetValue(panel) as Component;
+                return root ? root.gameObject : null;
+            }
+
             private static void Prefix(ConnectPanel __instance, out bool __state)
             {
-                __state = __instance.m_root && __instance.m_root.gameObject.activeSelf;
+                bool open = false;
+                Safe.Run("read the network panel", () =>
+                {
+                    var root = Root(__instance);
+                    open = root && root.activeSelf;
+                });
+                __state = open;
             }
 
             private static void Postfix(ConnectPanel __instance, bool __state)
             {
                 Safe.Run("keep F2 for a skill slot", () =>
                 {
-                    if (!__instance.m_root || __instance.m_root.gameObject.activeSelf == __state || CtrlHeld()
+                    var root = Root(__instance);
+                    if (!root || root.activeSelf == __state || CtrlHeld()
                         || !ZInput.GetKeyDown(KeyCode.F2) || !IsSlotKey(KeyCode.F2)
                         || !Player.m_localPlayer || Attributes.ClassOf(Player.m_localPlayer) == null)
                     {
                         return;
                     }
-                    __instance.m_root.gameObject.SetActive(__state);
+                    root.SetActive(__state);
                 });
             }
         }

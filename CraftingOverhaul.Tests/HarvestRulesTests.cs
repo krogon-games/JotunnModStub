@@ -14,9 +14,8 @@ namespace CraftingOverhaul.Tests
                 IsWood = s => s == "Wood" || s == "FineWood",
                 IsOre = s => s == "CopperOre" || s == "TinOre",
                 Seed = seed,
-                Stone = "Stone",
-                Resin = "Resin",
                 Coal = "Coal",
+                FindOrb = () => "CorruptionOrb_Transmutation",
                 Gems = new List<string>(gems)
             };
         }
@@ -42,7 +41,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void AnEmptyDropIsNotAHarvest()
         {
-            var chances = new HarvestChances { Bounty = 100f, Stone = 100f, Resin = 100f };
+            var chances = new HarvestChances { Bounty = 100f, MiningOrb = 100f, WoodcuttingOrb = 100f };
             Assert.Empty(HarvestRules.Apply(new List<string>(), chances, false, Items(), Rolls()));
         }
 
@@ -86,40 +85,48 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void StonecuttersAndResinousNoLongerRollPerHarvest()
+        public void HoardfindersDropsAnOrbOnAMiningHarvest()
         {
-            // Krogon, 2026-11-08: they roll per damaging hit instead (PerHit), so a breaking piece adds nothing.
-            var chances = new HarvestChances { Stone = 100f, Resin = 100f };
-            Assert.Equal(new[] { "CopperOre" }, HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items(), Rolls()));
-            Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls()));
+            // Krogon, 2026-11-19: "X% chance a rock or ore chunk you break drops an orb".
+            var chances = new HarvestChances { MiningOrb = 25f };
+            Assert.Equal(new[] { "CopperOre", "CorruptionOrb_Transmutation" },
+                HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items(), Rolls(0.24)));
+            Assert.Equal(new[] { "CopperOre" }, HarvestRules.Apply(new List<string> { "CopperOre" }, chances, false, Items(), Rolls(0.25)));
         }
 
         [Fact]
-        public void PerHitGivesStoneWhenMiningAndResinWhenChopping()
+        public void HiddenRichesDropsAnOrbOnAWoodcuttingHarvest()
         {
-            var chances = new HarvestChances { Stone = 25f, Resin = 5f };
-            Assert.Equal("Stone", HarvestRules.PerHit(chances, false, true, true, Items(), Rolls(0.24)));
-            Assert.Null(HarvestRules.PerHit(chances, false, true, true, Items(), Rolls(0.25)));
-            Assert.Equal("Resin", HarvestRules.PerHit(chances, true, true, true, Items(), Rolls(0.04)));
-            Assert.Null(HarvestRules.PerHit(chances, true, true, true, Items(), Rolls(0.05)));
+            // Krogon, 2026-11-19: "X% chance a tree, log or stump you fell drops an orb".
+            var chances = new HarvestChances { WoodcuttingOrb = 5f };
+            Assert.Equal(new[] { "Wood", "CorruptionOrb_Transmutation" },
+                HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls(0.04)));
+            Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls(0.05)));
         }
 
         [Fact]
-        public void PerHitNeedsTheRightToolAndDamage()
+        public void EachOrbFinderOnlyRollsOnItsOwnKindOfHarvest()
         {
-            var chances = new HarvestChances { Stone = 100f, Resin = 100f };
-            // Wrong tool, or a hit that did no damage (too low a tool tier, or 0 after resistances): no roll at all.
-            Assert.Null(HarvestRules.PerHit(chances, false, false, true, Items(), Rolls()));
-            Assert.Null(HarvestRules.PerHit(chances, true, true, false, Items(), Rolls()));
-            Assert.Null(HarvestRules.PerHit(null, false, true, true, Items(), Rolls()));
+            // Hoardfinder's is a pickaxe affix and of Hidden Riches an axe affix: neither rolls on the other's harvest.
+            Assert.Equal(new[] { "Wood" }, HarvestRules.Apply(new List<string> { "Wood" }, new HarvestChances { MiningOrb = 100f }, true, Items(), Rolls()));
+            Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { WoodcuttingOrb = 100f }, false, Items(), Rolls()));
         }
 
         [Fact]
-        public void PerHitWithoutTheAffixDoesNotRoll()
+        public void NoOrbThatCanDropAddsNothing()
         {
-            // A woodcutting hit with only Stonecutter's (which can't roll on an axe anyway) gives nothing.
-            Assert.Null(HarvestRules.PerHit(new HarvestChances { Stone = 100f }, true, true, true, Items(), Rolls()));
-            Assert.Null(HarvestRules.PerHit(new HarvestChances { Resin = 100f }, false, true, true, Items(), Rolls()));
+            var items = Items();
+            items.FindOrb = () => null;
+            Assert.Equal(new[] { "Stone" }, HarvestRules.Apply(new List<string> { "Stone" }, new HarvestChances { MiningOrb = 100f }, false, items, Rolls(0.0)));
+        }
+
+        [Fact]
+        public void OrbsAreNotDoubledByBountifulOrTurnedIntoCoal()
+        {
+            // The orbs are added after Bountiful's copy; Charring only touches wood.
+            var chances = new HarvestChances { Bounty = 100f, WoodcuttingOrb = 100f, Charring = 100f };
+            Assert.Equal(new[] { "Coal", "Coal", "CorruptionOrb_Transmutation" },
+                HarvestRules.Apply(new List<string> { "Wood" }, chances, true, Items(), Rolls(0.0, 0.0, 0.0, 0.0)));
         }
 
         [Fact]

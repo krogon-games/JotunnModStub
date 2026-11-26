@@ -24,11 +24,17 @@ namespace Corruption.Rules
         /// <summary>Gemseeker's, <c>gem_find</c>.</summary>
         public float Gem;
 
-        /// <summary>Stonecutter's, <c>extra_stone</c>: rolls per damaging mining hit, not per harvest (<see cref="HarvestRules.PerHit{T}" />).</summary>
-        public float Stone;
+        /// <summary>
+        ///     Hoardfinder's, <c>orb_find_mining</c> (was Stonecutter's, <c>extra_stone</c>): chance a mining
+        ///     harvest (a rock or ore chunk the striker breaks) drops one orb (Krogon, 2026-11-19).
+        /// </summary>
+        public float MiningOrb;
 
-        /// <summary>Resinous, <c>extra_resin</c>: rolls per damaging woodcutting hit, not per harvest (<see cref="HarvestRules.PerHit{T}" />).</summary>
-        public float Resin;
+        /// <summary>
+        ///     of Hidden Riches, <c>orb_find_woodcutting</c> (was Resinous, <c>extra_resin</c>): chance a woodcutting harvest (a tree, log or stump the
+        ///     striker fells) drops one orb (Krogon, 2026-11-19).
+        /// </summary>
+        public float WoodcuttingOrb;
 
         /// <summary>Forester's, <c>tree_seed_drop</c>.</summary>
         public float Seed;
@@ -43,7 +49,7 @@ namespace Corruption.Rules
         public long Striker;
 
         public bool Any =>
-            Odin || Bounty > 0f || WoodBounty > 0f || Stamina > 0f || Ore > 0f || Gem > 0f || Stone > 0f || Resin > 0f ||
+            Odin || Bounty > 0f || WoodBounty > 0f || Stamina > 0f || Ore > 0f || Gem > 0f || MiningOrb > 0f || WoodcuttingOrb > 0f ||
             Seed > 0f || Charring > 0f;
 
         /// <summary>A copy without the one-strike Odin's Grace flag (for a deposit that replaces a broken rock).</summary>
@@ -68,9 +74,13 @@ namespace Corruption.Rules
         /// <summary>The seed in this tree's own drop table, or null when it has none.</summary>
         public T Seed;
 
-        public T Stone;
-        public T Resin;
         public T Coal;
+
+        /// <summary>
+        ///     The orb Hoardfinder's or of Hidden Riches gives when it triggers: one, picked with the orb table's odds
+        ///     (<see cref="OrbDropTable.Pick" />); null if none can drop. Picked on the owner's game, where the harvest's drops spawn.
+        /// </summary>
+        public Func<T> FindOrb = () => null;
 
         /// <summary>Gemseeker's pool for this deposit's biome (<see cref="HarvestRules.GemPool" />).</summary>
         public IList<T> Gems = new List<T>();
@@ -136,9 +146,9 @@ namespace Corruption.Rules
         ///         <item>Bountiful: everything in the vanilla list once more. Woodcutting Bountiful: its wood once more. Both can trigger (triple wood).</item>
         ///         <item>Mining (rocks and ore): Artisan adds 1 of the first ore that dropped, Gemseeker's 1 gem from the biome's pool (equally likely).</item>
         ///         <item>Woodcutting (trees, logs, stumps): Forester's adds 1 of the tree's own seed.</item>
+        ///         <item>Hoardfinder's (mining) or of Hidden Riches (woodcutting): a chance the harvest also drops one orb (Krogon, 2026-11-19).</item>
         ///         <item>Charring last: each wood item in the result rolls on its own and becomes coal (replaces the wood, user's choice).</item>
         ///     </list>
-        ///     Stonecutter's and Resinous don't roll here: they roll on every damaging hit (<see cref="PerHit{T}" />).
         /// </summary>
         /// <param name="random">Returns a value in [0, 1).</param>
         public static List<T> Apply<T>(IList<T> drops, HarvestChances chances, bool woodcutting, HarvestItems<T> items, Func<double> random)
@@ -189,6 +199,14 @@ namespace Corruption.Rules
                     result.Add(items.Seed);
                 }
             }
+            if (GatheringRules.Roll(woodcutting ? chances.WoodcuttingOrb : chances.MiningOrb, random))
+            {
+                var orb = items.FindOrb();
+                if (orb != null)
+                {
+                    result.Add(orb);
+                }
+            }
             if (items.Coal != null && chances.Charring > 0f)
             {
                 for (int i = 0; i < result.Count; i++)
@@ -200,25 +218,6 @@ namespace Corruption.Rules
                 }
             }
             return result;
-        }
-
-        /// <summary>
-        ///     Stonecutter's and Resinous (Krogon, 2026-11-08): a chance on every valid gathering hit of one stone (mining)
-        ///     or one resin (woodcutting), whether or not the object breaks and whether or not it drops stone or resin
-        ///     itself. A valid hit is one made with the right tool (pickaxe damage on rock, chop damage on wood) that does
-        ///     damage, i.e. passes the object's tool tier and does more than 0 after its resistances. Null: nothing extra.
-        /// </summary>
-        /// <param name="random">Returns a value in [0, 1).</param>
-        public static T PerHit<T>(HarvestChances chances, bool woodcutting, bool rightTool, bool didDamage, HarvestItems<T> items,
-            Func<double> random) where T : class
-        {
-            if (chances == null || !rightTool || !didDamage)
-            {
-                return null;
-            }
-            float chance = woodcutting ? chances.Resin : chances.Stone;
-            T item = woodcutting ? items.Resin : items.Stone;
-            return item != null && chance > 0f && GatheringRules.Roll(chance, random) ? item : null;
         }
     }
 }

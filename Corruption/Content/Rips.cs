@@ -277,6 +277,7 @@ namespace Corruption.Content
             exit.Set(KeyBiome, heart.GetString(KeyBiome, ""));
             exit.Set(KeyExit, true);
             Jotunn.Logger.LogInfo($"Rip exit opened at {spot}, leading to {home}.");
+            Safe.Run("record the first destroyed rip heart", MapDrops.MarkRipCleared);
             Safe.Run("leave the rip chest", () => RipLoot.SpawnChest(heart.GetString(KeyBiome, ""), position));
             Player.m_localPlayer?.Message(MessageHud.MessageType.Center, "$corruption_rip_home_opened");
         }

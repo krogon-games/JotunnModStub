@@ -18,7 +18,7 @@ namespace Corruption
     {
         public const string PluginGUID = "com.krogongames.corruption";
         public const string PluginName = "Corruption";
-        public const string PluginVersion = "0.8.0";
+        public const string PluginVersion = "0.9.0";
 
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;
@@ -36,6 +36,8 @@ namespace Corruption
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
             Safe.Run("read the loot tables", Loot.Load);
             Safe.Run("add the co_loot command", Loot.Register);
+            Safe.Run("add the co_orbroll command", OrbDrops.RegisterCommand);
+            Safe.Run("add the co_mapdrops command", MapDrops.RegisterCommand);
             Safe.Run("add the co_affix command", LootProcs.RegisterCommand);
             Safe.Run("add the co_tabs_damage command", InventoryTabs.RegisterCommand);
             Safe.Run("add the co_own command", LootHarvest.RegisterCommand);

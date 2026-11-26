@@ -21,6 +21,8 @@ namespace Corruption
         public static ConfigEntry<int> BossShardsMin;
         public static ConfigEntry<int> BossShardsMax;
         public static ConfigEntry<bool> BossShardsFirstKillOnly;
+        public static ConfigEntry<int> BossShardsPerPlayer;
+        public static ConfigEntry<float> DungeonChestShardChance;
 
         public static ConfigEntry<bool> TabsEnabled;
         public static ConfigEntry<bool> TalismansEnabled;
@@ -75,7 +77,11 @@ namespace Corruption
             BossShardsMax = config.Bind(ShardSection, "BossShardsMax", 3,
                 AdminOnly("Most shards a boss drops.", new AcceptableValueRange<int>(0, 20)));
             BossShardsFirstKillOnly = config.Bind(ShardSection, "BossShardsFirstKillOnly", true,
-                AdminOnly("Bosses only drop shards the first time each is defeated in a world. Off: every kill."));
+                AdminOnly("The BossShardsMin-BossShardsMax shards drop only the first time each boss is defeated in a world. Off: every kill. (BossShardsPerPlayer comes on every kill either way.)"));
+            BossShardsPerPlayer = config.Bind(ShardSection, "BossShardsPerPlayer", 1,
+                AdminOnly("Shards every boss kill drops for each player nearby, on top of the first-kill and corrupted-boss shards (Krogon, 2026-11-23).", new AcceptableValueRange<int>(0, 10)));
+            DungeonChestShardChance = config.Bind(ShardSection, "DungeonChestShardChance", 0.05f,
+                AdminOnly("Chance (0-1) that a vanilla chest with its own loot (dungeons, locations) holds 1 corruption shard, rolled once when the game fills it (Krogon, 2026-11-23: 1 in 20).", new AcceptableValueRange<float>(0f, 1f)));
 
             TalismansEnabled = config.Bind(TalismanSection, "Enabled", true,
                 AdminOnly("Trophy talismans repel their creature family. Off: talismans can still be crafted but do nothing."));

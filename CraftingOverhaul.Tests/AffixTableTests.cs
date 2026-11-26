@@ -36,6 +36,28 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void ARetiredAffixLoadsButNeverRolls()
+        {
+            // 2026-11-19: retire instead of deleting, so gear and splinters saved with it still read.
+            var errors = new List<string>();
+            var affixes = AffixTable.Parse(Header + "\n" +
+                "old,retired,gathering-mining,prefix,old_family,Old,Old,{0}% old,1,5,%,,100,old_effect,,,,,,,,,x,,\n" +
+                "new,approved,gathering-mining,suffix,new_family,New,of New,{0}% new,1,5,%,,100,new_effect,,,,,,,,,x,,", errors);
+            Assert.Empty(errors);
+            Assert.False(affixes.Single(x => x.Id == "old").Rolls);
+            Assert.True(affixes.Single(x => x.Id == "new").Rolls);
+            var table = affixes.ToDictionary(x => x.Id);
+            var candidates = AffixRoller.AddCandidates(new LootItem(), "rare", table, new[] { "pickaxe" }, NoMechanics);
+            Assert.Equal(new[] { "new" }, candidates.Select(c => c.Id));
+            for (int i = 0; i < 20; i++)
+            {
+                double r = i / 20.0;
+                var rolled = AffixRoller.Roll("magic", 1, affixes, new[] { "pickaxe" }, NoMechanics, () => r);
+                Assert.DoesNotContain(rolled.Lines, l => l.Ids.Contains("old"));
+            }
+        }
+
+        [Fact]
         public void RealFileHasNoProblems()
         {
             Assert.NotEmpty(ParseReal());

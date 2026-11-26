@@ -55,6 +55,7 @@ Open the console with F5 while in a world (start the game with `-console` if it 
 - If two players take from the same unopened chest in the same instant, the last write wins.
 
 ## Changelog
+- 0.6.0 (2026-11-26): works with Valheim 1.0.30. The game removed `SoftReference.Name`, which stopped biome detection's Locations collector (the other collectors carried on); it now uses the loaded prefab's own name. No other change.
 - 0.5.0 (2026-11-15): the skills panel shows skill cards (#66, PR #68): nine cards per tab with icon, name, rank and a rank bar, a gold glow on the selected card, the Learn button beside the skill slots, and icons on the four attributes. The old tree view with its tiers and arrows is gone. Needs Orlog 0.4.0.
 - 0.4.0 (2026-11-15): biome grouping no longer freezes the game for about 20 seconds after spawning: the result is saved to `BepInEx/cache/CraftingOverhaul.biomes.txt` and reused while the game and mods are unchanged, and is otherwise worked out in the background. The classes UI's sample ("demo") data, its `Demo` setting and the `co_classes_stone` command are removed; the screens show Orlog's answers. The skills panel is larger (`SkillsPanelSize` fixes a size); right-click a skill cross slot to toggle quick cast.
 - 0.3.0 (2026-11-10): UI round (#30): the Skills button above the inventory is removed (it pushed the sixth inventory tab out of view); the skills panel still opens with its key (K).

@@ -34,9 +34,11 @@ A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft map
 3. **Take the essence**: guaranteed boss drop.
 4. **Craft a map**: shard, essence, material.
 5. **Open the rip**: unexplored land, waves.
-6. **Loot and escape**: shards, rolled gear (Magic, Rare, Unique). Shards and trophies go back into step 1.
+6. **Loot and escape**: shards, rolled gear (Magic, Rare, Unique), orbs and **a new map**. Shards and trophies go back into step 1; the map goes straight back into step 5.
 
 The loop runs once per biome. The essence from a biome's boss crafts maps into the corrupted version of that same biome, so beating a boss opens its biome's endgame, and moving on to the next biome's corrupted maps needs the next boss. *Changed 2026-10-28 (user): was "maps for the next biome up", which left no corrupted Meadows and gave the last boss's essence nowhere to go.* Shards and trophies from the rip feed the talisman bench and corrupted boss summons, so every piece connects.
+
+**Maps as loot (user, 2026-11-23):** the rip chest always holds one map of its biome, so each rip pays back the map it cost (one per chest, not one per player). Once the world's first rip heart is destroyed, creatures also drop a map of the biome they die in (as common as a Regal Orb, 1 in 830 per player), but only once that biome's boss is beaten. Bosses become the way to start or restart a biome's chain instead of a toll on every rip. This also removes the Queen limit: a world has 5 Infested Citadels, and as far as we know a Queen killed there doesn't come back (to confirm in game), so her essence alone could make only a handful of Mistlands maps.
 
 ## Corruption shards
 
@@ -48,12 +50,13 @@ The shard is the mod's currency. It unlocks the map bench, is an ingredient in e
 |---|---|---|
 | 1-star and 2-star creatures | Low chance, higher for 2-star | Rewards normal play; gives players their first shard without a map |
 | Every boss, first kill | Guaranteed, 1–3 shards | Makes sure the loop can start after the first boss |
+| Every boss, every kill | Guaranteed, 1 per player nearby, on top (user, 2026-11-23) | Makes boss kills worth it; also starts the loop in a world whose bosses died before the mod |
 | Rip waves and rip chests | Main source | Keeps players running maps |
-| Vanilla dungeon chests (crypts, burial chambers) | Rare | Optional; adds a reason to revisit dungeons |
+| Vanilla dungeon chests (crypts, burial chambers) | 1 in 20 chests, 1 shard (user, 2026-11-23; built) | Optional; adds a reason to revisit dungeons |
 
 ### Uses
 
-- Picking up the first shard unlocks the map bench recipe (vanilla-style pickup unlock).
+- ~~Picking up the first shard unlocks the map bench recipe.~~ Since 2026-11-23 the bench's recipe has no shard: it unlocks, vanilla-style, once its four materials have been picked up.
 - One shard per map recipe.
 - Combined with a boss offering (e.g. a deer trophy) into a corrupted offering that summons the corrupted version.
 - Extra shards at the bench roll affixes onto a map (see [Map affixes](#map-affixes-and-tiers)).
@@ -81,7 +84,7 @@ The Hive (an unused Mistlands boss, console-spawn only, in the 1.0 game files) i
 
 - Normal kill: 1 essence. Corrupted kill: 2–3 essences plus corrupted loot.
 - Essences are not tradeable at vanilla vendors and have no other recipe use, so they can't be farmed for anything but maps.
-- The chain means a corrupted Ashlands map needs Fader dead first. No skipping biomes: each biome's corrupted maps need that biome's boss.
+- The chain means an Ashlands map needs Fader dead first. No skipping biomes: each biome's maps need that biome's boss, also the maps creatures drop (user, 2026-11-23).
 
 **Open point:** the Meadows, Mistlands, Ashlands and Deep North materials are placeholders; pick whichever drops earliest in that biome so the recipe is easy to unlock.
 
@@ -89,7 +92,7 @@ The Hive (an unused Mistlands boss, console-spawn only, in the 1.0 game files) i
 
 The map bench is a new crafting station, unlocked by picking up the first corruption shard. It crafts maps, rolls affixes onto them, and crafts corrupted boss offerings. Working name: **Riftforge** (named for the rips its maps open).
 
-**Bench recipe:** Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Surtling cores. Needs a workbench nearby, same as other vanilla stations. Amounts to be set during tuning.
+**Bench recipe (final, user 2026-11-23):** 20 Fine wood, 10 Bronze nails, 5 Surtling cores, 10 Amber. Needs a workbench nearby, same as other vanilla stations. *Replaces* the first-guess recipe (Fine wood, Corruption shard, Eikthyr trophy, Bronze nails, Surtling cores).
 
 *Changed 2026-10-15: was "a boss trophy of any kind", which a single vanilla recipe can't express. Now Eikthyr's trophy, plus nails, leather scraps and cores. Bronze nails and Surtling cores keep the bench at the Black Forest stage, the same point where fine wood (bronze axe) already puts it.* *Changed 2026-10-26: Leather scraps dropped, because Valheim building pieces support at most 5 ingredients.*
 
@@ -104,6 +107,8 @@ All three must have been picked up before the recipe appears, which is vanilla b
 ### Map item
 
 - Stackable? No. Each map is a single item so affixes can live on it.
+- Named after its biome: "Meadows map" … "Deep North map" (user, 2026-11-23: "corrupted" maps come with the map tiers).
+- Comes from the Riftforge recipe, the rip chest (one, always) and creatures (once a rip is cleared and the biome's boss beaten).
 - Consumed on use. Kept in the Maps tab (built 2026-10-29, see [Inventory and equipment slots](#inventory-and-equipment-slots)); before that, the normal inventory (1 per slot).
 - Tooltip shows target biome, tier, and any rolled affixes.
 - Teleportable through portals (it's the key to the content, not a resource).
@@ -133,7 +138,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 - Waves come from the mod's own wave spawner, driven by the rip's heart, with the map's biome creatures and a raid-style on-screen message. *Changed 2026-10-28: was the vanilla raid system, which runs one raid at a time for the whole world.*
 - Spawns are **maddened**: a status effect that boosts damage and speed, disables fleeing, and ignores faction rules so creatures fight each other too.
 - Star level is pushed by map tier (see [Map affixes](#map-affixes-and-tiers)).
-- A rip chest or drop at the end holds the guaranteed loot.
+- A rip chest or drop at the end holds the guaranteed loot: its vanilla loot, 1–3 shards, one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
 
 *Built 2026-10-28 (step B), from the game data and the user's answers:*
 - **Waves are the biome boss's army:** the game's own raid(s) that stop once that boss is defeated (Eikthyr → army_eikthyr … Kall Fimbulbringer → army_elakingar and army_jotuns), with their own creatures, counts, intervals, chances and group sizes. They start when a player comes within the raid's range (96 m), with the raid's own start message, and keep coming **while the heart stands**.
@@ -222,7 +227,8 @@ A corrupted boss is the vanilla boss with its numbers turned up and its summons 
 ### Loot on kill
 
 - 2–3 essences instead of 1
-- Guaranteed shards (3–5)
+- Guaranteed shards (3–5), plus the 1 per player every boss kill gives
+- One guaranteed orb per player, picked with the orb table's odds (user, 2026-11-23)
 - Low chance at the boss's unique item (see [Loot and uniques](#loot-and-uniques))
 - Normal vanilla drops as well
 
@@ -405,18 +411,20 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 
 ### The orbs
 
-| Orb | What it does | Drops from |
+| Orb | What it does | How often (user, 2026-11-19) |
 |---|---|---|
-| Orb of Transmutation | Normal → Magic with 1 affix | Common: rip waves, chests |
+| Orb of Transmutation | Normal → Magic with 1 affix | Common |
 | Orb of Augmentation | Adds an affix to a Magic item with 0 or 1; it stays Magic | Common |
 | Orb of Alchemy | Normal → Rare | Uncommon |
 | Regal Orb | Magic item with exactly 2 affixes → Rare, adding a third | Uncommon |
-| Exalted Orb | Adds an affix to a Rare with room | Rare: tier 3–4 rips, corrupted bosses |
+| Exalted Orb | Adds an affix to a Rare with room | Rare |
 | Divine Orb | Rerolls the numbers on existing affixes | Rare |
 | Orb of Annulment | Removes one random affix; the rarity never changes, even at 0 affixes | Uncommon |
-| Orb of Chance | Normal item becomes Magic 50%, Rare 30%, Unique 20%; always Rare when no unique can come from that item | Uncommon |
-| Jeweller's Orb | Adds a socket, up to a set maximum. Greyed out (can't be used) until sockets and runewords are designed | Uncommon |
-| Mirror of Kalandra | Makes an exact copy, corrupted items included; the copy can never be modified or mirrored; the original is unchanged | Extremely rare: tier 4 rips, corrupted Queen or Fader |
+| Orb of Chance | Normal item becomes Magic 50%, Rare 30%, Unique 20%; always Rare when no unique can come from that item | Rare: always rarer than Alchemy (user, 2026-11-20) |
+| Jeweller's Orb | Adds a socket, up to a set maximum. Greyed out (can't be used) until sockets and runewords are designed | Doesn't drop until sockets exist |
+| Mirror of Kalandra | Makes an exact copy, corrupted items included; the copy can never be modified or mirrored; the original is unchanged | Extremely rare |
+
+**Where orbs drop (user, 2026-11-19, #33):** every orb can drop from all content: any creature kill (each nearby player rolls for themselves, as for gear; a boss is one kill), vanilla dungeon and location chests, the chest a rip heart leaves (once per player near the rip), and gathering with the Hoardfinder's and of Hidden Riches affixes (a 1–5% chance per harvest of one orb, mostly common ones). Stars, rips, corrupted bosses and dungeon chests raise the chance. The rates follow Path of Exile's order, squeezed between our Magic rate (1 in 50 kills) and Unique rate (1 in 2,500); the Divine Orb is then made rarer, 1 in 10,000 ("super strong orbs and should be quite rare"), and the Orb of Chance rarer than Alchemy for good, 1 in 2,000 (2026-11-20: until uniques exist it gives a Rare like Alchemy, and later its unique chance must not outpace unique drops). **Replaces** the earlier sources (Transmutation from rip waves and chests; Exalted only from tier 3–4 rips and corrupted bosses; the Mirror only from tier 4 rips and a corrupted Queen or Fader): "All orbs should have a chance to drop from all content." Live numbers: [`Corruption/Data/orbs.csv`](../Corruption/Data/orbs.csv) and the `orb` column of [`drop_modifiers.csv`](../Corruption/Data/drop_modifiers.csv).
 
 ### Rules
 

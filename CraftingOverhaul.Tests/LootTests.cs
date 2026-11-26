@@ -61,6 +61,13 @@ namespace CraftingOverhaul.Tests
             return affixes;
         }
 
+        [Fact]
+        public void SplinteringReachesFourMetres()
+        {
+            // Krogon, 2026-11-19: "a little bigger radius"; 4 m, twice the axe's reach.
+            Assert.Equal(4f, RealRules().SplinteringReach);
+        }
+
         // ---- Base items ----
 
         [Fact]

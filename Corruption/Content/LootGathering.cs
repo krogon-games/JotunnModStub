@@ -431,8 +431,9 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     Splintering: once per swing, a chance the same hit also lands on the nearest other tree or log within the
-        ///     axe's own attack range (AFFIX_RULES → Interpretations).
+        ///     Splintering: once per swing, a chance the same hit also lands on the nearest other tree or log within
+        ///     <c>splintering_reach_m</c> of the spot hit (<c>loot_rules.csv</c>; Krogon, 2026-11-19: 4 m, before the axe's
+        ///     own reach).
         /// </summary>
         private static void Splinter(GameObject struck, HitData hit)
         {
@@ -445,10 +446,9 @@ namespace Corruption.Content
             {
                 return;
             }
-            var tool = Swing.Tool;
             Safe.Run("apply Splintering", () =>
             {
-                float range = tool.m_shared.m_attack != null ? tool.m_shared.m_attack.m_attackRange : 1.5f;
+                float range = Loot.Rules != null ? Loot.Rules.SplinteringReach : 4f;
                 IDestructible nearest = null;
                 float best = float.MaxValue;
                 foreach (var collider in Physics.OverlapSphere(hit.m_point, range))

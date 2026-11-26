@@ -718,7 +718,7 @@ namespace Corruption.Content
             public override void Run(string[] args)
             {
                 var player = Player.m_localPlayer;
-                if (!player || !Loot.Loaded || args.Length == 0 || !Loot.Affixes.TryGetValue(args[0], out var affix))
+                if (!player || !Loot.Loaded || args.Length == 0 || !Loot.Affixes.TryGetValue(AffixRenames.Id(args[0]), out var affix))
                 {
                     Console.instance.Print(args.Length == 0 || !Loot.Loaded ? Help : $"No affix '{args[0]}' in affixes.csv.");
                     return;
