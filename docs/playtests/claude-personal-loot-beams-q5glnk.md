@@ -64,4 +64,14 @@
 
 ### What changed after the feedback
 
-(In progress: the tall beams at half size, every beam tapering from its base and pulsing slowly; the level-up sound stays. Handoff decisions 13–15.)
+- Steps 2 and 4: the tall beams are half the size (5 m high, 0.175 m at the base; they were 10 m and 0.35 m). Every beam, short and tall, now narrows from its base to a quarter of that width at the top, and pulses slowly: it dims by up to about a third and back once every 4 seconds, each drop out of step with its neighbours. The numbers are in `Corruption/Data/personal_loot.csv` (`tall_height`, `tall_width`, `top_width_fraction`, `pulse_seconds`, `pulse_strength`). Short beams keep their size (2.5 m, 0.15 m).
+- Step 14: no change; the level-up sound stays for every tall beam. Custom drop sounds like Diablo 4's are noted for later.
+
+### Final play-test
+
+**Build:** the three DLLs from this branch again (the log line names the newer commit). Same setup as above.
+
+1. [ ] (`plf-1`) `co_personal beams` → the 14 drops again. The tall beams (Rare, unique, map, Exalted, Divine, Chance, Mirror) are about half as tall and half as wide as before. **Every** beam is thick at the base and thin at the top, and pulses slowly (about one slow dim and back every 4 seconds), not all at the same moment. Note anything you'd still change (taller or shorter, thinner, faster or slower pulse, a deeper or softer dim).
+2. [ ] (`plf-2`) Walk or `fly` about 50 m away → the tall beams are still easy to find; note if they're now too small to spot.
+3. [ ] (`plf-3`) `co_personal drop rare` → the Rare beam is a comfortable size and pulses; you hear the level-up sound. `co_personal drop orb exalted other 10` → after about 10 s its beam appears, tapered and pulsing.
+4. [ ] (`plf-4`) Kill `spawn Greyling 20` → real drops have the new beams; pick them up → the beams go with them. F5: no red errors. Send `BepInEx/LogOutput.log`.
