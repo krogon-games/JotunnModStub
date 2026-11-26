@@ -51,6 +51,7 @@ Nothing built yet. Read for the round: the design, the handoffs of the rips, orb
     | 6 | corrupted | ×4.5 | all | 6–14 | ×2.5 | at least Rare |
 
     Waves: +0.5 per tier (most alive at once and spawn speed; Black Forest 24 … 54; with Swarming doubling, up to 96 at tier 5 and 108 at tier 6), over +1 per tier and ×2 everywhere. Sources: drop rates = decision 4b; shards = 2026-11-01 for tiers 1–4, the same step (+1 lowest, +2 highest) for 5–6; 2-stars = decision 3's 1 in 4 at tier 2, +1 in 4 per tier (Claude's proposal); heart gear = decision 4B's tier 2 floor, "at least Rare" once the map is Rare (Claude's proposal); waves = Claude's proposal. 3-stars still wait for the elite design (#39). Every number goes in a data table, tunable without a rebuild.
+6f. **All six tiers are built this round** (2026-11-26): "A". White, magic and rare maps with the orbs (decision 6b) and the shard's tier 6 (decision 6c), with the table of 6e; with only four affixes this round (decision 2), a tier 5 map carries all four and tier 6 is that map corrupted. Over "tiers 1–3 now" and "tiers 1–2 only". **Replaces** "build tiers 1–2" and "tiers 3–4 wait for the elite and champion design (#39)": only 3-star creatures still wait for #39.
 
 ## Playtest
 
