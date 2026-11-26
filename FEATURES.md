@@ -227,6 +227,7 @@ The saved-file format and the per-frame slicing are covered by unit tests (`Biom
 | `BiomeMaterialOverrides` | *(empty)* | Comma separated `PrefabName:Biome` pairs, only for items the detection gets wrong or can't place. Biomes: Meadows, BlackForest, Swamp, Ocean, Mountain, Plains, Mistlands, Ashlands, DeepNorth. |
 
 **Known issues:**
+- **Valheim 1.0.30 (2026-11-26):** the game removed `SoftReference.Name`, so the Locations collector failed on Krogon's first 1.0.30 start ("Biome collector Locations failed: … get_Name()"; the other collectors carried on). Fixed in code the same day (the loaded prefab's own name is used); to re-check in the log.
 - **Play-test 2026-11-15 (1.0.21, single player): background loading and the saved file passed.** No freeze after spawning; the first load worked in the background for 28.4 s using 1.2 s of game time over 2,695 frames (longest frame 87 ms), with the same 970 items and 39,595 sources as before; the second load used the saved file in 12 ms; biomes unchanged. Measured: the location and room loading was the freeze (13.5 of 13.6 s when run all at once; every other collector under 20 ms).
 - `co_biome refresh` (and `co_dump`) still run all at once: about 14 s of pause (13.6 s on 2026-11-15). Kept on purpose (Krogon, 2026-11-15: an admin command, rarely used).
 - The saved file can be stale if another mod changes what a prefab drops through its own settings without a version change; the key doesn't read inside prefabs. Run `co_biome refresh` after changing such a setting.
@@ -1523,7 +1524,7 @@ Wind Lance's charge is counted by the skill button (`Player.SetControls`): for a
 - `Projectile.OnHit`: postfix (Freezing Arrow's burst; Forked Lightning's forks; since 2026-11-16 Immolation Arrow's blast and burning ground and Venom Strike's cloud; since 2026-11-18 Shackle Shot's shackle). Not patched for Wind Lance, but **called by it directly** for each enemy struck and for what stops it (the prefix that could skip the game's hit, added the morning of 2026-11-16, was removed the same day)
 - `Player.StartGuardianPower`: postfix (record only: the player started their power)
 - `Player.ActivateGuardianPower`: prefix, can skip (once, within 3 s of Inner Sight's gesture)
-- `ConnectPanel.Update`: prefix + postfix (record only, then undoes the panel's F2 toggle when F2 is a slot key and Ctrl isn't held)
+- `ConnectPanel.Update`: prefix + postfix (record only, then undoes the panel's F2 toggle when F2 is a slot key and Ctrl isn't held). Since 2026-11-26 the panel's `m_root` is read by name: Valheim 1.0.30 removed it, which made the old patch throw every frame. Without it F2 opens the panel as well as using the slot (one warning in the log)
 - `Character.RPC_Damage`: prefix (Inner Sight's extra damage on a marked creature)
 - `StatusEffect.SetLevel`: postfix (the freeze's and Inner Sight's duration; since 2026-11-18 also Shackle Shot's stun and boss slow)
 - `Character.CanMove`: postfix (**new 2026-11-18**, Shackle Shot's stun: false for a creature, not a player, carrying `Orlog_Shackled`; the game then stops its moving, turning and new attacks)
@@ -1555,6 +1556,9 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ---
 
 ## Changelog
+
+### 2026-11-26
+- **Fix (Valheim 1.0.30, Krogon's first play-test of the update):** the game removed two things our code used. **Orlog:** the F2 skill-slot patch on the network panel (`ConnectPanel.m_root`) threw on every frame (2,119 red errors); it now reads the field by name inside the safety net, and if it's gone F2 opens the panel as well as using the slot. **CraftingOverhaul:** biome detection's Locations collector failed on `SoftReference.Name`; it now uses the loaded prefab's name. Untested in-game. Other changed game code may still break when it runs: a build on Valheim 1.0.30's own files is the full check. **PlantEasily 2.3.1** (built for Valheim 1.0.20) fails on 1.0.30 (`Inventory.CountItems(string,int)` is gone): not ours; disabled until its author updates it.
 
 ### 2026-11-23
 - **Change (loot loop, Krogon's answers to Claude's review, decisions 17–33; `claude/charming-dijkstra-sg16vv`). Built, untested.**

@@ -152,7 +152,8 @@ namespace CraftingOverhaul.Biomes.Collectors
                     var prefab = refs[i].IsLoaded ? refs[i].Asset : null;
                     if (prefab)
                     {
-                        Visit(visit, i, prefab, refs[i].Name);
+                        // prefab.name, not refs[i].Name: Valheim 1.0.30 removed SoftReference.Name (play-test 2026-11-26).
+                        Visit(visit, i, prefab, prefab.name);
                     }
                     held[i] = false;
                     refs[i].Release();
@@ -188,7 +189,7 @@ namespace CraftingOverhaul.Biomes.Collectors
             }
             catch (Exception ex)
             {
-                Jotunn.Logger.LogDebug($"Could not load {reference.Name}: {ex.Message}");
+                Jotunn.Logger.LogDebug($"Could not load {reference}: {ex.Message}");
                 return false;
             }
         }
@@ -215,7 +216,7 @@ namespace CraftingOverhaul.Biomes.Collectors
             }
             catch (Exception ex)
             {
-                Jotunn.Logger.LogDebug($"Could not load {reference.Name}: {ex.Message}");
+                Jotunn.Logger.LogDebug($"Could not load {reference}: {ex.Message}");
                 return null;
             }
         }

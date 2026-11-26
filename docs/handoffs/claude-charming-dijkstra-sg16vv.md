@@ -22,6 +22,8 @@ Built 2026-11-19, untested in game (623 tests pass; Corruption builds against th
 - **Splintering** reaches 4 m (`loot_rules.csv` → `splintering_reach_m`).
 - **Loop fixes (decisions 17–33, 2026-11-23):** maps named "{biome} map"; the rip chest holds one map of its biome and rolls Magic/Rare gear per player; destroying a rip heart sets the world key `corruption_rip_cleared`, after which creatures drop their biome's map 1 in 830 per player once that biome's boss is beaten (`MapDrops.cs`, `MapDropRules.cs`, `co_mapdrops`); every boss kill adds 1 shard per nearby player (`BossShardsPerPlayer`); corrupted bosses give each player one picked orb; dungeon chests hold a shard 1 in 20 (`DungeonChestShardChance`); Riftforge 20 fine wood, 10 nails, 5 cores, 10 amber. Issues: new #84 (explored-land fallback, decision 22), #35 raised to high (decision 23), notes on #31 and #33; ROADMAP, GAME_DESIGN and the design doc updated.
 
+**Valheim 1.0.30 (2026-11-26):** Steam updated the game. Krogon's first start: Orlog's `ConnectPanel.m_root` and CraftingOverhaul's `SoftReference.Name` are gone (fixed in code, untested); PlantEasily 2.3.1 is broken on 1.0.30 (not ours, disabled). Our build references are still 1.0.21's, so other changes may show only when their code runs: a build against 1.0.30's own files is the full check.
+
 Claude's interim choices (easy to change): the splinters of the two orb finders keep their stone-grey and resin-amber colours (`splinter_looks.csv`, `proposed`); orbs aren't locked to the player who rolled them, like gear (L7); chests the world made before this build get no orbs (the game fills each chest once). At 5%: about 1.5 orbs per copper deposit, 1 per about 5 trees; at 1%: 1 per about 3 deposits.
 
 ## Decisions

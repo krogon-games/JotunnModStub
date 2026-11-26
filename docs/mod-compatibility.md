@@ -13,7 +13,7 @@ Install steps for players and the server: [`PLAYER_SETUP.md`](PLAYER_SETUP.md).
 | Mod | Version checked | What it does | Needed on |
 |---|---|---|---|
 | [RandyKnapp-EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) (EAQS) | 3.1.3 | Dedicated slots for equipped items (head, chest, legs, shoulder, utility, trinket), up to 6 quick slots, optional extra utility slots, keep-on-death options. Has an API for other mods to add custom slots | Clients; server optional (syncs its balance settings) |
-| [Advize-PlantEasily](https://thunderstore.io/c/valheim/p/Advize/PlantEasily/) | 2.3.1 | Plant crops in grids, snap to grids, bulk harvest pickables and beehives, replant on harvest | Clients |
+| [Advize-PlantEasily](https://thunderstore.io/c/valheim/p/Advize/PlantEasily/) | 2.3.1 (**broken on Valheim 1.0.30**, 2026-11-26: built for 1.0.20, its `Player.UpdatePlacementGhost` patch calls `Inventory.CountItems(string,int)`, which 1.0.30 no longer has; red errors every frame. Disabled until Advize updates it) | Plant crops in grids, snap to grids, bulk harvest pickables and beehives, replant on harvest | Clients |
 | [Vapok-AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) (AB) | 2.4.6 | Craftable backpacks per biome (own models and textures) with their own inventory, carry-weight and movement modifiers and perks; craft and build from the backpack; auto-store loot | Everyone (adds items) |
 
 EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and neither declares the other incompatible. EAQS refuses to load next to other slot mods (AzuExtendedPlayerInventory, ExtendedPlayerInventory, ExtraSlots, ComfyQuickSlots).
