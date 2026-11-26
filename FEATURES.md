@@ -1270,7 +1270,7 @@ Also: while Forge is open, the station's list and description get a `CanvasGroup
 
 **Config:** no new options. `[Rips] ChestShardsMin`/`ChestShardsMax` keep their keys; their descriptions now say "the rip heart spills".
 
-**Network:** the `Corruption_HarvestChances` message now ends with the striker's player id (long). Both ends must be the same build (the version bump at merge covers it).
+**Network:** the `Corruption_HarvestChances` message now ends with the striker's player id (long), read only when it is there, so a striker on an older build still gets their harvest affixes (their orb is then unowned). Everyone and the server must still be on the same build: an older 0.9.0 game joins without a warning (Jötunn compares only the first two numbers) but shows everyone's locked drops and never locks its own.
 
 **Removed:** the rip chest (`RipLoot.SpawnChest` became `RipLoot.Spill`), `OrbDrops.PlacingRipChest` and its check in the `Container.AddDefaultItems` postfix.
 
@@ -1285,8 +1285,8 @@ Also: while Forge is open, the station's list and description get a `CanvasGroup
 
 **Known issues and limits:**
 - Built, untested in game. If a patch matched by name only gained an overload in Valheim 1.0.30, the log says `Failed to apply patch … PersonalLootPatches+<class>`; the worst case is `Awake` (other players would see locked drops).
-- On a dedicated server the network clock only runs while someone is online, so a lock pauses while nobody is on.
-- Tamed animals can eat a hidden food drop (vanilla `ItemDrop.RemoveOne`); only the heart's dealt vanilla loot could be food. Very rare; not guarded.
+- On a dedicated server the network clock only runs while someone is online, so a lock pauses while nobody is on. Sleeping through the night moves the clock on, so it ends every running lock at once.
+- Creatures can't eat a locked food drop either (the `CanPickup` refusal also covers vanilla `ItemDrop.RemoveOne`); only the heart's dealt vanilla loot could be food.
 - The heart's loot is now loose drops pushed outward like kill drops, so they can roll into water or off a ledge.
 - On ragdoll deaths each player's boss shard drops at the death; the shared shards drop when the corpse fades (vanilla timing).
 - Beam sizes and the sound are first guesses and a placeholder for Krogon's play-test.
@@ -1299,6 +1299,8 @@ Also: while Forge is open, the station's list and description get a `CanvasGroup
 |---|---|---|---|---|
 | `PersonalLootPatches.Pickup` (`Content/PersonalLootPatches.cs`) | `Humanoid.Pickup(GameObject go, bool autoequip, bool autoPickupDelay)`, matched by name, item read as `__0` | Prefix | `Priority.First` | Yes: `__result = false` when the drop is locked to another player (any error = allow) |
 | `PersonalLootPatches.Interact` | `ItemDrop.Interact(Humanoid, bool, bool)` | Prefix | Normal | Yes: `__result = false`, silently, when hidden from the local player |
+| `PersonalLootPatches.RequestOwn` | `ItemDrop.RequestOwn()`, matched by name | Prefix | Normal | Yes: skipped for a drop locked to another player (added after the multiplayer review, so the lock doesn't depend only on the hidden view; `ItemDrop.RPC_RequestOwn` stays vanilla, so the lock's owner always gets the item) |
+| `PersonalLootPatches.CanPickup` | `ItemDrop.CanPickup(bool autoPickupDelay)`, matched by name | Prefix | Normal | Yes: `__result = false` for a drop locked to another player (auto-pickup then neither pulls nor asks for it; creatures can't eat it) |
 | `PersonalLootPatches.AutoStack` | `ItemDrop.AutoStackItems()` | Prefix | Normal | Yes: when this drop is tagged (also sets `m_haveAutoStacked`) or a tagged neighbour vanilla would merge (same name, quality, `m_autoStack`, owned, within 4 m) |
 | `PersonalLootPatches.FindHover` | `Player.FindHoverObject(out GameObject, out Character)`, args as `__0`/`__1` | Postfix | Normal | No; when vanilla's hover is a drop hidden from this player, re-runs vanilla's ray loop (1.0.14 copy) skipping hidden drops |
 | `PersonalLootPatches.Awake` | `ItemDrop.Awake()` | Postfix | Normal | No; starts the view when the ZDO has our keys; inside a creature drop, tags a shard with a shared beam |
