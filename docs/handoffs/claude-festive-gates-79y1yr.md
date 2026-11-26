@@ -35,18 +35,19 @@ Nothing to test yet. The checklist will be `docs/playtests/claude-festive-gates-
 
 ## Open questions for Krogon
 
-Asked one at a time in the chat, each with options and a recommendation with its source:
+Asked one at a time in the chat, each with options and a recommendation with its source. The list was checked by an Opus review against the game code and data before asking (it corrected the spawn pace, the weather facts and the frost-resistance gear, and added the missing questions). "Proposal" means Claude's table of 2026-11-01, which has no source in the design or the data.
 1. The round and the branch.
-2. Scope: all seven affixes now, or the three weather ones (Frostbitten, Drowned, Choking) in a later round.
-3. Waves per tier (×2 today = tier 1; ×3 at tier 2 proposed) and tier 2's guaranteed 2-stars (1 in 4 proposed).
-4. Shards per tier (1–4 / 2–6 / 3–8 / 4–10, decided 2026-11-01): dealt among the players, or per player.
+2. Scope: recommended to build the tiers, #84 and the four creature-side affixes (Swarming, Hardened, Rabid, Smouldering) now, and the three weather ones (Frostbitten, Drowned, Choking) next round, after the fresh 1.0.30 `co_dump` (#86) also records what each weather does and the game's smoke damage.
+3. Waves per tier (×2 today = tier 1; ×3 at tier 2, proposal) and tier 2's guaranteed 2-stars (1 in 4, proposal).
+4. Shards per tier (1–4 / 2–6, decided 2026-11-01), dealt as decision 6; whether tier 2 adds anything else at the heart (the design: "map tier sets the affix count and the rarity floor").
 5. The tier of a dropped map (creatures; the heart's map).
-6. How a player gets a tier 2 map (the design: 1 extra shard).
-7. Rolling affixes: 1 shard for 1–3, each reroll 1 more; how often 1, 2 or 3 affixes.
+6. How a player gets a tier 2 map (the design: "1 extra shard").
+7. Rolling affixes: the design's "a reroll costing one more shard" (every roll 1 shard, or rising); how often 1, 2 or 3 affixes.
 8. Orbs on maps (Path of Exile's way), or shards only.
-9–15. Each affix: Frostbitten, Drowned, Smouldering, Choking, Swarming, Hardened, Rabid (danger, reward with personal loot, multiplayer).
-16. Map names for tiers, and the tier on the icon.
-17. #84: how far from player-built pieces, and for every rip or only the fallback.
+9–12. Swarming, Hardened, Rabid, Smouldering: danger, reward with personal loot, multiplayer.
+13–16. Only if built now: Frostbitten (frost-resistant capes from the Mountains on), Drowned, Choking, and how weather affixes combine and how far the weather reaches.
+17. Map names, the tier on the icon, the tier and affixes on the rip's hover text.
+18. #84: how far from player-built pieces, for every rip or only the fallback, and whether crops, boats and carts count.
 
 ## Next steps
 
