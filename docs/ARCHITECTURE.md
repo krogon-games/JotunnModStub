@@ -130,6 +130,22 @@ Full 1.0.14 game code (method bodies, not just signatures) comes from the NuGet 
 - Taking from a chest requires owning it: `NearbyContainers` claims ownership right before removing items.
 - Other players' trinkets are readable on any client via `VisEquipment.m_currentTrinketItemHash` (synced through the ZDO), which is how talismans work for remote players.
 
+**Ground items and pickup (1.0.14 code, decompiled 2026-11-26 for personal loot; assumed the same in 1.0.30)**
+- Every pickup path (E, auto-pickup, magnets) ends in `Humanoid.Pickup`, so refusing there stops them all.
+- `ItemDrop.CanPickup` means "this game owns the drop"; when it is false the game asks for ownership, so it must not be used to mean "allowed to take".
+- `Player.AutoPickup` skips a drop whose `m_autoPickup` is false before it pulls the drop or requests ownership. Setting that flag is how a hidden drop stays out of auto-pickup.
+- `ItemDrop.AutoStackItems` merges owned drops with the same name and quality within 4 m, only when more than 200 drops are loaded, and destroys the merged one. A tagged drop must be kept out of it or its owner tag and beam are lost.
+- `Player.FindHoverObject` uses the first hit of one ray, so a hidden drop in front would block the hover of whatever is behind it; the cloud's 1.0.21 references have no `RaycastHitComparer`, so 1.0.21 changed its sort (our replacement sorts by distance itself).
+- `DropTable.GetDropListItems` reuses one list; copy it before changing it.
+- The dedicated server's network clock (`ZNet.GetTime`) runs only while players are on, so a time-based lock pauses when nobody is online. Each game keeps its own copy of the clock (the server corrects it about every 2 s).
+- `LightLod` re-enables its light from a coroutine, so hiding a light by disabling it once is not enough.
+- `ItemDrop.SaveToZDO` writes only the item-data key; our own ZDO keys on a ground item (`corruption_loot_*`) never enter the item's data, so they don't travel into inventories.
+
+**How the group's mods and the game were read in the cloud (2026-11-26)**
+- A mod's DLL comes from Thunderstore at `https://thunderstore.io/package/download/<Team>/<Mod>/<version>/` (a zip). Decompile it with `ilspycmd`: `dotnet tool install -g ilspycmd --version 8.2.0.7535`, run with `DOTNET_ROLL_FORWARD=Major` and `-r /opt/valheim-standin/valheim_Data/Managed`. AdventureBackpacks 2.4.8, EquipmentAndQuickSlots 3.2.1 and PlantEasily 2.3.1 were read this way (results in [`mod-compatibility.md`](mod-compatibility.md)).
+- The game itself: `ilspycmd -p -o <dir> /opt/valheim-standin/valheim_Data/Managed/assembly_valheim.dll`.
+- Never commit the decompiled code.
+
 **Items, pieces, recipes**
 - A building piece supports at most **5 ingredients**: `Hud.SetupPieceInfo` indexes `m_requirementItems[resources.Length]`.
 - Pieces appear in the build menu once the station is known and every ingredient is in `m_knownMaterial` (picked up at least once). Recipes follow the same pickup rule.

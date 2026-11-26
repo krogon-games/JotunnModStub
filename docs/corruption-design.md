@@ -38,7 +38,7 @@ A Diablo/Path of Exile-style endgame layer for Valheim: farm bosses to craft map
 
 The loop runs once per biome. The essence from a biome's boss crafts maps into the corrupted version of that same biome, so beating a boss opens its biome's endgame, and moving on to the next biome's corrupted maps needs the next boss. *Changed 2026-10-28 (user): was "maps for the next biome up", which left no corrupted Meadows and gave the last boss's essence nowhere to go.* Shards and trophies from the rip feed the talisman bench and corrupted boss summons, so every piece connects.
 
-**Maps as loot (user, 2026-11-23):** the rip chest always holds one map of its biome, so each rip pays back the map it cost (one per chest, not one per player). Once the world's first rip heart is destroyed, creatures also drop a map of the biome they die in (as common as a Regal Orb, 1 in 830 per player), but only once that biome's boss is beaten. Bosses become the way to start or restart a biome's chain instead of a toll on every rip. This also removes the Queen limit: a world has 5 Infested Citadels, and as far as we know a Queen killed there doesn't come back (to confirm in game), so her essence alone could make only a handful of Mistlands maps.
+**Maps as loot (user, 2026-11-23):** the rip's end loot always includes one map of its biome (a chest until the personal-loot round; the heart spills it since 2026-11-26, dealt to one of the players), so each rip pays back the map it cost (one per rip, not one per player). Once the world's first rip heart is destroyed, creatures also drop a map of the biome they die in (as common as a Regal Orb, 1 in 830 per player), but only once that biome's boss is beaten. Bosses become the way to start or restart a biome's chain instead of a toll on every rip. This also removes the Queen limit: a world has 5 Infested Citadels, and as far as we know a Queen killed there doesn't come back (to confirm in game), so her essence alone could make only a handful of Mistlands maps.
 
 ## Corruption shards
 
@@ -51,7 +51,7 @@ The shard is the mod's currency. It unlocks the map bench, is an ingredient in e
 | 1-star and 2-star creatures | Low chance, higher for 2-star | Rewards normal play; gives players their first shard without a map |
 | Every boss, first kill | Guaranteed, 1–3 shards | Makes sure the loop can start after the first boss |
 | Every boss, every kill | Guaranteed, 1 per player nearby, on top (user, 2026-11-23) | Makes boss kills worth it; also starts the loop in a world whose bosses died before the mod |
-| Rip waves and rip chests | Main source | Keeps players running maps |
+| Rip waves and what the heart spills (was: rip chests, until the personal-loot round, 2026-11-26) | Main source | Keeps players running maps |
 | Vanilla dungeon chests (crypts, burial chambers) | 1 in 20 chests, 1 shard (user, 2026-11-23; built) | Optional; adds a reason to revisit dungeons |
 
 ### Uses
@@ -108,7 +108,7 @@ All three must have been picked up before the recipe appears, which is vanilla b
 
 - Stackable? No. Each map is a single item so affixes can live on it.
 - Named after its biome: "Meadows map" … "Deep North map" (user, 2026-11-23: "corrupted" maps come with the map tiers).
-- Comes from the Riftforge recipe, the rip chest (one, always) and creatures (once a rip is cleared and the biome's boss beaten).
+- Comes from the Riftforge recipe, the rip heart's loot (one, always; was the rip chest until 2026-11-26) and creatures (once a rip is cleared and the biome's boss beaten).
 - Consumed on use. Kept in the Maps tab (built 2026-10-29, see [Inventory and equipment slots](#inventory-and-equipment-slots)); before that, the normal inventory (1 per slot).
 - Tooltip shows target biome, tier, and any rolled affixes.
 - Teleportable through portals (it's the key to the content, not a resource).
@@ -138,14 +138,14 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 - Waves come from the mod's own wave spawner, driven by the rip's heart, with the map's biome creatures and a raid-style on-screen message. *Changed 2026-10-28: was the vanilla raid system, which runs one raid at a time for the whole world.*
 - Spawns are **maddened**: a status effect that boosts damage and speed, disables fleeing, and ignores faction rules so creatures fight each other too.
 - Star level is pushed by map tier (see [Map affixes](#map-affixes-and-tiers)).
-- A rip chest or drop at the end holds the guaranteed loot: its vanilla loot, 1–3 shards, one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
+- *Since the personal-loot round (2026-11-26, built, untested) there is no chest: see End loot below.* The end loot holds the guaranteed loot: its vanilla loot, 1–3 shards, one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
 
 *Built 2026-10-28 (step B), from the game data and the user's answers:*
 - **Waves are the biome boss's army:** the game's own raid(s) that stop once that boss is defeated (Eikthyr → army_eikthyr … Kall Fimbulbringer → army_elakingar and army_jotuns), with their own creatures, counts, intervals, chances and group sizes. They start when a player comes within the raid's range (96 m), with the raid's own start message, and keep coming **while the heart stands**.
 - When the waves start, every creature already within that range is **maddened** and hunts the players.
 - **Maddened:** damage from Dvergr power (the game's creature buff, ×1.2), speed from the Tonic of Ratatosk (+15%), no fleeing, enemies of everything; **charms don't repel them** (user).
 - **Stars:** at least 1 (user, 2026-10-29: waves weren't challenging enough), up to 2 (tier 1); the second rolls with the game's own level-up chance.
-- **End loot:** destroying the heart leaves one of the biome's own vanilla chests (weighted by how often each appears there; `Corruption/Data/rip_loot.csv`) with 1–3 corruption shards added (user). Rip creatures drop shards at **twice** the normal starred chances (user).
+- **End loot:** destroying the heart leaves one of the biome's own vanilla chests (weighted by how often each appears there; `Corruption/Data/rip_loot.csv`) with 1–3 corruption shards added (user). **Changed 2026-11-26 (Krogon, decisions 6 and 9 of the personal-loot round, built, untested): there is no chest.** Krogon: "We should make a change to the heart and chest mechanic. There should be no chest at all. And all loot should spill on killing the heart. Make all loot divided amongst the amount of players present. If an odd number rolls, someone may miss out and that’s fine." The heart spills the same loot on the ground around it. Each player near it (100 m) keeps their own orb roll and Magic/Rare roll, locked to them for 60 s; only the shared part (the biome chest's vanilla loot, the 1–3 shards, the map) is divided. The way it is divided is Claude's reading of decision 6, to confirm in the play-test: one item at a time in turn, players in a random order, the turn carrying on between kinds, so 10 coins for 3 players go 4/3/3 and the leftovers rotate; each player's share is theirs for the first 60 s. [`FEATURES.md`](../FEATURES.md) → Personal loot and loot beams has the detail. Rip creatures drop shards at **twice** the normal starred chances (user).
 
 ### Getting home
 
@@ -325,7 +325,7 @@ Corrupted loot is what keeps people running maps and farming bosses. Two layers:
 ### Corrupted gear
 
 - **Corrupted gear only comes from using a shard** *(user, 2026-10-28)*: nothing drops already corrupted. The first draft's "vanilla gear dropping with a corrupted tint and 1–2 bonus affixes" is dropped; it predates the rarity model.
-- Rip chests and corrupted bosses drop ordinary rolled loot (Normal, Magic, Rare, Unique); map tier sets the affix count and the rarity floor.
+- Rip hearts (formerly rip chests) and corrupted bosses drop ordinary rolled loot (Normal, Magic, Rare, Unique); map tier sets the affix count and the rarity floor.
 - **Corrupting at the Riftforge** *(decided by the user 2026-10-28)*: put a Normal, Magic or Rare item and 1 Corruption shard in the bench. One of three things happens:
 
   | Outcome | Chance | Result |
@@ -369,7 +369,7 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 | 1-star creature | 1.25x base |
 | 2-star creature | 1.5x base |
 | Vanilla dungeon chest | 1.5x base |
-| Rip creature or rip chest | 1.25x at tier 1, rising to 2x at tier 4 |
+| Rip creature or rip heart loot (formerly rip chest) | 1.25x at tier 1, rising to 2x at tier 4 |
 | 3-star creature (rips only) | 2x base |
 | Corrupted boss | 3x base, on top of its boss unique roll |
 
@@ -391,10 +391,20 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 
 ### Drops
 
-- **Personal loot.** Every player near a kill gets their own roll for rare and unique items, so nobody fights over drops. Magic and Rare roll separately, but a kill that succeeds on both drops only the Rare; uniques roll on top (decided 2026-10-27). Drops are tagged to their owner: only that player can pick them up for the first 60 seconds, then anyone can. Players can still drop or trade items to each other freely.
+- **Personal loot.** Every player near a kill gets their own roll for rare and unique items, so nobody fights over drops. Magic and Rare roll separately, but a kill that succeeds on both drops only the Rare; uniques roll on top (decided 2026-10-27). Drops are tagged to their owner: only that player can pick them up for the first 60 seconds, then anyone can. Players can still drop or trade items to each other freely. **Decided and built 2026-11-26 (Krogon, personal-loot round, untested in game):** 
+  - **Invisible to others** (decision 2, over "everyone sees it"): during the 60 seconds other players see nothing, no item, no beam, no hover; then it appears for everyone. **No hover text** (decision 4): "Nothing. Since drops are not visible to the player they dropped for. Once 60 seconds is up, it doesn’t matter, everyone sees it. No owner name needed to display since loot is unlocked."
+  - **Logging out or dying changes nothing** (decision 3): the 60 s run on the network's clock; a relog within the minute keeps the lock (it is on the character's id).
+  - **What is personal** (decision 5, all three offered): kill loot (each nearby player's Magic/Rare gear, orbs, maps, the corrupted boss's guaranteed orb), each player's boss shard, and orbs from Hoardfinder's and of Hidden Riches (locked to whoever swung the tool). Rolled once for everyone, so shared: vanilla loot, boss essences, the first-kill and corrupted-boss bonus shards, creature shards, dungeon chests.
+  - **Items players drop themselves are never locked** and get no beam.
+  - **The rip heart's loot** is divided between the players, each keeping their own orb and gear rolls (decisions 6 and 9; see Rips → End loot).
 - **Magic and rare drops** *(decided 2026-10-27)*: monsters drop randomly rolled items at low rates, starting at **Magic 1 in 50** and **Rare 1 in 100** per kill. Uniques and later rarities have their own separate chances. All chances live in easily tuned data tables ([`Corruption/Data/`](../Corruption/Data/README.md)), and other systems multiply them (corruption zones, scars, terror zones, map tiers). Workbench and forge crafting only makes Normal (vanilla) items; orbs are the path to better ones.
 - **Which item drops** *(user, 2026-10-29)*: a random player-craftable weapon, shield, armour piece, cape (backpacks included), trinket or pickaxe from the creature's biome, with a 20% chance of one from the biome just before it; at upgrade level 1. Magic items get 1 affix twice as often as 2, Rares 3 twice as often as 4. Numbers: [`loot_rules.csv`](../Corruption/Data/loot_rules.csv); item list: [`loot_bases.csv`](../Corruption/Data/loot_bases.csv), built from the game data.
-- **Loot beams.** Rare items get a yellow light pillar and uniques an orange-gold one, visible from about 50 m with a distinct sound. At 1 unique per 20 hours, nobody should ever lose one in the grass.
+- **Loot beams.** Rare items get a yellow light pillar and uniques an orange-gold one, visible from about 50 m with a distinct sound. At 1 unique per 20 hours, nobody should ever lose one in the grass. **Decided and built 2026-11-26 (Krogon, personal-loot round, untested in game):**
+  - **On every Corruption drop** (decision 7; Krogon: "All orbs, shards, and magic, rare and unique loot"); vanilla items and essences get none. A beam is hidden along with a drop that is locked to someone else.
+  - **Colours** (decision 10): Magic gear blue, Rare yellow, unique orange-gold, every orb white, shards red, maps green.
+  - **Size by rarity** (decision 11): short and faint (2.5 m, no light) for Magic gear, shards and the common and uncommon orbs (Transmutation, Augmentation, Alchemy, Regal, Annulment); tall and bright (10 m, a small light, seen from about 50 m) for Rare gear, uniques, maps and the rare orbs (Exalted, Divine, Chance, Mirror). The sizes are first guesses.
+  - **Sound** (decisions 8 and 12): played for tall-beam drops only, to the owner only; common drops stay silent. Krogon picks the sound by ear in the play-test with `co_personal`; Rare and unique can get different ones. A placeholder (the game's skill-level-up sound) plays until then.
+  - Live data: [`Corruption/Data/loot_beams.csv`](../Corruption/Data/loot_beams.csv) and [`personal_loot.csv`](../Corruption/Data/personal_loot.csv).
 
 ## Currency orbs
 
@@ -424,7 +434,7 @@ Path of Exile-style orbs let players craft their own gear instead of relying onl
 | Jeweller's Orb | Adds a socket, up to a set maximum. Greyed out (can't be used) until sockets and runewords are designed | Doesn't drop until sockets exist |
 | Mirror of Kalandra | Makes an exact copy, corrupted items included; the copy can never be modified or mirrored; the original is unchanged | Extremely rare |
 
-**Where orbs drop (user, 2026-11-19, #33):** every orb can drop from all content: any creature kill (each nearby player rolls for themselves, as for gear; a boss is one kill), vanilla dungeon and location chests, the chest a rip heart leaves (once per player near the rip), and gathering with the Hoardfinder's and of Hidden Riches affixes (a 1–5% chance per harvest of one orb, mostly common ones). Stars, rips, corrupted bosses and dungeon chests raise the chance. The rates follow Path of Exile's order, squeezed between our Magic rate (1 in 50 kills) and Unique rate (1 in 2,500); the Divine Orb is then made rarer, 1 in 10,000 ("super strong orbs and should be quite rare"), and the Orb of Chance rarer than Alchemy for good, 1 in 2,000 (2026-11-20: until uniques exist it gives a Rare like Alchemy, and later its unique chance must not outpace unique drops). **Replaces** the earlier sources (Transmutation from rip waves and chests; Exalted only from tier 3–4 rips and corrupted bosses; the Mirror only from tier 4 rips and a corrupted Queen or Fader): "All orbs should have a chance to drop from all content." Live numbers: [`Corruption/Data/orbs.csv`](../Corruption/Data/orbs.csv) and the `orb` column of [`drop_modifiers.csv`](../Corruption/Data/drop_modifiers.csv).
+**Where orbs drop (user, 2026-11-19, #33):** every orb can drop from all content: any creature kill (each nearby player rolls for themselves, as for gear; a boss is one kill), vanilla dungeon and location chests, the loot a rip heart spills (once per player near the rip; a chest until 2026-11-26), and gathering with the Hoardfinder's and of Hidden Riches affixes (a 1–5% chance per harvest of one orb, mostly common ones). Stars, rips, corrupted bosses and dungeon chests raise the chance. The rates follow Path of Exile's order, squeezed between our Magic rate (1 in 50 kills) and Unique rate (1 in 2,500); the Divine Orb is then made rarer, 1 in 10,000 ("super strong orbs and should be quite rare"), and the Orb of Chance rarer than Alchemy for good, 1 in 2,000 (2026-11-20: until uniques exist it gives a Rare like Alchemy, and later its unique chance must not outpace unique drops). **Replaces** the earlier sources (Transmutation from rip waves and chests; Exalted only from tier 3–4 rips and corrupted bosses; the Mirror only from tier 4 rips and a corrupted Queen or Fader): "All orbs should have a chance to drop from all content." Live numbers: [`Corruption/Data/orbs.csv`](../Corruption/Data/orbs.csv) and the `orb` column of [`drop_modifiers.csv`](../Corruption/Data/drop_modifiers.csv).
 
 ### Rules
 
