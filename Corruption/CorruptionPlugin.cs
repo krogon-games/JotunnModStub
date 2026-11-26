@@ -35,6 +35,7 @@ namespace Corruption
             Safe.Run("add talisman slots", TalismanSlots.Register);
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
             Safe.Run("read the loot tables", Loot.Load);
+            Safe.Run("read the map tier tables", MapTiers.Load);
             Safe.Run("read the personal loot tables", PersonalLoot.Load);
             Safe.Run("add the co_loot command", Loot.Register);
             Safe.Run("add the co_personal command", PersonalLoot.RegisterCommand);
