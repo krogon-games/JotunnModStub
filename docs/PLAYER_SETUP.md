@@ -6,7 +6,7 @@ For everyone joining our Valheim server. Takes about 10 minutes. You only do thi
 
 | Mod | What it does | Where from |
 |---|---|---|
-| **Corruption** | Our endgame mod: Magic and Rare gear, corruption shards and currency orbs, the Riftforge, maps and rips, corrupted bosses, creature talismans, six inventory tabs | Krogon sends you `Corruption.dll` |
+| **Corruption** | Our endgame mod: Magic and Rare gear, corruption shards and currency orbs (each player's drops are their own for a minute, with loot beams), the Riftforge, maps and rips, corrupted bosses, creature talismans, six inventory tabs | Krogon sends you `Corruption.dll` |
 | **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes, the class eitr pool; choose your class at the Orlog stone in the spawn area; the Amazon's passives, bow skills and Inner Sight work (her spear skills are still to come). **With a class, right click fires your chosen skill and block needs a key of its own** (see *Orlog's keys* below) | Krogon sends you `Orlog.dll` |
 | **CraftingOverhaul** | Our crafting mod: recipe search, collapsible categories, crafting and building from nearby chests | Krogon sends you `CraftingOverhaul.dll` |
 | [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) | Equipment slots and quick slots. **Talismans go in its slots**, so you need it | Thunderstore |

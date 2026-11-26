@@ -4,7 +4,9 @@
 
 ## Stage
 
-**Ready to merge.**
+**Merged** (PR #88, 2026-11-26).
+
+**Coordinator update (2026-11-26):** merged into `master` as **PR #88** on Krogon's word ("Merge branch claude/personal-loot-beams-q5glnk into master using a pull request"). `master` was already in the branch (no conflicts). The coordinator raised **Corruption to 0.10.0** (on this branch, the PR's last commit; Corruption's README feature list, config table and changelog brought up to date with it), copied decisions 1–16 into `docs/DECISIONS.md`, put the new wording of the rip and boss steps on the phone page and in `PLAYTEST.md`, and #35 is closed (by the PR). With the bump, a 0.9.0 game can no longer join, so the "older game sees locked drops" limit below is gone.
 
 ## Purpose
 
@@ -21,7 +23,7 @@ Passed Krogon's solo play-tests on 1.0.30 (2026-11-26, clean log; "playtest done
 
 - **Not tried with two players** (Session 2, 2l): hiding on another game, ownership handover, the heart's dealing, a dedicated server.
 - Three Opus reviews, all fixes in; the game methods relied on are confirmed on 1.0.30 by Krogon's log.
-- Limits: each game reveals a drop by its own network clock (±1 s); a dedicated server's locks pause while nobody is on; sleeping ends running locks; an older 0.9.0 game joins without a warning but sees locked drops.
+- Limits: each game reveals a drop by its own network clock (±1 s); a dedicated server's locks pause while nobody is on; sleeping ends running locks; ~~an older 0.9.0 game joins without a warning but sees locked drops~~ (gone with the 0.10.0 bump: Jötunn turns 0.9.0 away).
 
 ## Decisions
 
