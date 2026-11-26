@@ -30,6 +30,7 @@ Nothing built yet. Read for the round: the design, the handoffs of the rips, orb
 - No version changes; no edits to `STATUS.md` or `docs/DECISIONS.md`. With time to spare, tell him what related rips work could fit (e.g. R5, #40) "before starting anything else. Don't start a second area on your own."
 
 1. **This round and branch** (2026-11-26): "Yes" to #31 (bring the table up to date, approve it one question at a time, then build tiers 1–2 with the affixes) and #84 (the explored-land fallback), on `claude/festive-gates-79y1yr` (the rips area's old `claude/rips-bosses` is merged and finished); checklist `docs/playtests/claude-festive-gates-79y1yr.md` and the phone page.
+2. **A smaller round** (2026-11-26): "Option a. Keep round smaller." This round builds the tiers (tier and affixes on the map, sent with the rip request, setting waves, stars and shards), the map tooltip, raising a map's tier and rolling its affixes in the Forge tab, the dev commands, the explored-land fallback (#84) and the four affixes that change the creatures: **Swarming, Hardened, Rabid, Smouldering**. The three weather affixes (**Frostbitten, Drowned, Choking**) wait for the next round, after the fresh 1.0.30 `co_dump` (#86) also records what each weather does and the game's smoke damage. Over "all seven now".
 
 ## Playtest
 
