@@ -18,7 +18,7 @@ namespace Corruption
     {
         public const string PluginGUID = "com.krogongames.corruption";
         public const string PluginName = "Corruption";
-        public const string PluginVersion = "0.8.0";
+        public const string PluginVersion = "0.9.0";
 
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;

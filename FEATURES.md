@@ -465,12 +465,14 @@ Also reads EquipmentAndQuickSlots' public API (`GetSlotIdsJson`, `GetSlotInfoJso
 
 *Corruption plugin, design phase 1.*
 
-**What it does in-game:** Adds the **Corruption shard**, the corruption mod's currency: a deep-red gem, styled after the Path of Exile/Diablo shards. It stacks to 50 and can go through portals. By default it uses the Bloodstone model with a red tint; the look is configurable. Phase 1 drop sources:
+**What it does in-game:** Adds the **Corruption shard**, the corruption mod's currency: a deep-red gem, styled after the Path of Exile/Diablo shards. It stacks to 50 and can go through portals. By default it uses the Bloodstone model with a red tint; the look is configurable. Drop sources:
 - 1-star creatures: 2% chance of a shard.
 - 2-star creatures: 5% chance.
-- Bosses: 1–3 shards the first time each boss is defeated in a world. The check is the boss's own defeat key, so it also covers the Deep North boss's final phase.
+- Bosses: 1–3 shards the first time each boss is defeated in a world. The check is the boss's own defeat key, so it also covers the Deep North boss's final phase. **Every boss kill** also gives each nearby player 1 shard (since 2026-11-23, `BossShardsPerPlayer`); corrupted bosses give 3–5 ([Corrupted bosses](#corrupted-bosses-core)).
+- Vanilla dungeon and location chests: 1 in 20 holds a shard, rolled once when the game fills it (since 2026-11-23, `DungeonChestShardChance`).
+- Rips: wave creatures at twice the starred chances, and the rip chest ([Rip waves and loot](#rip-waves-and-loot-step-b)).
 
-Tamed creatures never drop shards, so a pen of starred wolves can't be farmed. Rip waves, rip chests and vanilla dungeon chests (design doc) come in later phases.
+Tamed creatures never drop shards, so a pen of starred wolves can't be farmed.
 
 **How to use it:** Kill starred creatures and bosses. Shards are an ingredient of the [Riftforge](#riftforge) for now, and later of maps and corrupted offerings.
 
@@ -502,7 +504,7 @@ The drop rules are unit-tested (`ShardRulesTests`).
 - The user found dropped shards easy to miss, so they now cast a small red glow on the ground (`ShardGlowIntensity`, `ShardGlowRange`). Glow untested in-game.
 - Play-test 2026-10-26: the mod loads and `spawn CorruptionShard` works (name, description and weight correct). The first version, a crystal with a purple tint, came out pale blue: the tint only changed the main colour, not the crystal's glow colours. The tint now changes every colour property, and the shard uses the naturally red Bloodstone model. Awaiting re-test. Drops from creatures and bosses are untested.
 - The icon is rendered at startup from the tinted model. If that fails, the vanilla crystal icon is used and a warning is logged.
-- A boss killed before installing the mod counts as already defeated, so it won't drop its first-kill shards unless `BossShardsFirstKillOnly` is turned off. Since 2026-11-23 every boss kill still gives each nearby player 1 shard (`BossShardsPerPlayer`), so an older world can start the loop. Untested in-game, like the dungeon chest shards.
+- A boss killed before installing the mod counts as already defeated, so it won't drop its first-kill shards unless `BossShardsFirstKillOnly` is turned off. Since 2026-11-23 every boss kill still gives each nearby player 1 shard (`BossShardsPerPlayer`), so an older world can start the loop. Boss shards per player and the dungeon chest shards passed Krogon's solo play-test on 2026-11-26 (Valheim 1.0.30); not tried with two players.
 
 **Vanilla behaviour overridden (Harmony patch targets):**
 

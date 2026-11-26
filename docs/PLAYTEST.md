@@ -160,7 +160,7 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 
 **What it can find:** everything so far was played in single player, where the "server" is your own game. On the dedicated server the mods load on a machine with no player and no screen, and the rip and Orlog stone requests really travel to the server and back ([`ARCHITECTURE.md`](ARCHITECTURE.md) → Server messages, Dedicated-server review). **What it can't find:** anything that needs a second player's game (who runs a creature or chest, what others see, loot and XP per player). Those stay in Session 2.
 
-1. **The mods load on the server** (Part 1): start the server. Its own log has the three lines `Corruption 0.8.0 loaded (build: master <commit>)`, `Orlog 0.8.0 loaded …` and `CraftingOverhaul 0.5.0 loaded …`, and no red errors from our mods.
+1. **The mods load on the server** (Part 1): start the server. Its own log has the three lines `Corruption 0.9.0 loaded (build: master <commit>)`, `Orlog 0.9.0 loaded …` and `CraftingOverhaul 0.6.0 loaded …`, and no red errors from our mods.
 2. **Joining** (Part 1): **Start modded** in r2modman and join. Expect: no "incompatible version" message; your own `BepInEx/LogOutput.log` has the same three lines with the same commit; F5 shows no red errors.
 3. **`devcommands`** (Session 2's open question): type `devcommands`, then `spawn Boar`, `orlog_info` and `orlog_level 10`. Do they work on the server? If not, note what the console says: the evening's script then needs real items brought in from play.
 4. **The server's settings win** (Part 5, step 1): set `[2 - Nearby Containers] Enabled = false` in the server's `com.krogongames.craftingoverhaul.cfg` and restart it; try crafting from a chest. Expect: you can't. Set it back.
@@ -177,7 +177,7 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 
 **Before B joins (Krogon, about 5 minutes; do Session 2-solo first, so you know the server works and whether `devcommands` does):** both install the same release build ([#25](https://github.com/krogon-games/JotunnModStub/issues/25); [`PLAYER_SETUP.md`](PLAYER_SETUP.md)). At the base: a workbench with one chest beside it holding **exactly 1 Wood and 1 Resin** (one torch's worth, `data/game-dump-1.0.21/recipes.csv`) and nothing else needed nearby. Bring a Greydwarf charm, a Corrupted wishbone and a Meadows map (`spawn CorruptionTalisman_Greydwarf`, `spawn CorruptedWishbone`, `spawn CorruptionMap_Meadows`). A is an Amazon (`orlog_class Amazon`, `orlog_level 40`, then `orlog_skill FreezingArrow 1`, `orlog_skill ShackleShot 1`, `orlog_skill ImmolationArrow 1`) with the three on the skill slots, a bow and arrows. Type `god` while fighting if you like.
 
-1. **Build check** (Part 1; both, 2 min): B starts with r2modman's **Start modded** and joins → no "incompatible version" message. Both open `BepInEx/LogOutput.log` → the same three lines from the same commit: `Corruption 0.8.0`, `Orlog 0.8.0`, `CraftingOverhaul 0.5.0`. F5: no red errors.
+1. **Build check** (Part 1; both, 2 min): B starts with r2modman's **Start modded** and joins → no "incompatible version" message. Both open `BepInEx/LogOutput.log` → the same three lines from the same commit: `Corruption 0.9.0`, `Orlog 0.9.0`, `CraftingOverhaul 0.6.0`. F5: no red errors.
 2. **One chest, two crafters** (2a steps 4 and 7, 2e E; 4 min): **A** opens the chest and keeps it open; **B** tries to craft a torch at the workbench → B can't while A has it open. A closes it. Count down from three and **both** craft a torch at the same moment → only one of you gets it; the other sees "A chest you need is in use by someone else…" or simply can't; the chest is empty, nothing doubled. Put 1 Wood and 1 Resin back and try twice more.
 3. **Shards and your own screen** (2b; 2 min): **A** drops a shard; **B** picks it up → it goes to B's Currencies tab, A's has one fewer. Standing side by side, each opens the inventory → only yourself in the character picture; take a hit → only your own health bar moves.
 4. **Loot and XP for both** (2c step 3, 2d, 2e F; 4 min): B types `orlog_info` and notes the level; A is level 40. Together, kill `spawn Boar 10 2` twice → both get "+N XP" on each kill, B the bigger share; about twice the Magic and Rare drops one player gets alone; no kill drops twice. Tell Claude roughly how many items dropped.
@@ -206,9 +206,9 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 
 1. **Each player:** start with r2modman's **Start modded** and join the server. Expect: no "incompatible version" message.
 2. **Each player and Krogon (also the server's own log):** open `BepInEx/LogOutput.log` and find the three lines. Expect, the **same** on every machine:
-   - `Corruption 0.8.0 loaded (build: master <commit>)`
-   - `Orlog 0.8.0 loaded (build: master <commit>)`, the same commit
-   - `CraftingOverhaul 0.5.0 loaded (build: master <commit>)`, the same commit
+   - `Corruption 0.9.0 loaded (build: master <commit>)`
+   - `Orlog 0.9.0 loaded (build: master <commit>)`, the same commit
+   - `CraftingOverhaul 0.6.0 loaded (build: master <commit>)`, the same commit
 3. **Each player:** F5, no red errors.
 
 ### Part 2: quick checks together at the base (about 45 minutes)
