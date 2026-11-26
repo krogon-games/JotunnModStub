@@ -32,7 +32,7 @@
 **Someone else's drop**
 
 6. [ ] (`pl-6`) `co_personal drop rare other` → the console says it dropped for "the test owner", but **you see nothing**: no item, no beam. `co_personal list` → one line: owner "the test owner", about 60 s of lock left, "your game HIDES it", 1–2 m away.
-7. [ ] (`pl-7`) Stand right where it landed and wait a few seconds → auto-pickup doesn't take it, pressing E there does nothing, and no hover text shows up.
+7. [ ] (`pl-7`) Stand right where it landed and wait a few seconds → auto-pickup doesn't take it, pressing E there does nothing, no hover text shows up, and your crosshair still finds things behind it (drop a stone just past the spot first and aim at it).
 8. [ ] (`pl-8`) `co_personal drop orb exalted other 10` (10 seconds of lock) → nothing to see; after about 10 seconds a **tall white beam** appears with the orb (no sound: it isn't yours), and now you can pick it up.
 9. [ ] (`pl-9`) **Backpack:** wear an AdventureBackpacks backpack that already holds a Transmutation Orb (its auto-store then wants more). `co_personal drop orb transmutation other 15` and stand on the spot → nothing for 15 s. When it appears, auto-pickup takes it → it ends up where a Transmutation Orb from a kill would go with that backpack on (compare with `co_personal drop orb transmutation`).
 10. [ ] (`pl-10`) **Relog:** `co_personal drop rare other` and `co_personal drop magic`, then log out to the menu and back in within the minute → the Magic item is still there with its blue beam (yours); the other one is still hidden until its minute is up (`co_personal list`), then appears.
