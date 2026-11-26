@@ -181,9 +181,16 @@ namespace Corruption.Content
                     candidates.Add(new RipRules.Placement(heart, landing));
                 }
 
-                int tier = package.ReadInt();
-                string affixText = package.ReadString();
-                bool fallback = package.ReadBool();
+                // Read only when present: a player on an older build of this round sends none (Opus review, 2026-11-26).
+                int tier = 1;
+                string affixText = "";
+                bool fallback = false;
+                if (package.GetPos() < package.Size())
+                {
+                    tier = package.ReadInt();
+                    affixText = package.ReadString();
+                    fallback = package.ReadBool();
+                }
 
                 // The tier and affixes come from a player's game: keep them inside the tables.
                 var affixIds = new List<string>();
@@ -264,8 +271,14 @@ namespace Corruption.Content
                 float landingX = package.ReadSingle();
                 float landingZ = package.ReadSingle();
                 double closeAt = package.ReadDouble();
-                int tier = package.ReadInt();
-                var affixIds = MapData.Split(package.ReadString());
+                // Read only when present: a server on an older build sends none, and the rip opens as tier 1.
+                int tier = 1;
+                var affixIds = new List<string>();
+                if (package.GetPos() < package.Size())
+                {
+                    tier = package.ReadInt();
+                    affixIds = MapData.Split(package.ReadString());
+                }
                 if (id != s_pendingId || mapItem != s_pendingMap)
                 {
                     return;
@@ -515,6 +528,11 @@ namespace Corruption.Content
                     {
                         return true;
                     }
+                    // As vanilla: the item must really be in the inventory it was used from (Opus review, 2026-11-26).
+                    if (!(__0 ?? Player.m_localPlayer.GetInventory()).ContainsItem(__1))
+                    {
+                        return true;
+                    }
                     TryOpen(Player.m_localPlayer, map, __1);
                     return false;
                 }
@@ -535,7 +553,20 @@ namespace Corruption.Content
         {
             private static void Postfix(Player __instance)
             {
-                if (!s_snapTarget.HasValue || __instance != Player.m_localPlayer || __instance.IsTeleporting())
+                if (__instance != Player.m_localPlayer)
+                {
+                    return;
+                }
+                // A map that got no answer in 15 s (a lost message, a server on another build): say so and free it.
+                if (s_pendingId != 0 && Time.time - s_pendingSince > 15f)
+                {
+                    s_pendingId = 0;
+                    s_pendingItem = null;
+                    s_pendingState = null;
+                    Jotunn.Logger.LogWarning("Rip request: no answer from the server within 15 s.");
+                    __instance.Message(MessageHud.MessageType.Center, "$corruption_rip_no_answer");
+                }
+                if (!s_snapTarget.HasValue || __instance.IsTeleporting())
                 {
                     return;
                 }

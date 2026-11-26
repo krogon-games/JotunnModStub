@@ -128,6 +128,8 @@ namespace Corruption.Rules
             private readonly float m_distance;
             private readonly float m_limit;
             private readonly Dictionary<long, List<int>> m_cells = new Dictionary<long, List<int>>();
+            /// <summary>Every cell next to (or holding) a candidate spot: one lookup rules out almost every object in the world.</summary>
+            private readonly HashSet<long> m_near = new HashSet<long>();
             private int m_alive;
 
             public PlacedScan(IList<Placement> candidates, float distance)
@@ -146,6 +148,8 @@ namespace Corruption.Rules
                     {
                         AddToCell(landing, i);
                     }
+                    AddNear(candidates[i].Heart.X, candidates[i].Heart.Z);
+                    AddNear(candidates[i].Landing.X, candidates[i].Landing.Z);
                 }
             }
 
@@ -157,6 +161,11 @@ namespace Corruption.Rules
             /// <summary>Whether a placed object at (x, z) is near a candidate that is still alive.</summary>
             public bool Touches(float x, float z)
             {
+                // The server runs this for every object in the world (Opus review, 2026-11-26): one set lookup first.
+                if (!m_near.Contains(Key(Cell(x), Cell(z))))
+                {
+                    return false;
+                }
                 return Visit(x, z, false) > 0;
             }
 
@@ -221,6 +230,18 @@ namespace Corruption.Rules
                 float dx = spot.X - x;
                 float dz = spot.Z - z;
                 return dx * dx + dz * dz < m_limit;
+            }
+
+            private void AddNear(float x, float z)
+            {
+                int cx = Cell(x), cz = Cell(z);
+                for (int dx = -1; dx <= 1; dx++)
+                {
+                    for (int dz = -1; dz <= 1; dz++)
+                    {
+                        m_near.Add(Key(cx + dx, cz + dz));
+                    }
+                }
             }
 
             private void AddToCell(long key, int index)

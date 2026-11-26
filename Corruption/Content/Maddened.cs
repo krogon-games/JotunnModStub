@@ -158,6 +158,8 @@ namespace Corruption.Content
             if (s_rabidEffect)
             {
                 // Rabid: the same two bonuses, multiplied by the affix's factor (damage 1 + f x (m - 1), speed f x s).
+                // One stronger effect for every creature whose own factor is above 1, with the table's largest factor: today
+                // only Rabid sets one. A second affix with its own factor would need an effect per factor (Opus review, 2026-11-26).
                 double factor = 1.0;
                 if (MapTiers.Loaded)
                 {

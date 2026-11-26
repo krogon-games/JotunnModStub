@@ -59,7 +59,7 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     Smouldering: a stamped creature's hit also carries the affix's share of its total damage as fire, which the game
+        ///     Smouldering: a stamped creature's hit also carries the affix's share of its combat damage as fire, which the game
         ///     turns into burning. On the attacker's game, before the hit is sent to the victim's owner. Damage-over-time hits
         ///     are skipped so burning never feeds itself; the creature never burns itself.
         ///     Priority Low: after Orlog's crit (VeryHigh), Corruption's on-hit affixes (High) and life steal (Normal), which
@@ -71,14 +71,16 @@ namespace Corruption.Content
             [HarmonyPriority(Priority.Low)]
             private static void Prefix(Character __instance, HitData hit)
             {
-                if (hit == null || !MapTiers.Loaded || HitSources.IsDamageOverTime(hit))
+                if (hit == null || !MapTiers.Loaded || hit.m_attacker.IsNone() || HitSources.IsDamageOverTime(hit))
                 {
                     return;
                 }
                 Safe.Run("add Smouldering fire", () =>
                 {
+                    // Each hit is built once, on whichever game makes it (melee and projectiles on the creature's owner, some
+                    // area hits on the victim's owner), so no owner check (Opus review, 2026-11-26).
                     var attacker = hit.GetAttacker();
-                    if (!attacker || attacker == __instance || attacker.IsPlayer() || !attacker.m_nview || !attacker.m_nview.IsOwner())
+                    if (!attacker || attacker == __instance || attacker.IsPlayer())
                     {
                         return;
                     }
@@ -90,7 +92,11 @@ namespace Corruption.Content
                     double share = RipTierRules.FireShare(MapTiers.AffixesOf(zdo));
                     if (share > 0.0)
                     {
-                        hit.m_damage.m_fire += (float)(share * hit.m_damage.GetTotalDamage());
+                        // The hit's combat damage, as life steal counts it: not its chop and pickaxe damage, which only trees,
+                        // rocks and buildings take (a goblin brute's hit would otherwise burn for twice the share).
+                        var d = hit.m_damage;
+                        float combat = d.m_blunt + d.m_slash + d.m_pierce + d.m_fire + d.m_frost + d.m_lightning + d.m_poison + d.m_spirit;
+                        hit.m_damage.m_fire += (float)(share * combat);
                     }
                 });
             }
