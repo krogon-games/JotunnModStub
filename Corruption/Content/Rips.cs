@@ -9,9 +9,10 @@ namespace Corruption.Content
 {
     /// <summary>
     ///     Opening and travelling through rips (design phase 4, step A). Using a map: the player's game samples
-    ///     unexplored spots of the map's biome from world generation, the server picks the first one away from every
-    ///     base (only it knows every bed, ward and portal) and sets the closing time, then the player's game consumes
-    ///     the map and spawns the entry rip next to the player and the heart 96-128 m from the landing spot.
+    ///     unexplored spots of the map's biome from world generation (explored land only when none is left), the
+    ///     server picks the first one away from everything a player placed (only it knows every object) and sets the
+    ///     closing time, then the player's game consumes the map and spawns the entry rip next to the player and the
+    ///     heart 96-128 m from the landing spot. The map's tier and affixes travel with the request and the reply.
     /// </summary>
     internal static class Rips
     {
@@ -33,19 +34,26 @@ namespace Corruption.Content
         private const float FlatRadius = 6f;
         // Directions tried around each heart spot for a landing spot.
         private const int LandingTries = 16;
+        // The explored-land fallback has a smaller chance per spot (explored land is mostly near buildings), so it tries more.
+        private const int FallbackSamples = 16000;
+        private const int FallbackCandidates = 80;
+
+        /// <summary>Dev command (co_rip fallback on): skip the unexplored search, as if no unexplored land were left. Not saved.</summary>
+        public static bool SkipUnexplored;
 
         private static int s_requestId;
         private static int s_pendingId;
         private static float s_pendingSince;
         private static string s_pendingMap;
+        private static ItemDrop.ItemData s_pendingItem;
+        private static MapState s_pendingState;
+        private static bool s_pendingFallback;
         private static Vector3? s_snapTarget;
-        private static List<string> s_baseMarkerPrefabs;
-        private static float s_wardRadius;
 
         // ------------------------------------------------------------------ opening
 
         /// <summary>The local player used a map: find candidate spots and ask the server to pick one.</summary>
-        public static void TryOpen(Player player, MapList.Map map)
+        public static void TryOpen(Player player, MapList.Map map, ItemDrop.ItemData mapItem)
         {
             if (!CorruptionConfig.RipsEnabled.Value)
             {
@@ -70,6 +78,7 @@ namespace Corruption.Content
             // The game's own flatness test for placing locations: height change within a radius, from world generation.
             float maxDelta = new ZoneSystem.ZoneLocation().m_maxTerrainDelta;
             var random = new System.Random();
+            bool requireUnexplored = true;
             bool Suitable(float x, float z)
             {
                 if (world.GetBiome(x, z) != biome)
@@ -86,16 +95,34 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                return !minimap || !minimap.IsExplored(new Vector3(x, h, z));
+                return !requireUnexplored || !minimap || !minimap.IsExplored(new Vector3(x, h, z));
             }
             // The heart stands 96-128 m from where players land, so they have to go and find it (user, 2026-10-29).
-            var spots = new List<RipRules.Placement>();
-            foreach (var heart in RipRules.Sample(random.NextDouble, Samples, Candidates, Suitable))
+            List<RipRules.Placement> Search(int samples, int candidates)
             {
-                var landing = RipRules.SpotAround(heart, random.NextDouble, RipRules.HeartMinDistance, RipRules.HeartMaxDistance, LandingTries, Suitable);
-                if (landing.HasValue)
+                var found = new List<RipRules.Placement>();
+                foreach (var heart in RipRules.Sample(random.NextDouble, samples, candidates, Suitable))
                 {
-                    spots.Add(new RipRules.Placement(heart, landing.Value));
+                    var landing = RipRules.SpotAround(heart, random.NextDouble, RipRules.HeartMinDistance, RipRules.HeartMaxDistance, LandingTries, Suitable);
+                    if (landing.HasValue)
+                    {
+                        found.Add(new RipRules.Placement(heart, landing.Value));
+                    }
+                }
+                return found;
+            }
+
+            // Unexplored land stays the first choice (rips round decision 12, #84); explored land only when none turns up.
+            var spots = SkipUnexplored ? new List<RipRules.Placement>() : Search(Samples, Candidates);
+            bool fallback = false;
+            if (spots.Count == 0)
+            {
+                requireUnexplored = false;
+                fallback = true;
+                spots = Search(FallbackSamples, FallbackCandidates);
+                if (spots.Count > 0)
+                {
+                    player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_fallback", map.Label));
                 }
             }
             if (spots.Count == 0)
@@ -104,9 +131,13 @@ namespace Corruption.Content
                 return;
             }
 
+            var state = MapTiers.StateOf(mapItem);
             s_pendingId = ++s_requestId;
             s_pendingSince = Time.time;
             s_pendingMap = map.Item;
+            s_pendingItem = mapItem;
+            s_pendingState = state;
+            s_pendingFallback = fallback;
             var package = new ZPackage();
             package.Write(s_pendingId);
             package.Write(map.Item);
@@ -118,6 +149,10 @@ namespace Corruption.Content
                 package.Write(spot.Landing.X);
                 package.Write(spot.Landing.Z);
             }
+            // The map's tier and affixes, after the candidates (the server checks them and echoes them in its reply).
+            package.Write(state.Tier);
+            package.Write(MapData.Join(state.Affixes));
+            package.Write(fallback);
             player.Message(MessageHud.MessageType.Center, "$corruption_rip_searching");
             ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.instance.GetServerPeerID(), RpcRequest, package);
         }
@@ -142,9 +177,58 @@ namespace Corruption.Content
                     candidates.Add(new RipRules.Placement(heart, landing));
                 }
 
-                var bases = BaseMarkers();
-                float distance = CorruptionConfig.RipBaseDistance.Value > 0f ? CorruptionConfig.RipBaseDistance.Value : s_wardRadius;
-                var spot = RipRules.FirstAwayFromBases(candidates, bases, distance);
+                int tier = package.ReadInt();
+                string affixText = package.ReadString();
+                bool fallback = package.ReadBool();
+
+                // The tier and affixes come from a player's game: keep them inside the tables.
+                var affixIds = new List<string>();
+                if (MapTiers.Loaded)
+                {
+                    tier = MapTiers.Tables.Tiers.Row(tier).Tier;
+                    foreach (string affix in MapData.Split(affixText))
+                    {
+                        if (MapTiers.Tables.Affixes.Find(affix) == null)
+                        {
+                            Jotunn.Logger.LogWarning($"Rip request: unknown map affix '{affix}' dropped.");
+                        }
+                        else if (!affixIds.Contains(affix))
+                        {
+                            affixIds.Add(affix);
+                        }
+                    }
+                }
+                else
+                {
+                    tier = 1;
+                }
+
+                // Neither the heart nor the landing spot may be near anything a player placed (rips round decision 12).
+                float distance = RipRules.BaseDistance(CorruptionConfig.RipBaseDistance.Value);
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                var scan = new RipRules.PlacedScan(candidates, distance);
+                int zdosSeen = 0, placedChecked = 0;
+                // All the world's objects (the server holds every one); sector searches changed between game versions.
+                foreach (var zdo in ZDOMan.instance.m_objectsByID.Values)
+                {
+                    zdosSeen++;
+                    var at = zdo.GetPosition();
+                    if (!scan.Touches(at.x, at.z) || zdo.GetLong(ZDOVars.s_creator, 0L) == 0L)
+                    {
+                        continue;
+                    }
+                    placedChecked++;
+                    scan.Reject(at.x, at.z);
+                    if (scan.AllRejected)
+                    {
+                        break;
+                    }
+                }
+                var spot = scan.First();
+                watch.Stop();
+                Jotunn.Logger.LogInfo($"Rip request: {candidates.Count} candidate(s){(fallback ? " (explored-land fallback)" : "")}, " +
+                                      $"{scan.Alive} away from player-placed objects ({distance:0} m); checked {placedChecked} placed object(s) near them " +
+                                      $"of {zdosSeen} in {watch.ElapsedMilliseconds} ms.");
                 double dayLength = EnvMan.instance ? EnvMan.instance.m_dayLengthSec : 1800.0;
                 double closeAt = ZNet.instance.GetTimeSeconds() + CorruptionConfig.RipOpenDays.Value * dayLength;
 
@@ -157,36 +241,10 @@ namespace Corruption.Content
                 reply.Write(spot.HasValue ? spot.Value.Landing.X : 0f);
                 reply.Write(spot.HasValue ? spot.Value.Landing.Z : 0f);
                 reply.Write(closeAt);
+                reply.Write(tier);
+                reply.Write(MapData.Join(affixIds));
                 ZRoutedRpc.instance.InvokeRoutedRPC(sender, RpcReply, reply);
             });
-        }
-
-        /// <summary>Positions of every bed, ward and portal in the world (the server holds all of them).</summary>
-        private static List<RipRules.Spot> BaseMarkers()
-        {
-            if (s_baseMarkerPrefabs == null)
-            {
-                // From the game's prefabs, so modded beds, wards and portals count too.
-                var markers = ZNetScene.instance.m_prefabs
-                    .Where(p => p && (p.GetComponent<Bed>() || p.GetComponent<PrivateArea>() || p.GetComponent<TeleportWorld>()))
-                    .ToList();
-                s_baseMarkerPrefabs = markers.Select(p => p.name).ToList();
-                // The default distance: the largest area a ward protects.
-                s_wardRadius = markers.Select(p => p.GetComponent<PrivateArea>()).Where(w => w).Select(w => w.m_radius)
-                    .DefaultIfEmpty(0f).Max();
-            }
-            var spots = new List<RipRules.Spot>();
-            var zdos = new List<ZDO>();
-            foreach (string prefab in s_baseMarkerPrefabs)
-            {
-                zdos.Clear();
-                int index = 0;
-                while (!ZDOMan.instance.GetAllZDOsWithPrefabIterative(prefab, zdos, ref index))
-                {
-                }
-                spots.AddRange(zdos.Select(z => new RipRules.Spot(z.GetPosition().x, z.GetPosition().z)));
-            }
-            return spots;
         }
 
         /// <summary>The player's game: consume the map and open the rip, or say why not.</summary>
@@ -202,11 +260,18 @@ namespace Corruption.Content
                 float landingX = package.ReadSingle();
                 float landingZ = package.ReadSingle();
                 double closeAt = package.ReadDouble();
+                int tier = package.ReadInt();
+                var affixIds = MapData.Split(package.ReadString());
                 if (id != s_pendingId || mapItem != s_pendingMap)
                 {
                     return;
                 }
                 s_pendingId = 0;
+                var usedItem = s_pendingItem;
+                var usedState = s_pendingState;
+                bool fallback = s_pendingFallback;
+                s_pendingItem = null;
+                s_pendingState = null;
 
                 var player = Player.m_localPlayer;
                 if (!player || !MapItems.ByItem.TryGetValue(mapItem, out var map))
@@ -218,10 +283,17 @@ namespace Corruption.Content
                     player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_only_bases", map.Label));
                     return;
                 }
-                // The map is in the bag or in the Maps tab.
-                var item = InventoryTabs.Find(player, i => MapItems.Find(i) == map, out Inventory inventory);
-                if (item == null)
+                // Use up the very map that was used: it is in the bag or in the Maps tab. If it has moved or is gone, another
+                // map of the same kind with the same tier, affixes and locks; if there is none, open nothing.
+                var item = usedItem;
+                var inventory = item != null ? InventoryTabs.SourceOf(player, item) : null;
+                if (inventory == null)
                 {
+                    item = InventoryTabs.Find(player, i => MapItems.Find(i) == map && SameMap(MapTiers.StateOf(i), usedState), out inventory);
+                }
+                if (item == null || inventory == null)
+                {
+                    player.Message(MessageHud.MessageType.Center, "$corruption_rip_map_gone");
                     return;
                 }
                 inventory.RemoveOneItem(item);
@@ -243,15 +315,26 @@ namespace Corruption.Content
                 entry.Set(KeyHeart, heartPosition);
                 entry.Set(KeyClose, closeMs);
                 entry.Set(KeyBiome, map.Biome);
+                MapTiers.Stamp(entry, tier, affixIds);
 
                 var heart = Spawn(Texts.RipHeartPrefab, heartPosition, Quaternion.identity);
                 // Exit travellers arrive just in front of the entry rip, back home.
                 heart.Set(KeyHome, entryPosition + forward * -2.5f);
                 heart.Set(KeyClose, closeMs);
                 heart.Set(KeyBiome, map.Biome);
+                MapTiers.Stamp(heart, tier, affixIds);
 
+                Jotunn.Logger.LogInfo($"Rip opened: {map.Biome}, {MapTiers.Describe(tier, affixIds)}, heart {heartPosition}, landing {landing}, " +
+                                      $"{(fallback ? "explored-land fallback" : "unexplored land")}.");
                 player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_opened", map.Label));
             });
+        }
+
+        /// <summary>Whether two map states are the same map for using it up: the same affixes (in order), corrupted and mirrored.</summary>
+        private static bool SameMap(MapState a, MapState b)
+        {
+            return a != null && b != null && a.Corrupted == b.Corrupted && a.Mirrored == b.Mirrored &&
+                   MapData.Join(a.Affixes) == MapData.Join(b.Affixes);
         }
 
         /// <summary>The heart was destroyed (on its owner's game): open the exit rip beside it, leading home.</summary>
@@ -276,6 +359,7 @@ namespace Corruption.Content
             exit.Set(KeyClose, heart.GetLong(KeyClose, 0L));
             exit.Set(KeyBiome, heart.GetString(KeyBiome, ""));
             exit.Set(KeyExit, true);
+            MapTiers.CopyStamp(heart, exit);
             Jotunn.Logger.LogInfo($"Rip exit opened at {spot}, leading to {home}.");
             Safe.Run("record the first destroyed rip heart", MapDrops.MarkRipCleared);
             Safe.Run("spill the rip loot", () => RipLoot.Spill(heart.GetString(KeyBiome, ""), position));
@@ -358,12 +442,18 @@ namespace Corruption.Content
             string where = rip.GetBool(KeyExit)
                 ? "$corruption_rip_home"
                 : Localization.instance.Localize("$corruption_rip_to", BiomeLabel(rip.GetString(KeyBiome, "")));
-            return Localization.instance.Localize($"$corruption_rip\n{where}\n{ClosesText(rip)}\n[<color=yellow><b>$KEY_Use</b></color>] $corruption_rip_enter");
+            return Localization.instance.Localize($"$corruption_rip\n{where}\n{TierText(rip)}\n{ClosesText(rip)}\n[<color=yellow><b>$KEY_Use</b></color>] $corruption_rip_enter");
         }
 
         public static string HeartHoverText(ZDO heart)
         {
-            return Localization.instance.Localize($"$corruption_rip_heart\n$corruption_rip_heart_hint\n{ClosesText(heart)}");
+            return Localization.instance.Localize($"$corruption_rip_heart\n$corruption_rip_heart_hint\n{TierText(heart)}\n{ClosesText(heart)}");
+        }
+
+        /// <summary>"Tier 5 · Swarming, Hardened, ..." from the object, so the whole group sees what they walk into.</summary>
+        private static string TierText(ZDO rip)
+        {
+            return MapTiers.Describe(MapTiers.TierOf(rip), MapTiers.AffixIdsOf(rip));
         }
 
         private static string ClosesText(ZDO rip)
@@ -416,7 +506,7 @@ namespace Corruption.Content
                     {
                         return true;
                     }
-                    TryOpen(Player.m_localPlayer, map);
+                    TryOpen(Player.m_localPlayer, map, __1);
                     return false;
                 }
                 catch (Exception ex)

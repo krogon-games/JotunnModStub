@@ -102,6 +102,154 @@ namespace Corruption.Rules
             return null;
         }
 
+        /// <summary>
+        ///     Rips never open (heart or landing spot) closer than this to anything a player placed (metres): the waves'
+        ///     range, the army raids' <c>m_eventRange</c> 96 in <c>data/game-dump-1.0.21/events.csv</c> (Krogon, 2026-11-26,
+        ///     rips round decision 12). The config's <c>BaseDistance</c> overrides it when above 0.
+        /// </summary>
+        public const float DefaultBaseDistance = 96f;
+
+        /// <summary>The distance to keep from placed objects: the configured one when above 0, else <see cref="DefaultBaseDistance" />.</summary>
+        public static float BaseDistance(float configured)
+        {
+            return configured > 0f ? configured : DefaultBaseDistance;
+        }
+
+        /// <summary>
+        ///     Finds which rip candidates are too close to anything a player placed, without testing every candidate
+        ///     against every placed object: candidate spots (heart and landing) go into a grid of cells one
+        ///     <c>distance</c> wide, so each placed object only meets the spots in its own and the eight neighbouring cells.
+        ///     Horizontal distance, strictly less than <c>distance</c> counts as near (as <see cref="IsAwayFromBases" />).
+        /// </summary>
+        public sealed class PlacedScan
+        {
+            private readonly IList<Placement> m_candidates;
+            private readonly bool[] m_rejected;
+            private readonly float m_distance;
+            private readonly float m_limit;
+            private readonly Dictionary<long, List<int>> m_cells = new Dictionary<long, List<int>>();
+            private int m_alive;
+
+            public PlacedScan(IList<Placement> candidates, float distance)
+            {
+                m_candidates = candidates;
+                m_distance = distance < 1f ? 1f : distance;
+                m_limit = distance * distance;
+                m_rejected = new bool[candidates.Count];
+                m_alive = candidates.Count;
+                for (int i = 0; i < candidates.Count; i++)
+                {
+                    long heart = CellKey(candidates[i].Heart.X, candidates[i].Heart.Z);
+                    long landing = CellKey(candidates[i].Landing.X, candidates[i].Landing.Z);
+                    AddToCell(heart, i);
+                    if (landing != heart)
+                    {
+                        AddToCell(landing, i);
+                    }
+                }
+            }
+
+            /// <summary>How many candidates no placed object has rejected yet.</summary>
+            public int Alive => m_alive;
+
+            public bool AllRejected => m_alive == 0;
+
+            /// <summary>Whether a placed object at (x, z) is near a candidate that is still alive.</summary>
+            public bool Touches(float x, float z)
+            {
+                return Visit(x, z, false) > 0;
+            }
+
+            /// <summary>Rejects every live candidate with its heart or landing spot near (x, z); returns how many.</summary>
+            public int Reject(float x, float z)
+            {
+                return Visit(x, z, true);
+            }
+
+            /// <summary>The first candidate (in the given order) that nothing has rejected, or null.</summary>
+            public Placement? First()
+            {
+                for (int i = 0; i < m_candidates.Count; i++)
+                {
+                    if (!m_rejected[i])
+                    {
+                        return m_candidates[i];
+                    }
+                }
+                return null;
+            }
+
+            private int Visit(float x, float z, bool reject)
+            {
+                int cx = Cell(x), cz = Cell(z);
+                int hits = 0;
+                for (int dx = -1; dx <= 1; dx++)
+                {
+                    for (int dz = -1; dz <= 1; dz++)
+                    {
+                        List<int> indices;
+                        if (!m_cells.TryGetValue(Key(cx + dx, cz + dz), out indices))
+                        {
+                            continue;
+                        }
+                        foreach (int i in indices)
+                        {
+                            if (m_rejected[i])
+                            {
+                                continue;
+                            }
+                            var c = m_candidates[i];
+                            if (!Near(c.Heart, x, z) && !Near(c.Landing, x, z))
+                            {
+                                continue;
+                            }
+                            if (!reject)
+                            {
+                                return 1;
+                            }
+                            m_rejected[i] = true;
+                            m_alive--;
+                            hits++;
+                        }
+                    }
+                }
+                return hits;
+            }
+
+            private bool Near(Spot spot, float x, float z)
+            {
+                float dx = spot.X - x;
+                float dz = spot.Z - z;
+                return dx * dx + dz * dz < m_limit;
+            }
+
+            private void AddToCell(long key, int index)
+            {
+                List<int> list;
+                if (!m_cells.TryGetValue(key, out list))
+                {
+                    list = new List<int>();
+                    m_cells[key] = list;
+                }
+                list.Add(index);
+            }
+
+            private int Cell(float v)
+            {
+                return (int)Math.Floor(v / m_distance);
+            }
+
+            private long CellKey(float x, float z)
+            {
+                return Key(Cell(x), Cell(z));
+            }
+
+            private static long Key(int cx, int cz)
+            {
+                return ((long)cx << 32) ^ (uint)cz;
+            }
+        }
+
         public static bool IsAwayFromBases(Spot spot, IList<Spot> bases, float distance)
         {
             float limit = distance * distance;

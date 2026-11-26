@@ -101,9 +101,12 @@ namespace Corruption.Content
         ///     Spawns one creature of a raid entry, tagged (<paramref name="tagKey" /> = <paramref name="tagValue" /> on
         ///     its ZDO) so its spawner can count it, maddened, with <paramref name="minStars" /> to <paramref name="maxStars" />
         ///     stars rolled as vanilla rolls them (SpawnSystem.Spawn). Returns the creature, or null for non-creatures
-        ///     (e.g. the Ashlands army's charred spawner stones).
+        ///     (e.g. the Ashlands army's charred spawner stones). Rip waves also pass the heart's ZDO
+        ///     (<paramref name="stampFrom" />: the creature gets the rip's tier and affixes) and the tier's chance of a
+        ///     guaranteed 2-star (never above <paramref name="maxStars" />); corrupted-boss summons pass neither.
         /// </summary>
-        public static Character Spawn(SpawnSystem.SpawnData entry, Vector3 point, string tagKey, string tagValue, int minStars, int maxStars)
+        public static Character Spawn(SpawnSystem.SpawnData entry, Vector3 point, string tagKey, string tagValue, int minStars, int maxStars,
+            ZDO stampFrom = null, double twoStarPercent = 0)
         {
             var go = Object.Instantiate(entry.m_prefab, point, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
             var zdo = go.GetComponent<ZNetView>()?.GetZDO();
@@ -133,11 +136,19 @@ namespace Corruption.Content
             {
                 level++;
             }
+            if (RipTierRules.IsGuaranteedTwoStar(twoStarPercent, Random.value))
+            {
+                level = Mathf.Max(level, Mathf.Min(3, maxStars + 1));   // 2 stars = level 3; 3-star creatures don't exist yet
+            }
             if (level > 1)
             {
                 character.SetLevel(level);
             }
-            Maddened.Madden(character);
+            Maddened.Madden(character);   // claims ownership (we spawned it, so it is ours)
+            if (stampFrom != null && zdo != null)
+            {
+                MapTiers.CopyStamp(stampFrom, zdo);
+            }
             return character;
         }
 

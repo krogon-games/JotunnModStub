@@ -92,10 +92,13 @@ namespace Corruption.Content
                     {
                         sources.Add("star_" + Mathf.Min(stars, 3));
                     }
-                    // Maps have no tiers yet, so every rip counts as tier 1.
+                    // A rip creature's drop rates are its tier's (read from its own stamp); an unstamped maddened one
+                    // (a corrupted boss's summon, a rip opened before tiers existed) counts as tier 1.
                     if (Maddened.IsMaddened(character))
                     {
-                        sources.Add("rip_tier_1");
+                        var zdo = character.m_nview && character.m_nview.IsValid() ? character.m_nview.GetZDO() : null;
+                        var row = MapTiers.Loaded && MapTiers.IsStamped(zdo) ? MapTiers.RowOf(zdo) : null;
+                        sources.AddRange(row != null ? RipTierRules.DropSources(row) : new List<string> { "rip_tier_1" });
                     }
                     bool corruptedBoss = character.IsBoss() && CorruptedBosses.IsCorrupted(character);
                     if (corruptedBoss)
