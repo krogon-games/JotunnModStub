@@ -120,9 +120,9 @@ namespace Corruption
                           "by this and its spawn interval divided by it. 1 = the vanilla raid. Default 2 (user, after play-testing).",
                     new AcceptableValueRange<float>(1f, 10f)));
             RipChestShardsMin = config.Bind(RipSection, "ChestShardsMin", 1,
-                AdminOnly("Fewest corruption shards in the chest a destroyed rip heart leaves.", new AcceptableValueRange<int>(0, 50)));
+                AdminOnly("Fewest corruption shards a destroyed rip heart spills (shared among the players near it).", new AcceptableValueRange<int>(0, 50)));
             RipChestShardsMax = config.Bind(RipSection, "ChestShardsMax", 3,
-                AdminOnly("Most corruption shards in the rip chest.", new AcceptableValueRange<int>(0, 50)));
+                AdminOnly("Most corruption shards a destroyed rip heart spills.", new AcceptableValueRange<int>(0, 50)));
             RipKillShardMultiplier = config.Bind(RipSection, "KillShardMultiplier", 2f,
                 AdminOnly("Multiplies the starred-creature shard chances for maddened (rip) creatures. 2 = twice as likely.",
                     new AcceptableValueRange<float>(0f, 20f)));

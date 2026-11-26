@@ -48,6 +48,12 @@ namespace Corruption.Rules
         /// <summary>The striker's peer, which Determined's stamina goes to (set by the owner when the message arrives).</summary>
         public long Striker;
 
+        /// <summary>
+        ///     The striker's character (profile) id, written by the striker: the orbs Hoardfinder's and of Hidden Riches drop
+        ///     are personal to that player. 0 = unknown. Not a chance, so it doesn't count for <see cref="Any" />.
+        /// </summary>
+        public long StrikerPlayer;
+
         public bool Any =>
             Odin || Bounty > 0f || WoodBounty > 0f || Stamina > 0f || Ore > 0f || Gem > 0f || MiningOrb > 0f || WoodcuttingOrb > 0f ||
             Seed > 0f || Charring > 0f;
@@ -79,6 +85,8 @@ namespace Corruption.Rules
         /// <summary>
         ///     The orb Hoardfinder's or of Hidden Riches gives when it triggers: one, picked with the orb table's odds
         ///     (<see cref="OrbDropTable.Pick" />); null if none can drop. Picked on the owner's game, where the harvest's drops spawn.
+        ///     The game may also return null after taking the orb for itself (to drop it personally to the striker): null just
+        ///     adds nothing to the list and changes no other roll.
         /// </summary>
         public Func<T> FindOrb = () => null;
 

@@ -8,7 +8,7 @@ namespace Corruption.Content
 {
     /// <summary>
     ///     Maps as loot (Krogon, 2026-11-23, decisions 18-19 and 31-32; <see cref="MapDropRules" />): one guaranteed
-    ///     map in every rip chest (<see cref="RipLoot" />), and creatures dropping a map of the biome they die in, once
+    ///     map in the loot a destroyed rip heart spills (<see cref="RipLoot" />), and creatures dropping a map of the biome they die in, once
     ///     the world's first rip heart is destroyed and that biome's boss is beaten (<see cref="LootDrops" />).
     /// </summary>
     internal static class MapDrops

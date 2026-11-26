@@ -3,7 +3,7 @@ using System;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     Maps as loot (Krogon, 2026-11-23, decisions 18-19 and 31-32): the rip chest always holds one map of the rip's
+    ///     Maps as loot (Krogon, 2026-11-23, decisions 18-19 and 31-32): the rip heart's loot always holds one map of the rip's
     ///     biome, and creatures can drop a map of the biome they die in. Monster drops start once the world's first rip
     ///     heart has been destroyed, and a biome's map drops only after that biome's boss is beaten in the world, so the
     ///     chain "each biome's maps need its boss" still holds. No game dependencies, so it is unit-tested.

@@ -8,8 +8,10 @@ using UnityEngine;
 namespace Corruption.Content
 {
     /// <summary>
-    ///     Magic and Rare drops, and currency orbs (<see cref="OrbDrops" />, 2026-11-19), from kills. Runs on the machine that simulates the creature, where vanilla drops its loot.
-    ///     Personal loot (design): every player within the game's own "nearby players" range (the range it counts
+    ///     Magic and Rare drops, maps and currency orbs (<see cref="OrbDrops" />, 2026-11-19), from kills, and each nearby
+    ///     player's boss shards (<see cref="ShardDrops.DropBossShards" />). Runs on the machine that simulates the creature, where vanilla drops its loot.
+    ///     Personal loot (design; <see cref="PersonalLoot" />): the i-th roll belongs to the i-th nearby player, so only they see and take
+    ///     that drop for the first seconds, and every drop gets its loot beam. Every player within the game's own "nearby players" range (the range it counts
     ///     players in to scale creature difficulty, <c>Game.m_difficultyScaleRange</c>) rolls separately.
     ///     Both of the game's death paths count: drops at once, and drops handed to the ragdoll (which turns the
     ///     creature's own drops off first); see <see cref="DeathLoot" />.
@@ -60,10 +62,26 @@ namespace Corruption.Content
                 Safe.Run("drop Magic and Rare loot", () =>
                 {
                     var character = __instance.m_character;
-                    if (!Deaths.TakeRolls(__instance, __instance.m_dropsEnabled) || !Loot.Loaded || !CorruptionConfig.LootEnabled.Value ||
+                    if (!Deaths.TakeRolls(__instance, __instance.m_dropsEnabled) ||
                         !character || character.IsPlayer() || character.IsTamed() ||
                         // Only the creature's owner rolls (the game only calls this there; checked again in case another mod does).
                         (character.m_nview && character.m_nview.IsValid() && !character.m_nview.IsOwner()))
+                    {
+                        return;
+                    }
+
+                    Vector3 position = character.GetCenterPoint();
+                    float range = Game.instance ? Game.instance.m_difficultyScaleRange : 100f;
+                    Nearby.Clear();
+                    Player.GetPlayersInRange(position, range, Nearby);
+
+                    // Every boss kill: each nearby player's own shards. Needs no loot tables (they worked without them before).
+                    if (character.IsBoss())
+                    {
+                        Safe.Run("drop each player's boss shards", () => ShardDrops.DropBossShards(position, Nearby));
+                    }
+
+                    if (!Loot.Loaded || !CorruptionConfig.LootEnabled.Value)
                     {
                         return;
                     }
@@ -85,14 +103,13 @@ namespace Corruption.Content
                         sources.Add("corrupted_boss");
                     }
 
-                    Vector3 position = character.GetCenterPoint();
                     string biome = Loot.BiomeAt(position);
-                    float range = Game.instance ? Game.instance.m_difficultyScaleRange : 100f;
-                    Nearby.Clear();
-                    Player.GetPlayersInRange(position, range, Nearby);
                     int players = DeathLoot.RollsFor(Nearby.Count);
                     for (int i = 0; i < players; i++)
                     {
+                        // Roll i belongs to the i-th nearby player: only they see and can take it for the first seconds
+                        // (personal loot). With nobody near there is no owner and the drop is free, as before.
+                        long owner = i < Nearby.Count && Nearby[i] ? Nearby[i].GetPlayerID() : 0L;
                         // Orbs: their own roll per player, beside the gear roll (Krogon, 2026-11-19: all content; a boss is
                         // one kill). A corrupted boss gives each player one guaranteed orb instead (2026-11-23, decision 26).
                         if (corruptedBoss)
@@ -100,18 +117,18 @@ namespace Corruption.Content
                             var orb = OrbDrops.FindOne();
                             if (orb)
                             {
-                                OrbDrops.DropPrefab(orb, position);
+                                OrbDrops.DropPersonal(orb, position, owner);
                             }
                         }
                         else
                         {
-                            OrbDrops.Drop(OrbDrops.Roll(sources), position);
+                            OrbDrops.Drop(OrbDrops.Roll(sources), position, owner);
                         }
                         // A map of the biome it died in (2026-11-23, decisions 19 and 31), once the conditions are met.
                         var map = MapDrops.Roll(biome, sources);
                         if (map)
                         {
-                            OrbDrops.DropPrefab(map, position);
+                            OrbDrops.DropPersonal(map, position, owner);
                         }
                         foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
                         {
@@ -123,7 +140,7 @@ namespace Corruption.Content
                             var item = Loot.Create(rarity, biome);
                             if (item != null)
                             {
-                                Loot.Drop(item, position);
+                                PersonalLoot.Tag(Loot.Drop(item, position), owner, PersonalLoot.BeamRowFor(item));
                             }
                         }
                     }
@@ -325,13 +342,21 @@ namespace Corruption.Content
         }
     }
 
-    /// <summary>Items on the ground: the hover text shows the rolled name in its rarity colour.</summary>
+    /// <summary>Items on the ground: the hover text shows the rolled name in its rarity colour; a drop locked to someone else shows nothing.</summary>
     [HarmonyPatch(typeof(ItemDrop), nameof(ItemDrop.GetHoverText))]
     internal static class LootHoverText
     {
         private static void Postfix(ItemDrop __instance, ref string __result)
         {
             string result = __result;
+            // A drop locked to someone else shows nothing at all (and no owner or time text for anyone).
+            bool hidden = false;
+            Safe.Run("hide a personal drop's hover text", () => hidden = PersonalLoot.Enabled && PersonalLoot.IsHiddenFromMe(__instance));
+            if (hidden)
+            {
+                __result = "";
+                return;
+            }
             Safe.Run("colour a loot item's hover text", () =>
             {
                 var item = __instance.m_itemData;

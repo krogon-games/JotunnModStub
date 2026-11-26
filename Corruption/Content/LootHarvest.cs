@@ -142,6 +142,7 @@ namespace Corruption.Content
             pkg.Write(c.Seed);
             pkg.Write(c.Charring);
             pkg.Write(c.Odin);
+            pkg.Write(c.StrikerPlayer);
         }
 
         private static HarvestChances Read(ZPackage pkg)
@@ -150,7 +151,7 @@ namespace Corruption.Content
             {
                 Bounty = pkg.ReadSingle(), WoodBounty = pkg.ReadSingle(), Stamina = pkg.ReadSingle(), Ore = pkg.ReadSingle(),
                 Gem = pkg.ReadSingle(), MiningOrb = pkg.ReadSingle(), WoodcuttingOrb = pkg.ReadSingle(), Seed = pkg.ReadSingle(),
-                Charring = pkg.ReadSingle(), Odin = pkg.ReadBool()
+                Charring = pkg.ReadSingle(), Odin = pkg.ReadBool(), StrikerPlayer = pkg.ReadLong()
             };
         }
 
@@ -186,7 +187,9 @@ namespace Corruption.Content
                 MiningOrb = Loot.Total(tool, "orb_find_mining"),
                 WoodcuttingOrb = Loot.Total(tool, "orb_find_woodcutting"),
                 Seed = Loot.Total(tool, "tree_seed_drop"),
-                Charring = Loot.Total(tool, "wood_to_coal")
+                Charring = Loot.Total(tool, "wood_to_coal"),
+                // The orbs this tool finds are the striker's own (personal loot).
+                StrikerPlayer = PersonalLoot.LocalPlayerId
             };
             // Odin's Grace on trees: one roll per swing, for the first tree, log or stump it hits (as on deposits,
             // where LootGathering rolls it once per swing).
@@ -617,13 +620,25 @@ namespace Corruption.Content
             {
                 return drops;
             }
+            // With personal loot on, the orb isn't added to the vanilla list (the game would drop it with no owner): it is
+            // picked here, left out of the list, and dropped to the striker below. Same roll, same odds.
+            var pendingOrbs = new List<GameObject>();
+            bool personal = PersonalLoot.Enabled;
             var items = new HarvestItems<GameObject>
             {
                 IsWood = go => go && Wood.Contains(go.name),
                 IsOre = go => go && Ores.Contains(go.name),
                 Coal = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(CoalPrefab) : null,
                 // Hoardfinder's and of Hidden Riches (Krogon, 2026-11-19): one guaranteed orb, weighted like kills' orbs.
-                FindOrb = OrbDrops.FindOne
+                FindOrb = !personal ? (System.Func<GameObject>)OrbDrops.FindOne : () =>
+                {
+                    var orb = OrbDrops.FindOne();
+                    if (orb)
+                    {
+                        pendingOrbs.Add(orb);
+                    }
+                    return null;
+                }
             };
             if (woodcutting && table.m_drops != null)
             {
@@ -648,6 +663,16 @@ namespace Corruption.Content
                 }
             }
             var result = HarvestRules.Apply(drops, chances, woodcutting, items, Random01);
+            if (pendingOrbs.Count > 0)
+            {
+                // At the hit point when this is a hit's own harvest (a whole-tree harvest has no hit context: the object's place).
+                var hit = _current?.Hit;
+                var at = hit != null && hit.m_point != Vector3.zero ? hit.m_point : position;
+                foreach (var orb in pendingOrbs)
+                {
+                    OrbDrops.DropPersonal(orb, at + Vector3.up * 0.5f, chances.StrikerPlayer);
+                }
+            }
             if (chances.Stamina > 0f)
             {
                 ZRoutedRpc.instance.InvokeRoutedRPC(chances.Striker, RpcHarvested, chances.Stamina);
