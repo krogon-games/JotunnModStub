@@ -73,7 +73,10 @@ namespace Corruption.Content
 
         /// <summary>
         ///     A drop locked to another player can't be picked up from this game, whatever its view did: auto-pickup then
-        ///     goes to <c>RequestOwn</c> (skipped above) instead of pulling the item, and creatures can't eat it.
+        ///     goes to <c>RequestOwn</c> (skipped above) instead of pulling the item, and creatures run by other games can't
+        ///     eat it. A refusal also stops the game's pickup retry loop (<c>PickupUpdate</c>, started by
+        ///     <c>ItemDrop.Pickup</c> when this returns false), so a loop can't hand the item over by itself once the lock
+        ///     ends; the player just picks it up again then.
         /// </summary>
         [HarmonyPatch(typeof(ItemDrop), nameof(ItemDrop.CanPickup))]
         private static class CanPickup
@@ -84,6 +87,10 @@ namespace Corruption.Content
                 try
                 {
                     refuse = IsLockedAway(__instance);
+                    if (refuse)
+                    {
+                        __instance.CancelInvoke("PickupUpdate");
+                    }
                 }
                 catch (System.Exception ex)
                 {
