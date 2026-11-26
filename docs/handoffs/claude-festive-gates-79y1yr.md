@@ -4,11 +4,11 @@
 
 ## Stage
 
-**Asking Krogon questions.** Round and branch confirmed (decision 1); the map tiers and affixes table, one decision at a time (Open questions below). Nothing is built yet.
+**Building.** All twelve questions answered (decisions 1–12, with Krogon's design change in decision 6: a map's tier is its rarity and affix count, six tiers, orbs craft maps). Next: the Forge tab preview pictures for Krogon, then the build.
 
 ## Purpose
 
-The rips round: map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31), ROADMAP R1: approve the table, then build tiers 1–2 with the seven affixes) and the explored-land fallback ([#84](https://github.com/krogon-games/JotunnModStub/issues/84), ROADMAP R7).
+The rips round: map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31), ROADMAP R1: six tiers as map rarity, crafted with orbs and the shard, and the four creature affixes Swarming, Hardened, Rabid, Smouldering; the three weather affixes next round) and the explored-land fallback with 96 m from anything players placed ([#84](https://github.com/krogon-games/JotunnModStub/issues/84), ROADMAP R7).
 
 ## Done
 
@@ -58,6 +58,7 @@ Nothing built yet. Read for the round: the design, the handoffs of the rips, orb
 9. **Rabid** (2026-11-26): "A". The maddened bonuses doubled, as the design says ("Maddened effect doubled"): damage ×1.4 instead of ×1.2 (the game's Dvergr power), speed +30% instead of +15% (the Tonic of Ratatosk). Over "half again" (×1.3, +22.5%). The design's "guaranteed 3-star" waits for the elite design (#39), which decides whether it becomes part of Rabid's danger.
 10. **Smouldering** (2026-11-26): "A". Every hit a rip creature makes (on players and on other creatures) also carries **25% of the hit's damage as fire**, which the game spreads over 5 s as burning; the Fire Resistance Barley Wine halves it. No source for the number (the design gives none, the dump has no damage types): Claude's proposal, the smallest step, about maddened's own +20%, tunable in the data table. Over 50% and 100%.
 11. **Map names and display** (2026-11-26): "b, yes yes yes". The name stays "{biome} map" ("Meadows map"), coloured by rarity as gear is (white, Magic blue, Rare yellow); only tier 6 becomes "Corrupted {biome} map", in red. Over Path of Exile-style names (affixes in Magic names, random Norse names for Rares) and the tier in the name. Yes to all three extras: (1) the tier as a small number in the corner of the map's icon, where the game shows an item's quality; (2) the rip's portal and heart show its tier and affixes on hover, so the whole group sees what they walk into; (3) the tooltip in the gear style: a "Tier 3 · Magic" line in the rarity colour, each affix as a bullet with its danger, the red "Corrupted" mark at tier 6.
+12. **#84: 96 m from everything a player placed, for every rip** (2026-11-26): "96m, every rip, everything a player placed". Neither the heart nor the landing spot may be within **96 m** (the waves' range: the heart maddens creatures and starts waves within 96 m, the army raids' own `m_eventRange`) of anything a player placed (buildings, fires, portals, crops and saplings, carts and boats: every piece the game marks with its builder). It applies to **every rip**, unexplored land too, and settles the design's open "minimum rip distance from bases" (today's ward radius from beds, wards and portals is replaced). When no unexplored land of the biome is left, the rip falls back to explored land under the same rule; unexplored land stays the first choice. Over the ward's ~32 m and 176 m (96 + 80), over "only the fallback" and "buildings only".
 
 ## Playtest
 
@@ -65,24 +66,12 @@ Nothing to test yet. The checklist will be `docs/playtests/claude-festive-gates-
 
 ## Open questions for Krogon
 
-Asked one at a time in the chat, each with options and a recommendation with its source. The list was checked by an Opus review against the game code and data before asking (it corrected the spawn pace, the weather facts and the frost-resistance gear, and added the missing questions). "Proposal" means Claude's table of 2026-11-01, which has no source in the design or the data.
-1. The round and the branch.
-2. Scope: recommended to build the tiers, #84 and the four creature-side affixes (Swarming, Hardened, Rabid, Smouldering) now, and the three weather ones (Frostbitten, Drowned, Choking) next round, after the fresh 1.0.30 `co_dump` (#86) also records what each weather does and the game's smoke damage.
-3. Waves per tier (×2 today = tier 1; ×3 at tier 2, proposal) and tier 2's guaranteed 2-stars (1 in 4, proposal).
-4. Shards per tier (1–4 / 2–6, decided 2026-11-01), dealt as decision 6; whether tier 2 adds anything else at the heart (the design: "map tier sets the affix count and the rarity floor").
-5. The tier of a dropped map (creatures; the heart's map).
-6. How a player gets a tier 2 map (the design: "1 extra shard").
-7. Rolling affixes: the design's "a reroll costing one more shard" (every roll 1 shard, or rising); how often 1, 2 or 3 affixes.
-8. Orbs on maps (Path of Exile's way), or shards only.
-9–12. Swarming, Hardened, Rabid, Smouldering: danger, reward with personal loot, multiplayer.
-13–16. Only if built now: Frostbitten (frost-resistant capes from the Mountains on), Drowned, Choking, and how weather affixes combine and how far the weather reaches.
-17. Map names, the tier on the icon, the tier and affixes on the rip's hover text.
-18. #84: how far from player-built pieces, for every rip or only the fallback, and whether crops, boats and carts count.
+None open. Claude's own choices so far, which Krogon can change: every map affix equally likely when an orb rolls one; "1 in 4 guaranteed 2-stars" is a 25% chance per creature; Alchemy and Chance give exactly 3 affixes (tier 4); Annulment on a Magic map with 1 affix makes it white (tier 1); a shard is refused on a map below tier 5; corrupting a map asks first, with its own "Don't warn me again"; the weather affixes stay out of the orbs' pool until they're built.
 
 ## Next steps
 
-1. Krogon confirms the round and answers the questions; each answer goes into Decisions and is committed at once.
-2. Build: pure rules and data tables (Sonnet), Harmony patches (Sonnet, then an Opus review), the Forge tab's map operations after Krogon approves a preview picture.
+1. Preview pictures of the Forge tab with a map (Sonnet art script, checked by the main session), for Krogon's approval before the Forge code.
+2. Build: pure rules and data tables (`map_tiers.csv`, `map_affixes.csv`, `drop_modifiers.csv`; Sonnet), then the game code and Harmony patches (Sonnet, then an Opus review against the game code and `mod-compatibility.md`).
 3. Tests and builds by the main session, every diff read, an Opus review focused on multiplayer and the dedicated server.
 4. Solo checklist in `docs/playtests/claude-festive-gates-79y1yr.md` and on the phone page; two-player steps in `PLAYTEST.md` → Session 2.
 
