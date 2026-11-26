@@ -73,42 +73,159 @@ namespace Corruption.Content
 
         /// <summary>
         ///     Vanilla merges nearby same-name stacks it owns (only with more than 200 drops loaded) and destroys one of
-        ///     them, which would lose its owner or beam. Merging only happens when neither carries our keys.
+        ///     them, which would lose its owner or beam. A drop that carries our keys never merges, and neither does one
+        ///     with a tagged neighbour vanilla would merge it with.
         /// </summary>
         [HarmonyPatch(typeof(ItemDrop), nameof(ItemDrop.AutoStackItems))]
         private static class AutoStack
         {
             private static bool Prefix(ItemDrop __instance)
             {
+                bool skip = false;
                 try
                 {
-                    if (!PersonalLoot.Enabled || !__instance)
-                    {
-                        return true;
-                    }
-                    bool thisTagged = PersonalLoot.IsTagged(__instance);
-                    if (!PersonalLootRules.MayAutoStack(thisTagged, false))
-                    {
-                        // Never merges: checked once, not again every 10 seconds.
-                        __instance.m_haveAutoStacked = true;
-                        return false;
-                    }
-                    // The same lookup vanilla uses: items within 4 m, through their rigidbodies.
-                    foreach (var collider in Physics.OverlapSphere(__instance.transform.position, 4f, LayerMask.GetMask("item")))
-                    {
-                        var body = collider.attachedRigidbody;
-                        var other = body ? body.GetComponent<ItemDrop>() : null;
-                        if (other && other != __instance && !PersonalLootRules.MayAutoStack(thisTagged, PersonalLoot.IsTagged(other)))
-                        {
-                            return false;
-                        }
-                    }
+                    skip = PersonalLoot.Enabled && __instance && ShouldSkip(__instance);
                 }
                 catch (System.Exception ex)
                 {
                     Safe.Report("keep personal drops from merging", ex);
+                    skip = false;
                 }
-                return true;
+                return !skip;
+            }
+
+            /// <summary>All the game-member access: true when vanilla's merge must not run for this drop.</summary>
+            private static bool ShouldSkip(ItemDrop drop)
+            {
+                bool thisTagged = PersonalLoot.IsTagged(drop);
+                if (!PersonalLootRules.MayAutoStack(thisTagged, false))
+                {
+                    // Never merges: checked once, not again every 10 seconds.
+                    drop.m_haveAutoStacked = true;
+                    return true;
+                }
+                var data = drop.m_itemData;
+                // The same lookup and the same conditions vanilla uses: items within 4 m, through their rigidbodies.
+                foreach (var collider in Physics.OverlapSphere(drop.transform.position, 4f, LayerMask.GetMask("item")))
+                {
+                    var body = collider.attachedRigidbody;
+                    var other = body ? body.GetComponent<ItemDrop>() : null;
+                    if (other && other != drop && other.m_itemData.m_shared.m_autoStack && other.m_nview && other.m_nview.IsValid() &&
+                        other.m_nview.IsOwner() && other.m_itemData.m_shared.m_name == data.m_shared.m_name &&
+                        other.m_itemData.m_quality == data.m_quality &&
+                        !PersonalLootRules.MayAutoStack(thisTagged, PersonalLoot.IsTagged(other)))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///     The crosshair looks through a drop hidden from this player. Vanilla stops at the first thing the ray hits, so
+        ///     an invisible drop would block hovering whatever is behind it; when that is the result, the loop is run again
+        ///     skipping hidden drops. Arguments by position (they are <c>out</c> in the game).
+        /// </summary>
+        [HarmonyPatch(typeof(Player), nameof(Player.FindHoverObject))]
+        private static class FindHover
+        {
+            private static void Postfix(Player __instance, ref GameObject __0, ref Character __1)
+            {
+                try
+                {
+                    if (PersonalLoot.Enabled && __0)
+                    {
+                        Redo(__instance, ref __0, ref __1);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    // Vanilla's result stays (a hidden drop then just shows no hover).
+                    Safe.Report("look through hidden drops", ex);
+                }
+            }
+
+            /// <summary>Our own copy of the game's hit comparer (nearest first), so no game type is needed for it.</summary>
+            private sealed class ByDistance : System.Collections.Generic.IComparer<RaycastHit>
+            {
+                public static readonly ByDistance Instance = new ByDistance();
+
+                public int Compare(RaycastHit x, RaycastHit y) => x.distance.CompareTo(y.distance);
+            }
+
+            private static ItemDrop DropOf(GameObject go)
+            {
+                var drop = go.GetComponent<ItemDrop>();
+                if (drop)
+                {
+                    return drop;
+                }
+                var body = go.GetComponent<Rigidbody>();
+                return body ? body.GetComponent<ItemDrop>() : null;
+            }
+
+            private static bool IsHiddenDrop(Rigidbody body)
+            {
+                var drop = body ? body.GetComponent<ItemDrop>() : null;
+                return drop && PersonalLoot.IsHiddenFromMe(drop);
+            }
+
+            /// <summary>Vanilla's <c>FindHoverObject</c> loop (game 1.0.14), plus skipping hidden drops. Starts only when vanilla landed on one.</summary>
+            private static void Redo(Player player, ref GameObject hover, ref Character hoverCreature)
+            {
+                var first = DropOf(hover);
+                if (!first || !PersonalLoot.IsHiddenFromMe(first))
+                {
+                    return;
+                }
+                GameObject newHover = null;
+                Character newCreature = null;
+                var camera = GameCamera.instance.transform;
+                var hits = player.m_raycastHoverHits;
+                int count = Physics.RaycastNonAlloc(camera.position, camera.forward, hits, 50f, player.m_interactMask);
+                System.Array.Sort(hits, 0, count, ByDistance.Instance);
+                for (int i = 0; i < count; i++)
+                {
+                    var hit = hits[i];
+                    var body = hit.collider.attachedRigidbody;
+                    if (body && body.gameObject == player.gameObject)
+                    {
+                        continue;
+                    }
+                    if (IsHiddenDrop(body))
+                    {
+                        continue;
+                    }
+                    if (newCreature == null)
+                    {
+                        var character = body ? body.GetComponent<Character>() : hit.collider.GetComponent<Character>();
+                        if (character != null && (!character.GetBaseAI() || !character.GetBaseAI().IsSleeping()) &&
+                            !ParticleMist.IsMistBlocked(player.GetCenterPoint(), character.GetCenterPoint()))
+                        {
+                            newCreature = character;
+                        }
+                    }
+                    var hoverable = hit.collider.GetComponentInParent<Hoverable>();
+                    if (Vector3.Distance(player.m_eye.position, hit.point) < player.m_maxInteractDistance + (hoverable?.GetHoverOffset() ?? 0f))
+                    {
+                        if (hit.collider.GetComponent<Hoverable>() != null)
+                        {
+                            newHover = hit.collider.gameObject;
+                        }
+                        else if (body)
+                        {
+                            newHover = body.gameObject;
+                        }
+                        else
+                        {
+                            newHover = hit.collider.gameObject;
+                        }
+                    }
+                    break;
+                }
+                hover = newHover;
+                hoverCreature = newCreature;
             }
         }
 

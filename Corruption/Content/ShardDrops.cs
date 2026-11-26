@@ -70,7 +70,7 @@ namespace Corruption.Content
         ///     worth (<see cref="ShardRules.BossPerPlayer" />) with no owner. Needs no loot tables. Called once per death
         ///     on the creature's owner (<c>LootDrops</c>, which knows both of the game's death paths).
         /// </summary>
-        public static void DropBossShards(Vector3 position, List<Player> nearby)
+        public static void DropBossShards(Vector3 position, List<Player> nearby, bool cheated)
         {
             int perPlayer = CorruptionConfig.BossShardsPerPlayer.Value;
             var prefab = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(Texts.ShardPrefab) : null;
@@ -80,20 +80,20 @@ namespace Corruption.Content
             }
             if (nearby.Count == 0)
             {
-                Drop(prefab, ShardRules.BossPerPlayer(0, perPlayer), position, 0L);
+                Drop(prefab, ShardRules.BossPerPlayer(0, perPlayer), position, 0L, cheated);
                 return;
             }
             foreach (var player in nearby)
             {
                 if (player)
                 {
-                    Drop(prefab, perPlayer, position, player.GetPlayerID());
+                    Drop(prefab, perPlayer, position, player.GetPlayerID(), cheated);
                 }
             }
         }
 
-        /// <summary>Drops shards in stacks up to the item's stack size, scattered like a creature's drops, locked to <paramref name="owner" /> (0 = nobody).</summary>
-        private static void Drop(GameObject prefab, int count, Vector3 position, long owner)
+        /// <summary>Drops shards in stacks up to the item's stack size, scattered like a creature's drops, locked to <paramref name="owner" /> (0 = nobody); <paramref name="cheated" /> is the kill's flag.</summary>
+        private static void Drop(GameObject prefab, int count, Vector3 position, long owner, bool cheated)
         {
             var template = prefab.GetComponent<ItemDrop>();
             if (!template)
@@ -107,6 +107,8 @@ namespace Corruption.Content
                 var item = template.m_itemData.Clone();
                 item.m_dropPrefab = prefab;
                 item.m_worldLevel = (byte)Game.m_worldLevel;
+                // Like vanilla's drops: the stack carries the kill's cheated flag.
+                item.m_cheated = cheated;
                 PersonalLoot.Tag(Loot.Drop(item, position, stack), owner, LootBeamTable.Shard);
                 count -= stack;
             }

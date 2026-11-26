@@ -302,7 +302,7 @@ namespace Corruption.Content
 
             public override bool IsCheat => true;
 
-            private const string HelpText =
+            private static string HelpText =>
                 "co_personal commands (all drop things in front of you):\n" +
                 "  co_personal drop <magic|rare|shard|map|orb ID> [other] [seconds]  - drop one thing. It is yours; with 'other' it belongs to a made-up other player, " +
                 "so you can't see it until its lock ends. 'seconds' = lock time left (default: the full lock).\n" +
@@ -311,7 +311,7 @@ namespace Corruption.Content
                 "  co_personal sounds [filter]  - the game's sound names (filter = part of a name); with no filter, a short list of candidates\n" +
                 "  co_personal play <sound|default>  - play a sound here ('default' = the skill-up sound)\n" +
                 "  co_personal sound <row|tall> <sound|default>  - use that sound for one beam row (e.g. rare) or for every tall row, until you quit the game\n" +
-                "Orb ids: " + "transmutation, augmentation, alchemy, regal, exalted, divine, annulment, chance, mirror (see co_orbroll for the full list)";
+                "Orb ids: " + string.Join(", ", OrbRules.Orbs) + " (see co_orbroll for the full list)";
 
             public override void Run(string[] args)
             {
@@ -639,7 +639,10 @@ namespace Corruption.Content
         private readonly HashSet<Light> _hiddenLights = new HashSet<Light>();
         private GameObject _beam;
         private LineRenderer _line;
-        private Material _material;
+        private Light _beamLight;
+        private readonly List<LightLod> _hiddenLightLods = new List<LightLod>();
+        private Vector3 _lastBeamPosition;
+        private bool _settled;
         private float _height;
         private float _next;
         private bool _hidden;
@@ -648,6 +651,15 @@ namespace Corruption.Content
         private bool _played;
         private bool _failed;
         private static bool _shaderReported;
+
+        /// <summary>One material for every beam (the colour comes from each line's gradient), made when first needed.</summary>
+        private static Material _sharedMaterial;
+
+        /// <summary>When a landing sound last played, so tall drops landing together don't pile their sounds up.</summary>
+        private static float _lastLandingSound = -100f;
+
+        private const float MinLandingSoundGap = 0.3f;
+        private const float BeamMoveEpsilon = 0.01f;
 
         private void Awake()
         {
@@ -693,8 +705,11 @@ namespace Corruption.Content
             _beam = new GameObject("CorruptionLootBeam") { hideFlags = HideFlags.DontSave };
             _beam.transform.SetParent(transform, false);
             _line = _beam.AddComponent<LineRenderer>();
-            _material = new Material(shader) { hideFlags = HideFlags.DontSave };
-            _line.sharedMaterial = _material;
+            if (!_sharedMaterial)
+            {
+                _sharedMaterial = new Material(shader) { hideFlags = HideFlags.DontSave };
+            }
+            _line.sharedMaterial = _sharedMaterial;
             _line.useWorldSpace = true;
             _line.positionCount = 2;
             _line.alignment = LineAlignment.View;
@@ -713,34 +728,40 @@ namespace Corruption.Content
                 lightObject.transform.SetParent(_beam.transform, false);
                 lightObject.transform.position = transform.position + Vector3.up * 0.3f;
                 var light = lightObject.AddComponent<Light>();
+                _beamLight = light;
                 light.type = LightType.Point;
                 light.color = colour;
                 light.range = lightRange;
                 light.intensity = lightIntensity;
                 light.shadows = LightShadows.None;
             }
-            PositionBeam();
+            PositionBeam(true);
         }
 
-        private void PositionBeam()
+        /// <summary>Puts the beam on the item; unless forced, only when the item moved more than a centimetre since last time.</summary>
+        private void PositionBeam(bool force = false)
         {
             if (_line == null)
             {
                 return;
             }
             var bottom = transform.position + Vector3.up * 0.1f;
+            if (!force && (bottom - _lastBeamPosition).sqrMagnitude < BeamMoveEpsilon * BeamMoveEpsilon)
+            {
+                return;
+            }
+            _lastBeamPosition = bottom;
             _line.SetPosition(0, bottom);
             _line.SetPosition(1, bottom + Vector3.up * _height);
-            var light = _beam.GetComponentInChildren<Light>();
-            if (light)
+            if (_beamLight)
             {
-                light.transform.position = bottom + Vector3.up * 0.2f;
+                _beamLight.transform.position = bottom + Vector3.up * 0.2f;
             }
         }
 
         private void Update()
         {
-            if (_failed)
+            if (_failed || _settled)
             {
                 return;
             }
@@ -779,7 +800,14 @@ namespace Corruption.Content
             // Back to vanilla: everything we changed is put back, and the view stops.
             _failed = true;
             Safe.Report(action, ex);
-            Safe.Run("restore a personal drop", () => Show());
+            Safe.Run("restore a personal drop", () =>
+            {
+                if (_beam)
+                {
+                    _beam.SetActive(false);
+                }
+                Show();
+            });
         }
 
         private void Refresh()
@@ -796,6 +824,22 @@ namespace Corruption.Content
                 return;
             }
             Show();
+            if (state == LootLockState.Free)
+            {
+                var settledZdo = _drop.m_nview.GetZDO();
+                long owner = settledZdo.GetLong(PersonalLootRules.OwnerKey, 0L);
+                long dropTime = settledZdo.GetLong(PersonalLootRules.TimeKey, 0L);
+                if (owner == 0L || PersonalLootRules.SecondsLeft(dropTime, ZNet.instance.GetTime().Ticks, PersonalLoot.Settings.LockSeconds) <= 0.0)
+                {
+                    // Nothing changes from here on: no more refreshing. Without a beam there is nothing left to draw.
+                    _settled = true;
+                    if (_beam == null)
+                    {
+                        Destroy(this);
+                    }
+                    return;
+                }
+            }
             if (!_played && _row != null && !_failed)
             {
                 var zdo = _drop.m_nview.GetZDO();
@@ -805,10 +849,14 @@ namespace Corruption.Content
                 if (PersonalLootRules.PlaySound(state, age, PersonalLoot.Settings.SoundWindowSeconds, sound != null))
                 {
                     _played = true;
-                    string problem = PersonalLoot.PlaySound(sound, transform.position);
-                    if (problem != null)
+                    if (Time.time - _lastLandingSound >= MinLandingSoundGap)
                     {
-                        Jotunn.Logger.LogWarning($"Personal loot: couldn't play the {_row.Drop} sound ({sound}): {problem}.");
+                        _lastLandingSound = Time.time;
+                        string problem = PersonalLoot.PlaySound(sound, transform.position);
+                        if (problem != null)
+                        {
+                            Jotunn.Logger.LogWarning($"Personal loot: couldn't play the {_row.Drop} sound ({sound}): {problem}.");
+                        }
                     }
                 }
             }
@@ -824,6 +872,15 @@ namespace Corruption.Content
                 {
                     renderer.enabled = false;
                     _hiddenRenderers.Add(renderer);
+                }
+            }
+            // The game's LightLod switches its light back on from a coroutine, so it is stopped too (Show starts it again).
+            foreach (var lod in GetComponentsInChildren<LightLod>(true))
+            {
+                if (lod && lod.enabled && !IsBeamPart(lod.transform))
+                {
+                    lod.enabled = false;
+                    _hiddenLightLods.Add(lod);
                 }
             }
             foreach (var light in GetComponentsInChildren<Light>(true))
@@ -861,6 +918,15 @@ namespace Corruption.Content
                 }
             }
             _hiddenRenderers.Clear();
+            // LightLod first: its loop then finds the light as vanilla would (it decides by distance, range and limits).
+            foreach (var lod in _hiddenLightLods)
+            {
+                if (lod)
+                {
+                    lod.enabled = true;
+                }
+            }
+            _hiddenLightLods.Clear();
             foreach (var light in _hiddenLights)
             {
                 if (light)
@@ -872,7 +938,7 @@ namespace Corruption.Content
             if (_beam && !_beam.activeSelf && !_failed)
             {
                 _beam.SetActive(true);
-                PositionBeam();
+                PositionBeam(true);
             }
             if (_changedAutoPickup)
             {
@@ -885,13 +951,5 @@ namespace Corruption.Content
         }
 
         private bool IsBeamPart(Transform t) => _beam && t.IsChildOf(_beam.transform);
-
-        private void OnDestroy()
-        {
-            if (_material)
-            {
-                Destroy(_material);
-            }
-        }
     }
 }

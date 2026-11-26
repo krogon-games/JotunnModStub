@@ -666,12 +666,15 @@ namespace Corruption.Content
             if (pendingOrbs.Count > 0)
             {
                 // At the hit point when this is a hit's own harvest (a whole-tree harvest has no hit context: the object's place).
-                var hit = _current?.Hit;
-                var at = hit != null && hit.m_point != Vector3.zero ? hit.m_point : position;
-                foreach (var orb in pendingOrbs)
+                Safe.Run("drop a harvest's orbs", () =>
                 {
-                    OrbDrops.DropPersonal(orb, at + Vector3.up * 0.5f, chances.StrikerPlayer);
-                }
+                    var hit = _current?.Hit;
+                    var at = hit != null && hit.m_point != Vector3.zero ? hit.m_point : position;
+                    foreach (var orb in pendingOrbs)
+                    {
+                        OrbDrops.DropPersonal(orb, at + Vector3.up * 0.5f, chances.StrikerPlayer);
+                    }
+                });
             }
             if (chances.Stamina > 0f)
             {

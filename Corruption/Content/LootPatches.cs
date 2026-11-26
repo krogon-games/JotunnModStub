@@ -78,7 +78,7 @@ namespace Corruption.Content
                     // Every boss kill: each nearby player's own shards. Needs no loot tables (they worked without them before).
                     if (character.IsBoss())
                     {
-                        Safe.Run("drop each player's boss shards", () => ShardDrops.DropBossShards(position, Nearby));
+                        Safe.Run("drop each player's boss shards", () => ShardDrops.DropBossShards(position, Nearby, __instance.m_cheated));
                     }
 
                     if (!Loot.Loaded || !CorruptionConfig.LootEnabled.Value)
