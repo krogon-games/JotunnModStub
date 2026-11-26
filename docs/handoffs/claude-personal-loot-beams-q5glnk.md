@@ -45,6 +45,7 @@ Krogon's play-test feedback (2026-11-26, phone page notes):
 13. **The beams are too big: half the size** (step `pl-2`, the Rare beam): "beam is massive though, way too big. shrink to half the size." With step `pl-4`'s "all the taller ones are just too tall", Claude applies it to the tall beams (height and width halved); the short beams keep their size.
 14. **Beams taper and pulse slowly** (step `pl-4`): "they are all too one dimensional so to say. i think they would look better if they flare. thick at base and thinner towards the top. all the taller ones are just too tall. Would look better if the beam pulsated very slowly". Every beam, short and tall.
 15. **Keep the level-up sound for now** (step `pl-14`): "fine with the level up sound for now. maybe we can make our own custom sounds similar to diablo 4 drops sounds." The `default` sound stays for every tall row; custom sounds are an idea for later, not this round.
+16. **The beams are too solid: softer, see-through, smoke-like** (final play-test step `plf-1`, failed; steps `plf-2` … `plf-4` passed): "they look better but still not quite right. attached screenshot. Maybe they need more opacity or smokelike effect. they are too solid looking." Claude's reading: less opaque, not more ("too solid looking"); soft fading edges, a faint glow, a dimmer core and slow smoke-like wisps rising up the beam, with a `co_personal look` command to tune them live; Krogon sends the numbers he likes.
 
 ## Playtest
 
@@ -57,8 +58,8 @@ Solo: `docs/playtests/claude-personal-loot-beams-q5glnk.md` (15 steps, `pl-1` �
 
 ## Next steps
 
-1. Krogon's final play-test of the beams' new look (`docs/playtests/claude-personal-loot-beams-q5glnk.md` → Final play-test, `plf-1` … `plf-4`, also on the phone page); built 2026-11-26 (decisions 13–14).
-2. Then `/handoff` and the PR.
+1. Make the beams softer and smoke-like (decision 16), with a live tuning command.
+2. Krogon's next play-test of the look (steps 2–4 of the final play-test already passed), then `/handoff` and the PR.
 3. Group checks (Session 2, 2l) at the next friend evening.
 
 ## Checks

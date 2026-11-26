@@ -75,3 +75,8 @@
 2. [ ] (`plf-2`) Walk or `fly` about 50 m away → the tall beams are still easy to find; note if they're now too small to spot.
 3. [ ] (`plf-3`) `co_personal drop rare` → the Rare beam is a comfortable size and pulses; you hear the level-up sound. `co_personal drop orb exalted other 10` → after about 10 s its beam appears, tapered and pulsing.
 4. [ ] (`plf-4`) Kill `spawn Greyling 20` → real drops have the new beams; pick them up → the beams go with them. F5: no red errors. Send `BepInEx/LogOutput.log`.
+
+### Final play-test feedback (2026-11-26, phone page, with a screenshot)
+
+- Step `plf-1`: failed. "they look better but still not quite right. attached screenshot. Maybe they need more opacity or smokelike effect. they are too solid looking." (The screenshot shows the 14 beams of `co_personal beams`, tapered, with hard edges and bright solid cores.)
+- Steps `plf-2`, `plf-3`, `plf-4`: passed.
