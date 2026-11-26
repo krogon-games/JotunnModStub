@@ -153,7 +153,11 @@ namespace Corruption.Content
             package.Write(state.Tier);
             package.Write(MapData.Join(state.Affixes));
             package.Write(fallback);
-            player.Message(MessageHud.MessageType.Center, "$corruption_rip_searching");
+            // With the fallback, its note stays on screen instead of "searching" (it is shown again when the rip opens).
+            if (!fallback)
+            {
+                player.Message(MessageHud.MessageType.Center, "$corruption_rip_searching");
+            }
             ZRoutedRpc.instance.InvokeRoutedRPC(ZRoutedRpc.instance.GetServerPeerID(), RpcRequest, package);
         }
 
@@ -326,7 +330,12 @@ namespace Corruption.Content
 
                 Jotunn.Logger.LogInfo($"Rip opened: {map.Biome}, {MapTiers.Describe(tier, affixIds)}, heart {heartPosition}, landing {landing}, " +
                                       $"{(fallback ? "explored-land fallback" : "unexplored land")}.");
-                player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_opened", map.Label));
+                string opened = Localization.instance.Localize("$corruption_rip_opened", map.Label);
+                if (fallback)
+                {
+                    opened += "\n" + Localization.instance.Localize("$corruption_rip_fallback", map.Label);
+                }
+                player.Message(MessageHud.MessageType.Center, opened);
             });
         }
 
@@ -362,7 +371,7 @@ namespace Corruption.Content
             MapTiers.CopyStamp(heart, exit);
             Jotunn.Logger.LogInfo($"Rip exit opened at {spot}, leading to {home}.");
             Safe.Run("record the first destroyed rip heart", MapDrops.MarkRipCleared);
-            Safe.Run("spill the rip loot", () => RipLoot.Spill(heart.GetString(KeyBiome, ""), position));
+            Safe.Run("spill the rip loot", () => RipLoot.Spill(heart, heart.GetString(KeyBiome, ""), position));
             Player.m_localPlayer?.Message(MessageHud.MessageType.Center, "$corruption_rip_home_opened");
         }
 
