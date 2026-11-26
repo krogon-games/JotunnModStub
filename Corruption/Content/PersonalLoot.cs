@@ -640,6 +640,9 @@ namespace Corruption.Content
         private GameObject _beam;
         private LineRenderer _line;
         private Light _beamLight;
+        private float _lightIntensity;
+        private float _pulsePhase;
+        private Color _beamColour;
         private readonly List<LightLod> _hiddenLightLods = new List<LightLod>();
         private Vector3 _lastBeamPosition;
         private bool _settled;
@@ -660,6 +663,7 @@ namespace Corruption.Content
 
         private const float MinLandingSoundGap = 0.3f;
         private const float BeamMoveEpsilon = 0.01f;
+        private const float BeamBaseAlpha = 0.8f;
 
         private void Awake()
         {
@@ -713,15 +717,15 @@ namespace Corruption.Content
             _line.useWorldSpace = true;
             _line.positionCount = 2;
             _line.alignment = LineAlignment.View;
-            _line.startWidth = width;
-            _line.endWidth = width;
+            // Thick at the base, thinner towards the top (Krogon, 2026-11-26): the curve runs 1 -> fraction along the beam.
+            _line.widthMultiplier = width;
+            _line.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, settings.TopWidthFraction));
             _line.shadowCastingMode = ShadowCastingMode.Off;
             _line.receiveShadows = false;
-            var gradient = new Gradient();
-            gradient.SetKeys(
-                new[] { new GradientColorKey(colour, 0f), new GradientColorKey(colour, 1f) },
-                new[] { new GradientAlphaKey(0.8f, 0f), new GradientAlphaKey(0f, 1f) });
-            _line.colorGradient = gradient;
+            _beamColour = colour;
+            _lightIntensity = lightIntensity;
+            _pulsePhase = Random.value; // each drop pulses on its own cycle
+            ApplyPulse();
             if (lightIntensity > 0f && lightRange > 0f)
             {
                 var lightObject = new GameObject("CorruptionLootBeamLight") { hideFlags = HideFlags.DontSave };
@@ -736,6 +740,19 @@ namespace Corruption.Content
                 light.shadows = LightShadows.None;
             }
             PositionBeam(true);
+        }
+
+        /// <summary>Sets the beam's brightness (and its light's) for this moment of the slow pulse. The colour fades out towards the top.</summary>
+        private void ApplyPulse()
+        {
+            var settings = PersonalLoot.Settings;
+            float factor = PersonalLootRules.PulseFactor(Time.time, settings.PulseSeconds, settings.PulseStrength, _pulsePhase);
+            _line.startColor = new Color(_beamColour.r, _beamColour.g, _beamColour.b, BeamBaseAlpha * factor);
+            _line.endColor = new Color(_beamColour.r, _beamColour.g, _beamColour.b, 0f);
+            if (_beamLight)
+            {
+                _beamLight.intensity = _lightIntensity * factor;
+            }
         }
 
         /// <summary>Puts the beam on the item; unless forced, only when the item moved more than a centimetre since last time.</summary>
@@ -788,6 +805,7 @@ namespace Corruption.Content
             try
             {
                 PositionBeam();
+                ApplyPulse();
             }
             catch (System.Exception ex)
             {

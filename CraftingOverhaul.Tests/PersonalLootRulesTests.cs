@@ -223,5 +223,34 @@ namespace CraftingOverhaul.Tests
             }
             Assert.Equal(3, first.Count);
         }
+
+        [Fact]
+        public void PulseFactorCyclesBetweenOneAndOneMinusStrength()
+        {
+            // Krogon, 2026-11-26: "would look better if the beam pulsated very slowly".
+            Assert.Equal(1f, PersonalLootRules.PulseFactor(0, 4, 0.35, 0), 4);
+            Assert.Equal(0.65f, PersonalLootRules.PulseFactor(2, 4, 0.35, 0), 4);
+            Assert.Equal(1f, PersonalLootRules.PulseFactor(4, 4, 0.35, 0), 4);
+            Assert.Equal(1f, PersonalLootRules.PulseFactor(40, 4, 0.35, 0), 4);
+        }
+
+        [Fact]
+        public void PulseFactorPhaseShiftsTheCycle()
+        {
+            Assert.Equal(0.65f, PersonalLootRules.PulseFactor(0, 4, 0.35, 0.5), 4);
+            Assert.Equal(PersonalLootRules.PulseFactor(1, 4, 0.35, 0), PersonalLootRules.PulseFactor(0, 4, 0.35, 0.25), 4);
+        }
+
+        [Fact]
+        public void PulseFactorStaysInRangeAndSteadyWithoutStrength()
+        {
+            for (double t = 0; t < 20; t += 0.37)
+            {
+                float f = PersonalLootRules.PulseFactor(t, 4, 0.35, 0.3);
+                Assert.InRange(f, 0.65f - 1e-5f, 1f + 1e-5f);
+                Assert.Equal(1f, PersonalLootRules.PulseFactor(t, 4, 0, 0.3));
+                Assert.Equal(1f, PersonalLootRules.PulseFactor(t, 0, 0.35, 0.3));
+            }
+        }
     }
 }

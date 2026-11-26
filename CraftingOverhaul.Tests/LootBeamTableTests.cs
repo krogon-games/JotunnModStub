@@ -191,9 +191,40 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(0f, s.ShortLightIntensity);
         }
 
+        [Fact]
+        public void TheTallBeamsAreHalfTheirOldSizeAndTheShortOnesUnchanged()
+        {
+            // Krogon, 2026-11-26: "shrink to half the size" (the tall beam was 10 m high and 0.35 m wide).
+            var s = ParseSettingsReal();
+            Assert.Equal(10f / 2, s.TallHeight);
+            Assert.Equal(0.35f / 2, s.TallWidth);
+            Assert.Equal(2.5f, s.ShortHeight);
+            Assert.Equal(0.15f, s.ShortWidth);
+        }
+
+        [Fact]
+        public void TheRealTaperAndPulseSettingsArePresentAndInRange()
+        {
+            var s = ParseSettingsReal();
+            Assert.InRange(s.TopWidthFraction, 0.0001f, 1f);
+            Assert.InRange(s.PulseStrength, 0.0001f, 1f);
+            Assert.True(s.PulseSeconds > 0);
+        }
+
+        [Fact]
+        public void BadTaperAndPulseSettingsGiveErrors()
+        {
+            Assert.Contains(SettingErrors(AllSettings.Replace("top_width_fraction,0.25", "top_width_fraction,1.5")), e => e.Contains("between 0 and 1"));
+            Assert.Contains(SettingErrors(AllSettings.Replace("pulse_strength,0.35", "pulse_strength,2")), e => e.Contains("between 0 and 1"));
+            Assert.Contains(SettingErrors(AllSettings.Replace("pulse_strength,0.35", "pulse_strength,-0.1")), e => e.Contains("negative"));
+            Assert.Contains(SettingErrors(AllSettings.Replace("pulse_seconds,4", "pulse_seconds,0")), e => e.Contains("more than 0"));
+            Assert.Contains(SettingErrors(AllSettings.Replace("pulse_seconds,4,\n", "")), e => e.Contains("missing setting 'pulse_seconds'"));
+        }
+
         private const string AllSettings =
             "setting,value,notes\nlock_seconds,60,\nsound_window_seconds,5,\nrefresh_seconds,0.25,\ntall_height,10,\ntall_width,0.35,\n" +
-            "tall_light_range,4,\ntall_light_intensity,1.5,\nshort_height,2.5,\nshort_width,0.15,\nshort_light_range,0,\nshort_light_intensity,0,\n";
+            "tall_light_range,4,\ntall_light_intensity,1.5,\nshort_height,2.5,\nshort_width,0.15,\nshort_light_range,0,\nshort_light_intensity,0,\n" +
+            "top_width_fraction,0.25,\npulse_seconds,4,\npulse_strength,0.35,\n";
 
         private static List<string> SettingErrors(string csv)
         {

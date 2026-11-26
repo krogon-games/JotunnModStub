@@ -168,7 +168,8 @@ namespace Corruption.Rules
     /// <summary>The settings of <c>Corruption/Data/personal_loot.csv</c>: the lock, the sound window and the beam look.</summary>
     public sealed class PersonalLootSettings
     {
-        public double LockSeconds, SoundWindowSeconds, RefreshSeconds;
+        public double LockSeconds, SoundWindowSeconds, RefreshSeconds, PulseSeconds;
+        public float TopWidthFraction, PulseStrength;
         public float TallHeight, TallWidth, TallLightRange, TallLightIntensity;
         public float ShortHeight, ShortWidth, ShortLightRange, ShortLightIntensity;
 
@@ -176,7 +177,8 @@ namespace Corruption.Rules
         {
             "lock_seconds", "sound_window_seconds", "refresh_seconds",
             "tall_height", "tall_width", "tall_light_range", "tall_light_intensity",
-            "short_height", "short_width", "short_light_range", "short_light_intensity"
+            "short_height", "short_width", "short_light_range", "short_light_intensity",
+            "top_width_fraction", "pulse_seconds", "pulse_strength"
         };
 
         /// <summary>Parses the table. Every setting is required. Problems are added to <paramref name="errors" />.</summary>
@@ -228,9 +230,14 @@ namespace Corruption.Rules
                     errors.Add($"{where}: value {text} can't be negative.");
                     continue;
                 }
-                if (number <= 0 && (name == "lock_seconds" || name == "refresh_seconds"))
+                if (number <= 0 && (name == "lock_seconds" || name == "refresh_seconds" || name == "pulse_seconds"))
                 {
                     errors.Add($"{where}: value must be more than 0.");
+                    continue;
+                }
+                if (number > 1 && (name == "top_width_fraction" || name == "pulse_strength"))
+                {
+                    errors.Add($"{where}: value {text} must be between 0 and 1.");
                     continue;
                 }
                 values[name] = number;
@@ -251,6 +258,9 @@ namespace Corruption.Rules
             settings.ShortWidth = (float)V("short_width");
             settings.ShortLightRange = (float)V("short_light_range");
             settings.ShortLightIntensity = (float)V("short_light_intensity");
+            settings.TopWidthFraction = (float)V("top_width_fraction");
+            settings.PulseSeconds = V("pulse_seconds");
+            settings.PulseStrength = (float)V("pulse_strength");
             return settings;
         }
     }

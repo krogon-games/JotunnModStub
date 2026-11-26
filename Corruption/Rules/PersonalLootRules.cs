@@ -35,6 +35,23 @@ namespace Corruption.Rules
 
         public const long TicksPerSecond = 10000000L;
 
+        /// <summary>
+        ///     The beam's brightness factor, so it pulses (Krogon, 2026-11-26: "Would look better if the beam pulsated very
+        ///     slowly"). Moves smoothly (a cosine) between 1 and 1 - <paramref name="strength" /> once per period: 1 at the
+        ///     start of each period when <paramref name="phase" /> is 0. <paramref name="phase" /> (0..1, a share of the
+        ///     period) offsets the cycle so neighbouring beams don't pulse together. No strength or no period = steady (1).
+        /// </summary>
+        public static float PulseFactor(double timeSeconds, double periodSeconds, double strength, double phase)
+        {
+            if (strength <= 0.0 || periodSeconds <= 0.0)
+            {
+                return 1f;
+            }
+            double cycle = timeSeconds / periodSeconds + phase;
+            double wave = 0.5 + 0.5 * Math.Cos(2.0 * Math.PI * cycle); // 1 .. 0
+            return (float)(1.0 - strength * (1.0 - wave));
+        }
+
         /// <summary>Seconds since the drop. Never negative: the network clock can step back (about 2 s) when the server corrects it.</summary>
         public static double AgeSeconds(long dropTicks, long nowTicks) => Math.Max(0.0, (nowTicks - dropTicks) / (double)TicksPerSecond);
 
