@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest.**
+**Fixing feedback.**
 
 ## Purpose
 
@@ -12,17 +12,17 @@ Personal loot ([#35](https://github.com/krogon-games/JotunnModStub/issues/35), R
 
 ## Done
 
-Nothing confirmed in game yet.
+Passed Krogon's solo play-test on Valheim 1.0.30 (2026-11-26, steps `pl-2` … `pl-15`; `pl-1` unmarked but its log line is there; clean log, every patch applied): his own drops and their beams, someone else's drop invisible and untouchable (auto-pickup, E, hover, crosshair), the reveal after the lock, the backpack, relogging, kill loot, boss shards, mining orbs, the rip heart's spill, the sound command, player-dropped items. Not yet tried with two players.
 
 ## Half-done and known issues
 
-Built 2026-11-26, untested in game (feature detail: `FEATURES.md` → Personal loot and loot beams):
+Built 2026-11-26 (feature detail: `FEATURES.md` → Personal loot and loot beams):
 - Kill loot, each player's boss shard and Hoardfinder's / of Hidden Riches orbs carry their owner's player id and drop time (network clock) in the ZDO, written on the game that makes the drop; others don't see them (item, lights, beam hidden; no hover; crosshair looks through) or pick them up for 60 s.
 - Beams on every Corruption drop (`loot_beams.csv`), sizes first guesses (`personal_loot.csv`); the sound is a placeholder (the skill-up sound) until Krogon picks.
 - The rip heart spills its loot (no chest); the shared part is dealt among the players near it.
 - Dev command `co_personal` (drop for a made-up other player, list, beams, sounds).
 - Reviewed by Opus: the Harmony patches against the game code and the group's mods, then multiplayer; the fixes from both are in. A short third review of the two lock patches the multiplayer review added found nothing to fix; its one hardening (a refused pickup also ends the game's pickup retry loop) is in.
-- **Game methods relied on, to confirm on Krogon's 1.0.30 build and log** (the cloud reads 1.0.14 code, #86): `Humanoid.Pickup` and `CharacterDrop.DropItems` (patched by name), `ItemDrop.Interact`, `ItemDrop.RequestOwn`, `ItemDrop.CanPickup`, `ItemDrop.AutoStackItems`, `ItemDrop.Awake`, `ItemDrop.GetHoverText`, `Player.FindHoverObject` (our copy of its 1.0.14 loop), `Player.AutoPickup` skipping `m_autoPickup == false`, `DropTable.GetDropListItems`, `ZNet.GetTime`, `Player.GetPlayerID`, `Player.m_skillLevelupEffects`, `LightLod`. If a patch fails, the log says `Failed to apply patch … PersonalLootPatches+<name>`.
+- **Game methods relied on, confirmed on Krogon's 1.0.30 build and log (2026-11-26: no `Failed to apply patch` line, the features worked)** (the cloud reads 1.0.14 code, #86): `Humanoid.Pickup` and `CharacterDrop.DropItems` (patched by name), `ItemDrop.Interact`, `ItemDrop.RequestOwn`, `ItemDrop.CanPickup`, `ItemDrop.AutoStackItems`, `ItemDrop.Awake`, `ItemDrop.GetHoverText`, `Player.FindHoverObject` (our copy of its 1.0.14 loop), `Player.AutoPickup` skipping `m_autoPickup == false`, `DropTable.GetDropListItems`, `ZNet.GetTime`, `Player.GetPlayerID`, `Player.m_skillLevelupEffects`, `LightLod`. If a patch fails, the log says `Failed to apply patch … PersonalLootPatches+<name>`.
 - Known limits: each game reveals a drop by its own copy of the network clock (a second early or late); on a dedicated server the clock, and so a lock, pauses while nobody is online. Sleeping moves the clock on, so it ends every running lock. A game on an older 0.9.0 build joins without a warning but shows everyone's locked drops: same build everywhere for the group test.
 
 ## Decisions
@@ -40,20 +40,25 @@ Built 2026-11-26, untested in game (feature detail: `FEATURES.md` → Personal l
 11. **Beam size by rarity** (2026-11-26), over "all tall": short and faint for Magic gear, shards and the common and uncommon orbs (Transmutation, Augmentation, Alchemy, Regal, Annulment); tall and bright, seen from about 50 m, for Rare gear, uniques, maps and the rare orbs (Exalted, Divine, Chance, Mirror).
 12. **The sound plays for tall-beam drops only** (2026-11-26), over "every beam drop" and "Rare gear and uniques": Rare gear, uniques, maps and the rare orbs, for the owner only; common drops stay silent.
 
+Krogon's play-test feedback (2026-11-26, phone page notes):
+
+13. **The beams are too big: half the size** (step `pl-2`, the Rare beam): "beam is massive though, way too big. shrink to half the size." With step `pl-4`'s "all the taller ones are just too tall", Claude applies it to the tall beams (height and width halved); the short beams keep their size.
+14. **Beams taper and pulse slowly** (step `pl-4`): "they are all too one dimensional so to say. i think they would look better if they flare. thick at base and thinner towards the top. all the taller ones are just too tall. Would look better if the beam pulsated very slowly". Every beam, short and tall.
+15. **Keep the level-up sound for now** (step `pl-14`): "fine with the level up sound for now. maybe we can make our own custom sounds similar to diablo 4 drops sounds." The `default` sound stays for every tall row; custom sounds are an idea for later, not this round.
+
 ## Playtest
 
-Solo: `docs/playtests/claude-personal-loot-beams-q5glnk.md` (15 steps, `pl-1` … `pl-15`, also on the phone page). Group: `PLAYTEST.md` → Session 2, 2l, and Session 2-short step 4 (on the phone page `duo-4b`). No feedback yet.
+Solo: `docs/playtests/claude-personal-loot-beams-q5glnk.md` (15 steps, `pl-1` … `pl-15`, also on the phone page). Group: `PLAYTEST.md` → Session 2, 2l, and Session 2-short step 4 (on the phone page `duo-4b`). Solo feedback 2026-11-26: 14 of 15 passed, the beams' look to change (decisions 13–14); details in the playtest file.
 
 ## Open questions for Krogon
 
-- The sounds: one each for Rare gear, uniques, maps and the rare orbs (checklist step 14).
-- The beam sizes (step 4).
-- How the heart's shared loot is dealt (one item at a time in turn) is Claude's reading of decision 6: confirm it in the play-test.
+- How the heart's shared loot is dealt between players (one item at a time in turn) is Claude's reading of decision 6; alone it all goes to you, so it shows only with two players (Session 2, 2l step 4).
+- Later, not this round: custom drop sounds like Diablo 4's (decision 15).
 
 ## Next steps
 
-1. Krogon's solo play-test; fix what it finds; put his sound picks into `loot_beams.csv`.
-2. Final play-test, then the PR.
+1. Fix the beams' look (decisions 13–14).
+2. Krogon's final play-test, then the PR.
 3. Group checks (Session 2, 2l) at the next friend evening.
 
 ## Checks
