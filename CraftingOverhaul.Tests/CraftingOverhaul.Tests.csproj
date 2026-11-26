@@ -50,6 +50,12 @@
     <Compile Include="..\Corruption\Rules\AffixRoller.cs" Link="Linked\AffixRoller.cs" />
     <Compile Include="..\Corruption\Rules\OrbRules.cs" Link="Linked\OrbRules.cs" />
     <Compile Include="..\Corruption\Rules\OrbDropTable.cs" Link="Linked\OrbDropTable.cs" />
+    <Compile Include="..\Corruption\Rules\MapTierTable.cs" Link="Linked\MapTierTable.cs" />
+    <Compile Include="..\Corruption\Rules\MapAffixTable.cs" Link="Linked\MapAffixTable.cs" />
+    <Compile Include="..\Corruption\Rules\MapData.cs" Link="Linked\MapData.cs" />
+    <Compile Include="..\Corruption\Rules\MapOrbRules.cs" Link="Linked\MapOrbRules.cs" />
+    <Compile Include="..\Corruption\Rules\MapCorruptRules.cs" Link="Linked\MapCorruptRules.cs" />
+    <Compile Include="..\Corruption\Rules\RipTierRules.cs" Link="Linked\RipTierRules.cs" />
     <Compile Include="..\Corruption\Rules\AffixRenames.cs" Link="Linked\AffixRenames.cs" />
     <Compile Include="..\Corruption\Rules\MapDropRules.cs" Link="Linked\MapDropRules.cs" />
     <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />
