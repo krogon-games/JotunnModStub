@@ -3,10 +3,12 @@ star_1,approved,1.25,1.25,1.25,1.25,1-star creature. Magic and rare use the same
 star_2,approved,1.5,1.5,1.5,1.5,2-star creature. Magic and rare use the same multiplier as unique.
 star_3,approved,2,2,2,2,3-star creature (rips only). Magic and rare use the same multiplier as unique.
 dungeon_chest,approved,,,1.5,1.5,"Vanilla dungeon chest. Orbs: one roll when the game fills the chest (user, 2026-11-19)."
-rip_tier_1,approved,1.25,1.25,1.25,1.25,Rip creature or rip chest. Magic and rare use the same multiplier as unique.
-rip_tier_2,approved,1.25,1.25,1.5,1.25,Between the design's tier 1 (1.25) and tier 4 (2).
-rip_tier_3,approved,1.5,1.5,1.75,1.5,Between tier 2 and tier 4.
-rip_tier_4,approved,2,2,2,2,Unique from the design; magic and rare match it.
+rip_tier_1,approved,1.25,1.25,1.25,1.25,Krogon 2026-11-26 (rips round decision 4b): +0.25 per tier.
+rip_tier_2,approved,1.5,1.5,1.5,1.5,Krogon 2026-11-26 (rips round decision 4b): +0.25 per tier.
+rip_tier_3,approved,1.75,1.75,1.75,1.75,Krogon 2026-11-26 (rips round decision 4b): +0.25 per tier.
+rip_tier_4,approved,2,2,2,2,Krogon 2026-11-26 (rips round decision 4b): +0.25 per tier.
+rip_tier_5,approved,2.25,2.25,2.25,2.25,Krogon 2026-11-26 (rips round decision 4b): +0.25 per tier.
+rip_tier_6,approved,2.5,2.5,2.5,2.5,Krogon 2026-11-26 (rips round decision 4b): +0.25 per tier.
 scar,approved,1.5,1.5,,1.5,Lingering corruption zone after a rip. Corruption zones raise item drops.
 terror_zone,approved,1.5,1.5,1.5,1.5,Counts as a tier 2 rip for uniques (design).
 corrupted_boss,approved,,,3,3,"On top of its boss unique roll. Orbs: x3 on the boss's one roll (user, 2026-11-19)."
