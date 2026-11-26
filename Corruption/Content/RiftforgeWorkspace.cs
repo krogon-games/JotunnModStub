@@ -707,6 +707,14 @@ namespace Corruption.Content
                 Pick(item);
                 return true;
             }
+            // A map of your own, right-clicked while the Forge tab is open, goes into the forge instead of being used
+            // (using it would open a rip and use the map up): Claude's choice, rips round 2026-11-26.
+            if (own && MapForge.IsMap(item))
+            {
+                ClearPick();
+                SetTarget(item, "");
+                return true;
+            }
             if (_pick != null)
             {
                 // A right-click elsewhere while holding a pick only drops the pick (it never equips or uses anything).
