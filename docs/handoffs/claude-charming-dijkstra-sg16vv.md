@@ -4,7 +4,9 @@
 
 ## Stage
 
-Ready to merge.
+**Merged** (PR #85, 2026-11-26).
+
+**Coordinator update (2026-11-26):** merged into `master` as **PR #85** on Krogon's word ("Merge branch claude/charming-dijkstra-sg16vv into master using a pull request"). `master` was already in the branch (no conflicts). The coordinator raised **Corruption and Orlog to 0.9.0 and CraftingOverhaul to 0.6.0** (on this branch, the PR's last commit; the three READMEs' feature lists and changelogs brought up to date with it), copied decisions 1–33 into `docs/DECISIONS.md`, and #33 is closed (by the PR). The Valheim 1.0.30 leftovers in "Half-done" below are tracked in [#86](https://github.com/krogon-games/JotunnModStub/issues/86).
 
 ## Purpose
 
@@ -77,9 +79,9 @@ None.
 
 ## Next steps
 
-1. A PR into `master` (Krogon asks for it, or the coordinator opens it).
+1. ~~A PR into `master`~~ Done: PR #85, 2026-11-26.
 2. The group evening: Session 2, 2k.
-3. Later: the F2 network-panel leftover on 1.0.30.
+3. Later: the F2 network-panel leftover on 1.0.30 ([#86](https://github.com/krogon-games/JotunnModStub/issues/86)).
 4. Later rounds, already on GitHub: [#84](https://github.com/krogon-games/JotunnModStub/issues/84) (ROADMAP R7: where a rip opens when its map points at land far from player buildings; decision 22) and [#35](https://github.com/krogon-games/JotunnModStub/issues/35) (ROADMAP L7: everyone gets their own loot; raised to high priority, decision 23).
 
 ## Checks

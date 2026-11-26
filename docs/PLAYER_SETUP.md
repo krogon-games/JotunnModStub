@@ -6,12 +6,12 @@ For everyone joining our Valheim server. Takes about 10 minutes. You only do thi
 
 | Mod | What it does | Where from |
 |---|---|---|
-| **Corruption** | Our endgame mod: corruption shards, the Riftforge, creature talismans | Krogon sends you `Corruption.dll` |
+| **Corruption** | Our endgame mod: Magic and Rare gear, corruption shards and currency orbs, the Riftforge, maps and rips, corrupted bosses, creature talismans, six inventory tabs | Krogon sends you `Corruption.dll` |
 | **Orlog** | Our classes mod: Diablo 2-style character levels and XP from kills, attributes, the class eitr pool; choose your class at the Orlog stone in the spawn area; the Amazon's passives, bow skills and Inner Sight work (her spear skills are still to come). **With a class, right click fires your chosen skill and block needs a key of its own** (see *Orlog's keys* below) | Krogon sends you `Orlog.dll` |
 | **CraftingOverhaul** | Our crafting mod: recipe search, collapsible categories, crafting and building from nearby chests | Krogon sends you `CraftingOverhaul.dll` |
 | [EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) | Equipment slots and quick slots. **Talismans go in its slots**, so you need it | Thunderstore |
 | [AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) | Craftable backpacks | Thunderstore |
-| [PlantEasily](https://thunderstore.io/c/valheim/p/Advize/PlantEasily/) | Plant and harvest crops in bulk | Thunderstore (optional) |
+| [PlantEasily](https://thunderstore.io/c/valheim/p/Advize/PlantEasily/) | Plant and harvest crops in bulk | Thunderstore (optional). **Leave it off for now:** version 2.3.1 is broken on Valheim 1.0.30 (red errors every frame); turn it back on when Advize releases an update |
 
 ### Dependencies
 
@@ -24,6 +24,8 @@ These mods need three more packages. r2modman installs them automatically when y
 | [YamlDotNet](https://thunderstore.io/c/valheim/p/ValheimModding/YamlDotNet/) (ValheimModding) | 16.3.1 | AdventureBackpacks |
 
 PlantEasily needs only BepInExPack.
+
+**Game version: Valheim 1.0.30** (2026-11-25). That patch changes crossplay compatibility, so every player and the server must be on it. AdventureBackpacks' matching version is **2.4.8** (its 1.0.30 update).
 
 **Everyone must have the same version of Corruption, Orlog and AdventureBackpacks as the server**, or the game won't let you join. Our three mods aren't on Thunderstore, so always use the files Krogon sends.
 
@@ -72,7 +74,7 @@ When Krogon sends new DLLs, replace the old ones in the same folders (step 3), w
 
 | Problem | Fix |
 |---|---|
-| "Incompatible version" or kicked when joining | Your Corruption, Orlog or AdventureBackpacks version differs from the server's. Get the latest DLLs from Krogon / update the mod to the version the server runs |
+| "Incompatible version" or kicked when joining | Your Corruption, Orlog or AdventureBackpacks version differs from the server's, or your Valheim isn't the server's version (1.0.30 since 2026-11-25). Get the latest DLLs from Krogon / update the mod to the version the server runs / let Steam update the game |
 | Game starts without mods | Start it from r2modman with **Start modded** |
 | Game crashes or mods don't load; the log mentions a missing dependency | A package from the Dependencies table is missing or too old. Install or update it |
 | No talisman slots | EquipmentAndQuickSlots isn't installed in your profile |
@@ -91,7 +93,7 @@ When Krogon sends new DLLs, replace the old ones in the same folders (step 3), w
 
 ## For the server admin (Krogon)
 
-The dedicated server needs, in its own BepInEx install:
+**Update the dedicated server to Valheim 1.0.30** (SteamCMD or your host's update button) before the players join: the patch changes crossplay compatibility. Then the server needs, in its own BepInEx install:
 
 | Mod | Needed on the server? |
 |---|---|

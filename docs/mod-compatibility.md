@@ -1,6 +1,6 @@
 # Compatibility with other mods
 
-Mods the group plays with alongside ours, what they change, and where they meet our code. Checked 2026-10-28 by decompiling each mod's DLL and comparing its Harmony patch targets with ours (`FEATURES.md`).
+Mods the group plays with alongside ours, what they change, and where they meet our code. Checked 2026-10-28 by decompiling each mod's DLL and comparing its Harmony patch targets with ours (`FEATURES.md`). **Game version: Valheim 1.0.30 since 2026-11-25**; Jötunn 2.30.2 (still the newest, 2026-11-26) and BepInExPack 5.4.2360 worked on it in Krogon's play-test of 2026-11-26.
 
 **Status values:** **Verified in code** (read their code and ours; no in-game test yet) · **Tested in-game** (user's report) · **Risk** (needs a fix or a test).
 
@@ -12,9 +12,9 @@ Install steps for players and the server: [`PLAYER_SETUP.md`](PLAYER_SETUP.md).
 
 | Mod | Version checked | What it does | Needed on |
 |---|---|---|---|
-| [RandyKnapp-EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) (EAQS) | 3.1.3 | Dedicated slots for equipped items (head, chest, legs, shoulder, utility, trinket), up to 6 quick slots, optional extra utility slots, keep-on-death options. Has an API for other mods to add custom slots | Clients; server optional (syncs its balance settings) |
+| [RandyKnapp-EquipmentAndQuickSlots](https://thunderstore.io/c/valheim/p/RandyKnapp/EquipmentAndQuickSlots/) (EAQS) | 3.1.3 (newer on Thunderstore, 2026-11-26: 3.2.1 of 2026-11-10, with controller quick slots and a fix for items hidden behind each other in a full quick slot; not checked against our code. Krogon's 1.0.30 play-test ran with it, no errors) | Dedicated slots for equipped items (head, chest, legs, shoulder, utility, trinket), up to 6 quick slots, optional extra utility slots, keep-on-death options. Has an API for other mods to add custom slots | Clients; server optional (syncs its balance settings) |
 | [Advize-PlantEasily](https://thunderstore.io/c/valheim/p/Advize/PlantEasily/) | 2.3.1 (**broken on Valheim 1.0.30**, 2026-11-26: built for 1.0.20, its `Player.UpdatePlacementGhost` patch calls `Inventory.CountItems(string,int)`, which 1.0.30 no longer has; red errors every frame. Disabled until Advize updates it) | Plant crops in grids, snap to grids, bulk harvest pickables and beehives, replant on harvest | Clients |
-| [Vapok-AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) (AB) | 2.4.6 | Craftable backpacks per biome (own models and textures) with their own inventory, carry-weight and movement modifiers and perks; craft and build from the backpack; auto-store loot | Everyone (adds items) |
+| [Vapok-AdventureBackpacks](https://thunderstore.io/c/valheim/p/Vapok/AdventureBackpacks/) (AB) | 2.4.6 (newer, 2026-11-26: **2.4.8 of 2026-11-25 is its Valheim 1.0.30 update**; it also makes items that go straight into the backpack (auto-store, overflow, crafting output, from a chest) unlock recipes and count as discoveries. Not checked against our code: our tabs take orbs, shards, splinters, maps and essences on pickup, so watch where they land with auto-store on. Everyone and the server need the same AB version. [#86](https://github.com/krogon-games/JotunnModStub/issues/86)) | Craftable backpacks per biome (own models and textures) with their own inventory, carry-weight and movement modifiers and perks; craft and build from the backpack; auto-store loot | Everyone (adds items) |
 
 EAQS and AB know about each other (AB adjusts a UI bar when EAQS is present) and neither declares the other incompatible. EAQS refuses to load next to other slot mods (AzuExtendedPlayerInventory, ExtendedPlayerInventory, ExtraSlots, ComfyQuickSlots).
 
