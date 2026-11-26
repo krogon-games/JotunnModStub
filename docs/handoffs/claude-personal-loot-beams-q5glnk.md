@@ -58,13 +58,13 @@ Solo: `docs/playtests/claude-personal-loot-beams-q5glnk.md` (15 steps, `pl-1` �
 
 ## Next steps
 
-1. Make the beams softer and smoke-like (decision 16), with a live tuning command.
-2. Krogon's next play-test of the look (steps 2–4 of the final play-test already passed), then `/handoff` and the PR.
+1. Krogon's look test (`plg-1` … `plg-4`, playtest file and phone page): the softer, smoke-like beams (decision 16, built 2026-11-26) and his `co_personal look` numbers, which then go into `personal_loot.csv`.
+2. Then `/handoff` and the PR.
 3. Group checks (Session 2, 2l) at the next friend evening.
 
 ## Checks
 
-Not run yet (`/handoff` runs them). By hand on 2026-11-26: `dotnet test CraftingOverhaul.Tests` 690 passed; all three plugins build against the cloud stand-in; Krogon's 1.0.30 log of the solo play-test is clean (every patch applied).
+Not run yet (`/handoff` runs them). By hand on 2026-11-26: `dotnet test CraftingOverhaul.Tests` 698 passed; all three plugins build against the cloud stand-in; Krogon's 1.0.30 log of the solo play-test is clean (every patch applied).
 
 ## Merge notes
 

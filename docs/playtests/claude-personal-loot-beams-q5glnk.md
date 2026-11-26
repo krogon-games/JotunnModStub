@@ -80,3 +80,17 @@
 
 - Step `plf-1`: failed. "they look better but still not quite right. attached screenshot. Maybe they need more opacity or smokelike effect. they are too solid looking." (The screenshot shows the 14 beams of `co_personal beams`, tapered, with hard edges and bright solid cores.)
 - Steps `plf-2`, `plf-3`, `plf-4`: passed.
+
+### What changed after the final play-test
+
+- Step `plf-1`: the beams are now soft-edged and see-through (they fade to nothing at their sides instead of a hard edge, and the core is dimmer), with a faint, wider glow around each and slow smoke-like wisps rising up it. Still tapered, pulsing, same colours and sizes. Every number is in `Corruption/Data/personal_loot.csv`, and you can change any of them live with `co_personal look`.
+
+### Look test (after the final play-test)
+
+**Build:** the three DLLs from this branch again. Same setup; dusk or night shows the beams best, then check daylight too.
+
+1. [ ] (`plg-1`) `co_personal beams` → every beam is soft at its sides and see-through, with a faint haze around it and a few slow wisps drifting up it; still thick at the base and thin at the top, pulsing slowly, same colours. Compare with your screenshot.
+2. [ ] (`plg-2`) **Tune it yourself:** `co_personal look` lists the settings. Try for example `co_personal look beam_alpha 0.3` (fainter core) or `0.6` (stronger), `co_personal look glow_alpha 0.25` (more haze), `co_personal look smoke_per_second 6` (more wisps), `co_personal look smoke_alpha 0.4` (stronger wisps), `co_personal look edge_softness 0.9` (softer sides). Every change redraws the beams at once and prints a line like `personal_loot.csv: beam_alpha = 0.3`. Paste the lines you like into the note; `co_personal look reset` goes back.
+3. [ ] (`plg-3`) In daylight and from about 50 m → the tall beams are still easy to find.
+4. [ ] (`plg-4`) Kill `spawn Greyling 20` near the line of beams → the game runs as smoothly as without them; F5 shows no red errors. Send `BepInEx/LogOutput.log`.
+
