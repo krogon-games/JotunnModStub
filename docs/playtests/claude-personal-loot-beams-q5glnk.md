@@ -51,6 +51,17 @@
 
 15. [ ] (`pl-15`) Drop an orb from your own inventory (drag it out) → no beam, and you pick it up again normally. F5 shows no red errors from the whole session. Send `BepInEx/LogOutput.log`.
 
-### Your feedback
+### Your feedback (2026-11-26, phone page; build `claude/personal-loot-beams-q5glnk 21b7a26`, Valheim 1.0.30)
 
-(Not yet.)
+- Step 1: not marked; the log has the line (`Personal loot: 14 beam rows, a drop is locked to its owner for 60 s.`) and no errors at startup.
+- Step 2: passed. "beam is massive though, way too big. shrink to half the size."
+- Step 3: passed.
+- Step 4: passed. "they are all too one dimensional so to say. i think they would look better if they flare. thick at base and thinner towards the top. all the taller ones are just too tall. Would look better if the beam pulsated very slowly"
+- Steps 5–13: passed.
+- Step 14: passed. "fine with the level up sound for now. maybe we can make our own custom sounds similar to diablo 4 drops sounds."
+- Step 15: passed.
+- The log (Claude's reading): every patch applied on 1.0.30 (no `Failed to apply patch` line), the beam's shader was found, no errors from this round. The heart's log lines are as expected (`Rip loot: 1 player(s) near the heart.`, then your share: 4 Feathers, 4 Torch, 3 Amber, 31 Coins, 1 shard, the Meadows map; 9 drops). The only warnings are older ones (Orlog's F2 panel on 1.0.30, #86; the game's own).
+
+### What changed after the feedback
+
+(In progress: the tall beams at half size, every beam tapering from its base and pulsing slowly; the level-up sound stays. Handoff decisions 13–15.)
