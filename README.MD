@@ -56,7 +56,12 @@ See [`CraftingOverhaul/README.md`](CraftingOverhaul/README.md) for the full feat
 
 ## After a game update
 
-Rebuild. The prebuild step regenerates the publicized assemblies. If a patched method changed, the mod logs `Failed to apply patch ...` in `BepInEx/LogOutput.log` and disables only that feature.
+1. Close Valheim.
+2. Delete `valheim_Data/Managed/publicized_assemblies` in the Valheim folder, so the prebuild step makes fresh copies from the new game (an old copy hides changes).
+3. Build the solution. If it stops with "The process cannot access the file '…_publicized.dll' because it is being used by another process", the three plugins' prebuild steps wrote the same copies at once (or Valheim was still open): just **Build** again; the copies are there now (2026-11-26, Valheim 1.0.30).
+4. Errors that name our own files are game changes our code meets at compile time; fix those first. Warnings such as "Found conflicts between different versions of netstandard" are normal for Unity games.
+
+Some changes only show at runtime: if a patched method changed, the mod logs `Failed to apply patch ...` in `BepInEx/LogOutput.log` and disables only that feature; a field or method our code reads that's gone shows as a `MissingFieldException` or `MissingMethodException` in the log when that code first runs.
 
 ## Developing Assets with Unity
 
