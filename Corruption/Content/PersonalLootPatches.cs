@@ -47,6 +47,61 @@ namespace Corruption.Content
             }
         }
 
+        /// <summary>
+        ///     The lock no longer depends only on the hidden view: vanilla auto-pickup calls <c>RequestOwn</c> on a drop it
+        ///     can't take yet, and <c>RPC_RequestOwn</c> (not patched, so the lock's owner always gets the item) hands
+        ///     ownership to anyone. A drop locked to another player never asks for ownership from this game.
+        /// </summary>
+        [HarmonyPatch(typeof(ItemDrop), nameof(ItemDrop.RequestOwn))]
+        private static class RequestOwn
+        {
+            private static bool Prefix(ItemDrop __instance)
+            {
+                bool skip = false;
+                try
+                {
+                    skip = IsLockedAway(__instance);
+                }
+                catch (System.Exception ex)
+                {
+                    Safe.Report("keep a locked drop from asking for ownership", ex);
+                    skip = false;
+                }
+                return !skip;
+            }
+        }
+
+        /// <summary>
+        ///     A drop locked to another player can't be picked up from this game, whatever its view did: auto-pickup then
+        ///     goes to <c>RequestOwn</c> (skipped above) instead of pulling the item, and creatures can't eat it.
+        /// </summary>
+        [HarmonyPatch(typeof(ItemDrop), nameof(ItemDrop.CanPickup))]
+        private static class CanPickup
+        {
+            private static bool Prefix(ItemDrop __instance, ref bool __result)
+            {
+                bool refuse = false;
+                try
+                {
+                    refuse = IsLockedAway(__instance);
+                }
+                catch (System.Exception ex)
+                {
+                    Safe.Report("keep a locked drop from being picked up", ex);
+                    refuse = false;
+                }
+                if (refuse)
+                {
+                    __result = false;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        /// <summary>All the game-member access: true when this drop is locked to another player, as seen from this game.</summary>
+        private static bool IsLockedAway(ItemDrop drop) => PersonalLoot.Enabled && drop && PersonalLoot.IsHiddenFromMe(drop);
+
         /// <summary>The E key on a drop locked to someone else does nothing, quietly (the item is invisible to that player).</summary>
         [HarmonyPatch(typeof(ItemDrop), nameof(ItemDrop.Interact))]
         private static class Interact

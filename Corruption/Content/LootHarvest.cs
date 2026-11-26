@@ -147,12 +147,15 @@ namespace Corruption.Content
 
         private static HarvestChances Read(ZPackage pkg)
         {
-            return new HarvestChances
+            var chances = new HarvestChances
             {
                 Bounty = pkg.ReadSingle(), WoodBounty = pkg.ReadSingle(), Stamina = pkg.ReadSingle(), Ore = pkg.ReadSingle(),
                 Gem = pkg.ReadSingle(), MiningOrb = pkg.ReadSingle(), WoodcuttingOrb = pkg.ReadSingle(), Seed = pkg.ReadSingle(),
-                Charring = pkg.ReadSingle(), Odin = pkg.ReadBool(), StrikerPlayer = pkg.ReadLong()
+                Charring = pkg.ReadSingle(), Odin = pkg.ReadBool()
             };
+            // A striker on an older build sends no id at the end: their harvest still counts, with an unowned orb.
+            chances.StrikerPlayer = pkg.GetPos() < pkg.Size() ? pkg.ReadLong() : 0L;
+            return chances;
         }
 
         /// <summary>Determined, on the striker: the owner reports a harvest.</summary>
