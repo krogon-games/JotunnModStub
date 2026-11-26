@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Asking Krogon questions.** The round and branch wait for Krogon's confirmation; then the map tiers and affixes table, one decision at a time (Open questions below). Nothing is built yet.
+**Asking Krogon questions.** Round and branch confirmed (decision 1); the map tiers and affixes table, one decision at a time (Open questions below). Nothing is built yet.
 
 ## Purpose
 
@@ -28,6 +28,8 @@ Nothing built yet. Read for the round: the design, the handoffs of the rips, orb
 - Building: "The map's tier and affixes live in the item's custom data and travel with the rip request, so the server and every player's game agree. Old maps (no tier) must keep working as tier 1." "Rules in pure, unit-tested files; numbers in data tables under Corruption/Data (a map tiers and map affixes table); nothing guessed." "Tooltip lines for tier and affixes in the same layout as gear affixes." "The Forge tab gets map rolling: the main session sets the layout numbers, a Sonnet subagent builds it, and I see a preview picture first." Harmony patches written by a Sonnet subagent and reviewed by an Opus subagent "against the game code and mod-compatibility.md". Dev console commands "so I can test alone: make a map of any tier and affixes, show a rip's tier and affixes, and force the explored-land fallback without exploring a whole biome." The handoff names the game methods relied on (weather, status effects, the landing search), so his 1.0.30 build and log can confirm them.
 - Checks: Claude runs the tests and builds and reads every diff, then "a separate review with an Opus subagent, focused on multiplayer and the dedicated server".
 - No version changes; no edits to `STATUS.md` or `docs/DECISIONS.md`. With time to spare, tell him what related rips work could fit (e.g. R5, #40) "before starting anything else. Don't start a second area on your own."
+
+1. **This round and branch** (2026-11-26): "Yes" to #31 (bring the table up to date, approve it one question at a time, then build tiers 1–2 with the affixes) and #84 (the explored-land fallback), on `claude/festive-gates-79y1yr` (the rips area's old `claude/rips-bosses` is merged and finished); checklist `docs/playtests/claude-festive-gates-79y1yr.md` and the phone page.
 
 ## Playtest
 
