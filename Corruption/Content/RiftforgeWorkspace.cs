@@ -387,9 +387,9 @@ namespace Corruption.Content
                 return;
             }
             var option = options[chosen];
-            // Every shard use asks first, unless this player switched its warning off (Krogon, 2026-11-10).
-            if (option.Id == MapForge.CorruptId ? CorruptionConfig.WarnBeforeCorruptingMaps.Value
-                    : ForgeRules.NeedsConfirmation(option.Id) && CorruptionConfig.WarnBeforeCorrupting.Value)
+            // A shard on gear asks first, unless this player switched its warning off (Krogon, 2026-11-10). A shard on a
+            // map works at once, like an orb: "Players should know what a corruption shard does by now" (2026-11-27).
+            if (ForgeRules.NeedsConfirmation(option.Id) && CorruptionConfig.WarnBeforeCorrupting.Value)
             {
                 OpenConfirm(option, material);
                 return;
@@ -584,21 +584,7 @@ namespace Corruption.Content
             CloseConfirm();
             bool shatter = option.Id == ShatterRules.OperationId;
             var content = new ForgeDialogContent { Item = _target, ItemName = TargetName() };
-            if (option.Id == MapForge.CorruptId)
-            {
-                // The approved picture: the map with its tier number, the cost, two lines of explanation; no warning
-                // (a map never breaks) and no outcome table.
-                content.Title = "Corrupt Map";
-                content.Compact = true;
-                content.Cost = "Cost: 1 " + Localization.instance.Localize(Texts.ShardName) + " (you have " + CountOf(ShardRules.ShardPrefab) + ")";
-                content.Explanation = MapForge.CorruptExplanation(_target);
-                content.ConfirmLabel = "Corrupt";
-                if (MapForge.BadgeOf(_target, out string tier, out Color tierColor))
-                {
-                    content.IconBadge = "<color=#" + ColorUtility.ToHtmlStringRGB(tierColor) + ">" + tier + "</color>";
-                }
-            }
-            else if (shatter)
+            if (shatter)
             {
                 content.Title = "Shatter item";
                 content.Cost = "Cost: Free";
@@ -656,8 +642,7 @@ namespace Corruption.Content
             {
                 // Remembered between sessions, each warning on its own (Krogon, 2026-11-10). It only counts here, on
                 // confirming; switch the warnings back on in the mod's settings (10 - Riftforge).
-                var setting = id == ShatterRules.OperationId ? CorruptionConfig.WarnBeforeShattering
-                    : id == MapForge.CorruptId ? CorruptionConfig.WarnBeforeCorruptingMaps : CorruptionConfig.WarnBeforeCorrupting;
+                var setting = id == ShatterRules.OperationId ? CorruptionConfig.WarnBeforeShattering : CorruptionConfig.WarnBeforeCorrupting;
                 setting.Value = false;
             }
             if (material != null)

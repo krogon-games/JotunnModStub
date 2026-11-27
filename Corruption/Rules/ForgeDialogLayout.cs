@@ -76,7 +76,7 @@ namespace Corruption.Rules
         ///     shorter). <paramref name="availableHeight" /> is the screen's height in the same units (0: don't scale).
         /// </summary>
         public static ForgeDialogLayout Compute(float nameHeight, float warningHeight, IList<float> rowHeights, float explanationHeight,
-            float lineHeight, float availableHeight, bool withList = true)
+            float lineHeight, float availableHeight)
         {
             var l = new ForgeDialogLayout();
             float x = Padding, y = TitleTop;
@@ -91,29 +91,24 @@ namespace Corruption.Rules
             l.Cost = new Box { X = x, Y = y, W = ContentWidth, H = CostHeight };
             y = l.Cost.Bottom + AfterCost;
 
-            // Without the list (the corrupt-map dialog, Krogon 2026-11-26): no warning, no list and no chances; the
-            // explanation follows the cost, as in the approved picture.
-            if (withList)
+            l.Warning = new Box { X = x, Y = y, W = ContentWidth, H = Math.Max(lineHeight, warningHeight) };
+            y = l.Warning.Bottom + AfterWarning;
+
+            float chanceX = x + ContentWidth - ChanceWidth;
+            l.ListHeader = new Box { X = x, Y = y, W = DescriptionWidth, H = HeaderHeight };
+            l.ChanceHeader = new Box { X = chanceX, Y = y, W = ChanceWidth, H = HeaderHeight };
+            l.Divider = new Box { X = x, Y = l.ListHeader.Bottom + 3f, W = ContentWidth, H = 2f };
+            y = l.ListHeader.Bottom + AfterHeader;
+
+            for (int i = 0; i < rowHeights.Count; i++)
             {
-                l.Warning = new Box { X = x, Y = y, W = ContentWidth, H = Math.Max(lineHeight, warningHeight) };
-                y = l.Warning.Bottom + AfterWarning;
-
-                float chanceX = x + ContentWidth - ChanceWidth;
-                l.ListHeader = new Box { X = x, Y = y, W = DescriptionWidth, H = HeaderHeight };
-                l.ChanceHeader = new Box { X = chanceX, Y = y, W = ChanceWidth, H = HeaderHeight };
-                l.Divider = new Box { X = x, Y = l.ListHeader.Bottom + 3f, W = ContentWidth, H = 2f };
-                y = l.ListHeader.Bottom + AfterHeader;
-
-                for (int i = 0; i < rowHeights.Count; i++)
-                {
-                    float h = Math.Max(lineHeight, rowHeights[i]);
-                    l.Descriptions.Add(new Box { X = x, Y = y, W = DescriptionWidth, H = h });
-                    // The chance sits on the row's first line, right-aligned in its own column.
-                    l.Chances.Add(new Box { X = chanceX, Y = y, W = ChanceWidth, H = lineHeight });
-                    y += h + (i < rowHeights.Count - 1 ? RowGap : 0f);
-                }
-                y += AfterRows;
+                float h = Math.Max(lineHeight, rowHeights[i]);
+                l.Descriptions.Add(new Box { X = x, Y = y, W = DescriptionWidth, H = h });
+                // The chance sits on the row's first line, right-aligned in its own column.
+                l.Chances.Add(new Box { X = chanceX, Y = y, W = ChanceWidth, H = lineHeight });
+                y += h + (i < rowHeights.Count - 1 ? RowGap : 0f);
             }
+            y += AfterRows;
 
             l.Explanation = new Box { X = x, Y = y, W = ContentWidth, H = explanationHeight };
             y = l.Explanation.Bottom + AfterExplanation;

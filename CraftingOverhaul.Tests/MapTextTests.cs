@@ -127,31 +127,11 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void TheCorruptExplanationNamesTheNewMap()
-        {
-            Assert.Equal(
-                "The map becomes tier 6: Corrupted Meadows map.\nIt never breaks, but it is locked: no orb can change it afterwards. " +
-                "Only a Mirror of Kalandra still works on it.", MapText.CorruptExplanation(6, "Corrupted Meadows map"));
-        }
-
-        [Fact]
         public void AMissingRowReadsAsANormalMap()
         {
             Assert.Equal("Tier 1 · Normal map", MapText.Header(null));
             Assert.Equal("Meadows map", MapText.Name("Meadows map", null));
             Assert.Equal("#FFFFFF", MapText.ColorOf(null));
-        }
-
-        [Fact]
-        public void TheCorruptMapDialogHasNoListAndTheExplanationFollowsTheCost()
-        {
-            var l = ForgeDialogLayout.Compute(20f, 0f, new List<float>(), 40f, 20f, 0f, false);
-            Assert.Empty(l.Descriptions);
-            Assert.Equal(l.Cost.Bottom + ForgeDialogLayout.AfterCost, l.Explanation.Y);
-            var full = ForgeDialogLayout.Compute(20f, 20f, new List<float> { 20f }, 40f, 20f, 0f);
-            Assert.True(l.Height < full.Height);
-            Assert.True(l.Tick.Y > l.Explanation.Bottom);
-            Assert.True(l.Footer.Y > l.Tick.Bottom);
         }
     }
 }

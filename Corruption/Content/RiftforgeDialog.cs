@@ -19,12 +19,6 @@ namespace Corruption.Content
         public string Explanation;
         public string ConfirmLabel;
 
-        /// <summary>No warning, list heading, list or chances (the corrupt-map dialog): the explanation follows the cost.</summary>
-        public bool Compact;
-
-        /// <summary>Rich text drawn in the icon's top-right corner (a map's tier number), empty for none.</summary>
-        public string IconBadge = "";
-
         /// <summary>The left column, rich text (affix lines as the Forge shows them, or a shard's outcomes).</summary>
         public readonly List<string> Rows = new List<string>();
 
@@ -170,10 +164,9 @@ namespace Corruption.Content
             // The texts first, so their wrapped heights can be measured before anything is placed.
             var nameText = Make("Name", content.ItemName, 21f, Body, TextAlignmentOptions.MidlineLeft);
             var costText = Make("Cost", content.Cost, 13.5f, Secondary, TextAlignmentOptions.TopLeft);
-            bool list = !content.Compact;
-            var warningText = Make("Warning", list ? "<color=" + WarningColor + ">" + content.Warning + "</color>" : "", 16f, Body, TextAlignmentOptions.TopLeft);
-            var listHeading = Make("ListHeading", list ? content.ListHeading : "", 14f, Heading, TextAlignmentOptions.BottomLeft);
-            var chanceHeading = Make("ChanceHeading", list ? ChanceHeading : "", 14f, Heading, TextAlignmentOptions.BottomRight);
+            var warningText = Make("Warning", "<color=" + WarningColor + ">" + content.Warning + "</color>", 16f, Body, TextAlignmentOptions.TopLeft);
+            var listHeading = Make("ListHeading", content.ListHeading, 14f, Heading, TextAlignmentOptions.BottomLeft);
+            var chanceHeading = Make("ChanceHeading", ChanceHeading, 14f, Heading, TextAlignmentOptions.BottomRight);
             var explanation = Make("Explanation", content.Explanation, 14f, Secondary, TextAlignmentOptions.TopLeft);
             var tickLabel = Make("DontWarnLabel", DontWarnLabel, 14f, Body, TextAlignmentOptions.MidlineLeft);
             var descriptions = new List<TMP_Text>();
@@ -189,7 +182,7 @@ namespace Corruption.Content
             // One line of body text: a row is never shorter than its chance.
             float lineHeight = chances.Count > 0 ? Measure(chances[0], ForgeDialogLayout.ChanceWidth) : 22f;
             var layout = ForgeDialogLayout.Compute(Measure(nameText, ForgeDialogLayout.NameWidth), Measure(warningText, ForgeDialogLayout.ContentWidth),
-                heights, Measure(explanation, ForgeDialogLayout.ContentWidth), lineHeight, screen.rect.height / u, list);
+                heights, Measure(explanation, ForgeDialogLayout.ContentWidth), lineHeight, screen.rect.height / u);
 
             panel.sizeDelta = new Vector2(ForgeDialogLayout.Width * u, layout.Height * u);
             panel.localScale = Vector3.one * layout.Scale;
@@ -214,26 +207,10 @@ namespace Corruption.Content
             Place(icon, layout.Icon);
             Place(nameText, layout.Name);
             Place(costText, layout.Cost);
-            if (list)
-            {
-                Place(warningText, layout.Warning);
-                Place(listHeading, layout.ListHeader);
-                Place(chanceHeading, layout.ChanceHeader);
-                Place(Block("Divider", Rule), layout.Divider);
-            }
-            else
-            {
-                warningText.gameObject.SetActive(false);
-                listHeading.gameObject.SetActive(false);
-                chanceHeading.gameObject.SetActive(false);
-            }
-            if (!string.IsNullOrEmpty(content.IconBadge))
-            {
-                var badge = Make("IconBadge", content.IconBadge, 19f, Body, TextAlignmentOptions.TopRight);
-                badge.fontStyle = FontStyles.Bold;
-                badge.textWrappingMode = TextWrappingModes.NoWrap;
-                Place(badge, new ForgeDialogLayout.Box { X = layout.Icon.X, Y = layout.Icon.Y + 1f, W = layout.Icon.W - 3f, H = 24f });
-            }
+            Place(warningText, layout.Warning);
+            Place(listHeading, layout.ListHeader);
+            Place(chanceHeading, layout.ChanceHeader);
+            Place(Block("Divider", Rule), layout.Divider);
             for (int i = 0; i < descriptions.Count; i++)
             {
                 Place(descriptions[i], layout.Descriptions[i]);

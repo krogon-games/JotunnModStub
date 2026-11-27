@@ -135,12 +135,5 @@ namespace Corruption.Rules
         {
             return value.ToString("0.##", CultureInfo.InvariantCulture);
         }
-
-        /// <summary>The two lines of the corrupt-map confirmation under the cost (the picture's wording).</summary>
-        public static string CorruptExplanation(int corruptTier, string corruptedName)
-        {
-            return "The map becomes tier " + corruptTier.ToString(CultureInfo.InvariantCulture) + ": " + corruptedName + ".\n" +
-                   "It never breaks, but it is locked: no orb can change it afterwards. Only a Mirror of Kalandra still works on it.";
-        }
     }
 }

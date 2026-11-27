@@ -308,18 +308,6 @@ namespace Corruption.Content
             return option;
         }
 
-        /// <summary>The corrupt-map dialog's explanation: the tier it becomes and what the lock means.</summary>
-        public static string CorruptExplanation(ItemDrop.ItemData item)
-        {
-            var view = ViewOf(item);
-            if (view == null)
-            {
-                return "";
-            }
-            var tiers = MapTiers.Tables.Tiers;
-            return MapText.CorruptExplanation(tiers.CorruptTier, MapText.Name(view.BaseName, tiers.Row(tiers.CorruptTier)));
-        }
-
         /// <summary>Null when the item isn't a map (the gear rules go ahead); for a map every operation is answered here.</summary>
         public RiftforgeResult Apply(ItemDrop.ItemData item, ItemDrop.ItemData material, string operationId)
         {
