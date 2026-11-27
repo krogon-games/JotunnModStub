@@ -124,6 +124,30 @@ namespace Corruption.Content
             return false;
         }
 
+        /// <summary>
+        ///     The data of the nearest live heart (loaded here, not yet expired) within <paramref name="distance" /> metres
+        ///     (ground distance) of a point, or null. Reads the list the heart keeps, never searches the scene.
+        /// </summary>
+        public static ZDO NearestData(Vector3 point, float distance)
+        {
+            ZDO best = null;
+            float bestDistance = distance;
+            foreach (var heart in Instances)
+            {
+                if (!heart || !heart.m_nview || !heart.m_nview.IsValid())
+                {
+                    continue;
+                }
+                float d = Utils.DistanceXZ(heart.transform.position, point);
+                if (d <= bestDistance && !Rips.IsExpired(heart.m_nview.GetZDO()))
+                {
+                    bestDistance = d;
+                    best = heart.m_nview.GetZDO();
+                }
+            }
+            return best;
+        }
+
         private void Awake()
         {
             m_nview = GetComponent<ZNetView>();

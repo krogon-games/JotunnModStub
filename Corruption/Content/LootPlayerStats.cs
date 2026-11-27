@@ -91,7 +91,7 @@ namespace Corruption.Content
 
     /// <summary>
     ///     Resistance affixes: less fire, frost, lightning and poison damage taken, on top of vanilla's resistances.
-    ///     Hits on a player arrive at that player's own game (the owner), so they are reduced there.
+    ///     Hits on a player arrive at that player's own game (the owner), so they are reduced there. Exposed (<see cref="RipCurse" />) lowers every element's total here.
     /// </summary>
     [HarmonyPatch(typeof(Character), nameof(Character.RPC_Damage))]
     internal static class LootResistances
@@ -105,10 +105,13 @@ namespace Corruption.Content
             Safe.Run("apply resistance affixes", () =>
             {
                 var items = Loot.Equipped(player);
-                hit.m_damage.m_fire *= 1f - AffixTotals.ResistancePercent("fire", items, Loot.Affixes, Loot.Caps) / 100f;
-                hit.m_damage.m_frost *= 1f - AffixTotals.ResistancePercent("frost", items, Loot.Affixes, Loot.Caps) / 100f;
-                hit.m_damage.m_lightning *= 1f - AffixTotals.ResistancePercent("lightning", items, Loot.Affixes, Loot.Caps) / 100f;
-                hit.m_damage.m_poison *= 1f - AffixTotals.ResistancePercent("poison", items, Loot.Affixes, Loot.Caps) / 100f;
+                // Exposed (a rip heart's affix within 96 m): taken off each gear total after its cap, so it can't be capped
+                // away; a total below 0 means more damage, which the same formula gives.
+                float penalty = RipCurse.ResistancePenalty;
+                hit.m_damage.m_fire *= 1f - (AffixTotals.ResistancePercent("fire", items, Loot.Affixes, Loot.Caps) - penalty) / 100f;
+                hit.m_damage.m_frost *= 1f - (AffixTotals.ResistancePercent("frost", items, Loot.Affixes, Loot.Caps) - penalty) / 100f;
+                hit.m_damage.m_lightning *= 1f - (AffixTotals.ResistancePercent("lightning", items, Loot.Affixes, Loot.Caps) - penalty) / 100f;
+                hit.m_damage.m_poison *= 1f - (AffixTotals.ResistancePercent("poison", items, Loot.Affixes, Loot.Caps) - penalty) / 100f;
             });
         }
     }

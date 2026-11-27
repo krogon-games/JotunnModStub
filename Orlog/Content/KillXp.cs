@@ -24,6 +24,14 @@ namespace Orlog.Content
     {
         private const string RpcXp = "Orlog_Xp";
         private const string RpcBossKill = "Orlog_BossKill";
+
+        /// <summary>
+        ///     Object data on a rip creature: the experience factor its map's affixes give (float, absent = 1). Written by
+        ///     Corruption (<c>MapTiers.KeyExperience</c> in Corruption/Content/MapTiers.cs), which Orlog doesn't reference:
+        ///     the two plugins share only this key's name, so change both together.
+        /// </summary>
+        private const string KeyRipExperience = "corruption_rip_xp";
+        private const float MaxRipExperience = 10f;
         private static readonly List<Player> Nearby = new List<Player>();
 
         [HarmonyPatch(typeof(Game), nameof(Game.Start))]
@@ -80,7 +88,9 @@ namespace Orlog.Content
                 creatureLevel = Mathf.Max(1, Mathf.RoundToInt((float)levelSum / Nearby.Count));
             }
             // A boss is worth several ordinary creatures of its level (D2's act bosses, user 2026-11-15; Kall's earlier phases give none).
-            double perLevel = Mathf.Max(1, creature.GetLevel()) * OrlogConfig.XpMultiplier.Value
+            // A rip's Glorious affix: more XP from the creature (Corruption writes the factor on the creature's data).
+            float ripFactor = Mathf.Clamp(creature.m_nview.GetZDO().GetFloat(KeyRipExperience, 1f), 1f, MaxRipExperience);
+            double perLevel = Mathf.Max(1, creature.GetLevel()) * OrlogConfig.XpMultiplier.Value * ripFactor
                               * Progress.Biomes.BossXpMultiplier(Utils.GetPrefabName(creature.gameObject));
             var shares = ExperienceRules.Share(level => (long)System.Math.Round(Progress.CreatureXp.For(level) * perLevel), creatureLevel, levels,
                 OrlogConfig.PartyBonusPerPlayer.Value, OrlogConfig.HighLevelPenalty.Value ? (System.Func<int, float>)Progress.Levels.HighLevelRatio : null);

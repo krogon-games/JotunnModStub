@@ -27,8 +27,17 @@ namespace Corruption.Content
 
             public override string Help =>
                 "Corruption: co_map <biome> [tier] [affix ...] - put a map in your inventory. Biomes: " + string.Join(", ", MapList.Biomes) +
-                ". With affix ids (from map_affixes.csv) they are used as given; with only a tier, random approved affixes for it " +
-                "(tier 6 = a full map, corrupted); no tier = a plain map.";
+                ". Affixes are ids from map_affixes.csv" + AffixIds() + ", each alone as \"id\" (rolls its value) or \"id:value\" " +
+                "(e.g. co_map meadows brutal:60 searing:50 tests two affixes at chosen strengths); they are used exactly as given, so one " +
+                "affix alone can be tested. With only a tier, random approved affixes for it (tier 6 = a full map, corrupted); no tier = a plain map.";
+
+            /// <summary>": glorious, teeming, ..." when the tables have loaded (the help may be read before they do).</summary>
+            private static string AffixIds()
+            {
+                return MapTiers.Loaded
+                    ? " (" + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray()) + ")"
+                    : "";
+            }
 
             public override bool IsCheat => true;
 
@@ -44,7 +53,8 @@ namespace Corruption.Content
                 string biome = args.Length > 0 ? MapList.Biomes.FirstOrDefault(b => string.Equals(b, args[0], StringComparison.OrdinalIgnoreCase)) : null;
                 if (biome == null)
                 {
-                    print.Print("Usage: co_map <biome> [tier] [affix ...]. Biomes: " + string.Join(", ", MapList.Biomes));
+                    print.Print("Usage: co_map <biome> [tier] [affix[:value] ...]. Biomes: " + string.Join(", ", MapList.Biomes) +
+                                ". Affixes" + AffixIds() + ", e.g. co_map meadows brutal:60 searing:50.");
                     return;
                 }
                 var prefab = ObjectDB.instance.GetItemPrefab(MapList.ItemPrefix + biome);
@@ -81,7 +91,7 @@ namespace Corruption.Content
                         var unknown = affixIds.Where(a => tables.Affixes.Find(a) == null).ToList();
                         if (unknown.Count > 0)
                         {
-                            print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}. Known: {string.Join(", ", tables.Affixes.Affixes.Select(a => a.Id).ToArray())}.");
+                            print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}. Known: {string.Join(", ", tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray())}.");
                             return;
                         }
                         // Explicit ids may break the group rule (dev tool).
@@ -193,6 +203,7 @@ namespace Corruption.Content
                 string left = closeMs > 0 && ZNet.instance ? RipRules.TimeLeft(closeMs / 1000.0 - ZNet.instance.GetTimeSeconds()) : "unknown";
                 print.Print($"Rip {kind}, {bestDistance:0} m away: {zdo.GetString(Rips.KeyBiome, "?")}, " +
                             $"{MapTiers.Describe(MapTiers.TierOf(zdo), MapTiers.AffixIdsOf(zdo))}. " +
+                            $"Values: {MapTiers.DescribeValues(MapTiers.AffixesOf(zdo))}. " +
                             $"Closes in {left}. Heart: {(heartAt == Vector3.zero ? "not known from here" : heartAt.ToString("0"))}. " +
                             $"This game owns it: {(best.IsOwner() ? "yes" : "no")}.");
             }

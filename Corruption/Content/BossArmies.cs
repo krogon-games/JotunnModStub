@@ -151,6 +151,8 @@ namespace Corruption.Content
                 MapTiers.CopyStamp(stampFrom, zdo);
                 // When the rip closes, its creatures leave like a vanilla raid's (Maddened.KeepEffect; MP review, 2026-11-27).
                 zdo.Set(Rips.KeyClose, stampFrom.GetLong(Rips.KeyClose, 0L));
+                // After the stamp: the Health affixes raise the maximum health Awake and SetLevel worked out before it existed.
+                MapAffixEffects.OnStamped(character);
             }
             return character;
         }

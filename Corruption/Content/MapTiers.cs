@@ -18,6 +18,13 @@ namespace Corruption.Content
         /// <summary>Object data on the rip portals, the heart and each rip creature: the map's affixes as "id:value", joined by <see cref="MapData.Separator" />.</summary>
         public const string KeyAffixes = "corruption_rip_affixes";
 
+        /// <summary>
+        ///     Object data on each stamped rip creature (only when it isn't 1): the experience factor its affixes give
+        ///     (<see cref="RipTierRules.ExperienceFactor" />, float). <b>Orlog</b> reads this same key by name
+        ///     (<c>Orlog/Content/KillXp.cs</c>, which has no reference to Corruption): change both together.
+        /// </summary>
+        public const string KeyExperience = "corruption_rip_xp";
+
         /// <summary>Null until <see cref="Load" /> succeeds.</summary>
         public static MapTables Tables { get; private set; }
 
@@ -111,6 +118,16 @@ namespace Corruption.Content
             }
             zdo.Set(KeyTier, tier < 1 ? 1 : tier);
             zdo.Set(KeyAffixes, affixes ?? "");
+            // Orlog works out kill XP without knowing Corruption, so the factor travels on the object itself.
+            double experience = Loaded ? RipTierRules.ExperienceFactor(RollsOf(affixes)) : 1.0;
+            if (experience > 1.0)
+            {
+                zdo.Set(KeyExperience, (float)experience);
+            }
+            else
+            {
+                zdo.RemoveFloat(KeyExperience);
+            }
         }
 
         /// <summary>Copies the tier and affixes from one object to another (heart → exit rip, heart → creature).</summary>
@@ -148,12 +165,18 @@ namespace Corruption.Content
         /// <summary>The affixes on an object that the table knows, with their values (a bare id reads as Min, values are clamped); unknown ids are skipped.</summary>
         public static List<MapAffixRoll> AffixesOf(ZDO zdo)
         {
+            return zdo == null ? new List<MapAffixRoll>() : RollsOf(zdo.GetString(KeyAffixes, ""));
+        }
+
+        /// <summary>The same for a stamp's text ("id:value;id:value"); none when the tables didn't load.</summary>
+        public static List<MapAffixRoll> RollsOf(string joined)
+        {
             var list = new List<MapAffixRoll>();
-            if (!Loaded || zdo == null)
+            if (!Loaded)
             {
                 return list;
             }
-            foreach (var entry in MapData.ParseEntries(zdo.GetString(KeyAffixes, "")))
+            foreach (var entry in MapData.ParseEntries(joined))
             {
                 var affix = Tables.Affixes.Find(entry.Id);
                 if (affix != null && !list.Any(r => r.Affix == affix))
@@ -162,6 +185,17 @@ namespace Corruption.Content
                 }
             }
             return list;
+        }
+
+        /// <summary>"glorious 75, brutal 40" for logs and <c>co_rip</c>: each affix with the value this rip rolled.</summary>
+        public static string DescribeValues(IEnumerable<MapAffixRoll> rolls)
+        {
+            var parts = new List<string>();
+            foreach (var roll in rolls ?? Enumerable.Empty<MapAffixRoll>())
+            {
+                parts.Add(roll.Affix.Id + " " + MapData.FormatValue(roll.Value));
+            }
+            return parts.Count > 0 ? string.Join(", ", parts.ToArray()) : "no affixes";
         }
 
         /// <summary>Whether an object carries a given affix id.</summary>

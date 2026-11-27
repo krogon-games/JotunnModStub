@@ -56,7 +56,8 @@ namespace Corruption.Content
                     Jotunn.Logger.LogInfo($"Rip waves: this game now runs the waves of rip {m_nview.GetZDO().m_uid}" +
                                           (MapTiers.Loaded
                                               ? $": {MapTiers.Describe(MapTiers.TierOf(m_nview.GetZDO()), MapTiers.AffixIdsOf(m_nview.GetZDO()))}, " +
-                                                $"waves x{m_multiplier}, {m_twoStarPercent}% guaranteed 2-stars."
+                                                $"waves x{m_multiplier}, {m_twoStarPercent}% guaranteed 2-stars. " +
+                                                $"Affix values: {MapTiers.DescribeValues(MapTiers.AffixesOf(m_nview.GetZDO()))}."
                                               : $": no tiers loaded, waves x{m_multiplier}."));
                 }
                 if (!m_resolved)
@@ -148,6 +149,7 @@ namespace Corruption.Content
                 {
                     MapTiers.CopyStamp(m_nview.GetZDO(), character.m_nview.GetZDO());
                     character.m_nview.GetZDO().Set(Rips.KeyClose, m_nview.GetZDO().GetLong(Rips.KeyClose, 0L));
+                    MapAffixEffects.OnStamped(character);
                 }
                 character.GetBaseAI()?.SetHuntPlayer(true);
             }
