@@ -12,7 +12,7 @@ The rips round: map tiers and affixes ([#31](https://github.com/krogon-games/Jot
 
 ## Done
 
-- **Re-test (2026-11-27), all eight steps Pass by Krogon's marks:** the fallback on explored land after its fix, unexplored land again, the leftovers leaving once the rip closed, no red errors, and the redesigned tooltip and Forge view at tiers 1, 3, 5 and 6 and at a smaller GUI scale. No log was sent for that game, so the fallback's timing on explored land isn't recorded.
+- **Re-test (2026-11-27), all eight steps Pass by Krogon's marks:** the fallback on explored land after its fix, unexplored land again, the leftovers leaving once the rip closed, no red errors, and the redesigned tooltip and Forge view at tiers 1, 3, 5 and 6 and at a smaller GUI scale. His saved log of that game (build `eb7ce0f`, Valheim 1.0.31, no errors): the fallback rip opened on explored land (`Rip request: 10 candidate(s) (explored-land fallback), 3 away from player-placed objects (96 m); checked 3 placed object(s) near them of 250075 in 20 ms.`, a tier 3 Meadows rip next to where his first play-test's rip had been), then, after the settings reload for `OpenDays`, a white-map rip on unexplored land (16 ms). The log doesn't record creatures leaving, so the leftovers stand on his mark.
 
 **Confirmed in game** (Krogon's solo play-test, 2026-11-27, single player, Valheim 1.0.31, build `f1bc90c`; his marks plus his log):
 - Maps, the tooltip and the Forge tab (`mt-1` … `mt-4c`, `mt-6` … `mt-11`): tier numbers on icons, the tooltips, every orb on maps, the refusals, Annulment, Alchemy, the Mirror of Kalandra, gear still working, old maps as tier 1.

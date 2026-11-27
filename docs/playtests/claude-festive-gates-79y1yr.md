@@ -115,7 +115,7 @@ Solo, single player, Valheim 1.0.31, build `claude/festive-gates-79y1yr f4d8580`
 
 ### Re-test (2026-11-27)
 Solo, single player, Valheim 1.0.31, the build with the fallback fix and then the maps UI redesign. Marks from the phone page; you: "Playtested. UI looks much better."
-- Steps 1–4 (`mtg-1` … `mtg-4`: the fallback on explored land, back to unexplored land, the leftovers, no red errors): Pass. No log was sent for this game, so the fallback's `Rip request … in X ms` on explored land isn't recorded (the earlier fallback run took 38 ms over 237,778 objects).
+- Steps 1–4 (`mtg-1` … `mtg-4`: the fallback on explored land, back to unexplored land, the leftovers, no red errors): Pass. Your saved log of that game (sent afterwards; build `eb7ce0f`, no errors) agrees: the fallback rip opened on land you'd explored (`Rip request: 10 candidate(s) (explored-land fallback), 3 away from player-placed objects (96 m); checked 3 placed object(s) near them of 250075 in 20 ms.`, a tier 3 rip next to where your first play-test's rip had been), then, after the settings reload for `OpenDays`, the white-map rip on unexplored land (16 ms). The log doesn't record creatures leaving, so the leftovers go by your mark.
 - Steps 5–8 (`mtg-5` … `mtg-8`: the new tooltip at tiers 1, 3, 5 and 6, the Forge with a map, a smaller GUI scale): Pass.
 
 **The round's solo play-test has passed.** Left for the group evening: `PLAYTEST.md` → Session 2, 2m (on the phone page as `mpe-2m-1` … `mpe-2m-8`).
