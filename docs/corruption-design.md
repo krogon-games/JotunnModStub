@@ -140,7 +140,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 - Waves come from the mod's own wave spawner, driven by the rip's heart, with the map's biome creatures and a raid-style on-screen message. *Changed 2026-10-28: was the vanilla raid system, which runs one raid at a time for the whole world.*
 - Spawns are **maddened**: a status effect that boosts damage and speed, disables fleeing, and ignores faction rules so creatures fight each other too.
 - Star level, the number of waves, the loot and the drop rates are pushed by map tier (see [Map affixes](#map-affixes-and-tiers); built 2026-11-27, not play-tested): the tier sets the waves, the share of guaranteed 2-stars, the heart's shards, each player's gear floor and the drop rates, and the map's affixes change the creatures. Rip creatures of rips opened since then leave once the rip has closed (they carry its closing time), as a vanilla raid's do.
-- *Since the personal-loot round (2026-11-26, passed alone, merged in PR #88) there is no chest: see End loot below.* The end loot holds the guaranteed loot: its vanilla loot, 1–3 shards, one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
+- *Since the personal-loot round (2026-11-26, passed alone, merged in PR #88) there is no chest: see End loot below.* The end loot holds the guaranteed loot: its vanilla loot, the shards of its map's tier (`map_tiers.csv`: tier 1 gives 1–4 … tier 6 gives 6–14), one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
 
 *Built 2026-10-28 (step B), from the game data and the user's answers:*
 - **Waves are the biome boss's army:** the game's own raid(s) that stop once that boss is defeated (Eikthyr → army_eikthyr … Kall Fimbulbringer → army_elakingar and army_jotuns), with their own creatures, counts, intervals, chances and group sizes. They start when a player comes within the raid's range (96 m), with the raid's own start message, and keep coming **while the heart stands**.
@@ -208,6 +208,7 @@ Affixes are the Path of Exile part: modifiers rolled onto a map that make its ri
 - **At most 4 affixes** (decision 4: "A map can only hold more then 4 affixes via means of corrupting a 5th affix on"). Claude's reading: the 5th is the corrupted-only affix of decision 6d, built in the corrupted round; until then tier 6 keeps 4.
 - **Groups** (decision 5: "Sure, create those rules. And yes, immune means takes 95% reduced damage."): never Ironskin with Warded, never Sturdy with Mighty, so no map is unwinnable. "Immune" means 95% less damage. The orbs, `co_map`'s random pick and the server (which drops a second affix of a group from a rip request) keep the rule.
 - **"In the rip"** means within 96 m of a live rip heart (decision 8: "Sure use the 96m"); the three player affixes act there.
+- **Display** *(2026-11-27, built, not play-tested)*: the tooltip and the Forge show each affix's line alone, with its rolled number and no name (decision 10: "The names of affixes do not need to be shown on the tooltip, it uses up already limited ui space."; names stay for logs and `co_rip`). The rip's portal and heart hover show the tier and each affix's line with its number (decision 15: "Tier and the lines"). Reward affixes (Glorious now) are listed under "What you'll earn", danger affixes under "What you'll face" (decision 16: "Move to earn (Recommended)"; the `section` column of `map_affixes.csv`).
 - The weather affixes below stay as designed, built later.
 
 ~~Old pool, built 2026-11-27 in the rips round, removed:~~ Swarming (waves ×2 again; replaced by Teeming's ×1.5), Hardened (30% less damage taken; replaced by Ironskin, Warded and the health affixes), Rabid (maddened bonuses doubled; replaced by Brutal, Fleet and the others) and Smouldering (25% of a hit as fire; replaced by Searing). Their old table rows are kept below, struck through.
@@ -406,7 +407,7 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 | 1-star creature | 1.25x base |
 | 2-star creature | 1.5x base |
 | Vanilla dungeon chest | 1.5x base |
-| Rip creature or rip heart loot (formerly rip chest) | 1.25x at tier 1, rising to 2x at tier 4 |
+| Rip creature or rip heart loot (formerly rip chest) | 1.25x at tier 1, +0.25 per tier, up to 2.5x at tier 6 (`rip_tier_1` … `rip_tier_6` in `drop_modifiers.csv`) |
 | 3-star creature (rips only) | 2x base |
 | Corrupted boss | 3x base, on top of its boss unique roll |
 

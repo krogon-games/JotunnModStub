@@ -20,8 +20,8 @@ spawn CorruptionShard 2
 Use a **fresh** white map for each test (`co_map meadows`), so one map's affixes don't mix into the next. Open the log (`BepInEx/LogOutput.log`) while you play; the lines quoted below are from it.
 
 **What changed:**
-- **Seventeen map affixes now have real values.** Glorious, Teeming, Brutal, Frenzied, Ruthless, Sturdy, Mighty, Fleet, Unyielding, Ironskin, Warded, Withering, Exhausting, Exposed, Venomous, Searing and Stormcalled, all from Krogon's list. Each one's strength is shown on the map's tooltip under "What you'll face".
-- **The old four are gone:** Swarming, Hardened, Rabid and Smouldering. Old maps that carry them lose those lines, and their tier goes down.
+- **Seventeen map affixes now have real values.** Glorious, Teeming, Brutal, Frenzied, Ruthless, Sturdy, Mighty, Fleet, Unyielding, Ironskin, Warded, Withering, Exhausting, Exposed, Venomous, Searing and Stormcalled, all from Krogon's list. Each one's strength is shown on the map's tooltip as a line without the affix's name: under "What you'll face", or, for Glorious, under "What you'll earn".
+- **The old four are gone:** Swarming, Hardened, Rabid and Smouldering. Old maps that still carry them are left as they are (decision 14): no migration.
 - **Some pairs never share a map:** Ironskin with Warded, and Sturdy with Mighty.
 - **Frostbitten, Drowned and Choking are listed but do nothing yet** (they wait for weather data).
 - **An admin can switch affixes off** with `DisabledMapAffixes` in the Rips section of the config.
@@ -33,7 +33,7 @@ Use a **fresh** white map for each test (`co_map meadows`), so one map's affixes
 | Step | What to do | What you should see | Pass / Fail | Note |
 |---|---|---|---|---|
 | ma-1 | F5, `devcommands`, `god`. Open `BepInEx/LogOutput.log` and read the top of it. | No red errors. The log has `Map tiers: 6 tiers, 20 affixes (glorious, teeming, brutal, frenzied, ruthless, sturdy, mighty, fleet, unyielding, ironskin, warded, withering, exhausting, exposed, venomous, searing, stormcalled roll).` Frostbitten, drowned and choking are counted but not in the roll list. | | |
-| ma-2 | `co_map meadows 2 brutal:100`. Open the inventory, Maps tab, and hover the map. | A Magic tier 2 Meadows map (blue name). Under "What you'll face": `Enemies deal 100% more damage.` (no affix name, decision 10), in the map's rarity colour | | |
+| ma-2 | `co_map meadows 2 brutal:100`. Open the inventory, Maps tab, and hover the map. | A Magic tier 2 Meadows map (blue name). Under "What you'll face": `Enemies deal 100% more damage.` (the line alone, no affix name, decision 10), in the map's rarity colour. A map with Glorious would list its line under "What you'll earn" instead (ma-31) | | |
 | ma-3 | `co_map meadows 3 brutal sturdy`. Put the map in the Forge tab. Pick up a **Divine Orb** in Currencies and click the forge slot. Repeat with more Divine Orbs if needed. | Brutal's number changes to something from 20 to 100. Sturdy's changes to something from 25 to 50. The map stays tier 3. | | |
 | ma-4 | `co_map meadows 2 teeming`. Put it in the forge and use a Divine Orb. | Refused: "Map affixes have no values to reroll." Teeming has one fixed value, so nothing changes. | | |
 | ma-5 | Make at least 4 new maps: `co_map meadows`, then an Orb of Alchemy (tier 4, 3 affixes); for some, an Exalted Orb as well (tier 5, 4 affixes). Look at each map's affix list. | No map ever shows both Ironskin and Warded, or both Sturdy and Mighty. If you see one, write which map and its tooltip in the Note. | | |
@@ -69,8 +69,12 @@ Each step: `co_map meadows 2 <affix>` (a tier 2 Meadows map with that one affix)
 |---|---|---|---|---|
 | ma-24 | Inside a rip (any one above), type `co_rip`. | The console prints the rip's tier and affixes, then `Values: …` with the numbers. | | |
 | ma-25 | 1. `co_map meadows 2 brutal:100`, and keep that map. 2. Open `BepInEx/config/com.krogongames.corruption.cfg`, find `[5 - Rips]` and set `DisabledMapAffixes = brutal`, then save (or set it in the config manager, if you use one). 3. Make 4 new maps with Alchemy. 4. Use the kept Brutal map. 5. Afterwards set `DisabledMapAffixes` back to empty and save. | The new maps never get Brutal. The kept map still shows Brutal, and its rip still hits harder. The log has `Map affixes switched off (never roll): brutal.` after the save. | | |
-| ma-26 | **Skip if you have none.** An old map from before this update that had Swarming, Hardened, Rabid or Smouldering. Hover it, then use it. | Those lines are gone from the tooltip, and its tier is lower by one for each removed affix. The log has `Map <name>: unknown affix id(s) … ignored.` | | |
+| ma-26 | (removed: decision 14, old maps are left as they are) | | | |
 | ma-27 | Play to the end, then quit. Check the console (F5) and the log. | No red errors in the console at any point. | | |
+| ma-28 | Life steal on an Ironskin map. 1. `co_map meadows 2 ironskin`. 2. Equip a weapon, then `co_affix life_steal 20 right` (the affix id, a value, and the hand; see the console's help if the hand name is refused). 3. Use the map and hit a creature with the sword while hurt (`god` off, or take some damage first). | Sword hits on an Ironskin creature heal you very little, because life steal counts the damage after Ironskin's 95% cut (decision 11). | | |
+| ma-29 | `co_map meadows 6` with no affixes listed. Hover it, then use it from the Maps tab and open the rip. | A red Corrupted tier 6 map with 4 random new affixes. The rip is tier 6 (`co_rip` says Tier 6, with the 4 affixes). | | |
+| ma-30 | In a rip from ma-29 or any rip with affixes, hover the rip's portal and the heart. | The hover shows the tier line and each affix's line with its number (decision 15). No affix names. | | |
+| ma-31 | `co_map meadows 2 glorious:100`. Hover the map. | Glorious's line (`Enemies grant 100% more experience.`) is listed under "What you'll earn", not under "What you'll face" (decision 16). | | |
 
 ### Feedback
 
