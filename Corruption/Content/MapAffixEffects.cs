@@ -4,10 +4,10 @@ using HarmonyLib;
 namespace Corruption.Content
 {
     /// <summary>
-    ///     The map affixes that change how rip creatures fight (rips round, 2026-11-26, decisions 8 and 10): Hardened
-    ///     (they take less damage) and Smouldering (their hits also burn). Both read the rip's stamp on the creature
+    ///     The map affixes that change how rip creatures fight (rips round, 2026-11-26, decisions 8 and 10): Smouldering
+    ///     (their hits also burn; the new affixes' effects come in the next step). Both read the rip's stamp on the creature
     ///     itself (<see cref="MapTiers.KeyTier" />, <see cref="MapTiers.KeyAffixes" />), never the heart, so they hold
-    ///     wherever the creature goes. Swarming is in <see cref="RipWaves" />, Rabid in <see cref="Maddened" />.
+    ///     wherever the creature goes. Swarming is in <see cref="RipWaves" />.
     /// </summary>
     internal static class MapAffixEffects
     {
@@ -19,43 +19,6 @@ namespace Corruption.Content
             }
             var zdo = character.m_nview.GetZDO();
             return MapTiers.IsStamped(zdo) ? zdo : null;
-        }
-
-        /// <summary>
-        ///     Hardened: a stamped creature takes the affix's share of every hit. On the game that owns the creature, where
-        ///     vanilla applies damage (as the corrupted boss's reduction does); players are never changed.
-        /// </summary>
-        [HarmonyPatch(typeof(Character), nameof(Character.RPC_Damage))]
-        private static class Hardened
-        {
-            private static void Prefix(Character __instance, HitData hit)
-            {
-                if (hit == null || !MapTiers.Loaded)
-                {
-                    return;
-                }
-                try
-                {
-                    if (__instance.IsPlayer() || !__instance.m_nview || !__instance.m_nview.IsValid() || !__instance.m_nview.IsOwner())
-                    {
-                        return;
-                    }
-                    var zdo = StampOf(__instance);
-                    if (zdo == null)
-                    {
-                        return;
-                    }
-                    double taken = RipTierRules.DamageTaken(MapTiers.AffixesOf(zdo));
-                    if (taken < 1.0)
-                    {
-                        hit.ApplyModifier((float)taken);
-                    }
-                }
-                catch (System.Exception ex)
-                {
-                    Safe.Report("apply Hardened damage", ex);
-                }
-            }
         }
 
         /// <summary>

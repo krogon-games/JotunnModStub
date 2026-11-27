@@ -36,9 +36,16 @@ namespace CraftingOverhaul.Tests
         private static MapState State(MapTables t, bool corrupted = false, bool mirrored = false, params string[] ids)
         {
             var s = new MapState { Affixes = ids.ToList(), Corrupted = corrupted, Mirrored = mirrored };
+            foreach (var id in ids)
+            {
+                s.Values[id] = t.Affixes.Find(id).Min;   // the lowest value, so results are easy to read
+            }
             s.Refresh(t.Tiers);
             return s;
         }
+
+        /// <summary>Four affixes that don't share a group: a tier 5 map.</summary>
+        private static readonly string[] Four = { "glorious", "teeming", "brutal", "frenzied" };
 
         private static Func<double> Sequence(params double[] values)
         {
@@ -87,31 +94,59 @@ namespace CraftingOverhaul.Tests
         {
             // Krogon, 2026-11-27: "make the option to disable some affixes from being able to roll".
             var t = Tables();
-            var unknown = t.Affixes.SetDisabled(" Rabid, smouldering;nosuchaffix ");
+            var keep = new[] { "glorious", "teeming" };
+            string off = string.Join(", ", t.Affixes.Rollable.Select(x => x.Id).Where(id => !keep.Contains(id)).Select(id => id.ToUpperInvariant()).ToArray());
+            var unknown = t.Affixes.SetDisabled(" " + off + ";nosuchaffix ");
             Assert.Equal(new[] { "nosuchaffix" }, unknown.ToArray());
-            Assert.Equal(new[] { "swarming", "hardened" }, t.Affixes.Rollable.Select(x => x.Id).ToArray());
-            // A map that already has Rabid keeps it, but no orb adds a switched-off affix.
-            var map = State(t, false, false, "rabid");
-            Assert.Equal(new[] { "swarming", "hardened" }, MapOrbRules.Candidates(map, t).Select(x => x.Id).ToArray());
-            // Two left: Exalted on a tier 4 map with swarming + hardened + rabid has nothing to add.
-            var full = State(t, false, false, "swarming", "hardened", "rabid");
+            Assert.Equal(keep, t.Affixes.Rollable.Select(x => x.Id).ToArray());
+            // A map that already has Brutal keeps it, but no orb adds a switched-off affix.
+            var map = State(t, false, false, "brutal");
+            Assert.Equal(keep, MapOrbRules.Candidates(map, t).Select(x => x.Id).ToArray());
+            // Two left: Exalted on a tier 4 map with brutal + frenzied + ruthless has nothing to add after the two are taken.
+            var full = State(t, false, false, "glorious", "teeming", "brutal");
             Assert.NotNull(MapOrbRules.Refusal("exalted", full, t));
             // Clearing the list brings them back.
             t.Affixes.SetDisabled("");
-            Assert.Equal(4, t.Affixes.Rollable.Count());
+            Assert.Equal(t.Affixes.Affixes.Count(a => a.Approved), t.Affixes.Rollable.Count());
         }
 
         [Fact]
         public void AffixTableHoldsKrogonsNumbers()
         {
             var a = Tables().Affixes;
-            Assert.Equal(7, a.Affixes.Count);
-            Assert.Equal(new[] { "swarming", "hardened", "rabid", "smouldering" }, a.Rollable.Select(x => x.Id).ToArray());
+            // id, effect, min, max, group (every approved row of map_affixes.csv, Krogon's list 2026-11-27)
+            object[][] expected =
+            {
+                new object[] { "glorious", "experience", 50.0, 100.0, "" },
+                new object[] { "teeming", "density", 50.0, 50.0, "" },
+                new object[] { "brutal", "damage", 20.0, 100.0, "" },
+                new object[] { "frenzied", "attack_speed", 25.0, 100.0, "" },
+                new object[] { "ruthless", "double_damage", 10.0, 50.0, "" },
+                new object[] { "sturdy", "health", 25.0, 50.0, "health" },
+                new object[] { "mighty", "health", 50.0, 100.0, "health" },
+                new object[] { "fleet", "move_speed", 25.0, 25.0, "" },
+                new object[] { "unyielding", "no_stagger", 0.0, 0.0, "" },
+                new object[] { "ironskin", "physical_taken", 95.0, 95.0, "immunity" },
+                new object[] { "warded", "elemental_taken", 95.0, 95.0, "immunity" },
+                new object[] { "withering", "life_drain", 5.0, 5.0, "" },
+                new object[] { "exhausting", "stamina_drain", 5.0, 5.0, "" },
+                new object[] { "exposed", "resistances", 25.0, 50.0, "" },
+                new object[] { "venomous", "poison_share", 25.0, 75.0, "" },
+                new object[] { "searing", "fire_share", 25.0, 75.0, "" },
+                new object[] { "stormcalled", "lightning_share", 25.0, 75.0, "" }
+            };
+            Assert.Equal(expected.Select(e => (string)e[0]).ToArray(), a.Rollable.Select(x => x.Id).ToArray());
             Assert.All(a.Rollable, x => Assert.Equal(100.0, x.Weight));
-            Assert.Equal(2.0, a.Find("swarming").WaveMultiplier);
-            Assert.Equal(0.7, a.Find("hardened").DamageTaken);
-            Assert.Equal(2.0, a.Find("rabid").MaddenedFactor);
-            Assert.Equal(0.25, a.Find("smouldering").FireShare);
+            foreach (var e in expected)
+            {
+                var affix = a.Find((string)e[0]);
+                Assert.Equal((string)e[1], affix.Effect);
+                Assert.Equal((double)e[2], affix.Min);
+                Assert.Equal((double)e[3], affix.Max);
+                Assert.Equal((string)e[4], affix.Group);
+                Assert.Equal((double)e[3] > (double)e[2], affix.Ranged);
+                Assert.Contains(affix.Effect, MapAffixTable.Effects.All);
+            }
             foreach (var id in new[] { "frostbitten", "drowned", "choking" })
             {
                 var later = a.Find(id);
@@ -119,10 +154,8 @@ namespace CraftingOverhaul.Tests
                 Assert.False(later.Approved);
                 Assert.DoesNotContain(later, a.Rollable);
             }
-            Assert.Equal("More enemies can fight at once, and reinforcements arrive faster.", a.Find("swarming").Danger);
-            Assert.Equal("Enemies take 30% less damage.", a.Find("hardened").Danger);
-            Assert.Equal("Enemies hit 40% harder and move 30% faster.", a.Find("rabid").Danger);
-            Assert.Equal("Enemy hits deal 25% extra damage as fire.", a.Find("smouldering").Danger);
+            Assert.Equal(20, a.Affixes.Count);
+            Assert.Equal("Enemies deal {value}% more damage.", a.Find("brutal").Danger);
         }
 
         [Fact]
@@ -177,7 +210,7 @@ namespace CraftingOverhaul.Tests
             Assert.NotEmpty(errors);
         }
 
-        private const string AffixHeader = "id,status,name,danger,weight,wave_multiplier,damage_taken,maddened_factor,fire_share,notes\n";
+        private const string AffixHeader = "id,status,name,danger,weight,effect,min,max,group,notes\n";
 
         private static List<string> AffixErrors(string rows)
         {
@@ -189,18 +222,22 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void AffixTableMistakesAreReported()
         {
-            Assert.Empty(AffixErrors("a,approved,A,Danger,100,,,,,x\nb,later,B,Danger,,,,,,x\n"));
-            Assert.NotEmpty(AffixErrors("A1,approved,A,Danger,100,,,,,x\n")); // id
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,,,,x\na,approved,A,Danger,100,,,,,x\n")); // twice
-            Assert.NotEmpty(AffixErrors("a,proposed,A,Danger,100,,,,,x\n")); // status
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,,,,,,x\n")); // no weight
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,0,,,,,x\n")); // weight 0
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,-1,,,,x\n")); // waves
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,1.5,,,x\n")); // damage taken above 1
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,0,,,x\n")); // damage taken 0
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,,0.5,,x\n")); // maddened below 1
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,,,11,x\n")); // fire above 10
-            Assert.NotEmpty(AffixErrors("a,approved,A,,100,,,,,x\n")); // no danger
+            Assert.Empty(AffixErrors("a,approved,A,Danger {value},100,damage,20,100,,x\nb,later,B,Danger,,,,,,x\nc,approved,C,Danger,100,no_stagger,,,grp,x\n"));
+            Assert.NotEmpty(AffixErrors("A1,approved,A,Danger,100,damage,20,100,,x\n")); // id
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,20,100,,x\na,approved,A,Danger,100,damage,20,100,,x\n")); // twice
+            Assert.NotEmpty(AffixErrors("a,proposed,A,Danger,100,damage,20,100,,x\n")); // status
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,,damage,20,100,,x\n")); // no weight
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,0,damage,20,100,,x\n")); // weight 0
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,20,100,,x\n")); // approved without an effect
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,sparkle,20,100,,x\n")); // unknown effect
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,,,,x\n")); // no range
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,x,100,,x\n")); // not a number
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,0,100,,x\n")); // min 0
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,100,20,,x\n")); // min above max
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,no_stagger,20,,,x\n")); // no_stagger with a value
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,20,100,Grp1,x\n")); // group
+            Assert.NotEmpty(AffixErrors("a,approved,A,,100,damage,20,100,,x\n")); // no danger
+            Assert.NotEmpty(AffixErrors("a,later,A,Danger,,damage,100,20,,x\n")); // later with min above max
         }
 
         // ---- tiers ----
@@ -240,7 +277,7 @@ namespace CraftingOverhaul.Tests
         public void TheTierIsDerivedNeverTrusted()
         {
             var t = Tables();
-            var data = new Dictionary<string, string> { { MapData.TierKey, "6" }, { MapData.AffixesKey, "swarming;rabid" } };
+            var data = new Dictionary<string, string> { { MapData.TierKey, "6" }, { MapData.AffixesKey, "teeming;brutal:60" } };
             Assert.Equal(3, MapData.Read(data, t.Tiers, t.Affixes, null).Tier);
             data[MapData.CorruptedKey] = "1";
             Assert.Equal(6, MapData.Read(data, t.Tiers, t.Affixes, null).Tier);
@@ -251,9 +288,9 @@ namespace CraftingOverhaul.Tests
         {
             var t = Tables();
             var unknown = new List<string>();
-            var data = new Dictionary<string, string> { { MapData.AffixesKey, "swarming;gone;swarming;;hardened" } };
+            var data = new Dictionary<string, string> { { MapData.AffixesKey, "teeming;gone;teeming;;brutal" } };
             var s = MapData.Read(data, t.Tiers, t.Affixes, unknown);
-            Assert.Equal(new[] { "swarming", "hardened" }, s.Affixes.ToArray());
+            Assert.Equal(new[] { "teeming", "brutal" }, s.Affixes.ToArray());
             Assert.Equal(new[] { "gone" }, unknown.ToArray());
             Assert.Equal(3, s.Tier);
         }
@@ -263,14 +300,16 @@ namespace CraftingOverhaul.Tests
         {
             var t = Tables();
             var data = new Dictionary<string, string>();
-            var s = State(t, true, true, "swarming", "hardened", "rabid", "smouldering");
+            var s = State(t, true, true, Four);
+            s.Values["brutal"] = 63;
             MapData.Write(data, s, t.Tiers);
-            Assert.Equal("swarming;hardened;rabid;smouldering", data[MapData.AffixesKey]);
+            Assert.Equal("glorious:50;teeming:50;brutal:63;frenzied:25", data[MapData.AffixesKey]);
             Assert.Equal("6", data[MapData.TierKey]);
             Assert.Equal("1", data["corruption.corrupted"]);
             Assert.Equal("1", data["corruption.mirrored"]);
             var back = MapData.Read(data, t.Tiers, t.Affixes, null);
             Assert.Equal(s.Affixes, back.Affixes);
+            Assert.Equal(63.0, back.Values["brutal"]);
             Assert.True(back.Corrupted);
             Assert.True(back.Mirrored);
             Assert.Equal(6, back.Tier);
@@ -281,7 +320,62 @@ namespace CraftingOverhaul.Tests
 
             Assert.Equal("a;b", MapData.Join(new[] { "a", "b" }));
             Assert.Equal(new[] { "a", "b" }, MapData.Split("a;b;").ToArray());
+            Assert.Equal(new[] { "a", "b" }, MapData.Split("a:5;b:7.5").ToArray());
             Assert.Empty(MapData.Split(null));
+        }
+
+        [Fact]
+        public void ValuesAreWrittenInvariantAndReadBackWhateverTheCulture()
+        {
+            var t = Tables();
+            var before = System.Globalization.CultureInfo.CurrentCulture;
+            System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
+            try
+            {
+                Assert.Equal("63", MapData.FormatValue(63));
+                Assert.Equal("62.5", MapData.FormatValue(62.5));
+                var s = State(t, false, false, "brutal", "exposed");
+                s.Values["exposed"] = 33;
+                string joined = MapData.JoinRolls(s);
+                Assert.Equal("brutal:20;exposed:33", joined);
+                var rolls = MapData.JoinRolls(s.Rolls(t.Affixes));
+                Assert.Equal(joined, rolls);
+                var entries = MapData.ParseEntries("brutal:62.5;exposed");
+                Assert.Equal(62.5, entries[0].Value);
+                Assert.True(entries[0].HasValue);
+                Assert.False(entries[1].HasValue);
+            }
+            finally
+            {
+                System.Globalization.CultureInfo.CurrentCulture = before;
+            }
+        }
+
+        [Fact]
+        public void EntriesWithoutAValueReadAsMinAndStoredValuesAreClamped()
+        {
+            var t = Tables();
+            var unknown = new List<string>();
+            var data = new Dictionary<string, string>
+            {
+                { MapData.AffixesKey, "brutal;frenzied:1000;exposed:abc;teeming:7;swarming:2;unyielding;glorious: 75 " }
+            };
+            var s = MapData.Read(data, t.Tiers, t.Affixes, unknown);
+            Assert.Equal(20.0, s.Values["brutal"]);        // bare id (an old map): Min
+            Assert.Equal(100.0, s.Values["frenzied"]);     // above the range: Max
+            Assert.Equal(25.0, s.Values["exposed"]);       // unreadable: Min
+            Assert.Equal(50.0, s.Values["teeming"]);       // fixed: always its one value
+            Assert.Equal(0.0, s.Values["unyielding"]);
+            Assert.Equal(75.0, s.Values["glorious"]);
+            Assert.Equal(new[] { "swarming" }, unknown.ToArray());
+            Assert.Equal(6, s.Affixes.Count);
+            Assert.Equal(5, s.Tier);
+            var rolls = s.Rolls(t.Affixes);
+            Assert.Equal(6, rolls.Count);
+            Assert.Equal(100.0, rolls.Single(r => r.Affix.Id == "frenzied").Value);
+            // below the range, through the rolls helper
+            s.Values["brutal"] = 1;
+            Assert.Equal(20.0, s.Rolls(t.Affixes).Single(r => r.Affix.Id == "brutal").Value);
         }
 
         // ---- orbs ----
@@ -295,7 +389,8 @@ namespace CraftingOverhaul.Tests
             var r = MapOrbRules.Apply("transmutation", white, t, Sequence(0.0));
             Assert.True(r.Done);
             Assert.Equal(2, r.State.Tier);
-            Assert.Equal(new[] { "swarming" }, r.Added.ToArray());
+            Assert.Equal(new[] { "glorious" }, r.Added.ToArray());
+            Assert.Equal(50.0, r.State.Values["glorious"]);   // 0.0 rolls the lowest value
             Assert.Empty(white.Affixes); // the input is untouched
             Assert.Equal("Orb of Transmutation: now tier 2", r.Headline);
             Assert.NotNull(MapOrbRules.Refusal("transmutation", r.State, t));
@@ -328,8 +423,8 @@ namespace CraftingOverhaul.Tests
                 Assert.NotNull(MapOrbRules.Refusal(orb, r.State, t));
             }
 
-            var divine = MapOrbRules.Refusal("divine", aug.State, t);
-            Assert.Equal("Map affixes have no values to reroll.", divine);
+            // Divine needs a value to reroll: a white map has none
+            Assert.Equal("Map affixes have no values to reroll.", MapOrbRules.Refusal("divine", white, t));
             Assert.NotNull(MapOrbRules.Refusal("jeweller", white, t));
             Assert.NotNull(MapOrbRules.Refusal("nonsense", white, t));
         }
@@ -338,14 +433,16 @@ namespace CraftingOverhaul.Tests
         public void AnnulmentRemovesOneAndTheTierFallsDownToWhite()
         {
             var t = Tables();
-            var full = State(t, false, false, "swarming", "hardened", "rabid", "smouldering");
+            var full = State(t, false, false, Four);
             Assert.Equal(5, full.Tier);
             var a = MapOrbRules.Apply("annulment", full, t, Sequence(0.5));
-            Assert.Equal(new[] { "rabid" }, a.Removed.ToArray());
+            Assert.Equal(new[] { "brutal" }, a.Removed.ToArray());
+            Assert.False(a.State.Values.ContainsKey("brutal"));   // its value goes with it
+            Assert.True(full.Values.ContainsKey("brutal"));
             Assert.Equal(4, a.State.Tier);
             Assert.Equal(4, full.Affixes.Count);
 
-            var one = State(t, false, false, "hardened");
+            var one = State(t, false, false, "brutal");
             var white = MapOrbRules.Apply("annulment", one, t, Sequence(0.0));
             Assert.Equal(1, white.State.Tier);
             Assert.Empty(white.State.Affixes);
@@ -358,7 +455,7 @@ namespace CraftingOverhaul.Tests
             var t = Tables();
             // a roll at the very end of the weights picks the last affix
             var last = MapOrbRules.Apply("transmutation", State(t), t, Sequence(0.9999));
-            Assert.Equal("smouldering", last.State.Affixes[0]);
+            Assert.Equal("stormcalled", last.State.Affixes[0]);
             // many random rolls never duplicate and never give a "later" affix
             var rng = new Random(7);
             for (int i = 0; i < 200; i++)
@@ -377,7 +474,7 @@ namespace CraftingOverhaul.Tests
         public void CorruptedMapsTakeOnlyTheMirror()
         {
             var t = Tables();
-            var corrupted = State(t, true, false, "swarming", "hardened", "rabid", "smouldering");
+            var corrupted = State(t, true, false, Four);
             foreach (var orb in OrbRules.Orbs.Where(o => o != "mirror"))
             {
                 Assert.Equal(OrbRules.CorruptedLocked, MapOrbRules.Refusal(orb, corrupted, t));
@@ -393,12 +490,12 @@ namespace CraftingOverhaul.Tests
         public void MirrorCopiesRefuseEverything()
         {
             var t = Tables();
-            var copy = State(t, false, true, "swarming");
+            var copy = State(t, false, true, "teeming");
             foreach (var orb in OrbRules.Orbs)
             {
                 Assert.NotNull(MapOrbRules.Refusal(orb, copy, t));
             }
-            var corruptedCopy = State(t, true, true, "swarming", "hardened", "rabid", "smouldering");
+            var corruptedCopy = State(t, true, true, Four);
             Assert.NotNull(MapOrbRules.Refusal("mirror", corruptedCopy, t));
             // the Mirror works on a white map too
             Assert.Null(MapOrbRules.Refusal("mirror", State(t), t));
@@ -410,36 +507,42 @@ namespace CraftingOverhaul.Tests
         public void TheShardCorruptsOnlyATierFiveMap()
         {
             var t = Tables();
-            var full = State(t, false, false, "swarming", "hardened", "rabid", "smouldering");
+            var full = State(t, false, false, Four);
             string headline;
             var done = MapCorruptRules.Apply(full, t, out headline);
             Assert.NotNull(done);
             Assert.True(done.Corrupted);
             Assert.Equal(6, done.Tier);
             Assert.Equal(4, done.Affixes.Count); // never destroyed, nothing lost
+            Assert.Equal(full.Values, done.Values);
             Assert.Equal("Corrupted: now tier 6", headline);
             Assert.False(full.Corrupted);
 
             for (int n = 0; n < 4; n++)
             {
-                var low = State(t, false, false, new[] { "swarming", "hardened", "rabid" }.Take(n).ToArray());
+                var low = State(t, false, false, Four.Take(n).ToArray());
                 Assert.Null(MapCorruptRules.Apply(low, t, out headline));
                 Assert.Equal("Only a tier 5 map (4 affixes) can be corrupted.", headline);
             }
             Assert.Equal("This map is already corrupted.", MapCorruptRules.Refusal(done, t));
-            Assert.NotNull(MapCorruptRules.Refusal(State(t, false, true, "swarming", "hardened", "rabid", "smouldering"), t));
+            Assert.NotNull(MapCorruptRules.Refusal(State(t, false, true, Four), t));
         }
 
         // ---- what a rip's tier changes ----
 
+        private static MapAffixRoll Roll(MapTables t, string id, double value)
+        {
+            return new MapAffixRoll { Affix = t.Affixes.Find(id), Value = value };
+        }
+
         [Fact]
-        public void WavesMultiplyTheTierAndSwarming()
+        public void WavesMultiplyTheTierAndDensity()
         {
             var t = Tables();
             Assert.Equal(2.5, RipTierRules.WaveMultiplier(t.Tiers.Row(2), null));
-            Assert.Equal(2.5, RipTierRules.WaveMultiplier(t.Tiers.Row(2), new[] { t.Affixes.Find("hardened") }));
-            Assert.Equal(5.0, RipTierRules.WaveMultiplier(t.Tiers.Row(2), new[] { t.Affixes.Find("swarming") }));
-            Assert.Equal(9.0, RipTierRules.WaveMultiplier(t.Tiers.Row(6), new[] { t.Affixes.Find("swarming") }));
+            Assert.Equal(2.5, RipTierRules.WaveMultiplier(t.Tiers.Row(2), new[] { Roll(t, "brutal", 60) }));
+            Assert.Equal(3.75, RipTierRules.WaveMultiplier(t.Tiers.Row(2), new[] { Roll(t, "teeming", 50) }));
+            Assert.Equal(6.75, RipTierRules.WaveMultiplier(t.Tiers.Row(6), new[] { Roll(t, "teeming", 50) }));
         }
 
         [Fact]
@@ -469,14 +572,171 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(6, max);
             Assert.Equal(new[] { "rip_tier_3" }, RipTierRules.DropSources(t.Tiers.Row(3)).ToArray());
 
-            var none = new List<MapAffixTable.Affix>();
-            Assert.Equal(1.0, RipTierRules.MaddenedFactor(none));
-            Assert.Equal(1.0, RipTierRules.DamageTaken(none));
-            Assert.Equal(0.0, RipTierRules.FireShare(none));
-            var all = t.Affixes.Rollable.ToList();
-            Assert.Equal(2.0, RipTierRules.MaddenedFactor(all));
-            Assert.Equal(0.7, RipTierRules.DamageTaken(all));
-            Assert.Equal(0.25, RipTierRules.FireShare(all));
+        }
+
+        [Fact]
+        public void EveryAffixFactorCombinesTwoAffixes()
+        {
+            var t = Tables();
+            var none = new List<MapAffixRoll>();
+            Assert.Equal(1.0, RipTierRules.ExperienceFactor(none));
+            Assert.Equal(1.0, RipTierRules.PhysicalTaken(null));
+            Assert.Equal(0.0, RipTierRules.DoubleDamageChance(none));
+            Assert.Equal(0.0, RipTierRules.LifeDrainPerSecond(none));
+            Assert.False(RipTierRules.NoStagger(none));
+
+            // two affixes of one effect (the table never rolls this, but explicit maps and future rows can)
+            var xp = new[] { Roll(t, "glorious", 50), Roll(t, "glorious", 100) };
+            Assert.Equal(1.5 * 2.0, RipTierRules.ExperienceFactor(xp), 9);
+            var dmg = new[] { Roll(t, "brutal", 20), Roll(t, "brutal", 50), Roll(t, "frenzied", 100) };
+            Assert.Equal(1.2 * 1.5, RipTierRules.DamageFactor(dmg), 9);
+            Assert.Equal(2.0, RipTierRules.AttackSpeedFactor(dmg), 9);
+            var dbl = new[] { Roll(t, "ruthless", 50), Roll(t, "ruthless", 20) };
+            Assert.Equal(1.0 - 0.5 * 0.8, RipTierRules.DoubleDamageChance(dbl), 9);
+            var health = new[] { Roll(t, "sturdy", 50), Roll(t, "mighty", 100) };
+            Assert.Equal(1.5 * 2.0, RipTierRules.HealthFactor(health), 9);
+            var speed = new[] { Roll(t, "fleet", 25), Roll(t, "fleet", 25) };
+            Assert.Equal(0.5, RipTierRules.MoveSpeedBonus(speed), 9);
+            Assert.True(RipTierRules.NoStagger(new[] { Roll(t, "brutal", 20), Roll(t, "unyielding", 0) }));
+            var taken = new[] { Roll(t, "ironskin", 95), Roll(t, "warded", 50), Roll(t, "ironskin", 50) };
+            Assert.Equal(0.05 * 0.5, RipTierRules.PhysicalTaken(taken), 9);
+            Assert.Equal(0.5, RipTierRules.ElementalTaken(taken), 9);
+            var drains = new[] { Roll(t, "withering", 5), Roll(t, "exhausting", 5), Roll(t, "withering", 3) };
+            Assert.Equal(8.0, RipTierRules.LifeDrainPerSecond(drains), 9);
+            Assert.Equal(5.0, RipTierRules.StaminaDrainPerSecond(drains), 9);
+            var exposed = new[] { Roll(t, "exposed", 25), Roll(t, "exposed", 50) };
+            Assert.Equal(75.0, RipTierRules.ResistancePenaltyPercent(exposed), 9);
+            var shares = new[] { Roll(t, "venomous", 25), Roll(t, "venomous", 25), Roll(t, "searing", 75), Roll(t, "stormcalled", 40) };
+            Assert.Equal(0.5, RipTierRules.PoisonShare(shares), 9);
+            Assert.Equal(0.75, RipTierRules.FireShare(shares), 9);
+            Assert.Equal(0.4, RipTierRules.LightningShare(shares), 9);
+            // a mix: each helper reads only its own effect
+            var mix = new[] { Roll(t, "brutal", 100), Roll(t, "glorious", 50) };
+            Assert.Equal(2.0, RipTierRules.DamageFactor(mix), 9);
+            Assert.Equal(1.5, RipTierRules.ExperienceFactor(mix), 9);
+            Assert.Equal(1.0, RipTierRules.HealthFactor(mix), 9);
+        }
+
+        // ---- values, groups and the Divine Orb (Krogon, 2026-11-27) ----
+
+        [Fact]
+        public void OrbsRollWholeValuesInsideTheRange()
+        {
+            var t = Tables();
+            var rng = new Random(3);
+            for (int i = 0; i < 300; i++)
+            {
+                var r = MapOrbRules.Apply("alchemy", State(t), t, () => rng.NextDouble());
+                Assert.Equal(3, r.State.Values.Count);
+                foreach (var roll in r.State.Rolls(t.Affixes))
+                {
+                    Assert.InRange(roll.Value, roll.Affix.Min, roll.Affix.Max);
+                    Assert.Equal(Math.Floor(roll.Value), roll.Value);
+                }
+            }
+            // the ends of a range are both reachable (brutal 20-100)
+            var brutal = t.Affixes.Find("brutal");
+            Assert.Equal(20.0, brutal.Roll(() => 0.0));
+            Assert.Equal(100.0, brutal.Roll(() => 0.999999));
+            Assert.Equal(50.0, t.Affixes.Find("teeming").Roll(() => 0.7));   // fixed
+        }
+
+        [Fact]
+        public void NoMapRollsTwoAffixesOfAGroup()
+        {
+            var t = Tables();
+            Assert.DoesNotContain("warded", MapOrbRules.Candidates(State(t, false, false, "ironskin"), t).Select(a => a.Id));
+            Assert.DoesNotContain("ironskin", MapOrbRules.Candidates(State(t, false, false, "warded"), t).Select(a => a.Id));
+            Assert.DoesNotContain("mighty", MapOrbRules.Candidates(State(t, false, false, "sturdy"), t).Select(a => a.Id));
+            Assert.DoesNotContain("sturdy", MapOrbRules.Candidates(State(t, false, false, "mighty"), t).Select(a => a.Id));
+            Assert.Contains("brutal", MapOrbRules.Candidates(State(t, false, false, "sturdy"), t).Select(a => a.Id));
+            // 300 random Alchemy rolls and a full climb with Exalted never hold two of a group
+            var rng = new Random(11);
+            for (int i = 0; i < 300; i++)
+            {
+                var r = MapOrbRules.Apply("alchemy", State(t), t, () => rng.NextDouble());
+                var ex = MapOrbRules.Apply("exalted", r.State, t, () => rng.NextDouble());
+                foreach (var m in new[] { r.State, ex.State })
+                {
+                    var groups = m.Rolls(t.Affixes).Select(x => x.Affix.Group).Where(g => g.Length > 0).ToList();
+                    Assert.Equal(groups.Count, groups.Distinct().Count());
+                }
+            }
+        }
+
+        [Fact]
+        public void OrbsRefuseWhenTheGroupsLeaveTooFewAffixes()
+        {
+            // only ironskin, warded and one free affix are rollable: Alchemy needs three that fit together, and can't have them
+            var t = Tables();
+            var small = new MapTables { Tiers = t.Tiers, Affixes = new MapAffixTable() };
+            foreach (var id in new[] { "ironskin", "warded", "brutal" })
+            {
+                small.Affixes.Affixes.Add(t.Affixes.Find(id));
+            }
+            Assert.Equal(MapOrbRules.TooFewAffixes, MapOrbRules.Refusal("alchemy", State(t), small));
+            Assert.Null(MapOrbRules.Refusal("transmutation", State(t), small));
+            // two free affixes plus a pair in one group is enough for three
+            small.Affixes.Affixes.Add(t.Affixes.Find("frenzied"));
+            Assert.Null(MapOrbRules.Refusal("alchemy", State(t), small));
+            var rng = new Random(5);
+            var r = MapOrbRules.Apply("alchemy", State(t), small, () => rng.NextDouble());
+            Assert.True(r.Done);
+            Assert.Equal(3, r.State.Affixes.Count);
+            // a map with ironskin on it has no room left for warded: Exalted on 3 affixes needs 1 candidate
+            var three = State(t, false, false, "ironskin", "brutal", "frenzied");
+            var only = new MapTables { Tiers = t.Tiers, Affixes = new MapAffixTable() };
+            only.Affixes.Affixes.Add(t.Affixes.Find("warded"));
+            only.Affixes.Affixes.Add(t.Affixes.Find("ironskin"));
+            only.Affixes.Affixes.Add(t.Affixes.Find("brutal"));
+            only.Affixes.Affixes.Add(t.Affixes.Find("frenzied"));
+            only.Affixes.SetDisabled("ironskin, brutal, frenzied");   // switched off, but the map's ironskin still blocks warded
+            Assert.Equal(MapOrbRules.TooFewAffixes, MapOrbRules.Refusal("exalted", three, only));
+        }
+
+        [Fact]
+        public void DivineRerollsOnlyTheRangedValues()
+        {
+            var t = Tables();
+            var map = State(t, false, false, "teeming", "brutal", "unyielding", "exposed");
+            map.Values["brutal"] = 20;
+            map.Values["exposed"] = 25;
+            Assert.Null(MapOrbRules.Refusal("divine", map, t));
+            var r = MapOrbRules.Apply("divine", map, t, Sequence(0.999999, 0.0));
+            Assert.True(r.Done);
+            Assert.Equal(100.0, r.State.Values["brutal"]);   // first ranged: top of 20-100
+            Assert.Equal(25.0, r.State.Values["exposed"]);   // second ranged: bottom of 25-50
+            Assert.Equal(50.0, r.State.Values["teeming"]);   // fixed ones untouched
+            Assert.Equal(0.0, r.State.Values["unyielding"]);
+            Assert.Equal(new[] { "brutal", "exposed" }, r.Rerolled.ToArray());
+            Assert.Equal(map.Affixes, r.State.Affixes);
+            Assert.Equal(20.0, map.Values["brutal"]);   // the input is untouched
+            Assert.Equal(map.Tier, r.State.Tier);
+        }
+
+        [Fact]
+        public void DivineIsRefusedOnAMapWithNoRangeAndOnCorruptedMaps()
+        {
+            var t = Tables();
+            Assert.Equal(MapOrbRules.NoValues, MapOrbRules.Refusal("divine", State(t, false, false, "teeming", "ironskin", "unyielding"), t));
+            Assert.Equal(MapOrbRules.NoValues, MapOrbRules.Refusal("divine", State(t), t));
+            Assert.Equal(OrbRules.CorruptedLocked, MapOrbRules.Refusal("divine", State(t, true, false, Four), t));
+            Assert.Equal(OrbRules.MirroredLocked, MapOrbRules.Refusal("divine", State(t, false, true, Four), t));
+            var none = MapOrbRules.Apply("divine", State(t, false, false, "teeming"), t, Sequence(0.5));
+            Assert.False(none.Done);
+            Assert.Equal(MapOrbRules.NoValues, none.Refusal);
+        }
+
+        [Fact]
+        public void MirrorAndTheShardKeepTheValues()
+        {
+            var t = Tables();
+            var map = State(t, false, false, Four);
+            map.Values["brutal"] = 77;
+            var mirror = MapOrbRules.Apply("mirror", map, t, Sequence(0.0));
+            Assert.Equal(77.0, mirror.State.Values["brutal"]);
+            string headline;
+            Assert.Equal(77.0, MapCorruptRules.Apply(map, t, out headline).Values["brutal"]);
         }
     }
 }

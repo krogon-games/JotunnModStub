@@ -62,7 +62,9 @@ namespace Corruption.Content
                 {
                     index = 2;
                 }
-                var affixIds = args.Skip(index).Select(a => a.ToLowerInvariant()).ToList();
+                // Each argument is an affix id, or "id:value" to set the value (an id alone rolls one; a random roll skips groups already on the map).
+                var entries = MapData.ParseEntries(string.Join(MapData.Separator.ToString(), args.Skip(index).Select(a => a.ToLowerInvariant()).ToArray()));
+                var affixIds = entries.Select(e => e.Id).ToList();
                 if (!MapTiers.Loaded)
                 {
                     if (tier > 1 || affixIds.Count > 0)
@@ -73,6 +75,7 @@ namespace Corruption.Content
                 else
                 {
                     var tables = MapTiers.Tables;
+                    var random = new System.Random();
                     if (affixIds.Count > 0)
                     {
                         var unknown = affixIds.Where(a => tables.Affixes.Find(a) == null).ToList();
@@ -81,21 +84,24 @@ namespace Corruption.Content
                             print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}. Known: {string.Join(", ", tables.Affixes.Affixes.Select(a => a.Id).ToArray())}.");
                             return;
                         }
-                        state.Affixes = affixIds.Distinct().ToList();
+                        // Explicit ids may break the group rule (dev tool).
+                        foreach (var entry in entries)
+                        {
+                            if (state.Affixes.Contains(entry.Id))
+                            {
+                                continue;
+                            }
+                            var affix = tables.Affixes.Find(entry.Id);
+                            state.Affixes.Add(entry.Id);
+                            state.Values[entry.Id] = entry.HasValue ? affix.Clamp(entry.Value) : affix.Roll(random.NextDouble);
+                        }
                         var row = tier > 0 ? tables.Tiers.Row(tier) : null;
                         state.Corrupted = row != null && row.Corrupted;
                     }
                     else if (tier > 1)
                     {
                         var row = tables.Tiers.Row(tier);
-                        var pool = tables.Affixes.Rollable.Select(a => a.Id).ToList();
-                        var random = new System.Random();
-                        while (state.Affixes.Count < row.Affixes && pool.Count > 0)
-                        {
-                            int pick = random.Next(pool.Count);
-                            state.Affixes.Add(pool[pick]);
-                            pool.RemoveAt(pick);
-                        }
+                        MapOrbRules.AddRandom(state, tables, random.NextDouble, row.Affixes, new List<string>());
                         state.Corrupted = row.Corrupted;
                     }
                 }

@@ -12,29 +12,71 @@ namespace Corruption.Rules
     internal sealed class MapAffixTable
     {
         private static readonly string[] RequiredColumns =
-            { "id", "status", "name", "danger", "weight", "wave_multiplier", "damage_taken", "maddened_factor", "fire_share" };
+            { "id", "status", "name", "danger", "weight", "effect", "min", "max", "group" };
 
         private static readonly string[] Statuses = { "approved", "later" };
+
+        /// <summary>What an affix does to the rip (the <c>effect</c> column). Krogon's list, 2026-11-27.</summary>
+        public static class Effects
+        {
+            public const string Experience = "experience";
+            public const string Density = "density";
+            public const string Damage = "damage";
+            public const string AttackSpeed = "attack_speed";
+            public const string DoubleDamage = "double_damage";
+            public const string Health = "health";
+            public const string MoveSpeed = "move_speed";
+            public const string NoStagger = "no_stagger";
+            public const string PhysicalTaken = "physical_taken";
+            public const string ElementalTaken = "elemental_taken";
+            public const string LifeDrain = "life_drain";
+            public const string StaminaDrain = "stamina_drain";
+            public const string Resistances = "resistances";
+            public const string PoisonShare = "poison_share";
+            public const string FireShare = "fire_share";
+            public const string LightningShare = "lightning_share";
+
+            public static readonly string[] All =
+            {
+                Experience, Density, Damage, AttackSpeed, DoubleDamage, Health, MoveSpeed, NoStagger, PhysicalTaken,
+                ElementalTaken, LifeDrain, StaminaDrain, Resistances, PoisonShare, FireShare, LightningShare
+            };
+        }
 
         public sealed class Affix
         {
             public string Id;
             public string Status;
             public string Name;
-            /// <summary>What it does to the rip, for the tooltip.</summary>
+            /// <summary>What it does to the rip, for the tooltip. <c>{value}</c> stands for the map's rolled number.</summary>
             public string Danger;
             /// <summary>Roll weight among the affixes an orb can add.</summary>
             public double Weight;
-            /// <summary>Multiplies the tier's waves; 1 = no effect.</summary>
-            public double WaveMultiplier = 1;
-            /// <summary>Multiplies the damage rip creatures take; 1 = no effect.</summary>
-            public double DamageTaken = 1;
-            /// <summary>Multiplies the maddened bonuses (damage and speed); 1 = no effect.</summary>
-            public double MaddenedFactor = 1;
-            /// <summary>Share of each hit's damage added as fire; 0 = none.</summary>
-            public double FireShare;
+            /// <summary>One of <see cref="Effects.All" />; blank only on a <c>later</c> row.</summary>
+            public string Effect = "";
+            /// <summary>Lowest rolled value (percent, or points per second for the drains); 0 for a value-less effect.</summary>
+            public double Min;
+            /// <summary>Highest rolled value; equal to <see cref="Min" /> for a fixed affix.</summary>
+            public double Max;
+            /// <summary>Affixes with the same non-empty group never share a map (they would make it unwinnable).</summary>
+            public string Group = "";
 
             public bool Approved => Status == "approved";
+
+            /// <summary>Whether each map rolls its own number (Max above Min).</summary>
+            public bool Ranged => Max > Min;
+
+            /// <summary>Keeps a stored value inside [Min, Max].</summary>
+            public double Clamp(double value)
+            {
+                return value < Min ? Min : value > Max ? Max : value;
+            }
+
+            /// <summary>A whole number from Min to Max, both included (fixed affixes give Min).</summary>
+            public double Roll(System.Func<double> random)
+            {
+                return Ranged ? AffixRoller.RollValue((int)System.Math.Ceiling(Min), (int)System.Math.Floor(Max), random) : Min;
+            }
         }
 
         public readonly List<Affix> Affixes = new List<Affix>();
@@ -73,6 +115,27 @@ namespace Corruption.Rules
                 }
             }
             return unknown;
+        }
+
+        /// <summary>
+        ///     Whether the affix may join a map that holds <paramref name="onMap" /> (ids): not already on it, and no affix of
+        ///     its non-empty group on it (Krogon, 2026-11-27: no unwinnable maps).
+        /// </summary>
+        public bool FitsWith(Affix affix, IEnumerable<string> onMap)
+        {
+            foreach (string id in onMap)
+            {
+                if (id == affix.Id)
+                {
+                    return false;
+                }
+                var held = Find(id);
+                if (held != null && affix.Group.Length > 0 && held.Group == affix.Group)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>The affix with this id (any status), or null.</summary>
@@ -150,54 +213,57 @@ namespace Corruption.Rules
                 {
                     errors.Add($"{where}: an approved affix needs a weight above 0.");
                 }
-                double value;
-                string text = Cell("wave_multiplier");
-                if (text.Length > 0)
+                a.Effect = Cell("effect").ToLowerInvariant();
+                a.Group = Cell("group");
+                if (a.Group.Length > 0 && a.Group.Any(c => !(c >= 'a' && c <= 'z')))
                 {
-                    if (!Number(text, out value) || value <= 0)
+                    errors.Add($"{where}: group must be lowercase letters only (blank = no group).");
+                }
+                string minText = Cell("min"), maxText = Cell("max");
+                bool hasMin = minText.Length > 0, hasMax = maxText.Length > 0;
+                bool minOk = !hasMin || Number(minText, out a.Min);
+                bool maxOk = !hasMax || Number(maxText, out a.Max);
+                if (!minOk || !maxOk)
+                {
+                    errors.Add($"{where}: min and max must be numbers (or blank).");
+                }
+                if (a.Effect.Length > 0 && !Effects.All.Contains(a.Effect))
+                {
+                    errors.Add($"{where}: effect '{a.Effect}' must be one of {string.Join(", ", Effects.All)}.");
+                }
+                else if (a.Approved)
+                {
+                    if (a.Effect.Length == 0)
                     {
-                        errors.Add($"{where}: wave_multiplier must be a number above 0 (blank = no effect).");
+                        errors.Add($"{where}: an approved affix needs an effect.");
                     }
-                    else
+                    else if (a.Effect == Effects.NoStagger)
                     {
-                        a.WaveMultiplier = value;
+                        if (hasMin || hasMax)
+                        {
+                            errors.Add($"{where}: no_stagger has no value, so min and max must be blank.");
+                        }
+                    }
+                    else if (!hasMin || !hasMax || !minOk || !maxOk)
+                    {
+                        errors.Add($"{where}: an approved {a.Effect} affix needs a numeric min and max.");
+                    }
+                    else if (a.Min <= 0 || a.Max < a.Min)
+                    {
+                        errors.Add($"{where}: min must be above 0 and at most max.");
                     }
                 }
-                text = Cell("damage_taken");
-                if (text.Length > 0)
+                else if (hasMin && hasMax && minOk && maxOk && a.Max < a.Min)
                 {
-                    if (!Number(text, out value) || value <= 0 || value > 1)
-                    {
-                        errors.Add($"{where}: damage_taken must be above 0 and at most 1 (0.7 = 30% less damage; blank = no effect).");
-                    }
-                    else
-                    {
-                        a.DamageTaken = value;
-                    }
+                    errors.Add($"{where}: min must be at most max.");
                 }
-                text = Cell("maddened_factor");
-                if (text.Length > 0)
+                if (!hasMax && hasMin && minOk)
                 {
-                    if (!Number(text, out value) || value < 1)
-                    {
-                        errors.Add($"{where}: maddened_factor must be 1 or more (2 = the maddened bonuses doubled; blank = no effect).");
-                    }
-                    else
-                    {
-                        a.MaddenedFactor = value;
-                    }
+                    a.Max = a.Min;
                 }
-                text = Cell("fire_share");
-                if (text.Length > 0)
+                if (!hasMin && hasMax && maxOk)
                 {
-                    if (!Number(text, out value) || value <= 0 || value > 10)
-                    {
-                        errors.Add($"{where}: fire_share must be above 0 and at most 10 (0.25 = 25% of the hit as fire; blank = none).");
-                    }
-                    else
-                    {
-                        a.FireShare = value;
-                    }
+                    a.Min = a.Max;
                 }
                 table.Affixes.Add(a);
             }

@@ -463,7 +463,7 @@ namespace Corruption.Content
                 {
                     text.Append("\n<color=#B8F08A>+ ").Append(MapForge.AffixText(id)).Append("</color>");
                 }
-                _changedMap.AddRange(result.MapAdded);
+                _changedMap.AddRange(MapData.ParseEntries(MapData.Join(result.MapAdded)).Select(e => e.Id));
             }
             if (result.MapRemoved != null)
             {
@@ -984,7 +984,7 @@ namespace Corruption.Content
             if (_target != null && MapForge.IsMap(_target))
             {
                 var state = MapForge.StateOf(_target, out _);
-                key = MapData.Join(state.Affixes) + "|" + state.Corrupted + "|" + state.Mirrored;
+                key = MapData.JoinRolls(state) + "|" + state.Corrupted + "|" + state.Mirrored;
             }
             if (!ReferenceEquals(_usableTarget, _target) || _usableKey != key)
             {

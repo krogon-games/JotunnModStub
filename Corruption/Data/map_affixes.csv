@@ -1,8 +1,21 @@
-﻿id,status,name,danger,weight,wave_multiplier,damage_taken,maddened_factor,fire_share,notes
-swarming,approved,Swarming,"More enemies can fight at once, and reinforcements arrive faster.",100,2,,,,Design: doubles spawn count; Krogon decision 7 (danger only since 8b). Weight 100 each = equally likely (Claude's choice).
-hardened,approved,Hardened,Enemies take 30% less damage.,100,,0.7,,,Design: creatures take 30% less damage; decision 8.
-rabid,approved,Rabid,Enemies hit 40% harder and move 30% faster.,100,,,2,,Design: maddened effect doubled (the game's x1.2 damage and +15% speed bonuses; doubled); decision 9.
-smouldering,approved,Smouldering,Enemy hits deal 25% extra damage as fire.,100,,,,0.25,Design: burning on hit; 25% Claude's proposal; decision 10.
-frostbitten,later,Frostbitten,Freezing for the whole run,,,,,,Weather affix, next round (decision 2).
-drowned,later,Drowned,Wet and rain,,,,,,Weather affix, next round (decision 2).
-choking,later,Choking,Smoke: poor visibility and damage,,,,,,Weather affix, next round (decision 2).
+id,status,name,danger,weight,effect,min,max,group,notes
+glorious,approved,Glorious,Enemies grant {value}% more experience.,100,experience,50,100,,"Krogon's list 2026-11-27: ""Monsters Grant +50-100% Experience"". Reward allowed since decision 2 (8b overwritten). Name Claude's proposal."
+teeming,approved,Teeming,{value}% more enemies can fight at once and reinforcements arrive faster.,100,density,50,50,,"Krogon's list: ""+50% Base Monster Density"" (fixed, no range). Multiplies the tier's waves like the old Swarming (x1.5). Name Claude's proposal."
+brutal,approved,Brutal,Enemies deal {value}% more damage.,100,damage,20,100,,"Krogon's list: ""Monsters Deal +20%-100% Damage"". Name Claude's proposal."
+frenzied,approved,Frenzied,Enemies attack {value}% faster.,100,attack_speed,25,100,,"Krogon's list: ""Monsters have +25-100% Increased Attack Speed"". Name Claude's proposal."
+ruthless,approved,Ruthless,Enemy hits have a {value}% chance to deal double damage.,100,double_damage,10,50,,"Krogon's list: ""Monsters have +10-50% Chance to deal Double Damage"". Name Claude's proposal."
+sturdy,approved,Sturdy,Enemies have {value}% more health.,100,health,25,50,health,"Krogon's list: ""Monsters have + 25-50% Extra Health"". Never on a map with Mighty (decision 5, group health). Name Claude's proposal."
+mighty,approved,Mighty,Enemies have {value}% more health.,100,health,50,100,health,"Krogon's list: ""Monsters have +50-100% Extra Health"". Never on a map with Sturdy (decision 5, group health). Name Claude's proposal."
+fleet,approved,Fleet,Enemies move {value}% faster.,100,move_speed,25,25,,"Krogon's list: ""Monsters have +25% Increased Speed"" (fixed). Name Claude's proposal."
+unyielding,approved,Unyielding,Enemies can't be staggered.,100,no_stagger,,,,"Krogon's list: ""Monsters cannot be Staggered"". Name Claude's proposal."
+ironskin,approved,Ironskin,Enemies take {value}% less physical damage.,100,physical_taken,95,95,immunity,"Krogon's list: ""Monsters are immune to Physical Damage""; decision 5: ""immune means takes 95% reduced damage"". Physical = blunt, slash, pierce. Never with Warded (group immunity). Name Claude's proposal."
+warded,approved,Warded,Enemies take {value}% less elemental damage.,100,elemental_taken,95,95,immunity,"Krogon's list: ""Monsters are immune to Elemental Damage""; decision 5: 95% reduced. Elemental = fire, frost, lightning, poison (the four Corruption's resistances cover; spirit not included, Claude's reading). Never with Ironskin. Name Claude's proposal."
+withering,approved,Withering,You lose {value} health per second near the heart.,100,life_drain,5,5,,"Krogon's list: ""Players have -5 Drain Life per Second"" (fixed). Near the heart = within 96 m (decision 8). Name Claude's proposal."
+exhausting,approved,Exhausting,You lose {value} stamina per second near the heart.,100,stamina_drain,5,5,,"Krogon's list: ""Players have -5 Drain Stamina per Second"" (fixed); the game's base stamina regen is also 5 a second (Player.m_staminaRegen = 5f, 1.0.31 code). Within 96 m (decision 8). Name Claude's proposal."
+exposed,approved,Exposed,You have {value}% less resistance to every element near the heart.,100,resistances,25,50,,"Krogon's list: ""Players have -25%-50% to All Resistances"". Fire, frost, lightning, poison (Corruption's resistances); subtracted from the gear total, below 0 = more damage. Within 96 m (decision 8). Name Claude's proposal."
+venomous,approved,Venomous,Enemy hits add {value}% of their physical damage as poison.,100,poison_share,25,75,,"Krogon's list: ""Monsters have +25-75% of Physical Damage as extra Poison Damage over 5 seconds"". The game sets poison's length from the hit's size (SE_Poison), so the copy names no length. Name Claude's proposal."
+searing,approved,Searing,Enemy hits add {value}% of their physical damage as fire that burns over 5 s.,100,fire_share,25,75,,"Krogon's list: ""Monsters have +25-75% of Physical Damage as extra Fire Damage over 5 seconds"". The game's burning lasts 5 s (SE_Burning m_ttl 5). Replaces Smouldering (decision 1). Name Claude's proposal."
+stormcalled,approved,Stormcalled,Enemy hits add {value}% of their physical damage as lightning.,100,lightning_share,25,75,,"Krogon's list: ""Monsters have +25-75% of Physical Damage as extra Lightning Damage"". Name Claude's proposal."
+frostbitten,later,Frostbitten,Freezing for the whole run,,,,,,"Weather affix: waits for co_dump weather data (#86; rips round decision 2)."
+drowned,later,Drowned,Wet and rain,,,,,,"Weather affix: waits for co_dump weather data (#86)."
+choking,later,Choking,Smoke: poor visibility and damage,,,,,,"Weather affix: waits for co_dump weather data (#86)."

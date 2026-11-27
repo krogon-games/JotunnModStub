@@ -21,6 +21,8 @@ namespace Corruption.Rules
         public MapState State;
         public List<string> Added = new List<string>();
         public List<string> Removed = new List<string>();
+        /// <summary>Divine Orb: the ids of the affixes whose values were rerolled.</summary>
+        public List<string> Rerolled = new List<string>();
         /// <summary>A short line for the Forge, e.g. "Orb of Augmentation: now tier 3".</summary>
         public string Headline = "";
         /// <summary>Mirror of Kalandra: the caller makes the copy (and marks it mirrored); the map itself is unchanged.</summary>
@@ -29,11 +31,13 @@ namespace Corruption.Rules
 
     /// <summary>
     ///     The currency orbs on maps (Krogon's rips round decision 6b, 2026-11-26): they put affixes on a map exactly as on
-    ///     gear, but a map's affixes have no prefix/suffix sides and no values. The tier follows the affix count. Refusal
+    ///     gear, but a map's affixes have no prefix/suffix sides. Each affix rolls a value from its range (2026-11-27) and the
+    ///     Divine Orb rerolls them; no two affixes of one group share a map. The tier follows the affix count. Refusal
     ///     texts reuse <see cref="OrbRules" />' gear wording. No game dependencies, so it is unit-tested.
     /// </summary>
     internal static class MapOrbRules
     {
+        /// <summary>Divine Orb on a map none of whose affixes has a range.</summary>
         public const string NoValues = "Map affixes have no values to reroll.";
         public const string NoSockets = "Maps have no sockets.";
         public const string OnlyNormalMap = "Only on Normal maps";
@@ -71,7 +75,7 @@ namespace Corruption.Rules
                 case "jeweller":
                     return NoSockets;
                 case "divine":
-                    return NoValues;
+                    return state.Rolls(tables.Affixes).Any(r => r.Affix.Ranged) ? null : NoValues;
                 case "transmutation":
                     if (rarity != "normal") return OnlyNormalMap;
                     add = 1;
@@ -96,13 +100,20 @@ namespace Corruption.Rules
                 case "annulment":
                     return count > 0 ? null : NoAffixesLeft;
             }
-            return Candidates(state, tables).Count >= add ? null : TooFewAffixes;
+            return Capacity(state, tables) >= add ? null : TooFewAffixes;
         }
 
-        /// <summary>The rollable affixes the map doesn't have yet.</summary>
+        /// <summary>The rollable affixes the map can take: not on it already, and none whose group is already on it.</summary>
         public static List<MapAffixTable.Affix> Candidates(MapState state, MapTables tables)
         {
-            return tables.Affixes.Rollable.Where(a => !state.Affixes.Contains(a.Id)).ToList();
+            return tables.Affixes.Rollable.Where(a => tables.Affixes.FitsWith(a, state.Affixes)).ToList();
+        }
+
+        /// <summary>How many more affixes the map can take: candidates, counting each group once.</summary>
+        public static int Capacity(MapState state, MapTables tables)
+        {
+            var pool = Candidates(state, tables);
+            return pool.Count(a => a.Group.Length == 0) + pool.Where(a => a.Group.Length > 0).Select(a => a.Group).Distinct().Count();
         }
 
         /// <summary>Uses the orb on the map. Checks <see cref="Refusal" /> first; never changes <paramref name="state" />.</summary>
@@ -128,7 +139,18 @@ namespace Corruption.Rules
                 case "annulment":
                     int index = Math.Min((int)(random() * next.Affixes.Count), next.Affixes.Count - 1);
                     result.Removed.Add(next.Affixes[index]);
+                    next.Values.Remove(next.Affixes[index]);
                     next.Affixes.RemoveAt(index);
+                    break;
+                case "divine":
+                    foreach (var roll in next.Rolls(tables.Affixes))
+                    {
+                        if (roll.Affix.Ranged)
+                        {
+                            next.Values[roll.Affix.Id] = roll.Affix.Roll(random);
+                            result.Rerolled.Add(roll.Affix.Id);
+                        }
+                    }
                     break;
                 case "transmutation":
                 case "augmentation":
@@ -142,15 +164,23 @@ namespace Corruption.Rules
                     break;
             }
             next.Refresh(tables.Tiers);
-            result.Headline = OrbRules.Name(orb) + ": now tier " + next.Tier;
+            result.Headline = orb == "divine" ? OrbRules.Name(orb) + ": values rerolled" : OrbRules.Name(orb) + ": now tier " + next.Tier;
             return result;
         }
 
-        private static void AddRandom(MapState state, MapTables tables, Func<double> random, int count, List<string> added)
+        /// <summary>
+        ///     Adds <paramref name="count" /> random affixes (weighted, never a repeat or a second of a group), each with a rolled
+        ///     value; stops early if none fit. Also used by the co_map dev command.
+        /// </summary>
+        public static void AddRandom(MapState state, MapTables tables, Func<double> random, int count, List<string> added)
         {
             for (int n = 0; n < count; n++)
             {
                 var pool = Candidates(state, tables);
+                if (pool.Count == 0)
+                {
+                    break;
+                }
                 double total = pool.Sum(a => a.Weight);
                 double roll = random() * total;
                 var pick = pool[pool.Count - 1];
@@ -164,6 +194,7 @@ namespace Corruption.Rules
                     roll -= affix.Weight;
                 }
                 state.Affixes.Add(pick.Id);
+                state.Values[pick.Id] = pick.Roll(random);
                 added.Add(pick.Id);
             }
         }

@@ -152,7 +152,7 @@ namespace Corruption.Content
             }
             // The map's tier and affixes, after the candidates (the server checks them and echoes them in its reply).
             package.Write(state.Tier);
-            package.Write(MapData.Join(state.Affixes));
+            package.Write(MapData.JoinRolls(state));
             package.Write(fallback);
             // With the fallback, its note stays on screen instead of "searching" (it is shown again when the rip opens).
             if (!fallback)
@@ -194,24 +194,27 @@ namespace Corruption.Content
                 }
 
                 // The tier and affixes come from a player's game: keep them inside the tables.
-                var affixIds = new List<string>();
+                var affixIds = new MapState();
                 if (MapTiers.Loaded)
                 {
                     var tiers = MapTiers.Tables.Tiers;
-                    foreach (string affix in MapData.Split(affixText))
+                    foreach (var entry in MapData.ParseEntries(affixText))
                     {
-                        if (MapTiers.Tables.Affixes.Find(affix) == null)
+                        var known = MapTiers.Tables.Affixes.Find(entry.Id);
+                        if (known == null)
                         {
-                            Jotunn.Logger.LogWarning($"Rip request: unknown map affix '{affix}' dropped.");
+                            Jotunn.Logger.LogWarning($"Rip request: unknown map affix '{entry.Id}' dropped.");
                         }
-                        else if (!affixIds.Contains(affix) && affixIds.Count < tiers.MaxAffixes)
+                        else if (!affixIds.Affixes.Contains(entry.Id) && affixIds.Affixes.Count < tiers.MaxAffixes)
                         {
-                            affixIds.Add(affix);
+                            affixIds.Affixes.Add(entry.Id);
+                            // A value outside the affix's range is clamped; none reads as the Min.
+                            affixIds.Values[entry.Id] = known.Clamp(entry.HasValue ? entry.Value : known.Min);
                         }
                     }
                     // The tier follows from the affixes (decision 6); only a full map can be the corrupted tier (MP review, 2026-11-27).
-                    bool corrupted = tiers.CorruptTier > 0 && tier >= tiers.CorruptTier && affixIds.Count >= tiers.MaxAffixes;
-                    tier = tiers.TierFor(affixIds.Count, corrupted);
+                    bool corrupted = tiers.CorruptTier > 0 && tier >= tiers.CorruptTier && affixIds.Affixes.Count >= tiers.MaxAffixes;
+                    tier = tiers.TierFor(affixIds.Affixes.Count, corrupted);
                 }
                 else
                 {
@@ -258,7 +261,7 @@ namespace Corruption.Content
                 reply.Write(spot.HasValue ? spot.Value.Landing.Z : 0f);
                 reply.Write(closeAt);
                 reply.Write(tier);
-                reply.Write(MapData.Join(affixIds));
+                reply.Write(MapData.JoinRolls(affixIds));
                 ZRoutedRpc.instance.InvokeRoutedRPC(sender, RpcReply, reply);
             });
         }
@@ -325,12 +328,12 @@ namespace Corruption.Content
                 double closeAt = package.ReadDouble();
                 // Read only when present: a server on an older build sends none, and the rip opens as tier 1.
                 int tier = 1;
-                var affixIds = new List<string>();
+                string affixIds = "";
                 bool serverKnowsTiers = package.GetPos() < package.Size();
                 if (serverKnowsTiers)
                 {
                     tier = package.ReadInt();
-                    affixIds = MapData.Split(package.ReadString());
+                    affixIds = package.ReadString();   // "id:value;id:value"
                 }
                 if (id != s_pendingId || mapItem != s_pendingMap)
                 {
@@ -404,7 +407,7 @@ namespace Corruption.Content
                 heart.Set(KeyBiome, map.Biome);
                 MapTiers.Stamp(heart, tier, affixIds);
 
-                Jotunn.Logger.LogInfo($"Rip opened: {map.Biome}, {MapTiers.Describe(tier, affixIds)}, heart {heartPosition}, landing {landing}, " +
+                Jotunn.Logger.LogInfo($"Rip opened: {map.Biome}, {MapTiers.Describe(tier, MapData.Split(affixIds))}, heart {heartPosition}, landing {landing}, " +
                                       $"{(fallback ? "explored-land fallback" : "unexplored land")}.");
                 string opened = Localization.instance.Localize("$corruption_rip_opened", map.Label);
                 if (fallback)
@@ -415,11 +418,11 @@ namespace Corruption.Content
             });
         }
 
-        /// <summary>Whether two map states are the same map for using it up: the same affixes (in order), corrupted and mirrored.</summary>
+        /// <summary>Whether two map states are the same map for using it up: the same affixes and values (in order), corrupted and mirrored.</summary>
         private static bool SameMap(MapState a, MapState b)
         {
             return a != null && b != null && a.Corrupted == b.Corrupted && a.Mirrored == b.Mirrored &&
-                   MapData.Join(a.Affixes) == MapData.Join(b.Affixes);
+                   MapData.JoinRolls(a) == MapData.JoinRolls(b);
         }
 
         /// <summary>The heart was destroyed (on its owner's game): open the exit rip beside it, leading home.</summary>

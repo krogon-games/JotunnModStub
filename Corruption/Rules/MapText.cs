@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -58,23 +59,25 @@ namespace Corruption.Rules
             return "Tier " + row.Tier.ToString(CultureInfo.InvariantCulture) + " · " + kind + " map";
         }
 
-        /// <summary>"Hardened: Enemies take 30% less damage.".</summary>
-        public static string AffixLine(MapAffixTable.Affix affix)
+        /// <summary>The danger text with <c>{value}</c> replaced by the map's rolled number, as a whole number: "Enemies deal 63% more damage."</summary>
+        public static string Danger(MapAffixTable.Affix affix, double value)
         {
-            return affix.Name + ": " + affix.Danger;
+            return affix.Danger.Replace("{value}", Math.Round(value).ToString("0", CultureInfo.InvariantCulture));
         }
 
-        /// <summary>One line per affix id the table knows, in the map's order (unknown ids are skipped).</summary>
-        public static List<string> AffixLines(IEnumerable<string> ids, MapAffixTable affixes)
+        /// <summary>"Brutal: Enemies deal 63% more damage." (the plain one-line form, e.g. for the Forge's message).</summary>
+        public static string AffixLine(MapAffixTable.Affix affix, double value)
+        {
+            return affix.Name + ": " + Danger(affix, value);
+        }
+
+        /// <summary>One line per roll, in the map's order.</summary>
+        public static List<string> AffixLines(IEnumerable<MapAffixRoll> rolls)
         {
             var lines = new List<string>();
-            foreach (string id in ids)
+            foreach (var roll in rolls)
             {
-                var affix = affixes.Find(id);
-                if (affix != null)
-                {
-                    lines.Add(AffixLine(affix));
-                }
+                lines.Add(AffixLine(roll.Affix, roll.Value));
             }
             return lines;
         }
@@ -119,10 +122,10 @@ namespace Corruption.Rules
         }
 
         /// <summary>The "What you'll face" bullets as plain text (no tags, no bullet): the two-star line, then one line per affix on the map in map_affixes.csv order.</summary>
-        public static List<string> FaceLines(MapTierTable.TierRow row, IEnumerable<string> affixIds, MapAffixTable affixes, MapGlyphs glyphs)
+        public static List<string> FaceLines(MapTierTable.TierRow row, IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes, MapGlyphs glyphs)
         {
             var lines = new List<string>();
-            foreach (string line in Face(row, affixIds, affixes, glyphs, null, false))
+            foreach (string line in Face(row, rolls, affixes, glyphs, null, false))
             {
                 lines.Add(line);
             }
@@ -135,25 +138,30 @@ namespace Corruption.Rules
             return Earn(row, dropMultiplier, glyphs, false);
         }
 
-        private static List<string> Face(MapTierTable.TierRow row, IEnumerable<string> affixIds, MapAffixTable affixes, MapGlyphs glyphs,
+        private static List<string> Face(MapTierTable.TierRow row, IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes, MapGlyphs glyphs,
             ICollection<string> highlight, bool rich)
         {
             var lines = new List<string> { rich ? Bullet(TwoStarLine(row.TwoStarPercent)) : TwoStarLine(row.TwoStarPercent) };
-            var present = new HashSet<string>(affixIds ?? new string[0]);
+            var present = new Dictionary<string, double>();
+            foreach (var roll in rolls ?? new MapAffixRoll[0])
+            {
+                present[roll.Affix.Id] = roll.Value;
+            }
             string nameColor = LineColorOf(row);
             // Table order, not the order the affixes were rolled in; ids the table doesn't know are skipped.
             foreach (var affix in affixes.Affixes)
             {
-                if (!present.Contains(affix.Id))
+                double value;
+                if (!present.TryGetValue(affix.Id, out value))
                 {
                     continue;
                 }
                 if (!rich)
                 {
-                    lines.Add(affix.Name + " " + glyphs.Dash + " " + affix.Danger);
+                    lines.Add(affix.Name + " " + glyphs.Dash + " " + Danger(affix, value));
                     continue;
                 }
-                string line = Bullet("<color=" + nameColor + ">" + affix.Name + "</color><color=" + BodyColor + "> " + glyphs.Dash + " " + affix.Danger + "</color>");
+                string line = Bullet("<color=" + nameColor + ">" + affix.Name + "</color><color=" + BodyColor + "> " + glyphs.Dash + " " + Danger(affix, value) + "</color>");
                 lines.Add(highlight != null && highlight.Contains(affix.Id) ? MarkOpen + line + MarkClose : line);
             }
             return lines;
@@ -200,13 +208,13 @@ namespace Corruption.Rules
         ///     The block both views share: the usage line, "What you'll face" and "What you'll earn", with the tags of
         ///     TextMeshPro. <paramref name="highlight" /> lists affix ids to mark (the Forge's last-use highlight).
         /// </summary>
-        public static string Summary(MapTierTable.TierRow row, string label, IEnumerable<string> affixIds, MapAffixTable affixes,
+        public static string Summary(MapTierTable.TierRow row, string label, IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes,
             double? dropMultiplier, MapGlyphs glyphs, ICollection<string> highlight)
         {
             var text = new System.Text.StringBuilder();
             text.Append("<color=").Append(BodyColor).Append('>').Append(Usage(label)).Append("</color>");
             text.Append(Spacer).Append('\n').Append(Heading("What you" + glyphs.Apostrophe + "ll face"));
-            foreach (string line in Face(row, affixIds, affixes, glyphs, highlight, true))
+            foreach (string line in Face(row, rolls, affixes, glyphs, highlight, true))
             {
                 text.Append('\n').Append(line);
             }
@@ -219,11 +227,11 @@ namespace Corruption.Rules
         }
 
         /// <summary>The inventory tooltip: tier line, summary, the Corrupted/Mirrored marks (centred), then the game's own text (weight) in the secondary colour.</summary>
-        public static string Tooltip(MapTierTable.TierRow row, string label, IEnumerable<string> affixIds, MapAffixTable affixes,
+        public static string Tooltip(MapTierTable.TierRow row, string label, IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes,
             double? dropMultiplier, MapGlyphs glyphs, string marks, string secondary)
         {
             var text = new System.Text.StringBuilder(ForgeCaption(row));
-            text.Append('\n').Append(Summary(row, label, affixIds, affixes, dropMultiplier, glyphs, null));
+            text.Append('\n').Append(Summary(row, label, rolls, affixes, dropMultiplier, glyphs, null));
             string centred = ForgeRules.CentredMarks(marks);
             if (centred.Length > 0)
             {
@@ -239,10 +247,10 @@ namespace Corruption.Rules
         }
 
         /// <summary>The Forge's right column: the summary (no tier line, no weight), the last use's added affixes marked.</summary>
-        public static string ForgeSheet(MapTierTable.TierRow row, string label, IEnumerable<string> affixIds, MapAffixTable affixes,
+        public static string ForgeSheet(MapTierTable.TierRow row, string label, IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes,
             double? dropMultiplier, MapGlyphs glyphs, ICollection<string> highlight)
         {
-            return Summary(row, label, affixIds, affixes, dropMultiplier, glyphs, highlight);
+            return Summary(row, label, rolls, affixes, dropMultiplier, glyphs, highlight);
         }
 
         /// <summary>The coloured tier line ("Tier 5 · Rare map"): under the Forge slot and at the top of the tooltip.</summary>

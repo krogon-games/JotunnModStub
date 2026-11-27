@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Corruption.Rules;
 using Xunit;
@@ -70,11 +71,12 @@ namespace CraftingOverhaul.Tests
             Assert.Empty(errors);
 
             var cases = new List<string>();
+            // Fixed values (each affix's lowest) so the picture is stable.
             AddCase(cases, tiers, affixes, drops, "tier1", "Tier 1, no affixes", 1, new string[0], "", "", true, "");
-            AddCase(cases, tiers, affixes, drops, "tier3", "Tier 3, swarming and hardened, just added hardened", 3, new[] { "swarming", "hardened" }, "",
-                "Orb of Augmentation: now tier 3\n+ " + MapText.AffixLine(affixes.Find("hardened")), true, "hardened");
-            AddCase(cases, tiers, affixes, drops, "tier5", "Tier 5, four affixes", 5, new[] { "smouldering", "rabid", "swarming", "hardened" }, "", "", true, "");
-            AddCase(cases, tiers, affixes, drops, "tier6", "Tier 6, corrupted and mirrored", 6, new[] { "swarming", "hardened", "rabid", "smouldering" },
+            AddCase(cases, tiers, affixes, drops, "tier3", "Tier 3, brutal and teeming, just added teeming", 3, new[] { "brutal", "teeming" }, "",
+                "Orb of Augmentation: now tier 3\n+ " + MapText.AffixLine(affixes.Find("teeming"), affixes.Find("teeming").Min), true, "teeming");
+            AddCase(cases, tiers, affixes, drops, "tier5", "Tier 5, four affixes", 5, new[] { "glorious", "ironskin", "withering", "searing" }, "", "", true, "");
+            AddCase(cases, tiers, affixes, drops, "tier6", "Tier 6, corrupted and mirrored", 6, new[] { "glorious", "ironskin", "withering", "searing" },
                 Corrupted + Mirrored, "Corrupted: now tier 6", true, "");
             File.WriteAllText(output, "{\"cases\":[" + string.Join(",", cases) + "]}", new UTF8Encoding(false));
         }
@@ -87,9 +89,10 @@ namespace CraftingOverhaul.Tests
             string color = MapText.ColorOf(row);
             string name = MapText.Name("Meadows map", row);
             var glyphs = MapGlyphs.Fancy;
-            string tooltip = MapText.Tooltip(row, "Meadows", ids, affixes, multiplier, glyphs, marks, "Weight: <color=orange>0.5</color>");
+            var rolls = ids.Select(i => new MapAffixRoll { Affix = affixes.Find(i), Value = affixes.Find(i).Min }).ToList();
+            string tooltip = MapText.Tooltip(row, "Meadows", rolls, affixes, multiplier, glyphs, marks, "Weight: <color=orange>0.5</color>");
             var highlight = highlighted.Length > 0 ? new[] { highlighted } : null;
-            string sheet = MapText.ForgeSheet(row, "Meadows", ids, affixes, multiplier, glyphs, highlight);
+            string sheet = MapText.ForgeSheet(row, "Meadows", rolls, affixes, multiplier, glyphs, highlight);
             cases.Add("{\"id\":" + Q(id) + ",\"label\":" + Q(label) + ",\"biome\":\"Meadows\",\"tier\":" + tier + ",\"tierColor\":" + Q(color) +
                       ",\"tooltip\":{\"title\":" + Q(name) + ",\"titleColor\":" + Q(color) + ",\"text\":" + Q(tooltip) + "}" +
                       ",\"forge\":{\"title\":" + Q(name) + ",\"titleColor\":" + Q(color) + ",\"caption\":" + Q(MapText.ForgeCaption(row)) +

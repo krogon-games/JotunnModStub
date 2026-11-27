@@ -15,7 +15,7 @@ namespace Corruption.Content
         /// <summary>Object data on the rip portals, the heart and each rip creature: the map's tier (int, 1 when missing).</summary>
         public const string KeyTier = "corruption_rip_tier";
 
-        /// <summary>Object data on the rip portals, the heart and each rip creature: the map's affix ids, joined by <see cref="MapData.Separator" />.</summary>
+        /// <summary>Object data on the rip portals, the heart and each rip creature: the map's affixes as "id:value", joined by <see cref="MapData.Separator" />.</summary>
         public const string KeyAffixes = "corruption_rip_affixes";
 
         /// <summary>Null until <see cref="Load" /> succeeds.</summary>
@@ -102,14 +102,15 @@ namespace Corruption.Content
         }
 
         /// <summary>Puts a rip's tier and affixes on an object (rip, heart, creature). The caller must own the object.</summary>
-        public static void Stamp(ZDO zdo, int tier, IEnumerable<string> affixIds)
+        /// <param name="affixes">The affixes as "id:value;id:value" (<see cref="MapData.JoinRolls(MapState)" />); a bare id reads as the affix's Min.</param>
+        public static void Stamp(ZDO zdo, int tier, string affixes)
         {
             if (zdo == null)
             {
                 return;
             }
             zdo.Set(KeyTier, tier < 1 ? 1 : tier);
-            zdo.Set(KeyAffixes, MapData.Join(affixIds ?? Enumerable.Empty<string>()));
+            zdo.Set(KeyAffixes, affixes ?? "");
         }
 
         /// <summary>Copies the tier and affixes from one object to another (heart → exit rip, heart → creature).</summary>
@@ -119,7 +120,7 @@ namespace Corruption.Content
             {
                 return;
             }
-            Stamp(to, TierOf(from), AffixIdsOf(from));
+            Stamp(to, TierOf(from), from.GetString(KeyAffixes, ""));
         }
 
         /// <summary>Whether the object carries a rip's stamp (wave creatures do; corrupted-boss summons and wild creatures don't).</summary>
@@ -144,20 +145,20 @@ namespace Corruption.Content
             return Loaded ? Tables.Tiers.Row(TierOf(zdo)) : null;
         }
 
-        /// <summary>The affixes on an object that the table knows (approved or not); unknown ids are skipped.</summary>
-        public static List<MapAffixTable.Affix> AffixesOf(ZDO zdo)
+        /// <summary>The affixes on an object that the table knows, with their values (a bare id reads as Min, values are clamped); unknown ids are skipped.</summary>
+        public static List<MapAffixRoll> AffixesOf(ZDO zdo)
         {
-            var list = new List<MapAffixTable.Affix>();
-            if (!Loaded)
+            var list = new List<MapAffixRoll>();
+            if (!Loaded || zdo == null)
             {
                 return list;
             }
-            foreach (string id in AffixIdsOf(zdo))
+            foreach (var entry in MapData.ParseEntries(zdo.GetString(KeyAffixes, "")))
             {
-                var affix = Tables.Affixes.Find(id);
-                if (affix != null)
+                var affix = Tables.Affixes.Find(entry.Id);
+                if (affix != null && !list.Any(r => r.Affix == affix))
                 {
-                    list.Add(affix);
+                    list.Add(new MapAffixRoll { Affix = affix, Value = affix.Clamp(entry.HasValue ? entry.Value : affix.Min) });
                 }
             }
             return list;
