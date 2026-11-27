@@ -34,6 +34,9 @@ namespace Corruption.Content
 
         /// <summary>A map's orb: the affix ids it added and removed (<see cref="Outcome" /> "map"); null otherwise.</summary>
         public List<string> MapAdded, MapRemoved;
+
+        /// <summary>A map's affixes whose values a Divine Orb rerolled, as "id:value" (shown as rerolled, not as added).</summary>
+        public List<string> MapRerolled;
     }
 
     /// <summary>Operations another part of the mod adds to the Riftforge (the rips session's map rolling, ids <c>map:*</c>).</summary>

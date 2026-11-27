@@ -29,7 +29,7 @@ namespace Corruption.Content
                 "Corruption: co_map <biome> [tier] [affix ...] - put a map in your inventory. Biomes: " + string.Join(", ", MapList.Biomes) +
                 ". Affixes are ids from map_affixes.csv" + AffixIds() + ", each alone as \"id\" (rolls its value) or \"id:value\" " +
                 "(e.g. co_map meadows brutal:60 searing:50 tests two affixes at chosen strengths); they are used exactly as given, so one " +
-                "affix alone can be tested. With only a tier, random approved affixes for it (tier 6 = a full map, corrupted); no tier = a plain map.";
+                "affix alone can be tested. With only a tier, random affixes that aren't switched off for it (tier 6 = a full map, corrupted); no tier = a plain map.";
 
             /// <summary>": glorious, teeming, ..." when the tables have loaded (the help may be read before they do).</summary>
             private static string AffixIds()
@@ -66,6 +66,7 @@ namespace Corruption.Content
                 }
 
                 var state = new MapState();
+                var clamped = new List<string>();
                 int index = 1;
                 int tier = 0;
                 if (args.Length > 1 && int.TryParse(args[1], out tier))
@@ -94,6 +95,13 @@ namespace Corruption.Content
                             print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}. Known: {string.Join(", ", tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray())}.");
                             return;
                         }
+                        // A 'later' affix is designed but not built: it does nothing and the server drops it from a rip.
+                        var notBuilt = affixIds.Where(a => !tables.Affixes.Find(a).Approved).ToList();
+                        if (notBuilt.Count > 0)
+                        {
+                            print.Print($"Not built yet, so a map can't carry: {string.Join(", ", notBuilt.ToArray())}. Built: {string.Join(", ", tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray())}.");
+                            return;
+                        }
                         // Explicit ids may break the group rule (dev tool).
                         foreach (var entry in entries)
                         {
@@ -104,6 +112,10 @@ namespace Corruption.Content
                             var affix = tables.Affixes.Find(entry.Id);
                             state.Affixes.Add(entry.Id);
                             state.Values[entry.Id] = entry.HasValue ? affix.Clamp(entry.Value) : affix.Roll(random.NextDouble);
+                            if (entry.HasValue && state.Values[entry.Id] != entry.Value)
+                            {
+                                clamped.Add($"{entry.Id} {MapData.FormatValue(entry.Value)} -> {MapData.FormatValue(state.Values[entry.Id])} (its range is {MapData.FormatValue(affix.Min)}-{MapData.FormatValue(affix.Max)})");
+                            }
                         }
                         var row = tier > 0 ? tables.Tiers.Row(tier) : null;
                         state.Corrupted = row != null && row.Corrupted;
@@ -127,6 +139,15 @@ namespace Corruption.Content
                 }
                 print.Print($"Put a {biome} map in your inventory: {MapTiers.Describe(state.Tier, state.Affixes)}{(state.Corrupted ? ", corrupted" : "")}. " +
                             "The Maps tab takes it from the bag within half a second.");
+                if (MapTiers.Loaded)
+                {
+                    // The final values (after any clamping), like co_rip's "Values:".
+                    print.Print("Values: " + MapTiers.DescribeValues(state.Rolls(MapTiers.Tables.Affixes)));
+                    if (clamped.Count > 0)
+                    {
+                        print.Print("Clamped into range: " + string.Join("; ", clamped.ToArray()) + ".");
+                    }
+                }
             }
         }
 

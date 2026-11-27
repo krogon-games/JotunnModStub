@@ -8,8 +8,8 @@ namespace Corruption.Rules
     ///     The words and colours of a map: its name and colour by rarity (rips round decision 11), the "Tier 3 · Magic map"
     ///     line, and the summary both the inventory tooltip and the Riftforge's Forge tab show (decision 15, 2026-11-27:
     ///     the approved mockup <c>docs/images/map_ui_approved_mockup.png</c> and Krogon's copy): the usage line, "What
-    ///     you'll face" (the two-star line, then the map's affixes in table order) and "What you'll earn" (the heart's
-    ///     shards, the gear floor, the drop rate). Every number comes from map_tiers.csv, map_affixes.csv and
+    ///     you'll face" (the two-star line, then the map's face affixes in table order) and "What you'll earn" (the heart's
+    ///     shards, the gear floor, the drop rate, then the map's reward affixes, decision 16). Every number comes from map_tiers.csv, map_affixes.csv and
     ///     drop_modifiers.csv. No game dependencies, so it is unit-tested; <c>tools/mockup_map_ui.py</c> draws it.
     /// </summary>
     internal static class MapText
@@ -139,41 +139,79 @@ namespace Corruption.Rules
         /// <summary>The "What you'll earn" bullets as plain text; the drop line is left out without a multiplier.</summary>
         public static List<string> EarnLines(MapTierTable.TierRow row, double? dropMultiplier, MapGlyphs glyphs)
         {
-            return Earn(row, dropMultiplier, glyphs, false);
+            return Earn(row, dropMultiplier, glyphs, null, null, null, false);
+        }
+
+        /// <summary>The same, then one line per reward affix (<see cref="MapAffixTable.Affix.Earns" />) on the map, in table order.</summary>
+        public static List<string> EarnLines(MapTierTable.TierRow row, double? dropMultiplier, MapGlyphs glyphs, IEnumerable<MapAffixRoll> rolls,
+            MapAffixTable affixes)
+        {
+            return Earn(row, dropMultiplier, glyphs, rolls, affixes, null, false);
+        }
+
+        /// <summary>
+        ///     The tier and the lines for a rip's portal or heart (Krogon, decision 15): the coloured "Tier 5 · Rare map" header, then
+        ///     one line per affix with its number, in table order and the map's line colour, like the tooltip and with no names.
+        ///     Plain lines, no bullets. Ids the table doesn't know are skipped.
+        /// </summary>
+        public static string Hover(MapTierTable.TierRow row, IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes)
+        {
+            var text = new System.Text.StringBuilder(ForgeCaption(row));
+            string color = LineColorOf(row);
+            foreach (var roll in InTableOrder(rolls, affixes, null))
+            {
+                text.Append('\n').Append("<color=").Append(color).Append('>').Append(Danger(roll.Affix, roll.Value)).Append("</color>");
+            }
+            return text.ToString();
+        }
+
+        /// <summary>The rolls in table order (not the order they were rolled in), ones the table doesn't know skipped; <paramref name="earn" /> keeps only that section (null = all).</summary>
+        private static List<MapAffixRoll> InTableOrder(IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes, bool? earn)
+        {
+            var present = new Dictionary<string, MapAffixRoll>();
+            foreach (var roll in rolls ?? new MapAffixRoll[0])
+            {
+                present[roll.Affix.Id] = roll;
+            }
+            var ordered = new List<MapAffixRoll>();
+            if (affixes == null)
+            {
+                return ordered;
+            }
+            foreach (var affix in affixes.Affixes)
+            {
+                MapAffixRoll roll;
+                if (present.TryGetValue(affix.Id, out roll) && (!earn.HasValue || affix.Earns == earn.Value))
+                {
+                    ordered.Add(new MapAffixRoll { Affix = affix, Value = roll.Value });
+                }
+            }
+            return ordered;
+        }
+
+        private static string AffixBullet(MapAffixRoll roll, string color, ICollection<string> highlight)
+        {
+            // The line alone, in the rarity colour the name had, so the map's own affixes still stand out from the tier's
+            // lines (decision 10: no names).
+            string line = Bullet("<color=" + color + ">" + Danger(roll.Affix, roll.Value) + "</color>");
+            return highlight != null && highlight.Contains(roll.Affix.Id) ? MarkOpen + line + MarkClose : line;
         }
 
         private static List<string> Face(MapTierTable.TierRow row, IEnumerable<MapAffixRoll> rolls, MapAffixTable affixes, MapGlyphs glyphs,
             ICollection<string> highlight, bool rich)
         {
             var lines = new List<string> { rich ? Bullet(TwoStarLine(row.TwoStarPercent)) : TwoStarLine(row.TwoStarPercent) };
-            var present = new Dictionary<string, double>();
-            foreach (var roll in rolls ?? new MapAffixRoll[0])
+            // Table order, not the order the affixes were rolled in; ids the table doesn't know are skipped; reward affixes
+            // are listed under "What you'll earn".
+            foreach (var roll in InTableOrder(rolls, affixes, false))
             {
-                present[roll.Affix.Id] = roll.Value;
-            }
-            string nameColor = LineColorOf(row);
-            // Table order, not the order the affixes were rolled in; ids the table doesn't know are skipped.
-            foreach (var affix in affixes.Affixes)
-            {
-                double value;
-                if (!present.TryGetValue(affix.Id, out value))
-                {
-                    continue;
-                }
-                if (!rich)
-                {
-                    lines.Add(Danger(affix, value));
-                    continue;
-                }
-                // The line alone, in the rarity colour the name had, so the map's own affixes still stand out from the tier's
-                // lines (decision 10: no names).
-                string line = Bullet("<color=" + nameColor + ">" + Danger(affix, value) + "</color>");
-                lines.Add(highlight != null && highlight.Contains(affix.Id) ? MarkOpen + line + MarkClose : line);
+                lines.Add(rich ? AffixBullet(roll, LineColorOf(row), highlight) : Danger(roll.Affix, roll.Value));
             }
             return lines;
         }
 
-        private static List<string> Earn(MapTierTable.TierRow row, double? dropMultiplier, MapGlyphs glyphs, bool rich)
+        private static List<string> Earn(MapTierTable.TierRow row, double? dropMultiplier, MapGlyphs glyphs, IEnumerable<MapAffixRoll> rolls,
+            MapAffixTable affixes, ICollection<string> highlight, bool rich)
         {
             string b = rich ? "<b>" : "", e = rich ? "</b>" : "";
             string shards = row.ShardsMin == row.ShardsMax
@@ -196,6 +234,11 @@ namespace Corruption.Rules
                 {
                     lines[i] = Bullet(lines[i]);
                 }
+            }
+            // The map's reward affixes (decision 16), after the tier's own lines, in the same style as the face affixes.
+            foreach (var roll in InTableOrder(rolls, affixes, true))
+            {
+                lines.Add(rich ? AffixBullet(roll, LineColorOf(row), highlight) : Danger(roll.Affix, roll.Value));
             }
             return lines;
         }
@@ -225,7 +268,7 @@ namespace Corruption.Rules
                 text.Append('\n').Append(line);
             }
             text.Append(Spacer).Append('\n').Append(Heading("What you" + glyphs.Apostrophe + "ll earn"));
-            foreach (string line in Earn(row, dropMultiplier, glyphs, true))
+            foreach (string line in Earn(row, dropMultiplier, glyphs, rolls, affixes, highlight, true))
             {
                 text.Append('\n').Append(line);
             }

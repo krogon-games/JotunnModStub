@@ -11,7 +11,7 @@ namespace Corruption.Content
     ///     roll (2026-11-19 and 2026-11-23), locked to them for the first seconds. The shared part is dealt among those
     ///     players (<see cref="PersonalLootRules.Deal" />): the vanilla loot of one of the rip biome's own chests (from
     ///     <c>Corruption/Data/rip_loot.csv</c>, weighted by how often each appears in that biome), corruption shards
-    ///     (user: 1-3, 2026-10-28) and one guaranteed map of the rip's biome (2026-11-23: each rip pays back its map).
+    ///     (the tier's amount from map_tiers.csv, 1-4 at tier 1) and one guaranteed map of the rip's biome (2026-11-23: each rip pays back its map).
     ///     Every dealt share is locked to the player it went to; an odd number may leave someone with less, which is fine.
     ///     Shards and maps carry their loot beam.
     /// </summary>

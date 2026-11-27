@@ -189,16 +189,68 @@ namespace CraftingOverhaul.Tests
                 "Opens a rip into the Meadows. The map crumbles once used.",
                 "What you’ll face",
                 "• Every enemy spawned in a wave has two stars.",
-                "• Enemies grant 50% more experience.",
                 "• Enemies take 95% less physical damage.",
                 "• You lose 5 health per second near the heart.",
                 "• Enemy hits add 25% of their physical damage as fire that burns over 5 s.",
                 "What you’ll earn",
                 "• Destroy the heart for 5–12 Corruption Shards total.",
                 "• Each eligible player gets Rare gear or better.",
-                "• Corruption loot is 2.25× as likely to drop during the rip."
+                "• Corruption loot is 2.25× as likely to drop during the rip.",
+                "• Enemies grant 50% more experience."
             };
             Assert.Equal(expected, Plain(Tooltip(5, FourAffixes)));
+        }
+
+        [Fact]
+        public void RewardAffixesAreListedUnderEarnAfterTheTiersLinesInTheRarityColour()
+        {
+            // Decision 16: "Move to earn". Glorious is the one reward affix; it is no longer under "What you'll face".
+            var row = Tiers().Row(5);
+            var affixes = Affixes();
+            Assert.True(affixes.Find("glorious").Earns);
+            Assert.False(affixes.Find("brutal").Earns);
+            Assert.DoesNotContain(MapText.FaceLines(row, Rolls(FourAffixes), affixes, MapGlyphs.Fancy), l => l.Contains("experience"));
+            var earn = MapText.EarnLines(row, Drops(row.DropSource), MapGlyphs.Fancy, Rolls(FourAffixes), affixes);
+            Assert.Equal("Enemies grant 50% more experience.", earn[earn.Count - 1]);
+            Assert.Equal(4, earn.Count);
+            // The old overload (no rolls) is unchanged.
+            Assert.Equal(3, MapText.EarnLines(row, Drops(row.DropSource), MapGlyphs.Fancy).Count);
+            // Tooltip and Forge sheet share the code path: the line is in the earn section, in the rarity colour, and marked when added.
+            string tooltip = Tooltip(5, FourAffixes);
+            string sheet = MapText.ForgeSheet(row, "Meadows", Rolls(FourAffixes), affixes, Drops(row.DropSource), MapGlyphs.Fancy, new[] { "glorious" });
+            foreach (string text in new[] { tooltip, sheet })
+            {
+                Assert.True(text.IndexOf("Enemies grant", StringComparison.Ordinal) > text.IndexOf("ll earn", StringComparison.Ordinal));
+                Assert.Contains("<color=#FFFF77>Enemies grant 50% more experience.</color>", text);
+            }
+            Assert.Contains("<mark=#E8C66A40>", sheet.Split('\n').Single(l => l.Contains("Enemies grant")));
+            Assert.DoesNotContain("<mark", tooltip);
+        }
+
+        [Fact]
+        public void TheRipHoverIsTheTierHeaderAndOneLinePerAffixInTableOrderWithNoNames()
+        {
+            // Decision 15: "Tier and the lines" on the rip's portal and heart.
+            var affixes = Affixes();
+            var rolls = Rolls(FourAffixes);
+            rolls.Add(new MapAffixRoll { Affix = affixes.Find("brutal"), Value = 63 });
+            rolls.Add(new MapAffixRoll { Affix = affixes.Find("brutal"), Value = 63 });
+            string hover = MapText.Hover(Tiers().Row(5), rolls, affixes);
+            Assert.Equal(new[]
+            {
+                "Tier 5 · Rare map",
+                "Enemies grant 50% more experience.",
+                "Enemies deal 63% more damage.",
+                "Enemies take 95% less physical damage.",
+                "You lose 5 health per second near the heart.",
+                "Enemy hits add 25% of their physical damage as fire that burns over 5 s."
+            }, Plain(hover));
+            Assert.StartsWith("<color=#FFFF77>Tier 5 · Rare map</color>\n<color=#FFFF77>Enemies grant", hover);
+            Assert.DoesNotContain("Glorious", hover);
+            Assert.DoesNotContain("•", hover);
+            // A corrupted rip: red header, the lines keep the Rare yellow. No affixes: the header alone.
+            Assert.StartsWith("<color=#E04040>Tier 6 · Corrupted map</color>\n<color=#FFFF77>", MapText.Hover(Tiers().Row(6), rolls, affixes));
+            Assert.Equal("<color=#FFFFFF>Tier 1 · Normal map</color>", MapText.Hover(Tiers().Row(1), new List<MapAffixRoll>(), affixes));
         }
 
         [Fact]

@@ -5,14 +5,17 @@ using System.Linq;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     Reads and checks the map affix table (<c>Corruption/Data/map_affixes.csv</c>, Krogon's rips round decisions 7-10,
-    ///     2026-11-26). Every map affix is danger only. <c>approved</c> rows roll on maps; <c>later</c> rows are designed but
-    ///     not built and never roll. No game dependencies, so it is unit-tested.
+    ///     Reads and checks the map affix table (<c>Corruption/Data/map_affixes.csv</c>, Krogon's affix list of 2026-11-27,
+    ///     which replaced the rips round decisions 7-10, and decision 16). Each affix has a danger line and a <c>section</c>: <c>face</c> (listed under
+    ///     "What you'll face") or <c>earn</c> (a reward, listed under "What you'll earn"). <c>approved</c> rows roll on maps;
+    ///     <c>later</c> rows are designed but not built and never roll. No game dependencies, so it is unit-tested.
     /// </summary>
     internal sealed class MapAffixTable
     {
         private static readonly string[] RequiredColumns =
-            { "id", "status", "name", "danger", "weight", "effect", "min", "max", "group" };
+            { "id", "status", "name", "danger", "weight", "effect", "min", "max", "group", "section" };
+
+        private static readonly string[] Sections = { "face", "earn" };
 
         private static readonly string[] Statuses = { "approved", "later" };
 
@@ -60,6 +63,11 @@ namespace Corruption.Rules
             public double Max;
             /// <summary>Affixes with the same non-empty group never share a map (they would make it unwinnable).</summary>
             public string Group = "";
+            /// <summary><c>face</c> (the default) or <c>earn</c>: where the affix's line is listed (decision 16, "Move to earn").</summary>
+            public string Section = "face";
+
+            /// <summary>A reward: listed under "What you'll earn" instead of "What you'll face".</summary>
+            public bool Earns => Section == "earn";
 
             public bool Approved => Status == "approved";
 
@@ -143,7 +151,7 @@ namespace Corruption.Rules
             return true;
         }
 
-        /// <summary>The affix with this id (any status), or null.</summary>
+        /// <summary>The affix with this id (any status, so a <c>later</c> row is found too), or null. Use <see cref="Affix.Approved" /> to tell them apart.</summary>
         public Affix Find(string id)
         {
             return id == null ? null : Affixes.FirstOrDefault(a => a.Id == id);
@@ -220,6 +228,19 @@ namespace Corruption.Rules
                 }
                 a.Effect = Cell("effect").ToLowerInvariant();
                 a.Group = Cell("group");
+                string section = Cell("section").ToLowerInvariant();
+                if (section.Length > 0)
+                {
+                    a.Section = section;
+                    if (!Sections.Contains(section))
+                    {
+                        errors.Add($"{where}: section '{Cell("section")}' must be one of {string.Join(", ", Sections)}.");
+                    }
+                }
+                else if (a.Approved)
+                {
+                    errors.Add($"{where}: an approved affix needs a section (face or earn).");
+                }
                 if (a.Group.Length > 0 && a.Group.Any(c => !(c >= 'a' && c <= 'z')))
                 {
                     errors.Add($"{where}: group must be lowercase letters only (blank = no group).");

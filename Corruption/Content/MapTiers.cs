@@ -204,7 +204,7 @@ namespace Corruption.Content
             return AffixIdsOf(zdo).Contains(affixId);
         }
 
-        /// <summary>"Tier 3 · Brutal, Teeming" for hover texts and logs (the names from the table).</summary>
+        /// <summary>"Tier 3 · Brutal, Teeming" for logs and the console (the names from the table; the rips' hover shows <see cref="MapText.Hover" /> instead).</summary>
         public static string Describe(int tier, IEnumerable<string> affixIds)
         {
             var names = new List<string>();

@@ -114,7 +114,8 @@ namespace Corruption
                 AdminOnly("Fewest stars a rip wave creature has. Default 1 (user, 2026-10-29: waves weren't challenging enough). " +
                           "Higher stars still roll on top, up to MaxStars.", new AcceptableValueRange<int>(0, 5)));
             RipMaxStars = config.Bind(RipSection, "MaxStars", 2,
-                AdminOnly("Most stars a rip creature can roll (design: tier 1 maps, up to 2 stars). Stars roll with the game's own level-up chance.",
+                AdminOnly("Most stars a rip creature can roll (design: tier 1 maps, up to 2 stars). Stars roll with the game's own level-up chance. " +
+                          "Also caps the tiers' guaranteed two-star creatures: below 2 they can't happen.",
                     new AcceptableValueRange<int>(0, 5)));
             RipWaveMultiplier = config.Bind(RipSection, "WaveMultiplier", 2f,
                 AdminOnly("Rip waves are the biome boss's army raid made busier: each raid entry's 'most alive at once' is multiplied " +
@@ -123,8 +124,8 @@ namespace Corruption
                     new AcceptableValueRange<float>(1f, 10f)));
             RipChestShardsMin = config.Bind(RipSection, "ChestShardsMin", 1,
                 AdminOnly("Fewest corruption shards a destroyed rip heart spills (shared among the players near it). Only used if map_tiers.csv fails to load (the tier table sets them now).", new AcceptableValueRange<int>(0, 50)));
-            RipChestShardsMax = config.Bind(RipSection, "ChestShardsMax", 3,
-                AdminOnly("Most corruption shards a destroyed rip heart spills. Only used if map_tiers.csv fails to load (the tier table sets them now).", new AcceptableValueRange<int>(0, 50)));
+            RipChestShardsMax = config.Bind(RipSection, "ChestShardsMax", 4,
+                AdminOnly("Most corruption shards a destroyed rip heart spills (default 4, the tier 1 map's most in map_tiers.csv). Only used if map_tiers.csv fails to load (the tier table sets them now).", new AcceptableValueRange<int>(0, 50)));
             RipKillShardMultiplier = config.Bind(RipSection, "KillShardMultiplier", 2f,
                 AdminOnly("Multiplies the starred-creature shard chances for maddened (rip) creatures. 2 = twice as likely.",
                     new AcceptableValueRange<float>(0f, 20f)));

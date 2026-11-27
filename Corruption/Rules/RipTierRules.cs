@@ -5,7 +5,7 @@ using System.Linq;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     What a rip's map tier and affixes change (Krogon's rips round decisions 3, 4, 4b, 6e and 7-10, 2026-11-26; the affix pool and rolled values 2026-11-27): waves,
+    ///     What a rip's map tier and affixes change (Krogon's rips round decisions 3, 4, 4b and 6e, 2026-11-26; the affix pool, rolled values and the sections are Krogon's list of 2026-11-27, which replaced decisions 7-10): waves,
     ///     guaranteed 2-stars, the heart's shards and gear floor, drop sources and the creatures' damage. Numbers come from
     ///     <c>map_tiers.csv</c> and <c>map_affixes.csv</c>. No game dependencies, so it is unit-tested.
     /// </summary>

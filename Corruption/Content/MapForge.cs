@@ -419,8 +419,9 @@ namespace Corruption.Content
             itemSource.Changed();
             result.Done = true;
             result.Outcome = "map";
-            // "id:value" entries: the Forge shows each with its rolled number (a Divine Orb's rerolled affixes show as added).
-            result.MapAdded = outcome.Added.Concat(outcome.Rerolled).Select(id => id + MapData.ValueSeparator + MapData.FormatValue(outcome.State.Values[id])).ToList();
+            // "id:value" entries: the Forge shows each with its rolled number (a Divine Orb's rerolled affixes show as rerolled).
+            result.MapAdded = outcome.Added.Select(id => id + MapData.ValueSeparator + MapData.FormatValue(outcome.State.Values[id])).ToList();
+            result.MapRerolled = outcome.Rerolled.Select(id => id + MapData.ValueSeparator + MapData.FormatValue(outcome.State.Values[id])).ToList();
             result.MapRemoved = outcome.Removed.Select(id =>
             {
                 double old;
@@ -464,7 +465,7 @@ namespace Corruption.Content
             return item != null && item.m_dropPrefab ? item.m_dropPrefab.name : null;
         }
 
-        /// <summary>The affix line of an "id:value" entry ("Brutal: Enemies deal 63% more damage."), or the id when the table doesn't know it.</summary>
+        /// <summary>The affix line of an "id:value" entry ("Enemies deal 63% more damage.", no name: decision 10), or the id when the table doesn't know it.</summary>
         public static string AffixText(string entryText)
         {
             var entry = MapData.ParseEntries(entryText).FirstOrDefault();

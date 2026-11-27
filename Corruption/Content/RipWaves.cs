@@ -10,7 +10,9 @@ namespace Corruption.Content
     ///     a player's game. The waves are the rip biome's boss army: the game's own raid(s) for that boss, with their
     ///     own creatures, counts, intervals, chances and group sizes (<see cref="RipRules.ArmyRaids" />). They start
     ///     when a player comes within the raid's range, maddening the creatures already there, and keep coming while
-    ///     the heart stands. Spawned creatures are maddened and have <c>MinStars</c> to <c>MaxStars</c> stars (user; design tier 1).
+    ///     the heart stands. Spawned creatures are maddened and have <c>MinStars</c> to <c>MaxStars</c> stars (user; design tier 1),
+    ///     the tier's share of them are guaranteed 2-stars (<c>two_star_percent</c>, capped by MaxStars), and the map's
+    ///     Teeming affix makes the waves busier (more alive at once, shorter intervals).
     /// </summary>
     internal class RipWaves : MonoBehaviour
     {

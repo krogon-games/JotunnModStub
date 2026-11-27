@@ -194,37 +194,20 @@ namespace Corruption.Content
                 }
 
                 // The tier and affixes come from a player's game: keep them inside the tables.
-                var affixIds = new MapState();
+                MapState affixIds;
                 if (MapTiers.Loaded)
                 {
-                    var tiers = MapTiers.Tables.Tiers;
-                    foreach (var entry in MapData.ParseEntries(affixText))
+                    var warnings = new List<string>();
+                    affixIds = MapData.Sanitize(affixText, tier, MapTiers.Tables, warnings);
+                    foreach (string warning in warnings)
                     {
-                        var known = MapTiers.Tables.Affixes.Find(entry.Id);
-                        if (known == null)
-                        {
-                            Jotunn.Logger.LogWarning($"Rip request: unknown map affix '{entry.Id}' dropped.");
-                        }
-                        else if (!known.Approved || (!affixIds.Affixes.Contains(entry.Id) && !MapTiers.Tables.Affixes.FitsWith(known, affixIds.Affixes)))
-                        {
-                            // A 'later' affix does nothing, and two of one group (both immunities, both health affixes) are never
-                            // rolled (decision 5); a tampered or co_map-made map can't carry them into a rip (MP review, 2026-11-27).
-                            // Switched-off affixes are kept: maps that already carry one keep it.
-                            Jotunn.Logger.LogWarning($"Rip request: map affix '{entry.Id}' dropped ({(known.Approved ? "its group is already on the map" : "not built yet")}).");
-                        }
-                        else if (!affixIds.Affixes.Contains(entry.Id) && affixIds.Affixes.Count < tiers.MaxAffixes)
-                        {
-                            affixIds.Affixes.Add(entry.Id);
-                            // A value outside the affix's range is clamped; none reads as the Min.
-                            affixIds.Values[entry.Id] = known.Clamp(entry.HasValue ? entry.Value : known.Min);
-                        }
+                        Jotunn.Logger.LogWarning("Rip request: " + warning);
                     }
-                    // The tier follows from the affixes (decision 6); only a full map can be the corrupted tier (MP review, 2026-11-27).
-                    bool corrupted = tiers.CorruptTier > 0 && tier >= tiers.CorruptTier && affixIds.Affixes.Count >= tiers.MaxAffixes;
-                    tier = tiers.TierFor(affixIds.Affixes.Count, corrupted);
+                    tier = affixIds.Tier;
                 }
                 else
                 {
+                    affixIds = new MapState();
                     tier = 1;
                 }
 
@@ -363,11 +346,15 @@ namespace Corruption.Content
                     player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_only_bases", map.Label));
                     return;
                 }
-                // A server on an older build answers without tiers: a tiered map would open as tier 1 and be lost, so keep it
-                // (MP review, 2026-11-27). Same-version players can't hit this.
-                if (!serverKnowsTiers && usedState != null && (usedState.Tier > 1 || usedState.Affixes.Count > 0))
+                // A server on an older build answers without tiers, and a server whose map tables failed to load answers tier 1:
+                // a tiered map would open as a lower tier and be lost, so keep it (MP review, 2026-11-27). Same-version players
+                // with working tables can't hit this: the server only lowers a tier for affixes this game drops too.
+                bool tiered = usedState != null && (usedState.Tier > 1 || usedState.Affixes.Count > 0);
+                if (tiered && (!serverKnowsTiers || tier < usedState.Tier))
                 {
-                    Jotunn.Logger.LogWarning("Rip request: the server's Corruption has no map tiers (an older build); the tiered map is kept.");
+                    Jotunn.Logger.LogWarning(serverKnowsTiers
+                        ? $"Rip request: the server answered tier {tier} for a tier {usedState.Tier} map (its map tables may not have loaded); the map is kept."
+                        : "Rip request: the server's Corruption has no map tiers (an older build); the tiered map is kept.");
                     player.Message(MessageHud.MessageType.Center, "$corruption_rip_old_server");
                     return;
                 }
@@ -545,10 +532,15 @@ namespace Corruption.Content
             return Localization.instance.Localize($"$corruption_rip_heart\n$corruption_rip_heart_hint\n{TierText(heart)}\n{ClosesText(heart)}");
         }
 
-        /// <summary>"Tier 5 · Brutal, Teeming, ..." from the object, so the whole group sees what they walk into.</summary>
+        /// <summary>
+        ///     The tier and the lines from the object (Krogon, decision 15): "Tier 5 · Rare map" and one line per affix with its
+        ///     number, like the tooltip, so the whole group sees what they walk into. Without the tables just "Tier 5".
+        /// </summary>
         private static string TierText(ZDO rip)
         {
-            return MapTiers.Describe(MapTiers.TierOf(rip), MapTiers.AffixIdsOf(rip));
+            return MapTiers.Loaded
+                ? MapText.Hover(MapTiers.RowOf(rip), MapTiers.AffixesOf(rip), MapTiers.Tables.Affixes)
+                : MapTiers.Describe(MapTiers.TierOf(rip), MapTiers.AffixIdsOf(rip));
         }
 
         private static string ClosesText(ZDO rip)

@@ -105,7 +105,7 @@ namespace CraftingOverhaul.Tests
         public void DamageTakenAffixesCantPassAHundred()
         {
             var errors = new List<string>();
-            MapAffixTable.Parse("id,status,name,danger,weight,effect,min,max,group\nironskin,approved,Ironskin,x,100,physical_taken,95,120,", errors);
+            MapAffixTable.Parse("id,status,name,danger,weight,effect,min,max,group,section\nironskin,approved,Ironskin,x,100,physical_taken,95,120,,face", errors);
             Assert.Contains(errors, e => e.Contains("at most 100"));
         }
 
@@ -230,7 +230,7 @@ namespace CraftingOverhaul.Tests
             Assert.NotEmpty(errors);
         }
 
-        private const string AffixHeader = "id,status,name,danger,weight,effect,min,max,group,notes\n";
+        private const string AffixHeader = "id,status,name,danger,weight,effect,min,max,group,section,notes\n";
 
         private static List<string> AffixErrors(string rows)
         {
@@ -242,22 +242,22 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void AffixTableMistakesAreReported()
         {
-            Assert.Empty(AffixErrors("a,approved,A,Danger {value},100,damage,20,100,,x\nb,later,B,Danger,,,,,,x\nc,approved,C,Danger,100,no_stagger,,,grp,x\n"));
-            Assert.NotEmpty(AffixErrors("A1,approved,A,Danger,100,damage,20,100,,x\n")); // id
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,20,100,,x\na,approved,A,Danger,100,damage,20,100,,x\n")); // twice
-            Assert.NotEmpty(AffixErrors("a,proposed,A,Danger,100,damage,20,100,,x\n")); // status
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,,damage,20,100,,x\n")); // no weight
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,0,damage,20,100,,x\n")); // weight 0
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,20,100,,x\n")); // approved without an effect
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,sparkle,20,100,,x\n")); // unknown effect
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,,,,x\n")); // no range
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,x,100,,x\n")); // not a number
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,0,100,,x\n")); // min 0
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,100,20,,x\n")); // min above max
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,no_stagger,20,,,x\n")); // no_stagger with a value
-            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,20,100,Grp1,x\n")); // group
-            Assert.NotEmpty(AffixErrors("a,approved,A,,100,damage,20,100,,x\n")); // no danger
-            Assert.NotEmpty(AffixErrors("a,later,A,Danger,,damage,100,20,,x\n")); // later with min above max
+            Assert.Empty(AffixErrors("a,approved,A,Danger {value},100,damage,20,100,,face,x\nb,later,B,Danger,,,,,,face,x\nc,approved,C,Danger,100,no_stagger,,,grp,face,x\n"));
+            Assert.NotEmpty(AffixErrors("A1,approved,A,Danger,100,damage,20,100,,face,x\n")); // id
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,20,100,,face,x\na,approved,A,Danger,100,damage,20,100,,face,x\n")); // twice
+            Assert.NotEmpty(AffixErrors("a,proposed,A,Danger,100,damage,20,100,,face,x\n")); // status
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,,damage,20,100,,face,x\n")); // no weight
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,0,damage,20,100,,face,x\n")); // weight 0
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,,20,100,,face,x\n")); // approved without an effect
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,sparkle,20,100,,face,x\n")); // unknown effect
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,,,,face,x\n")); // no range
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,x,100,,face,x\n")); // not a number
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,0,100,,face,x\n")); // min 0
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,100,20,,face,x\n")); // min above max
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,no_stagger,20,,,face,x\n")); // no_stagger with a value
+            Assert.NotEmpty(AffixErrors("a,approved,A,Danger,100,damage,20,100,Grp1,face,x\n")); // group
+            Assert.NotEmpty(AffixErrors("a,approved,A,,100,damage,20,100,,face,x\n")); // no danger
+            Assert.NotEmpty(AffixErrors("a,later,A,Danger,,damage,100,20,,face,x\n")); // later with min above max
         }
 
         // ---- tiers ----
@@ -313,6 +313,105 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(new[] { "teeming", "brutal" }, s.Affixes.ToArray());
             Assert.Equal(new[] { "gone" }, unknown.ToArray());
             Assert.Equal(3, s.Tier);
+        }
+
+        [Fact]
+        public void LaterAffixesAreDroppedLikeUnknownOnesAndDontCountTowardTheTier()
+        {
+            var t = Tables();
+            var unknown = new List<string>();
+            var data = new Dictionary<string, string> { { MapData.AffixesKey, "frostbitten;brutal:60;drowned:1;choking" } };
+            var s = MapData.Read(data, t.Tiers, t.Affixes, unknown);
+            Assert.Equal(new[] { "brutal" }, s.Affixes.ToArray());
+            Assert.Equal(new[] { "frostbitten", "drowned", "choking" }, unknown.ToArray());
+            Assert.Equal(2, s.Tier);
+        }
+
+        [Fact]
+        public void AffixesHaveASectionAndGloriousIsTheOnlyReward()
+        {
+            var a = Tables().Affixes;
+            Assert.Equal(new[] { "glorious" }, a.Affixes.Where(x => x.Earns).Select(x => x.Id).ToArray());
+            Assert.All(a.Affixes.Where(x => x.Approved), x => Assert.Contains(x.Section, new[] { "face", "earn" }));
+            Assert.Contains(AffixErrors("a,approved,A,Danger,100,damage,20,100,,,x\n"), e => e.Contains("needs a section"));
+            Assert.Contains(AffixErrors("a,approved,A,Danger,100,damage,20,100,,loot,x\n"), e => e.Contains("section 'loot'"));
+            Assert.Empty(AffixErrors("a,approved,A,Danger,100,damage,20,100,,earn,x\nb,later,B,Danger,,,,,,,x\n"));
+            var errors = new List<string>();
+            var table = MapAffixTable.Parse(AffixHeader + "a,approved,A,Danger,100,damage,20,100,,earn,x\nb,later,B,Danger,,,,,,,x\n", errors);
+            Assert.True(table.Find("a").Earns);
+            Assert.False(table.Find("b").Earns);   // blank = face
+            var noColumn = new List<string>();
+            MapAffixTable.Parse("id,status,name,danger,weight,effect,min,max,group,notes\n", noColumn);
+            Assert.Contains(noColumn, e => e.Contains("missing column 'section'"));
+        }
+
+        // ---- the server's check of a rip request ----
+
+        [Fact]
+        public void SanitizeKeepsAGoodRequestAsIs()
+        {
+            var t = Tables();
+            var warnings = new List<string>();
+            var s = MapData.Sanitize("brutal:60;teeming:50", 3, t, warnings);
+            Assert.Equal(new[] { "brutal", "teeming" }, s.Affixes.ToArray());
+            Assert.Equal(60, s.Values["brutal"]);
+            Assert.Equal(3, s.Tier);
+            Assert.False(s.Corrupted);
+            Assert.Empty(warnings);
+        }
+
+        [Fact]
+        public void SanitizeDropsUnknownLaterDuplicateAndSecondOfAGroup()
+        {
+            var t = Tables();
+            var warnings = new List<string>();
+            var s = MapData.Sanitize("nosuch:5;frostbitten;brutal:60;brutal:90;ironskin;warded;sturdy;mighty", 9, t, warnings);
+            Assert.Equal(new[] { "brutal", "ironskin", "sturdy" }, s.Affixes.ToArray());
+            Assert.Equal(60, s.Values["brutal"]);   // the repeat doesn't overwrite
+            Assert.Equal(4, s.Tier);                // three affixes; a requested corrupted tier on a partial map is ignored
+            Assert.False(s.Corrupted);
+            Assert.Equal(4, warnings.Count);
+            Assert.Contains(warnings, w => w.Contains("unknown map affix 'nosuch'"));
+            Assert.Contains(warnings, w => w.Contains("'frostbitten'") && w.Contains("not built yet"));
+            Assert.Contains(warnings, w => w.Contains("'warded'") && w.Contains("group"));
+            Assert.Contains(warnings, w => w.Contains("'mighty'") && w.Contains("group"));
+        }
+
+        [Fact]
+        public void SanitizeClampsValuesAndReadsNaNAndNoValueAsTheMin()
+        {
+            var t = Tables();
+            var s = MapData.Sanitize("brutal:9999;frenzied:-5;ruthless:NaN;glorious", 1, t, null);
+            Assert.Equal(100, s.Values["brutal"]);
+            Assert.Equal(25, s.Values["frenzied"]);
+            Assert.Equal(10, s.Values["ruthless"]);
+            Assert.Equal(50, s.Values["glorious"]);
+        }
+
+        [Fact]
+        public void SanitizeKeepsNoMoreThanTheMostAffixes()
+        {
+            var t = Tables();
+            var s = MapData.Sanitize("glorious;teeming;brutal;frenzied;ruthless;fleet", 5, t, null);
+            Assert.Equal(Four, s.Affixes.ToArray());
+            Assert.Equal(5, s.Tier);
+        }
+
+        [Fact]
+        public void SanitizeHonoursTheCorruptedTierOnlyOnAFullMap()
+        {
+            var t = Tables();
+            var full = MapData.Sanitize(string.Join(";", Four), 6, t, null);
+            Assert.True(full.Corrupted);
+            Assert.Equal(6, full.Tier);
+            var partial = MapData.Sanitize("glorious;teeming", 6, t, null);
+            Assert.False(partial.Corrupted);
+            Assert.Equal(3, partial.Tier);
+            // A full map that doesn't ask for it isn't corrupted; none at all is tier 1.
+            Assert.Equal(5, MapData.Sanitize(string.Join(";", Four), 5, t, null).Tier);
+            Assert.Equal(1, MapData.Sanitize("", 6, t, null).Tier);
+            // A full map whose fourth affix was dropped is not full.
+            Assert.False(MapData.Sanitize("glorious;teeming;brutal;frostbitten", 6, t, null).Corrupted);
         }
 
         [Fact]

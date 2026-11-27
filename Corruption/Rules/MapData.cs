@@ -165,8 +165,10 @@ namespace Corruption.Rules
         }
 
         /// <summary>
-        ///     Reads a map's state. Missing keys give tier 1 with no affixes. Ids not in <paramref name="affixes" /> are
-        ///     dropped (and added to <paramref name="unknown" /> when given); repeated ids count once.
+        ///     Reads a map's state. Missing keys give tier 1 with no affixes. Ids not in <paramref name="affixes" />, and
+        ///     <c>later</c> ids (designed but not built; the server drops them from a rip too), are dropped (and added to
+        ///     <paramref name="unknown" /> when given); repeated ids count once. Nothing else is cleaned up: an old map
+        ///     keeps whatever approved affixes it has (Krogon, decision 14: no migration).
         /// </summary>
         public static MapState Read(IDictionary<string, string> data, MapTierTable tiers, MapAffixTable affixes, List<string> unknown)
         {
@@ -179,7 +181,7 @@ namespace Corruption.Rules
                     foreach (var entry in ParseEntries(value))
                     {
                         var affix = affixes.Find(entry.Id);
-                        if (affix == null)
+                        if (affix == null || !affix.Approved)
                         {
                             if (unknown != null)
                             {
@@ -197,6 +199,44 @@ namespace Corruption.Rules
                 state.Corrupted = data.TryGetValue(CorruptedKey, out value) && value == "1";
                 state.Mirrored = data.TryGetValue(MirroredKey, out value) && value == "1";
             }
+            state.Refresh(tiers);
+            return state;
+        }
+
+        /// <summary>
+        ///     The server's check of a rip request's tier and affixes (they come from a player's game): unknown and
+        ///     <c>later</c> ids are dropped, a repeat counts once, an affix whose group is already on the map is dropped
+        ///     (decision 5), values are clamped into the affix's range (none, NaN or infinity read as the Min), no more than
+        ///     <see cref="MapTierTable.MaxAffixes" /> are kept, and the corrupted tier is only honoured on a full map. The tier
+        ///     follows from the affixes (decision 6). Switched-off affixes are kept: maps that already carry one keep it.
+        ///     Every drop is added to <paramref name="warnings" /> (when given) as a sentence for the log.
+        /// </summary>
+        /// <param name="affixText">The request's "id:value;id:value" text.</param>
+        /// <param name="requestedTier">The tier the player's game claims; only used to ask for the corrupted tier.</param>
+        public static MapState Sanitize(string affixText, int requestedTier, MapTables tables, List<string> warnings)
+        {
+            var state = new MapState();
+            var tiers = tables.Tiers;
+            foreach (var entry in ParseEntries(affixText))
+            {
+                var known = tables.Affixes.Find(entry.Id);
+                bool held = state.Affixes.Contains(entry.Id);
+                if (known == null)
+                {
+                    warnings?.Add($"unknown map affix '{entry.Id}' dropped.");
+                }
+                else if (!known.Approved || (!held && !tables.Affixes.FitsWith(known, state.Affixes)))
+                {
+                    // A 'later' affix does nothing, and two of one group (both immunities, both health affixes) are never rolled.
+                    warnings?.Add($"map affix '{entry.Id}' dropped ({(known.Approved ? "its group is already on the map" : "not built yet")}).");
+                }
+                else if (!held && state.Affixes.Count < tiers.MaxAffixes)
+                {
+                    state.Affixes.Add(entry.Id);
+                    state.Values[entry.Id] = known.Clamp(entry.HasValue ? entry.Value : known.Min);
+                }
+            }
+            state.Corrupted = tiers.CorruptTier > 0 && requestedTier >= tiers.CorruptTier && state.Affixes.Count >= tiers.MaxAffixes;
             state.Refresh(tiers);
             return state;
         }
