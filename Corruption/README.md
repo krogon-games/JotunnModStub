@@ -38,12 +38,12 @@ A Diablo/Path of Exile-style endgame layer for Valheim. Full design: `docs/corru
 | Essences / Enabled | true | Bosses drop their essence |
 | Rips / Enabled | true | Maps open rips |
 | Rips / OpenDays | 1 | How long a rip stays open (in-game days) |
-| Rips / BaseDistance | 0 | Rips never open this close (m) to a bed, ward or portal; 0 = a ward's radius |
+| Rips / BaseDistance | 0 | Rips never open (heart or landing spot) this close (m) to anything a player placed; 0 = 96 m |
 | Rips / HeartHealth | 0 | Health of a rip's heart; 0 = a greydwarf nest's health |
 | Rips / MinStars | 1 | Fewest stars a rip wave creature has |
 | Rips / MaxStars | 2 | Most stars a rip creature can have |
-| Rips / WaveMultiplier | 2 | Rip waves: twice as many alive at once, twice as often, as the vanilla raid |
-| Rips / ChestShardsMin–Max | 1–3 | Shards a destroyed rip heart spills (shared among the players near it) |
+| Rips / WaveMultiplier | 2 | Only if `map_tiers.csv` fails to load: rip waves this many times the vanilla raid (the map's tier sets it otherwise) |
+| Rips / ChestShardsMin–Max | 1–3 | Only if `map_tiers.csv` fails to load: shards a destroyed rip heart spills (the map's tier sets them otherwise) |
 | Rips / KillShardMultiplier | 2 | Rip creatures drop shards this many times as often |
 | Corrupted Bosses / DamageDealt, DamageTaken | 1.5, 0.7 | Corrupted boss damage multipliers |
 | Corrupted Bosses / EssencesMin–Max, ShardsMin–Max | 2–3, 3–5 | Corrupted boss drops |
