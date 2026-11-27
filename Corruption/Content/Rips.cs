@@ -303,7 +303,9 @@ namespace Corruption.Content
                 // Use up the very map that was used: it is in the bag or in the Maps tab. If it has moved or is gone, another
                 // map of the same kind with the same tier, affixes and locks; if there is none, open nothing.
                 var item = usedItem;
-                var inventory = item != null ? InventoryTabs.SourceOf(player, item) : null;
+                // Only while it is still the map that was sent: one changed at the Forge during the wait isn't used up at
+                // its old tier (Opus review, 2026-11-27).
+                var inventory = item != null && SameMap(MapTiers.StateOf(item), usedState) ? InventoryTabs.SourceOf(player, item) : null;
                 if (inventory == null)
                 {
                     item = InventoryTabs.Find(player, i => MapItems.Find(i) == map && SameMap(MapTiers.StateOf(i), usedState), out inventory);

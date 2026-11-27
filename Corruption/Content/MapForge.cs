@@ -150,15 +150,48 @@ namespace Corruption.Content
         {
             tier = "";
             color = Color.white;
-            var view = ViewOf(item);
-            if (view == null)
+            if (item == null || !MapTiers.Loaded)
             {
                 return false;
             }
-            tier = view.Row.Tier.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            color = ParseColor(MapText.ColorOf(view.Row));
+            // Runs every frame for every cell on screen (Opus review, 2026-11-27): whether the item is a map is worked out
+            // once per item, and its tier again only when its affixes or corrupted mark change.
+            var badge = Badges.GetValue(item, NewBadge);
+            if (!badge.IsMap)
+            {
+                return false;
+            }
+            string affixes = null, corrupted = null;
+            if (item.m_customData != null)
+            {
+                item.m_customData.TryGetValue(MapData.AffixesKey, out affixes);
+                item.m_customData.TryGetValue(MapData.CorruptedKey, out corrupted);
+            }
+            if (badge.Tier == null || badge.Affixes != affixes || badge.Corrupted != corrupted)
+            {
+                var row = MapTiers.Tables.Tiers.Row(StateOf(item, out _).Tier);
+                badge.Tier = row.Tier.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                badge.Color = ParseColor(MapText.ColorOf(row));
+                badge.Affixes = affixes;
+                badge.Corrupted = corrupted;
+            }
+            tier = badge.Tier;
+            color = badge.Color;
             return true;
         }
+
+        /// <summary>An item's tier badge, kept with the item (the table forgets it when the item is gone).</summary>
+        private sealed class Badge
+        {
+            public bool IsMap;
+            public string Affixes, Corrupted, Tier;
+            public Color Color;
+        }
+
+        private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<ItemDrop.ItemData, Badge> Badges =
+            new System.Runtime.CompilerServices.ConditionalWeakTable<ItemDrop.ItemData, Badge>();
+
+        private static Badge NewBadge(ItemDrop.ItemData item) => new Badge { IsMap = IsMap(item) };
 
         private static readonly Dictionary<string, Color> Colors = new Dictionary<string, Color>();
 
