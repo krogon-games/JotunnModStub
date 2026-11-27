@@ -19,14 +19,14 @@ namespace CraftingOverhaul.Tests
         private static List<TalismanFamilies.Creature> RealCreatures()
         {
             string dir = AppContext.BaseDirectory;
-            while (dir != null && !File.Exists(Path.Combine(dir, "data", "game-dump-1.0.21", "creatures.csv")))
+            while (dir != null && !File.Exists(Path.Combine(dir, "data", "game-dump-1.0.31", "creatures.csv")))
             {
                 dir = Path.GetDirectoryName(dir);
             }
             Assert.NotNull(dir);
 
             var creatures = new List<TalismanFamilies.Creature>();
-            foreach (var line in File.ReadLines(Path.Combine(dir, "data", "game-dump-1.0.21", "creatures.csv")).Skip(1))
+            foreach (var line in File.ReadLines(Path.Combine(dir, "data", "game-dump-1.0.31", "creatures.csv")).Skip(1))
             {
                 // prefab,token,name,health,faction,boss,defeat_key,spawn_biomes,drops (drops last, may be quoted)
                 var cols = line.Split(',');

@@ -62,7 +62,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void EveryMaterialIsAGameItem()
         {
-            var items = new HashSet<string>(File.ReadLines(Path.Combine(RepoRoot(), "data", "game-dump-1.0.21", "items.csv"))
+            var items = new HashSet<string>(File.ReadLines(Path.Combine(RepoRoot(), "data", "game-dump-1.0.31", "items.csv"))
                 .Skip(1).Select(l => l.Split(',')[0]));
             foreach (var m in ParseReal())
             {

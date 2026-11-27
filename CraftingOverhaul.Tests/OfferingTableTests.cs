@@ -20,7 +20,7 @@ namespace CraftingOverhaul.Tests
             return dir;
         }
 
-        private static string Dump(string file) => Path.Combine(Root(), "data", "game-dump-1.0.21", file);
+        private static string Dump(string file) => Path.Combine(Root(), "data", "game-dump-1.0.31", file);
 
         private static List<Dictionary<string, string>> ReadCsv(string path)
         {

@@ -45,7 +45,7 @@ File names: `<branch>` is the branch name with `/` replaced by `-` (e.g. `claude
 | [`Corruption/Data/`](Corruption/Data/README.md) | **Tunable numbers**: `affixes.csv` (every affix), `affix_caps.csv` (stat caps), `drop_chances.csv` and `drop_modifiers.csv` (loot drop rates). Edit numbers here, never in the docs; `dotnet test` validates them |
 | [`Orlog/Data/`](Orlog/Data/README.md) | Levelling tables (XP per level, XP per creature level, biome level ranges), made by `tools/make_orlog_tables.py` |
 
-Game reference data: `data/game-dump-1.0.21/` (from `co_dump`; development only, never ship it). Diablo 2 class data for the class design: `data/d2-reference/` (never ship it).
+Game reference data: `data/game-dump-1.0.31/` (from `co_dump`; development only, never ship it). Diablo 2 class data for the class design: `data/d2-reference/` (never ship it).
 
 ## Build and test
 
@@ -99,4 +99,4 @@ The user runs several Claude sessions at once, each on a different part of the m
 
 - Plain, concise English; short answers when asked.
 - Ask before changing an agreed design; record the user's decisions in the branch's handoff (Decisions section) as soon as they're made.
-- **Never guess numbers or choices.** Take them from the design docs or derive them from the game data (`data/game-dump-1.0.21/`, the game code), and write down the source. Ask the user only when neither answers.
+- **Never guess numbers or choices.** Take them from the design docs or derive them from the game data (`data/game-dump-1.0.31/`, the game code), and write down the source. Ask the user only when neither answers.

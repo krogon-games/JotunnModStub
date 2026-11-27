@@ -45,7 +45,6 @@ Honey,Honey,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > DropOnDes
 Ironpit,Iron Pit,Meadows,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 KnifeFlint,Flint Knife,Meadows,False,Recipes,Recipe Recipe_KnifeFlint @ piece_workbench
 KnifeWood,Wooden Knife,Meadows,False,Locations,Location ShipSetting01 > ShipSetting01 > Container
-Lantern_DN,Salvaged Lantern,Meadows,False,Vegetation,deepnorth_lantern_standing > DropOnDestroyed
 LeatherScraps,Leather Scraps,Meadows,False,Spawns,Boar > CharacterDrop
 MaceWood,Wooden Mace,Meadows,False,Locations,Location CombatRuin01 > CombatRuin01 > Container
 Mushroom,Mushroom,Meadows,False,Vegetation,Pickable_Mushroom > Pickable
@@ -56,7 +55,6 @@ QueenBee,Queen Bee,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > Dr
 Raspberry,Raspberries,Meadows,False,Vegetation,RaspberryBush > Pickable
 RawMeat,Boar Meat,Meadows,False,Spawns,Boar > CharacterDrop
 Resin,Resin,Meadows,False,Vegetation,Beech1 > Tree
-ShieldBoneTower,Bone Tower Shield,Meadows,False,Recipes,Recipe Recipe_ShieldBoneTower @ piece_workbench
 ShieldWood,Wood Shield,Meadows,False,Recipes,Recipe Recipe_ShieldWood @ piece_workbench
 ShieldWoodTower,Wood Tower Shield,Meadows,False,Recipes,Recipe Recipe_ShieldWoodTower @ piece_workbench
 Sparkler,Sparkler,Meadows,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
@@ -74,8 +72,6 @@ TrophyNeck,Neck Trophy,Meadows,False,Spawns,Neck > CharacterDrop
 TrophySkeleton,Skeleton Trophy,Meadows,False,Locations,Location Dolmen01 > Dolmen01 > CreatureSpawner > CharacterDrop
 Upgrader0Armor,Wooden Protection Idol,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > Container
 Upgrader0Weapon,Wooden Battle Idol,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > Container
-Upgrader1Armor,Bronze Protection Idol,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > Container
-Upgrader1Weapon,Bronze Battle Idol,Meadows,False,Locations,Location WoodHouse1 > WoodHouse1 > Container
 Wood,Wood,Meadows,False,Vegetation,Beech1 > Tree > Log > Log
 Acorn,Acorns,BlackForest,False,Vegetation,Oak1 > Tree
 AncientSeed,Ancient Seed,BlackForest,False,Spawns,Greydwarf_Elite > CharacterDrop
@@ -129,6 +125,7 @@ Fish5,Trollfish,BlackForest,False,Spawns,Fish5
 FishingBait,Fishing Bait,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
 FishingRod,Fishing Rod,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
 FistBjornClaw,Paws of the Bear,BlackForest,False,Recipes,Recipe Recipe_FistBjornClaw @ piece_workbench
+HelmetBerserkerHood,Headdress of the Bear,BlackForest,False,Recipes,Recipe Recipe_HelmetBerserker @ piece_workbench
 HelmetBronze,Bronze Helmet,BlackForest,False,Recipes,Recipe Recipe_HelmetBronze @ forge
 HelmetCelebration,Celebratory Cap,BlackForest,False,Recipes,Recipe Recipe_HelmetCelebration @ piece_workbench
 HelmetDverger,Dverger Circlet,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
@@ -159,6 +156,7 @@ QueensJam,Queen's Jam,BlackForest,False,Recipes,Recipe Recipe_QueensJam @ piece_
 RoundLog,Corewood,BlackForest,False,Vegetation,Pinetree_01 > Tree > Log > Log
 Ruby,Ruby,BlackForest,False,Locations,Location TrollCave02 > TrollCave02 > PickableItem
 Sausages,Sausages,BlackForest,False,Recipes,Recipe Recipe_Sausages @ piece_cauldron
+ShieldBoneTower,Bone Tower Shield,BlackForest,False,Recipes,Recipe Recipe_ShieldBoneTower @ piece_workbench
 ShieldBronzeBuckler,Bronze Buckler,BlackForest,False,Recipes,Recipe Recipe_ShieldBronzeBuckler @ forge
 SledgeStagbreaker,Stagbreaker,BlackForest,False,Recipes,Recipe Recipe_SledgeStagbreaker @ piece_workbench
 SpearBronze,Bronze Spear,BlackForest,False,Recipes,Recipe Recipe_SpearBronze @ forge
@@ -187,8 +185,8 @@ TrophyGreydwarfShaman,Greydwarf Shaman Trophy,BlackForest,False,Spawns,Greydwarf
 TrophySkeletonHildir,Brenna Trophy,BlackForest,False,Locations,Location Hildir_crypt > Room > forestcrypt_chamber_hildir > CreatureSpawner > CharacterDrop
 TrophySkeletonPoison,Rancid Remains Trophy,BlackForest,False,Locations,Location Crypt2 > Room > forestcrypt_new_BurialChamber02 > CreatureSpawner > CharacterDrop
 TrophyTheElder,The Elder Trophy,BlackForest,False,Locations,Location GDKing > GDKing > OfferingBowl > CharacterDrop
-Upgrader2Armor,Iron Protection Idol,BlackForest,False,Locations,Location Ruin1 > Ruin1 > Container
-Upgrader2Weapon,Iron Battle Idol,BlackForest,False,Locations,Location Ruin1 > Ruin1 > Container
+Upgrader1Armor,Bronze Protection Idol,BlackForest,False,Locations,Location Ruin1 > Ruin1 > Container
+Upgrader1Weapon,Bronze Battle Idol,BlackForest,False,Locations,Location Ruin1 > Ruin1 > Container
 YmirRemains,Ymir Flesh,BlackForest,False,Locations,Location Vendor_BlackForest > Vendor_BlackForest > Trader Haldor
 Abomination_attack1,Swing attack,Swamp,False,Spawns,Abomination > Creature attack Abomination
 Abomination_attack2,Slam attack,Swamp,False,Spawns,Abomination > Creature attack Abomination
@@ -286,8 +284,8 @@ TrophyWrithan,Writhan Trophy,Swamp,False,Spawns,Writhan > CharacterDrop
 Turnip,Turnip,Swamp,False,Producers,sapling_turnip > Pickable_Turnip > Pickable
 TurnipSeeds,Turnip Seeds,Swamp,False,Vegetation,Pickable_SeedTurnip > Pickable
 TurnipStew,Turnip Stew,Swamp,False,Recipes,Recipe Recipe_TurnipStew @ piece_cauldron
-Upgrader3Armor,Silver Protection Idol,Swamp,False,Locations,Location Grave1 > Grave1 > Container
-Upgrader3Weapon,Silver Battle Idol,Swamp,False,Locations,Location Grave1 > Grave1 > Container
+Upgrader2Armor,Iron Protection Idol,Swamp,False,Locations,Location Grave1 > Grave1 > Container
+Upgrader2Weapon,Iron Battle Idol,Swamp,False,Locations,Location Grave1 > Grave1 > Container
 Vineberry,Vineberry Cluster,Swamp,False,Producers,VineGreen_sapling > VineGreen > Pickable
 VineGreenSeeds,Ivy Seeds,Swamp,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 Wishbone,Wishbone,Swamp,False,Locations,Location Bonemass > Bonemass > OfferingBowl > CharacterDrop
@@ -304,7 +302,6 @@ SerpentMeat,Serpent Meat,Ocean,False,Spawns,Serpent > CharacterDrop
 SerpentMeatCooked,Cooked Serpent Meat,Ocean,False,Conversions,piece_cookingstation_iron: SerpentMeat > SerpentMeatCooked
 SerpentScale,Serpent Scale,Ocean,False,Spawns,Serpent > CharacterDrop
 SerpentStew,Serpent Stew,Ocean,False,Recipes,Recipe Recipe_SerpentStew @ piece_cauldron
-ShieldSerpentscale,Serpent Scale Shield,Ocean,False,Recipes,Recipe Recipe_ShieldSerpentscale @ forge
 SpearChitin,Abyssal Harpoon,Ocean,False,Recipes,Recipe Recipe_SpearChitin @ piece_workbench
 SpiceOceans,Seafarer's Herbs,Ocean,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
 TrinketChitinSwim,Fins of Destiny,Ocean,False,Recipes,Recipe Recipe_TrinketChitinSwim @ forge
@@ -366,6 +363,7 @@ OnionSeeds,Onion Seeds,Mountain,False,Locations,Location StoneTowerRuins04 > Sto
 OnionSoup,Onion Soup,Mountain,False,Recipes,Recipe Recipe_Onionsoup @ piece_cauldron
 Scythe,Scythe,Mountain,False,Recipes,Recipe Recipe_Scythe @ forge
 ScytheHandle,Scythe Handle,Mountain,False,Locations,Location BogWitch_Camp > BogWitch_Camp > Trader BogWitch
+ShieldSerpentscale,Serpent Scale Shield,Mountain,False,Recipes,Recipe Recipe_ShieldSerpentscale @ forge
 ShieldSilver,Silver Shield,Mountain,False,Recipes,Recipe Recipe_ShieldSilver @ forge
 Silver,Silver,Mountain,False,Conversions,smelter: SilverOre > Silver
 SilverNecklace,Silver Necklace,Mountain,False,Locations,Location MountainGrave01 > MountainGrave01 > Pickable
@@ -384,6 +382,8 @@ TrophySGolem,Stone Golem Trophy,Mountain,False,Spawns,StoneGolem > CharacterDrop
 TrophyUlv,Ulv Trophy,Mountain,False,Locations,Location MountainCave02 > Room > cave_new_deeproom_bottom_shrine > CreatureSpawner > CharacterDrop
 TrophyWolf,Wolf Trophy,Mountain,False,Spawns,Wolf > CharacterDrop
 TurretBoltWood,Wooden Missile,Mountain,False,Recipes,Recipe Recipe_TurretBoltWood @ piece_artisanstation
+Upgrader3Armor,Silver Protection Idol,Mountain,False,Locations,Location StoneTowerRuins04 > StoneTowerRuins04 > Container
+Upgrader3Weapon,Silver Battle Idol,Mountain,False,Locations,Location StoneTowerRuins04 > StoneTowerRuins04 > Container
 WolfClaw,Fenris Claw,Mountain,False,Locations,Location MountainCave02 > Room > cave_shrine_lootencap03 > PickableItem
 WolfFang,Wolf Fang,Mountain,False,Spawns,Fenring > CharacterDrop
 WolfHairBundle,Fenris Hair,Mountain,False,Locations,Location MountainCave02 > Room > cave_shrine_lootencap03 > PickableItem
@@ -451,7 +451,6 @@ GoblinBrute_RageAttack,Brute sword,Plains,False,Spawns,GoblinBrute > Creature at
 GoblinBruteBros_Attack,Brute sword,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > Creature attack GoblinBruteBros
 GoblinBruteBros_RageAttack,Brute sword,Plains,False,Locations,Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Start > CreatureSpawner > Creature attack GoblinBruteBros
 GoblinTotem,Fuling Totem,Plains,False,Spawns,GoblinBrute > CharacterDrop
-HelmetBerserkerHood,Headdress of the Bear,Plains,False,Recipes,Recipe Recipe_HelmetBerserker @ piece_workbench
 HelmetBerserkerUndead,Vilebone Visage,Plains,False,Recipes,Recipe Recipe_HelmetBerserkerUndead @ forge
 HelmetHat7,Red Twisted Headscarf,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir
 HelmetHat8,Grey Fur Cap,Plains,False,Locations,Location Hildir_camp > Hildir_camp > Trader Hildir

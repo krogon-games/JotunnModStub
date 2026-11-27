@@ -24,7 +24,7 @@ namespace CraftingOverhaul.Tests
 
         private static List<Dictionary<string, string>> DumpRows(string file)
         {
-            var rows = Csv.ReadRows(RepoFile("data", "game-dump-1.0.21", file));
+            var rows = Csv.ReadRows(RepoFile("data", "game-dump-1.0.31", file));
             var header = rows[0];
             return rows.Skip(1).Where(r => r.Count == header.Count)
                 .Select(r => header.Select((h, i) => new KeyValuePair<string, string>(h, r[i])).ToDictionary(p => p.Key, p => p.Value))

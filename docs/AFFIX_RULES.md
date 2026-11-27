@@ -72,7 +72,7 @@ Brief from the user for the general pool: "Diablo 2-style prefixes and suffixes.
   - The gathering pool's Durable and the weapon families' Durability raise the same stat, so they count as one family on an axe and can't both roll.
 - The rule is data-driven, so modded tools qualify automatically; a config list excludes exceptions.
 
-From the game dump (`data/game-dump-1.0.21/items.csv`; first read in 1.0.20, the same in 1.0.21):
+From the game dump (`data/game-dump-1.0.31/items.csv`; first read in 1.0.20, the same in 1.0.21 and 1.0.31):
 
 | Tool | Prefab | Biome | Tool tier | Eligible |
 |---|---|---|---|---|

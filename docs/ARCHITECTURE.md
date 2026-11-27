@@ -7,7 +7,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - Valheim 1.0.20 (Unity 6, Mono), BepInEx 5, Jötunn (JotunnLib 2.30.2), HarmonyX.
 - SDK-style `net462` projects with `Microsoft.NETFramework.ReferenceAssemblies`; game assemblies are publicized by Jötunn's prebuild (`DoPrebuild.props`, `ExecutePrebuild=true`), with `IgnoreAccessModifiers.cs` so private members can be used directly.
 - `Directory.Build.props` sets `SolutionDir`; `publish.ps1` runs after a Windows build: Debug copies the DLL to `MOD_DEPLOYPATH`, Release zips a Thunderstore package from `<Project>/Package/`.
-- Reference game data: `data/game-dump-1.0.21/` (CSV output of `co_dump`, development only, never shipped).
+- Reference game data: `data/game-dump-1.0.31/` (CSV output of `co_dump`, development only, never shipped).
 
 ## Solution layout
 
@@ -101,7 +101,7 @@ Read through the code, not run on a server (the user's group session tests it; `
 
 1. **Isolated patches.** `PatchAllSafely()` applies each `[HarmonyPatch]` class separately inside try/catch, so one broken target doesn't disable the rest.
 2. **Never break vanilla.** Code that runs inside game methods goes through `Safe.Run` / `Safe.Report`: log once per action, fall back to vanilla behaviour.
-3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.21/*.csv` for real game data.
+3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.31/*.csv` for real game data.
 4. **Data-driven first.** Derive lists from game data (biomes, talisman families); config overrides only for real exceptions (`BiomeMaterialOverrides`, `ExcludedCreatures`).
 5. **Clone, don't import** (exceptions: the shard and essence models, above). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models unless the user asks. New animations are allowed where no vanilla animation or emote fits (user, 2026-10-30); they come from asset bundles built in `JotunnModUnity/`.
 6. **Config scope.** Gameplay numbers admin-only (server-synced); visual settings per player.

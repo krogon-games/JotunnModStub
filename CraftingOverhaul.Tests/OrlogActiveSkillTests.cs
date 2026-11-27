@@ -341,7 +341,7 @@ namespace CraftingOverhaul.Tests
         public void TheLancePassesThroughBushesButNotTreesOrRocks()
         {
             // Krogon, 2026-11-16: "Pass through bushes" (a Bush01 had stopped a lance). What trees and logs drop, as the
-            // game dump lists it; the things below are rows of data/game-dump-1.0.21/destructibles.csv.
+            // game dump lists it; the things below are rows of data/game-dump-1.0.31/destructibles.csv.
             var treeDrops = new HashSet<string> { "Wood", "FineWood", "Resin", "BeechSeeds", "FirCone", "Frostwood" };
             // Bush01, shrub_2: not a tree to the game, drop wood.
             Assert.True(ActiveSkillRules.IsSmallPlant(false, new[] { "Wood" }, treeDrops));

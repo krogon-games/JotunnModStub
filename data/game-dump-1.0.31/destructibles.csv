@@ -255,13 +255,6 @@ prop_FeastMeadows,30,0,Default,1,1,1,Wood 1-2 w0
 prop_forge_ext2,30,0,Default,1,1,1,Wood 1-5 w0
 prop_forge_ext5,30,0,Default,1,1,1,FineWood 1-5 w0
 prop_hearth,50,0,Default,1,1,1,Stone 1-5 w0
-prop_itemstand,10,0,Default,1,1,1,FineWood 1-1 w0
-prop_itemstand_TrophyDraugrElite,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyDraugrElite 1-1 w0.05
-prop_itemstand_TrophyGoblinBrute,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGoblinBrute 1-1 w0.01
-prop_itemstand_TrophyGoblinShaman,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGoblinShaman 1-1 w0.05
-prop_itemstand_TrophyGreydwarf,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGreydwarf 1-1 w0.1
-prop_itemstand_TrophyGreydwarfBrute,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophyGreydwarfBrute 1-1 w0.05
-prop_itemstand_TrophySeekerBrute,10,0,Default,1,1,1,FineWood 1-1 w0.9; TrophySeekerBrute 1-1 w0.05
 prop_piece_bench_runed,30,0,Default,1,1,1,Frostwood 1-5 w0
 prop_piece_brazierfloor01,30,0,Default,1,1,1,BronzeScrap 1-5 w0
 prop_piece_cauldron,30,0,Default,1,1,1,TinOre 1-5 w0
@@ -273,7 +266,6 @@ prop_piece_workbench_ext2,30,0,Default,1,1,1,Wood 1-5 w0
 prop_piece_workbench_ext3,30,0,Default,1,1,1,FineWood 1-5 w0
 prop_piece_workbench_ext4,30,0,Default,1,1,1,FineWood 1-5 w0
 prop_preptable,30,0,Default,1,1,1,FineWood 1-10 w0
-prop_Tankard,10,0,Default,1,1,1,FineWood 1-1 w0
 prop_wood_stack,30,0,Default,1,1,1,Wood 3-10 w0
 PropFeastDeepNorth,30,0,Default,1,1,1,Frostwood 1-2 w0
 RaspberryBush,30,0,Default,1,2,1,Wood 1-1 w0
@@ -283,8 +275,8 @@ Rock_4,30,0,Default,3,6,1,Stone 1-1 w1
 Rock_4_deepnorth,30,0,Default,3,6,1,Stone 1-1 w1
 Rock_4_plains,30,0,Default,3,6,1,Stone 1-1 w1
 Rock_7,30,0,Default,3,6,1,Stone 1-1 w1
-Rock_7_deepnorth,200,0,Default,3,6,1,Stone 1-1 w1
-Rock_7_meadows,200,0,Default,3,6,1,Stone 1-1 w1
+Rock_7_deepnorth,100,0,Default,3,6,1,Stone 1-1 w1
+Rock_7_meadows,50,0,Default,3,6,1,Stone 1-1 w1
 Rock_destructible,10,0,Default,,,,
 rock_mistlands1,1,0,Default,,,,
 rock_mistlands2,1,0,Default,,,,

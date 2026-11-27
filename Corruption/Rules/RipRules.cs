@@ -47,7 +47,7 @@ namespace Corruption.Rules
 
         /// <summary>
         ///     The heart is at least this far from the landing spot (metres): the range of every boss army raid
-        ///     (<c>m_eventRange</c> 96 in <c>data/game-dump-1.0.21/events.csv</c>), so players land in quiet and the
+        ///     (<c>m_eventRange</c> 96 in <c>data/game-dump-1.0.31/events.csv</c>), so players land in quiet and the
         ///     waves start as they close in on the heart. A test checks the game data still agrees.
         /// </summary>
         public const float HeartMinDistance = 96f;
@@ -104,7 +104,7 @@ namespace Corruption.Rules
 
         /// <summary>
         ///     Rips never open (heart or landing spot) closer than this to anything a player placed (metres): the waves'
-        ///     range, the army raids' <c>m_eventRange</c> 96 in <c>data/game-dump-1.0.21/events.csv</c> (Krogon, 2026-11-26,
+        ///     range, the army raids' <c>m_eventRange</c> 96 in <c>data/game-dump-1.0.31/events.csv</c> (Krogon, 2026-11-26,
         ///     rips round decision 12). The config's <c>BaseDistance</c> overrides it when above 0.
         /// </summary>
         public const float DefaultBaseDistance = 96f;
