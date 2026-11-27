@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Building** (this round: the creature and player affixes; decisions 1–9 below).
+**Waiting for Krogon's playtest** (this round: the creature and player affixes; decisions 1–9 below).
 
 ## Purpose
 
@@ -16,9 +16,10 @@ Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-- The round and the branch are not yet confirmed by Krogon (the session routine's step 3): he gave the brief and went to sleep. The branch is the one this cloud session was given.
-- **Built, not play-tested:** the admin setting `[5 - Rips] DisabledMapAffixes` (his "option to disable some affixes from being able to roll"): listed ids never roll; maps already carrying one keep it and it still acts (Claude's choice). 743 tests pass; Corruption builds.
-- **Not checked against the game code:** decompiling `assembly_valheim.dll` was refused by this session's permission check, so the game-method names for attack speed, stagger, creature max health and the stamina regen number are unverified; they need that permission or a `co_dump` extension.
+- **Built, not play-tested** (756 tests; Corruption and Orlog build): the 17 affixes of Krogon's list (4 old ones removed), rolled values (`id:value`), Divine rerolling map values, the groups rule, the "Rip curse" within 96 m, `DisabledMapAffixes`, `co_map id:value`. Reviewed by Opus twice (game code; multiplayer and dedicated server); their fixes are in (`FEATURES.md` changelog).
+- **Claude's choices** (changeable): the 17 affix names (Glorious, Teeming, Brutal, Frenzied, Ruthless, Sturdy, Mighty, Fleet, Unyielding, Ironskin, Warded, Withering, Exhausting, Exposed, Venomous, Searing, Stormcalled) and their one-line copy; all equally likely; "elemental" = fire, frost, lightning, poison (not spirit); Exposed lowers Corruption's gear resistances only; a switched-off affix still acts on maps that carry it; old maps lose their removed affixes and drop in tier.
+- **Known limits:** life steal counts the hit before Ironskin/Warded's 95% cut; Fleet adds its full bonus while swimming; a creature already hurt when a rip starts keeps its health points while its maximum rises; Unyielding also stops parry staggers, guard breaks and adrenaline from staggers.
+- The game code was decompiled for this round (decision 9); every patch target was checked against Valheim 1.0.31.
 
 ## Decisions
 
@@ -98,29 +99,24 @@ Monsters have thorns.
 
 ## Playtest
 
-Nothing to test yet. Checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` once built.
+Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-*`) and the phone page. Not started.
 
 ## Open questions for Krogon
 
-Research of 2026-11-27 (two Sonnet subagents over the code and the 1.0.31 dump; summary in the chat message of that day):
-1. Confirm the round (#90) and the branch `claude/kind-einstein-8sn8e7`.
-2. Which of Swarming, Hardened, Rabid, Smouldering go. Overlaps: Swarming ≈ "+50% density", Hardened ≈ "extra health", Rabid ≈ "+damage" and "+25% speed", Smouldering ≈ "+25-75% fire".
-3. Decision 8b: experience, every "chance to drop" affix, Treasure Fallen, the unique chance and the Treasure Vault are rewards. Keep 8b (drop them, or keep them `later`) or allow reward affixes?
-4. Ranges: map affixes have no values today (decision 6b: Divine does nothing on maps). Roll a value per map (Divine then rerolls it), or one fixed number per affix?
-5. More than 4 affixes per map? Some affixes rarer than others (the `weight` column)?
-6. Rules against unwinnable maps: never both immunities on one map; the two health affixes never together. Full immunity to physical leaves a player without elemental damage unable to hurt anything: full immunity or "takes N% less"?
-7. Scope: Claude proposes this round = the 16 creature and player affixes (all danger, buildable now); loot affixes next round; corrupted-only ones after (meteors need the dump extended; heart charge, unique chance and the vault wait for champions and uniques; runes don't exist). Weather still waits for `co_dump`.
-8. Per-affix questions: what "additional items" means (vanilla drops?); "+10% shields" etc. has no base chance to add to (an extra 10% roll per kill for that kind?); poison's length is set by the game from the hit's size, not a fixed 5 s; "-5 stamina per second" against the game's regen; where "in the rip" ends for the player drains (the waves' 96 m?).
+1. The 17 affix names and their copy (Claude's proposals; preview `docs/images/map_ui_tier5.png`): keep, or rename?
+2. Life steal on Ironskin/Warded maps counts the full hit before the 95% cut: leave it, or cut it too?
+3. Should some affixes be rarer than others? All are equally likely today.
 
 ## Next steps
 
-1. Krogon confirms the round and branch, answers the questions above.
-2. Build the agreed affixes; play-test checklist; reviews.
+1. Krogon's play-test (`ma-*`), then his LogOutput.log checked against his marks.
+2. Fix feedback; final play-test; `/handoff`.
+3. Next rounds: the loot affixes (decision 7: every drop affix ×2 on its chances), then the corrupted-only affixes.
 
 ## Checks
 
-Not run yet.
+Not run yet (`/handoff`). Tests and builds pass (2026-11-27).
 
 ## Merge notes
 
-Not ready to merge.
+Not ready to merge (no play-test). Gameplay changed: version bump needed at merge (Corruption, Orlog): the rip request and the map's stored affixes changed format.
