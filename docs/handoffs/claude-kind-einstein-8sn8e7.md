@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Asking Krogon questions** (he is asleep; questions below wait for him).
+**Building** (this round: the creature and player affixes; decisions 1–9 below).
 
 ## Purpose
 
@@ -83,6 +83,18 @@ Monsters trigger an explosion of Ice on death.
 
 Monsters have thorns.
 ```
+
+**Krogon's answers to the research questions** (2026-11-27, his words; the round and branch taken as confirmed by his answering and "Split rounds, agreed"):
+
+1. **The four old affixes all go** (2026-11-27): "Remove each one. Use new affix pool I provided." Swarming, Hardened, Rabid and Smouldering are removed; the pool is his list.
+2. **Decision 8b is overwritten: affixes can give rewards** (2026-11-27): "overwrite decision 8b, affixes can now provide rewards too". Replaces the rips round's 8b ("every map affix is danger only; the tier pays").
+3. **Affixes roll a value from their range** (2026-11-27): "Yes that's why I provided the ranges, so that it can roll." Each map rolls its own number within the range on his list. Replaces decision 6b's "Divine does nothing (map affixes have no ranges)": Claude's reading is that the Divine Orb now rerolls a map's values, as on gear.
+4. **More than 4 affixes only by corrupting** (2026-11-27): "A map can only hold more then 4 affixes via means of corrupting a 5th affix on." Claude's reading: the 5th is the corrupted-only affix of decision 6d, built in the corrupted-affix round; until then tier 6 keeps 4.
+5. **Rules against unwinnable maps; immune = 95% less** (2026-11-27): "Sure, create those rules. And yes, immune means takes 95% reduced damage." No map rolls both immunities, nor both health affixes; "immune to physical/elemental damage" means 95% less damage of that kind.
+6. **The round is split** (2026-11-27): "Split rounds, agreed". This round: the creature and player affixes of his list. Next round: the loot affixes. After that: the corrupted-only affixes. The weather affixes still wait for `co_dump` (#86).
+7. **The drop affixes raise chances, never guarantee** (2026-11-27, for the loot round): "Additional items means increased drop rates for everything. I thought it was supposed to say 100% for shields, maybe I made a mistake. All the map affixes that say drop extra items just means the chances for those drops are increased by 100%, not that they are guaranteed drops from every kill." So every drop affix is a ×2 on its drop chances, the shields, armour, melee and ranged ones included (+100%, not +10%).
+8. **"In the rip" is 96 m from the heart** (2026-11-27): "Sure use the 96m". The player drains (life, stamina, resistances) act within 96 m of the rip's heart, the waves' range.
+9. **Decompiling the game is allowed** (2026-11-27): "Youre allowed to decompile game code for the purpose of modding."
 
 ## Playtest
 
