@@ -306,6 +306,16 @@ All passed 2026-10-31 ("everything looks really good now"); ~~the adrenaline bar
 13. **B relogs in the middle of A's lock:** after B is back, A's drop is still hidden for B until its minute is up, then appears.
 14. **Who counts at the heart:** in the rip, B destroys the heart while A stands 50–90 m away → the `Rip loot: N player(s) near the heart.` line (in the log of whichever game ran the heart; check both) says 2.
 
+**2m. Map tiers and the explored-land fallback (rips round, `claude/festive-gates-79y1yr`, #31 and #84; built 2026-11-27, solo steps in [`playtests/claude-festive-gates-79y1yr.md`](playtests/claude-festive-gates-79y1yr.md)).** A tiered map keeps its tier and affixes when it opens a rip, and every rip keeps 96 m from anything a player placed. **Everyone and the server must be on this build** (Part 1's build check: the log says `Corruption 0.10.0 loaded (build: claude/festive-gates-79y1yr …)` on every game). All of it needs devcommands (admin): `co_map <biome> [tier] [affix ...]` makes a map, `co_rip` shows the nearest rip object (biome, tier, affixes, time left, heart, owner).
+1. **Tier for everyone:** **A** types `co_map BlackForest 6` and uses it at home → the server log says `Rip request: … away from player-placed objects (96 m) … in N ms` (note N); A's log says `Rip opened: BlackForest, Tier 6 · …`; both hover the entry and see the same "Tier 6" line.
+2. **First owner:** **B** goes through first to the heart; **A** follows a minute later → B's log says `this game now runs the waves … waves x9, 100% guaranteed 2-stars`; both hover the heart and type `co_rip` → the same tier and affixes, "owns it: yes" only for B; every creature is a 2-star.
+3. **Handover:** with 50 or more creatures up, **B** runs about 300 m away with creatures chasing (or logs out) → **A**'s log says `this game now runs the waves` with the same x9 and 100%; then A's `… alive (counted here) X of 54` lines against what is really alive. Note any stutter.
+4. **Logging in inside the rip:** **B** logs back in next to the heart → the creatures are red and fast, B's hits do less (Hardened), B burns when hit (Smouldering).
+5. **Heart destroyed by the non-opener:** **B** destroys the heart while B owns it → B's log says `Rip loot: tier 6`, one line per player with gear "rare"; 6 to 14 shards in all, dealt among you; A sees "Tier 6" on the exit.
+6. **Fallback near buildings:** **A** builds a workbench in explored Meadows, types `co_rip fallback on`, then `co_map Meadows` and uses it → the server log says `(explored-land fallback)`; the heart and the landing spot are both more than 96 m from any building of either player.
+7. **Leftovers:** after the rip closes (one in-game day; sleeping counts), go back → the red creatures have left (they despawn once nobody fights them).
+8. **Trading:** a tiered map handed to **B** keeps its tier and affixes (tooltip and the number on the icon).
+
 ### Part 3: a rip run (about 45 minutes)
 
 On a dedicated server the rip request goes to the server and its answer comes back; alone this was all one game.
