@@ -113,5 +113,9 @@ Solo, single player, Valheim 1.0.31, build `claude/festive-gates-79y1yr f4d8580`
 7. [ ] (`mtg-7`) **The Forge with a map.** Put the tier 5 map in the Forge tab → left: the icon with its yellow **5**, **Tier 5 · Rare map** under it (once; not on the right), Remove; **no Shatter button**. Right: "Meadows map" and the same summary as the tooltip, nothing cut off at the bottom (the text may be a little smaller than the tooltip's). Then the tier 3 map: use a **Regal Orb** → the green "Regal Orb: now tier 4" result at the bottom of the right column, the new affix's line highlighted for a moment, nothing overlapping. Put the tier 6 map in → **Corrupted** under the tier line on the left. Take the map out and put a gear item in → the gear view exactly as before, **Shatter back**.
 8. [ ] (`mtg-8`) **Smaller UI.** In the game's settings, set the GUI scale lower, then repeat a quick look at steps 5 and 7 with the tier 6 map: the lines wrap the same way and nothing is cut off. (Everything scales together, so it should look the same, only smaller.)
 
-### Re-test (<date>)
-- 
+### Re-test (2026-11-27)
+Solo, single player, Valheim 1.0.31, the build with the fallback fix and then the maps UI redesign. Marks from the phone page; you: "Playtested. UI looks much better."
+- Steps 1–4 (`mtg-1` … `mtg-4`: the fallback on explored land, back to unexplored land, the leftovers, no red errors): Pass. No log was sent for this game, so the fallback's `Rip request … in X ms` on explored land isn't recorded (the earlier fallback run took 38 ms over 237,778 objects).
+- Steps 5–8 (`mtg-5` … `mtg-8`: the new tooltip at tiers 1, 3, 5 and 6, the Forge with a map, a smaller GUI scale): Pass.
+
+**The round's solo play-test has passed.** Left for the group evening: `PLAYTEST.md` → Session 2, 2m (on the phone page as `mpe-2m-1` … `mpe-2m-8`).

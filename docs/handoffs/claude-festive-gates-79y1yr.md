@@ -4,13 +4,15 @@
 
 ## Stage
 
-**Waiting for Krogon's re-test** (`mtg-1` … `mtg-8`) and his look at the maps UI preview (decision 15). Built, reviewed (two Opus patch reviews, one Opus multiplayer review and its follow-up) and play-tested twice on 2026-11-27 (solo, Valheim 1.0.31). First play-test: the Forge tab, tooltips and a tier 6 rip passed; fixed: no pop-up when a shard corrupts a map (decision 14) and a red Unity error from the loot beams' smoke. Final play-test: both fixes passed; the explored-land fallback opened on land he had never seen (it took any land): fixed, it now takes explored land only. The re-test covers that fix, the white-map rip and the leftovers (not in his logs yet). Then the maps UI redesign (decision 15) was built the same day: preview `docs/images/map_ui_tier5.png` and `map_ui_tiers.png`, play-test steps `mtg-5` … `mtg-8`.
+**Play-tested; ready to merge** (once `/handoff` confirms the checks). Built, reviewed (two Opus patch reviews, one Opus multiplayer review and its follow-up) and play-tested three times alone on 2026-11-27 (Valheim 1.0.31). First play-test: the Forge tab, tooltips and a tier 6 rip passed; fixed: no pop-up when a shard corrupts a map (decision 14) and the loot beams' red smoke error. Final play-test: both fixes passed; the explored-land fallback took any land: fixed (explored land only). The maps UI was then redesigned to Krogon's mockup (decision 15). **Re-test (`mtg-1` … `mtg-8`): all passed** (Krogon: "Playtested. UI looks much better."). Two players still to come at the group evening (Session 2, 2m).
 
 ## Purpose
 
 The rips round: map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31), ROADMAP R1: six tiers as map rarity, crafted with orbs and the shard, and the four creature affixes Swarming, Hardened, Rabid, Smouldering; the three weather affixes next round) and the explored-land fallback with 96 m from anything players placed ([#84](https://github.com/krogon-games/JotunnModStub/issues/84), ROADMAP R7).
 
 ## Done
+
+- **Re-test (2026-11-27), all eight steps Pass by Krogon's marks:** the fallback on explored land after its fix, unexplored land again, the leftovers leaving once the rip closed, no red errors, and the redesigned tooltip and Forge view at tiers 1, 3, 5 and 6 and at a smaller GUI scale. No log was sent for that game, so the fallback's timing on explored land isn't recorded.
 
 **Confirmed in game** (Krogon's solo play-test, 2026-11-27, single player, Valheim 1.0.31, build `f1bc90c`; his marks plus his log):
 - Maps, the tooltip and the Forge tab (`mt-1` … `mt-4c`, `mt-6` … `mt-11`): tier numbers on icons, the tooltips, every orb on maps, the refusals, Annulment, Alchemy, the Mirror of Kalandra, gear still working, old maps as tier 1.
@@ -87,10 +89,9 @@ Solo: `docs/playtests/claude-festive-gates-79y1yr.md`. First play-test (23 steps
 
 ## Next steps
 
-1. **Krogon's re-test** (`mtg-1` … `mtg-8`; his verdict on the preview pictures first): read his marks (`ArtifactData`, collection `results`, ids `mtg-*`) and his log (it must show the fallback rip, a `Reloaded … .cfg` line and a second rip on unexplored land), copy them into the playtest file, then take this round's steps off the phone page once it passes.
-2. A PR into `master`; the coordinator raises Corruption's version and updates the older rip steps (Merge notes).
-3. The group evening: Session 2, 2m.
-4. Next rips rounds: the weather affixes (after a fresh 1.0.30 `co_dump`; the multiplayer review's notes are in `docs/ARCHITECTURE.md` and `FEATURES.md`), corrupted-only affixes (decision 6d), R5 (#40), elites (#39).
+1. **`/handoff`**, then a PR into `master` (Krogon asks for it); the coordinator raises Corruption's version and updates the older rip steps (Merge notes), and takes this round's `mpe-2m` steps into the group evening.
+2. The group evening: `PLAYTEST.md` → Session 2, 2m (`mpe-2m-1` … `mpe-2m-8` on the phone page).
+3. Next rips rounds: the weather affixes (after a fresh 1.0.30 `co_dump`; the multiplayer review's notes are in `docs/ARCHITECTURE.md` and `FEATURES.md`), corrupted-only affixes (decision 6d), R5 (#40), elites (#39).
 
 ## Checks
 
@@ -104,5 +105,5 @@ Run 2026-11-27 by `/handoff`:
 
 ## Merge notes
 
-**Ready to merge: no** (Krogon's play-test). 0 behind `master`; no other remote branch has unmerged commits. **Gameplay changed: version bump needed at merge (Corruption)**; the rip request and reply changed (new fields read only when present), so the server and every player need the new build. Shares `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/PersonalLoot.cs` (one-line smoke fix in the personal-loot round's code), `Content/RiftforgeDialog.cs`, `Rules/ForgeDialogLayout.cs`, `Content/RiftforgeForgeView.cs` and `Content/RiftforgeWorkspace.cs` (the maps UI), `Content/LootPatches.cs` (the tooltip postfix's map branch), `Content/Texts.cs`, `Content/LootPatches.cs`, the Riftforge files and the shared docs (`FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/corruption-design.md`, `docs/GAME_DESIGN.md`, `docs/ARCHITECTURE.md`, `docs/riftforge-ui-brief.md`). For `docs/DECISIONS.md`: decisions 1–15 (14 replaces the corrupt-map dialog of decision 13's pictures; 15 replaces the map tooltip and Forge description of decisions 11 (3) and 13); decision 6 replaces the design's tier table and "four tiers", 6b replaces the shard rolling, 8b the per-affix rewards (and decision 7's), 12 answers the minimum rip distance from bases.
+**Ready to merge: yes** (Krogon's solo play-test passed 2026-11-27; `/handoff` re-runs the checks). 0 behind `master`; no other remote branch has unmerged commits. **Gameplay changed: version bump needed at merge (Corruption)**; the rip request and reply changed (new fields read only when present), so the server and every player need the new build. Shares `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/PersonalLoot.cs` (one-line smoke fix in the personal-loot round's code), `Content/RiftforgeDialog.cs`, `Rules/ForgeDialogLayout.cs`, `Content/RiftforgeForgeView.cs` and `Content/RiftforgeWorkspace.cs` (the maps UI), `Content/LootPatches.cs` (the tooltip postfix's map branch), `Content/Texts.cs`, `Content/LootPatches.cs`, the Riftforge files and the shared docs (`FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/corruption-design.md`, `docs/GAME_DESIGN.md`, `docs/ARCHITECTURE.md`, `docs/riftforge-ui-brief.md`). For `docs/DECISIONS.md`: decisions 1–15 (14 replaces the corrupt-map dialog of decision 13's pictures; 15 replaces the map tooltip and Forge description of decisions 11 (3) and 13); decision 6 replaces the design's tier table and "four tiers", 6b replaces the shard rolling, 8b the per-affix rewards (and decision 7's), 12 answers the minimum rip distance from bases.
 **Coordinator, after the merge:** older steps on `master` still describe the old rip rule and loot: `PLAYTEST.md` Session 2-solo step 8 and Part 3 step 1 ("never near a bed, ward or portal", "1–3 shards") and the phone page's `srv-8`, `duo-7`, `mpe-rip`; with this round a white map's heart gives 1–4 shards and rips keep 96 m from anything a player placed. Corruption's README config rows are updated here; its feature list and changelog wait for the version bump.
