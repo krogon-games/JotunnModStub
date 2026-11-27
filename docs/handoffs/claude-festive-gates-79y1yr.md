@@ -1,35 +1,24 @@
 # Handoff: `claude/festive-gates-79y1yr`
 
-**Written:** 2026-11-27 (`/handoff`). Started 2026-11-26 from `master` at `1966980`; 41 commits ahead, 0 behind; no PR.
+**Written:** 2026-11-27 (`/handoff`, second session). From `master` at `1966980`; 55 commits ahead, 0 behind; no PR yet.
 
 ## Stage
 
-**Play-tested; ready to merge** (once `/handoff` confirms the checks). Built, reviewed (two Opus patch reviews, one Opus multiplayer review and its follow-up) and play-tested three times alone on 2026-11-27 (Valheim 1.0.31). First play-test: the Forge tab, tooltips and a tier 6 rip passed; fixed: no pop-up when a shard corrupts a map (decision 14) and the loot beams' red smoke error. Final play-test: both fixes passed; the explored-land fallback took any land: fixed (explored land only). The maps UI was then redesigned to Krogon's mockup (decision 15). **Re-test (`mtg-1` … `mtg-8`): all passed** (Krogon: "Playtested. UI looks much better."). Two players still to come at the group evening (Session 2, 2m).
+**Ready to merge.** Krogon's solo play-tests passed on Valheim 1.0.31 (2026-11-27: "Playtested. UI looks much better."). Two players still to come (Session 2, 2m).
 
 ## Purpose
 
-The rips round: map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31), ROADMAP R1: six tiers as map rarity, crafted with orbs and the shard, and the four creature affixes Swarming, Hardened, Rabid, Smouldering; the three weather affixes next round) and the explored-land fallback with 96 m from anything players placed ([#84](https://github.com/krogon-games/JotunnModStub/issues/84), ROADMAP R7).
+Map tiers and affixes ([#31](https://github.com/krogon-games/JotunnModStub/issues/31)), the explored-land fallback ([#84](https://github.com/krogon-games/JotunnModStub/issues/84)); also decisions 14–16 (no map pop-up, maps UI, 1.0.31 dump [#86](https://github.com/krogon-games/JotunnModStub/issues/86)).
 
 ## Done
 
-- **Re-test (2026-11-27), all eight steps Pass by Krogon's marks:** the fallback on explored land after its fix, unexplored land again, the leftovers leaving once the rip closed, no red errors, and the redesigned tooltip and Forge view at tiers 1, 3, 5 and 6 and at a smaller GUI scale. His saved log of that game (build `eb7ce0f`, Valheim 1.0.31, no errors): the fallback rip opened on explored land (`Rip request: 10 candidate(s) (explored-land fallback), 3 away from player-placed objects (96 m); checked 3 placed object(s) near them of 250075 in 20 ms.`, a tier 3 Meadows rip next to where his first play-test's rip had been), then, after the settings reload for `OpenDays`, a white-map rip on unexplored land (16 ms). The log doesn't record creatures leaving, so the leftovers stand on his mark.
-
-**Confirmed in game** (Krogon's solo play-test, 2026-11-27, single player, Valheim 1.0.31, build `f1bc90c`; his marks plus his log):
-- Maps, the tooltip and the Forge tab (`mt-1` … `mt-4c`, `mt-6` … `mt-11`): tier numbers on icons, the tooltips, every orb on maps, the refusals, Annulment, Alchemy, the Mirror of Kalandra, gear still working, old maps as tier 1.
-- A tier 6 Meadows rip (log): `Rip request: 29 candidate(s), 27 away from player-placed objects (96 m); checked 2 placed object(s) near them of 223274 in 25 ms.`; waves x9, 100% guaranteed 2-stars; Rabid's ×1.4 and +30%; the heart by tier 6: 11 shards, a Rare gear item, 2 orbs and one white map.
-- Final play-test (build `f4d8580`): no pop-up when a shard corrupts a map (`mtf-1`); the loot beams ("beams are fine, no red errors"), no red error in the log; the fallback search ran in 38 ms over 237,778 objects; tier 3's waves line and heart loot.
-- **Every Corruption patch applied on Valheim 1.0.31:** no `Failed to apply patch` line (Corruption's `PatchAllSafely` writes one for any patch class that fails) and no Harmony error from Corruption; the only Harmony warning is Orlog's known `ConnectPanel.m_root`.
+Confirmed by Krogon (Valheim 1.0.31; playtest file): tiers, orbs and the shard on maps, rips by tier, the fallback on explored land and the 96 m rule, leftovers leaving, the new tooltip and Forge view; every patch applied, no red errors.
 
 ## Half-done and known issues
 
-- **Built; partly tried in game** (729 unit tests; see Done): six map tiers (`Corruption/Data/map_tiers.csv`, drop rates `rip_tier_1`…`6` in `drop_modifiers.csv`); four affixes (`map_affixes.csv`: Swarming, Hardened, Rabid, Smouldering; the weather three are `later` rows); orbs and the shard on maps in the Forge tab (`MapForge.cs`), the map tooltip, the tier number on icons, tier and affixes on the rip's hover; rips by tier (tier and affixes sent with the request and stamped on the rip, the heart and every wave creature; the exact map used is used up); #84 (explored-land fallback; every rip 96 m from anything a player placed, grown crops included, wild plants not); `co_map`, `co_rip`, `co_rip fallback on|off`.
-- **Game code read in 1.0.14; every patch applied on 1.0.31** (see Done). The patches: `Character.Damage`, `Character.RPC_Damage`, `InventoryGrid.UpdateGui`, `ItemData.GetTooltip`, `InventoryGrid.CreateItemTooltip`, `ItemDrop.GetHoverText`, `Humanoid.UseItem`, `InventoryGui.OnRightClickItem`, `Player.UpdateTeleport`, `Character.Awake`, `CharacterDrop.OnDeath`. Members relied on: `ZDOMan.m_objectsByID`, `ZDO.GetPosition/GetLong/GetPrefab`, `ZDOVars.s_creator`, `ZPackage.GetPos/Size`, `ZoneSystem.m_vegetation`, `Plant.m_grownPrefabs`, `Minimap.IsExplored`, `WorldGenerator.GetBiome/GetHeight/GetTerrainDelta`, `EffectArea.IsPointInsideArea`, `MonsterAI.SetEventCreature`, `SEMan.Add/Remove/HaveStatusEffect`, `SE_Stats.m_damageModifier/m_speedModifier`, `HitData.GetAttacker/ApplyModifier`, `InventoryElement.m_quality`, `ItemData.Clone`. Weather and status-effect code (`EnvMan`, `Player.UpdateEnvStatusEffects`, `SE_Smoke`) was read for the next round only. **Not yet seen working in game:** the fallback on explored land (after its fix), the white-map rip on unexplored land after the fallback test, rip creatures leaving after the rip closes, the exact map used being used up. Krogon marked such steps Pass twice, but each log showed one rip only, so they stay in the re-test; his logs are the check.
-- **Maps UI redesign (decision 15), built 2026-11-27, not yet seen in game** (742 tests): one summary for the tooltip and the Forge (`MapText`, pure): usage line, What you'll face, What you'll earn; the tooltip keeps the game's weight line dim at the bottom; the Forge shows the tier line under the slot, the summary on the right, the result in a bottom band sized to the message, and hides Shatter for maps; the text shrinks to 70% instead of clipping. **Claude's choices in it** (Krogon can change them): the two-star wording "at least a N% chance" for tiers 2–4 (creatures that miss the roll still get the game's own chance) and "may have two stars by chance" at tier 1; affixes listed in table order (as his example), not the order they were rolled; heading gold `#F8BC42` sampled from his mockup, text cream `#EDE3CF` (the Forge dialogs' existing body colour) for his "readable cream"; a half-line gap before the tooltip's marks; "—", "×", "’" fall back to "-", "x", "'" if the game's font lacks them. **Unknown until his play-test:** the real panel sizes (the preview uses the earlier pictures' estimates: at those, tier 6 fits at 79%), whether the game's description panel scrolls, whether its font has the three glyphs.
-- **Game dump 1.0.31 added** (decision 16, #86): `data/game-dump-1.0.31/` replaces 1.0.21 (its README lists what changed); `loot_bases.csv` regenerated (Headdress of the Bear and Bone Tower Shield now Black Forest, Serpent Scale Shield now Mountain); Orlog tables unchanged; 742 tests pass. Still no weather data.
-- **Fixed after the final play-test** (2026-11-27): the explored-land fallback took any land of the biome (it dropped the unexplored requirement instead of asking for explored land); now explored land only, for the heart and the landing spot (`RipRules.ExplorationFits`, 730 tests).
-- **Fixed after the play-test** (2026-11-27): the corrupt-map pop-up and its setting `WarnBeforeCorruptingMaps` are removed (decision 14; the gear's pop-ups stay); the loot beams' smoke no longer logs Unity's red "Particle Velocity curves must all be in the same mode" (once per beam; `PersonalLoot.cs`, from the personal-loot round: the smoke's rise was a single number, its drift a range). The smoke may now rise as designed and look a little different: Krogon checks it in `mtf-3`.
-- **Known limits:** Swarming at tiers 5–6 means up to ~100 creatures at once, all run by one game; after the heart changes owner, creatures the new owner never loaded aren't counted; the Ashlands spawner stones aren't stamped and don't leave; mixed builds within 0.10.0 lose tiers (a tiered map is kept with a message; the version bump ends it); the server scans every object once per map use (logged in ms).
-- **Claude's own choices** (Krogon can change them; full list in `FEATURES.md` → Map tiers and affixes): affixes equally likely; Alchemy/Chance give 3 affixes; right-clicking a map with the Forge tab open puts it in the forge; rip creatures leave after the rip closes; wave spawns avoid player bases.
+- **Not play-tested:** `loot_bases.csv` regenerated from the 1.0.31 dump (three items change loot biome); two players.
+- **Known limits:** up to ~100 creatures at tiers 5–6; handover counting; Ashlands spawner stones unstamped (`FEATURES.md`).
+- **Claude's choices** (changeable; `FEATURES.md` → Map tiers and affixes): affixes equally likely; Alchemy/Chance give 3; right-click puts a map in the forge; leftovers leave; no waves inside bases; the maps UI's two-star wording, table order, colours and plain-glyph fallback.
 
 ## Decisions
 
@@ -83,29 +72,31 @@ The rips round: map tiers and affixes ([#31](https://github.com/krogon-games/Jot
 
 ## Playtest
 
-Solo: `docs/playtests/claude-festive-gates-79y1yr.md`. First play-test (23 steps, `mt-1` … `mt-21`) done 2026-11-27: 21 marked Pass, `mt-5` unmarked with his note (decision 14), `mt-21` Fail (the beams' red errors). Final play-test (`mtf-1` … `mtf-6`) done 2026-11-27: `mtf-1` Pass, `mtf-2` and `mtf-3` Fail (the fallback on unexplored land; beams fine), `mtf-4` … `mtf-6` marked Pass (4 and 5 not in the log). **Re-test:** `mtg-1` … `mtg-4` (and the maps UI's `mtg-5` … `mtg-8`) in the same file and on the phone page (replacing the `mtf-*` steps there): the fallback on explored land, unexplored land again with `OpenDays = 0.1`, the leftovers, the log. Group: `PLAYTEST.md` → Session 2, 2m (on the phone page as `mpe-2m-1` … `mpe-2m-8`).
+Solo: `docs/playtests/claude-festive-gates-79y1yr.md` (`mt-*`, `mtf-*`, `mtg-*`, feedback and fixes): **passed**; steps off the phone page. Group: `PLAYTEST.md` → Session 2, 2m (`mpe-2m-*`).
 
 ## Open questions for Krogon
 
-1. Related rips work for later (asked 2026-11-27, not answered): (a) extend `co_dump` to record what each weather does and the smoke damage (recommended: unblocks the weather round), (b) R5, #40: keep rips out of villages and water, (c) a firmer creature count after a handover, or the Ashlands spawner stones.
+1. Next rips work (asked 2026-11-27, not answered): (a) extend `co_dump` with weather data and smoke damage (recommended: the weather affixes need it), (b) R5, #40: rips out of villages and water, (c) a firmer creature count after a handover, or the Ashlands spawner stones.
 
 ## Next steps
 
-1. **`/handoff`**, then a PR into `master` (Krogon asks for it); the coordinator raises Corruption's version and updates the older rip steps (Merge notes), and takes this round's `mpe-2m` steps into the group evening.
-2. The group evening: `PLAYTEST.md` → Session 2, 2m (`mpe-2m-1` … `mpe-2m-8` on the phone page).
-3. Next rips rounds: the weather affixes (after a fresh 1.0.30 `co_dump`; the multiplayer review's notes are in `docs/ARCHITECTURE.md` and `FEATURES.md`), corrupted-only affixes (decision 6d), R5 (#40), elites (#39).
+1. A PR into `master` when Krogon asks; the coordinator merges and does the Merge notes.
+2. The group evening (Session 2, 2m).
 
 ## Checks
 
 Run 2026-11-27 by `/handoff`:
-- **Build: PASS.** `dotnet test CraftingOverhaul.Tests` 731 passed; Corruption builds with 0 errors against the stand-in game files (Orlog and CraftingOverhaul unchanged).
-- **Version:** gameplay changed: version bump needed at merge (Corruption). No version changed here.
-- **Multiplayer sync: PASS** (read in code, not tested): tier and affixes on the rip request/reply and on ZDOs; `BaseDistance` admin-only; `WarnBeforeCorruptingMaps` per player (a warning); tables compiled into the DLL.
-- **Assets and names: PASS:** both new tables embedded; every new `$corruption_rip_*` text in `Texts.cs`.
+- **Build: PASS:** 742 tests; Corruption builds, 0 errors (stand-in game files).
+- **Version:** gameplay changed: version bump needed at merge (Corruption). None changed here.
+- **Multiplayer sync: PASS** (read in code, not tested).
+- **Assets and names: PASS:** tables embedded; no new text tokens.
 - **FEATURES.md: PASS.**
-- **In-game: needs Krogon's playtest.**
+- **In-game: PASS** by Krogon's play-test (re-test `mtg-1` … `mtg-8`).
 
 ## Merge notes
 
-**Ready to merge: yes** (Krogon's solo play-test passed 2026-11-27; `/handoff` re-runs the checks). 0 behind `master`; no other remote branch has unmerged commits. **Gameplay changed: version bump needed at merge (Corruption)**; the rip request and reply changed (new fields read only when present), so the server and every player need the new build. Shares `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/PersonalLoot.cs` (one-line smoke fix in the personal-loot round's code), `Content/RiftforgeDialog.cs`, `Rules/ForgeDialogLayout.cs`, `Content/RiftforgeForgeView.cs` and `Content/RiftforgeWorkspace.cs` (the maps UI), `Content/LootPatches.cs` (the tooltip postfix's map branch), `Content/Texts.cs`, `Content/LootPatches.cs`, the Riftforge files and the shared docs (`FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/corruption-design.md`, `docs/GAME_DESIGN.md`, `docs/ARCHITECTURE.md`, `docs/riftforge-ui-brief.md`). For `docs/DECISIONS.md`: decisions 1–15 (14 replaces the corrupt-map dialog of decision 13's pictures; 15 replaces the map tooltip and Forge description of decisions 11 (3) and 13); decision 6 replaces the design's tier table and "four tiers", 6b replaces the shard rolling, 8b the per-affix rewards (and decision 7's), 12 answers the minimum rip distance from bases.
-**The game dump moved** (decision 16): `data/game-dump-1.0.21/` is now `data/game-dump-1.0.31/` (Krogon's 1.0.31 `co_dump`); code comments, eight tests, `tools/make_loot_bases.py`, `tools/make_orlog_tables.py`, `CLAUDE.md`, the handoff skill and the live docs point at the new folder (dated history entries keep the old name). **Any other branch whose tests or tools read `data/game-dump-1.0.21/` fails until it merges `master`.** `Corruption/Data/loot_bases.csv` was regenerated from it (gameplay data: three items change biome, 249 bases) — part of this round's version bump. **Coordinator, after the merge:** older steps on `master` still describe the old rip rule and loot: `PLAYTEST.md` Session 2-solo step 8 and Part 3 step 1 ("never near a bed, ward or portal", "1–3 shards") and the phone page's `srv-8`, `duo-7`, `mpe-rip`; with this round a white map's heart gives 1–4 shards and rips keep 96 m from anything a player placed. Corruption's README config rows are updated here; its feature list and changelog wait for the version bump.
+**Ready to merge: yes.** 0 behind `master`; no other branch has unmerged commits. **Gameplay changed: version bump needed at merge (Corruption)**: the rip messages changed, so the server and every player need the new build.
+- **Shared files:** Corruption's plugin, config, texts, loot patches, personal loot and Riftforge files; `CLAUDE.md`; the shared docs.
+- **The game dump moved** to `data/game-dump-1.0.31/`: other branches reading `data/game-dump-1.0.21/` fail until they merge `master`.
+- **`docs/DECISIONS.md`:** decisions 1–16 (6 replaces the tier table, 6b the shard rolling, 8b per-affix rewards, 12 the base distance, 14 the corrupt-map dialog, 15 the map tooltip of 11 and 13).
+- **Coordinator, after the merge:** update the older rip steps (`PLAYTEST.md` Session 2-solo step 8, Part 3 step 1; phone page `srv-8`, `duo-7`, `mpe-rip`): 1–4 shards, 96 m from anything placed.
