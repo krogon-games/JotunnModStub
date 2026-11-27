@@ -110,7 +110,8 @@ All three must have been picked up before the recipe appears, which is vanilla b
 - Named after its biome: "Meadows map" … "Deep North map" (user, 2026-11-23: "corrupted" maps come with the map tiers).
 - Comes from the Riftforge recipe, the rip heart's loot (one, always; was the rip chest until 2026-11-26) and creatures (once a rip is cleared and the biome's boss beaten).
 - Consumed on use. Kept in the Maps tab (built 2026-10-29, see [Inventory and equipment slots](#inventory-and-equipment-slots)); before that, the normal inventory (1 per slot).
-- Tooltip shows target biome, tier, and any rolled affixes.
+- Tooltip shows target biome, tier, and any rolled affixes. *Built 2026-11-27 (Krogon, decision 11, rips round `claude/festive-gates-79y1yr`; not play-tested):* the name stays "{biome} map", coloured by rarity as gear is (white, Magic blue, Rare yellow); only a tier 6 map is "Corrupted {biome} map", in red. The tooltip is in the gear style: a "Tier 3 · Magic map" line, each affix as a bullet with its danger, the red Corrupted mark at tier 6, and three dim lines for what the tier gives. The tier also shows as a small number in the corner of the map's icon (where the game shows an item's quality), and the rip's portals and heart show "Tier N · affixes" on hover.
+- **Dropped maps** *(Krogon, 2026-11-26, decision 5: "Option a")*: every map that drops (a creature's, the heart's one) is tier 1 with no affixes.
 - Teleportable through portals (it's the key to the content, not a resource).
 
 ## Rips
@@ -129,7 +130,8 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 - Only terrain the activating player has not explored, read from their minimap explored data.
 - Only the map's target biome. A Black Forest map never lands you in Ashlands or open ocean.
 - Meadows maps follow the same unexplored-land rule as every other map. The user expects plenty of unexplored Meadows to remain by the time the first corrupted map is crafted (decided 2026-10-28; revisit only if rips fail to find a spot in play-tests).
-- Prefer land at least a set distance from the player's bases (no ward or bed nearby) so rips don't trash a build.
+- ~~Prefer land at least a set distance from the player's bases (no ward or bed nearby) so rips don't trash a build.~~ *Changed 2026-11-26 (Krogon, rips round decision 12): "96m, every rip, everything a player placed".* Neither the heart nor the landing spot may be within **96 m** (the waves' range; the army raids' own `m_eventRange`) of anything a player placed (buildings, fires, portals, beds, wards, crops and saplings, carts and boats: every piece the game marks with its builder), for **every** rip, unexplored land too. This replaces the old rule of a ward's radius from beds, wards and portals. Built 2026-11-27, not play-tested.
+- **Explored-land fallback** *(Krogon, rips round brief, #84; built 2026-11-27, not play-tested)*: unexplored land stays the first choice. When no unexplored land of the biome is left, the rip falls back to explored land under the same 96 m rule, with a message.
 - The area isn't loaded until arrival, so validate the spot after the zone loads and re-roll if it's water or a cliff face.
 - Multiplayer: the activator's explored data decides. Others may already know the area; that's fine.
 
@@ -137,7 +139,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 
 - Waves come from the mod's own wave spawner, driven by the rip's heart, with the map's biome creatures and a raid-style on-screen message. *Changed 2026-10-28: was the vanilla raid system, which runs one raid at a time for the whole world.*
 - Spawns are **maddened**: a status effect that boosts damage and speed, disables fleeing, and ignores faction rules so creatures fight each other too.
-- Star level is pushed by map tier (see [Map affixes](#map-affixes-and-tiers)).
+- Star level, the number of waves, the loot and the drop rates are pushed by map tier (see [Map affixes](#map-affixes-and-tiers); built 2026-11-27, not play-tested): the tier sets the waves, the share of guaranteed 2-stars, the heart's shards, each player's gear floor and the drop rates, and the map's affixes change the creatures. Rip creatures of rips opened since then leave once the rip has closed (they carry its closing time), as a vanilla raid's do.
 - *Since the personal-loot round (2026-11-26, passed alone, merged in PR #88) there is no chest: see End loot below.* The end loot holds the guaranteed loot: its vanilla loot, 1–3 shards, one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
 
 *Built 2026-10-28 (step B), from the game data and the user's answers:*
@@ -145,7 +147,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 - When the waves start, every creature already within that range is **maddened** and hunts the players.
 - **Maddened:** damage from Dvergr power (the game's creature buff, ×1.2), speed from the Tonic of Ratatosk (+15%), no fleeing, enemies of everything; **charms don't repel them** (user).
 - **Stars:** at least 1 (user, 2026-10-29: waves weren't challenging enough), up to 2 (tier 1); the second rolls with the game's own level-up chance.
-- **End loot:** destroying the heart leaves one of the biome's own vanilla chests (weighted by how often each appears there; `Corruption/Data/rip_loot.csv`) with 1–3 corruption shards added (user). **Changed 2026-11-26 (Krogon, decisions 6 and 9 of the personal-loot round; passed alone, merged in PR #88): there is no chest.** Krogon: "We should make a change to the heart and chest mechanic. There should be no chest at all. And all loot should spill on killing the heart. Make all loot divided amongst the amount of players present. If an odd number rolls, someone may miss out and that’s fine." The heart spills the same loot on the ground around it. Each player near it (100 m) keeps their own orb roll and Magic/Rare roll, locked to them for 60 s; only the shared part (the biome chest's vanilla loot, the 1–3 shards, the map) is divided. The way it is divided is Claude's reading of decision 6, to confirm in the play-test: one item at a time in turn, players in a random order, the turn carrying on between kinds, so 10 coins for 3 players go 4/3/3 and the leftovers rotate; each player's share is theirs for the first 60 s. [`FEATURES.md`](../FEATURES.md) → Personal loot and loot beams has the detail. Rip creatures drop shards at **twice** the normal starred chances (user).
+- **End loot:** destroying the heart leaves one of the biome's own vanilla chests (weighted by how often each appears there; `Corruption/Data/rip_loot.csv`) with 1–3 corruption shards added (user). **Changed 2026-11-26 (Krogon, decisions 6 and 9 of the personal-loot round; passed alone, merged in PR #88): there is no chest.** Krogon: "We should make a change to the heart and chest mechanic. There should be no chest at all. And all loot should spill on killing the heart. Make all loot divided amongst the amount of players present. If an odd number rolls, someone may miss out and that’s fine." The heart spills the same loot on the ground around it. Each player near it (100 m) keeps their own orb roll and Magic/Rare roll, locked to them for 60 s; only the shared part (the biome chest's vanilla loot, the 1–3 shards, the map) is divided. The way it is divided is Claude's reading of decision 6, to confirm in the play-test: one item at a time in turn, players in a random order, the turn carrying on between kinds, so 10 coins for 3 players go 4/3/3 and the leftovers rotate; each player's share is theirs for the first 60 s. [`FEATURES.md`](../FEATURES.md) → Personal loot and loot beams has the detail. Rip creatures drop shards at **twice** the normal starred chances (user). *Changed 2026-11-26 (Krogon, rips round decisions 4, 4b and 6e; built 2026-11-27, not play-tested):* the heart's shards depend on the map's tier (1–4 at tier 1 up to 6–14 at tier 6; [`map_tiers.csv`](../Corruption/Data/map_tiers.csv)), dealt one at a time among the players within 100 m as above, and each player's gear roll at the heart has a floor by tier (by chance at tier 1, at least Magic at tiers 2 and 3, at least Rare from tier 4). The drop rates of the rip's creatures and rolls rise by tier too (below).
 
 ### Getting home
 
@@ -163,37 +165,54 @@ After a rip closes, the area stays corrupted for **3 in-game days** *(user, 2026
 
 ## Map affixes and tiers
 
-Affixes are the Path of Exile part: spend extra shards at the bench to roll modifiers onto a map. More affixes means more danger and more reward. Every affix below reuses a vanilla status effect or stat, so none needs new art.
+Affixes are the Path of Exile part: modifiers rolled onto a map that make its rip more dangerous. Every affix below reuses a vanilla status effect or stat, so none needs new art.
+
+*Changed 2026-11-26 (Krogon, rips round `claude/festive-gates-79y1yr`, decisions 6 to 8b; built 2026-11-27, **not play-tested**): the design below is replaced in four ways.* A map's tier is now its **rarity and affix count**, with **six** tiers (not four); the **orbs** put affixes on maps as they do on gear (not extra shards); **corrupting a map never breaks it**; and **every affix is danger only** (the Reward column is replaced, the tier pays). The decisions are kept in the branch's handoff (`docs/handoffs/claude-festive-gates-79y1yr.md`) and, once the coordinator copies them, in [`DECISIONS.md`](DECISIONS.md).
 
 ### Tiers
 
-| Tier | Set by | Effect |
+~~Tier 1 the base map (vanilla spawns, up to 2-star); tier 2 set by 1 extra shard (more waves, 2-star guaranteed on some); tier 3 by 2 extra shards (3-star creatures); tier 4 by 3 extra shards and a boss trophy (3-star packs, a maddened mini-boss, best loot).~~ *Changed 2026-11-26 (Krogon, decision 6, answering "how does a player get a tier 2 map?"; replaces the table of tiers set by extra shards and trophies, and "four tiers", 2026-11-01).* Krogon: "This is where we make a design change: Tier 1 is a white item / Tier 2 becomes a magic map with 1 affix / Tier 3 magic map with 2 affixes / Tier 4 rare map with 3 affixes / Tier 5 rare map with 4 affixes / New tier 6 corrupted map via a shard on top of a tier 5 map that already has 4 affixes"
+
+| Tier | Map | What the tier gives |
 |---|---|---|
-| 1 | Base map | Vanilla spawns, up to 2-star |
-| 2 | 1 extra shard | More waves, 2-star guaranteed on some |
-| 3 | 2 extra shards | 3-star creatures appear (above vanilla cap) |
-| 4 | 3 extra shards + a boss trophy | 3-star packs, a maddened mini-boss, best loot |
+| 1 | white, no affixes | waves ×2 (today's), no guaranteed 2-stars, the lowest shards, gear by chance |
+| 2 | Magic, 1 affix | more waves, 1 in 4 creatures a guaranteed 2-star, at least a Magic gear roll at the heart |
+| 3 | Magic, 2 affixes | more again, 1 in 2 guaranteed 2-stars |
+| 4 | Rare, 3 affixes | 3 in 4 guaranteed 2-stars, at least a Rare gear roll |
+| 5 | Rare, 4 affixes | every creature a 2-star |
+| 6 | corrupted (a tier 5 map with a shard on it, locked) | the most of everything |
+
+- **The numbers live in [`Corruption/Data/map_tiers.csv`](../Corruption/Data/map_tiers.csv)** (waves, guaranteed 2-stars, heart shards, the drop-rate row and the heart's gear floor per tier, each with its source), and the drop rates in the `rip_tier_1` … `rip_tier_6` rows of [`drop_modifiers.csv`](../Corruption/Data/drop_modifiers.csv); they aren't repeated here. Krogon (decision 6e): "Table as proposed. Waves a". Waves go up by 0.5 per tier; drop rates by 0.25 per tier from ×1.25 (decision 4b: "Tier 1 - everything x1.25 / Tier 2 - everything x1.5 / Tier 3 - everything 1.75 / Tier 4 - everything x2 / And so on"); the heart's shards are dealt among the players near it (decision 4A).
+- **All six tiers are built this round** (decision 6f: "A"). Only 3-star creatures still wait for the elite design below (#39).
+- **Orbs craft maps** (decision 6b: "A"), exactly as gear, at the Riftforge's Forge tab: Transmutation white to tier 2, Augmentation 2 to 3, Alchemy or Chance white to tier 4, Regal 3 to 4, Exalted 4 to 5, Annulment removes an affix so the map drops a tier, the Mirror of Kalandra copies a map; Divine, the Jeweller's Orb, Affix Splinters and Shatter don't work on maps. ~~Spend extra shards at the bench to roll modifiers onto a map, with a reroll costing one more shard~~ (and the 2026-11-01 idea of one shard for 1 to 3 affixes) is replaced by this.
+- **Corrupting never breaks a map** (decision 6c: "B. We should make corrupted only affixes that add fun and danger"): a shard on a full tier 5 map makes it a tier 6 map, corrupted and locked (no orb changes it afterwards; the Mirror can still copy it, and the copy stays corrupted). This follows the old rule "Rolling map affixes never bricks the map".
+- **Corrupted-only affixes come in a later round** (decision 6d: "Later round"): once they exist, every corrupted map gets one. Until then a tier 6 map's tier alone sets its waves, stars, shards and drop rates. Ideas offered, none chosen: Haunted (the game's ghost weather), Undying (rip creatures rise once more), Fenrir's Hunt (wolves join every wave), Endless Night (always night, night-only creatures come).
 
 **Elite and champion packs** *(user, 2026-10-30; to design when stars go above 2)*: every creature above 2 stars is an elite or a champion, as in Diablo and Path of Exile (packs with their own modifiers). Until then rip waves and boss summons stop at 2 stars. Details (pack sizes, modifiers, names, loot) are still to be agreed.
 
-### Affix pool (roll 1–3)
+### Affix pool
 
-| Affix | Vanilla effect reused | Danger | Reward |
-|---|---|---|---|
-| Frostbitten | Freezing status the whole run | Stamina drain, slow | More shards |
-| Drowned | Wet status, rain | Lower fire, slower stamina regen | More trophies |
-| Smouldering | Burning on hit from all creatures | Damage over time | Better gear rolls |
-| Choking | Smoke effect in the area | Visibility, damage | More essence chance |
-| Swarming | Doubles spawn count | Overwhelm | More drops overall |
-| Hardened | Creatures take 30% less damage | Longer fights | Higher rarity floor |
-| Rabid | Maddened effect doubled | Faster, harder hitting | Guaranteed 3-star |
+*Changed 2026-11-26 (Krogon, decisions 2, 7 to 10):* the pool was "roll 1–3"; now a map's tier sets how many affixes it carries (0 to 4), any different affixes, all equally likely when an orb rolls one (Claude's choice), with no prefix or suffix sides and no values. **This round builds four, the three weather ones come next round** (decision 2: "Option a. Keep round smaller."), after a fresh 1.0.30 `co_dump` records what each weather does and the game's smoke damage. ~~Reward column~~ **Every affix is danger only and the tier pays** (decision 8b: "A, every affix danger only. I must have misunderstood decision 7."): the old Reward column below is replaced, not extended.
+
+| Affix | Vanilla effect reused | Danger | ~~Reward~~ | Status |
+|---|---|---|---|---|
+| Frostbitten | Freezing status the whole run | Stamina drain, slow | ~~More shards~~ replaced 2026-11-26: the tier pays | Next round |
+| Drowned | Wet status, rain | Lower fire, slower stamina regen | ~~More trophies~~ replaced 2026-11-26 | Next round |
+| Smouldering | Burning on hit from all creatures | Damage over time | ~~Better gear rolls~~ replaced 2026-11-26 | **Built 2026-11-27**, not tested (decision 10, "A": every hit a rip creature makes also carries 25% of its combat damage as fire, which the game spreads over 5 s as burning; 25% is Claude's proposal, no source in the design) |
+| Choking | Smoke effect in the area | Visibility, damage | ~~More essence chance~~ replaced 2026-11-26 | Next round |
+| Swarming | Doubles spawn count | Overwhelm | ~~More drops overall~~ replaced 2026-11-26 (decision 7's reward dropped by 8b) | **Built 2026-11-27**, not tested (decision 7, "Your recommended.": the tier's waves ×2 again) |
+| Hardened | Creatures take 30% less damage | Longer fights | ~~Higher rarity floor~~ replaced 2026-11-26 (decision 8: "That's old design idea, scrap it.") | **Built 2026-11-27**, not tested |
+| Rabid | Maddened effect doubled | Faster, harder hitting | ~~Guaranteed 3-star~~ replaced 2026-11-26; 3-stars wait for the elite design (#39), which decides whether they become part of Rabid's danger | **Built 2026-11-27**, not tested (decision 9, "A": damage ×1.4 instead of ×1.2, speed +30% instead of +15%) |
+
+The numbers are in [`Corruption/Data/map_affixes.csv`](../Corruption/Data/map_affixes.csv).
 
 ### Rules
 
 - **One map, one rip for the group** *(user, 2026-11-01)*: one player uses the map and everyone goes through the same rip.
-- **Shards per tier** *(user, 2026-11-01)*: the rip's end chest holds tier 1: 1–4, tier 2: 2–6, tier 3: 3–8, tier 4: 4–10 shards (replacing the flat 1–3). Four tiers (a fifth was a slip).
-- Rolling is random from the pool, with a reroll costing one more shard. This is the shard sink. Rolling map affixes never bricks the map; the 25% brick chance applies to gear only.
+- **Shards per tier** *(user, 2026-11-01; extended 2026-11-26, decision 6e)*: the rip's heart spills tier 1: 1–4, tier 2: 2–6, tier 3: 3–8, tier 4: 4–10 shards (replacing the flat 1–3), and the same step for the new tiers 5 (5–12) and 6 (6–14). ~~Four tiers (a fifth was a slip).~~ There are six tiers since 2026-11-26.
+- ~~Rolling is random from the pool, with a reroll costing one more shard. This is the shard sink.~~ Orbs roll map affixes (above); the shard's sink is corrupting a tier 5 map into tier 6. Rolling map affixes never bricks the map; the 25% brick chance applies to gear only, and corrupting a map never breaks it either (decision 6c).
 - Affixes stack with tier. A tier-4 Rabid-Swarming map is meant to be a near-death experience.
+- **Names and display** (decision 11: "b, yes yes yes"): see Map item.
 - Numbers above are starting points for tuning, not final.
 
 ## Corrupted bosses
@@ -494,7 +513,7 @@ Moved to [`AFFIX_RULES.md`](AFFIX_RULES.md) on 2026-10-27: prefixes and suffixes
 - Should scars be permanent until cleared, or expire after a few days?
 - Unique limits: **decided**, unlimited copies.
 - Does using a map in a group consume one map or one per player who enters?
-- Where do rips spawn relative to player bases? Minimum distance value.
+- ~~Where do rips spawn relative to player bases? Minimum distance value.~~ **Decided 2026-11-26 (Krogon, rips round decision 12): 96 m from anything a player placed, for every rip** ("96m, every rip, everything a player placed"); built 2026-11-27, not play-tested.
 
 ## Build order and technical notes
 
