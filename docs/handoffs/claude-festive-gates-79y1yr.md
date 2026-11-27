@@ -4,7 +4,9 @@
 
 ## Stage
 
-**Ready to merge.** Krogon's solo play-tests passed on Valheim 1.0.31 (2026-11-27: "Playtested. UI looks much better."). Two players still to come (Session 2, 2m).
+**Merged** (PR #91, 2026-11-27).
+
+**Coordinator update (2026-11-27):** merged into `master` as **PR #91** on Krogon's word ("Merge branch claude/festive-gates-79y1yr into master using a pull request."). `master` was already in the branch. The coordinator raised **Corruption to 0.11.0** (the branch's last commit, `12afc97`), copied decisions 1–16 into `docs/DECISIONS.md`, closed #31 and #84, opened [#90](https://github.com/krogon-games/JotunnModStub/issues/90) (map affix overhaul) for Krogon's next session, and updated the older rip steps in `PLAYTEST.md` to the 96 m rule and 1–4 shards. Krogon's solo play-tests had passed on Valheim 1.0.31 ("Playtested. UI looks much better."). Two players still to come (Session 2, 2m).
 
 ## Purpose
 
