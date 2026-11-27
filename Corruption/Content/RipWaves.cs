@@ -147,6 +147,7 @@ namespace Corruption.Content
                 if (MapTiers.Loaded && character.m_nview && character.m_nview.IsValid())
                 {
                     MapTiers.CopyStamp(m_nview.GetZDO(), character.m_nview.GetZDO());
+                    character.m_nview.GetZDO().Set(Rips.KeyClose, m_nview.GetZDO().GetLong(Rips.KeyClose, 0L));
                 }
                 character.GetBaseAI()?.SetHuntPlayer(true);
             }

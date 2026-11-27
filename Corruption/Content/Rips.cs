@@ -196,18 +196,21 @@ namespace Corruption.Content
                 var affixIds = new List<string>();
                 if (MapTiers.Loaded)
                 {
-                    tier = MapTiers.Tables.Tiers.Row(tier).Tier;
+                    var tiers = MapTiers.Tables.Tiers;
                     foreach (string affix in MapData.Split(affixText))
                     {
                         if (MapTiers.Tables.Affixes.Find(affix) == null)
                         {
                             Jotunn.Logger.LogWarning($"Rip request: unknown map affix '{affix}' dropped.");
                         }
-                        else if (!affixIds.Contains(affix))
+                        else if (!affixIds.Contains(affix) && affixIds.Count < tiers.MaxAffixes)
                         {
                             affixIds.Add(affix);
                         }
                     }
+                    // The tier follows from the affixes (decision 6); only a full map can be the corrupted tier (MP review, 2026-11-27).
+                    bool corrupted = tier >= tiers.CorruptTier && affixIds.Count >= tiers.MaxAffixes;
+                    tier = tiers.TierFor(affixIds.Count, corrupted);
                 }
                 else
                 {
@@ -224,7 +227,8 @@ namespace Corruption.Content
                 {
                     zdosSeen++;
                     var at = zdo.GetPosition();
-                    if (!scan.Touches(at.x, at.z) || zdo.GetLong(ZDOVars.s_creator, 0L) == 0L)
+                    // Placed by a player (the game's builder id), or a crop grown from one (the grown plant has no builder id).
+                    if (!scan.Touches(at.x, at.z) || (zdo.GetLong(ZDOVars.s_creator, 0L) == 0L && !GrownCrops().Contains(zdo.GetPrefab())))
                     {
                         continue;
                     }
@@ -258,6 +262,38 @@ namespace Corruption.Content
             });
         }
 
+        private static HashSet<int> s_grownCrops;
+
+        /// <summary>
+        ///     The prefabs a planted crop grows into (a Plant's grown Pickables, e.g. Pickable_Barley; not the wild ones such
+        ///     as Pickable_Barley_Wild): the grown plant carries no builder id, but it is still something players made (MP
+        ///     review, 2026-11-27). Grown trees can't be told from wild ones, so they don't count.
+        /// </summary>
+        private static HashSet<int> GrownCrops()
+        {
+            if (s_grownCrops == null)
+            {
+                s_grownCrops = new HashSet<int>();
+                foreach (var prefab in ZNetScene.instance.m_prefabs)
+                {
+                    var plant = prefab ? prefab.GetComponent<Plant>() : null;
+                    if (plant == null || plant.m_grownPrefabs == null)
+                    {
+                        continue;
+                    }
+                    foreach (var grown in plant.m_grownPrefabs)
+                    {
+                        if (grown && grown.GetComponent<Pickable>())
+                        {
+                            s_grownCrops.Add(grown.name.GetStableHashCode());
+                        }
+                    }
+                }
+                Jotunn.Logger.LogInfo($"Rip requests: {s_grownCrops.Count} grown-crop kinds count as player-made.");
+            }
+            return s_grownCrops;
+        }
+
         /// <summary>The player's game: consume the map and open the rip, or say why not.</summary>
         private static void RPC_Reply(long sender, ZPackage package)
         {
@@ -274,7 +310,8 @@ namespace Corruption.Content
                 // Read only when present: a server on an older build sends none, and the rip opens as tier 1.
                 int tier = 1;
                 var affixIds = new List<string>();
-                if (package.GetPos() < package.Size())
+                bool serverKnowsTiers = package.GetPos() < package.Size();
+                if (serverKnowsTiers)
                 {
                     tier = package.ReadInt();
                     affixIds = MapData.Split(package.ReadString());
@@ -298,6 +335,14 @@ namespace Corruption.Content
                 if (!found)
                 {
                     player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_only_bases", map.Label));
+                    return;
+                }
+                // A server on an older build answers without tiers: a tiered map would open as tier 1 and be lost, so keep it
+                // (MP review, 2026-11-27). Same-version players can't hit this.
+                if (!serverKnowsTiers && usedState != null && (usedState.Tier > 1 || usedState.Affixes.Count > 0))
+                {
+                    Jotunn.Logger.LogWarning("Rip request: the server's Corruption has no map tiers (an older build); the tiered map is kept.");
+                    player.Message(MessageHud.MessageType.Center, "$corruption_rip_old_server");
                     return;
                 }
                 // Use up the very map that was used: it is in the bag or in the Maps tab. If it has moved or is gone, another

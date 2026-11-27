@@ -190,6 +190,12 @@ namespace Corruption.Content
                     {
                         __instance.gameObject.AddComponent<MaddenedCreature>();
                     }
+                    // A rip's wave creature loaded here: counted by this game too, should the waves pass to it.
+                    string rip = zdo != null ? zdo.GetString(RipWaves.KeyFromRip, "") : "";
+                    if (rip.Length > 0)
+                    {
+                        BossArmies.Remember(RipWaves.KeyFromRip, rip, zdo.m_uid);
+                    }
                 });
             }
         }
@@ -286,6 +292,17 @@ namespace Corruption.Content
                             seman.RemoveStatusEffect(other, true);
                         }
                         seman.AddStatusEffect(wanted, true);
+                    }
+                    // Once its rip has closed, a rip creature leaves like a vanilla raid's when nobody is fighting it
+                    // (the game's event-creature despawn; MP review, 2026-11-27). Rips opened before this build carry no time.
+                    var zdo = m_character.m_nview.GetZDO();
+                    if (zdo != null && zdo.GetLong(Rips.KeyClose, 0L) > 0 && Rips.IsExpired(zdo))
+                    {
+                        var ai = GetComponent<MonsterAI>();
+                        if (ai && !ai.IsEventCreature())
+                        {
+                            ai.SetEventCreature(true);
+                        }
                     }
                 });
             }

@@ -69,6 +69,7 @@ namespace Corruption.Content
                 { "corruption_rip_fallback", "No unexplored $1 is left: the rip opens on land you've explored, away from anything players built." },
                 { "corruption_rip_only_bases", "Every spot of $1 the map found is too close to something players built. Try again." },
                 { "corruption_rip_map_gone", "The map you used is gone. No rip opens." },
+                { "corruption_rip_old_server", "The server's Corruption mod is older than yours: this map's tier can't open there. Update the server; the map is kept." },
                 { "corruption_rip_no_answer", "The map falls silent. Try again." },
                 { "corruption_rip_opened", "A rip tears open into the corrupted $1." },
                 { "corruption_rip_home_opened", "The heart shatters. A way home opens." },
