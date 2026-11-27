@@ -755,6 +755,7 @@ namespace Corruption.Content
             RefreshUsable();
             bool usable = _pick != null && _target != null && CanUse(_pick);
             ForgeView.SetSlot(_target, usable, "Drag gear or a map here");
+            ForgeView.SetMapLayout(_target != null && MapForge.IsMap(_target));
             if ((_changed.Count > 0 || _changedMap.Count > 0) && Time.time >= _changedUntil)
             {
                 // The highlight of the last change runs out.
@@ -781,10 +782,15 @@ namespace Corruption.Content
             bool highlight = Time.time < _changedUntil;
             if (MapForge.IsMap(_target))
             {
-                // The map's header, affixes (the last use's added ones highlighted) and marks; the description has the rest.
-                string mapText = "";
-                Safe.Run("show the forge map's affixes", () => mapText = MapForge.BenchSection(_target, highlight ? _changedMap : null));
-                ForgeView.SetBench(TargetName(), Localization.instance.Localize(mapText));
+                // A map (decision 15): the coloured tier line under the slot, and only its Corrupted/Mirrored marks here;
+                // the sheet beside it has the rest.
+                string caption = "", marks = "";
+                Safe.Run("show the forge map's tier", () =>
+                {
+                    caption = MapForge.ForgeCaption(_target);
+                    marks = MapForge.ForgeBench(_target);
+                });
+                ForgeView.SetBench(Localization.instance.Localize(caption), Localization.instance.Localize(marks));
                 return;
             }
             var text = new System.Text.StringBuilder();
@@ -847,6 +853,15 @@ namespace Corruption.Content
             if (_target == null)
             {
                 ForgeView.SetSheet(Localization.instance.Localize("$piece_riftforge"), Localization.instance.Localize(Intro));
+                return;
+            }
+            if (MapForge.IsMap(_target))
+            {
+                // A map's sheet is its own summary (decision 15), the last use's added affixes marked.
+                string sheet = "";
+                bool mark = Time.time < _changedUntil;
+                Safe.Run("show the forge map's summary", () => sheet = MapForge.ForgeSheet(_target, mark ? _changedMap : null));
+                ForgeView.SetSheet(TargetName(), Localization.instance.Localize(sheet));
                 return;
             }
             // The routine stats: the tooltip without the affix block, which the bench shows.

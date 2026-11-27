@@ -1,8 +1,8 @@
 ﻿id,status,name,danger,weight,wave_multiplier,damage_taken,maddened_factor,fire_share,notes
-swarming,approved,Swarming,Twice as many creatures in every wave,100,2,,,,Design: doubles spawn count; Krogon decision 7 (danger only since 8b). Weight 100 each = equally likely (Claude's choice).
-hardened,approved,Hardened,Rip creatures take 30% less damage,100,,0.7,,,Design: creatures take 30% less damage; decision 8.
-rabid,approved,Rabid,Rip creatures hit 40% harder and move 30% faster,100,,,2,,Design: maddened effect doubled (the game's x1.2 damage and +15% speed bonuses; doubled); decision 9.
-smouldering,approved,Smouldering,Every hit from a rip creature adds 25% of its damage as fire,100,,,,0.25,Design: burning on hit; 25% Claude's proposal; decision 10.
+swarming,approved,Swarming,"More enemies can fight at once, and reinforcements arrive faster.",100,2,,,,Design: doubles spawn count; Krogon decision 7 (danger only since 8b). Weight 100 each = equally likely (Claude's choice).
+hardened,approved,Hardened,Enemies take 30% less damage.,100,,0.7,,,Design: creatures take 30% less damage; decision 8.
+rabid,approved,Rabid,Enemies hit 40% harder and move 30% faster.,100,,,2,,Design: maddened effect doubled (the game's x1.2 damage and +15% speed bonuses; doubled); decision 9.
+smouldering,approved,Smouldering,Enemy hits deal 25% extra damage as fire.,100,,,,0.25,Design: burning on hit; 25% Claude's proposal; decision 10.
 frostbitten,later,Frostbitten,Freezing for the whole run,,,,,,Weather affix, next round (decision 2).
 drowned,later,Drowned,Wet and rain,,,,,,Weather affix, next round (decision 2).
 choking,later,Choking,Smoke: poor visibility and damage,,,,,,Weather affix, next round (decision 2).

@@ -100,10 +100,10 @@ namespace CraftingOverhaul.Tests
                 Assert.False(later.Approved);
                 Assert.DoesNotContain(later, a.Rollable);
             }
-            Assert.Equal("Twice as many creatures in every wave", a.Find("swarming").Danger);
-            Assert.Equal("Rip creatures take 30% less damage", a.Find("hardened").Danger);
-            Assert.Equal("Rip creatures hit 40% harder and move 30% faster", a.Find("rabid").Danger);
-            Assert.Equal("Every hit from a rip creature adds 25% of its damage as fire", a.Find("smouldering").Danger);
+            Assert.Equal("More enemies can fight at once, and reinforcements arrive faster.", a.Find("swarming").Danger);
+            Assert.Equal("Enemies take 30% less damage.", a.Find("hardened").Danger);
+            Assert.Equal("Enemies hit 40% harder and move 30% faster.", a.Find("rabid").Danger);
+            Assert.Equal("Enemy hits deal 25% extra damage as fire.", a.Find("smouldering").Danger);
         }
 
         [Fact]

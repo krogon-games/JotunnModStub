@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using Corruption.Rules;
 using HarmonyLib;
 using UnityEngine;
@@ -76,68 +77,82 @@ namespace Corruption.Content
             return color == MapText.NormalColor ? null : "<color=" + color + ">" + name + "</color>";
         }
 
+        /// <summary>The tier's drop multiplier for the "Corruption loot is x times as likely" line; null while the drop table isn't loaded.</summary>
+        private static double? DropMultiplierOrNull(MapTierTable.TierRow row)
+        {
+            return Loot.Drops != null ? (double?)DropMultiplier(row) : null;
+        }
+
+        private static string LabelOf(ItemDrop.ItemData item)
+        {
+            var map = MapItems.Find(item);
+            return map != null ? map.Label : "";
+        }
+
         /// <summary>
-        ///     The map's text for a tooltip or the Forge: the header, the affixes as bullets and the Corrupted/Mirrored
-        ///     marks (<paramref name="withAffixes" />), then what the tier gives, dim. Empty for anything but a map.
-        ///     <paramref name="highlight" /> lists the affix ids the last use added.
+        ///     The inventory tooltip of a map (decision 15): tier line, summary, marks, then the game's own text (weight, other
+        ///     mods' lines) without the map's description. <paramref name="gameText" /> is the game's tooltip so far; null when the
+        ///     map can't be read (the caller keeps the game's text).
         /// </summary>
-        public static string Section(ItemDrop.ItemData item, bool withAffixes, ICollection<string> highlight)
+        public static string Tooltip(ItemDrop.ItemData item, string gameText)
+        {
+            var view = ViewOf(item);
+            if (view == null)
+            {
+                return null;
+            }
+            return MapText.Tooltip(view.Row, LabelOf(item), view.State.Affixes, MapTiers.Tables.Affixes, DropMultiplierOrNull(view.Row),
+                MapGlyphSet.Current(), LootTooltip.LocksOf(item), WithoutDescription(item, gameText));
+        }
+
+        /// <summary>The game's tooltip text minus the map's description (the raw token first, else its translation); the whole text if neither is found.</summary>
+        private static string WithoutDescription(ItemDrop.ItemData item, string gameText)
+        {
+            string text = gameText ?? "";
+            string token = item.m_shared.m_description;
+            if (!string.IsNullOrEmpty(token))
+            {
+                int at = text.IndexOf(token, StringComparison.Ordinal);
+                if (at >= 0)
+                {
+                    return (text.Substring(0, at) + text.Substring(at + token.Length)).Trim('\n');
+                }
+                string localised = Localization.instance.Localize(token);
+                if (!string.IsNullOrEmpty(localised) && localised != token)
+                {
+                    at = text.IndexOf(localised, StringComparison.Ordinal);
+                    if (at >= 0)
+                    {
+                        return (text.Substring(0, at) + text.Substring(at + localised.Length)).Trim('\n');
+                    }
+                }
+            }
+            return text.Trim('\n');
+        }
+
+        /// <summary>The coloured tier line under the Forge slot; empty for anything but a map.</summary>
+        public static string ForgeCaption(ItemDrop.ItemData item)
+        {
+            var view = ViewOf(item);
+            return view == null ? "" : MapText.ForgeCaption(view.Row);
+        }
+
+        /// <summary>The Forge's bench text for a map: only the Corrupted/Mirrored marks.</summary>
+        public static string ForgeBench(ItemDrop.ItemData item)
+        {
+            return ViewOf(item) == null ? "" : MapText.ForgeBench(LootTooltip.LocksOf(item));
+        }
+
+        /// <summary>The Forge's right column for a map: usage, what you'll face, what you'll earn; <paramref name="highlight" /> lists the affix ids the last use added.</summary>
+        public static string ForgeSheet(ItemDrop.ItemData item, ICollection<string> highlight)
         {
             var view = ViewOf(item);
             if (view == null)
             {
                 return "";
             }
-            var text = new StringBuilder(Header(view)).Append(Affixes(item, view, withAffixes ? highlight : null, withAffixes));
-            text.Append("\n<size=45%> </size>");
-            var lines = MapText.TierLines(view.Row, DropMultiplier(view.Row));
-            if (Loot.Drops == null)
-            {
-                lines.RemoveAt(lines.Count - 1);
-            }
-            foreach (string line in lines)
-            {
-                text.Append("\n<color=").Append(MapText.DimColor).Append('>').Append(line).Append("</color>");
-            }
-            return text.ToString();
-        }
-
-        /// <summary>The bench under the forge slot: the header, the affixes and the marks (the tier lines are in the description beside it).</summary>
-        public static string BenchSection(ItemDrop.ItemData item, ICollection<string> highlight)
-        {
-            var view = ViewOf(item);
-            return view == null ? "" : Header(view) + Affixes(item, view, highlight, true);
-        }
-
-        private static string Header(View view)
-        {
-            return "<color=" + MapText.ColorOf(view.Row) + ">" + MapText.Header(view.Row) + "</color>";
-        }
-
-        private static string Affixes(ItemDrop.ItemData item, View view, ICollection<string> highlight, bool bullets)
-        {
-            var text = new StringBuilder();
-            if (bullets)
-            {
-                string color = MapText.LineColorOf(view.Row);
-                if (view.State.Affixes.Count > 0)
-                {
-                    text.Append("\n<size=45%> </size>");
-                }
-                foreach (string id in view.State.Affixes)
-                {
-                    var affix = MapTiers.Tables.Affixes.Find(id);
-                    if (affix == null)
-                    {
-                        continue;
-                    }
-                    string line = ForgeRules.BulletLine("<color=" + color + ">" + MapText.AffixLine(affix) + "</color>", false);
-                    text.Append('\n').Append(highlight != null && highlight.Contains(id) ? "<mark=#E8C66A40><b>" + line + "</b></mark>" : line);
-                }
-                // The generic Corrupted / Mirrored marks, once.
-                text.Append(ForgeRules.CentredMarks(LootTooltip.LocksOf(item)));
-            }
-            return text.ToString();
+            return MapText.ForgeSheet(view.Row, LabelOf(item), view.State.Affixes, MapTiers.Tables.Affixes, DropMultiplierOrNull(view.Row),
+                MapGlyphSet.Current(), highlight);
         }
 
         private static double DropMultiplier(MapTierTable.TierRow row)
@@ -523,6 +538,42 @@ namespace Corruption.Content
                     Safe.Report("show a map's tier on its icon", ex);
                 }
             }
+        }
+    }
+}
+
+namespace Corruption.Content
+{
+    /// <summary>
+    ///     Picks the glyph set of the map text once per font: the fancy "—", "×" and "’" only if the game's description font
+    ///     has all three (a missing glyph shows as a box and the game logs it), else the plain "-", "x" and "'".
+    /// </summary>
+    internal static class MapGlyphSet
+    {
+        private static TMP_FontAsset _font;
+        private static MapGlyphs _glyphs;
+
+        public static MapGlyphs Current()
+        {
+            TMP_FontAsset font = null;
+            var gui = InventoryGui.instance;
+            if (gui && gui.m_recipeDecription)
+            {
+                font = gui.m_recipeDecription.font;
+            }
+            if (!font)
+            {
+                font = TMP_Settings.defaultFontAsset;
+            }
+            if (_glyphs != null && (font ? font == _font : _font == null))
+            {
+                return _glyphs;
+            }
+            _font = font;
+            _glyphs = font && font.HasCharacter('—', true, true) && font.HasCharacter('×', true, true) && font.HasCharacter('’', true, true)
+                ? MapGlyphs.Fancy
+                : MapGlyphs.Plain;
+            return _glyphs;
         }
     }
 }

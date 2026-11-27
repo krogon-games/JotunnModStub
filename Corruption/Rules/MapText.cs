@@ -4,10 +4,12 @@ using System.Globalization;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     The words and colours of a map (Krogon's rips round, decisions 11 and 13, 2026-11-26): its name, its colour by
-    ///     rarity, the "Tier 3 · Magic map" header, one line per affix and the lines saying what the tier gives. The
-    ///     wording is that of the approved pictures (<c>docs/images/forge_map_*.png</c>, drawn by
-    ///     <c>tools/mockup_forge_maps.py</c>). No game dependencies, so it is unit-tested.
+    ///     The words and colours of a map: its name and colour by rarity (rips round decision 11), the "Tier 3 · Magic map"
+    ///     line, and the summary both the inventory tooltip and the Riftforge's Forge tab show (decision 15, 2026-11-27:
+    ///     the approved mockup <c>docs/images/map_ui_approved_mockup.png</c> and Krogon's copy): the usage line, "What
+    ///     you'll face" (the two-star line, then the map's affixes in table order) and "What you'll earn" (the heart's
+    ///     shards, the gear floor, the drop rate). Every number comes from map_tiers.csv, map_affixes.csv and
+    ///     drop_modifiers.csv. No game dependencies, so it is unit-tested; <c>tools/mockup_map_ui.py</c> draws it.
     /// </summary>
     internal static class MapText
     {
@@ -17,9 +19,6 @@ namespace Corruption.Rules
         public const string MagicColor = "#8888FF";
         public const string RareColor = "#FFFF77";
         public const string CorruptedColor = "#E04040";
-
-        /// <summary>The colour of the tier lines under the affixes.</summary>
-        public const string DimColor = "#B0A898";
 
         public const string NoShatter = "Maps can't be shattered";
         public const string NoSplinter = "Affix Splinters don't work on maps";
@@ -59,7 +58,7 @@ namespace Corruption.Rules
             return "Tier " + row.Tier.ToString(CultureInfo.InvariantCulture) + " · " + kind + " map";
         }
 
-        /// <summary>"Swarming: Twice as many creatures in every wave".</summary>
+        /// <summary>"Hardened: Enemies take 30% less damage.".</summary>
         public static string AffixLine(MapAffixTable.Affix affix)
         {
             return affix.Name + ": " + affix.Danger;
@@ -80,54 +79,182 @@ namespace Corruption.Rules
             return lines;
         }
 
-        /// <summary>The three lines saying what the tier gives. <paramref name="dropMultiplier" /> is the tier's drop rate from drop_modifiers.csv.</summary>
-        public static List<string> TierLines(MapTierTable.TierRow row, double dropMultiplier)
+        // ------------------------------------------------------------ the summary (Krogon's decision 15, 2026-11-27)
+
+        /// <summary>Headings: sampled from the approved mockup (docs/images/map_ui_approved_mockup.png).</summary>
+        public const string HeadingColor = "#F8BC42";
+
+        /// <summary>Descriptions and bullet text: the Forge dialogs' Body colour (RiftforgeDialog.Body = 0.93, 0.89, 0.81).</summary>
+        public const string BodyColor = "#EDE3CF";
+
+        /// <summary>Weight and the rest of the game's own tooltip: the Forge dialogs' Secondary colour (RiftforgeDialog.Secondary = 0.72, 0.68, 0.62).</summary>
+        public const string SecondaryColor = "#B8AD9E";
+
+        /// <summary>A half-line gap (the same spacer the Forge's affix blocks use).</summary>
+        public const string Spacer = "\n<size=45%> </size>";
+
+        /// <summary>The highlight of the affix lines the last orb use added (the Forge's existing style).</summary>
+        private const string MarkOpen = "<mark=#E8C66A40><b>";
+        private const string MarkClose = "</b></mark>";
+
+        /// <summary>"Opens a rip into the Black Forest. The map crumbles once used." (label: maps.csv).</summary>
+        public static string Usage(string label)
         {
-            return new List<string>
-            {
-                "Waves x" + Number(row.WaveMultiplier) + " · " + TwoStars(row.TwoStarPercent),
-                "The heart: " + Shards(row.ShardsMin, row.ShardsMax) + " · " + Floor(row.HeartFloor),
-                "Drops x" + Number(dropMultiplier) + " in the rip"
-            };
+            return "Opens a rip into the " + label + ". The map crumbles once used.";
         }
 
-        /// <summary>"every creature two-star", "1 in 2 creatures two-star", "no guaranteed two-stars"; other percentages are spelled out.</summary>
-        public static string TwoStars(double percent)
+        /// <summary>The two-star line from the tier's two_star_percent: 100 every enemy, 0 by chance, else at least N%.</summary>
+        public static string TwoStarLine(double percent)
         {
-            if (percent <= 0)
-            {
-                return "no guaranteed two-stars";
-            }
             if (percent >= 100)
             {
-                return "every creature two-star";
+                return "Every enemy spawned in a wave has two stars.";
             }
-            if (percent == 25)
+            if (percent <= 0)
             {
-                return "1 in 4 creatures two-star";
+                return "Enemies spawned in a wave may have two stars by chance.";
             }
-            if (percent == 50)
-            {
-                return "1 in 2 creatures two-star";
-            }
-            if (percent == 75)
-            {
-                return "3 in 4 creatures two-star";
-            }
-            return Number(percent) + "% of creatures two-star";
+            // "At least": creatures that miss the roll still get the game's own level-up chance.
+            return "Each enemy spawned in a wave has at least a " + Number(percent) + "% chance of two stars.";
         }
 
-        /// <summary>"3–8 shards" (an en dash), "6 shards" when the two are the same, "1 shard".</summary>
-        public static string Shards(int min, int max)
+        /// <summary>The "What you'll face" bullets as plain text (no tags, no bullet): the two-star line, then one line per affix on the map in map_affixes.csv order.</summary>
+        public static List<string> FaceLines(MapTierTable.TierRow row, IEnumerable<string> affixIds, MapAffixTable affixes, MapGlyphs glyphs)
         {
-            string text = min == max ? min.ToString(CultureInfo.InvariantCulture) : min.ToString(CultureInfo.InvariantCulture) + "–" + max.ToString(CultureInfo.InvariantCulture);
-            return text + (max == 1 ? " shard" : " shards");
+            var lines = new List<string>();
+            foreach (string line in Face(row, affixIds, affixes, glyphs, null, false))
+            {
+                lines.Add(line);
+            }
+            return lines;
         }
 
-        /// <summary>"gear by chance", "gear at least Magic", "gear at least Rare".</summary>
-        public static string Floor(string floor)
+        /// <summary>The "What you'll earn" bullets as plain text; the drop line is left out without a multiplier.</summary>
+        public static List<string> EarnLines(MapTierTable.TierRow row, double? dropMultiplier, MapGlyphs glyphs)
         {
-            return floor == "rare" ? "gear at least Rare" : floor == "magic" ? "gear at least Magic" : "gear by chance";
+            return Earn(row, dropMultiplier, glyphs, false);
+        }
+
+        private static List<string> Face(MapTierTable.TierRow row, IEnumerable<string> affixIds, MapAffixTable affixes, MapGlyphs glyphs,
+            ICollection<string> highlight, bool rich)
+        {
+            var lines = new List<string> { rich ? Bullet(TwoStarLine(row.TwoStarPercent)) : TwoStarLine(row.TwoStarPercent) };
+            var present = new HashSet<string>(affixIds ?? new string[0]);
+            string nameColor = LineColorOf(row);
+            // Table order, not the order the affixes were rolled in; ids the table doesn't know are skipped.
+            foreach (var affix in affixes.Affixes)
+            {
+                if (!present.Contains(affix.Id))
+                {
+                    continue;
+                }
+                if (!rich)
+                {
+                    lines.Add(affix.Name + " " + glyphs.Dash + " " + affix.Danger);
+                    continue;
+                }
+                string line = Bullet("<color=" + nameColor + ">" + affix.Name + "</color><color=" + BodyColor + "> " + glyphs.Dash + " " + affix.Danger + "</color>");
+                lines.Add(highlight != null && highlight.Contains(affix.Id) ? MarkOpen + line + MarkClose : line);
+            }
+            return lines;
+        }
+
+        private static List<string> Earn(MapTierTable.TierRow row, double? dropMultiplier, MapGlyphs glyphs, bool rich)
+        {
+            string b = rich ? "<b>" : "", e = rich ? "</b>" : "";
+            string shards = row.ShardsMin == row.ShardsMax
+                ? row.ShardsMin.ToString(CultureInfo.InvariantCulture)
+                : row.ShardsMin.ToString(CultureInfo.InvariantCulture) + "–" + row.ShardsMax.ToString(CultureInfo.InvariantCulture);
+            var lines = new List<string>
+            {
+                "Destroy the heart for " + b + shards + e + (row.ShardsMax == 1 ? " Corruption Shard" : " Corruption Shards") + " total.",
+                row.HeartFloor == "rare" ? "Each eligible player gets Rare gear or better."
+                    : row.HeartFloor == "magic" ? "Each eligible player gets Magic gear or better."
+                    : "The heart may also drop gear."
+            };
+            if (dropMultiplier.HasValue)
+            {
+                lines.Add("Corruption loot is " + b + Number(dropMultiplier.Value) + glyphs.Times + e + " as likely to drop during the rip.");
+            }
+            if (rich)
+            {
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    lines[i] = Bullet(lines[i]);
+                }
+            }
+            return lines;
+        }
+
+        private static string Bullet(string text)
+        {
+            return ForgeRules.BulletLine("<color=" + BodyColor + ">" + text + "</color>", false);
+        }
+
+        private static string Heading(string text)
+        {
+            return "<size=120%><b><color=" + HeadingColor + ">" + text + "</color></b></size>";
+        }
+
+        /// <summary>
+        ///     The block both views share: the usage line, "What you'll face" and "What you'll earn", with the tags of
+        ///     TextMeshPro. <paramref name="highlight" /> lists affix ids to mark (the Forge's last-use highlight).
+        /// </summary>
+        public static string Summary(MapTierTable.TierRow row, string label, IEnumerable<string> affixIds, MapAffixTable affixes,
+            double? dropMultiplier, MapGlyphs glyphs, ICollection<string> highlight)
+        {
+            var text = new System.Text.StringBuilder();
+            text.Append("<color=").Append(BodyColor).Append('>').Append(Usage(label)).Append("</color>");
+            text.Append(Spacer).Append('\n').Append(Heading("What you" + glyphs.Apostrophe + "ll face"));
+            foreach (string line in Face(row, affixIds, affixes, glyphs, highlight, true))
+            {
+                text.Append('\n').Append(line);
+            }
+            text.Append(Spacer).Append('\n').Append(Heading("What you" + glyphs.Apostrophe + "ll earn"));
+            foreach (string line in Earn(row, dropMultiplier, glyphs, true))
+            {
+                text.Append('\n').Append(line);
+            }
+            return text.ToString();
+        }
+
+        /// <summary>The inventory tooltip: tier line, summary, the Corrupted/Mirrored marks (centred), then the game's own text (weight) in the secondary colour.</summary>
+        public static string Tooltip(MapTierTable.TierRow row, string label, IEnumerable<string> affixIds, MapAffixTable affixes,
+            double? dropMultiplier, MapGlyphs glyphs, string marks, string secondary)
+        {
+            var text = new System.Text.StringBuilder(ForgeCaption(row));
+            text.Append('\n').Append(Summary(row, label, affixIds, affixes, dropMultiplier, glyphs, null));
+            string centred = ForgeRules.CentredMarks(marks);
+            if (centred.Length > 0)
+            {
+                // The same half-line gap as between the sections, so the marks don't touch the last bullet.
+                text.Append(Spacer).Append(centred);
+            }
+            secondary = (secondary ?? "").Trim('\n');
+            if (secondary.Length > 0)
+            {
+                text.Append(Spacer).Append("\n<color=").Append(SecondaryColor).Append('>').Append(secondary).Append("</color>");
+            }
+            return text.ToString();
+        }
+
+        /// <summary>The Forge's right column: the summary (no tier line, no weight), the last use's added affixes marked.</summary>
+        public static string ForgeSheet(MapTierTable.TierRow row, string label, IEnumerable<string> affixIds, MapAffixTable affixes,
+            double? dropMultiplier, MapGlyphs glyphs, ICollection<string> highlight)
+        {
+            return Summary(row, label, affixIds, affixes, dropMultiplier, glyphs, highlight);
+        }
+
+        /// <summary>The coloured tier line ("Tier 5 · Rare map"): under the Forge slot and at the top of the tooltip.</summary>
+        public static string ForgeCaption(MapTierTable.TierRow row)
+        {
+            return "<color=" + ColorOf(row) + ">" + Header(row) + "</color>";
+        }
+
+        /// <summary>The Forge's bench text under the slot: only the Corrupted/Mirrored marks (empty when neither).</summary>
+        public static string ForgeBench(string marks)
+        {
+            return ForgeRules.CentredMarks(marks).TrimStart('\n');
         }
 
         /// <summary>A number without trailing zeros, with a dot: 3, 4.5, 1.75.</summary>
@@ -135,5 +262,17 @@ namespace Corruption.Rules
         {
             return value.ToString("0.##", CultureInfo.InvariantCulture);
         }
+    }
+
+    /// <summary>
+    ///     The special characters the map text uses. The game's font may lack them (it already logs a missing "…"), so
+    ///     the game side picks <see cref="Fancy" /> only for a font that has all three, else <see cref="Plain" />.
+    /// </summary>
+    internal sealed class MapGlyphs
+    {
+        public string Dash, Times, Apostrophe;
+
+        public static readonly MapGlyphs Fancy = new MapGlyphs { Dash = "—", Times = "×", Apostrophe = "’" };
+        public static readonly MapGlyphs Plain = new MapGlyphs { Dash = "-", Times = "x", Apostrophe = "'" };
     }
 }

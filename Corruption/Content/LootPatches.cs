@@ -169,16 +169,15 @@ namespace Corruption.Content
         {
             if (MapItems.Find(item) != null)
             {
-                // A map (rips round, decision 11): the header, affixes, marks and what the tier gives. In the Forge tab
-                // (OmitAffixes) the bench shows the affixes, so the description has only the header and the tier lines.
+                // A map (rips round, decision 15): tier line, what you'll face and earn, marks, then the game's own
+                // text (weight) without the map's description. The Forge no longer asks for a map's tooltip.
                 string withMap = __result;
-                bool omit = OmitAffixes;
-                Safe.Run("add a map's tier and affixes to its tooltip", () =>
+                Safe.Run("rewrite a map's tooltip", () =>
                 {
-                    string section = MapForge.Section(item, !omit, null);
-                    if (section.Length > 0)
+                    string text = MapForge.Tooltip(item, withMap);
+                    if (!string.IsNullOrEmpty(text))
                     {
-                        withMap = withMap + "\n\n" + section;
+                        withMap = text;
                     }
                 });
                 __result = withMap;
