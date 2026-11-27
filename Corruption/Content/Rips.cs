@@ -209,7 +209,7 @@ namespace Corruption.Content
                         }
                     }
                     // The tier follows from the affixes (decision 6); only a full map can be the corrupted tier (MP review, 2026-11-27).
-                    bool corrupted = tier >= tiers.CorruptTier && affixIds.Count >= tiers.MaxAffixes;
+                    bool corrupted = tiers.CorruptTier > 0 && tier >= tiers.CorruptTier && affixIds.Count >= tiers.MaxAffixes;
                     tier = tiers.TierFor(affixIds.Count, corrupted);
                 }
                 else
@@ -274,6 +274,20 @@ namespace Corruption.Content
             if (s_grownCrops == null)
             {
                 s_grownCrops = new HashSet<int>();
+                // What world generation scatters by itself (wild seed carrots, turnips, kale, Mistlands mushrooms) is wild,
+                // even where a planted one grows into the same object: never counted (MP review follow-up, 2026-11-27).
+                var wild = new HashSet<string>();
+                if (ZoneSystem.instance && ZoneSystem.instance.m_vegetation != null)
+                {
+                    foreach (var vegetation in ZoneSystem.instance.m_vegetation)
+                    {
+                        if (vegetation != null && vegetation.m_prefab)
+                        {
+                            wild.Add(vegetation.m_prefab.name);
+                        }
+                    }
+                }
+                var names = new List<string>();
                 foreach (var prefab in ZNetScene.instance.m_prefabs)
                 {
                     var plant = prefab ? prefab.GetComponent<Plant>() : null;
@@ -283,13 +297,14 @@ namespace Corruption.Content
                     }
                     foreach (var grown in plant.m_grownPrefabs)
                     {
-                        if (grown && grown.GetComponent<Pickable>())
+                        if (grown && grown.GetComponent<Pickable>() && !wild.Contains(grown.name) && s_grownCrops.Add(grown.name.GetStableHashCode()))
                         {
-                            s_grownCrops.Add(grown.name.GetStableHashCode());
+                            names.Add(grown.name);
                         }
                     }
                 }
-                Jotunn.Logger.LogInfo($"Rip requests: {s_grownCrops.Count} grown-crop kinds count as player-made.");
+                Jotunn.Logger.LogInfo($"Rip requests: grown crops count as player-made: {string.Join(", ", names.ToArray())} " +
+                                      $"({wild.Count} kinds of wild vegetation left out).");
             }
             return s_grownCrops;
         }
