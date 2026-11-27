@@ -52,7 +52,19 @@ namespace Corruption.Content
         /// <summary>The heart was destroyed (on its owner's game): spill everything around it.</summary>
         public static void Spill(string biome, Vector3 heartPosition)
         {
-            // "Players near the rip": the game's own nearby-players range, as for kills. Maps have no tiers yet: tier 1.
+            Spill(null, biome, heartPosition);
+        }
+
+        /// <summary>
+        ///     The same, for a heart with a tier (rips round, decisions 4, 4b, 5, 6e): the tier's drop rates, its gear floor
+        ///     and its shards. A null heart, or tables that didn't load, spills as tier 1 as before.
+        /// </summary>
+        public static void Spill(ZDO heart, string biome, Vector3 heartPosition)
+        {
+            var row = heart != null ? MapTiers.RowOf(heart) : null;
+            int tier = row != null ? MapTiers.TierOf(heart) : 1;
+            // "Players near the rip": the game's own nearby-players range, as for kills.
+            Jotunn.Logger.LogInfo($"Rip loot: tier {tier}{(row == null ? " (no tier data)" : "")}.");
             var nearby = new List<Player>();
             Player.GetPlayersInRange(heartPosition, Game.instance ? Game.instance.m_difficultyScaleRange : 100f, nearby);
             Jotunn.Logger.LogInfo($"Rip loot: {nearby.Count} player(s) near the heart.");
@@ -77,7 +89,7 @@ namespace Corruption.Content
                 {
                     return;
                 }
-                var sources = new[] { "rip_tier_1" };
+                var sources = (row != null ? RipTierRules.DropSources(row) : new List<string> { "rip_tier_1" }).ToArray();
                 int rolls = DeathLoot.RollsFor(nearby.Count);
                 for (int i = 0; i < rolls; i++)
                 {
@@ -93,7 +105,17 @@ namespace Corruption.Content
                         }
                     }
                     // The same Magic/Rare roll as a kill, per player (Krogon, 2026-11-23); uniques come with ROADMAP L6.
-                    foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
+                    // The best of the Magic/Rare rolls (Rare wins), lifted to the tier's floor; none when both are nothing.
+                    string rolled = null;
+                    foreach (var r in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
+                    {
+                        if (r == "rare" || (r == "magic" && rolled == null))
+                        {
+                            rolled = r;
+                        }
+                    }
+                    var result = row != null ? RipTierRules.HeartGear(rolled, row.HeartFloor) : rolled;
+                    foreach (var rarity in new[] { result })
                     {
                         if (rarity != "magic" && rarity != "rare")
                         {
@@ -113,7 +135,7 @@ namespace Corruption.Content
             // The shared part, dealt among the players near the heart.
             Safe.Run("deal the rip heart's shared loot", () =>
             {
-                var kinds = SharedKinds(biome);
+                var kinds = SharedKinds(biome, row);
                 if (kinds.Count == 0)
                 {
                     return;
@@ -136,14 +158,14 @@ namespace Corruption.Content
 
             foreach (var seat in seats)
             {
-                Jotunn.Logger.LogInfo($"Rip loot: player {seat.Name} ({seat.Owner}): {seat.Orbs.Count} orb(s) ({string.Join(", ", seat.Orbs.ToArray())}), " +
+                Jotunn.Logger.LogInfo($"Rip loot (tier {tier}): player {seat.Name} ({seat.Owner}): {seat.Orbs.Count} orb(s) ({string.Join(", ", seat.Orbs.ToArray())}), " +
                                       $"{seat.Gear.Count} gear ({string.Join(", ", seat.Gear.ToArray())}), shared: {(seat.Shared.Count > 0 ? string.Join(", ", seat.Shared.ToArray()) : "nothing")}.");
             }
-            Jotunn.Logger.LogInfo($"Rip loot: spilled {total} drop(s) at {origin}.");
+            Jotunn.Logger.LogInfo($"Rip loot (tier {tier}): spilled {total} drop(s) at {origin}.");
         }
 
         /// <summary>The shared part as kinds to deal: the chosen chest's vanilla loot, the shards, the one map.</summary>
-        private static List<SharedKind> SharedKinds(string biome)
+        private static List<SharedKind> SharedKinds(string biome, MapTierTable.TierRow row)
         {
             var kinds = new List<SharedKind>();
             Safe.Run("roll the rip chest's vanilla loot", () =>
@@ -176,7 +198,12 @@ namespace Corruption.Content
             {
                 var shard = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(Texts.ShardPrefab) : null;
                 int min = CorruptionConfig.RipChestShardsMin.Value;
-                int shards = Random.Range(min, Mathf.Max(min, CorruptionConfig.RipChestShardsMax.Value) + 1);
+                int max = CorruptionConfig.RipChestShardsMax.Value;
+                if (row != null)
+                {
+                    RipTierRules.ShardRange(row, out min, out max);   // the tier's range; the config only when the tables didn't load
+                }
+                int shards = Random.Range(min, Mathf.Max(min, max) + 1);
                 if (shard && shards > 0)
                 {
                     kinds.Add(new SharedKind { Item = FromPrefab(shard), Units = shards, BeamRow = LootBeamTable.Shard, Label = "corruption shard" });

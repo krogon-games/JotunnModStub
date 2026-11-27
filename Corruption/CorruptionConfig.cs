@@ -104,8 +104,8 @@ namespace Corruption
                 AdminOnly("How long a rip stays open, in in-game days (sleeping skips time). Both its portals close then.",
                     new AcceptableValueRange<float>(0.1f, 10f)));
             RipBaseDistance = config.Bind(RipSection, "BaseDistance", 0f,
-                AdminOnly("Rips never open within this many metres of a bed, ward or portal (any player's). " +
-                          "0 = the game's ward radius (the area a ward protects).", new AcceptableValueRange<float>(0f, 1000f)));
+                AdminOnly("Rips never open (heart or landing spot) within this many metres of anything a player placed. " +
+                          "0 = 96 m (the waves' range; Krogon, 2026-11-26).", new AcceptableValueRange<float>(0f, 1000f)));
             RipHeartHealth = config.Bind(RipSection, "HeartHealth", 0f,
                 AdminOnly("Health of a rip's heart. Destroying it opens the way home. " +
                           "0 = the health of the greydwarf nest it's made from.", new AcceptableValueRange<float>(0f, 100000f)));
@@ -117,12 +117,13 @@ namespace Corruption
                     new AcceptableValueRange<int>(0, 5)));
             RipWaveMultiplier = config.Bind(RipSection, "WaveMultiplier", 2f,
                 AdminOnly("Rip waves are the biome boss's army raid made busier: each raid entry's 'most alive at once' is multiplied " +
-                          "by this and its spawn interval divided by it. 1 = the vanilla raid. Default 2 (user, after play-testing).",
+                          "by this and its spawn interval divided by it. 1 = the vanilla raid. Default 2 (user, after play-testing). " +
+                          "Only used if map_tiers.csv fails to load (the tier table sets the waves now).",
                     new AcceptableValueRange<float>(1f, 10f)));
             RipChestShardsMin = config.Bind(RipSection, "ChestShardsMin", 1,
-                AdminOnly("Fewest corruption shards a destroyed rip heart spills (shared among the players near it).", new AcceptableValueRange<int>(0, 50)));
+                AdminOnly("Fewest corruption shards a destroyed rip heart spills (shared among the players near it). Only used if map_tiers.csv fails to load (the tier table sets them now).", new AcceptableValueRange<int>(0, 50)));
             RipChestShardsMax = config.Bind(RipSection, "ChestShardsMax", 3,
-                AdminOnly("Most corruption shards a destroyed rip heart spills.", new AcceptableValueRange<int>(0, 50)));
+                AdminOnly("Most corruption shards a destroyed rip heart spills. Only used if map_tiers.csv fails to load (the tier table sets them now).", new AcceptableValueRange<int>(0, 50)));
             RipKillShardMultiplier = config.Bind(RipSection, "KillShardMultiplier", 2f,
                 AdminOnly("Multiplies the starred-creature shard chances for maddened (rip) creatures. 2 = twice as likely.",
                     new AcceptableValueRange<float>(0f, 20f)));

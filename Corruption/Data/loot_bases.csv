@@ -12,7 +12,6 @@ Club,Club,Meadows,weapon
 HelmetLeather,Leather Helmet,Meadows,helmet
 KnifeFlint,Flint Knife,Meadows,weapon
 PickaxeAntler,Antler Pickaxe,Meadows,pickaxe
-ShieldBoneTower,Bone Tower Shield,Meadows,shield
 ShieldWood,Wood Shield,Meadows,shield
 ShieldWoodTower,Wood Tower Shield,Meadows,shield
 SpearFlint,Flint Spear,Meadows,weapon
@@ -30,6 +29,7 @@ BowFineWood,Finewood Bow,BlackForest,weapon
 CapeOdin,Cape of Oden,BlackForest,cape
 CapeTrollHide,Troll Hide Cape,BlackForest,cape
 FistBjornClaw,Paws of the Bear,BlackForest,weapon
+HelmetBerserkerHood,Headdress of the Bear,BlackForest,helmet
 HelmetBronze,Bronze Helmet,BlackForest,helmet
 HelmetCelebration,Celebratory Cap,BlackForest,helmet
 HelmetOdin,Hood of Oden,BlackForest,helmet
@@ -38,6 +38,7 @@ KnifeButcher,Butcher Knife,BlackForest,weapon
 KnifeCopper,Copper Knife,BlackForest,weapon
 MaceBronze,Bronze Mace,BlackForest,weapon
 PickaxeBronze,Bronze Pickaxe,BlackForest,pickaxe
+ShieldBoneTower,Bone Tower Shield,BlackForest,shield
 ShieldBronzeBuckler,Bronze Buckler,BlackForest,shield
 SledgeStagbreaker,Stagbreaker,BlackForest,weapon
 SpearBronze,Bronze Spear,BlackForest,weapon
@@ -83,6 +84,7 @@ HelmetDrake,Drake Helmet,Mountain,helmet
 HelmetFenring,Fenris Hood,Mountain,helmet
 KnifeSilver,Silver Knife,Mountain,weapon
 MaceSilver,Frostner,Mountain,weapon
+ShieldSerpentscale,Serpent Scale Shield,Mountain,shield
 ShieldSilver,Silver Shield,Mountain,shield
 SpearWolfFang,Fang Spear,Mountain,weapon
 SwordSilver,Silver Sword,Mountain,weapon
@@ -101,7 +103,6 @@ BattleaxeBlackmetal,Black Metal Battleaxe,Plains,weapon
 CapeLinen,Linen Cape,Plains,cape
 CapeLox,Lox Cape,Plains,cape
 FistBjornUndeadClaw,Vilebone Maulclaws,Plains,weapon
-HelmetBerserkerHood,Headdress of the Bear,Plains,helmet
 HelmetBerserkerUndead,Vilebone Visage,Plains,helmet
 HelmetLox,Lox Fur Hood,Plains,helmet
 HelmetPadded,Padded Helmet,Plains,helmet

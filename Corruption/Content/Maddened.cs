@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Corruption.Rules;
 using HarmonyLib;
 using Jotunn.Entities;
 using Jotunn.Managers;
@@ -16,6 +17,8 @@ namespace Corruption.Content
     {
         public const string KeyMaddened = "corruption_maddened";
         public const string StatusEffectName = "SE_CorruptionMaddened";
+        /// <summary>The stronger effect of the Rabid map affix (rips round decision 9), kept on instead of the normal one.</summary>
+        public const string RabidEffectName = "SE_CorruptionRabid";
 
         // Vanilla sources of the effect's numbers, read when the effect is made (game data, not our guesses).
         private const string DamageSource = "SE_Dvergr_buff";   // Dvergr power: the game's own creature damage buff
@@ -26,6 +29,8 @@ namespace Corruption.Content
         private static readonly HashSet<Character> Summons = new HashSet<Character>();
         private static int s_effectHash;
         private static SE_Stats s_effect;
+        private static SE_Stats s_rabidEffect;
+        private static int s_rabidHash;
         private static bool s_sourcesCopied;
 
         public static bool IsMaddened(Character character)
@@ -91,6 +96,29 @@ namespace Corruption.Content
             ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(effect, false));
             s_effect = effect;
             s_effectHash = StatusEffectName.GetStableHashCode();
+
+            var rabid = ScriptableObject.CreateInstance<SE_Stats>();
+            rabid.name = RabidEffectName;
+            rabid.m_name = "$corruption_maddened";
+            rabid.m_tooltip = "$corruption_maddened_tooltip";
+            rabid.m_ttl = 0f;
+            ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(rabid, false));
+            s_rabidEffect = rabid;
+            s_rabidHash = RabidEffectName.GetStableHashCode();
+        }
+
+        /// <summary>
+        ///     The effect a creature should have: Rabid's for a rip creature whose own stamp gives a maddened factor above 1,
+        ///     else the normal one. Read from the creature's ZDO (never the heart), so it holds wherever the creature goes.
+        /// </summary>
+        private static int EffectFor(ZDO zdo)
+        {
+            if (s_rabidHash != 0 && MapTiers.Loaded && MapTiers.IsStamped(zdo) &&
+                RipTierRules.MaddenedFactor(MapTiers.AffixesOf(zdo)) > 1.0)
+            {
+                return s_rabidHash;
+            }
+            return s_effectHash;
         }
 
         /// <summary>
@@ -127,6 +155,24 @@ namespace Corruption.Content
             {
                 s_effect.m_speedModifier = speed.m_speedModifier;
             }
+            if (s_rabidEffect)
+            {
+                // Rabid: the same two bonuses, multiplied by the affix's factor (damage 1 + f x (m - 1), speed f x s).
+                // One stronger effect for every creature whose own factor is above 1, with the table's largest factor: today
+                // only Rabid sets one. A second affix with its own factor would need an effect per factor (Opus review, 2026-11-26).
+                double factor = 1.0;
+                if (MapTiers.Loaded)
+                {
+                    foreach (var affix in MapTiers.Tables.Affixes.Affixes)
+                    {
+                        factor = System.Math.Max(factor, affix.MaddenedFactor);
+                    }
+                }
+                s_rabidEffect.m_modifyAttackSkill = s_effect.m_modifyAttackSkill;
+                s_rabidEffect.m_damageModifier = (float)(1.0 + factor * (s_effect.m_damageModifier - 1f));
+                s_rabidEffect.m_speedModifier = (float)(factor * s_effect.m_speedModifier);
+                Jotunn.Logger.LogInfo($"Maddened (Rabid, factor {factor}): damage ×{s_rabidEffect.m_damageModifier}, speed +{s_rabidEffect.m_speedModifier * 100f}%.");
+            }
             Jotunn.Logger.LogInfo($"Maddened: damage ×{s_effect.m_damageModifier} (from {(damage ? DamageSource : "nothing, not found")}), " +
                                   $"speed +{s_effect.m_speedModifier * 100f}% (from {(speed ? SpeedSource : "nothing, not found")}).");
         }
@@ -143,6 +189,12 @@ namespace Corruption.Content
                     if (zdo != null && zdo.GetBool(KeyMaddened) && !__instance.GetComponent<MaddenedCreature>())
                     {
                         __instance.gameObject.AddComponent<MaddenedCreature>();
+                    }
+                    // A rip's wave creature loaded here: counted by this game too, should the waves pass to it.
+                    string rip = zdo != null ? zdo.GetString(RipWaves.KeyFromRip, "") : "";
+                    if (rip.Length > 0)
+                    {
+                        BossArmies.Remember(RipWaves.KeyFromRip, rip, zdo.m_uid);
                     }
                 });
             }
@@ -226,10 +278,31 @@ namespace Corruption.Content
                         return;
                     }
                     var seman = m_character.GetSEMan();
-                    if (seman != null && !seman.HaveStatusEffect(s_effectHash))
+                    if (seman == null)
+                    {
+                        return;
+                    }
+                    int wanted = EffectFor(m_character.m_nview.GetZDO());
+                    int other = wanted == s_effectHash ? s_rabidHash : s_effectHash;
+                    if (!seman.HaveStatusEffect(wanted))
                     {
                         CopySources();
-                        seman.AddStatusEffect(s_effectHash, true);
+                        if (other != 0 && seman.HaveStatusEffect(other))
+                        {
+                            seman.RemoveStatusEffect(other, true);
+                        }
+                        seman.AddStatusEffect(wanted, true);
+                    }
+                    // Once its rip has closed, a rip creature leaves like a vanilla raid's when nobody is fighting it
+                    // (the game's event-creature despawn; MP review, 2026-11-27). Rips opened before this build carry no time.
+                    var zdo = m_character.m_nview.GetZDO();
+                    if (zdo != null && zdo.GetLong(Rips.KeyClose, 0L) > 0 && Rips.IsExpired(zdo))
+                    {
+                        var ai = GetComponent<MonsterAI>();
+                        if (ai && !ai.IsEventCreature())
+                        {
+                            ai.SetEventCreature(true);
+                        }
                     }
                 });
             }

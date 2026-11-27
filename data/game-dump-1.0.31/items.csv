@@ -195,9 +195,9 @@ bat_melee,Bat melee,Bat melee,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,
 Battleaxe,$item_battleaxe,Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,28,-0.15,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_Battleaxe @ forge
 BattleaxeBlackmetal,$item_battleaxe_blackmetal,Black Metal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,200,15,1,52,-0.15,0,0,110,0,60,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_Battleaxe_Blackmetal @ forge
 BattleaxeCrystal,$item_battleaxe_crystal,Crystal Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,3,200,15,1,40,-0.15,0,0,90,0,50,0,0,0,0,0,30,0,0,0,0,Mountain,Recipes: Recipe Recipe_Battleaxe_Crystal @ forge
-BattleaxeGold,$item_axe2h_gold,Nord Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,188,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold @ blackforge
-BattleaxeGold_BloodLightning,$item_axe2h_gold_bloodlightning,Thunderblood Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,198,0,40,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold_BloodLightning @ blackforge
-BattleaxeGold_FrostFire,$item_axe2h_gold_frostfire,Frostfire Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,154,0,40,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold_FrostFire @ blackforge
+BattleaxeGold,$item_axe2h_gold,Nord Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,188,0,90,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold @ blackforge
+BattleaxeGold_BloodLightning,$item_axe2h_gold_bloodlightning,Thunderblood Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,198,0,90,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold_BloodLightning @ blackforge
+BattleaxeGold_FrostFire,$item_axe2h_gold_frostfire,Frostfire Greataxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,400,15,1,76,-0.2,0,0,154,0,90,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGold_FrostFire @ blackforge
 BattleaxeGoldUncooked,$item_battleaxe_gold_uncooked,Cast: Nord Greataxe,Material,Axes,1,2.5,1,0,True,3,200,15,1,28,0,0,0,70,0,40,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_BattleaxeGoldUncooked @ blackforge
 BattleaxeSkullSplittur,$item_battleaxe_skullsplittur,Skull Splittur,TwoHandedWeapon,Axes,1,2.5,4,0,True,4,200,15,1,64,-0.15,0,0,130,0,70,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_Battleaxe_SkullSplittur @ blackforge
 BattleaxeWood,$item_battleaxe_wood,Wooden Battleaxe,TwoHandedWeapon,Axes,1,2.5,4,0,True,1,200,15,1,12,-0.15,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location StoneTowerRuins04 > StoneTowerRuins04 > Container
@@ -462,6 +462,8 @@ CorruptionAffixSplinter_tool_log_damage,$item_corruptionaffixsplinter,Affix Spli
 CorruptionAffixSplinter_tool_magnetic,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionAffixSplinter_tool_nth_hit,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionAffixSplinter_tool_odins_grace,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionAffixSplinter_tool_orb_find_mining,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionAffixSplinter_tool_orb_find_woodcutting,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionAffixSplinter_tool_pickup_range,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionAffixSplinter_tool_stamina_save,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionAffixSplinter_tool_stump_damage,$item_corruptionaffixsplinter,Affix Splinter,Material,Swords,1,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -478,14 +480,14 @@ CorruptionEssence_kall,$item_corruptionessence_kall,Essence of Kall Fimbulbringe
 CorruptionEssence_moder,$item_corruptionessence_moder,Essence of Moder,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionEssence_queen,$item_corruptionessence_queen,Essence of the Queen,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionEssence_yagluth,$item_corruptionessence_yagluth,Essence of Yagluth,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_AshLands,$item_corruptionmap_ashlands,Corrupted Ashlands map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_BlackForest,$item_corruptionmap_blackforest,Corrupted Black Forest map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_DeepNorth,$item_corruptionmap_deepnorth,Corrupted Deep North map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_Meadows,$item_corruptionmap_meadows,Corrupted Meadows map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_Mistlands,$item_corruptionmap_mistlands,Corrupted Mistlands map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_Mountain,$item_corruptionmap_mountain,Corrupted Mountains map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_Plains,$item_corruptionmap_plains,Corrupted Plains map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
-CorruptionMap_Swamp,$item_corruptionmap_swamp,Corrupted Swamp map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_AshLands,$item_corruptionmap_ashlands,Ashlands map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_BlackForest,$item_corruptionmap_blackforest,Black Forest map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_DeepNorth,$item_corruptionmap_deepnorth,Deep North map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Meadows,$item_corruptionmap_meadows,Meadows map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Mistlands,$item_corruptionmap_mistlands,Mistlands map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Mountain,$item_corruptionmap_mountain,Mountains map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Plains,$item_corruptionmap_plains,Plains map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
+CorruptionMap_Swamp,$item_corruptionmap_swamp,Swamp map,Material,Swords,1,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionOrb_Alchemy,$item_corruptionorb_alchemy,Orb of Alchemy,Material,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionOrb_Annulment,$item_corruptionorb_annulment,Orb of Annulment,Material,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 CorruptionOrb_Augmentation,$item_corruptionorb_augmentation,Orb of Augmentation,Material,Swords,50,0.2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -540,15 +542,15 @@ CorruptionTalisman_Volture,Volture charm,Volture charm,Misc,Swords,1,2,1,0,True,
 CorruptionTalisman_Wolf,Wolf charm,Wolf charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_CorruptionTalisman_Wolf @ piece_workbench
 CorruptionTalisman_Wraith,Wraith charm,Wraith charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Wraith @ piece_workbench
 CorruptionTalisman_Writhan,Writhan charm,Writhan charm,Misc,Swords,1,2,1,0,True,0,100,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_CorruptionTalisman_Writhan @ piece_workbench
-CrossbowArbalest,$item_crossbow_arbalest,Arbalest,Bow,Crossbows,1,1.5,4,0,True,5,150,15,1,3,-0.05,0,0,0,200,140,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CrossbowArbalest @ blackforge
-CrossbowGold,$item_crossbow_gold,Nord Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,264,180,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold @ blackforge
-CrossbowGold_BloodLightning,$item_crossbow_bloodlightning_gold,Thunderblood Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,274,180,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold_BloodLightning @ blackforge
-CrossbowGold_FrostFire,$item_crossbow_frostfire_gold,Frostfire Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,232,180,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold_FrostFire @ blackforge
+CrossbowArbalest,$item_crossbow_arbalest,Arbalest,Bow,Crossbows,1,1.5,4,0,True,5,150,15,1,3,-0.05,0,0,0,200,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_CrossbowArbalest @ blackforge
+CrossbowGold,$item_crossbow_gold,Nord Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,264,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold @ blackforge
+CrossbowGold_BloodLightning,$item_crossbow_bloodlightning_gold,Thunderblood Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,274,0,0,0,0,45,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold_BloodLightning @ blackforge
+CrossbowGold_FrostFire,$item_crossbow_frostfire_gold,Frostfire Crossbow,Bow,Crossbows,1,1.5,4,0,True,6,300,15,1,3,-0.05,0,0,0,232,0,0,12,88,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGold_FrostFire @ blackforge
 CrossbowGoldUncooked,$item_crossbow_gold_uncooked,Cast: Nord Crossbow,Material,Crossbows,1,1.5,1,0,True,5,50,15,1,3,0,0,0,0,220,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowGoldUncooked @ blackforge
-CrossbowRipper,$item_crossbow_ripper,Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CrossbowRipper @ blackforge
-CrossbowRipperBlood,$item_crossbow_ripper_blood,Wound Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Blood @ blackforge
-CrossbowRipperLightning,$item_crossbow_ripper_lightning,Storm Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,10,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Lightning @ blackforge
-CrossbowRipperNature,$item_crossbow_ripper_nature,Root Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,160,0,0,0,0,10,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Nature @ blackforge
+CrossbowRipper,$item_crossbow_ripper,Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_CrossbowRipper @ blackforge
+CrossbowRipperBlood,$item_crossbow_ripper_blood,Wound Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Blood @ blackforge
+CrossbowRipperLightning,$item_crossbow_ripper_lightning,Storm Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,0,0,0,0,10,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Lightning @ blackforge
+CrossbowRipperNature,$item_crossbow_ripper_nature,Root Ripper,Bow,Crossbows,1,1.5,4,0,True,6,200,15,1,3,-0.05,0,0,0,220,0,0,0,0,0,10,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_CrossbowRipper_Nature @ blackforge
 CrownJewel,$item_crownjewel,Crown Jewel,Material,Swords,5,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location DN_Bossroom > DN_Bossroom > On death > On death > CharacterDrop
 CryptKey,$item_cryptkey,Swamp Key,Misc,Swords,1,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location GDKing > GDKing > OfferingBowl > CharacterDrop
 Crystal,$item_crystal,Crystal,Material,Swords,50,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Spawns: StoneGolem > CharacterDrop
@@ -955,7 +957,7 @@ HatefulBlood,$item_hatefulblood,Malicious Blood,Misc,Swords,50,1,1,0,True,0,100,
 HealthUpgrade_Bonemass,Bonemass heart,Bonemass heart,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 HealthUpgrade_GDKing,Elder heart,Elder heart,Consumable,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 HelmetAshlandsMediumHood,$item_helmet_medium_ashlands,Hood of Ask,Helmet,Swords,1,1,4,0,True,5,1000,28,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Ashlands,Recipes: Recipe Recipe_HelmetMedium_Ashlands @ blackforge
-HelmetBerserkerHood,$item_helmet_berserker,Headdress of the Bear,Helmet,Swords,1,1,4,0,True,5,1000,7,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_HelmetBerserker @ piece_workbench
+HelmetBerserkerHood,$item_helmet_berserker,Headdress of the Bear,Helmet,Swords,1,1,4,0,True,5,1000,7,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_HelmetBerserker @ piece_workbench
 HelmetBerserkerUndead,$item_helmet_berserker_undead,Vilebone Visage,Helmet,Swords,1,1,4,0,True,5,1000,12,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_HelmetBerserkerUndead @ forge
 HelmetBronze,$item_helmet_bronze,Bronze Helmet,Helmet,Swords,1,3,4,0,True,1,1000,8,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_HelmetBronze @ forge
 HelmetCarapace,$item_helmet_carapace,Carapace Helmet,Helmet,Swords,1,3,4,0,True,5,1200,32,2,10,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_HelmetCarapace @ blackforge
@@ -1070,14 +1072,14 @@ KnifeSkollAndHati,$item_knife_skollandhati,Skoll and Hati,TwoHandedWeapon,Knives
 KnifeVoid,$item_knife_void,Voidcaller,OneHandedWeapon,Knives,1,0.3,4,0,True,1,200,20,1,2,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,,
 KnifeWood,$item_knife_wood,Wooden Knife,OneHandedWeapon,Knives,1,0.3,4,0,True,3,200,20,1,12,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location ShipSetting01 > ShipSetting01 > Container
 Lantern,$item_lantern,Dvergr Lantern,Torch,Clubs,1,2,1,0,True,0,0,15,1,3,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Locations: Location Mistlands_GuardTower1_new > Mistlands_GuardTower1_new > Pickable
-Lantern_DN,$item_lanternDN,Salvaged Lantern,Torch,Clubs,1,2,1,0,True,0,0,15,1,3,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Vegetation: deepnorth_lantern_standing > DropOnDestroyed
+Lantern_DN,$item_lanternDN,Salvaged Lantern,Torch,Clubs,1,2,1,0,True,0,0,15,1,3,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 Lantern_hooded,$piece_hoodedlantern,Hooded Lantern,Torch,Clubs,1,2,1,0,True,0,0,15,1,3,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 Larva,$item_larva,[item_larva],Material,Swords,20,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,12,0,1200,,
 LastBossGate_RuneTile,$item_runetile,[item_runetile],Material,Swords,3,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 LeatherScraps,$item_leatherscraps,Leather Scraps,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Spawns: Boar > CharacterDrop
 Leatherstraps,$item_leatherstraps,Leather Straps,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Locations: Location MorkBorg > Room > morkhalla_floor01 > CreatureSpawner > CharacterDrop
 Leech_BiteAttack,jaws,jaws,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,0,20,0,0,0,0,0,70,0,0,0,0,0,,
-LinenThread,$item_linenthread,Linen Thread,Material,Swords,50,2,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Conversions: piece_spinningwheel: Flax > LinenThread
+LinenThread,$item_linenthread,Linen Thread,Material,Swords,50,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Conversions: piece_spinningwheel: Flax > LinenThread
 Lingonberry,$item_lingonberries,Lingonberries,Consumable,Swords,50,0.1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,35,0,900,DeepNorth,Vegetation: LingonberryBush > Pickable
 Lingondricka,$item_lingondricka,Lingonberry Juice,Consumable,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,35,105,0,1500,DeepNorth,Recipes: Recipe Recipe_LingonDricka @ piece_cauldron
 lox_bite,lox bite,lox bite,OneHandedWeapon,Swords,1,1,1,0,True,0,100,10,1,10,0,0,0,130,0,0,0,0,0,0,0,0,0,0,0,0,,
@@ -1305,7 +1307,7 @@ SharpeningStone,$item_sharpeningstone,Sharpening Stone,Material,Swords,20,6,1,0,
 ShieldBanded,$item_shield_banded,Banded Shield,Shield,Blocking,1,5,3,0,True,2,200,200,1,42,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ShieldBanded @ forge
 ShieldBlackmetal,$item_shield_blackmetal,Black Metal Shield,Shield,Blocking,1,5,3,0,True,4,200,200,1,78,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_ShieldBlackmetal @ forge
 ShieldBlackmetalTower,$item_shield_blackmetal_tower,Black Metal Tower Shield,Shield,Blocking,1,5,3,0,True,4,200,200,1,104,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Recipes: Recipe Recipe_ShieldBlackmetalTower @ forge
-ShieldBoneTower,$item_shield_bonetower,Bone Tower Shield,Shield,Blocking,1,4,3,0,True,1,200,100,1,32,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ShieldBoneTower @ piece_workbench
+ShieldBoneTower,$item_shield_bonetower,Bone Tower Shield,Shield,Blocking,1,4,3,0,True,1,200,100,1,32,-0.1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_ShieldBoneTower @ piece_workbench
 ShieldBronzeBuckler,$item_shield_bronzebuckler,Bronze Buckler,Shield,Blocking,1,3,3,0,True,1,200,100,1,16,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Recipes: Recipe Recipe_ShieldBronzeBuckler @ forge
 ShieldBucklerGoldUncooked,$item_shield_buckler_gold_uncooked,Cast: Nord Buckler,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldBucklerGoldUncooked @ blackforge
 ShieldCarapace,$item_shield_carapace,Carapace Shield,Shield,Blocking,1,5,3,0,True,5,250,200,1,96,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mistlands,Recipes: Recipe Recipe_ShieldCarapace @ blackforge
@@ -1322,7 +1324,7 @@ ShieldIronTower,$item_shield_iron_tower,Iron Tower Shield,Shield,Blocking,1,4,3,
 ShieldKnight,$item_shield_knight,Knight shield UNUSED,Shield,Blocking,1,4,1,0,True,0,100,0,1,120,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,
 ShieldRoots,$item_shield_roots,Shield of Roots,Shield,Blocking,1,4,3,0,True,0,200,100,1,48,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Recipes: Recipe Recipe_ShieldRoots @ piece_workbench
 ShieldRoundGoldUncooked,$item_shield_round_gold_uncooked,Cast: Nord Shield,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldRoundGoldUncooked @ blackforge
-ShieldSerpentscale,$item_shield_serpentscale,Serpent Scale Shield,Shield,Blocking,1,5,3,0,True,3,250,300,1,60,-0.1,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Ocean,Recipes: Recipe Recipe_ShieldSerpentscale @ forge
+ShieldSerpentscale,$item_shield_serpentscale,Serpent Scale Shield,Shield,Blocking,1,5,3,0,True,3,250,300,1,60,-0.1,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_ShieldSerpentscale @ forge
 ShieldSilver,$item_shield_silver,Silver Shield,Shield,Blocking,1,5,3,0,True,3,200,200,1,60,-0.05,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Recipes: Recipe Recipe_ShieldSilver @ forge
 ShieldTowerGoldUncooked,$item_shield_tower_gold_uncooked,Cast: Nord Greatshield,Material,Swords,10,1,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,DeepNorth,Recipes: Recipe Recipe_ShieldTowerGoldUncooked @ blackforge
 ShieldWood,$item_shield_wood,Wood Shield,Shield,Blocking,1,4,3,0,True,0,200,100,1,6,-0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Recipes: Recipe Recipe_ShieldWood @ piece_workbench
@@ -1629,12 +1631,12 @@ unbjorn_swipe_r,bjorn bite,bjorn bite,OneHandedWeapon,Swords,1,1,1,0,True,0,100,
 UndeadBjornRibcage,$item_UndeadBjornRibcage,Vile Ribcage,Material,Swords,50,5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Spawns: Unbjorn > CharacterDrop
 Upgrader0Armor,$item_upgrader_tier0 $item_upgrader_armor $item_upgrader_name,Wooden Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location WoodHouse1 > WoodHouse1 > Container
 Upgrader0Weapon,$item_upgrader_tier0 $item_upgrader_weapon $item_upgrader_name,Wooden Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location WoodHouse1 > WoodHouse1 > Container
-Upgrader1Armor,$item_upgrader_tier1 $item_upgrader_armor $item_upgrader_name,Bronze Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location WoodHouse1 > WoodHouse1 > Container
-Upgrader1Weapon,$item_upgrader_tier1 $item_upgrader_weapon $item_upgrader_name,Bronze Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Meadows,Locations: Location WoodHouse1 > WoodHouse1 > Container
-Upgrader2Armor,$item_upgrader_tier2 $item_upgrader_armor $item_upgrader_name,Iron Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Ruin1 > Ruin1 > Container
-Upgrader2Weapon,$item_upgrader_tier2 $item_upgrader_weapon $item_upgrader_name,Iron Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Ruin1 > Ruin1 > Container
-Upgrader3Armor,$item_upgrader_tier3 $item_upgrader_armor $item_upgrader_name,Silver Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location Grave1 > Grave1 > Container
-Upgrader3Weapon,$item_upgrader_tier3 $item_upgrader_weapon $item_upgrader_name,Silver Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location Grave1 > Grave1 > Container
+Upgrader1Armor,$item_upgrader_tier1 $item_upgrader_armor $item_upgrader_name,Bronze Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Ruin1 > Ruin1 > Container
+Upgrader1Weapon,$item_upgrader_tier1 $item_upgrader_weapon $item_upgrader_name,Bronze Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,BlackForest,Locations: Location Ruin1 > Ruin1 > Container
+Upgrader2Armor,$item_upgrader_tier2 $item_upgrader_armor $item_upgrader_name,Iron Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location Grave1 > Grave1 > Container
+Upgrader2Weapon,$item_upgrader_tier2 $item_upgrader_weapon $item_upgrader_name,Iron Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Swamp,Locations: Location Grave1 > Grave1 > Container
+Upgrader3Armor,$item_upgrader_tier3 $item_upgrader_armor $item_upgrader_name,Silver Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location StoneTowerRuins04 > StoneTowerRuins04 > Container
+Upgrader3Weapon,$item_upgrader_tier3 $item_upgrader_weapon $item_upgrader_name,Silver Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Mountain,Locations: Location StoneTowerRuins04 > StoneTowerRuins04 > Container
 Upgrader4Armor,$item_upgrader_tier4 $item_upgrader_armor $item_upgrader_name,Black Metal Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Floor0 > DropOnDestroyed
 Upgrader4Weapon,$item_upgrader_tier4 $item_upgrader_weapon $item_upgrader_name,Black Metal Battle Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Floor0 > DropOnDestroyed
 Upgrader5Armor,$item_upgrader_tier5 $item_upgrader_armor $item_upgrader_name,Black Marble Protection Idol,Material,Swords,20,0.5,1,0,True,0,100,10,1,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Plains,Locations: Location Hildir_plainsfortress > Room > plainsfortress_Hildir_Floor0 > DropOnDestroyed

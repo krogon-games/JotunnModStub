@@ -38,16 +38,16 @@ namespace Corruption.Content
 
         private const string Intro =
             "Work your gear with orbs, shards and splinters here.\n\n" +
-            "<color=orange>1.</color> Drag a piece of gear from your Bag onto the forge.\n" +
+            "<color=orange>1.</color> Drag a piece of gear from your Bag, or a map from your Bag or Maps tab, onto the forge.\n" +
             "<color=orange>2.</color> Right-click an orb or shard in Currencies, or a splinter in Splinters, to pick it up.\n" +
             "<color=orange>3.</color> Click the forge to use it once. Hold Shift to keep an orb for the next click.\n\n" +
             "Esc or a right-click puts it back. Materials that can't be used on the gear turn red.\n" +
-            "Shatter destroys Magic or Rare gear for Affix Splinters.";
+            "Shatter destroys Magic or Rare gear for Affix Splinters. Orbs and a shard raise a map's tier.";
 
         private const string ShatterUnavailable = "Shattering isn't available (see the log).";
-        private const string BagOnly = "Put in gear from your Bag.";
+        private const string BagOnly = "Put in gear from your Bag, or a map from your Bag or Maps tab.";
         private const string NotATarget = "This item can't be worked at the Riftforge.";
-        private const string NoTarget = "Put gear in the forge first: drag it from your Bag.";
+        private const string NoTarget = "Put gear or a map in the forge first: drag it from your Bag (or Maps tab).";
         private const string NothingToDo = "This material does nothing to this item.";
         private const string NoConfirm = "The confirmation couldn't be shown, so nothing was done.";
 
@@ -73,6 +73,8 @@ namespace Corruption.Content
         private static readonly Dictionary<string, bool> Usable = new Dictionary<string, bool>();
         /// <summary>The affix lines the last use changed (indexes into the gear's lines), highlighted for a few seconds.</summary>
         private static List<int> _changed = new List<int>();
+        /// <summary>The map affix ids the last use added, highlighted in the bench for a few seconds.</summary>
+        private static List<string> _changedMap = new List<string>();
         private static float _changedUntil;
         private const float HighlightSeconds = 6f;
 
@@ -237,6 +239,7 @@ namespace Corruption.Content
         {
             _target = item;
             _changed.Clear();
+            _changedMap.Clear();
             CloseConfirm();
             _detailsDirty = true;
             _nextEligibility = 0f;
@@ -297,7 +300,12 @@ namespace Corruption.Content
         private static bool TargetStillHere()
         {
             var player = Player.m_localPlayer;
-            return _target != null && player && player.GetInventory().ContainsItem(_target);
+            if (_target == null || !player)
+            {
+                return false;
+            }
+            // A map may sit in the Maps tab; gear is only ever put in from the bag.
+            return MapForge.IsMap(_target) ? InventoryTabs.SourceOf(player, _target) != null : player.GetInventory().ContainsItem(_target);
         }
 
         // ------------------------------------------------------------ clicks
@@ -340,7 +348,10 @@ namespace Corruption.Content
             var from = gui.m_dragInventory;
             // The drag is only a way to point at the item: it stays where it was, so cancel the drag either way.
             gui.SetupDragItem(null, null, 1);
-            if (!player || from != player.GetInventory())
+            // Gear only from the bag; a map also from the Maps tab (the tab sweeps maps out of the bag twice a second).
+            bool fromBag = player && from == player.GetInventory();
+            bool fromMaps = player && !fromBag && MapForge.IsMap(item) && InventoryTabs.TabOf(from) == InventoryTab.Maps;
+            if (!fromBag && !fromMaps)
             {
                 ShowResult(BagOnly, false);
                 return;
@@ -376,7 +387,8 @@ namespace Corruption.Content
                 return;
             }
             var option = options[chosen];
-            // Every shard use asks first, unless this player switched its warning off (Krogon, 2026-11-10).
+            // A shard on gear asks first, unless this player switched its warning off (Krogon, 2026-11-10). A shard on a
+            // map works at once, like an orb: "Players should know what a corruption shard does by now" (2026-11-27).
             if (ForgeRules.NeedsConfirmation(option.Id) && CorruptionConfig.WarnBeforeCorrupting.Value)
             {
                 OpenConfirm(option, material);
@@ -405,7 +417,12 @@ namespace Corruption.Content
                 // Destroyed (shattered, or bricked by a shard): the slot empties; the rules' message says what happened.
                 _target = null;
                 _changed.Clear();
+                _changedMap.Clear();
                 ShowResult(result.Message, true);
+            }
+            else if (result.Outcome == "map")
+            {
+                ShowMapResult(result);
             }
             else if (result.Outcome == "unchanged")
             {
@@ -429,6 +446,35 @@ namespace Corruption.Content
             }
             _detailsDirty = true;
             _nextEligibility = 0f;
+        }
+
+        /// <summary>
+        ///     A map's result (the approved picture): the rule's headline in green ("Orb of Augmentation: now tier 3"),
+        ///     then "+ Name: danger" in green for each added affix and "− Name: danger" in red for each removed one; the
+        ///     added ones are also highlighted on the bench for a few seconds. The Mirror's copy leaves the map unchanged.
+        /// </summary>
+        private static void ShowMapResult(RiftforgeResult result)
+        {
+            var text = new System.Text.StringBuilder(result.Message);
+            _changedMap = new List<string>();
+            if (result.MapAdded != null)
+            {
+                foreach (string id in result.MapAdded)
+                {
+                    text.Append("\n<color=#B8F08A>+ ").Append(MapForge.AffixText(id)).Append("</color>");
+                }
+                _changedMap.AddRange(result.MapAdded);
+            }
+            if (result.MapRemoved != null)
+            {
+                foreach (string id in result.MapRemoved)
+                {
+                    text.Append("\n<color=#FF8A70>− ").Append(MapForge.AffixText(id)).Append("</color>");
+                }
+            }
+            _changed.Clear();
+            ForgeView.SetResult(text.ToString(), true);
+            _changedUntil = Time.time + HighlightSeconds;
         }
 
         /// <summary>
@@ -625,7 +671,7 @@ namespace Corruption.Content
             {
                 return "";
             }
-            return Loot.ColoredName(_target) ?? Localization.instance.Localize(_target.m_shared.m_name);
+            return Loot.ColoredName(_target) ?? MapForge.ColoredName(_target) ?? Localization.instance.Localize(_target.m_shared.m_name);
         }
 
         /// <summary>
@@ -644,6 +690,14 @@ namespace Corruption.Content
             if (own && RiftforgeCrafting.IsMaterial(item))
             {
                 Pick(item);
+                return true;
+            }
+            // A map of your own, right-clicked while the Forge tab is open, goes into the forge instead of being used
+            // (using it would open a rip and use the map up): Claude's choice, rips round 2026-11-26.
+            if (own && MapForge.IsMap(item))
+            {
+                ClearPick();
+                SetTarget(item, "");
                 return true;
             }
             if (_pick != null)
@@ -698,12 +752,15 @@ namespace Corruption.Content
                     _pick = resolved;
                 }
             }
+            RefreshUsable();
             bool usable = _pick != null && _target != null && CanUse(_pick);
-            ForgeView.SetSlot(_target, usable, "Drag gear from your Bag here");
-            if (_changed.Count > 0 && Time.time >= _changedUntil)
+            ForgeView.SetSlot(_target, usable, "Drag gear or a map here");
+            ForgeView.SetMapLayout(_target != null && MapForge.IsMap(_target));
+            if ((_changed.Count > 0 || _changedMap.Count > 0) && Time.time >= _changedUntil)
             {
                 // The highlight of the last change runs out.
                 _changed.Clear();
+                _changedMap.Clear();
                 _detailsDirty = true;
             }
             UpdateButtons();
@@ -719,10 +776,23 @@ namespace Corruption.Content
         {
             if (_target == null)
             {
-                ForgeView.SetBench("Drag gear from your Bag here", "");
+                ForgeView.SetBench("Drag gear or a map here", "");
                 return;
             }
             bool highlight = Time.time < _changedUntil;
+            if (MapForge.IsMap(_target))
+            {
+                // A map (decision 15): the coloured tier line under the slot, and only its Corrupted/Mirrored marks here;
+                // the sheet beside it has the rest.
+                string caption = "", marks = "";
+                Safe.Run("show the forge map's tier", () =>
+                {
+                    caption = MapForge.ForgeCaption(_target);
+                    marks = MapForge.ForgeBench(_target);
+                });
+                ForgeView.SetBench(Localization.instance.Localize(caption), Localization.instance.Localize(marks));
+                return;
+            }
             var text = new System.Text.StringBuilder();
             Safe.Run("show the forge gear's affixes", () =>
             {
@@ -783,6 +853,15 @@ namespace Corruption.Content
             if (_target == null)
             {
                 ForgeView.SetSheet(Localization.instance.Localize("$piece_riftforge"), Localization.instance.Localize(Intro));
+                return;
+            }
+            if (MapForge.IsMap(_target))
+            {
+                // A map's sheet is its own summary (decision 15), the last use's added affixes marked.
+                string sheet = "";
+                bool mark = Time.time < _changedUntil;
+                Safe.Run("show the forge map's summary", () => sheet = MapForge.ForgeSheet(_target, mark ? _changedMap : null));
+                ForgeView.SetSheet(TargetName(), Localization.instance.Localize(sheet));
                 return;
             }
             // The routine stats: the tooltip without the affix block, which the bench shows.
@@ -854,6 +933,7 @@ namespace Corruption.Content
                     _nextEligibility = Time.time + EligibilityInterval;
                     Usable.Clear();
                 }
+                RefreshUsable();
                 Decorate(tabGrid);
                 Decorate(gui.m_playerGrid);
             }
@@ -887,6 +967,36 @@ namespace Corruption.Content
                 }
             }
         }
+
+        /// <summary>
+        ///     Throws away the cached "can this material be used" answers when the target or, for a map, its tier,
+        ///     affixes or locks changed since they were worked out (the cache is by material, so it must follow the target).
+        ///     Once a frame.
+        /// </summary>
+        private static void RefreshUsable()
+        {
+            if (_usableFrame == Time.frameCount)
+            {
+                return;
+            }
+            _usableFrame = Time.frameCount;
+            string key = "";
+            if (_target != null && MapForge.IsMap(_target))
+            {
+                var state = MapForge.StateOf(_target, out _);
+                key = MapData.Join(state.Affixes) + "|" + state.Corrupted + "|" + state.Mirrored;
+            }
+            if (!ReferenceEquals(_usableTarget, _target) || _usableKey != key)
+            {
+                _usableTarget = _target;
+                _usableKey = key;
+                Usable.Clear();
+            }
+        }
+
+        private static int _usableFrame = -1;
+        private static ItemDrop.ItemData _usableTarget;
+        private static string _usableKey = "";
 
         private static bool CanUse(ItemDrop.ItemData material)
         {
@@ -1070,6 +1180,8 @@ namespace Corruption.Content
                 _active = false;
                 _target = null;
                 _pick = null;
+                _changedMap.Clear();
+                _usableTarget = null;
             }
         }
     }

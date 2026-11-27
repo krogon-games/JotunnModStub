@@ -25,6 +25,9 @@ namespace Corruption.Content
         private bool m_resolved;
         /// <summary>Diagnostics for the ownership-migration check (handoff 2026-11-07): log when this game starts running the waves.</summary>
         private bool m_ranWaves;
+        /// <summary>The wave multiplier from the heart's tier and affixes (or the config when the tables didn't load); read every tick.</summary>
+        private float m_multiplier = 2f;
+        private double m_twoStarPercent;
 
         private void Awake()
         {
@@ -46,10 +49,15 @@ namespace Corruption.Content
                     m_ranWaves = false;
                     return;
                 }
+                ReadTier();
                 if (!m_ranWaves)
                 {
                     m_ranWaves = true;
-                    Jotunn.Logger.LogInfo($"Rip waves: this game now runs the waves of rip {m_nview.GetZDO().m_uid}.");
+                    Jotunn.Logger.LogInfo($"Rip waves: this game now runs the waves of rip {m_nview.GetZDO().m_uid}" +
+                                          (MapTiers.Loaded
+                                              ? $": {MapTiers.Describe(MapTiers.TierOf(m_nview.GetZDO()), MapTiers.AffixIdsOf(m_nview.GetZDO()))}, " +
+                                                $"waves x{m_multiplier}, {m_twoStarPercent}% guaranteed 2-stars."
+                                              : $": no tiers loaded, waves x{m_multiplier}."));
                 }
                 if (!m_resolved)
                 {
@@ -79,6 +87,24 @@ namespace Corruption.Content
                     }
                 }
             });
+        }
+
+        /// <summary>
+        ///     The multiplier and 2-star chance come from the heart's own data (tier and affixes), so a new owner of the heart
+        ///     plays the same numbers; without tables they are today's config value and no guaranteed 2-stars.
+        /// </summary>
+        private void ReadTier()
+        {
+            var zdo = m_nview.GetZDO();
+            var row = MapTiers.RowOf(zdo);
+            if (row == null)
+            {
+                m_multiplier = Mathf.Max(1f, CorruptionConfig.RipWaveMultiplier.Value);
+                m_twoStarPercent = 0;
+                return;
+            }
+            m_multiplier = Mathf.Max(1f, (float)RipTierRules.WaveMultiplier(row, MapTiers.AffixesOf(zdo)));
+            m_twoStarPercent = row.TwoStarPercent;
         }
 
         /// <summary>Finds the rip biome's army raids: the boss whose essence makes this biome's maps.</summary>
@@ -117,7 +143,12 @@ namespace Corruption.Content
                 {
                     continue;
                 }
-                Maddened.Madden(character);
+                Maddened.Madden(character);   // claims ownership, so the stamp can be written
+                if (MapTiers.Loaded && character.m_nview && character.m_nview.IsValid())
+                {
+                    MapTiers.CopyStamp(m_nview.GetZDO(), character.m_nview.GetZDO());
+                    character.m_nview.GetZDO().Set(Rips.KeyClose, m_nview.GetZDO().GetLong(Rips.KeyClose, 0L));
+                }
                 character.GetBaseAI()?.SetHuntPlayer(true);
             }
         }
@@ -126,7 +157,7 @@ namespace Corruption.Content
         private void UpdateEntry(SpawnSystem.SpawnData entry)
         {
             // The raid made busier (user, 2026-10-29): more alive at once, shorter interval.
-            float multiplier = Mathf.Max(1f, CorruptionConfig.RipWaveMultiplier.Value);
+            float multiplier = m_multiplier;
             int maxSpawned = entry.m_maxSpawned > 0 ? Mathf.RoundToInt(entry.m_maxSpawned * multiplier) : 0;
             float interval = Mathf.Max(entry.m_spawnInterval / multiplier, 1f);
             m_timers.TryGetValue(entry, out float elapsed);
@@ -164,7 +195,8 @@ namespace Corruption.Content
                     point.y = ZoneSystem.instance.GetGroundHeight(point);
                     // MinStars to MaxStars: user, 2026-10-29 (every rip spawn at least 1 star); design tier 1.
                     BossArmies.Spawn(entry, point, KeyFromRip, m_nview.GetZDO().m_uid.ToString(),
-                        CorruptionConfig.RipMinStars.Value, CorruptionConfig.RipMaxStars.Value);
+                        CorruptionConfig.RipMinStars.Value, CorruptionConfig.RipMaxStars.Value,
+                        MapTiers.Loaded ? m_nview.GetZDO() : null, m_twoStarPercent);
                 }
             }
         }

@@ -3,7 +3,7 @@
 Sources (all in this repository):
 - data/d2-reference/experience.csv: Diablo 2's XP needed for each level (Arreat Summit / D2R experience table).
 - data/wow-reference/xp_for_level.csv: classic WoW's XP per level (cmangos mangos-classic `player_xp_for_level`).
-- data/game-dump-1.0.21/creatures.csv and spawns.csv: creature health and the world spawn lists.
+- data/game-dump-1.0.31/creatures.csv and spawns.csv: creature health and the world spawn lists.
 - The user's levelling guide (docs/class-design.md, 2026-10-30): the level at each boss.
 
 Outputs:
@@ -38,7 +38,7 @@ import math
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DUMP = os.path.join(ROOT, "data", "game-dump-1.0.21")
+DUMP = os.path.join(ROOT, "data", "game-dump-1.0.31")
 OUT = os.path.join(ROOT, "Orlog", "Data")
 
 # The user's levelling guide (2026-10-30): biome, its boss prefabs, the boss's level. Biome names are Heightmap.Biome's.

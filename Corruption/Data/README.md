@@ -8,6 +8,8 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`affix_caps.csv`](affix_caps.csv) | The most a stat can gain from all affixes together (movement speed, attack speed, pickup radius, resistances, life steal). A shard's corrupted affix is not capped |
 | [`drop_chances.csv`](drop_chances.csv) | Base chance of each rarity dropping |
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
+| [`map_tiers.csv`](map_tiers.csv) | The six map tiers: rarity and affix count, waves, guaranteed 2-stars, the heart's shards and gear floor, which `drop_modifiers.csv` row sets the drop rates |
+| [`map_affixes.csv`](map_affixes.csv) | The map affixes (danger only): what each does to the rip, how often orbs roll it; `later` rows are designed but never roll |
 | [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
 | [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
 | [`splinter_looks.csv`](splinter_looks.csv) | How each Affix Splinter looks: per affix family (and pool: `gear`, `any`, `gathering`), its shape (`kind`: attack, elemental, defence, vitality, resistance, utility, mining, woodcutting, gathering) and `colour` (`#RRGGBB`). After editing, run `python tools/make_splinters.py` to remake the textures. The test checks every affix has a row |
@@ -24,7 +26,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`personal_loot.csv`](personal_loot.csv) | Personal loot settings: how long a drop is locked to its roller, the sound window, how often the lock is re-checked, the beam's size and light |
 | [`offerings.csv`](offerings.csv) | Corrupted offerings: per boss, the vanilla item, how it's used (`altar`, `stand`, `door`), how many vanilla items one corrupted item takes (plus 1 shard), name and description |
 
-`essences.csv`, `maps.csv`, `rip_loot.csv`, `offerings.csv` and the loot tables (`affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`, since loot step 1) and `orb_chance.csv` (since 2026-11-08) and `orbs.csv` (since 2026-11-19) are compiled into the mod: **rebuild after editing them**. The others (`affix_caps.csv`, `corruption_outcomes.csv`, `shattering.csv`) aren't loaded by the game yet. Later the server's copy of the loot tables will be the one everybody plays with. That way the group can rebalance without a new mod version.
+`essences.csv`, `maps.csv`, `map_tiers.csv`, `map_affixes.csv`, `rip_loot.csv`, `offerings.csv` and the loot tables (`affixes.csv`, `loot_bases.csv`, `loot_rules.csv`, `rare_names.csv`, `drop_chances.csv`, `drop_modifiers.csv`, since loot step 1) and `orb_chance.csv` (since 2026-11-08) and `orbs.csv` (since 2026-11-19) are compiled into the mod: **rebuild after editing them**. The others (`affix_caps.csv`, `corruption_outcomes.csv`, `shattering.csv`) aren't loaded by the game yet. Later the server's copy of the loot tables will be the one everybody plays with. That way the group can rebalance without a new mod version.
 
 ## How to edit
 
@@ -69,6 +71,45 @@ Example: a 2-star creature (`star_2`, ×1.5 for every rarity) inside a scar (`sc
 
 **Roll rules (decided 2026-10-27):** each player near a kill rolls separately (personal loot). Magic and Rare roll separately, but if both succeed only the Rare drops. Uniques roll on their own, on top. Code: `DropTable.Roll` in `Corruption/Rules/DropTable.cs`.
 
+## map_tiers.csv
+
+One row per map tier (Krogon's rips round decisions 6 and 6e, 2026-11-26). A map's tier is its rarity and affix count: tier 1 white, tier 2 Magic with 1 affix, tier 3 Magic with 2, tier 4 Rare with 3, tier 5 Rare with 4, tier 6 a tier 5 map corrupted by a shard.
+
+| Column | Meaning |
+|---|---|
+| `tier` | 1, 2, 3 ... in order, no gaps |
+| `rarity` | `normal` (white), `magic` or `rare`: the map's colour and name colour |
+| `affixes` | How many affixes the map carries. Never fewer than the tier before |
+| `corrupted` | `true` for the tier a shard makes. Exactly one row, the last |
+| `wave_multiplier` | Multiplies every raid entry's most-alive-at-once and divides its spawn interval. Tier 1's 2 is what the `[Rips] WaveMultiplier` setting used to be |
+| `two_star_percent` | Chance (percent) that each wave creature is a guaranteed 2-star. The rest roll as before |
+| `shards_min`, `shards_max` | The heart's corruption shards, dealt one at a time among the players nearby |
+| `drop_source` | The row of `drop_modifiers.csv` that sets this tier's drop rates (`rip_tier_1` ... `rip_tier_6`) |
+| `heart_floor` | The lowest rarity of each player's gear roll at the destroyed heart: `none`, `magic` or `rare` |
+| `status`, `notes` | As above. Each row's `notes` gives its source |
+
+**Changed 2026-11-26 (decision 4b):** the `rip_tier_*` rows of `drop_modifiers.csv` are now x1.25, x1.5, x1.75, x2 for tiers 1 to 4 in every column (Magic, Rare, unique, orbs), with new rows `rip_tier_5` (x2.25) and `rip_tier_6` (x2.5): plus 0.25 per tier.
+
+**Rebuild after editing.** Waves, 2-star chances, shards and the heart floor are Claude's proposals where the notes say so; Krogon approved the table as proposed.
+
+## map_affixes.csv
+
+The affixes that orbs roll onto a map. Every one is danger only: it pays through the tier it adds (decision 8b). Map affixes have no prefix or suffix and no values.
+
+| Column | Meaning |
+|---|---|
+| `id` | Lowercase letters, one word. Stored on the map item, so don't rename a row that players may hold |
+| `status` | `approved` = orbs can roll it. `later` = designed, not built, never rolls (the three weather affixes wait for the next round) |
+| `name`, `danger` | In-game name and the tooltip line saying what it does |
+| `weight` | How likely an orb is to roll it, against the others. 100 each = equally likely. Required for `approved` rows, blank for `later` |
+| `wave_multiplier` | Multiplies the tier's waves (Swarming: 2). Blank = no effect |
+| `damage_taken` | Multiplies the damage rip creatures take, above 0 and at most 1 (Hardened: 0.7 = 30% less). Blank = no effect |
+| `maddened_factor` | Multiplies the maddened bonuses (the game's x1.2 damage and +15% speed), 1 or more (Rabid: 2). Blank = no effect |
+| `fire_share` | Share of each hit's damage that is added as fire, above 0 and at most 10 (Smouldering: 0.25). Blank = none |
+| `status`, `notes` | `notes` gives the source of each number |
+
+**Rebuild after editing.** The Smouldering 25% is Claude's proposal (the design gives no number).
+
 ## orbs.csv
 
 | Column | Meaning |
@@ -108,7 +149,7 @@ Rules: [`docs/corruption-design.md` → Affix Splinters and shattering](../../do
 | `biome` | The item's biome from the game dump: `Meadows`, `BlackForest`, `Swamp`, `Mountain`, `Plains`, `Mistlands`, `Ashlands`, `DeepNorth` |
 | `classes` | Affix item classes (columns of `affixes.csv`), separated by `;` |
 
-Built by `python3 tools/make_loot_bases.py` from `data/game-dump-1.0.21/items.csv` and `recipes.csv`: every item with an enabled recipe whose type and skill make it a weapon, shield, armour piece, cape, trinket or pickaxe (tools, bombs, torches and ammo are left out). The test checks it matches the dump.
+Built by `python3 tools/make_loot_bases.py` from `data/game-dump-1.0.31/items.csv` and `recipes.csv`: every item with an enabled recipe whose type and skill make it a weapon, shield, armour piece, cape, trinket or pickaxe (tools, bombs, torches and ammo are left out). The test checks it matches the dump.
 
 ## loot_rules.csv
 

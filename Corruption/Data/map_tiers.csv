@@ -1,0 +1,7 @@
+﻿tier,status,rarity,affixes,corrupted,wave_multiplier,two_star_percent,shards_min,shards_max,drop_source,heart_floor,notes
+1,approved,normal,0,false,2,0,1,4,rip_tier_1,none,"Krogon decision 6e (2026-11-26): white map; waves x2 = today's [Rips] WaveMultiplier (2026-10-29); shards 1-4 (2026-11-01); no guaranteed 2-stars; heart gear by chance."
+2,approved,magic,1,false,2.5,25,2,6,rip_tier_2,magic,"Krogon decision 6e (2026-11-26): waves +0.5 per tier; shards 2-6 (2026-11-01); 2-stars decision 3's 1 in 4 at tier 2 (+1 in 4 per tier, Claude's proposal); heart floor decision 4B / 6e."
+3,approved,magic,2,false,3,50,3,8,rip_tier_3,magic,"Krogon decision 6e (2026-11-26): waves +0.5 per tier; shards 2026-11-01 (3-8); 2-stars +1 in 4 per tier (Claude's proposal); heart floor Magic (decision 6e)."
+4,approved,rare,3,false,3.5,75,4,10,rip_tier_4,rare,"Krogon decision 6e (2026-11-26): waves +0.5 per tier; shards 2026-11-01 (4-10); 2-stars +1 in 4 per tier (Claude's proposal); heart floor Rare (decision 6e, Claude's proposal)."
+5,approved,rare,4,false,4,100,5,12,rip_tier_5,rare,"Krogon decision 6e (2026-11-26): waves +0.5 per tier; shards same step as tiers 1-4 (+1 lowest, +2 highest); every creature a 2-star; heart floor Rare."
+6,approved,rare,4,true,4.5,100,6,14,rip_tier_6,rare,"Krogon decision 6e/6c (2026-11-26): a tier 5 map corrupted by a shard (locked, never breaks); waves +0.5 per tier; shards same step; every creature a 2-star; heart floor Rare."

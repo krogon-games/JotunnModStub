@@ -7,7 +7,7 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - Valheim 1.0.20 (Unity 6, Mono), BepInEx 5, Jötunn (JotunnLib 2.30.2), HarmonyX.
 - SDK-style `net462` projects with `Microsoft.NETFramework.ReferenceAssemblies`; game assemblies are publicized by Jötunn's prebuild (`DoPrebuild.props`, `ExecutePrebuild=true`), with `IgnoreAccessModifiers.cs` so private members can be used directly.
 - `Directory.Build.props` sets `SolutionDir`; `publish.ps1` runs after a Windows build: Debug copies the DLL to `MOD_DEPLOYPATH`, Release zips a Thunderstore package from `<Project>/Package/`.
-- Reference game data: `data/game-dump-1.0.21/` (CSV output of `co_dump`, development only, never shipped).
+- Reference game data: `data/game-dump-1.0.31/` (CSV output of `co_dump`, development only, never shipped).
 
 ## Solution layout
 
@@ -68,6 +68,10 @@ How the code is organised and the game facts it relies on. Feature behaviour and
 - Only the server holds every object in the world (`ZDOMan.GetAllZDOsWithPrefabIterative` covers them all there), so checks like "near anyone's base" belong on the server.
 - Objects for far-away places (the rip heart) are instantiated there directly: their persistent ZDO stays when the instance is removed as out of range, and they appear when someone arrives. Settle them on the ground once the area is loaded.
 - Rip state lives on the objects' ZDOs (`corruption_rip_*` keys in `Rips.cs`), so it survives restarts and works for every player.
+- **The rip request and reply carry the map's tier and affixes** (rips round, 2026-11-27; built, not play-tested). Request, in order: the request id, the map item's name, the number of candidate spots and for each its heart and landing x and z, then (new) `int tier`, `string affixes` (the affix ids joined with `;`) and `bool fallback` (the opener's game searched explored land too). Reply: the request id, the map item's name, whether a spot was found, its heart and landing x and z, `closeAt`, then (new) `int tier` and `string affixes`. **Both are read only when present** (`ZPackage.GetPos() < Size()`): an older build's message stops after the candidates or after `closeAt`, and a tiered map used on a server that sends no tier is kept with a message. The server clamps the tier to the table, drops unknown affixes, derives the tier from the affix count (corrupted only with a full set), echoes them, and rejects every candidate whose heart or landing spot is within 96 m of an object a player placed.
+- **The server's placed-object scan** (#84): one pass over all the server's objects (`ZDOMan.m_objectsByID`; sector searches changed between game versions). For each object it checks first whether it is within the distance of any candidate (a position test only), and only then its builder id (`ZDOVars.s_creator`, set by `Piece.SetCreator`); an object with no builder id still counts if its prefab is a Plant's grown Pickable that isn't wild vegetation (a set of prefab hashes made once). It logs the time ("… checked K placed object(s) near them of Z in X ms"). Grown trees from saplings can't be told from wild ones.
+- **Rip object data keys (2026-11-27):** `corruption_rip_tier` (int) and `corruption_rip_affixes` (the ids joined with `;`) on the entry rip, the heart and every wave creature (and every creature maddened in place); the exit copies them from the entry. `corruption_rip_close` (the rip's closing time) is now also on wave creatures: once it has passed they become the game's event creatures and leave like a vanilla raid's. `MapTiers.IsStamped` is "has a tier"; a creature without it counts as tier 1.
+- **Map item custom data (2026-11-27):** `corruption.map_affixes` (the ids, `;`-joined) and `corruption.map_tier`, beside the shared `corruption.corrupted` and `corruption.mirrored` marks that gear uses (a corrupted map is locked, as corrupted gear). A map without them is tier 1. Constants in `Rules/MapData.cs`.
 - **A game only loads the area around its player.** Counting creatures with `Character.GetAllCharacters()` misses the ones near a friend far away. Spawners also remember the ZDO ids they spawned (`BossArmies.Spawned`): a client keeps a ZDO it created until the game reports it destroyed, and destroy messages go to every player, so `ZDOMan.GetZDO(id) != null` means "still alive somewhere".
 - **A flag set on an object others already have loaded** isn't seen by their `Awake` patches. Either poll it (the corrupted boss look checks its ZDO) or broadcast a message (`Corruption_Maddened` makes every game add the maddened look).
 
@@ -97,7 +101,7 @@ Read through the code, not run on a server (the user's group session tests it; `
 
 1. **Isolated patches.** `PatchAllSafely()` applies each `[HarmonyPatch]` class separately inside try/catch, so one broken target doesn't disable the rest.
 2. **Never break vanilla.** Code that runs inside game methods goes through `Safe.Run` / `Safe.Report`: log once per action, fall back to vanilla behaviour.
-3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.21/*.csv` for real game data.
+3. **Pure rules + tests.** Anything decidable without Unity goes in a pure file (no `UnityEngine`), linked into `CraftingOverhaul.Tests` by `<Compile Include=... Link=...>`, and unit-tested. Tests may read `data/game-dump-1.0.31/*.csv` for real game data.
 4. **Data-driven first.** Derive lists from game data (biomes, talisman families); config overrides only for real exceptions (`BiomeMaterialOverrides`, `ExcludedCreatures`).
 5. **Clone, don't import** (exceptions: the shard and essence models, above). New items/pieces are Jötunn clones of vanilla prefabs, recoloured with `Corrupted.Tint` (all shader colour properties, particle start colours, lights). No new models unless the user asks. New animations are allowed where no vanilla animation or emote fits (user, 2026-10-30); they come from asset bundles built in `JotunnModUnity/`.
 6. **Config scope.** Gameplay numbers admin-only (server-synced); visual settings per player.
@@ -129,6 +133,12 @@ Full 1.0.14 game code (method bodies, not just signatures) comes from the NuGet 
 - Items in EquipmentAndQuickSlots custom slots (our talisman slots) live only in the owner's inventory; other games can't see them. What other games need to know (worn talismans) is published on the player's own ZDO, which the player owns and every game receives.
 - Taking from a chest requires owning it: `NearbyContainers` claims ownership right before removing items.
 - Other players' trinkets are readable on any client via `VisEquipment.m_currentTrinketItemHash` (synced through the ZDO), which is how talismans work for remote players.
+
+**Rips, weather and placed objects (1.0.14 code read for the rips round, 2026-11-26; assumed the same in 1.0.30, to confirm from the log)**
+- Weather is per client: each game works out its own with `EnvMan.GetEnvironmentOverride`, and a vanilla raid forces its weather per client the same way. The weather affixes (next round) must therefore be set on each player's own game from data it can read, not once on the server. Smoke damage must likewise run on each player's own game.
+- What an object's ZDO holds in a game depends on the server's simulation distance: the server sends "normal" objects only within the near area. A rip's heart 96–128 m from the landing spot may not be loaded there, so a client either gets the heart made a "distant" object or remembers the rip's affixes on entering (as `RipCompass` does the heart's position). After the heart dies only the exit carries the stamp.
+- `Piece.SetCreator` sets the builder id (`creator`) only for player placements; objects the world makes have none, and a Plant's grown Pickable has none either (so grown crops are matched by prefab name and grown trees can't be).
+- A raid's own wave spawn refuses spots inside a player base (an `EffectArea` of type PlayerBase); ours does the same.
 
 **Ground items and pickup (1.0.14 code, decompiled 2026-11-26 for personal loot; assumed the same in 1.0.30)**
 - Every pickup path (E, auto-pickup, magnets) ends in `Humanoid.Pickup`, so refusing there stops them all.

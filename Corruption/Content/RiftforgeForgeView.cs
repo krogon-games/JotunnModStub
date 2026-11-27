@@ -63,6 +63,18 @@ namespace Corruption.Content
         private static UITooltip _shatterTip;
         private static string _lastSheet;
 
+        // The map layout (decision 15): the original rects and text settings, kept the first time map mode is applied.
+        private static bool _mapMode;
+        private static bool _savedLayout;
+        private static RectTransform _fitRect;       // the sheet's text rect, or its ScrollRect's rect
+        private static bool _fitIsScroll;
+        private static Vector2 _resultMin, _resultMax, _resultPivot, _resultOffsetMin, _resultOffsetMax;
+        private static Vector2 _fitMin, _fitMax, _fitPivot, _fitOffsetMin, _fitOffsetMax;
+        private static bool _textAuto;
+        private static float _textSize, _textSizeMin, _textSizeMax;
+        private static TextWrappingModes _textWrapping;
+        private static TextOverflowModes _textOverflow;
+
         public static bool Built => _bench && _sheet;
 
         // ------------------------------------------------------------ building
@@ -620,6 +632,11 @@ namespace Corruption.Content
             {
                 return;
             }
+            if (!forge)
+            {
+                // Never leave a map's layout on the gear's sheet.
+                SetMapLayout(false);
+            }
             _bench.gameObject.SetActive(forge);
             _sheet.gameObject.SetActive(forge);
             if (forge)
@@ -707,7 +724,7 @@ namespace Corruption.Content
 
         // ------------------------------------------------------------ contents
 
-        /// <summary>The forge slot: the gear's icon, durability and quality; a gold frame while a pick can be used on it.</summary>
+        /// <summary>The forge slot: the gear's icon, durability and quality (a map's tier); a gold frame while a pick can be used on it.</summary>
         public static void SetSlot(ItemDrop.ItemData target, bool armed, string emptyTip)
         {
             if (!_slot || !_slot.m_icon)
@@ -732,10 +749,14 @@ namespace Corruption.Content
             }
             if (_slot.m_quality)
             {
-                _slot.m_quality.enabled = has && target.m_shared.m_maxQuality > 1;
-                if (_slot.m_quality.enabled)
+                // A map shows its tier in the quality's place, in its colour; gear its quality as before.
+                if (!MapTierBadge.Set(_slot, has ? target : null))
                 {
-                    _slot.m_quality.text = target.m_quality.ToString();
+                    _slot.m_quality.enabled = has && target.m_shared.m_maxQuality > 1;
+                    if (_slot.m_quality.enabled)
+                    {
+                        _slot.m_quality.text = target.m_quality.ToString();
+                    }
                 }
             }
             if (_slot.m_amount)
@@ -781,6 +802,7 @@ namespace Corruption.Content
             {
                 _result.text = message ?? "";
                 _result.color = good ? Good : Bad;
+                ArrangeMap();
             }
         }
 
@@ -803,6 +825,157 @@ namespace Corruption.Content
                 _sheetText.enabled = true;
                 _sheetText.text = text;
             }
+        }
+
+        /// <summary>
+        ///     Makes room for a map's longer summary (decision 15): the result moves to a band at the bottom of the sheet, the
+        ///     sheet's text (or its scroll area) ends above it, and Shatter is hidden. Idempotent; false puts everything back
+        ///     exactly as it was.
+        /// </summary>
+        public static void SetMapLayout(bool map)
+        {
+            if (map == _mapMode || !Built || !_result || !_sheet)
+            {
+                return;
+            }
+            if (!map)
+            {
+                RestoreLayout();
+                return;
+            }
+            if (!_sheet.gameObject.activeInHierarchy)
+            {
+                return;   // the sheet's rects aren't laid out yet; tried again next frame
+            }
+            var textRect = _sheetText ? _sheetText.rectTransform : null;
+            var scroll = textRect ? textRect.GetComponentInParent<ScrollRect>() : null;
+            bool inScroll = scroll && scroll.transform != _sheet && scroll.transform.IsChildOf(_sheet);
+            var fit = inScroll ? scroll.GetComponent<RectTransform>() : textRect;
+            if (!_savedLayout)
+            {
+                var rr = _result.rectTransform;
+                _resultMin = rr.anchorMin;
+                _resultMax = rr.anchorMax;
+                _resultPivot = rr.pivot;
+                _resultOffsetMin = rr.offsetMin;
+                _resultOffsetMax = rr.offsetMax;
+                _fitRect = fit;
+                _fitIsScroll = inScroll;
+                if (fit)
+                {
+                    _fitMin = fit.anchorMin;
+                    _fitMax = fit.anchorMax;
+                    _fitPivot = fit.pivot;
+                    _fitOffsetMin = fit.offsetMin;
+                    _fitOffsetMax = fit.offsetMax;
+                }
+                if (_sheetText)
+                {
+                    _textAuto = _sheetText.enableAutoSizing;
+                    _textSize = _sheetText.fontSize;
+                    _textSizeMin = _sheetText.fontSizeMin;
+                    _textSizeMax = _sheetText.fontSizeMax;
+                    _textWrapping = _sheetText.textWrappingMode;
+                    _textOverflow = _sheetText.overflowMode;
+                }
+                _savedLayout = true;
+            }
+            _mapMode = true;
+            ArrangeMap();
+            // (c) without a scroll area the text shrinks (down to 70%) instead of clipping.
+            if (_sheetText && !inScroll)
+            {
+                float normal = _textAuto ? _textSizeMax : _textSize;
+                _sheetText.enableAutoSizing = true;
+                _sheetText.fontSizeMax = normal;
+                _sheetText.fontSizeMin = normal * 0.70f;
+                _sheetText.textWrappingMode = TextWrappingModes.Normal;
+            }
+            if (_shatter)
+            {
+                _shatter.gameObject.SetActive(false);
+            }
+            _mapMode = true;
+        }
+
+        /// <summary>
+        ///     Map mode's bottom band: the result keeps the bottom, 14 in from the sides and 12 above the sheet's bottom, and is
+        ///     as tall as its text needs (none when empty, at most 84). The sheet text's (or scroll area's) bottom edge sits
+        ///     12 + that height (+ 8 when there is a result) above the sheet's bottom. Runs on every change of the result.
+        /// </summary>
+        private static void ArrangeMap()
+        {
+            if (!_mapMode || !_result || !_sheet)
+            {
+                return;
+            }
+            var r = _result.rectTransform;
+            r.anchorMin = new Vector2(0f, 0f);
+            r.anchorMax = new Vector2(1f, 0f);
+            r.pivot = new Vector2(0.5f, 0f);
+            float height = 0f;
+            if (!string.IsNullOrEmpty(_result.text))
+            {
+                // Measured at the normal (largest) font size, as it would be without shrinking.
+                bool auto = _result.enableAutoSizing;
+                _result.enableAutoSizing = false;
+                _result.fontSize = _result.fontSizeMax;
+                height = Mathf.Min(_result.GetPreferredValues(_result.text, Mathf.Max(1f, _sheet.rect.width - 28f), 0f).y, 84f);
+                _result.enableAutoSizing = auto;
+            }
+            r.offsetMin = new Vector2(14f, 12f);
+            r.offsetMax = new Vector2(-14f, 12f + height);
+            var fit = _fitRect;
+            if (fit && fit.parent is RectTransform parent)
+            {
+                float edge = 12f + height + (height > 0f ? 8f : 0f);
+                float wanted = parent.InverseTransformPoint(_sheet.TransformPoint(new Vector3(0f, _sheet.rect.yMin + edge, 0f))).y;
+                float current = parent.InverseTransformPoint(fit.TransformPoint(new Vector3(0f, fit.rect.yMin, 0f))).y;
+                var min = fit.offsetMin;
+                min.y += wanted - current;
+                fit.offsetMin = min;
+            }
+        }
+
+        private static void RestoreLayout()
+        {
+            _mapMode = false;
+            if (!_savedLayout)
+            {
+                return;
+            }
+            if (_result)
+            {
+                var r = _result.rectTransform;
+                r.anchorMin = _resultMin;
+                r.anchorMax = _resultMax;
+                r.pivot = _resultPivot;
+                r.offsetMin = _resultOffsetMin;
+                r.offsetMax = _resultOffsetMax;
+            }
+            if (_fitRect)
+            {
+                _fitRect.anchorMin = _fitMin;
+                _fitRect.anchorMax = _fitMax;
+                _fitRect.pivot = _fitPivot;
+                _fitRect.offsetMin = _fitOffsetMin;
+                _fitRect.offsetMax = _fitOffsetMax;
+            }
+            if (_sheetText && !_fitIsScroll)
+            {
+                _sheetText.enableAutoSizing = false;
+                _sheetText.fontSize = _textSize;
+                _sheetText.fontSizeMin = _textSizeMin;
+                _sheetText.fontSizeMax = _textSizeMax;
+                _sheetText.enableAutoSizing = _textAuto;
+                _sheetText.textWrappingMode = _textWrapping;
+                _sheetText.overflowMode = _textOverflow;
+            }
+            if (_shatter)
+            {
+                _shatter.gameObject.SetActive(true);
+            }
+            _lastSheet = null;
         }
 
         public static void SetButtons(bool canRemove, bool canShatter, string shatterTip)
@@ -841,6 +1014,9 @@ namespace Corruption.Content
             _shatter = null;
             _shatterTip = null;
             _lastSheet = null;
+            _mapMode = false;
+            _savedLayout = false;
+            _fitRect = null;
         }
     }
 }

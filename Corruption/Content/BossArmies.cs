@@ -87,7 +87,8 @@ namespace Corruption.Content
                 var direction = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f) * Vector3.forward;
                 var point = player.transform.position + direction * Random.Range(min, max);
                 point.y = ZoneSystem.instance.GetGroundHeight(point);
-                if (point.y > water && !ZoneSystem.instance.IsBlocked(point))
+                // Not inside a player base, as the game's own raid spawns (SpawnSystem's m_insidePlayerBase check).
+                if (point.y > water && !ZoneSystem.instance.IsBlocked(point) && !EffectArea.IsPointInsideArea(point, EffectArea.Type.PlayerBase))
                 {
                     center = point;
                     return true;
@@ -101,9 +102,12 @@ namespace Corruption.Content
         ///     Spawns one creature of a raid entry, tagged (<paramref name="tagKey" /> = <paramref name="tagValue" /> on
         ///     its ZDO) so its spawner can count it, maddened, with <paramref name="minStars" /> to <paramref name="maxStars" />
         ///     stars rolled as vanilla rolls them (SpawnSystem.Spawn). Returns the creature, or null for non-creatures
-        ///     (e.g. the Ashlands army's charred spawner stones).
+        ///     (e.g. the Ashlands army's charred spawner stones). Rip waves also pass the heart's ZDO
+        ///     (<paramref name="stampFrom" />: the creature gets the rip's tier and affixes) and the tier's chance of a
+        ///     guaranteed 2-star (never above <paramref name="maxStars" />); corrupted-boss summons pass neither.
         /// </summary>
-        public static Character Spawn(SpawnSystem.SpawnData entry, Vector3 point, string tagKey, string tagValue, int minStars, int maxStars)
+        public static Character Spawn(SpawnSystem.SpawnData entry, Vector3 point, string tagKey, string tagValue, int minStars, int maxStars,
+            ZDO stampFrom = null, double twoStarPercent = 0)
         {
             var go = Object.Instantiate(entry.m_prefab, point, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
             var zdo = go.GetComponent<ZNetView>()?.GetZDO();
@@ -133,12 +137,37 @@ namespace Corruption.Content
             {
                 level++;
             }
+            if (RipTierRules.IsGuaranteedTwoStar(twoStarPercent, Random.value))
+            {
+                level = Mathf.Max(level, Mathf.Min(3, maxStars + 1));   // 2 stars = level 3; 3-star creatures don't exist yet
+            }
             if (level > 1)
             {
                 character.SetLevel(level);
             }
-            Maddened.Madden(character);
+            Maddened.Madden(character);   // claims ownership (we spawned it, so it is ours)
+            if (stampFrom != null && zdo != null)
+            {
+                MapTiers.CopyStamp(stampFrom, zdo);
+                // When the rip closes, its creatures leave like a vanilla raid's (Maddened.KeepEffect; MP review, 2026-11-27).
+                zdo.Set(Rips.KeyClose, stampFrom.GetLong(Rips.KeyClose, 0L));
+            }
             return character;
+        }
+
+        /// <summary>
+        ///     Counts a tagged creature this game loaded but didn't spawn (another game spawned it, before the spawner
+        ///     passed to this one), so a new owner of a rip heart counts every wave creature it has ever seen (MP review,
+        ///     2026-11-27). Dead ones drop out as their objects are destroyed everywhere.
+        /// </summary>
+        public static void Remember(string tagKey, string tagValue, ZDOID id)
+        {
+            string key = tagKey + "|" + tagValue;
+            if (!Spawned.TryGetValue(key, out var ids))
+            {
+                Spawned[key] = ids = new HashSet<ZDOID>();
+            }
+            ids.Add(id);
         }
 
         /// <summary>

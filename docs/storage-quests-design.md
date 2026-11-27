@@ -57,7 +57,7 @@ The server owns all storage state. Clients only request actions and receive upda
 
 ## Notes from the codebase and game data (2026-10-27)
 
-**Answers from the Valheim 1.0.20 dump (now `data/game-dump-1.0.21/`; the same in 1.0.21):**
+**Answers from the Valheim 1.0.20 dump (now `data/game-dump-1.0.31/`; the same in 1.0.21 and 1.0.31, except the Grausten chest's cost, changed in 1.0.31):**
 
 - **Traders: 3.** Haldor (`Vendor_BlackForest`, Black Forest), Hildir (`Hildir_camp`, Meadows) and the Bog Witch (`BogWitch_Camp`, Swamp).
 - **Chest costs** (`pieces.csv`):
@@ -70,7 +70,7 @@ The server owns all storage state. Clients only request actions and receive upda
 | Personal chest | `piece_chest_private` | Fine wood ×10, Iron ×8 |
 | Black metal chest | `piece_chest_blackmetal` | Wood ×10, Tar ×2, Black metal ×6 |
 | Wardrobe | `piece_chest_warderobe` | Frostwood ×10, Tar ×2, Black metal ×6 |
-| Grausten chest | `piece_chest_grausten` | Grausten ×10, Charred warrior trophy ×5, Flametal ×2 |
+| Grausten chest | `piece_chest_grausten` | Grausten ×10, Charred Skull ×5 (Charred warrior trophy ×5 until 1.0.21), Flametal ×2 |
 | Treasure chest | `piece_chest_treasure` | Coins ×99, Ruby ×5, Silver necklace ×2, Fine wood ×8, Silver ×2 |
 
 - **Slot counts aren't in the dump yet.** Adding container width × height to `co_dump`'s `pieces.csv` is a small change, worth making before Feature 1.

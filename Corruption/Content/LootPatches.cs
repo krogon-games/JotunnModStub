@@ -92,10 +92,13 @@ namespace Corruption.Content
                     {
                         sources.Add("star_" + Mathf.Min(stars, 3));
                     }
-                    // Maps have no tiers yet, so every rip counts as tier 1.
+                    // A rip creature's drop rates are its tier's (read from its own stamp); an unstamped maddened one
+                    // (a corrupted boss's summon, a rip opened before tiers existed) counts as tier 1.
                     if (Maddened.IsMaddened(character))
                     {
-                        sources.Add("rip_tier_1");
+                        var zdo = character.m_nview && character.m_nview.IsValid() ? character.m_nview.GetZDO() : null;
+                        var row = MapTiers.Loaded && MapTiers.IsStamped(zdo) ? MapTiers.RowOf(zdo) : null;
+                        sources.AddRange(row != null ? RipTierRules.DropSources(row) : new List<string> { "rip_tier_1" });
                     }
                     bool corruptedBoss = character.IsBoss() && CorruptedBosses.IsCorrupted(character);
                     if (corruptedBoss)
@@ -164,6 +167,22 @@ namespace Corruption.Content
 
         private static void Postfix(ItemDrop.ItemData item, int qualityLevel, float worldLevel, ref string __result)
         {
+            if (MapItems.Find(item) != null)
+            {
+                // A map (rips round, decision 15): tier line, what you'll face and earn, marks, then the game's own
+                // text (weight) without the map's description. The Forge no longer asks for a map's tooltip.
+                string withMap = __result;
+                Safe.Run("rewrite a map's tooltip", () =>
+                {
+                    string text = MapForge.Tooltip(item, withMap);
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        withMap = text;
+                    }
+                });
+                __result = withMap;
+                return;
+            }
             if (OmitAffixes)
             {
                 return;
@@ -325,7 +344,7 @@ namespace Corruption.Content
         }
     }
 
-    /// <summary>Inventory tooltips: the title shows the rolled name in its rarity colour.</summary>
+    /// <summary>Inventory tooltips: the title shows the rolled name in its rarity colour (a map's name in its tier's colour).</summary>
     [HarmonyPatch(typeof(InventoryGrid), nameof(InventoryGrid.CreateItemTooltip))]
     internal static class LootTooltipTitle
     {
@@ -333,7 +352,7 @@ namespace Corruption.Content
         {
             Safe.Run("colour a loot item's tooltip title", () =>
             {
-                string name = Loot.ColoredName(item);
+                string name = Loot.ColoredName(item) ?? MapForge.ColoredName(item);
                 if (name != null && tooltip)
                 {
                     tooltip.Set(name, item.GetTooltip(), __instance.m_tooltipAnchor);
@@ -360,7 +379,7 @@ namespace Corruption.Content
             Safe.Run("colour a loot item's hover text", () =>
             {
                 var item = __instance.m_itemData;
-                string name = Loot.ColoredName(item);
+                string name = Loot.ColoredName(item) ?? MapForge.ColoredName(item);
                 // The game localizes the hover text before returning it, so it starts with the translated base name.
                 string baseName = Localization.instance.Localize(item.m_shared.m_name);
                 if (name != null && result.StartsWith(baseName))

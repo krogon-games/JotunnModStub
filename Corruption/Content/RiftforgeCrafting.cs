@@ -31,6 +31,9 @@ namespace Corruption.Content
         ///     shard's "bricked" / "unchanged" / "affix". "unchanged" still changed the item: it is now locked.
         /// </summary>
         public string Outcome = "";
+
+        /// <summary>A map's orb: the affix ids it added and removed (<see cref="Outcome" /> "map"); null otherwise.</summary>
+        public List<string> MapAdded, MapRemoved;
     }
 
     /// <summary>Operations another part of the mod adds to the Riftforge (the rips session's map rolling, ids <c>map:*</c>).</summary>
@@ -185,7 +188,11 @@ namespace Corruption.Content
                 return options;
             }
             string orb = OrbRules.OrbOf(PrefabName(material));
-            if (orb != null)
+            if (MapItems.Find(item) != null)
+            {
+                // A map is worked only by the map operations below: no gear refusal is ever shown for it.
+            }
+            else if (orb != null)
             {
                 options.Add(OrbOption(orb, item));
             }
@@ -428,13 +435,18 @@ namespace Corruption.Content
         /// <summary>
         ///     Whether an item can go in the Riftforge's target slot (riftforge-ui-brief.md §1): gear that can carry
         ///     affixes (a loot base, or an item that already has affixes). Materials and everything else can't. Map
-        ///     targets come with the rips session's operations (#31).
+        ///     targets are the rips round's maps (<see cref="MapForge" />, Krogon 2026-11-26).
         /// </summary>
         public static bool IsTarget(ItemDrop.ItemData item)
         {
             if (item == null || IsMaterial(item) || item.m_shared == null || item.m_shared.m_maxStackSize > 1)
             {
                 return false;
+            }
+            if (MapItems.Find(item) != null)
+            {
+                // A map: the rips session's operations (MapForge), with the map put in from the bag or the Maps tab.
+                return true;
             }
             string prefab = PrefabName(item);
             if (item.m_customData != null && item.m_customData.ContainsKey(LootItem.AffixesKey))
@@ -682,7 +694,7 @@ namespace Corruption.Content
 
         private static string DisplayName(ItemDrop.ItemData item)
         {
-            return Loot.ColoredName(item) ?? Localization.instance.Localize(item.m_shared.m_name);
+            return Loot.ColoredName(item) ?? MapForge.ColoredName(item) ?? Localization.instance.Localize(item.m_shared.m_name);
         }
 
         private static bool AtRiftforge()

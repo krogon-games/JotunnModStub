@@ -18,7 +18,7 @@ namespace Corruption
     {
         public const string PluginGUID = "com.krogongames.corruption";
         public const string PluginName = "Corruption";
-        public const string PluginVersion = "0.10.0";
+        public const string PluginVersion = "0.11.0";
 
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;
@@ -35,17 +35,20 @@ namespace Corruption
             Safe.Run("add talisman slots", TalismanSlots.Register);
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
             Safe.Run("read the loot tables", Loot.Load);
+            Safe.Run("read the map tier tables", MapTiers.Load);
             Safe.Run("read the personal loot tables", PersonalLoot.Load);
             Safe.Run("add the co_loot command", Loot.Register);
             Safe.Run("add the co_personal command", PersonalLoot.RegisterCommand);
             Safe.Run("add the co_orbroll command", OrbDrops.RegisterCommand);
             Safe.Run("add the co_mapdrops command", MapDrops.RegisterCommand);
+            Safe.Run("add the co_map and co_rip commands", RipCommands.Register);
             Safe.Run("add the co_affix command", LootProcs.RegisterCommand);
             Safe.Run("add the co_tabs_damage command", InventoryTabs.RegisterCommand);
             Safe.Run("add the co_own command", LootHarvest.RegisterCommand);
             Safe.Run("read the Orb of Chance table", RiftforgeCrafting.Load);
             Safe.Run("read the corruption and shattering tables", RiftforgeCrafting.LoadForgeTables);
             Safe.Run("add the co_craft command", RiftforgeCrafting.RegisterCommand);
+            Safe.Run("add map rolling to the Riftforge", () => RiftforgeCrafting.Register(new MapForge()));
 
             Jotunn.Logger.LogInfo($"{PluginName} {PluginVersion} loaded (build: {BuildStamp()})");
         }

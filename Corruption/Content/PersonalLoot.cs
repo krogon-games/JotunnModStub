@@ -927,8 +927,10 @@ namespace Corruption.Content
             var velocity = system.velocityOverLifetime;
             velocity.enabled = true;
             velocity.space = ParticleSystemSimulationSpace.World;
+            // Unity needs x, y and z in the same curve mode ("Particle Velocity curves must all be in the same mode",
+            // one red error per beam in Krogon's 2026-11-27 log): the rise is a range too, from itself to itself.
             velocity.x = new ParticleSystem.MinMaxCurve(-drift, drift);
-            velocity.y = rise;
+            velocity.y = new ParticleSystem.MinMaxCurve(rise, rise);
             velocity.z = new ParticleSystem.MinMaxCurve(-drift, drift);
             var colour = system.colorOverLifetime;
             colour.enabled = true;
