@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest** (this round: the creature and player affixes; decisions 1–17 below).
+**Waiting for Krogon's playtest** (this round: the creature and player affixes; decisions 1–18 below).
 
 ## Purpose
 
@@ -108,13 +108,15 @@ Monsters have thorns.
 16. **Reward affixes go under "What you'll earn"** (2026-11-27): "Move to earn (Recommended)". Glorious now (and the loot affixes next round) is listed under "What you'll earn"; danger affixes stay under "What you'll face". Changes decision 15's layout (where every affix was under "face").
 17. **Venomous keeps the game's own poison length** (2026-11-27): "Game's own (Recommended)". The game sets poison's length from the hit's size; the line names no length.
 
+18. **Divine rerolls shown in gold** (2026-11-27): "Yes rerolled gold colour is fine". The Forge shows a Divine Orb's rerolled lines with a gold "~" (the Forge's highlight colour).
+
 ## Playtest
 
 Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-1` … `ma-31`, `ma-26` removed by decision 14) and the phone page (its new top section, "Map affix overhaul"). Not started.
 
 ## Open questions for Krogon
 
-1. The Forge shows a Divine Orb's rerolled lines with a gold "~" (Claude's pick, the existing highlight colour): fine?
+None.
 
 ## Next steps
 
