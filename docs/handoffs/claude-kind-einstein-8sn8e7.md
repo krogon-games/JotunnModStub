@@ -18,7 +18,7 @@ Nothing confirmed in game yet.
 
 - **Built, not play-tested** (756 tests; Corruption and Orlog build): the 17 affixes of Krogon's list (4 old ones removed), rolled values (`id:value`), Divine rerolling map values, the groups rule, the "Rip curse" within 96 m, `DisabledMapAffixes`, `co_map id:value`. Reviewed by Opus twice (game code; multiplayer and dedicated server); their fixes are in (`FEATURES.md` changelog).
 - **Claude's choices** (changeable): the 17 affix names (Glorious, Teeming, Brutal, Frenzied, Ruthless, Sturdy, Mighty, Fleet, Unyielding, Ironskin, Warded, Withering, Exhausting, Exposed, Venomous, Searing, Stormcalled) and their one-line copy; all equally likely; "elemental" = fire, frost, lightning, poison (not spirit); Exposed lowers Corruption's gear resistances only; a switched-off affix still acts on maps that carry it; old maps lose their removed affixes and drop in tier.
-- **Known limits:** life steal counts the hit before Ironskin/Warded's 95% cut; Fleet adds its full bonus while swimming; a creature already hurt when a rip starts keeps its health points while its maximum rises; Unyielding also stops parry staggers, guard breaks and adrenaline from staggers.
+- **Known limits:** Fleet adds its full bonus while swimming; a creature already hurt when a rip starts keeps its health points while its maximum rises; Unyielding also stops parry staggers, guard breaks and adrenaline from staggers.
 - The game code was decompiled for this round (decision 9); every patch target was checked against Valheim 1.0.31.
 
 ## Decisions
@@ -97,15 +97,18 @@ Monsters have thorns.
 8. **"In the rip" is 96 m from the heart** (2026-11-27): "Sure use the 96m". The player drains (life, stamina, resistances) act within 96 m of the rip's heart, the waves' range.
 9. **Decompiling the game is allowed** (2026-11-27): "Youre allowed to decompile game code for the purpose of modding."
 
+10. **Affix names are not shown on the map** (2026-11-27): "The names of affixes do not need to be shown on the tooltip, it uses up already limited ui space. Either remove them or hide them, if you need the names for the affixes to function in the background correctly." The tooltip and the Forge show each affix's line only; the names stay in the table for the code, logs and console.
+11. **Life steal steals what the hit really deals** (2026-11-27): "Lifesteal should steal the amount it damages for." On Ironskin and Warded maps life steal counts the damage after their 95% cut.
+12. **All affixes equally likely** (2026-11-27): "All are equal for now."
+
 ## Playtest
 
 Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-1` … `ma-27`) and the phone page (its new top section, "Map affix overhaul"). Not started.
 
 ## Open questions for Krogon
 
-1. The 17 affix names and their copy (Claude's proposals; preview `docs/images/map_ui_tier5.png`): keep, or rename?
-2. Life steal on Ironskin/Warded maps counts the full hit before the 95% cut: leave it, or cut it too?
-3. Should some affixes be rarer than others? All are equally likely today.
+1. The rip's portal and heart hover text still lists the affix names ("Tier 5 · Glorious, Ironskin, …"): keep the names there, or show the lines too?
+2. Life steal in general counts the hit before the target's armour and resistances (since 2026-10-30); decision 11 is applied to Ironskin/Warded only. Should all life steal count the damage after armour and resistances?
 
 ## Next steps
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -100,15 +100,15 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void AffixLinesAreNameAndDanger()
+        public void AffixLinesAreTheDangerOnly()
         {
             var lines = MapText.AffixLines(Rolls("teeming", "nonsense", "brutal", "ironskin", "searing"));
             Assert.Equal(new[]
             {
-                "Teeming: 50% more enemies can fight at once and reinforcements arrive faster.",
-                "Brutal: Enemies deal 20% more damage.",
-                "Ironskin: Enemies take 95% less physical damage.",
-                "Searing: Enemy hits add 25% of their physical damage as fire that burns over 5 s."
+                "50% more enemies can fight at once and reinforcements arrive faster.",
+                "Enemies deal 20% more damage.",
+                "Enemies take 95% less physical damage.",
+                "Enemy hits add 25% of their physical damage as fire that burns over 5 s."
             }, lines.ToArray());
         }
 
@@ -116,14 +116,14 @@ namespace CraftingOverhaul.Tests
         public void AffixLineReplacesTheValueWithAWholeNumber()
         {
             var brutal = Affixes().Find("brutal");
-            Assert.Equal("Brutal: Enemies deal 63% more damage.", MapText.AffixLine(brutal, 63));
+            Assert.Equal("Enemies deal 63% more damage.", MapText.AffixLine(brutal, 63));
             Assert.Equal("Enemies deal 63% more damage.", MapText.Danger(brutal, 62.6));
             Assert.Equal("Enemies can't be staggered.", MapText.Danger(Affixes().Find("unyielding"), 0));
-            // The face line carries the value with the layout's dash, and the plain dash on a font without the fancy one.
+            // The face line is the danger alone (decision 10: no names), the same with either glyph set.
             var row = Tiers().Row(2);
             var rolls = new[] { new MapAffixRoll { Affix = brutal, Value = 63 } };
-            Assert.Equal("Brutal — Enemies deal 63% more damage.", MapText.FaceLines(row, rolls, Affixes(), MapGlyphs.Fancy)[1]);
-            Assert.Equal("Brutal - Enemies deal 63% more damage.", MapText.FaceLines(row, rolls, Affixes(), MapGlyphs.Plain)[1]);
+            Assert.Equal("Enemies deal 63% more damage.", MapText.FaceLines(row, rolls, Affixes(), MapGlyphs.Fancy)[1]);
+            Assert.Equal("Enemies deal 63% more damage.", MapText.FaceLines(row, rolls, Affixes(), MapGlyphs.Plain)[1]);
         }
 
         [Fact]
@@ -189,10 +189,10 @@ namespace CraftingOverhaul.Tests
                 "Opens a rip into the Meadows. The map crumbles once used.",
                 "What you’ll face",
                 "• Every enemy spawned in a wave has two stars.",
-                "• Glorious — Enemies grant 50% more experience.",
-                "• Ironskin — Enemies take 95% less physical damage.",
-                "• Withering — You lose 5 health per second near the heart.",
-                "• Searing — Enemy hits add 25% of their physical damage as fire that burns over 5 s.",
+                "• Enemies grant 50% more experience.",
+                "• Enemies take 95% less physical damage.",
+                "• You lose 5 health per second near the heart.",
+                "• Enemy hits add 25% of their physical damage as fire that burns over 5 s.",
                 "What you’ll earn",
                 "• Destroy the heart for 5–12 Corruption Shards total.",
                 "• Each eligible player gets Rare gear or better.",
@@ -221,7 +221,7 @@ namespace CraftingOverhaul.Tests
             var row = Tiers().Row(3);
             var face = MapText.FaceLines(row, Rolls("teeming", "brutal"), Affixes(), MapGlyphs.Fancy);
             Assert.Equal("Each enemy spawned in a wave has at least a 50% chance of two stars.", face[0]);
-            Assert.Equal(new[] { "Teeming — 50% more enemies can fight at once and reinforcements arrive faster.", "Brutal — Enemies deal 20% more damage." },
+            Assert.Equal(new[] { "50% more enemies can fight at once and reinforcements arrive faster.", "Enemies deal 20% more damage." },
                 face.Skip(1).ToArray());
             Assert.Equal(new[]
             {
@@ -238,9 +238,10 @@ namespace CraftingOverhaul.Tests
             string marks = "\n<color=#E04040>Corrupted</color>\n<color=#C8D8FF>Mirrored: can't be changed</color>";
             string text = Tooltip(6, FourAffixes, marks: marks);
             Assert.StartsWith("<color=#E04040>Tier 6 · Corrupted map</color>", text);
-            Assert.Contains("<color=#FFFF77>Glorious</color>", text);
-            Assert.Contains("<color=#FFFF77>Searing</color>", text);
-            Assert.DoesNotContain("<color=#E04040>Glorious", text);
+            // Decision 10: no names; the line itself is in the rarity colour.
+            Assert.Contains("<color=#FFFF77>Enemies grant 50% more experience.</color>", text);
+            Assert.DoesNotContain("Glorious", text);
+            Assert.DoesNotContain("<color=#E04040>Enemies grant", text);
             Assert.Contains("<b>6–14</b>", text);
             Assert.Contains("<b>2.5×</b>", text);
             Assert.Contains("<align=center>" + marks.TrimStart('\n') + "</align>", text);
@@ -253,7 +254,7 @@ namespace CraftingOverhaul.Tests
             var lines = Plain(Tooltip(5, new[] { "glorious" }, glyphs: MapGlyphs.Plain));
             Assert.Contains("What you'll face", lines);
             Assert.Contains("What you'll earn", lines);
-            Assert.Contains("• Glorious - Enemies grant 50% more experience.", lines);
+            Assert.Contains("• Enemies grant 50% more experience.", lines);
             Assert.Contains("• Corruption loot is 2.25x as likely to drop during the rip.", lines);
         }
 
@@ -263,7 +264,7 @@ namespace CraftingOverhaul.Tests
             var row = Tiers().Row(2);
             var face = MapText.FaceLines(row, Rolls("nonsense", "brutal"), Affixes(), MapGlyphs.Fancy);
             Assert.Equal(2, face.Count);
-            Assert.StartsWith("Brutal — ", face[1]);
+            Assert.StartsWith("", face[1]);
             var earn = MapText.EarnLines(row, null, MapGlyphs.Fancy);
             Assert.Equal(2, earn.Count);
             Assert.DoesNotContain("Corruption loot", string.Join("\n", earn));
@@ -299,8 +300,8 @@ namespace CraftingOverhaul.Tests
             Assert.StartsWith("<color=#EDE3CF>Opens a rip into the Meadows.", sheet);
             var lines = sheet.Split('\n');
             Assert.Single(lines, l => l.Contains("<mark=#E8C66A40>"));
-            Assert.Contains("Brutal", lines.Single(l => l.Contains("<mark=#E8C66A40>")));
-            Assert.DoesNotContain("<mark", lines.Single(l => l.Contains("Teeming")));
+            Assert.Contains("Enemies deal", lines.Single(l => l.Contains("<mark=#E8C66A40>")));
+            Assert.DoesNotContain("<mark", lines.Single(l => l.Contains("more enemies can fight")));
         }
 
         [Fact]

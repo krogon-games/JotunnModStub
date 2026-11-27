@@ -65,10 +65,14 @@ namespace Corruption.Rules
             return affix.Danger.Replace("{value}", Math.Round(value).ToString("0", CultureInfo.InvariantCulture));
         }
 
-        /// <summary>"Brutal: Enemies deal 63% more damage." (the plain one-line form, e.g. for the Forge's message).</summary>
+        /// <summary>
+        ///     "Enemies deal 63% more damage." (the one-line form, e.g. for the Forge's message). No affix name: Krogon,
+        ///     2026-11-27 (decision 10): "The names of affixes do not need to be shown on the tooltip, it uses up already
+        ///     limited ui space." The names stay in the table for logs and the console.
+        /// </summary>
         public static string AffixLine(MapAffixTable.Affix affix, double value)
         {
-            return affix.Name + ": " + Danger(affix, value);
+            return Danger(affix, value);
         }
 
         /// <summary>One line per roll, in the map's order.</summary>
@@ -158,10 +162,12 @@ namespace Corruption.Rules
                 }
                 if (!rich)
                 {
-                    lines.Add(affix.Name + " " + glyphs.Dash + " " + Danger(affix, value));
+                    lines.Add(Danger(affix, value));
                     continue;
                 }
-                string line = Bullet("<color=" + nameColor + ">" + affix.Name + "</color><color=" + BodyColor + "> " + glyphs.Dash + " " + Danger(affix, value) + "</color>");
+                // The line alone, in the rarity colour the name had, so the map's own affixes still stand out from the tier's
+                // lines (decision 10: no names).
+                string line = Bullet("<color=" + nameColor + ">" + Danger(affix, value) + "</color>");
                 lines.Add(highlight != null && highlight.Contains(affix.Id) ? MarkOpen + line + MarkClose : line);
             }
             return lines;
