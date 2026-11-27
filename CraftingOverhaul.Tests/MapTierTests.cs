@@ -90,6 +90,26 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void NonNumbersReadAsTheLowestValue()
+        {
+            // Multiplayer review, 2026-11-27: "NaN" parses as a number and slipped past the clamp.
+            var t = Tables();
+            var brutal = t.Affixes.Find("brutal");
+            Assert.Equal(brutal.Min, brutal.Clamp(double.NaN));
+            Assert.Equal(brutal.Min, brutal.Clamp(double.PositiveInfinity));
+            var entries = MapData.ParseEntries("brutal:NaN;sturdy:Infinity");
+            Assert.All(entries, e => Assert.False(e.HasValue));
+        }
+
+        [Fact]
+        public void DamageTakenAffixesCantPassAHundred()
+        {
+            var errors = new List<string>();
+            MapAffixTable.Parse("id,status,name,danger,weight,effect,min,max,group\nironskin,approved,Ironskin,x,100,physical_taken,95,120,", errors);
+            Assert.Contains(errors, e => e.Contains("at most 100"));
+        }
+
+        [Fact]
         public void SwitchedOffAffixesNeverRoll()
         {
             // Krogon, 2026-11-27: "make the option to disable some affixes from being able to roll".

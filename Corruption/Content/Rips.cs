@@ -205,6 +205,13 @@ namespace Corruption.Content
                         {
                             Jotunn.Logger.LogWarning($"Rip request: unknown map affix '{entry.Id}' dropped.");
                         }
+                        else if (!known.Approved || (!affixIds.Affixes.Contains(entry.Id) && !MapTiers.Tables.Affixes.FitsWith(known, affixIds.Affixes)))
+                        {
+                            // A 'later' affix does nothing, and two of one group (both immunities, both health affixes) are never
+                            // rolled (decision 5); a tampered or co_map-made map can't carry them into a rip (MP review, 2026-11-27).
+                            // Switched-off affixes are kept: maps that already carry one keep it.
+                            Jotunn.Logger.LogWarning($"Rip request: map affix '{entry.Id}' dropped ({(known.Approved ? "its group is already on the map" : "not built yet")}).");
+                        }
                         else if (!affixIds.Affixes.Contains(entry.Id) && affixIds.Affixes.Count < tiers.MaxAffixes)
                         {
                             affixIds.Affixes.Add(entry.Id);
@@ -538,7 +545,7 @@ namespace Corruption.Content
             return Localization.instance.Localize($"$corruption_rip_heart\n$corruption_rip_heart_hint\n{TierText(heart)}\n{ClosesText(heart)}");
         }
 
-        /// <summary>"Tier 5 · Swarming, Hardened, ..." from the object, so the whole group sees what they walk into.</summary>
+        /// <summary>"Tier 5 · Brutal, Teeming, ..." from the object, so the whole group sees what they walk into.</summary>
         private static string TierText(ZDO rip)
         {
             return MapTiers.Describe(MapTiers.TierOf(rip), MapTiers.AffixIdsOf(rip));

@@ -180,7 +180,7 @@ namespace Corruption.Content
         ///     Ironskin and Warded: a stamped creature takes the affix's share of physical (blunt, slash, pierce) or elemental
         ///     (fire, frost, lightning, poison) damage; spirit, chop and pickaxe are untouched. On the game that owns the
         ///     creature, where vanilla applies damage, so the fire and poison that turn into burning and poison are cut too.
-        ///     Players are never changed. Normal priority, never skips (replaces the old Hardened patch).
+        ///     Players are never changed. Normal priority, never skips (replaced the old Hardened patch).
         ///     Game: Character.RPC_Damage, Character.cs:2242; poison and fire become damage over time at Character.cs:2400-2412.
         /// </summary>
         [HarmonyPatch(typeof(Character), nameof(Character.RPC_Damage))]
@@ -234,7 +234,29 @@ namespace Corruption.Content
         [HarmonyPatch(typeof(Character), nameof(Character.SetupMaxHealth))]
         private static class RaiseHealth
         {
-            private static void Postfix(Character __instance)
+            /// <summary>
+            ///     Whether the creature was at full health before vanilla ran: vanilla first sets the unraised maximum, which
+            ///     clamps a stored full (raised) health down, so the postfix puts it back (Opus review, 2026-11-27: a Mighty
+            ///     creature that regenerated to full and was reloaded came back at 100/150).
+            /// </summary>
+            private static void Prefix(Character __instance, out bool __state)
+            {
+                __state = false;
+                if (__instance is Player)
+                {
+                    return;
+                }
+                try
+                {
+                    __state = __instance.m_nview && __instance.m_nview.IsValid() && __instance.GetHealth() >= __instance.GetMaxHealth();
+                }
+                catch (System.Exception ex)
+                {
+                    Safe.Report("read a rip creature's health", ex);
+                }
+            }
+
+            private static void Postfix(Character __instance, bool __state)
             {
                 if (__instance is Player)
                 {
@@ -251,7 +273,12 @@ namespace Corruption.Content
                     {
                         return;
                     }
-                    __instance.SetMaxHealth(__instance.GetMaxHealthBase() * __instance.GetLevel() * affixes.Health);
+                    float raised = __instance.GetMaxHealthBase() * __instance.GetLevel() * affixes.Health;
+                    __instance.SetMaxHealth(raised);
+                    if (__state)
+                    {
+                        __instance.SetHealth(raised);
+                    }
                     // The game only writes a changed health to the creature's data when it differs from this remembered value
                     // (Character.cs:3026); after the maximum moved, it must start from the creature's real health.
                     __instance.m_lastHealth = __instance.GetHealth();
@@ -289,7 +316,9 @@ namespace Corruption.Content
                 try
                 {
                     var affixes = RipCreatures.Of(character);
-                    if (affixes != null && affixes.MoveBonus > 0f)
+                    // Only while the creature can move at all: a freeze or stun (Orlog's Freezing Arrow, Shackle Shot, the
+                    // game's own) brings speed to 0, and Fleet must not undo it (Opus review, 2026-11-27).
+                    if (affixes != null && affixes.MoveBonus > 0f && speed > 0f)
                     {
                         speed += __state * affixes.MoveBonus;
                     }

@@ -69,6 +69,11 @@ namespace Corruption.Rules
             /// <summary>Keeps a stored value inside [Min, Max].</summary>
             public double Clamp(double value)
             {
+                // NaN or infinity (a tampered item) reads as Min (multiplayer review, 2026-11-27).
+                if (double.IsNaN(value) || double.IsInfinity(value))
+                {
+                    return Min;
+                }
                 return value < Min ? Min : value > Max ? Max : value;
             }
 
@@ -251,6 +256,10 @@ namespace Corruption.Rules
                     else if (a.Min <= 0 || a.Max < a.Min)
                     {
                         errors.Add($"{where}: min must be above 0 and at most max.");
+                    }
+                    else if ((a.Effect == Effects.PhysicalTaken || a.Effect == Effects.ElementalTaken) && a.Max > 100)
+                    {
+                        errors.Add($"{where}: {a.Effect} is a percentage of damage removed, so max must be at most 100.");
                     }
                 }
                 else if (hasMin && hasMax && minOk && maxOk && a.Max < a.Min)

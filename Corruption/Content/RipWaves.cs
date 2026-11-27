@@ -145,7 +145,9 @@ namespace Corruption.Content
                     continue;
                 }
                 Maddened.Madden(character);   // claims ownership, so the stamp can be written
-                if (MapTiers.Loaded && character.m_nview && character.m_nview.IsValid())
+                // A creature already carrying a rip's stamp (a neighbouring rip's, or this one's after a handover) keeps it
+                // (multiplayer review, 2026-11-27: the last rip to start used to overwrite it).
+                if (MapTiers.Loaded && character.m_nview && character.m_nview.IsValid() && !MapTiers.IsStamped(character.m_nview.GetZDO()))
                 {
                     MapTiers.CopyStamp(m_nview.GetZDO(), character.m_nview.GetZDO());
                     character.m_nview.GetZDO().Set(Rips.KeyClose, m_nview.GetZDO().GetLong(Rips.KeyClose, 0L));

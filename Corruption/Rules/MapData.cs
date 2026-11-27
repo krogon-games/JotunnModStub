@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Corruption.Rules
@@ -145,6 +145,10 @@ namespace Corruption.Rules
                     entry.Id = text.Substring(0, colon).Trim();
                     entry.HasValue = double.TryParse(text.Substring(colon + 1).Trim(), System.Globalization.NumberStyles.Float,
                         System.Globalization.CultureInfo.InvariantCulture, out entry.Value);
+                    if (entry.HasValue && (double.IsNaN(entry.Value) || double.IsInfinity(entry.Value)))
+                    {
+                        entry.HasValue = false;
+                    }
                 }
                 if (entry.Id.Length > 0)
                 {

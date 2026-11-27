@@ -129,7 +129,7 @@ namespace Corruption
                 AdminOnly("Multiplies the starred-creature shard chances for maddened (rip) creatures. 2 = twice as likely.",
                     new AcceptableValueRange<float>(0f, 20f)));
             RipDisabledMapAffixes = config.Bind(RipSection, "DisabledMapAffixes", "",
-                AdminOnly("Map affix ids that never roll on maps (orbs, co_map's random pick), comma-separated, e.g. \"swarming, rabid\". " +
+                AdminOnly("Map affix ids that never roll on maps (orbs, co_map's random pick), comma-separated, e.g. \"ironskin, withering\". " +
                           "The ids are the first column of map_affixes.csv. Maps that already carry one keep it."));
 
             // Starting values from the design doc (corruption-design.md -> Corrupted bosses).
