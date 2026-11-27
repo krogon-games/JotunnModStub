@@ -18,6 +18,7 @@ Nothing confirmed in game yet.
 
 - **Built, not play-tested** (756 tests; Corruption and Orlog build): the 17 affixes of Krogon's list (4 old ones removed), rolled values (`id:value`), Divine rerolling map values, the groups rule, the "Rip curse" within 96 m, `DisabledMapAffixes`, `co_map id:value`. Reviewed by Opus twice (game code; multiplayer and dedicated server); their fixes are in (`FEATURES.md` changelog).
 - **Claude's choices** (changeable): the 17 affix names (Glorious, Teeming, Brutal, Frenzied, Ruthless, Sturdy, Mighty, Fleet, Unyielding, Ironskin, Warded, Withering, Exhausting, Exposed, Venomous, Searing, Stormcalled) and their one-line copy; all equally likely; "elemental" = fire, frost, lightning, poison (not spirit); Exposed lowers Corruption's gear resistances only; a switched-off affix still acts on maps that carry it; old maps lose their removed affixes and drop in tier.
+- **Audit (2026-11-27, Opus, read-only):** every link of the maps mechanic checked against the decisions; its fixes are in (`FEATURES.md` changelog), its open points became decisions 14–17. 765 tests.
 - **Known limits:** Fleet adds its full bonus while swimming; a creature already hurt when a rip starts keeps its health points while its maximum rises; Unyielding also stops parry staggers, guard breaks and adrenaline from staggers.
 - The game code was decompiled for this round (decision 9); every patch target was checked against Valheim 1.0.31.
 
@@ -109,11 +110,11 @@ Monsters have thorns.
 
 ## Playtest
 
-Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-1` … `ma-27`) and the phone page (its new top section, "Map affix overhaul"). Not started.
+Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-1` … `ma-31`, `ma-26` removed by decision 14) and the phone page (its new top section, "Map affix overhaul"). Not started.
 
 ## Open questions for Krogon
 
-1. The rip's portal and heart hover text still lists the affix names ("Tier 5 · Glorious, Ironskin, …"): keep the names there, or show the lines too?
+1. The Forge shows a Divine Orb's rerolled lines with a gold "~" (Claude's pick, the existing highlight colour): fine?
 
 ## Next steps
 
