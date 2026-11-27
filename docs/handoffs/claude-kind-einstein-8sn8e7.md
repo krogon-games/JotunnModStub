@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest** (this round: the creature and player affixes; decisions 1–9 below).
+**Waiting for Krogon's playtest** (this round: the creature and player affixes; decisions 1–17 below).
 
 ## Purpose
 
@@ -101,6 +101,11 @@ Monsters have thorns.
 11. **Life steal steals what the hit really deals** (2026-11-27): "Lifesteal should steal the amount it damages for." On Ironskin and Warded maps life steal counts the damage after their 95% cut.
 12. **All affixes equally likely** (2026-11-27): "All are equal for now."
 13. **All life steal should count the damage after armour and resistances, later** (2026-11-27): "Yes I think so. It would balance it better. But if the task is large you can open a ticket and we can deal with it later." It needs the share carried with the hit to the target's owner and the heal sent back, so it's a ticket of its own: [#93](https://github.com/krogon-games/JotunnModStub/issues/93). This round keeps decision 11 (Ironskin and Warded only).
+
+14. **Old maps stay as they are** (2026-11-27, after Claude's audit found old maps with removed affixes, corrupted tier 6 ones showing tier 6 but opening tier 1 and locked at the Forge): "Since everything is still in alpha essentially and we're not playing for real, it's fine. Leave them be as is and I'll delete whatever copies I have left." No migration; the play-test step for old maps goes.
+15. **The rip's hover shows the tier and the affix lines** (2026-11-27): "Tier and the lines". The portal's and heart's hover text shows the tier and each affix's line with its number, like the tooltip, instead of the affix names.
+16. **Reward affixes go under "What you'll earn"** (2026-11-27): "Move to earn (Recommended)". Glorious now (and the loot affixes next round) is listed under "What you'll earn"; danger affixes stay under "What you'll face". Changes decision 15's layout (where every affix was under "face").
+17. **Venomous keeps the game's own poison length** (2026-11-27): "Game's own (Recommended)". The game sets poison's length from the hit's size; the line names no length.
 
 ## Playtest
 
