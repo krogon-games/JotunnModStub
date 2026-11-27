@@ -1,10 +1,10 @@
 # Handoff: `claude/festive-gates-79y1yr`
 
-**Written:** 2026-11-26, at the start of the round. From `master` at `1966980` (after PR #88 and its coordinator update #89); 0 behind; no PR.
+**Written:** 2026-11-26, updated 2026-11-27 when the build was finished. Started from `master` at `1966980` (after PR #88 and #89); 0 behind; no PR.
 
 ## Stage
 
-**Building.** All twelve questions answered (decisions 1–12, with Krogon's design change in decision 6: a map's tier is its rarity and affix count, six tiers, orbs craft maps). Next: the Forge tab preview pictures for Krogon, then the build.
+**Waiting for Krogon's playtest.** All decisions made (1–13); everything built, reviewed (two Opus patch reviews, one Opus multiplayer review and its follow-up; every finding fixed or listed below) and checklisted: `docs/playtests/claude-festive-gates-79y1yr.md` and the phone page (`mt-1` … `mt-21`).
 
 ## Purpose
 
@@ -12,12 +12,21 @@ The rips round: map tiers and affixes ([#31](https://github.com/krogon-games/Jot
 
 ## Done
 
-Nothing built yet. Read for the round: the design, the handoffs of the rips, orb-drops and personal-loot rounds, #31 and #84; four code maps (rips, Forge tab, tier hooks in the data, the rip request and server messages); the game's 1.0.14 code for weather, status effects, spawning and building.
+Nothing confirmed in game yet.
 
 ## Half-done and known issues
 
-- Found while mapping (to fix in this round): when the server answers a rip request, the game uses up the **first** map of that biome in the inventory, not necessarily the one that was used. Harmless while all maps of a biome are alike; with tiers and affixes it must take the map that was used.
-- The rip heart's spill and kill loot always count as `rip_tier_1` today (`RipLoot.cs`, `LootPatches.cs`); `drop_modifiers.csv` already has `rip_tier_2` … `rip_tier_4`.
+- **Built this round, not tried in game yet** (731 unit tests pass):
+  - **Six map tiers** as rarity and affix count, numbers in `Corruption/Data/map_tiers.csv`; drop rates per tier in `drop_modifiers.csv` (`rip_tier_1` … `rip_tier_6`).
+  - **Four map affixes** (`map_affixes.csv`): Swarming, Hardened, Rabid, Smouldering; the weather three are `later` rows.
+  - **Orbs and the shard on maps** in the Riftforge's Forge tab (`MapForge.cs`), with the approved look; the map tooltip, the tier number on map icons, the tier and affixes on the rip's hover text.
+  - **Rips by tier:** tier and affixes travel with the rip request and back, stamped on the rip's objects and every wave creature; waves, 2-stars, the heart's shards, gear floor and drop rates follow the tier; the exact map used is the one used up.
+  - **#84:** the explored-land fallback, and every rip at least 96 m from anything a player placed (grown crops included, wild vegetation not).
+  - **Dev commands:** `co_map`, `co_rip`, `co_rip fallback on|off`.
+- **Untested in game**, alone and with two players (Session 2, 2m).
+- **Game code read in 1.0.14 only** (the cloud's readable version; compiled against 1.0.21). Krogon's 1.0.30 build and log should confirm: the patches on `Character.Damage(HitData)`, `Character.RPC_Damage(long, HitData)`, `InventoryGrid.UpdateGui(Player, ItemData)`, `ItemData.GetTooltip(ItemData, int, bool, float, int, bool)`, `InventoryGrid.CreateItemTooltip`, `ItemDrop.GetHoverText`, `Humanoid.UseItem(Inventory, ItemData, bool)`, `InventoryGui.OnRightClickItem`, `Player.UpdateTeleport`, `Character.Awake`, `CharacterDrop.OnDeath` apply without Harmony errors; and these members still exist: `ZDOMan.m_objectsByID`, `ZDO.GetPosition/GetLong/GetPrefab`, `ZDOVars.s_creator` (written by `Piece.SetCreator`), `ZPackage.GetPos/Size`, `ZoneSystem.m_vegetation`, `Plant.m_grownPrefabs`, `Minimap.IsExplored`, `WorldGenerator.GetBiome/GetHeight/GetTerrainDelta`, `EffectArea.IsPointInsideArea`, `MonsterAI.SetEventCreature/IsEventCreature`, `SEMan.AddStatusEffect/RemoveStatusEffect/HaveStatusEffect`, `SE_Stats.m_damageModifier/m_speedModifier`, `HitData.GetAttacker/ApplyModifier/m_hitType`, `InventoryElement.m_quality`, `ItemData.Clone`. Weather and status-effect code (`EnvMan`, `Player.UpdateEnvStatusEffects`, `SE_Smoke`) was read for the next round only; nothing this round uses it. Log lines to look for: "Map tiers: 6 tiers, 7 affixes …", "Maddened (Rabid, factor 2) …", "Rip request: … in X ms", "Rip requests: grown crops count as player-made: …".
+- **Known limits:** Swarming at tiers 5–6 means up to 96–108 creatures at once in the Black Forest, all run by the heart owner's game (lag unknown); after the heart changes owner, creatures the new owner never loaded aren't counted; the Ashlands army's charred spawner stones aren't stamped and don't leave after the rip; the base check for wave spawns sees only bases loaded on the heart owner's game (as vanilla raids); mixed builds within 0.10.0 lose tiers (a tiered map is kept with a message when the server's build has none; the version bump at merge ends it); the server scans every object once per map use (the log prints the time); two rips can overlap; Rabid's effect uses the table's largest factor (only Rabid sets one).
+- **Claude's own choices** (Krogon can change them): every affix equally likely; "1 in 4 guaranteed 2-stars" is a 25% chance per creature; Alchemy and Chance give exactly 3 affixes; Annulment on a 1-affix map makes it white; the shard only on tier 5; corrupting a map asks first with its own "Don't warn me again" (`WarnBeforeCorruptingMaps`); the weather affixes stay out of the orbs' pool; right-clicking a map with the Forge tab open puts it in the forge (instead of opening a rip); the fallback searches more widely (16,000 spots, 80 candidates); rip creatures leave once their rip has closed (like the game's raid creatures; fixes the old "maddened creatures stay" issue for new rips); wave spawns skip player bases (the game's raid rule); the server works the tier out from the affixes; grown crops count as built.
 
 ## Decisions
 
@@ -63,23 +72,23 @@ Nothing built yet. Read for the round: the design, the handoffs of the rips, orb
 
 ## Playtest
 
-Nothing to test yet. The checklist will be `docs/playtests/claude-festive-gates-79y1yr.md` and the phone page.
+Solo: `docs/playtests/claude-festive-gates-79y1yr.md` (23 steps, `mt-1` … `mt-21`), on the phone page too. Group: `PLAYTEST.md` → Session 2, 2m (on the phone page as `mpe-2m-1` … `mpe-2m-8`). No feedback yet.
 
 ## Open questions for Krogon
 
-None open. Claude's own choices so far, which Krogon can change: every map affix equally likely when an orb rolls one; "1 in 4 guaranteed 2-stars" is a 25% chance per creature; Alchemy and Chance give exactly 3 affixes (tier 4); Annulment on a Magic map with 1 affix makes it white (tier 1); a shard is refused on a map below tier 5; corrupting a map asks first, with its own "Don't warn me again"; the weather affixes stay out of the orbs' pool until they're built.
+None. (Claude's own choices are listed under Half-done; say if any should change.)
 
 ## Next steps
 
-1. Preview pictures of the Forge tab with a map (Sonnet art script, checked by the main session), for Krogon's approval before the Forge code.
-2. Build: pure rules and data tables (`map_tiers.csv`, `map_affixes.csv`, `drop_modifiers.csv`; Sonnet), then the game code and Harmony patches (Sonnet, then an Opus review against the game code and `mod-compatibility.md`).
-3. Tests and builds by the main session, every diff read, an Opus review focused on multiplayer and the dedicated server.
-4. Solo checklist in `docs/playtests/claude-festive-gates-79y1yr.md` and on the phone page; two-player steps in `PLAYTEST.md` → Session 2.
+1. Krogon's solo play-test (phone page `mt-*`), then fix his feedback and a final play-test.
+2. `/handoff`, then a PR into `master`; the coordinator raises Corruption's version.
+3. The group evening: Session 2, 2m.
+4. Next rips rounds (not started): the three weather affixes after a fresh 1.0.30 `co_dump` that also records what each weather does and the smoke damage (notes from the multiplayer review: each game sets its own weather; the heart may not be loaded at the landing spot, so remember the affixes on entering or make the heart a distant object); corrupted-only affixes (decision 6d); R5 (#40: keep rips out of villages and water); elites and 3-stars (#39).
 
 ## Checks
 
-Not run yet (nothing built).
+Run by the main session on 2026-11-27 (not yet by `/handoff`): `dotnet test CraftingOverhaul.Tests` 731 passed; Corruption builds with 0 errors against the stand-in game files. In game: needs Krogon's play-test.
 
 ## Merge notes
 
-**Ready to merge: no** (nothing built). Will be "gameplay changed: version bump needed at merge (Corruption)". Expected to share `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/Texts.cs`, `Content/LootPatches.cs` and the shared docs.
+**Ready to merge: no** (Krogon's play-test). **Gameplay changed: version bump needed at merge (Corruption)**; the rip request and reply changed (new fields read only when present), so the server and every player need the new build. Shares `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/Texts.cs`, `Content/LootPatches.cs`, the Riftforge files and the shared docs (`FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/ROADMAP.md`, `docs/mod-compatibility.md`, `docs/corruption-design.md`, `docs/GAME_DESIGN.md`, `docs/ARCHITECTURE.md`, `docs/riftforge-ui-brief.md`). For `docs/DECISIONS.md`: decisions 1–13; decision 6 replaces the design's tier table and "four tiers", 6b replaces the shard rolling, 8b the per-affix rewards (and decision 7's), 12 answers the minimum rip distance from bases.
