@@ -932,7 +932,7 @@ New status effect `SE_CorruptionMaddened` (built from `SE_Dvergr_buff` and `Poti
 - The Ashlands army's charred spawner stones spawn creatures that aren't stamped: no tier drop rates and no affixes on them (an older gap).
 - After the heart changes owner, the new game may still undercount far survivors (the 2026-11-07 suspicion above): creatures it never loaded aren't counted, and Swarming makes the cap bigger (at tier 5 and 6 up to 96 and 108 creatures in the Black Forest, all run by one game, about 70–80 bytes more per creature for the stamps). `Begin()` maddens only what the heart's owner has loaded.
 - Two rips can overlap. The server scans every object once per map use (the log prints the time; if it passes about 200 ms, a sector search comes next).
-- Mixed builds inside 0.10.0 are not turned away by Jötunn; the coordinator's version bump at the merge closes that. Until then the server's DLL must be updated with the clients'.
+- Mixed builds inside 0.10.0 were not turned away by Jötunn; the coordinator's bump to **0.11.0** at the merge (2026-11-27, PR into `master`) closes that: a 0.10.0 game can't join a 0.11.0 server.
 - For the weather round (from the multiplayer review): each game works out its own weather, so each client must set it from data it can read; the heart may not be loaded at the landing spot (it depends on the server's simulation distance); after the heart dies only the exit carries the stamp; smoke damage must run on each player's own game. See `docs/ARCHITECTURE.md` → Game facts.
 
 **Vanilla behaviour overridden (Harmony patch targets):** everything new acts only on creatures stamped by a rip or on map items; unstamped creatures and other items are untouched.
