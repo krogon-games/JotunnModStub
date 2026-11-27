@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,6 +80,25 @@ namespace CraftingOverhaul.Tests
             }
             Assert.Equal(4, t.MaxAffixes);
             Assert.Equal(6, t.CorruptTier);
+        }
+
+        [Fact]
+        public void SwitchedOffAffixesNeverRoll()
+        {
+            // Krogon, 2026-11-27: "make the option to disable some affixes from being able to roll".
+            var t = Tables();
+            var unknown = t.Affixes.SetDisabled(" Rabid, smouldering;nosuchaffix ");
+            Assert.Equal(new[] { "nosuchaffix" }, unknown.ToArray());
+            Assert.Equal(new[] { "swarming", "hardened" }, t.Affixes.Rollable.Select(x => x.Id).ToArray());
+            // A map that already has Rabid keeps it, but no orb adds a switched-off affix.
+            var map = State(t, false, false, "rabid");
+            Assert.Equal(new[] { "swarming", "hardened" }, MapOrbRules.Candidates(map, t).Select(x => x.Id).ToArray());
+            // Two left: Exalted on a tier 4 map with swarming + hardened + rabid has nothing to add.
+            var full = State(t, false, false, "swarming", "hardened", "rabid");
+            Assert.NotNull(MapOrbRules.Refusal("exalted", full, t));
+            // Clearing the list brings them back.
+            t.Affixes.SetDisabled("");
+            Assert.Equal(4, t.Affixes.Rollable.Count());
         }
 
         [Fact]

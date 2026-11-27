@@ -1,4 +1,4 @@
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 using Jotunn.Configs;
 
 namespace Corruption
@@ -38,6 +38,7 @@ namespace Corruption
         public static ConfigEntry<int> RipChestShardsMin;
         public static ConfigEntry<int> RipChestShardsMax;
         public static ConfigEntry<float> RipKillShardMultiplier;
+        public static ConfigEntry<string> RipDisabledMapAffixes;
         public static ConfigEntry<float> CorruptedDamageDealt;
         public static ConfigEntry<float> CorruptedDamageTaken;
         public static ConfigEntry<int> CorruptedEssencesMin;
@@ -127,6 +128,9 @@ namespace Corruption
             RipKillShardMultiplier = config.Bind(RipSection, "KillShardMultiplier", 2f,
                 AdminOnly("Multiplies the starred-creature shard chances for maddened (rip) creatures. 2 = twice as likely.",
                     new AcceptableValueRange<float>(0f, 20f)));
+            RipDisabledMapAffixes = config.Bind(RipSection, "DisabledMapAffixes", "",
+                AdminOnly("Map affix ids that never roll on maps (orbs, co_map's random pick), comma-separated, e.g. \"swarming, rabid\". " +
+                          "The ids are the first column of map_affixes.csv. Maps that already carry one keep it."));
 
             // Starting values from the design doc (corruption-design.md -> Corrupted bosses).
             CorruptedDamageDealt = config.Bind(CorruptedSection, "DamageDealt", 1.5f,

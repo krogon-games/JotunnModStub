@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Corruption.Rules;
 
@@ -37,8 +37,38 @@ namespace Corruption.Content
                 return;
             }
             Tables = new MapTables { Tiers = tiers, Affixes = affixes };
+            ApplyDisabled();
             Jotunn.Logger.LogInfo($"Map tiers: {tiers.Rows.Count} tiers, {affixes.Affixes.Count} affixes " +
                                   $"({string.Join(", ", affixes.Rollable.Select(a => a.Id).ToArray())} roll).");
+        }
+
+        private static bool _watchingDisabled;
+
+        /// <summary>
+        ///     Reads <c>[5 - Rips] DisabledMapAffixes</c> into the affix table, and again whenever it changes (the server's
+        ///     value arrives through Jötunn's config sync as a setting change), so every game rolls from the same pool.
+        /// </summary>
+        private static void ApplyDisabled()
+        {
+            var entry = CorruptionConfig.RipDisabledMapAffixes;
+            if (entry == null || Tables == null)
+            {
+                return;
+            }
+            var unknown = Tables.Affixes.SetDisabled(entry.Value);
+            if (unknown.Count > 0)
+            {
+                Jotunn.Logger.LogWarning($"DisabledMapAffixes: unknown affix id(s) {string.Join(", ", unknown.ToArray())} ignored.");
+            }
+            if (Tables.Affixes.Disabled.Count > 0)
+            {
+                Jotunn.Logger.LogInfo($"Map affixes switched off (never roll): {string.Join(", ", Tables.Affixes.Disabled.ToArray())}.");
+            }
+            if (!_watchingDisabled)
+            {
+                _watchingDisabled = true;
+                entry.SettingChanged += (sender, args) => Safe.Run("apply DisabledMapAffixes", ApplyDisabled);
+            }
         }
 
         /// <summary>A map item's tier and affixes (tier 1 with none for old maps, or when the tables didn't load).</summary>

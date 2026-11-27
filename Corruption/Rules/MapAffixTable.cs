@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -39,8 +39,41 @@ namespace Corruption.Rules
 
         public readonly List<Affix> Affixes = new List<Affix>();
 
-        /// <summary>The affixes orbs can roll: approved rows only.</summary>
-        public IEnumerable<Affix> Rollable => Affixes.Where(a => a.Approved);
+        /// <summary>
+        ///     Affix ids an admin has switched off (Krogon, 2026-11-27: "make the option to disable some affixes from being able
+        ///     to roll - until we catch up and create the mechanics"). They never roll; maps that already carry one keep it.
+        /// </summary>
+        public readonly HashSet<string> Disabled = new HashSet<string>();
+
+        /// <summary>The affixes orbs can roll: approved rows that aren't switched off.</summary>
+        public IEnumerable<Affix> Rollable => Affixes.Where(a => a.Approved && !Disabled.Contains(a.Id));
+
+        /// <summary>
+        ///     Replaces <see cref="Disabled" /> from a comma- or space-separated list of ids (case and spaces ignored).
+        ///     Returns the ids that aren't in the table, so the caller can warn about typos.
+        /// </summary>
+        public List<string> SetDisabled(string list)
+        {
+            Disabled.Clear();
+            var unknown = new List<string>();
+            foreach (var raw in (list ?? "").Split(new[] { ',', ';', ' ' }, System.StringSplitOptions.RemoveEmptyEntries))
+            {
+                string id = raw.Trim().ToLowerInvariant();
+                if (id.Length == 0)
+                {
+                    continue;
+                }
+                if (Find(id) == null)
+                {
+                    unknown.Add(id);
+                }
+                else
+                {
+                    Disabled.Add(id);
+                }
+            }
+            return unknown;
+        }
 
         /// <summary>The affix with this id (any status), or null.</summary>
         public Affix Find(string id)
