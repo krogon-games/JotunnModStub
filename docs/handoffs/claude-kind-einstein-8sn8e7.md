@@ -99,7 +99,7 @@ Monsters have thorns.
 
 ## Playtest
 
-Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-*`) and the phone page. Not started.
+Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-1` … `ma-27`) and the phone page (its new top section, "Map affix overhaul"). Not started.
 
 ## Open questions for Krogon
 
@@ -119,4 +119,4 @@ Not run yet (`/handoff`). Tests and builds pass (2026-11-27).
 
 ## Merge notes
 
-Not ready to merge (no play-test). Gameplay changed: version bump needed at merge (Corruption, Orlog): the rip request and the map's stored affixes changed format.
+Not ready to merge (no play-test). `PLAYTEST.md` → Session 2, 2m (step `mpe-2m-4`, "B burns when hit") describes the removed Smouldering: update it when this merges. Gameplay changed: version bump needed at merge (Corruption, Orlog): the rip request and the map's stored affixes changed format.
