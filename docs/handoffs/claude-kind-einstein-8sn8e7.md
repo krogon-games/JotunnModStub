@@ -100,6 +100,7 @@ Monsters have thorns.
 10. **Affix names are not shown on the map** (2026-11-27): "The names of affixes do not need to be shown on the tooltip, it uses up already limited ui space. Either remove them or hide them, if you need the names for the affixes to function in the background correctly." The tooltip and the Forge show each affix's line only; the names stay in the table for the code, logs and console.
 11. **Life steal steals what the hit really deals** (2026-11-27): "Lifesteal should steal the amount it damages for." On Ironskin and Warded maps life steal counts the damage after their 95% cut.
 12. **All affixes equally likely** (2026-11-27): "All are equal for now."
+13. **All life steal should count the damage after armour and resistances, later** (2026-11-27): "Yes I think so. It would balance it better. But if the task is large you can open a ticket and we can deal with it later." It needs the share carried with the hit to the target's owner and the heal sent back, so it's a ticket of its own: [#93](https://github.com/krogon-games/JotunnModStub/issues/93). This round keeps decision 11 (Ironskin and Warded only).
 
 ## Playtest
 
@@ -108,7 +109,6 @@ Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-1` … `ma-
 ## Open questions for Krogon
 
 1. The rip's portal and heart hover text still lists the affix names ("Tier 5 · Glorious, Ironskin, …"): keep the names there, or show the lines too?
-2. Life steal in general counts the hit before the target's armour and resistances (since 2026-10-30); decision 11 is applied to Ironskin/Warded only. Should all life steal count the damage after armour and resistances?
 
 ## Next steps
 
