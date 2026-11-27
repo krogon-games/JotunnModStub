@@ -5,6 +5,8 @@ with a shard); orbs put affixes on maps as on gear. Three pictures, written into
 
     forge_map_bench.png     the Forge tab with a tier 3 map in the slot (Currencies tab: what can't be used is red)
     forge_map_corrupt.png   the Corrupt confirmation for a tier 5 map (same layout numbers as forge_dialog_corrupt.png)
+                            NOTE: this pop-up was removed on 2026-11-27 (Krogon's decision 14: a shard on a map acts
+                            with one click); the picture is kept as the record of decision 13
     forge_map_tooltip.png   the Maps tab with tier numbers in the corners, the tier 6 map's tooltip, the rip's hover text
 
     python tools/mockup_forge_maps.py      (writes into docs/images/)

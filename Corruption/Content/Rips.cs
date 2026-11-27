@@ -78,7 +78,7 @@ namespace Corruption.Content
             // The game's own flatness test for placing locations: height change within a radius, from world generation.
             float maxDelta = new ZoneSystem.ZoneLocation().m_maxTerrainDelta;
             var random = new System.Random();
-            bool requireUnexplored = true;
+            bool searchExplored = false;
             bool Suitable(float x, float z)
             {
                 if (world.GetBiome(x, z) != biome)
@@ -95,7 +95,8 @@ namespace Corruption.Content
                 {
                     return false;
                 }
-                return !requireUnexplored || !minimap || !minimap.IsExplored(new Vector3(x, h, z));
+                // Unexplored land first; the fallback takes explored land only (both the heart and the landing spot).
+                return !minimap || RipRules.ExplorationFits(minimap.IsExplored(new Vector3(x, h, z)), searchExplored);
             }
             // The heart stands 96-128 m from where players land, so they have to go and find it (user, 2026-10-29).
             List<RipRules.Placement> Search(int samples, int candidates)
@@ -117,7 +118,7 @@ namespace Corruption.Content
             bool fallback = false;
             if (spots.Count == 0)
             {
-                requireUnexplored = false;
+                searchExplored = true;
                 fallback = true;
                 spots = Search(FallbackSamples, FallbackCandidates);
                 if (spots.Count > 0)

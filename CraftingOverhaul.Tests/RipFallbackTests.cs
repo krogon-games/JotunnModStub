@@ -23,6 +23,16 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void TheFirstSearchTakesUnexploredLandAndTheFallbackOnlyExploredLand()
+        {
+            Assert.True(RipRules.ExplorationFits(false, false));
+            Assert.False(RipRules.ExplorationFits(true, false));
+            // The fallback never opens on land nobody has seen (Krogon's final play-test, mtf-2).
+            Assert.True(RipRules.ExplorationFits(true, true));
+            Assert.False(RipRules.ExplorationFits(false, true));
+        }
+
+        [Fact]
         public void HeartOrLandingNearAPlacedObjectRejectsTheCandidate()
         {
             var candidates = new List<RipRules.Placement>

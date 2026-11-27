@@ -109,6 +109,17 @@ namespace Corruption.Rules
         /// </summary>
         public const float DefaultBaseDistance = 96f;
 
+        /// <summary>
+        ///     Whether a spot's exploration suits the search (#84, rips round decision 12): the first search takes only
+        ///     unexplored land; the fallback, when none is found, takes only explored land ("Fall back to explored land",
+        ///     Krogon, 2026-11-26). Before 2026-11-27 the fallback took any land, so the forced test opened rips on land
+        ///     nobody had seen (Krogon's final play-test, mtf-2).
+        /// </summary>
+        public static bool ExplorationFits(bool explored, bool fallback)
+        {
+            return fallback ? explored : !explored;
+        }
+
         /// <summary>The distance to keep from placed objects: the configured one when above 0, else <see cref="DefaultBaseDistance" />.</summary>
         public static float BaseDistance(float configured)
         {
