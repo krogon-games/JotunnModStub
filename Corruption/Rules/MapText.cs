@@ -24,16 +24,19 @@ namespace Corruption.Rules
         public const string NoShatter = "Maps can't be shattered";
         public const string NoSplinter = "Affix Splinters don't work on maps";
 
-        /// <summary>"Meadows map"; a corrupted (tier 6) map is "Corrupted Meadows map" (decision 11).</summary>
-        public static string Name(string mapName, MapTierTable.TierRow row)
+        /// <summary>
+        ///     "Meadows map"; a corrupted map is "Corrupted Meadows map" (decision 11), whatever its tier (decision 29 of
+        ///     2026-11-28, claude/wizardly-wozniak-4aix76).
+        /// </summary>
+        public static string Name(string mapName, MapTierTable.TierRow row, bool corrupted = false)
         {
-            return row != null && row.Corrupted ? "Corrupted " + mapName : mapName;
+            return corrupted || row != null && row.Corrupted ? "Corrupted " + mapName : mapName;
         }
 
-        /// <summary>The map's colour: white, Magic, Rare, or red when corrupted. Used for the name, the header and the number on the icon.</summary>
-        public static string ColorOf(MapTierTable.TierRow row)
+        /// <summary>The map's colour: white, Magic, Rare, or red when corrupted (any tier). Used for the name, the header and the number on the icon.</summary>
+        public static string ColorOf(MapTierTable.TierRow row, bool corrupted = false)
         {
-            return row == null ? NormalColor : row.Corrupted ? CorruptedColor : RarityColor(row.Rarity);
+            return corrupted || row != null && row.Corrupted ? CorruptedColor : row == null ? NormalColor : RarityColor(row.Rarity);
         }
 
         /// <summary>The colour of a rarity (a tier 6 map's affix lines keep its Rare yellow, as in the picture).</summary>

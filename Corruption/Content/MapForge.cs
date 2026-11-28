@@ -73,8 +73,8 @@ namespace Corruption.Content
             {
                 return null;
             }
-            string color = MapText.ColorOf(view.Row);
-            string name = MapText.Name(view.BaseName, view.Row);
+            string color = MapText.ColorOf(view.Row, view.State.Corrupted);
+            string name = MapText.Name(view.BaseName, view.Row, view.State.Corrupted);
             return color == MapText.NormalColor ? null : "<color=" + color + ">" + name + "</color>";
         }
 
@@ -185,9 +185,10 @@ namespace Corruption.Content
             }
             if (badge.Tier == null || badge.Affixes != affixes || badge.Corrupted != corrupted)
             {
-                var row = MapTiers.Tables.Tiers.Row(StateOf(item, out _).Tier);
+                var badgeState = StateOf(item, out _);
+                var row = MapTiers.Tables.Tiers.Row(badgeState.Tier);
                 badge.Tier = row.Tier.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                badge.Color = ParseColor(MapText.ColorOf(row));
+                badge.Color = ParseColor(MapText.ColorOf(row, badgeState.Corrupted));
                 badge.Affixes = affixes;
                 badge.Corrupted = corrupted;
             }
@@ -318,8 +319,9 @@ namespace Corruption.Content
             option.Allowed = refusal.Length == 0;
             if (option.Allowed)
             {
+                var state = StateOf(item, out _);
                 var tiers = MapTiers.Tables.Tiers;
-                option.Preview.Add("Becomes tier " + tiers.CorruptTier + ": it never breaks, but it is locked");
+                option.Preview.Add("Becomes tier " + tiers.TierFor(state.Affixes.Count - state.CorruptedOnly, true) + ": it never breaks, but it is locked");
             }
             return option;
         }

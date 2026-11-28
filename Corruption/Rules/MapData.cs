@@ -21,12 +21,15 @@ namespace Corruption.Rules
         public bool Corrupted;
         public bool Mirrored;
 
+        /// <summary>How many of <see cref="Affixes" /> are corrupted-only (#97): they don't count towards the tier.</summary>
+        public int CorruptedOnly;
+
         /// <summary>Derived from the affix count and <see cref="Corrupted" /> by <see cref="MapTierTable.TierFor" />; call <see cref="Refresh" /> after changing them.</summary>
         public int Tier = 1;
 
         public MapState Copy()
         {
-            return new MapState { Affixes = new List<string>(Affixes), Values = new Dictionary<string, double>(Values), Corrupted = Corrupted, Mirrored = Mirrored, Tier = Tier };
+            return new MapState { Affixes = new List<string>(Affixes), Values = new Dictionary<string, double>(Values), Corrupted = Corrupted, Mirrored = Mirrored, Tier = Tier, CorruptedOnly = CorruptedOnly };
         }
 
         /// <summary>The map's affixes with their values, in roll order; ids the table doesn't know are skipped, values are clamped into the affix's range.</summary>
@@ -48,7 +51,7 @@ namespace Corruption.Rules
 
         public void Refresh(MapTierTable tiers)
         {
-            Tier = tiers.TierFor(Affixes.Count, Corrupted);
+            Tier = tiers.TierFor(Affixes.Count - CorruptedOnly, Corrupted);
         }
     }
 
@@ -191,6 +194,10 @@ namespace Corruption.Rules
                         else if (!state.Affixes.Contains(entry.Id))
                         {
                             state.Affixes.Add(entry.Id);
+                            if (affix.CorruptedOnly)
+                            {
+                                state.CorruptedOnly++;
+                            }
                             // No value (old maps, fixed affixes) reads as Min; a stored value outside the range is clamped.
                             state.Values[entry.Id] = affix.Clamp(entry.HasValue ? entry.Value : affix.Min);
                         }
@@ -207,7 +214,7 @@ namespace Corruption.Rules
         ///     The server's check of a rip request's tier and affixes (they come from a player's game): unknown and
         ///     <c>later</c> ids are dropped, a repeat counts once, an affix whose group is already on the map is dropped
         ///     (decision 5), values are clamped into the affix's range (none, NaN or infinity read as the Min), no more than
-        ///     <see cref="MapTierTable.MaxAffixes" /> are kept, and the corrupted tier is only honoured on a full map. A
+        ///     <see cref="MapTierTable.MaxAffixes" /> are kept, and a corrupted map is one tier above its normal affixes (decision 27; any tier). A
         ///     corrupted-only affix (#97) doesn't count towards that limit: one is kept, and only on a corrupted map. The tier
         ///     follows from the affixes (decision 6). Switched-off affixes are kept: maps that already carry one keep it.
         ///     Every drop is added to <paramref name="warnings" /> (when given) as a sentence for the log.
@@ -220,6 +227,17 @@ namespace Corruption.Rules
             var tiers = tables.Tiers;
             int normal = 0;
             string corruptedOnly = null;
+            // The normal affixes the player's game sent (before anything is dropped): its tier came from these, so a tier
+            // above theirs means the map is corrupted, even when the server then drops one of them.
+            var sent = new HashSet<string>();
+            foreach (var entry in ParseEntries(affixText))
+            {
+                var known = tables.Affixes.Find(entry.Id);
+                if (known == null || !known.CorruptedOnly)
+                {
+                    sent.Add(entry.Id);
+                }
+            }
             foreach (var entry in ParseEntries(affixText))
             {
                 var known = tables.Affixes.Find(entry.Id);
@@ -243,6 +261,7 @@ namespace Corruption.Rules
                     {
                         corruptedOnly = entry.Id;
                         state.Affixes.Add(entry.Id);
+                        state.CorruptedOnly = 1;
                         state.Values[entry.Id] = known.Clamp(entry.HasValue ? entry.Value : known.Min);
                     }
                 }
@@ -253,12 +272,15 @@ namespace Corruption.Rules
                     normal++;
                 }
             }
-            state.Corrupted = tiers.CorruptTier > 0 && requestedTier >= tiers.CorruptTier && normal >= tiers.MaxAffixes;
+            // Decision 27: any map can be corrupted, one tier above its normal affixes' tier; the player's game asks for it by
+            // claiming that tier.
+            state.Corrupted = requestedTier > tiers.TierFor(sent.Count, false) && tiers.TierFor(normal, true) > tiers.TierFor(normal, false);
             if (corruptedOnly != null && !state.Corrupted)
             {
                 warnings?.Add($"map affix '{corruptedOnly}' dropped (corrupted-only, and the map isn't corrupted).");
                 state.Affixes.Remove(corruptedOnly);
                 state.Values.Remove(corruptedOnly);
+                state.CorruptedOnly = 0;
             }
             state.Refresh(tiers);
             return state;

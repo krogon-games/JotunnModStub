@@ -4,8 +4,9 @@ using System.Linq;
 namespace Corruption.Rules
 {
     /// <summary>
-    ///     A Corruption Shard on a map (Krogon's rips round decisions 6 and 6c, 2026-11-26): only a full tier 5 map (4 affixes)
-    ///     can be corrupted; it always becomes tier 6, locked, and is never destroyed. Since 2026-11-28 (#97, the rips round's
+    ///     A Corruption Shard on a map (Krogon's rips round decisions 6 and 6c, 2026-11-26; decision 27 of 2026-11-28 on
+    ///     claude/wizardly-wozniak-4aix76): a map of any tier can be corrupted; it goes up one tier (tier 5 becomes 6), is
+    ///     locked, and is never destroyed. Since 2026-11-28 (#97, the rips round's
     ///     decision 6d: "once corrupted-only affixes exist, every corrupted map gets one") it also gains one random
     ///     corrupted-only affix as its 5th (<see cref="MapAffixTable.RollableCorrupted" />), when any is rollable. No game
     ///     dependencies, so it is unit-tested.
@@ -23,11 +24,7 @@ namespace Corruption.Rules
             {
                 return "This map is already corrupted.";
             }
-            if (state.Affixes.Count(id => !IsCorruptedOnly(id, tables)) != tables.Tiers.MaxAffixes)
-            {
-                return "Only a tier " + tables.Tiers.TierFor(tables.Tiers.MaxAffixes, false) + " map (" + tables.Tiers.MaxAffixes +
-                       " affixes) can be corrupted.";
-            }
+            // Any tier (decision 27, 2026-11-28; it was "only a full tier 5 map").
             return null;
         }
 
@@ -69,6 +66,7 @@ namespace Corruption.Rules
                 }
             }
             state.Affixes.Add(pick.Id);
+            state.CorruptedOnly++;
             state.Values[pick.Id] = random != null ? pick.Roll(random) : pick.Min;
             return pick.Id;
         }

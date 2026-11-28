@@ -42,7 +42,7 @@ namespace Corruption.Content
             "<color=orange>2.</color> Right-click an orb or shard in Currencies, or a splinter in Splinters, to pick it up.\n" +
             "<color=orange>3.</color> Click the forge to use it once. Hold Shift to keep an orb for the next click.\n\n" +
             "Esc or a right-click puts it back. Materials that can't be used on the gear turn red.\n" +
-            "Shatter destroys Magic or Rare gear for Affix Splinters. Orbs change a map's affixes and tier; a shard corrupts a full tier 5 map.";
+            "Shatter destroys Magic or Rare gear for Affix Splinters. Orbs change a map's affixes and tier; a shard corrupts a map of any tier, one tier up.";
 
         private const string ShatterUnavailable = "Shattering isn't available (see the log).";
         private const string BagOnly = "Put in gear from your Bag, or a map from your Bag or Maps tab.";

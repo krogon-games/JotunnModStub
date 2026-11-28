@@ -55,7 +55,7 @@ Nothing yet.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`**: Krogon, 2026-11-28: "Playtesting done" (no marks on the phone page; taken as passed on his word). Then decisions 23–26 (the Forge tab: no result text, gear laid out like a map, toasts): steps `cg-24` … `cg-27`: Krogon, 2026-11-28: "Playtesting done. All works." (he found a tier 4 map couldn't be corrupted, by the old rule: decision 27).
+Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`**: Krogon, 2026-11-28: "Playtesting done" (no marks on the phone page; taken as passed on his word). Then decisions 23–26 (the Forge tab: no result text, gear laid out like a map, toasts): steps `cg-24` … `cg-27`: Krogon, 2026-11-28: "Playtesting done. All works." (he found a tier 4 map couldn't be corrupted, by the old rule: decision 27). Then decisions 27–29 (corrupt maps of any tier): steps `cg-28` … `cg-30`, waiting for Krogon.
 
 ## Open questions for Krogon
 

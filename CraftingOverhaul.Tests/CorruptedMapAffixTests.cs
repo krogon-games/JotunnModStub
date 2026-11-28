@@ -110,7 +110,7 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void TheServerKeepsThornsOnlyOnACorruptedFullMap()
+        public void TheServerKeepsThornsOnlyOnACorruptedMap()
         {
             var t = Tables();
             var warnings = new List<string>();
@@ -128,10 +128,14 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(Four, five.Affixes.ToArray());
             Assert.Contains(warnings, w => w.Contains("thorns") && w.Contains("isn't corrupted"));
 
-            // Only 3 normal affixes: no corruption, no Thorns.
-            var three = MapData.Sanitize("glorious;teeming;brutal;thorns", 6, t, null);
-            Assert.False(three.Corrupted);
-            Assert.DoesNotContain("thorns", three.Affixes);
+            // 3 normal affixes asking for tier 5 (decision 27): corrupted, Thorns kept. Asking for their own tier 4: no Thorns.
+            var three = MapData.Sanitize("glorious;teeming;brutal;thorns", 5, t, null);
+            Assert.True(three.Corrupted);
+            Assert.Equal(5, three.Tier);
+            Assert.Contains("thorns", three.Affixes);
+            var four = MapData.Sanitize("glorious;teeming;brutal;thorns", 4, t, null);
+            Assert.False(four.Corrupted);
+            Assert.DoesNotContain("thorns", four.Affixes);
 
             // Five normal affixes and Thorns: four normal kept, Thorns kept on top; its value clamped.
             var many = MapData.Sanitize("glorious;teeming;brutal;frenzied;ruthless;thorns:99", 6, t, null);
