@@ -4,7 +4,7 @@
 
 ## Stage
 
-Ready to merge.
+**Merged into `master`** as PR #100 (2026-11-28, merge commit `f9ad348`, with the version bump: Corruption 0.13.0). Decisions 1–18 copied into `docs/DECISIONS.md`; #96 closed; #97 stays open for the rest of the corrupted list; #86's weather-data item dropped.
 
 ## Purpose
 
@@ -56,8 +56,8 @@ Not started. Krogon wants a new session to work on more affixes first (2026-11-2
 
 ## Next steps
 
-1. The coordinator merges this branch into `master` (PR), with the Corruption version bump.
-2. Then `claude/wizardly-wozniak-4aix76`, which was started from this branch, merges after it.
+1. ~~The coordinator merges this branch~~ Done: PR #100.
+2. `claude/wizardly-wozniak-4aix76`, started from this branch, merges `master` before its own merge.
 3. Later: Thorns' balance; two-player checks (Thorns on a creature another game runs, the loot affixes' personal drops).
 
 ## Checks
