@@ -42,6 +42,9 @@ Nothing yet.
 17. **The map's other affixes apply to it** (2026-11-28): "Yes, like the waves". It carries the rip's stamp like every rip creature.
 18. **Its red line** (2026-11-28): "Guards the heart". "A corrupted boss guards the heart."
 19. **A freeze watch** (2026-11-28, after the game froze during the play-test): "Yes, add it". If the game stops drawing frames for 10 s, the log and `BepInEx/corruption_freeze.txt` name the mod code that was running (or none of ours). No gameplay change.
+20. **Corrupted creatures fight players only** (2026-11-28, after the play-test, changes the design's "maddened creatures treat every other creature and player as an enemy"): "The corrupted creatures should NOT attack each other or the corrupted boss. The normal creatures around should NOT attack the corrupted creatures and behave normally until agro'ed by a player. The corrupted creatures should not attack normal creatures, but instead target the player." So corrupted creatures (maddened wave creatures, a corrupted boss and its summons) are never enemies of each other or of normal creatures, and normal creatures behave as vanilla towards players.
+21. **Creatures near the heart still turn corrupted when the waves start** (2026-11-28): "Keep turning them red". They join the corrupted side and hunt players only.
+22. **Tamed creatures fight the corrupted ones** (2026-11-28): "Yes, tames fight them". Corrupted creatures attack players and players' tames, and tames can hurt them.
 
 ## Playtest
 
