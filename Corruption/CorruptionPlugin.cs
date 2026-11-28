@@ -32,6 +32,7 @@ namespace Corruption
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
+            Safe.Run("start the freeze watch", FreezeWatch.Start);
             Safe.Run("add talisman slots", TalismanSlots.Register);
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
             Safe.Run("read the loot tables", Loot.Load);
@@ -63,6 +64,7 @@ namespace Corruption
 
         private void Update()
         {
+            FreezeWatch.Beat(Player.m_localPlayer);
             _configWatcher?.Tick();
         }
 

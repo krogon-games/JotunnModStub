@@ -41,6 +41,7 @@ Nothing yet.
 16. **It keeps its summons** (2026-11-28): "Keep summons". 2–3 of its army every 30 s on top of the rip's waves, as a corrupted boss anywhere.
 17. **The map's other affixes apply to it** (2026-11-28): "Yes, like the waves". It carries the rip's stamp like every rip creature.
 18. **Its red line** (2026-11-28): "Guards the heart". "A corrupted boss guards the heart."
+19. **A freeze watch** (2026-11-28, after the game froze during the play-test): "Yes, add it". If the game stops drawing frames for 10 s, the log and `BepInEx/corruption_freeze.txt` name the mod code that was running (or none of ours). No gameplay change.
 
 ## Playtest
 
