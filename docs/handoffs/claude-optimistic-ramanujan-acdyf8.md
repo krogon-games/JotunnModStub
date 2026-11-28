@@ -4,7 +4,7 @@
 
 ## Stage
 
-Asking Krogon questions (numbers agreed; previews next).
+Building.
 
 ## Purpose
 
@@ -35,6 +35,7 @@ Nothing built yet.
 13. **2026-11-28: Plague Javelin's ghost spear hits for 100% of the throw's damage, then its cloud poisons for 25% → 100% of it** (recommended; Venom Strike's share, by the game's own poison), over a 50% → 150% cloud with or without the hit. Eitr: Diablo 2's 7, +0.5 per level (7 → 16.5), plus the throw's stamina (decision 9).
 14. **2026-11-28: the cloud spreads from where the javelin lands out to 4 m across its time, and lasts 3 s at skill level 1, 6.8 s at 20** (recommended; the time is Diablo 2 Resurrected's poison duration, `amazon_skill_values.csv`; the 4 m was Claude's proposal, a little over Venom Strike's 3 m because it spreads). Over Venom Strike's 3 m and 4 s, and 3 → 6 m with level.
 15. **2026-11-28: Plague Javelin looks like the gold ghost spear with green drips in flight, and Venom Strike's green cloud rolls outward where it lands** (recommended), over the plain gold spear. A preview picture comes first.
+16. **2026-11-28: the preview of the three looks is approved** ("Approved, build it"; `docs/images/javelins_preview.png`, drawn by `tools/preview_javelins.py`).
 
 ## Playtest
 
@@ -42,7 +43,7 @@ Nothing to test yet. Checklist: `docs/playtests/claude-optimistic-ramanujan-acdy
 
 ## Open questions for Krogon
 
-1. Approve the preview pictures of the three looks.
+1. None open.
 
 ## Next steps
 
