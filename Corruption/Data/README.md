@@ -99,15 +99,16 @@ The affixes that orbs roll onto a map (Krogon's list, 2026-11-27, #90; tested al
 | Column | Meaning |
 |---|---|
 | `id` | Lowercase letters, one word. Stored on the map item, so don't rename a row that players may hold |
-| `status` | `approved` = orbs can roll it. `later` = designed, not built, never rolls (the three weather affixes) |
+| `status` | `approved` = orbs can roll it. `later` = designed, not built, never rolls (the three weather affixes, and Runic until runes exist) |
 | `name` | Used in logs and the console only; it is not shown on the map tooltip or the Forge (decision 10) |
 | `danger` | The line the tooltip, the Forge and the rip's hover show, in the table's copy; `{value}` stands for the number the map rolled |
 | `weight` | How likely an orb is to roll it, against the others. 100 each = equally likely. Required for `approved` rows, blank for `later` |
-| `effect` | What it does. One of: `experience`, `density`, `damage`, `attack_speed`, `double_damage`, `health`, `move_speed`, `no_stagger`, `physical_taken`, `elemental_taken`, `life_drain`, `stamina_drain`, `resistances`, `poison_share`, `fire_share`, `lightning_share` (the list in `Corruption/Rules/MapAffixTable.cs`, `Effects`). Blank only on a `later` row |
+| `effect` | What it does. One of: `experience`, `density`, `damage`, `attack_speed`, `double_damage`, `health`, `move_speed`, `no_stagger`, `physical_taken`, `elemental_taken`, `life_drain`, `stamina_drain`, `resistances`, `poison_share`, `fire_share`, `lightning_share`, and the loot ones (#96): `drop_items` (Corruption's gear, orbs and maps), `drop_orbs`, `drop_shields`, `drop_armour`, `drop_melee`, `drop_ranged` (these four tilt which item a gear drop becomes) (the list in `Corruption/Rules/MapAffixTable.cs`, `Effects`). Blank only on a `later` row |
 | `min`, `max` | The whole numbers a map rolls between (percent, or points per second for the two drains); equal = a fixed value. Blank for `no_stagger`, which has no number |
 | `group` | Two affixes of the same group never share a map (Ironskin with Warded: `immunity`; Sturdy with Mighty: `health`) |
-| `section` | Where the line shows on the map: `face` ("What you'll face", dangers) or `earn` ("What you'll earn", rewards such as Glorious; decision 16) |
+| `section` | Where the line shows on the map: `face` ("What you'll face", dangers) or `earn` ("What you'll earn", rewards such as Glorious and the loot affixes; decision 16) |
 | `notes` | The source of each number |
+| `pool` | Optional, last column. Blank = orbs roll it. `corrupted` = only the shard adds it, as a corrupted map's 5th affix (#97; Thorns). Effect `thorns` is the share of a player's dealt damage that comes back |
 
 The admin setting `[5 - Rips] DisabledMapAffixes` (comma-separated ids, blank by default) keeps listed affixes out of every roll; maps that already carry one keep it.
 

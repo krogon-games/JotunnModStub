@@ -27,6 +27,7 @@ Each round adds a dated section to its branch's file:
 
 Rules:
 - Plain steps a non-developer can follow; say what should happen at each step.
+- For affixes and combat mechanics, test on the game's training dummy where you can (Krogon, 2026-11-28): `spawn TrainingDummy` (or the buildable T.W.I.G.), then `co_stamp` for map affixes. Print numbers to the console with `devcommands` on so the result is visible.
 - Write the user's feedback in their own words, then what changed. Never mark a step passed without their report.
 - **Every round's solo checklist also goes on the phone page** (Krogon, 2026-11-11): the Corruption Play-test Log linked at the top of [`../PLAYTEST.md`](../PLAYTEST.md). Add the steps to the page when you write them here (one step id each, so Krogon's Pass / Fail / Skip and notes are saved per step), read his marks from it with `ArtifactData`, and copy them here as his feedback. Take a round's steps off the page once its play-test has passed. The page went stale between 2026-11-08 and 2026-11-11 because four rounds wrote only here.
 - When a step needs other players, also add it to `PLAYTEST.md` → Session 2 (the group evening's script) and to the phone page's Session 2.

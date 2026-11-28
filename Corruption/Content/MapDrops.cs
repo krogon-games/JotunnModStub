@@ -57,8 +57,11 @@ namespace Corruption.Content
             return !string.IsNullOrEmpty(key) && ZoneSystem.instance.GetGlobalKey(key);
         }
 
-        /// <summary>One player's map roll for a creature that died in <paramref name="biome" />: the map's prefab, or null.</summary>
-        public static GameObject Roll(string biome, System.Collections.Generic.IEnumerable<string> sources)
+        /// <summary>
+        ///     One player's map roll for a creature that died in <paramref name="biome" />: the map's prefab, or null.
+        ///     <paramref name="extra" /> is a further factor (a rip's loot affixes, <see cref="Corruption.Rules.MapLootBoost.Items" />).
+        /// </summary>
+        public static GameObject Roll(string biome, System.Collections.Generic.IEnumerable<string> sources, double extra = 1.0)
         {
             if (!Loot.Loaded || !CorruptionConfig.LootEnabled.Value)
             {
@@ -69,7 +72,7 @@ namespace Corruption.Content
             {
                 return null;
             }
-            float multiplier = Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources);
+            float multiplier = (float)(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources) * extra);
             return MapDropRules.Roll(Loot.Rules.MapDropOneIn, multiplier, Random01) ? Prefab(map) : null;
         }
 

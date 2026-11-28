@@ -19,6 +19,202 @@ namespace Corruption.Content
         {
             CommandManager.Instance.AddConsoleCommand(new MapCommand());
             CommandManager.Instance.AddConsoleCommand(new RipCommand());
+            CommandManager.Instance.AddConsoleCommand(new RipLootCommand());
+            CommandManager.Instance.AddConsoleCommand(new StampCommand());
+        }
+
+        /// <summary>
+        ///     co_stamp: gives the creature you look at (or the nearest within 10 m) a rip's tier and any map affixes, as if a
+        ///     rip had spawned it, so each creature affix can be tried alone on a still target such as the game's training dummy
+        ///     (Krogon, 2026-11-28, la-18: "its really difficult to tell if i take damage from hitting another creature with
+        ///     thorns on"). Your game takes the creature over first. <c>co_stamp clear</c> takes the stamp off.
+        /// </summary>
+        private sealed class StampCommand : ConsoleCommand
+        {
+            public override string Name => "co_stamp";
+
+            public override string Help =>
+                "Corruption: co_stamp [tier] <affix[:value] ...> - give the creature you look at (or the nearest within 10 m) a rip's tier " +
+                "(default 1) and map affixes, e.g. spawn TrainingDummy, then co_stamp thorns:25. co_stamp clear removes it. Testing only.";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var print = Console.instance;
+                var player = Player.m_localPlayer;
+                if (!player || !MapTiers.Loaded)
+                {
+                    print.Print("co_stamp needs a loaded character and the map tables (see the log).");
+                    return;
+                }
+                var target = player.GetHoverCreature();
+                if (!target || target is Player)
+                {
+                    target = null;
+                    float best = 10f;
+                    foreach (var c in Character.GetAllCharacters())
+                    {
+                        if (!c || c is Player || c.IsDead())
+                        {
+                            continue;
+                        }
+                        float d = Vector3.Distance(c.transform.position, player.transform.position);
+                        if (d <= best)
+                        {
+                            best = d;
+                            target = c;
+                        }
+                    }
+                }
+                if (!target || !target.m_nview || !target.m_nview.IsValid())
+                {
+                    print.Print("No creature under your crosshair or within 10 m. Try: spawn TrainingDummy");
+                    return;
+                }
+                var zdo = target.m_nview.GetZDO();
+                target.m_nview.ClaimOwnership();
+                if (args.Length > 0 && args[0].Equals("clear", StringComparison.OrdinalIgnoreCase))
+                {
+                    zdo.Set(MapTiers.KeyTier, 0);
+                    zdo.Set(MapTiers.KeyAffixes, "");
+                    zdo.RemoveFloat(MapTiers.KeyExperience);
+                    target.SetupMaxHealth();
+                    print.Print($"{target.m_name}: rip stamp removed.");
+                    return;
+                }
+                int index = 0;
+                int tier = 1;
+                if (args.Length > 0 && int.TryParse(args[0], out var t))
+                {
+                    tier = Mathf.Clamp(t, 1, 6);
+                    index = 1;
+                }
+                var tables = MapTiers.Tables;
+                var entries = MapData.ParseEntries(string.Join(MapData.Separator.ToString(), args.Skip(index).Select(a => a.ToLowerInvariant()).ToArray()));
+                var bad = entries.Where(e => tables.Affixes.Find(e.Id) == null || !tables.Affixes.Find(e.Id).Approved).Select(e => e.Id).ToList();
+                if (bad.Count > 0)
+                {
+                    print.Print($"Unknown or not built: {string.Join(", ", bad.ToArray())}. Built: {string.Join(", ", tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray())}.");
+                    return;
+                }
+                var state = new MapState();
+                var random = new System.Random();
+                foreach (var e in entries)
+                {
+                    if (state.Affixes.Contains(e.Id))
+                    {
+                        continue;
+                    }
+                    var affix = tables.Affixes.Find(e.Id);
+                    state.Affixes.Add(e.Id);
+                    state.Values[e.Id] = e.HasValue ? affix.Clamp(e.Value) : affix.Roll(random.NextDouble);
+                }
+                MapTiers.Stamp(zdo, tier, MapData.JoinRolls(state));
+                MapAffixEffects.OnStamped(target);
+                print.Print($"{target.m_name}: stamped tier {tier}" +
+                            (state.Affixes.Count > 0 ? " with " + MapTiers.DescribeValues(state.Rolls(tables.Affixes)) : ", no affixes") +
+                            ". Your game runs it now; it stays stamped until co_stamp clear." +
+                            (state.Affixes.Contains("thorns") ? " Each Thorns return prints here while devcommands is on." : ""));
+            }
+        }
+
+        /// <summary>
+        ///     co_riploot: rolls many kills of a rip with a chosen tier and affixes in the biome you stand in and prints what
+        ///     they would drop, to check the loot affixes (#96) without killing thousands of creatures. Drops nothing.
+        /// </summary>
+        private sealed class RipLootCommand : ConsoleCommand
+        {
+            public override string Name => "co_riploot";
+
+            public override string Help =>
+                "Corruption: co_riploot [rolls] [tier] [affix ...] - roll a rip creature's kill loot many times (default 10000, tier 1) " +
+                "in the biome you stand in and print the gear, orbs, map chance and kinds of gear (e.g. co_riploot 10000 3 bountiful). Drops nothing.";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var print = Console.instance;
+                var player = Player.m_localPlayer;
+                if (!player || !Loot.Loaded || !MapTiers.Loaded)
+                {
+                    print.Print("co_riploot needs a loaded character and the loot and map tables (see the log).");
+                    return;
+                }
+                int index = 0;
+                int rolls = 10000;
+                int tier = 1;
+                if (args.Length > index && int.TryParse(args[index], out var n))
+                {
+                    rolls = Mathf.Clamp(n, 1, 1000000);
+                    index++;
+                }
+                if (args.Length > index && int.TryParse(args[index], out var t))
+                {
+                    tier = t;
+                    index++;
+                }
+                var tables = MapTiers.Tables;
+                var row = tables.Tiers.Row(tier);
+                if (row == null)
+                {
+                    print.Print($"No tier {tier} in map_tiers.csv.");
+                    return;
+                }
+                var entries = MapData.ParseEntries(string.Join(MapData.Separator.ToString(), args.Skip(index).Select(a => a.ToLowerInvariant()).ToArray()));
+                var unknown = entries.Where(e => tables.Affixes.Find(e.Id) == null).Select(e => e.Id).ToList();
+                if (unknown.Count > 0)
+                {
+                    print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}.");
+                    return;
+                }
+                var affixRolls = entries.Select(e =>
+                {
+                    var affix = tables.Affixes.Find(e.Id);
+                    return new MapAffixRoll { Affix = affix, Value = e.HasValue ? affix.Clamp(e.Value) : affix.Min };
+                }).ToList();
+                var boost = MapLootRules.Of(affixRolls);
+                var sources = RipTierRules.DropSources(row);
+                string biome = Loot.BiomeAt(player.transform.position);
+                System.Func<double> random = () => UnityEngine.Random.value * 0.99999f;
+                System.Func<LootBases.Base, double> weight = null;
+                if (boost.TiltsPick)
+                {
+                    weight = b => boost.WeightOf(Loot.KindOf(b));
+                }
+                float orbMultiplier = (float)(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources) * boost.Orbs);
+                int magic = 0, rare = 0, orbs = 0;
+                var kinds = new Dictionary<string, int>();
+                for (int i = 0; i < rolls; i++)
+                {
+                    orbs += Loot.Orbs.Roll(orbMultiplier, random).Count;
+                    foreach (var rarity in Loot.Drops.Roll(sources, random, boost.Items))
+                    {
+                        if (rarity != "magic" && rarity != "rare")
+                        {
+                            continue;
+                        }
+                        if (rarity == "magic") magic++; else rare++;
+                        var pick = Loot.Bases.Pick(biome, Loot.Rules.PreviousBiomePercent, p => ObjectDB.instance.GetItemPrefab(p), random, weight);
+                        string kind = pick == null ? "none" : Loot.KindOf(pick);
+                        if (kind.Length == 0) kind = "jewellery";
+                        kinds[kind] = kinds.TryGetValue(kind, out var c) ? c + 1 : 1;
+                    }
+                }
+                float mapChance = MapDropRules.Chance(Loot.Rules.MapDropOneIn, (float)(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources) * boost.Items));
+                print.Print($"{rolls} kills in a tier {tier} {biome} rip" + (affixRolls.Count > 0 ? $" with {MapTiers.DescribeValues(affixRolls)}" : "") +
+                            $": gear x{boost.Items:0.##}, orbs x{boost.Orbs:0.##} on top of the tier.");
+                print.Print($"  Magic {magic} (expected {Loot.Drops.Chance("magic", sources, boost.Items) * rolls:0.#}), " +
+                            $"Rare {rare} (expected {Loot.Drops.Chance("rare", sources, boost.Items) * rolls:0.#}), orbs {orbs}.");
+                print.Print($"  Map chance per kill: {(mapChance > 0f ? $"1 in {1f / mapChance:0}" : "none")} (if maps can drop here).");
+                int gear = magic + rare;
+                if (gear > 0)
+                {
+                    print.Print("  Kinds of gear: " + string.Join(", ", kinds.OrderByDescending(k => k.Value)
+                        .Select(k => $"{k.Key} {k.Value} ({100.0 * k.Value / gear:0}%)").ToArray()) + ".");
+                }
+            }
         }
 
         private sealed class MapCommand : ConsoleCommand
@@ -35,7 +231,8 @@ namespace Corruption.Content
             private static string AffixIds()
             {
                 return MapTiers.Loaded
-                    ? " (" + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray()) + ")"
+                    ? " (" + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray()) +
+                      "; corrupted-only, for a tier 6 map: " + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved && a.CorruptedOnly).Select(a => a.Id).ToArray()) + ")"
                     : "";
             }
 
@@ -125,6 +322,10 @@ namespace Corruption.Content
                         var row = tables.Tiers.Row(tier);
                         MapOrbRules.AddRandom(state, tables, random.NextDouble, row.Affixes, new List<string>());
                         state.Corrupted = row.Corrupted;
+                        if (state.Corrupted)
+                        {
+                            MapCorruptRules.AddCorruptedAffix(state, tables, random.NextDouble);   // the 5th (#97)
+                        }
                     }
                 }
 

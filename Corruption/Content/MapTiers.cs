@@ -46,7 +46,8 @@ namespace Corruption.Content
             Tables = new MapTables { Tiers = tiers, Affixes = affixes };
             ApplyDisabled();
             Jotunn.Logger.LogInfo($"Map tiers: {tiers.Rows.Count} tiers, {affixes.Affixes.Count} affixes " +
-                                  $"({string.Join(", ", affixes.Rollable.Select(a => a.Id).ToArray())} roll).");
+                                  $"({string.Join(", ", affixes.Rollable.Select(a => a.Id).ToArray())} roll; corrupted-only: " +
+                                  $"{string.Join(", ", affixes.RollableCorrupted.Select(a => a.Id).ToArray())}).");
         }
 
         private static bool _watchingDisabled;

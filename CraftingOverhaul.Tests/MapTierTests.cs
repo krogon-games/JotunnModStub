@@ -138,7 +138,7 @@ namespace CraftingOverhaul.Tests
             Assert.NotNull(MapOrbRules.Refusal("exalted", full, t));
             // Clearing the list brings them back.
             t.Affixes.SetDisabled("");
-            Assert.Equal(t.Affixes.Affixes.Count(a => a.Approved), t.Affixes.Rollable.Count());
+            Assert.Equal(t.Affixes.Affixes.Count(a => a.Approved && !a.CorruptedOnly), t.Affixes.Rollable.Count());
         }
 
         [Fact]
@@ -164,9 +164,22 @@ namespace CraftingOverhaul.Tests
                 new object[] { "exposed", "resistances", 25.0, 50.0, "" },
                 new object[] { "venomous", "poison_share", 25.0, 75.0, "" },
                 new object[] { "searing", "fire_share", 25.0, 75.0, "" },
-                new object[] { "stormcalled", "lightning_share", 25.0, 75.0, "" }
+                new object[] { "stormcalled", "lightning_share", 25.0, 75.0, "" },
+                // The loot affixes (#96): fixed at +100% (x2), overhaul decision 7.
+                new object[] { "bountiful", "drop_items", 100.0, 100.0, "" },
+                new object[] { "glittering", "drop_orbs", 100.0, 100.0, "" },
+                new object[] { "bulwarked", "drop_shields", 100.0, 100.0, "" },
+                new object[] { "mailed", "drop_armour", 100.0, 100.0, "" },
+                new object[] { "honed", "drop_melee", 100.0, 100.0, "" },
+                new object[] { "fletched", "drop_ranged", 100.0, 100.0, "" }
             };
             Assert.Equal(expected.Select(e => (string)e[0]).ToArray(), a.Rollable.Select(x => x.Id).ToArray());
+            // Corrupted-only (#97): Thorns 5-25 (decision 12), never in the orbs' pool.
+            Assert.Equal(new[] { "thorns" }, a.RollableCorrupted.Select(x => x.Id).ToArray());
+            Assert.Equal(5.0, a.Find("thorns").Min);
+            Assert.Equal(25.0, a.Find("thorns").Max);
+            Assert.Equal("thorns", a.Find("thorns").Effect);
+            Assert.False(a.Find("thorns").Earns);
             Assert.All(a.Rollable, x => Assert.Equal(100.0, x.Weight));
             foreach (var e in expected)
             {
@@ -178,14 +191,14 @@ namespace CraftingOverhaul.Tests
                 Assert.Equal((double)e[3] > (double)e[2], affix.Ranged);
                 Assert.Contains(affix.Effect, MapAffixTable.Effects.All);
             }
-            foreach (var id in new[] { "frostbitten", "drowned", "choking" })
+            foreach (var id in new[] { "runic", "frostbitten", "drowned", "choking" })
             {
                 var later = a.Find(id);
                 Assert.Equal("later", later.Status);
                 Assert.False(later.Approved);
                 Assert.DoesNotContain(later, a.Rollable);
             }
-            Assert.Equal(20, a.Affixes.Count);
+            Assert.Equal(28, a.Affixes.Count);
             Assert.Equal("Enemies deal {value}% more damage.", a.Find("brutal").Danger);
         }
 
@@ -339,10 +352,11 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void AffixesHaveASectionAndGloriousIsTheOnlyReward()
+        public void AffixesHaveASectionAndTheRewardsAreGloriousAndTheLootAffixes()
         {
             var a = Tables().Affixes;
-            Assert.Equal(new[] { "glorious" }, a.Affixes.Where(x => x.Earns).Select(x => x.Id).ToArray());
+            Assert.Equal(new[] { "glorious", "bountiful", "glittering", "runic", "bulwarked", "mailed", "honed", "fletched" },
+                a.Affixes.Where(x => x.Earns).Select(x => x.Id).ToArray());
             Assert.All(a.Affixes.Where(x => x.Approved), x => Assert.Contains(x.Section, new[] { "face", "earn" }));
             Assert.Contains(AffixErrors("a,approved,A,Danger,100,damage,20,100,,,x\n"), e => e.Contains("needs a section"));
             Assert.Contains(AffixErrors("a,approved,A,Danger,100,damage,20,100,,loot,x\n"), e => e.Contains("section 'loot'"));
@@ -585,7 +599,7 @@ namespace CraftingOverhaul.Tests
             var t = Tables();
             // a roll at the very end of the weights picks the last affix
             var last = MapOrbRules.Apply("transmutation", State(t), t, Sequence(0.9999));
-            Assert.Equal("stormcalled", last.State.Affixes[0]);
+            Assert.Equal("fletched", last.State.Affixes[0]);
             // many random rolls never duplicate and never give a "later" affix
             var rng = new Random(7);
             for (int i = 0; i < 200; i++)
@@ -643,8 +657,14 @@ namespace CraftingOverhaul.Tests
             Assert.NotNull(done);
             Assert.True(done.Corrupted);
             Assert.Equal(6, done.Tier);
-            Assert.Equal(4, done.Affixes.Count); // never destroyed, nothing lost
-            Assert.Equal(full.Values, done.Values);
+            // Never destroyed, nothing lost; the 5th is the corrupted-only affix (#97), at its lowest without a random.
+            Assert.Equal(5, done.Affixes.Count);
+            Assert.Equal(Four.Concat(new[] { "thorns" }).ToArray(), done.Affixes.ToArray());
+            Assert.Equal(5.0, done.Values["thorns"]);
+            foreach (var id in Four)
+            {
+                Assert.Equal(full.Values[id], done.Values[id]);
+            }
             Assert.Equal("Corrupted: now tier 6", headline);
             Assert.False(full.Corrupted);
 

@@ -202,6 +202,18 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void LootAffixesReadUnderEarnWithTheirNumbers()
+        {
+            // #96: the loot affixes are rewards (decision 16 of the overhaul), copy as Krogon approved (decision 9).
+            var lines = Plain(Tooltip(3, new[] { "brutal", "bountiful", "bulwarked" }));
+            int face = Array.IndexOf(lines, "What you’ll face"), earn = Array.IndexOf(lines, "What you’ll earn");
+            Assert.True(face >= 0 && earn > face);
+            Assert.True(Array.IndexOf(lines, "• Enemies deal 20% more damage.") is int danger && danger > face && danger < earn);
+            Assert.Equal("• Enemies are 100% more likely to drop gear, orbs and maps.", lines[lines.Length - 2]);
+            Assert.Equal("• Gear drops are 100% more likely to be shields.", lines[lines.Length - 1]);
+        }
+
+        [Fact]
         public void RewardAffixesAreListedUnderEarnAfterTheTiersLinesInTheRarityColour()
         {
             // Decision 16: "Move to earn". Glorious is the one reward affix; it is no longer under "What you'll face".

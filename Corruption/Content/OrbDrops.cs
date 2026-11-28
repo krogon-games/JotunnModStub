@@ -21,14 +21,17 @@ namespace Corruption.Content
     {
         private static readonly System.Func<double> Random01 = () => Random.value * 0.99999f;
 
-        /// <summary>One roll of the orb table with these sources (null for none). Empty when the loot tables didn't load.</summary>
-        public static List<string> Roll(IEnumerable<string> sources)
+        /// <summary>
+        ///     One roll of the orb table with these sources (null for none) and a further factor (a rip's loot affixes,
+        ///     <see cref="MapLootBoost.Orbs" />; 1 for none). Empty when the loot tables didn't load.
+        /// </summary>
+        public static List<string> Roll(IEnumerable<string> sources, double extra = 1.0)
         {
             if (!Loot.Loaded || !CorruptionConfig.LootEnabled.Value)
             {
                 return new List<string>();
             }
-            return Loot.Orbs.Roll(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources), Random01);
+            return Loot.Orbs.Roll((float)(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources) * extra), Random01);
         }
 
         /// <summary>

@@ -117,13 +117,14 @@ namespace Corruption.Rules
         ///     Chance (0–1) that one roll drops an item of this rarity: the base chance times the multiplier of every
         ///     source that applies (e.g. <c>star_2</c> and <c>scar</c>), capped at 1. Unknown sources count as x1.
         /// </summary>
-        public float Chance(string rarity, IEnumerable<string> sources)
+        /// <param name="extra">A further factor on top of the sources: a rip's loot affixes (<see cref="MapLootBoost.Items" />); 1 for none.</param>
+        public float Chance(string rarity, IEnumerable<string> sources, double extra = 1.0)
         {
             if (!OneIn.TryGetValue(rarity, out var oneIn) || oneIn <= 0f)
             {
                 return 0f;
             }
-            double chance = 1.0 / oneIn;
+            double chance = extra > 0.0 ? extra / oneIn : 0.0;
             foreach (var source in sources ?? Enumerable.Empty<string>())
             {
                 if (Modifiers.TryGetValue(source, out var multipliers) && multipliers.TryGetValue(rarity, out var multiplier))
@@ -157,16 +158,17 @@ namespace Corruption.Rules
         ///     A Unique rolls on its own, on top. Returns the rarities that drop, rarest first.
         /// </summary>
         /// <param name="random">Returns a value in [0, 1).</param>
-        public List<string> Roll(IEnumerable<string> sources, Func<double> random)
+        /// <param name="extra">A further factor on every rarity's chance (a rip's loot affixes); 1 for none.</param>
+        public List<string> Roll(IEnumerable<string> sources, Func<double> random, double extra = 1.0)
         {
             var list = sources == null ? new List<string>() : sources.ToList();
             var drops = new List<string>();
-            if (random() < Chance("unique", list))
+            if (random() < Chance("unique", list, extra))
             {
                 drops.Add("unique");
             }
-            bool rare = random() < Chance("rare", list);
-            bool magic = random() < Chance("magic", list);
+            bool rare = random() < Chance("rare", list, extra);
+            bool magic = random() < Chance("magic", list, extra);
             if (rare)
             {
                 drops.Add("rare");

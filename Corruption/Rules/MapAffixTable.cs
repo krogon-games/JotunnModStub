@@ -19,6 +19,9 @@ namespace Corruption.Rules
 
         private static readonly string[] Statuses = { "approved", "later" };
 
+        /// <summary>The optional <c>pool</c> column: blank = the orbs' pool; <c>corrupted</c> = only the shard adds it, as a map's 5th affix (#97).</summary>
+        public const string CorruptedPool = "corrupted";
+
         /// <summary>What an affix does to the rip (the <c>effect</c> column). Krogon's list, 2026-11-27.</summary>
         public static class Effects
         {
@@ -38,11 +41,21 @@ namespace Corruption.Rules
             public const string PoisonShare = "poison_share";
             public const string FireShare = "fire_share";
             public const string LightningShare = "lightning_share";
+            // The loot affixes (#96): see MapLootRules.
+            public const string DropItems = "drop_items";
+            public const string DropOrbs = "drop_orbs";
+            public const string DropShields = "drop_shields";
+            public const string DropArmour = "drop_armour";
+            public const string DropMelee = "drop_melee";
+            public const string DropRanged = "drop_ranged";
+            // Corrupted-only (#97): a share of the damage a player's hit deals comes back to that player.
+            public const string Thorns = "thorns";
 
             public static readonly string[] All =
             {
                 Experience, Density, Damage, AttackSpeed, DoubleDamage, Health, MoveSpeed, NoStagger, PhysicalTaken,
-                ElementalTaken, LifeDrain, StaminaDrain, Resistances, PoisonShare, FireShare, LightningShare
+                ElementalTaken, LifeDrain, StaminaDrain, Resistances, PoisonShare, FireShare, LightningShare, DropItems, DropOrbs,
+                DropShields, DropArmour, DropMelee, DropRanged, Thorns
             };
         }
 
@@ -70,6 +83,12 @@ namespace Corruption.Rules
             public bool Earns => Section == "earn";
 
             public bool Approved => Status == "approved";
+
+            /// <summary>
+            ///     Only the shard adds it: a corrupted map's 5th affix (Krogon, rips round decision 6d and the overhaul's
+            ///     decision 4; #97). Orbs never roll it. Shown last under "What you'll face", in the corrupted red (#96 round, decision 15).
+            /// </summary>
+            public bool CorruptedOnly;
 
             /// <summary>Whether each map rolls its own number (Max above Min).</summary>
             public bool Ranged => Max > Min;
@@ -100,8 +119,11 @@ namespace Corruption.Rules
         /// </summary>
         public readonly HashSet<string> Disabled = new HashSet<string>();
 
-        /// <summary>The affixes orbs can roll: approved rows that aren't switched off.</summary>
-        public IEnumerable<Affix> Rollable => Affixes.Where(a => a.Approved && !Disabled.Contains(a.Id));
+        /// <summary>The affixes orbs can roll: approved rows that aren't switched off and aren't corrupted-only.</summary>
+        public IEnumerable<Affix> Rollable => Affixes.Where(a => a.Approved && !a.CorruptedOnly && !Disabled.Contains(a.Id));
+
+        /// <summary>The corrupted-only affixes the shard can add as a 5th: approved and not switched off.</summary>
+        public IEnumerable<Affix> RollableCorrupted => Affixes.Where(a => a.Approved && a.CorruptedOnly && !Disabled.Contains(a.Id));
 
         /// <summary>
         ///     Replaces <see cref="Disabled" /> from a comma- or space-separated list of ids (case and spaces ignored).
@@ -226,6 +248,12 @@ namespace Corruption.Rules
                 {
                     errors.Add($"{where}: an approved affix needs a weight above 0.");
                 }
+                string pool = Cell("pool").ToLowerInvariant();
+                if (pool.Length > 0 && pool != CorruptedPool)
+                {
+                    errors.Add($"{where}: pool '{Cell("pool")}' must be blank (orbs roll it) or {CorruptedPool} (only the shard adds it).");
+                }
+                a.CorruptedOnly = pool == CorruptedPool;
                 a.Effect = Cell("effect").ToLowerInvariant();
                 a.Group = Cell("group");
                 string section = Cell("section").ToLowerInvariant();
@@ -278,9 +306,9 @@ namespace Corruption.Rules
                     {
                         errors.Add($"{where}: min must be above 0 and at most max.");
                     }
-                    else if ((a.Effect == Effects.PhysicalTaken || a.Effect == Effects.ElementalTaken) && a.Max > 100)
+                    else if ((a.Effect == Effects.PhysicalTaken || a.Effect == Effects.ElementalTaken || a.Effect == Effects.Thorns) && a.Max > 100)
                     {
-                        errors.Add($"{where}: {a.Effect} is a percentage of damage removed, so max must be at most 100.");
+                        errors.Add($"{where}: {a.Effect} is a percentage of a hit's damage, so max must be at most 100.");
                     }
                 }
                 else if (hasMin && hasMax && minOk && maxOk && a.Max < a.Min)

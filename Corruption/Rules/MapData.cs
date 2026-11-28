@@ -207,7 +207,8 @@ namespace Corruption.Rules
         ///     The server's check of a rip request's tier and affixes (they come from a player's game): unknown and
         ///     <c>later</c> ids are dropped, a repeat counts once, an affix whose group is already on the map is dropped
         ///     (decision 5), values are clamped into the affix's range (none, NaN or infinity read as the Min), no more than
-        ///     <see cref="MapTierTable.MaxAffixes" /> are kept, and the corrupted tier is only honoured on a full map. The tier
+        ///     <see cref="MapTierTable.MaxAffixes" /> are kept, and the corrupted tier is only honoured on a full map. A
+        ///     corrupted-only affix (#97) doesn't count towards that limit: one is kept, and only on a corrupted map. The tier
         ///     follows from the affixes (decision 6). Switched-off affixes are kept: maps that already carry one keep it.
         ///     Every drop is added to <paramref name="warnings" /> (when given) as a sentence for the log.
         /// </summary>
@@ -217,6 +218,8 @@ namespace Corruption.Rules
         {
             var state = new MapState();
             var tiers = tables.Tiers;
+            int normal = 0;
+            string corruptedOnly = null;
             foreach (var entry in ParseEntries(affixText))
             {
                 var known = tables.Affixes.Find(entry.Id);
@@ -230,13 +233,33 @@ namespace Corruption.Rules
                     // A 'later' affix does nothing, and two of one group (both immunities, both health affixes) are never rolled.
                     warnings?.Add($"map affix '{entry.Id}' dropped ({(known.Approved ? "its group is already on the map" : "not built yet")}).");
                 }
-                else if (!held && state.Affixes.Count < tiers.MaxAffixes)
+                else if (!held && known.CorruptedOnly)
+                {
+                    if (corruptedOnly != null)
+                    {
+                        warnings?.Add($"map affix '{entry.Id}' dropped (a map holds one corrupted-only affix).");
+                    }
+                    else
+                    {
+                        corruptedOnly = entry.Id;
+                        state.Affixes.Add(entry.Id);
+                        state.Values[entry.Id] = known.Clamp(entry.HasValue ? entry.Value : known.Min);
+                    }
+                }
+                else if (!held && normal < tiers.MaxAffixes)
                 {
                     state.Affixes.Add(entry.Id);
                     state.Values[entry.Id] = known.Clamp(entry.HasValue ? entry.Value : known.Min);
+                    normal++;
                 }
             }
-            state.Corrupted = tiers.CorruptTier > 0 && requestedTier >= tiers.CorruptTier && state.Affixes.Count >= tiers.MaxAffixes;
+            state.Corrupted = tiers.CorruptTier > 0 && requestedTier >= tiers.CorruptTier && normal >= tiers.MaxAffixes;
+            if (corruptedOnly != null && !state.Corrupted)
+            {
+                warnings?.Add($"map affix '{corruptedOnly}' dropped (corrupted-only, and the map isn't corrupted).");
+                state.Affixes.Remove(corruptedOnly);
+                state.Values.Remove(corruptedOnly);
+            }
             state.Refresh(tiers);
             return state;
         }
