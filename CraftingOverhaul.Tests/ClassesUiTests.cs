@@ -97,6 +97,23 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void BasicSkillsShowAboveTheTabsAlwaysLearned()
+        {
+            var skills = ClassesFixture.AmazonSkills();
+            var basics = SkillCardsLayout.Basics(skills);
+            Assert.Equal(new[] { "GungnirsThrow" }, basics.Select(s => s.Id));
+            for (int tab = 0; tab < 3; tab++)
+            {
+                Assert.DoesNotContain(SkillCardsLayout.Visible(skills, tab), s => s.Basic);
+            }
+            var basic = basics[0];
+            basic.Points = 1;
+            basic.MaxPoints = 1;
+            Assert.Equal(CardState.Learned, SkillCardsLayout.StateOf(basic));
+            Assert.Equal(SkillCardsLayout.BasicLabel, SkillCardsLayout.RankLabel(basic));
+        }
+
+        [Fact]
         public void DroppedSkillsLeaveAnEmptyPlace()
         {
             var skills = AllSkills();

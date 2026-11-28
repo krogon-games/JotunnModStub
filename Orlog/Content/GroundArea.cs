@@ -10,6 +10,8 @@ namespace Orlog.Content
     ///     at once). Lives on the shooter's own game only, which is where the arrow's impact is handled; it isn't
     ///     networked. The damage is a share of the shot's own damage worked out by the caller; no new art: a vanilla
     ///     impact effect at each hit, a light and a ring on the ground.
+    ///     Plague Javelin's cloud (Krogon, 2026-11-28) spreads: its reach grows evenly from nothing to the full radius over
+    ///     its time (<see cref="ActiveSkillRules.SpreadRadius" />), and its ring grows with it.
     /// </summary>
     internal sealed class GroundArea : MonoBehaviour
     {
@@ -36,9 +38,14 @@ namespace Orlog.Content
         private float m_start;
         private Light m_light;
         private float m_lightIntensity;
+        private bool m_spreads;
+        private Skills.SkillType m_skillType = Skills.SkillType.Bows;
+        private LineRenderer m_ring;
+        private float m_ringRadius = -1f;
 
         public static void Begin(Character owner, string skillName, int level, Vector3 point, float radius, float duration,
-            float damagePerHit, bool poison, bool firstHitAtOnce, float shotDamage, float percent)
+            float damagePerHit, bool poison, bool firstHitAtOnce, float shotDamage, float percent, bool spreads = false,
+            Skills.SkillType skillType = Skills.SkillType.Bows)
         {
             if (!owner || duration <= 0f || radius <= 0f)
             {
@@ -60,6 +67,8 @@ namespace Orlog.Content
             area.m_percent = percent;
             area.m_hits = ActiveSkillRules.AreaTicks(duration, ActiveSkillRules.AreaInterval);
             area.m_start = Time.time;
+            area.m_spreads = spreads;
+            area.m_skillType = skillType;
             area.Dress();
         }
 
@@ -99,15 +108,32 @@ namespace Orlog.Content
                     line.endColor = AreaColour;
                     line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                     line.receiveShadows = false;
-                    const int points = 32;
-                    line.positionCount = points;
-                    for (int i = 0; i < points; i++)
-                    {
-                        float angle = i * Mathf.PI * 2f / points;
-                        line.SetPosition(i, m_point + new Vector3(Mathf.Cos(angle) * m_radius, 0.1f, Mathf.Sin(angle) * m_radius));
-                    }
+                    m_ring = line;
+                    SetRing(CurrentRadius());
                 }
             });
+        }
+
+        /// <summary>The area's reach now: the full radius, or for a spreading cloud how far it has spread.</summary>
+        private float CurrentRadius()
+        {
+            return m_spreads ? ActiveSkillRules.SpreadRadius(m_radius, Time.time - m_start, m_duration) : m_radius;
+        }
+
+        private void SetRing(float radius)
+        {
+            if (!m_ring || Mathf.Abs(radius - m_ringRadius) < 0.02f)
+            {
+                return;
+            }
+            m_ringRadius = radius;
+            const int points = 32;
+            m_ring.positionCount = points;
+            for (int i = 0; i < points; i++)
+            {
+                float angle = i * Mathf.PI * 2f / points;
+                m_ring.SetPosition(i, m_point + new Vector3(Mathf.Cos(angle) * radius, 0.1f, Mathf.Sin(angle) * radius));
+            }
         }
 
         /// <summary>
@@ -150,6 +176,10 @@ namespace Orlog.Content
                 return;
             }
             float elapsed = Time.time - m_start;
+            if (m_spreads)
+            {
+                SetRing(CurrentRadius());
+            }
             while (m_hitsDone < m_hits && elapsed >= HitTime(m_hitsDone))
             {
                 m_hitsDone++;
@@ -172,7 +202,12 @@ namespace Orlog.Content
 
         private void Hit()
         {
-            BowSkills.CharactersInBlast(m_point, m_radius, null, s_inArea);
+            float radius = CurrentRadius();
+            if (radius <= 0f)
+            {
+                return;
+            }
+            BowSkills.CharactersInBlast(m_point, radius, null, s_inArea);
             foreach (var target in s_inArea)
             {
                 if (!target || target == m_owner || target.IsPlayer() || target.IsDead() || !BaseAI.IsEnemy(m_owner, target))
@@ -191,9 +226,9 @@ namespace Orlog.Content
                 hit.m_point = target.GetCenterPoint();
                 hit.m_dir = Vector3.up;
                 // Marked as an area hit, like the blast's (Explode).
-                hit.m_radius = m_radius;
+                hit.m_radius = radius;
                 hit.m_ranged = true;
-                hit.m_skill = Skills.SkillType.Bows;
+                hit.m_skill = m_skillType;
                 hit.m_skillRaiseAmount = 0f;
                 // Damage over time (Krogon, 2026-11-18, decision 19): typed as the game's own burning and poison, so
                 // Corruption's on-hit affixes (life steal, Skadi, Rallying, the procs) skip it. Penetrate still applies.

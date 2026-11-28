@@ -32,6 +32,8 @@ namespace Orlog
             ZoneManager.OnVanillaLocationsAvailable += () => Safe.Run("make the Orlog stone", OrlogStone.Build);
             // The freeze copies the game's Immobilized status effect, which needs ObjectDB.
             PrefabManager.OnVanillaPrefabsAvailable += () => Safe.Run("add the skills' status effects", BowSkills.RegisterStatusEffects);
+            // The ghost javelins copy each spear's own throw projectile (roadmap C6).
+            PrefabManager.OnVanillaPrefabsAvailable += () => Safe.Run("make the ghost javelins", Javelins.Build);
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();

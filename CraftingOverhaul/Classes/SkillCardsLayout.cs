@@ -25,6 +25,8 @@ namespace CraftingOverhaul.Classes
 
         public bool Passive => Kind == "passive";
         public bool Later => Status == "later";
+        /// <summary>A basic skill: outside the tabs, always learned, no points (Gungnir's Throw; Krogon, 2026-11-28).</summary>
+        public bool Basic => Status == "basic";
         public bool Dropped => Status == "dropped";
         public bool Maxed => MaxPoints > 0 && Points >= MaxPoints;
 
@@ -83,6 +85,9 @@ namespace CraftingOverhaul.Classes
     /// </summary>
     internal static class SkillCardsLayout
     {
+        /// <summary>The line under a basic skill's name.</summary>
+        public const string BasicLabel = "Basic · always learned";
+
         public const int Rows = 3;
         public const int Cols = 3;
         public const float CardWidth = 236f;
@@ -116,7 +121,21 @@ namespace CraftingOverhaul.Classes
             var result = new List<SkillView>();
             foreach (var skill in skills)
             {
-                if (skill != null && skill.Tab == tab && !skill.Dropped)
+                if (skill != null && skill.Tab == tab && !skill.Dropped && !skill.Basic)
+                {
+                    result.Add(skill);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>The basic skills (shown as cards above the tabs), in table order.</summary>
+        public static List<SkillView> Basics(IEnumerable<SkillView> skills)
+        {
+            var result = new List<SkillView>();
+            foreach (var skill in skills)
+            {
+                if (skill != null && skill.Basic)
                 {
                     result.Add(skill);
                 }
@@ -126,6 +145,10 @@ namespace CraftingOverhaul.Classes
 
         public static CardState StateOf(SkillView skill)
         {
+            if (skill.Basic)
+            {
+                return CardState.Learned;
+            }
             if (skill.Later)
             {
                 return CardState.Later;
@@ -144,6 +167,10 @@ namespace CraftingOverhaul.Classes
         /// <summary>The line under a card's name: "Coming later", "Not learned" or "Rank 3 / 20".</summary>
         public static string RankLabel(SkillView skill)
         {
+            if (skill.Basic)
+            {
+                return BasicLabel;
+            }
             if (skill.Later)
             {
                 return "Coming later";

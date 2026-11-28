@@ -45,10 +45,95 @@ namespace CraftingOverhaul.Tests
             var built = Tree().Skills.Where(s => s.Built && s.Kind != "passive").ToList();
             Assert.Equal(built.Select(s => s.Id).OrderBy(x => x), v.SkillIds.OrderBy(x => x));
             // The bow skills and Inner Sight (C5) have their tooltip text; the spear skills come with C6.
-            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight", "ForkedLightning", "WindLance", "Strafe", "ImmolationArrow", "VenomStrike", "Snipe", "ShackleShot" })
+            foreach (var id in new[] { "MultipleShot", "FreezingArrow", "InnerSight", "ForkedLightning", "WindLance", "Strafe", "ImmolationArrow", "VenomStrike", "Snipe", "ShackleShot",
+                         "LightningBolt", "PlagueJavelin", "GungnirsThrow" })
             {
                 Assert.False(string.IsNullOrEmpty(ActiveSkillRules.Describe(id, v, 1, 1f, 25f)), id);
             }
+        }
+
+        [Fact]
+        public void TheGhostJavelinSkillsHaveKrogonsNumbers()
+        {
+            // docs/handoffs/claude-optimistic-ramanujan-acdyf8.md, decisions 9-14.
+            var v = Values();
+            // Lightning Bolt: 75% -> 200% of the throw, all lightning, twice a thrown spear's speed; eitr D2's 6 + 0.25.
+            Assert.Equal(75f, v.Get("LightningBolt", "weapon_damage_pct", 1));
+            Assert.Equal(200f, v.Get("LightningBolt", "weapon_damage_pct", 20));
+            Assert.Equal(200f, v.Get("LightningBolt", "speed_pct", 1));
+            Assert.Equal(6f, v.Get("LightningBolt", "mana_cost", 1));
+            Assert.Equal(10.75f, v.Get("LightningBolt", "mana_cost", 20));
+            Assert.False(v.Has("LightningBolt", "lightning_damage_max"));
+            // Plague Javelin: the hit 100%, the cloud 25% -> 100% a second, out to 4 m over 3 s -> 6.8 s; eitr 7 + 0.5.
+            Assert.Equal(100f, v.Get("PlagueJavelin", "weapon_damage_pct", 20));
+            Assert.Equal(25f, v.Get("PlagueJavelin", "cloud_damage_pct", 1));
+            Assert.Equal(100f, v.Get("PlagueJavelin", "cloud_damage_pct", 20));
+            Assert.Equal(4f, v.Get("PlagueJavelin", "radius_m", 1));
+            Assert.Equal(3f, v.Get("PlagueJavelin", "poison_duration_s", 1));
+            Assert.Equal(6.8f, v.Get("PlagueJavelin", "poison_duration_s", 20), 3);
+            Assert.Equal(7f, v.Get("PlagueJavelin", "mana_cost", 1));
+            Assert.Equal(16.5f, v.Get("PlagueJavelin", "mana_cost", 20));
+            Assert.False(v.Has("PlagueJavelin", "poison_damage_max"));
+            // Gungnir's Throw has no numbers of its own: the game's throw.
+            Assert.DoesNotContain("GungnirsThrow", v.SkillIds);
+        }
+
+        [Fact]
+        public void ThrowSkillsAreTheGhostJavelins()
+        {
+            Assert.True(ActiveSkillRules.Throws("GungnirsThrow"));
+            Assert.True(ActiveSkillRules.Throws("LightningBolt"));
+            Assert.True(ActiveSkillRules.Throws("plaguejavelin"));
+            Assert.False(ActiveSkillRules.Throws("PoisonJavelin"));
+            Assert.False(ActiveSkillRules.Throws("Jab"));
+            Assert.False(ActiveSkillRules.Throws("VenomStrike"));
+            Assert.False(ActiveSkillRules.Throws(null));
+            Assert.False(ActiveSkillRules.Charges("LightningBolt"));
+        }
+
+        [Fact]
+        public void PlagueCloudSpreadsEvenlyToItsRadius()
+        {
+            Assert.Equal(0f, ActiveSkillRules.SpreadRadius(4f, 0f, 3f));
+            Assert.Equal(2f, ActiveSkillRules.SpreadRadius(4f, 1.5f, 3f), 4);
+            Assert.Equal(4f, ActiveSkillRules.SpreadRadius(4f, 3f, 3f));
+            Assert.Equal(4f, ActiveSkillRules.SpreadRadius(4f, 10f, 3f));
+            Assert.Equal(0f, ActiveSkillRules.SpreadRadius(4f, -1f, 3f));
+            Assert.Equal(4f, ActiveSkillRules.SpreadRadius(4f, 0f, 0f));
+            Assert.Equal(0f, ActiveSkillRules.SpreadRadius(0f, 2f, 3f));
+            // Level 20's cloud lasts 6.8 s: at its 3rd poisoning (3 s) it reaches 1.76 m.
+            Assert.Equal(1.765f, ActiveSkillRules.SpreadRadius(4f, 3f, 6.8f), 3);
+        }
+
+        [Fact]
+        public void StuckGhostFadesOverASecond()
+        {
+            Assert.Equal(1f, ActiveSkillRules.GhostAlpha(0f));
+            Assert.Equal(0.5f, ActiveSkillRules.GhostAlpha(0.5f), 4);
+            Assert.Equal(0f, ActiveSkillRules.GhostAlpha(1f));
+            Assert.Equal(0f, ActiveSkillRules.GhostAlpha(5f));
+            Assert.Equal(0f, ActiveSkillRules.GhostAlpha(0.1f, 0f));
+            Assert.Equal(1f, ActiveSkillRules.GhostFadeSeconds);
+        }
+
+        [Fact]
+        public void GhostJavelinTooltips()
+        {
+            var v = Values();
+            string bolt = ActiveSkillRules.Describe("LightningBolt", v, 1, 1f, 25f);
+            Assert.Contains("75% of the throw's damage", bolt);
+            Assert.Contains("2× a thrown spear's speed", bolt);
+            Assert.Contains("all of it lightning", bolt);
+            Assert.Contains("200%", ActiveSkillRules.Describe("LightningBolt", v, 20, 1f, 25f));
+            string plague = ActiveSkillRules.Describe("PlagueJavelin", v, 1, 1f, 25f);
+            Assert.Contains("100% of the throw's damage", plague);
+            Assert.Contains("spreads out to 4 m over 3 s", plague);
+            Assert.Contains("25% of the throw's damage each second", plague);
+            Assert.Contains("over 6.8 s", ActiveSkillRules.Describe("PlagueJavelin", v, 20, 1f, 25f));
+            // The admin's multiplier scales the cloud's share (as Venom Strike's), not the hit.
+            Assert.Contains("50% of the throw's damage each second", ActiveSkillRules.Describe("PlagueJavelin", v, 1, 2f, 25f));
+            Assert.Contains("spear stays in your hand", ActiveSkillRules.Describe("GungnirsThrow", v, 1, 1f, 25f));
+            Assert.Null(ActiveSkillRules.Describe("GungnirsThrow", v, 0, 1f, 25f));
         }
 
         [Fact]

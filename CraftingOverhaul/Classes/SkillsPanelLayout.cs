@@ -11,7 +11,7 @@ namespace CraftingOverhaul.Classes
     ///
     ///     Left column: the character box (level, XP, stat points, the four attributes) and under it the skill details
     ///     pane (the hovered or selected skill: name, rank, cost, what it does now and next).
-    ///     Right column: the three tabs, the tab's nine skill cards on a dark tablet (<see cref="SkillCardsLayout" />),
+    ///     Right column: a row of basic skill cards (Gungnir's Throw; always learned, no points), the three tabs, the tab's nine skill cards on a dark tablet (<see cref="SkillCardsLayout" />),
     ///     and a bottom strip with the four skill slots and the Learn button.
     /// </summary>
     internal static class SkillsPanelLayout
@@ -23,6 +23,9 @@ namespace CraftingOverhaul.Classes
         public const float CloseSize = 36f;
         public const float LeftWidth = 320f;
         public const float TabHeight = 34f;
+        /// <summary>The row of basic skill cards above the tabs (Gungnir's Throw; Krogon, 2026-11-28).</summary>
+        public const float BasicHeight = 60f;
+        public const float BasicMedallion = 44f;
         public const float TabGap = 6f;
         public const float TabletPadding = 16f;
         public const float SlotSize = 56f;
@@ -70,7 +73,20 @@ namespace CraftingOverhaul.Classes
             return System.Math.Max(1f, System.Math.Min(3f, fit));
         }
 
-        public static SheetRect Tablet => new SheetRect(RightX, HeaderHeight + TabHeight + TabGap, RightWidth,
+        /// <summary>The top of the tabs: under the row of basic skill cards.</summary>
+        public static float TabsTop => HeaderHeight + BasicHeight + TabGap;
+
+        /// <summary>A basic skill's card (outside the tabs, always learned), left to right above the tabs.</summary>
+        public static SheetRect BasicCard(int index) =>
+            new SheetRect(RightX + index * (SkillCardsLayout.CardWidth + SkillCardsLayout.Gap), HeaderHeight, SkillCardsLayout.CardWidth, BasicHeight);
+
+        // ---- inside a basic card (relative to it)
+
+        public static SheetRect BasicIcon => new SheetRect(10f, (BasicHeight - BasicMedallion) / 2f, BasicMedallion, BasicMedallion);
+        public static SheetRect BasicName => new SheetRect(BasicMedallion + 20f, 8f, SkillCardsLayout.CardWidth - BasicMedallion - 28f, 24f);
+        public static SheetRect BasicLabel => new SheetRect(BasicMedallion + 20f, 32f, SkillCardsLayout.CardWidth - BasicMedallion - 28f, 18f);
+
+        public static SheetRect Tablet => new SheetRect(RightX, TabsTop + TabHeight + TabGap, RightWidth,
             SkillCardsLayout.GridHeight + 2f * TabletPadding);
 
         /// <summary>The card grid on the tablet.</summary>
@@ -88,7 +104,7 @@ namespace CraftingOverhaul.Classes
         public static SheetRect Message => new SheetRect(RightX, Height - Margin + 1f, RightWidth, 20f);
 
         public static float TabWidth => (RightWidth - 2f * TabGap) / 3f;
-        public static SheetRect Tab(int index) => new SheetRect(RightX + index * (TabWidth + TabGap), HeaderHeight, TabWidth, TabHeight);
+        public static SheetRect Tab(int index) => new SheetRect(RightX + index * (TabWidth + TabGap), TabsTop, TabWidth, TabHeight);
 
         public static SheetRect Character
         {
@@ -189,6 +205,11 @@ namespace CraftingOverhaul.Classes
             Add("close", Close);
             Add("skillPoints", SkillPoints);
             Add("message", Message);
+            var basic = BasicCard(0);
+            Add("basic0", basic);
+            AddIn("basicIcon", basic, BasicIcon);
+            AddIn("basicName", basic, BasicName);
+            AddIn("basicLabel", basic, BasicLabel);
             for (int i = 0; i < 3; i++)
             {
                 Add("tab" + i, Tab(i));

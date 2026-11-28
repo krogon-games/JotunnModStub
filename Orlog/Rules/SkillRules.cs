@@ -19,7 +19,9 @@ namespace Orlog.Rules
         /// <summary>Every tab of every class holds exactly this many skills (Krogon, 2026-11-15).</summary>
         public const int SkillsPerTab = Rows * Cols;
 
-        private static readonly string[] Statuses = { "v1", "reworked", "later", "dropped" };
+        private static readonly string[] Statuses = { "v1", "reworked", "later", "dropped", "basic" };
+        /// <summary>The tab of the basic skills, shown as cards above the three tabs (Krogon, 2026-11-28).</summary>
+        public const int BasicTab = -1;
         private static readonly string[] Kinds = { "attack", "cast", "passive" };
 
         public sealed class Skill
@@ -29,7 +31,10 @@ namespace Orlog.Rules
             public int Tab;
             public int Row;
             public int Col;
-            /// <summary><c>v1</c>, <c>reworked</c>, <c>later</c> or <c>dropped</c> (<c>class-design.md</c> §4).</summary>
+            /// <summary>
+            ///     <c>v1</c>, <c>reworked</c>, <c>later</c> or <c>dropped</c> (<c>class-design.md</c> §4), or <c>basic</c>: outside
+            ///     the tabs, always learned at level 1, no skill points (Gungnir's Throw; Krogon, 2026-11-28).
+            /// </summary>
             public string Status;
             /// <summary><c>attack</c> (on the skill button), <c>cast</c> (on its hotkey) or <c>passive</c> (no slot).</summary>
             public string Kind;
@@ -41,6 +46,12 @@ namespace Orlog.Rules
 
             /// <summary>Built skills can take points; later and dropped ones can't (and don't block others).</summary>
             public bool Built => Status == "v1" || Status == "reworked";
+
+            /// <summary>A basic skill (<see cref="BasicTab" />): every character with the class has it, at level 1, for no points.</summary>
+            public bool IsBasic => Status == "basic";
+
+            /// <summary>Works now: built, or a basic skill.</summary>
+            public bool Works => Built || IsBasic;
         }
 
         private readonly List<Skill> _skills = new List<Skill>();
@@ -90,7 +101,14 @@ namespace Orlog.Rules
                 {
                     errors.Add($"{file}: {skill.Id} has kind '{skill.Kind}' ({string.Join(", ", Kinds)}).");
                 }
-                if (skill.Tab < 0 || skill.Tab >= Tabs || skill.Row < 1 || skill.Row > Rows || skill.Col < 1 || skill.Col > Cols)
+                if (skill.IsBasic)
+                {
+                    if (skill.Tab != BasicTab || skill.Row != 1 || skill.Col < 1)
+                    {
+                        errors.Add($"{file}: {skill.Id} is a basic skill: tab {BasicTab}, row 1, col 1 or more.");
+                    }
+                }
+                else if (skill.Tab < 0 || skill.Tab >= Tabs || skill.Row < 1 || skill.Row > Rows || skill.Col < 1 || skill.Col > Cols)
                 {
                     errors.Add($"{file}: {skill.Id} is outside the grid (tab 0-{Tabs - 1}, row 1-{Rows}, col 1-{Cols}).");
                 }
@@ -119,6 +137,9 @@ namespace Orlog.Rules
     /// </summary>
     internal static class SkillRules
     {
+        /// <summary>Why a basic skill takes no points (and the Learn button's text for it).</summary>
+        public const string BasicNoPoints = "Basic skill: always learned";
+
         /// <summary>
         ///     Unspent skill points; never below 0 (a lowered setting keeps the spent points). The total is overflow-safe
         ///     (<see cref="AttributeRules.Total" />), so a damaged save reads as nothing to spend instead of throwing.
@@ -164,6 +185,12 @@ namespace Orlog.Rules
             return id != null && points.TryGetValue(id, out int n) ? n : 0;
         }
 
+        /// <summary>A skill's level from the points in it; a basic skill is always level 1 (Krogon, 2026-11-28).</summary>
+        public static int LevelIn(IDictionary<string, int> points, SkillTable.Skill skill)
+        {
+            return skill == null ? 0 : skill.IsBasic ? 1 : PointsIn(points, skill.Id);
+        }
+
         /// <summary>
         ///     The saved points without the skills the class no longer has, so their points count as unspent again (the
         ///     2026-11-15 overhaul removed skills characters had points in). A null table keeps everything.
@@ -189,6 +216,10 @@ namespace Orlog.Rules
         /// </summary>
         public static string SpendBlocked(SkillTable.Skill skill, int level, IDictionary<string, int> points, int unspent, int maxPoints, bool pace)
         {
+            if (skill.IsBasic)
+            {
+                return BasicNoPoints;
+            }
             if (!skill.Built)
             {
                 return "Coming later";

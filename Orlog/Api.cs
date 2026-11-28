@@ -160,8 +160,9 @@ namespace Orlog
             {
                 return "";
             }
-            int points = SkillRules.PointsIn(SkillPoints.Points(player), skill.Id);
-            int max = OrlogConfig.MaxSkillPoints.Value;
+            // A basic skill (Gungnir's Throw) is always learned at level 1 and takes no points (Krogon, 2026-11-28).
+            int points = SkillRules.LevelIn(SkillPoints.Points(player), skill);
+            int max = skill.IsBasic ? 1 : OrlogConfig.MaxSkillPoints.Value;
             string blocked = SkillPoints.SpendBlocked(player, skill);
             var json = new StringBuilder("{");
             Field(json, "id", skill.Id);
@@ -182,7 +183,7 @@ namespace Orlog
             string now = Passives.Describe(cls, skill.Id, points) ?? SkillBar.Describe(player, skill.Id, points) ?? skill.Description;
             string next = Passives.Describe(cls, skill.Id, points + 1) ?? SkillBar.Describe(player, skill.Id, points + 1) ?? skill.Description;
             Field(json, "description", points > 0 ? now : "Not learned yet. " + skill.Description);
-            Field(json, "nextDescription", points < max ? "Level " + (points + 1).ToString(CultureInfo.InvariantCulture) + ": " + next : "");
+            Field(json, "nextDescription", points < max && !skill.IsBasic ? "Level " + (points + 1).ToString(CultureInfo.InvariantCulture) + ": " + next : "");
             Field(json, "eitrCost", ActiveSkillRules.EitrCost(skill, SkillBar.ValuesFor(cls), points));
             json.Length--;
             return json.Append('}').ToString();

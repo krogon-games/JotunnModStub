@@ -33,7 +33,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void TheMainBoxesDoNotOverlap()
         {
-            var boxes = new[] { "character", "details", "tab0", "tab1", "tab2", "tablet", "slotsLabel", "slot0", "slot1", "slot2", "slot3", "slotsDivider", "learn", "close", "skillPoints" };
+            var boxes = new[] { "character", "details", "basic0", "tab0", "tab1", "tab2", "tablet", "slotsLabel", "slot0", "slot1", "slot2", "slot3", "slotsDivider", "learn", "close", "skillPoints" };
             for (int i = 0; i < boxes.Length; i++)
             {
                 for (int j = i + 1; j < boxes.Length; j++)
@@ -41,6 +41,22 @@ namespace CraftingOverhaul.Tests
                     Assert.False(Overlap(Rects[boxes[i]], Rects[boxes[j]]), boxes[i] + " overlaps " + boxes[j]);
                 }
             }
+        }
+
+        [Fact]
+        public void TheBasicCardSitsAboveTheTabs()
+        {
+            // Gungnir's Throw (Krogon, 2026-11-28, decision 6): a card above the tabs, under the header's skill points.
+            var basic = Rects["basic0"];
+            Assert.True(basic.Y + basic.Height <= Rects["tab0"].Y);
+            Assert.True(basic.Y >= Rects["skillPoints"].Y + Rects["skillPoints"].Height);
+            Assert.Equal(Rects["tab0"].X, basic.X);
+            foreach (var name in new[] { "basicIcon", "basicName", "basicLabel" })
+            {
+                Assert.True(Inside(Rects[name], basic), name);
+            }
+            Assert.False(Overlap(Rects["basicIcon"], Rects["basicName"]));
+            Assert.False(Overlap(Rects["basicName"], Rects["basicLabel"]));
         }
 
         [Fact]
