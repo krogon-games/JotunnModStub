@@ -4,7 +4,7 @@
 
 ## Stage
 
-Asking Krogon questions.
+Building.
 
 ## Purpose
 
@@ -28,6 +28,7 @@ Nothing built yet.
 6. **"Helmets and Armors" = helmet, chest, legs and cape** (2026-11-28): "Helmet, chest, legs, cape". Backpacks count (they are capes in `loot_bases.csv`); jewellery doesn't.
 7. **Ranged = bows, crossbows and magic staffs** (2026-11-28): "Bows, crossbows, staffs". Every other weapon (pickaxes included) is melee.
 8. **The loot affixes act on kills and on the heart's spill** (2026-11-28): "Kills and the spill". The heart's per-player orbs and gear get the same ×2s.
+9. **Names and copy as Claude proposed** (2026-11-28): "Use these". Bountiful ("Enemies are {value}% more likely to drop gear, orbs and maps."), Glittering (orbs), Runic (runes, `later`), Bulwarked ("Gear drops are {value}% more likely to be shields."), Mailed (helmets and armour), Honed (melee weapons), Fletched (ranged weapons). Value 100 (decision 7 of the map affix overhaul), under "What you'll earn".
 
 ## Playtest
 
@@ -35,7 +36,7 @@ None yet.
 
 ## Open questions for Krogon
 
-Asking now: names and copy.
+None.
 
 ## Next steps
 
