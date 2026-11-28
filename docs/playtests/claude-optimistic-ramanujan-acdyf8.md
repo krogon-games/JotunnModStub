@@ -68,11 +68,21 @@ If something looks wrong, tell me what you saw and send `BepInEx/LogOutput.log`:
 
 **Phone page:** the first section, "This round: re-test, the ghost javelin's look (#41)" (step ids `r2-1` … `r2-8`). Round 1's steps are off the page.
 
-1. [ ] (`r2-1`) After loading a world, `BepInEx/LogOutput.log` has `Orlog: made the ghost javelins for N more spear throws`, with N about 20 (0 on the second line is fine). After your first Gungnir's Throw: `Orlog: ghost javelin …: X model part(s) tinted, light on, trail on.` Copy both lines into the note.
-2. [ ] (`r2-2`) Gungnir's Throw at the dummy → the spear in flight is **see-through gold** with a soft gold light and a faint trail; it doesn't look like the real spear.
-3. [ ] (`r2-3`) The ghost **stays visible where it sticks** (in the dummy, or the ground if you miss) and **fades out in about a second**.
-4. [ ] (`r2-4`) Lightning Bolt → the gold spear **crackles with blue-white lightning** in flight, faster than Gungnir's Throw.
-5. [ ] (`r2-5`) Plague Javelin → **green drips** fall in flight; where it lands, **a soft green cloud spreads out** to about 4 m, with a **thin, faint ring** at its edge (much less bright than before).
-6. [ ] (`r2-6`) Abyssal Harpoon (`spawn SpearChitin`, Gungnir's Throw on its slot): right click → a **gold ghost harpoon**, no rope and no pull. Left click is still the real harpoon throw, rope and pull included.
-7. [ ] (`r2-7`) Your verdict on the looks now. Anything to change?
-8. [ ] (`r2-8`) **The freeze test.** On 2026-11-29 the game froze during this re-test (`BepInEx/corruption_freeze.txt`: "the main thread is inside our mods' code: Orlog: \"set a ghost javelin's damage\""; you restarted, repeated the same thing and it didn't freeze). That code does nothing that can loop; its only slow part is writing a log line (one per skill throw). Claude's guess, not confirmed: on Windows, a click inside the BepInEx console window pauses it to select text, and the game then hangs at its next log line until a key is pressed there. You said this was "very possible but not sure". Test: with the console window open, click once inside it (its title starts with "Select"), go back to the game and throw Gungnir's Throw a few times. Does it freeze? If so, click the console and press `Esc`: does the game come back at once?
+1. [x] (`r2-1`) After loading a world, `BepInEx/LogOutput.log` has `Orlog: made the ghost javelins for N more spear throws`, with N about 20 (0 on the second line is fine). After your first Gungnir's Throw: `Orlog: ghost javelin …: X model part(s) tinted, light on, trail on.` Copy both lines into the note.
+2. [x] (`r2-2`) Gungnir's Throw at the dummy → the spear in flight is **see-through gold** with a soft gold light and a faint trail; it doesn't look like the real spear.
+3. [x] (`r2-3`) The ghost **stays visible where it sticks** (in the dummy, or the ground if you miss) and **fades out in about a second**.
+4. [x] (`r2-4`) Lightning Bolt → the gold spear **crackles with blue-white lightning** in flight, faster than Gungnir's Throw.
+5. [x] (`r2-5`) Plague Javelin → **green drips** fall in flight; where it lands, **a soft green cloud spreads out** to about 4 m, with a **thin, faint ring** at its edge (much less bright than before).
+6. [x] (`r2-6`) Abyssal Harpoon (`spawn SpearChitin`, Gungnir's Throw on its slot): right click → a **gold ghost harpoon**, no rope and no pull. Left click is still the real harpoon throw, rope and pull included.
+7. [x] (`r2-7`) Your verdict on the looks now. Anything to change?
+8. [x] (`r2-8`) **The freeze test.** On 2026-11-29 the game froze during this re-test (`BepInEx/corruption_freeze.txt`: "the main thread is inside our mods' code: Orlog: \"set a ghost javelin's damage\""; you restarted, repeated the same thing and it didn't freeze). That code does nothing that can loop; its only slow part is writing a log line (one per skill throw). Claude's guess, not confirmed: on Windows, a click inside the BepInEx console window pauses it to select text, and the game then hangs at its next log line until a key is pressed there. You said this was "very possible but not sure". Test: with the console window open, click once inside it (its title starts with "Select"), go back to the game and throw Gungnir's Throw a few times. Does it freeze? If so, click the console and press `Esc`: does the game come back at once?
+
+### Your feedback (2026-11-28/29, phone page)
+All 8 passed, no notes on 1–7. On `r2-8` you pasted the log: the ghost is drawn ("the ghost javelin is drawn with Sprites/Default", "ghost javelin Orlog_BoltSpear_projectile_chitinharpoon(Clone): 1 model part(s) tinted, light on, trail on", Lightning Bolt lines), and the freeze watch caught the game again inside "set a ghost javelin's damage" (plus one freeze outside our code). In chat: "that was most definitely the source of the glitch. no need to do anything to fix it. just document and move on. this should not happen in normal gameplay, only when playtesting and checking the log while game is running. the freeze/hang resumes the game as soon as you switch to the bepinex log window and press Esc to clear selection." And: "Also noticed a little bug, the throw has no icon" (a screenshot of the Basic card with an empty medallion).
+
+### What changed after the feedback
+- The freeze: documented in `FEATURES.md` → Freeze watch (decision 19); no code change.
+- The icon: Gungnir's Throw now has a placeholder icon like the other skills, a gold spear with gold streaks (`tools/make_skill_icons.py`).
+
+### Final play-test
+1. [ ] (`fin-1`) Build from this branch again (CraftingOverhaul changed). Press `K`: the Basic card's medallion shows a **gold spear** icon, and so does its slot on the skill cross once it's in a slot.

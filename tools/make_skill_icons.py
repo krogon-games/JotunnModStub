@@ -1092,6 +1092,18 @@ def icon_energy(cv):
     solid(cv, boltm, GOLD, depth=2.2, bias=0.1)
 
 
+def icon_gungnirs_throw(cv):
+    """Gungnir's Throw (basic skill, 2026-11-28): a gold ghost spear flying where you aim, trailing gold streaks."""
+    aura(cv, GLOW_GOLD, 0.24)
+    u = unit(V(1, -1))
+    n = perp(u)
+    streaks = [[V(22, 66) + n * s * 9 - u * 2, V(22, 66) + n * s * 9 + u * ln] for s, ln in ((-1, 20), (1, 16))]
+    speed_lines(cv, streaks, 2.4, GOLD, alpha=0.7, glow_colour=GLOW_GOLD)
+    spear(cv, V(24, 76), V(76, 24), head_len=22, head_w=13, shaft=3.4, head=GOLD, shaft_pal=GOLD, alpha=0.85,
+          glow_colour=GLOW_GOLD, glow_r=3.2, glow_s=1.3)
+    sparkle(cv, V(76, 24), 4.5, (1, 1, 1), GLOW_GOLD)
+
+
 ATTRIBUTE_ICONS = [("Strength", icon_strength), ("Dexterity", icon_dexterity), ("Vitality", icon_vitality),
                    ("Energy", icon_energy)]
 
@@ -1114,6 +1126,8 @@ TABS = [
         ("PoisonJavelin", icon_poison_javelin), ("PlagueJavelin", icon_plague_javelin), ("LightningFury", icon_lightning_fury)]),
 ]
 CLASS_ICON = ("Amazon", icon_amazon)
+# Basic skills: outside the tabs, a card above them (Krogon, 2026-11-28).
+BASIC_ICONS = [("GungnirsThrow", icon_gungnirs_throw)]
 
 
 # ---------------------------------------------------------------- output
@@ -1153,7 +1167,7 @@ def preview(icons):
     cols, pitch, margin = 9, 100, 20
     w = margin * 2 + cols * pitch
     row_h = 30 + 64 + 22 + 56 + 14
-    h = margin + len(TABS) * row_h + 2 * (30 + 64 + 22) + margin
+    h = margin + len(TABS) * row_h + 3 * (30 + 64 + 22) + margin
     sheet = Image.new("RGBA", (w, h), (0x3A, 0x2A, 0x1E, 255))
     d = ImageDraw.Draw(sheet)
     f_tab, f_name = font(15), font(10)
@@ -1164,7 +1178,7 @@ def preview(icons):
         sheet.alpha_composite(icons[name].resize((size, size), Image.LANCZOS), (cx - size // 2, top))
 
     y = margin
-    for tab, skills in TABS + [("Class", [CLASS_ICON]), ("Attributes", ATTRIBUTE_ICONS)]:
+    for tab, skills in TABS + [("Basic", BASIC_ICONS), ("Class", [CLASS_ICON]), ("Attributes", ATTRIBUTE_ICONS)]:
         d.text((margin, y), tab, font=f_tab, fill=(232, 196, 106))
         y += 26
         for i, (name, _) in enumerate(skills):
@@ -1173,16 +1187,16 @@ def preview(icons):
             d.text((cx, y + 68), label(name), font=f_name, fill=(236, 226, 206), anchor="mt")
             if tab == "Attributes":
                 put(name, 28, cx + 44, y + 18, framed=False)
-            elif tab != "Class":
+            elif tab not in ("Class", "Basic"):
                 put(name, 48, cx, y + 86)
-        y += row_h - 26 if tab not in ("Class", "Attributes") else 30 + 64 + 22 - 26
+        y += row_h - 26 if tab not in ("Class", "Basic", "Attributes") else 30 + 64 + 22 - 26
     sheet.save(PREVIEW)
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
     icons = {}
-    for _, skills in TABS + [("Class", [CLASS_ICON]), ("Attributes", ATTRIBUTE_ICONS)]:
+    for _, skills in TABS + [("Basic", BASIC_ICONS), ("Class", [CLASS_ICON]), ("Attributes", ATTRIBUTE_ICONS)]:
         for name, draw in skills:
             img = render(draw)
             img.save(os.path.join(OUT, name + ".png"))

@@ -4,7 +4,7 @@
 
 ## Stage
 
-Fixing feedback: round 1's fixes built, waiting for Krogon's re-test.
+Waiting for Krogon's final play-test (one step: the Basic card's icon).
 
 ## Purpose
 
@@ -42,10 +42,11 @@ Built 2026-11-28, **not play-tested** (821 tests pass; Orlog and CraftingOverhau
 16. **2026-11-28: the preview of the three looks is approved** ("Approved, build it"; `docs/images/javelins_preview.png`, drawn by `tools/preview_javelins.py`).
 17. **2026-11-28 (play-test): Plague Javelin's cloud grows in size, and its ring stays but blends in** (his note on `c6-2`: "it would be better if the poison cloud grew in size instead … keep the ring for now, maybe give it a slightly less intrusive and blended feel"). Built: soft green puffs fill the cloud's reach as it spreads; the ring is thinner and half see-through, the light dimmer. Venom Strike's and Immolation Arrow's rings are unchanged.
 18. **2026-11-28 (play-test): the glowing ground ring's design is to be revisited for every area skill later**, as its own ticket ("add it as a ticket to work on in the future"): [#105](https://github.com/krogon-games/JotunnModStub/issues/105).
+19. **2026-11-29: the freezes were the BepInEx console window's text selection; don't fix it, document it** ("that was most definitely the source of the glitch. no need to do anything to fix it. just document and move on. this should not happen in normal gameplay … the freeze/hang resumes the game as soon as you switch to the bepinex log window and press Esc to clear selection"). Documented in `FEATURES.md` → Freeze watch.
 
 ## Playtest
 
-`docs/playtests/claude-optimistic-ramanujan-acdyf8.md`. **Round 1 (2026-11-28):** 12 of 18 passed (the Basic card, slots, stamina and eitr, damage, holding, Spears skill, Lightning Bolt's and Plague Javelin's numbers, the eitr check). Failed: the ghost looked like the game's spear, with no gold, glow or trail (`gt-3`, `lb-2`, `pj-2`), and vanished on impact (`gt-4`), because the ghost copies were never made (the game's item list is empty when they were built); the Abyssal Harpoon throws with left click, so right click did nothing (`gt-8`); the verdict (`c6-2`) asked for a growing cloud and a softer ring. All fixed, not yet re-tested. **Round 2:** 8 re-test steps (`r2-1` … `r2-8`), on the phone page too. **A freeze on 2026-11-29** during the re-test: the freeze watch caught the main thread inside "set a ghost javelin's damage" (whose only slow part is a log line); not reproduced after a restart. Claude's guess, unconfirmed: the BepInEx console window paused by a click (Windows' select mode) blocks every log line; Krogon will test it (`r2-8`). If confirmed: offer to turn the console's select mode off at start-up, or fewer log lines.
+`docs/playtests/claude-optimistic-ramanujan-acdyf8.md`. **Round 1 (2026-11-28):** 12 of 18 passed (the Basic card, slots, stamina and eitr, damage, holding, Spears skill, Lightning Bolt's and Plague Javelin's numbers, the eitr check). Failed: the ghost looked like the game's spear, with no gold, glow or trail (`gt-3`, `lb-2`, `pj-2`), and vanished on impact (`gt-4`), because the ghost copies were never made (the game's item list is empty when they were built); the Abyssal Harpoon throws with left click, so right click did nothing (`gt-8`); the verdict (`c6-2`) asked for a growing cloud and a softer ring. All fixed, not yet re-tested. **Round 2 (2026-11-28/29): all 8 passed** (`r2-1` … `r2-8`). **A freeze on 2026-11-29** during the re-test: the freeze watch caught the main thread inside "set a ghost javelin's damage" (whose only slow part is a log line); not reproduced after a restart. Cause confirmed by Krogon: the BepInEx console window's text selection, which holds up every log line (decision 19: documented, not fixed). He then noticed the Basic card had no icon (screenshot): fixed, one final step (`fin-1`).
 
 ## Open questions for Krogon
 
@@ -53,7 +54,7 @@ Built 2026-11-28, **not play-tested** (821 tests pass; Orlog and CraftingOverhau
 
 ## Next steps
 
-1. Krogon's re-test (round 2, phone page); then the final play-test.
+1. Krogon's final step (`fin-1`, the Basic card's icon).
 2. `/handoff`, then a pull request into `master` (gameplay changed: Orlog and CraftingOverhaul).
 3. Later rounds for #41: Jab, Impale, Poison Javelin.
 
