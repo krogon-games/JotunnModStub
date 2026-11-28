@@ -140,7 +140,7 @@ Using a map opens a rip: a portal to an unexplored spot in the player's own worl
 - Waves come from the mod's own wave spawner, driven by the rip's heart, with the map's biome creatures and a raid-style on-screen message. *Changed 2026-10-28: was the vanilla raid system, which runs one raid at a time for the whole world.*
 - Spawns are **maddened**: a status effect that boosts damage and speed, disables fleeing, and ignores faction rules so creatures fight each other too.
 - Star level, the number of waves, the loot and the drop rates are pushed by map tier (see [Map affixes](#map-affixes-and-tiers); built 2026-11-27, not play-tested): the tier sets the waves, the share of guaranteed 2-stars, the heart's shards, each player's gear floor and the drop rates, and the map's affixes change the creatures. Rip creatures of rips opened since then leave once the rip has closed (they carry its closing time), as a vanilla raid's do.
-- *Since the personal-loot round (2026-11-26, passed alone, merged in PR #88) there is no chest: see End loot below.* The end loot holds the guaranteed loot: its vanilla loot, 1–3 shards, one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
+- *Since the personal-loot round (2026-11-26, passed alone, merged in PR #88) there is no chest: see End loot below.* The end loot holds the guaranteed loot: its vanilla loot, the shards of its map's tier (`map_tiers.csv`: tier 1 gives 1–4 … tier 6 gives 6–14), one map of its biome, and per player near the rip one Magic/Rare gear roll and one orb roll (user, 2026-11-23).
 
 *Built 2026-10-28 (step B), from the game data and the user's answers:*
 - **Waves are the biome boss's army:** the game's own raid(s) that stop once that boss is defeated (Eikthyr → army_eikthyr … Kall Fimbulbringer → army_elakingar and army_jotuns), with their own creatures, counts, intervals, chances and group sizes. They start when a player comes within the raid's range (96 m), with the raid's own start message, and keep coming **while the heart stands**.
@@ -167,7 +167,7 @@ After a rip closes, the area stays corrupted for **3 in-game days** *(user, 2026
 
 Affixes are the Path of Exile part: modifiers rolled onto a map that make its rip more dangerous. Every affix below reuses a vanilla status effect or stat, so none needs new art.
 
-*Changed 2026-11-26 (Krogon, rips round `claude/festive-gates-79y1yr`, decisions 6 to 8b; built 2026-11-27, **not play-tested**): the design below is replaced in four ways.* A map's tier is now its **rarity and affix count**, with **six** tiers (not four); the **orbs** put affixes on maps as they do on gear (not extra shards); **corrupting a map never breaks it**; and **every affix is danger only** (the Reward column is replaced, the tier pays). The decisions are kept in the branch's handoff (`docs/handoffs/claude-festive-gates-79y1yr.md`) and, once the coordinator copies them, in [`DECISIONS.md`](DECISIONS.md).
+*Changed 2026-11-26 (Krogon, rips round `claude/festive-gates-79y1yr`, decisions 6 to 8b; built 2026-11-27, **not play-tested**): the design below is replaced in four ways.* A map's tier is now its **rarity and affix count**, with **six** tiers (not four); the **orbs** put affixes on maps as they do on gear (not extra shards); **corrupting a map never breaks it**; and ~~**every affix is danger only** (the Reward column is replaced, the tier pays)~~ *(changed 2026-11-27: affixes can give rewards too, see Affix pool)*. The decisions are kept in the branch's handoff (`docs/handoffs/claude-festive-gates-79y1yr.md`) and, once the coordinator copies them, in [`DECISIONS.md`](DECISIONS.md).
 
 ### Tiers
 
@@ -184,7 +184,7 @@ Affixes are the Path of Exile part: modifiers rolled onto a map that make its ri
 
 - **The numbers live in [`Corruption/Data/map_tiers.csv`](../Corruption/Data/map_tiers.csv)** (waves, guaranteed 2-stars, heart shards, the drop-rate row and the heart's gear floor per tier, each with its source), and the drop rates in the `rip_tier_1` … `rip_tier_6` rows of [`drop_modifiers.csv`](../Corruption/Data/drop_modifiers.csv); they aren't repeated here. Krogon (decision 6e): "Table as proposed. Waves a". Waves go up by 0.5 per tier; drop rates by 0.25 per tier from ×1.25 (decision 4b: "Tier 1 - everything x1.25 / Tier 2 - everything x1.5 / Tier 3 - everything 1.75 / Tier 4 - everything x2 / And so on"); the heart's shards are dealt among the players near it (decision 4A).
 - **All six tiers are built this round** (decision 6f: "A"). Only 3-star creatures still wait for the elite design below (#39).
-- **Orbs craft maps** (decision 6b: "A"), exactly as gear, at the Riftforge's Forge tab: Transmutation white to tier 2, Augmentation 2 to 3, Alchemy or Chance white to tier 4, Regal 3 to 4, Exalted 4 to 5, Annulment removes an affix so the map drops a tier, the Mirror of Kalandra copies a map; Divine, the Jeweller's Orb, Affix Splinters and Shatter don't work on maps. ~~Spend extra shards at the bench to roll modifiers onto a map, with a reroll costing one more shard~~ (and the 2026-11-01 idea of one shard for 1 to 3 affixes) is replaced by this.
+- **Orbs craft maps** (decision 6b: "A"), exactly as gear, at the Riftforge's Forge tab: Transmutation white to tier 2, Augmentation 2 to 3, Alchemy or Chance white to tier 4, Regal 3 to 4, Exalted 4 to 5, Annulment removes an affix so the map drops a tier, the Mirror of Kalandra copies a map; ~~Divine~~, the Jeweller's Orb, Affix Splinters and Shatter don't work on maps. *(Changed 2026-11-27: the Divine Orb now rerolls a map's ranged affix values.)* ~~Spend extra shards at the bench to roll modifiers onto a map, with a reroll costing one more shard~~ (and the 2026-11-01 idea of one shard for 1 to 3 affixes) is replaced by this.
 - **Corrupting never breaks a map** (decision 6c: "B. We should make corrupted only affixes that add fun and danger"): a shard on a full tier 5 map makes it a tier 6 map, corrupted and locked (no orb changes it afterwards; the Mirror can still copy it, and the copy stays corrupted). This follows the old rule "Rolling map affixes never bricks the map".
 - **Corrupted-only affixes come in a later round** (decision 6d: "Later round"): once they exist, every corrupted map gets one. Until then a tier 6 map's tier alone sets its waves, stars, shards and drop rates. Ideas offered, none chosen: Haunted (the game's ghost weather), Undying (rip creatures rise once more), Fenrir's Hunt (wolves join every wave), Endless Night (always night, night-only creatures come).
 
@@ -192,17 +192,36 @@ Affixes are the Path of Exile part: modifiers rolled onto a map that make its ri
 
 ### Affix pool
 
-*Changed 2026-11-26 (Krogon, decisions 2, 7 to 10):* the pool was "roll 1–3"; now a map's tier sets how many affixes it carries (0 to 4), any different affixes, all equally likely when an orb rolls one (Claude's choice), with no prefix or suffix sides and no values. **This round builds four, the three weather ones come next round** (decision 2: "Option a. Keep round smaller."), after a fresh 1.0.30 `co_dump` records what each weather does and the game's smoke damage. ~~Reward column~~ **Every affix is danger only and the tier pays** (decision 8b: "A, every affix danger only. I must have misunderstood decision 7."): the old Reward column below is replaced, not extended.
+*Changed 2026-11-26 (Krogon, decisions 2, 7 to 10):* the pool was "roll 1–3"; now a map's tier sets how many affixes it carries (0 to 4), any different affixes, all equally likely when an orb rolls one (Claude's choice), with no prefix or suffix sides. ~~**Every affix is danger only and the tier pays** (decision 8b: "A, every affix danger only. I must have misunderstood decision 7.")~~ **Changed 2026-11-27 (branch `claude/kind-einstein-8sn8e7`, #90, ROADMAP R1b; Krogon's decisions 1–9 in `docs/handoffs/claude-kind-einstein-8sn8e7.md`; built, not play-tested):** Krogon: "overwrite decision 8b, affixes can now provide rewards too". The pool is now Krogon's own list, the four old affixes are gone ("Remove each one. Use new affix pool I provided."), and the numbers are rolled.
+
+**The new pool.** The table [`Corruption/Data/map_affixes.csv`](../Corruption/Data/map_affixes.csv) holds the 17 affixes built this round (ranges and copy are there, not repeated here); names are Claude's proposals, to be approved with the preview picture. All weights are 100. The rounds are split (decision 6: "Split rounds, agreed"): this round the creature, player and wave affixes; **next round the loot affixes** (decision 7, for then: the drop affixes raise chances by 100%, never guarantee: "All the map affixes that say drop extra items just means the chances for those drops are increased by 100%, not that they are guaranteed drops from every kill."); **after that the corrupted-only affixes**; the weather ones still wait for `co_dump` (#86).
+
+| Group | Affixes (range) | What they do |
+|---|---|---|
+| Reward and waves | Glorious (50–100%), Teeming (fixed 50%) | More Orlog experience per kill; the tier's waves ×1.5 |
+| Creature damage | Brutal (20–100%), Ruthless (10–50% double-damage chance), Venomous, Searing, Stormcalled (25–75% of a hit's blunt, slash and pierce as poison, fire, lightning) | Harder hits and extra elemental damage |
+| Creature toughness | Ironskin and Warded (95% less physical or elemental damage; group `immunity`), Sturdy (25–50%) and Mighty (50–100%) extra health (group `health`), Unyielding (no stagger) | Longer fights |
+| Creature speed | Fleet (fixed 25% faster), Frenzied (25–100% faster attacks) | Faster enemies |
+| Players near the heart | Withering (5 health a second), Exhausting (5 stamina a second), Exposed (25–50% less resistance to fire, frost, lightning, poison) | Pressure on the players; within 96 m of a live heart |
+
+- **Rolled values** (decision 3: "Yes that's why I provided the ranges, so that it can roll."): each map rolls a whole number in the affix's range; the rip, its creatures and the tooltip carry it. This replaces 6b's "no values" and its "Divine does nothing": the **Divine Orb rerolls a map's ranged values** (refused when no affix on the map has a range; corrupted maps stay locked).
+- **At most 4 affixes** (decision 4: "A map can only hold more then 4 affixes via means of corrupting a 5th affix on"). Claude's reading: the 5th is the corrupted-only affix of decision 6d, built in the corrupted round; until then tier 6 keeps 4.
+- **Groups** (decision 5: "Sure, create those rules. And yes, immune means takes 95% reduced damage."): never Ironskin with Warded, never Sturdy with Mighty, so no map is unwinnable. "Immune" means 95% less damage. The orbs, `co_map`'s random pick and the server (which drops a second affix of a group from a rip request) keep the rule.
+- **"In the rip"** means within 96 m of a live rip heart (decision 8: "Sure use the 96m"); the three player affixes act there.
+- **Display** *(2026-11-27, built, not play-tested)*: the tooltip and the Forge show each affix's line alone, with its rolled number and no name (decision 10: "The names of affixes do not need to be shown on the tooltip, it uses up already limited ui space."; names stay for logs and `co_rip`). The rip's portal and heart hover show the tier and each affix's line with its number (decision 15: "Tier and the lines"). Reward affixes (Glorious now) are listed under "What you'll earn", danger affixes under "What you'll face" (decision 16: "Move to earn (Recommended)"; the `section` column of `map_affixes.csv`).
+- The weather affixes below stay as designed, built later.
+
+~~Old pool, built 2026-11-27 in the rips round, removed:~~ Swarming (waves ×2 again; replaced by Teeming's ×1.5), Hardened (30% less damage taken; replaced by Ironskin, Warded and the health affixes), Rabid (maddened bonuses doubled; replaced by Brutal, Fleet and the others) and Smouldering (25% of a hit as fire; replaced by Searing). Their old table rows are kept below, struck through.
 
 | Affix | Vanilla effect reused | Danger | ~~Reward~~ | Status |
 |---|---|---|---|---|
 | Frostbitten | Freezing status the whole run | Stamina drain, slow | ~~More shards~~ replaced 2026-11-26: the tier pays | Next round |
 | Drowned | Wet status, rain | Lower fire, slower stamina regen | ~~More trophies~~ replaced 2026-11-26 | Next round |
-| Smouldering | Burning on hit from all creatures | Damage over time | ~~Better gear rolls~~ replaced 2026-11-26 | **Built 2026-11-27**, not tested (decision 10, "A": every hit a rip creature makes also carries 25% of its combat damage as fire, which the game spreads over 5 s as burning; 25% is Claude's proposal, no source in the design) |
+| ~~Smouldering~~ | Burning on hit from all creatures | Damage over time | ~~Better gear rolls~~ replaced 2026-11-26 | **Removed 2026-11-27** (decision 1); Searing replaces it |
 | Choking | Smoke effect in the area | Visibility, damage | ~~More essence chance~~ replaced 2026-11-26 | Next round |
-| Swarming | Doubles spawn count | Overwhelm | ~~More drops overall~~ replaced 2026-11-26 (decision 7's reward dropped by 8b) | **Built 2026-11-27**, not tested (decision 7, "Your recommended.": the tier's waves ×2 again) |
-| Hardened | Creatures take 30% less damage | Longer fights | ~~Higher rarity floor~~ replaced 2026-11-26 (decision 8: "That's old design idea, scrap it.") | **Built 2026-11-27**, not tested |
-| Rabid | Maddened effect doubled | Faster, harder hitting | ~~Guaranteed 3-star~~ replaced 2026-11-26; 3-stars wait for the elite design (#39), which decides whether they become part of Rabid's danger | **Built 2026-11-27**, not tested (decision 9, "A": damage ×1.4 instead of ×1.2, speed +30% instead of +15%) |
+| ~~Swarming~~ | Doubles spawn count | Overwhelm | ~~More drops overall~~ replaced 2026-11-26 (decision 7's reward dropped by 8b) | **Removed 2026-11-27** (decision 1); Teeming replaces it |
+| ~~Hardened~~ | Creatures take 30% less damage | Longer fights | ~~Higher rarity floor~~ replaced 2026-11-26 (decision 8: "That's old design idea, scrap it.") | **Removed 2026-11-27** (decision 1) |
+| ~~Rabid~~ | Maddened effect doubled | Faster, harder hitting | ~~Guaranteed 3-star~~ replaced 2026-11-26; 3-stars wait for the elite design (#39) | **Removed 2026-11-27** (decision 1) |
 
 The numbers are in [`Corruption/Data/map_affixes.csv`](../Corruption/Data/map_affixes.csv).
 
@@ -211,7 +230,7 @@ The numbers are in [`Corruption/Data/map_affixes.csv`](../Corruption/Data/map_af
 - **One map, one rip for the group** *(user, 2026-11-01)*: one player uses the map and everyone goes through the same rip.
 - **Shards per tier** *(user, 2026-11-01; extended 2026-11-26, decision 6e)*: the rip's heart spills tier 1: 1–4, tier 2: 2–6, tier 3: 3–8, tier 4: 4–10 shards (replacing the flat 1–3), and the same step for the new tiers 5 (5–12) and 6 (6–14). ~~Four tiers (a fifth was a slip).~~ There are six tiers since 2026-11-26.
 - ~~Rolling is random from the pool, with a reroll costing one more shard. This is the shard sink.~~ Orbs roll map affixes (above); the shard's sink is corrupting a tier 5 map into tier 6. Rolling map affixes never bricks the map; the 25% brick chance applies to gear only, and corrupting a map never breaks it either (decision 6c).
-- Affixes stack with tier. A tier-4 Rabid-Swarming map is meant to be a near-death experience.
+- Affixes stack with tier. A tier-4 map with, say, Brutal, Mighty and Frenzied is meant to be a near-death experience (was: ~~a tier-4 Rabid-Swarming map~~, both removed 2026-11-27).
 - **Names and display** (decision 11: "b, yes yes yes"): see Map item.
 - Numbers above are starting points for tuning, not final.
 
@@ -388,7 +407,7 @@ Any creature or chest can drop a unique, Diablo 2-style. Where it drops sets the
 | 1-star creature | 1.25x base |
 | 2-star creature | 1.5x base |
 | Vanilla dungeon chest | 1.5x base |
-| Rip creature or rip heart loot (formerly rip chest) | 1.25x at tier 1, rising to 2x at tier 4 |
+| Rip creature or rip heart loot (formerly rip chest) | 1.25x at tier 1, +0.25 per tier, up to 2.5x at tier 6 (`rip_tier_1` … `rip_tier_6` in `drop_modifiers.csv`) |
 | 3-star creature (rips only) | 2x base |
 | Corrupted boss | 3x base, on top of its boss unique roll |
 

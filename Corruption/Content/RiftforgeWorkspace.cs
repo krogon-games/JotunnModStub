@@ -42,7 +42,7 @@ namespace Corruption.Content
             "<color=orange>2.</color> Right-click an orb or shard in Currencies, or a splinter in Splinters, to pick it up.\n" +
             "<color=orange>3.</color> Click the forge to use it once. Hold Shift to keep an orb for the next click.\n\n" +
             "Esc or a right-click puts it back. Materials that can't be used on the gear turn red.\n" +
-            "Shatter destroys Magic or Rare gear for Affix Splinters. Orbs and a shard raise a map's tier.";
+            "Shatter destroys Magic or Rare gear for Affix Splinters. Orbs change a map's affixes and tier; a shard corrupts a full tier 5 map.";
 
         private const string ShatterUnavailable = "Shattering isn't available (see the log).";
         private const string BagOnly = "Put in gear from your Bag, or a map from your Bag or Maps tab.";
@@ -450,8 +450,8 @@ namespace Corruption.Content
 
         /// <summary>
         ///     A map's result (the approved picture): the rule's headline in green ("Orb of Augmentation: now tier 3"),
-        ///     then "+ Name: danger" in green for each added affix and "− Name: danger" in red for each removed one; the
-        ///     added ones are also highlighted on the bench for a few seconds. The Mirror's copy leaves the map unchanged.
+        ///     then "+ danger" in green for each added affix, "~ danger" in gold for each one a Divine Orb rerolled and "− danger" in red
+        ///     for each removed one; the added and rerolled ones are also highlighted on the bench for a few seconds. The Mirror's copy leaves the map unchanged.
         /// </summary>
         private static void ShowMapResult(RiftforgeResult result)
         {
@@ -463,7 +463,15 @@ namespace Corruption.Content
                 {
                     text.Append("\n<color=#B8F08A>+ ").Append(MapForge.AffixText(id)).Append("</color>");
                 }
-                _changedMap.AddRange(result.MapAdded);
+                _changedMap.AddRange(MapData.ParseEntries(MapData.Join(result.MapAdded)).Select(e => e.Id));
+            }
+            if (result.MapRerolled != null)
+            {
+                foreach (string id in result.MapRerolled)
+                {
+                    text.Append("\n<color=#E8C66A>~ ").Append(MapForge.AffixText(id)).Append("</color>");
+                }
+                _changedMap.AddRange(MapData.ParseEntries(MapData.Join(result.MapRerolled)).Select(e => e.Id));
             }
             if (result.MapRemoved != null)
             {
@@ -984,7 +992,7 @@ namespace Corruption.Content
             if (_target != null && MapForge.IsMap(_target))
             {
                 var state = MapForge.StateOf(_target, out _);
-                key = MapData.Join(state.Affixes) + "|" + state.Corrupted + "|" + state.Mirrored;
+                key = MapData.JoinRolls(state) + "|" + state.Corrupted + "|" + state.Mirrored;
             }
             if (!ReferenceEquals(_usableTarget, _target) || _usableKey != key)
             {

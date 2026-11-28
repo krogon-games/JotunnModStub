@@ -11,6 +11,10 @@ with a shard); orbs put affixes on maps as on gear. Three pictures, written into
 
     python tools/mockup_forge_maps.py      (writes into docs/images/)
 
+SUPERSEDED: Krogon's decision 1 of the affix round (2026-11-27, four affixes removed), decision 14 of the rips round (no
+corrupt-map pop-up) and decision 10 of the affix round (no affix names on the map tooltip or Forge) supersede the pictures
+this script draws. It is kept as the record.
+
 Item names, lines and counts are samples; a picture of the arrangement, not the exact art. Reuses the helpers of
 tools/mockup_riftforge_workspace.py and tools/mockup_forge_dialogs.py; map icons come from Corruption/Assets/.
 """

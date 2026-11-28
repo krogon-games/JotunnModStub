@@ -9,7 +9,7 @@ Tunable numbers for the Corruption mod, kept as spreadsheet-friendly tables. The
 | [`drop_chances.csv`](drop_chances.csv) | Base chance of each rarity dropping |
 | [`drop_modifiers.csv`](drop_modifiers.csv) | Multipliers from where the drop happens (stars, rip tiers, corruption zones, bosses, chests) |
 | [`map_tiers.csv`](map_tiers.csv) | The six map tiers: rarity and affix count, waves, guaranteed 2-stars, the heart's shards and gear floor, which `drop_modifiers.csv` row sets the drop rates |
-| [`map_affixes.csv`](map_affixes.csv) | The map affixes (danger only): what each does to the rip, how often orbs roll it; `later` rows are designed but never roll |
+| [`map_affixes.csv`](map_affixes.csv) | The map affixes: the line each shows, what it does to the rip, its rolled range, how often orbs roll it and whether it is a danger or a reward; `later` rows are designed but never roll |
 | [`corruption_outcomes.csv`](corruption_outcomes.csv) | What happens when a shard corrupts an item: bricked, unchanged (locked) or one corrupted affix |
 | [`shattering.csv`](shattering.csv) | Shattering items into Affix Splinters: the chance per affix line |
 | [`splinter_looks.csv`](splinter_looks.csv) | How each Affix Splinter looks: per affix family (and pool: `gear`, `any`, `gathering`), its shape (`kind`: attack, elemental, defence, vitality, resistance, utility, mining, woodcutting, gathering) and `colour` (`#RRGGBB`). After editing, run `python tools/make_splinters.py` to remake the textures. The test checks every affix has a row |
@@ -94,21 +94,24 @@ One row per map tier (Krogon's rips round decisions 6 and 6e, 2026-11-26). A map
 
 ## map_affixes.csv
 
-The affixes that orbs roll onto a map. Every one is danger only: it pays through the tier it adds (decision 8b). Map affixes have no prefix or suffix and no values.
+The affixes that orbs roll onto a map (Krogon's list, 2026-11-27, #90; built, not play-tested). Each map rolls a whole number inside an affix's range. Map affixes have no prefix or suffix.
 
 | Column | Meaning |
 |---|---|
 | `id` | Lowercase letters, one word. Stored on the map item, so don't rename a row that players may hold |
-| `status` | `approved` = orbs can roll it. `later` = designed, not built, never rolls (the three weather affixes wait for the next round) |
-| `name`, `danger` | In-game name and the tooltip line saying what it does |
+| `status` | `approved` = orbs can roll it. `later` = designed, not built, never rolls (the three weather affixes) |
+| `name` | Used in logs and the console only; it is not shown on the map tooltip or the Forge (decision 10) |
+| `danger` | The line the tooltip, the Forge and the rip's hover show, in the table's copy; `{value}` stands for the number the map rolled |
 | `weight` | How likely an orb is to roll it, against the others. 100 each = equally likely. Required for `approved` rows, blank for `later` |
-| `wave_multiplier` | Multiplies the tier's waves (Swarming: 2). Blank = no effect |
-| `damage_taken` | Multiplies the damage rip creatures take, above 0 and at most 1 (Hardened: 0.7 = 30% less). Blank = no effect |
-| `maddened_factor` | Multiplies the maddened bonuses (the game's x1.2 damage and +15% speed), 1 or more (Rabid: 2). Blank = no effect |
-| `fire_share` | Share of each hit's damage that is added as fire, above 0 and at most 10 (Smouldering: 0.25). Blank = none |
-| `status`, `notes` | `notes` gives the source of each number |
+| `effect` | What it does. One of: `experience`, `density`, `damage`, `attack_speed`, `double_damage`, `health`, `move_speed`, `no_stagger`, `physical_taken`, `elemental_taken`, `life_drain`, `stamina_drain`, `resistances`, `poison_share`, `fire_share`, `lightning_share` (the list in `Corruption/Rules/MapAffixTable.cs`, `Effects`). Blank only on a `later` row |
+| `min`, `max` | The whole numbers a map rolls between (percent, or points per second for the two drains); equal = a fixed value. Blank for `no_stagger`, which has no number |
+| `group` | Two affixes of the same group never share a map (Ironskin with Warded: `immunity`; Sturdy with Mighty: `health`) |
+| `section` | Where the line shows on the map: `face` ("What you'll face", dangers) or `earn` ("What you'll earn", rewards such as Glorious; decision 16) |
+| `notes` | The source of each number |
 
-**Rebuild after editing.** The Smouldering 25% is Claude's proposal (the design gives no number).
+The admin setting `[5 - Rips] DisabledMapAffixes` (comma-separated ids, blank by default) keeps listed affixes out of every roll; maps that already carry one keep it.
+
+**Rebuild after editing.** Names are Claude's proposals; every number is Krogon's list.
 
 ## orbs.csv
 

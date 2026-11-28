@@ -476,7 +476,7 @@ namespace Corruption.Content
     [HarmonyPatch(typeof(Character), nameof(Character.Damage))]
     internal static class LootHitEffects
     {
-        private static void Prefix(HitData hit)
+        private static void Prefix(Character __instance, HitData hit)
         {
             if (hit == null || !Player.m_localPlayer || hit.GetAttacker() != Player.m_localPlayer || HitSources.IsDamageOverTime(hit))
             {
@@ -494,7 +494,18 @@ namespace Corruption.Content
                 if (steal > 0f && hit.GetAttacker() != null)
                 {
                     var d = hit.m_damage;
-                    float damage = d.m_blunt + d.m_slash + d.m_pierce + d.m_fire + d.m_frost + d.m_lightning + d.m_poison + d.m_spirit;
+                    float physical = d.m_blunt + d.m_slash + d.m_pierce;
+                    float elemental = d.m_fire + d.m_frost + d.m_lightning + d.m_poison;
+                    // A rip creature with Ironskin or Warded takes only 5% of that kind on its owner's game; life steal counts
+                    // what the hit really deals to it (Krogon, 2026-11-27, decision 11: "Lifesteal should steal the amount it
+                    // damages for."). The stamp is on the creature's ZDO, so this game can read it.
+                    var rip = RipCreatures.Of(__instance);
+                    if (rip != null)
+                    {
+                        physical *= rip.PhysicalTaken;
+                        elemental *= rip.ElementalTaken;
+                    }
+                    float damage = physical + elemental + d.m_spirit;
                     Player.m_localPlayer.Heal(damage * steal);
                 }
             });

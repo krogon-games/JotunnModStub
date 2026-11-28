@@ -18,7 +18,7 @@ namespace Corruption
     {
         public const string PluginGUID = "com.krogongames.corruption";
         public const string PluginName = "Corruption";
-        public const string PluginVersion = "0.11.0";
+        public const string PluginVersion = "0.12.0";
 
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;
@@ -91,6 +91,7 @@ namespace Corruption
             Safe.Run("register the corrupted wishbone", CorruptedWishbone.Register);
             Safe.Run("register corrupted offerings", CorruptedOfferings.Register);
             Safe.Run("register the maddened effect", Maddened.RegisterEffect);
+            Safe.Run("register the rip curse effect", RipCurse.RegisterEffect);
             Safe.Run("register the proc affix effects", LootProcs.RegisterEffects);
             Safe.Run("find the wild plants for Foraging", LootProcs.CollectWildPlants);
             Safe.Run("read the rip loot table", RipLoot.Load);

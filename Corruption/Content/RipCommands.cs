@@ -27,8 +27,17 @@ namespace Corruption.Content
 
             public override string Help =>
                 "Corruption: co_map <biome> [tier] [affix ...] - put a map in your inventory. Biomes: " + string.Join(", ", MapList.Biomes) +
-                ". With affix ids (from map_affixes.csv) they are used as given; with only a tier, random approved affixes for it " +
-                "(tier 6 = a full map, corrupted); no tier = a plain map.";
+                ". Affixes are ids from map_affixes.csv" + AffixIds() + ", each alone as \"id\" (rolls its value) or \"id:value\" " +
+                "(e.g. co_map meadows brutal:60 searing:50 tests two affixes at chosen strengths); they are used exactly as given, so one " +
+                "affix alone can be tested. With only a tier, random affixes that aren't switched off for it (tier 6 = a full map, corrupted); no tier = a plain map.";
+
+            /// <summary>": glorious, teeming, ..." when the tables have loaded (the help may be read before they do).</summary>
+            private static string AffixIds()
+            {
+                return MapTiers.Loaded
+                    ? " (" + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray()) + ")"
+                    : "";
+            }
 
             public override bool IsCheat => true;
 
@@ -44,7 +53,8 @@ namespace Corruption.Content
                 string biome = args.Length > 0 ? MapList.Biomes.FirstOrDefault(b => string.Equals(b, args[0], StringComparison.OrdinalIgnoreCase)) : null;
                 if (biome == null)
                 {
-                    print.Print("Usage: co_map <biome> [tier] [affix ...]. Biomes: " + string.Join(", ", MapList.Biomes));
+                    print.Print("Usage: co_map <biome> [tier] [affix[:value] ...]. Biomes: " + string.Join(", ", MapList.Biomes) +
+                                ". Affixes" + AffixIds() + ", e.g. co_map meadows brutal:60 searing:50.");
                     return;
                 }
                 var prefab = ObjectDB.instance.GetItemPrefab(MapList.ItemPrefix + biome);
@@ -56,13 +66,16 @@ namespace Corruption.Content
                 }
 
                 var state = new MapState();
+                var clamped = new List<string>();
                 int index = 1;
                 int tier = 0;
                 if (args.Length > 1 && int.TryParse(args[1], out tier))
                 {
                     index = 2;
                 }
-                var affixIds = args.Skip(index).Select(a => a.ToLowerInvariant()).ToList();
+                // Each argument is an affix id, or "id:value" to set the value (an id alone rolls one; a random roll skips groups already on the map).
+                var entries = MapData.ParseEntries(string.Join(MapData.Separator.ToString(), args.Skip(index).Select(a => a.ToLowerInvariant()).ToArray()));
+                var affixIds = entries.Select(e => e.Id).ToList();
                 if (!MapTiers.Loaded)
                 {
                     if (tier > 1 || affixIds.Count > 0)
@@ -73,29 +86,44 @@ namespace Corruption.Content
                 else
                 {
                     var tables = MapTiers.Tables;
+                    var random = new System.Random();
                     if (affixIds.Count > 0)
                     {
                         var unknown = affixIds.Where(a => tables.Affixes.Find(a) == null).ToList();
                         if (unknown.Count > 0)
                         {
-                            print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}. Known: {string.Join(", ", tables.Affixes.Affixes.Select(a => a.Id).ToArray())}.");
+                            print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}. Known: {string.Join(", ", tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray())}.");
                             return;
                         }
-                        state.Affixes = affixIds.Distinct().ToList();
+                        // A 'later' affix is designed but not built: it does nothing and the server drops it from a rip.
+                        var notBuilt = affixIds.Where(a => !tables.Affixes.Find(a).Approved).ToList();
+                        if (notBuilt.Count > 0)
+                        {
+                            print.Print($"Not built yet, so a map can't carry: {string.Join(", ", notBuilt.ToArray())}. Built: {string.Join(", ", tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray())}.");
+                            return;
+                        }
+                        // Explicit ids may break the group rule (dev tool).
+                        foreach (var entry in entries)
+                        {
+                            if (state.Affixes.Contains(entry.Id))
+                            {
+                                continue;
+                            }
+                            var affix = tables.Affixes.Find(entry.Id);
+                            state.Affixes.Add(entry.Id);
+                            state.Values[entry.Id] = entry.HasValue ? affix.Clamp(entry.Value) : affix.Roll(random.NextDouble);
+                            if (entry.HasValue && state.Values[entry.Id] != entry.Value)
+                            {
+                                clamped.Add($"{entry.Id} {MapData.FormatValue(entry.Value)} -> {MapData.FormatValue(state.Values[entry.Id])} (its range is {MapData.FormatValue(affix.Min)}-{MapData.FormatValue(affix.Max)})");
+                            }
+                        }
                         var row = tier > 0 ? tables.Tiers.Row(tier) : null;
                         state.Corrupted = row != null && row.Corrupted;
                     }
                     else if (tier > 1)
                     {
                         var row = tables.Tiers.Row(tier);
-                        var pool = tables.Affixes.Rollable.Select(a => a.Id).ToList();
-                        var random = new System.Random();
-                        while (state.Affixes.Count < row.Affixes && pool.Count > 0)
-                        {
-                            int pick = random.Next(pool.Count);
-                            state.Affixes.Add(pool[pick]);
-                            pool.RemoveAt(pick);
-                        }
+                        MapOrbRules.AddRandom(state, tables, random.NextDouble, row.Affixes, new List<string>());
                         state.Corrupted = row.Corrupted;
                     }
                 }
@@ -111,6 +139,15 @@ namespace Corruption.Content
                 }
                 print.Print($"Put a {biome} map in your inventory: {MapTiers.Describe(state.Tier, state.Affixes)}{(state.Corrupted ? ", corrupted" : "")}. " +
                             "The Maps tab takes it from the bag within half a second.");
+                if (MapTiers.Loaded)
+                {
+                    // The final values (after any clamping), like co_rip's "Values:".
+                    print.Print("Values: " + MapTiers.DescribeValues(state.Rolls(MapTiers.Tables.Affixes)));
+                    if (clamped.Count > 0)
+                    {
+                        print.Print("Clamped into range: " + string.Join("; ", clamped.ToArray()) + ".");
+                    }
+                }
             }
         }
 
@@ -187,6 +224,7 @@ namespace Corruption.Content
                 string left = closeMs > 0 && ZNet.instance ? RipRules.TimeLeft(closeMs / 1000.0 - ZNet.instance.GetTimeSeconds()) : "unknown";
                 print.Print($"Rip {kind}, {bestDistance:0} m away: {zdo.GetString(Rips.KeyBiome, "?")}, " +
                             $"{MapTiers.Describe(MapTiers.TierOf(zdo), MapTiers.AffixIdsOf(zdo))}. " +
+                            $"Values: {MapTiers.DescribeValues(MapTiers.AffixesOf(zdo))}. " +
                             $"Closes in {left}. Heart: {(heartAt == Vector3.zero ? "not known from here" : heartAt.ToString("0"))}. " +
                             $"This game owns it: {(best.IsOwner() ? "yes" : "no")}.");
             }

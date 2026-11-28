@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TMPro;
 using Corruption.Rules;
@@ -101,7 +102,7 @@ namespace Corruption.Content
             {
                 return null;
             }
-            return MapText.Tooltip(view.Row, LabelOf(item), view.State.Affixes, MapTiers.Tables.Affixes, DropMultiplierOrNull(view.Row),
+            return MapText.Tooltip(view.Row, LabelOf(item), view.State.Rolls(MapTiers.Tables.Affixes), MapTiers.Tables.Affixes, DropMultiplierOrNull(view.Row),
                 MapGlyphSet.Current(), LootTooltip.LocksOf(item), WithoutDescription(item, gameText));
         }
 
@@ -151,7 +152,7 @@ namespace Corruption.Content
             {
                 return "";
             }
-            return MapText.ForgeSheet(view.Row, LabelOf(item), view.State.Affixes, MapTiers.Tables.Affixes, DropMultiplierOrNull(view.Row),
+            return MapText.ForgeSheet(view.Row, LabelOf(item), view.State.Rolls(MapTiers.Tables.Affixes), MapTiers.Tables.Affixes, DropMultiplierOrNull(view.Row),
                 MapGlyphSet.Current(), highlight);
         }
 
@@ -418,8 +419,14 @@ namespace Corruption.Content
             itemSource.Changed();
             result.Done = true;
             result.Outcome = "map";
-            result.MapAdded = outcome.Added;
-            result.MapRemoved = outcome.Removed;
+            // "id:value" entries: the Forge shows each with its rolled number (a Divine Orb's rerolled affixes show as rerolled).
+            result.MapAdded = outcome.Added.Select(id => id + MapData.ValueSeparator + MapData.FormatValue(outcome.State.Values[id])).ToList();
+            result.MapRerolled = outcome.Rerolled.Select(id => id + MapData.ValueSeparator + MapData.FormatValue(outcome.State.Values[id])).ToList();
+            result.MapRemoved = outcome.Removed.Select(id =>
+            {
+                double old;
+                return state.Values.TryGetValue(id, out old) ? id + MapData.ValueSeparator + MapData.FormatValue(old) : id;
+            }).ToList();
             result.Message = outcome.Headline;
             return result;
         }
@@ -458,11 +465,12 @@ namespace Corruption.Content
             return item != null && item.m_dropPrefab ? item.m_dropPrefab.name : null;
         }
 
-        /// <summary>The affix line of an id ("Hardened: Rip creatures take 30% less damage"), or the id when the table doesn't know it.</summary>
-        public static string AffixText(string id)
+        /// <summary>The affix line of an "id:value" entry ("Enemies deal 63% more damage.", no name: decision 10), or the id when the table doesn't know it.</summary>
+        public static string AffixText(string entryText)
         {
-            var affix = MapTiers.Loaded ? MapTiers.Tables.Affixes.Find(id) : null;
-            return affix != null ? MapText.AffixLine(affix) : id;
+            var entry = MapData.ParseEntries(entryText).FirstOrDefault();
+            var affix = MapTiers.Loaded && entry != null ? MapTiers.Tables.Affixes.Find(entry.Id) : null;
+            return affix != null ? MapText.AffixLine(affix, affix.Clamp(entry.HasValue ? entry.Value : affix.Min)) : entryText;
         }
     }
 

@@ -152,7 +152,7 @@ namespace Corruption.Content
             }
             // The map's tier and affixes, after the candidates (the server checks them and echoes them in its reply).
             package.Write(state.Tier);
-            package.Write(MapData.Join(state.Affixes));
+            package.Write(MapData.JoinRolls(state));
             package.Write(fallback);
             // With the fallback, its note stays on screen instead of "searching" (it is shown again when the rip opens).
             if (!fallback)
@@ -194,27 +194,20 @@ namespace Corruption.Content
                 }
 
                 // The tier and affixes come from a player's game: keep them inside the tables.
-                var affixIds = new List<string>();
+                MapState affixIds;
                 if (MapTiers.Loaded)
                 {
-                    var tiers = MapTiers.Tables.Tiers;
-                    foreach (string affix in MapData.Split(affixText))
+                    var warnings = new List<string>();
+                    affixIds = MapData.Sanitize(affixText, tier, MapTiers.Tables, warnings);
+                    foreach (string warning in warnings)
                     {
-                        if (MapTiers.Tables.Affixes.Find(affix) == null)
-                        {
-                            Jotunn.Logger.LogWarning($"Rip request: unknown map affix '{affix}' dropped.");
-                        }
-                        else if (!affixIds.Contains(affix) && affixIds.Count < tiers.MaxAffixes)
-                        {
-                            affixIds.Add(affix);
-                        }
+                        Jotunn.Logger.LogWarning("Rip request: " + warning);
                     }
-                    // The tier follows from the affixes (decision 6); only a full map can be the corrupted tier (MP review, 2026-11-27).
-                    bool corrupted = tiers.CorruptTier > 0 && tier >= tiers.CorruptTier && affixIds.Count >= tiers.MaxAffixes;
-                    tier = tiers.TierFor(affixIds.Count, corrupted);
+                    tier = affixIds.Tier;
                 }
                 else
                 {
+                    affixIds = new MapState();
                     tier = 1;
                 }
 
@@ -258,7 +251,7 @@ namespace Corruption.Content
                 reply.Write(spot.HasValue ? spot.Value.Landing.Z : 0f);
                 reply.Write(closeAt);
                 reply.Write(tier);
-                reply.Write(MapData.Join(affixIds));
+                reply.Write(MapData.JoinRolls(affixIds));
                 ZRoutedRpc.instance.InvokeRoutedRPC(sender, RpcReply, reply);
             });
         }
@@ -325,12 +318,12 @@ namespace Corruption.Content
                 double closeAt = package.ReadDouble();
                 // Read only when present: a server on an older build sends none, and the rip opens as tier 1.
                 int tier = 1;
-                var affixIds = new List<string>();
+                string affixIds = "";
                 bool serverKnowsTiers = package.GetPos() < package.Size();
                 if (serverKnowsTiers)
                 {
                     tier = package.ReadInt();
-                    affixIds = MapData.Split(package.ReadString());
+                    affixIds = package.ReadString();   // "id:value;id:value"
                 }
                 if (id != s_pendingId || mapItem != s_pendingMap)
                 {
@@ -353,11 +346,22 @@ namespace Corruption.Content
                     player.Message(MessageHud.MessageType.Center, Localization.instance.Localize("$corruption_rip_only_bases", map.Label));
                     return;
                 }
-                // A server on an older build answers without tiers: a tiered map would open as tier 1 and be lost, so keep it
-                // (MP review, 2026-11-27). Same-version players can't hit this.
-                if (!serverKnowsTiers && usedState != null && (usedState.Tier > 1 || usedState.Affixes.Count > 0))
+                // A server on an older build answers without tiers, and a server whose map tables failed to load answers tier 1:
+                // a tiered map would open as a lower tier and be lost, so keep it (MP review, 2026-11-27). The server also lowers
+                // a tier on purpose when it drops an affix (a second of one group, one not built yet); this game runs the same
+                // check on what it sent, so only a reply below that expected tier keeps the map (Krogon's play-test ma-6,
+                // 2026-11-28: an Ironskin + Warded map was kept instead of opening as tier 2).
+                bool tiered = usedState != null && (usedState.Tier > 1 || usedState.Affixes.Count > 0);
+                int expected = usedState != null ? usedState.Tier : 1;
+                if (tiered && MapTiers.Loaded)
                 {
-                    Jotunn.Logger.LogWarning("Rip request: the server's Corruption has no map tiers (an older build); the tiered map is kept.");
+                    expected = MapData.Sanitize(MapData.JoinRolls(usedState), usedState.Tier, MapTiers.Tables, null).Tier;
+                }
+                if (tiered && (!serverKnowsTiers || tier < expected))
+                {
+                    Jotunn.Logger.LogWarning(serverKnowsTiers
+                        ? $"Rip request: the server answered tier {tier} for a map that should open as tier {expected} (its map tables may not have loaded); the map is kept."
+                        : "Rip request: the server's Corruption has no map tiers (an older build); the tiered map is kept.");
                     player.Message(MessageHud.MessageType.Center, "$corruption_rip_old_server");
                     return;
                 }
@@ -404,7 +408,7 @@ namespace Corruption.Content
                 heart.Set(KeyBiome, map.Biome);
                 MapTiers.Stamp(heart, tier, affixIds);
 
-                Jotunn.Logger.LogInfo($"Rip opened: {map.Biome}, {MapTiers.Describe(tier, affixIds)}, heart {heartPosition}, landing {landing}, " +
+                Jotunn.Logger.LogInfo($"Rip opened: {map.Biome}, {MapTiers.Describe(tier, MapData.Split(affixIds))}, heart {heartPosition}, landing {landing}, " +
                                       $"{(fallback ? "explored-land fallback" : "unexplored land")}.");
                 string opened = Localization.instance.Localize("$corruption_rip_opened", map.Label);
                 if (fallback)
@@ -415,11 +419,11 @@ namespace Corruption.Content
             });
         }
 
-        /// <summary>Whether two map states are the same map for using it up: the same affixes (in order), corrupted and mirrored.</summary>
+        /// <summary>Whether two map states are the same map for using it up: the same affixes and values (in order), corrupted and mirrored.</summary>
         private static bool SameMap(MapState a, MapState b)
         {
             return a != null && b != null && a.Corrupted == b.Corrupted && a.Mirrored == b.Mirrored &&
-                   MapData.Join(a.Affixes) == MapData.Join(b.Affixes);
+                   MapData.JoinRolls(a) == MapData.JoinRolls(b);
         }
 
         /// <summary>The heart was destroyed (on its owner's game): open the exit rip beside it, leading home.</summary>
@@ -535,10 +539,15 @@ namespace Corruption.Content
             return Localization.instance.Localize($"$corruption_rip_heart\n$corruption_rip_heart_hint\n{TierText(heart)}\n{ClosesText(heart)}");
         }
 
-        /// <summary>"Tier 5 · Swarming, Hardened, ..." from the object, so the whole group sees what they walk into.</summary>
+        /// <summary>
+        ///     The tier and the lines from the object (Krogon, decision 15): "Tier 5 · Rare map" and one line per affix with its
+        ///     number, like the tooltip, so the whole group sees what they walk into. Without the tables just "Tier 5".
+        /// </summary>
         private static string TierText(ZDO rip)
         {
-            return MapTiers.Describe(MapTiers.TierOf(rip), MapTiers.AffixIdsOf(rip));
+            return MapTiers.Loaded
+                ? MapText.Hover(MapTiers.RowOf(rip), MapTiers.AffixesOf(rip), MapTiers.Tables.Affixes)
+                : MapTiers.Describe(MapTiers.TierOf(rip), MapTiers.AffixIdsOf(rip));
         }
 
         private static string ClosesText(ZDO rip)

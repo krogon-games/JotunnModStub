@@ -10,7 +10,9 @@ namespace Corruption.Content
     ///     a player's game. The waves are the rip biome's boss army: the game's own raid(s) for that boss, with their
     ///     own creatures, counts, intervals, chances and group sizes (<see cref="RipRules.ArmyRaids" />). They start
     ///     when a player comes within the raid's range, maddening the creatures already there, and keep coming while
-    ///     the heart stands. Spawned creatures are maddened and have <c>MinStars</c> to <c>MaxStars</c> stars (user; design tier 1).
+    ///     the heart stands. Spawned creatures are maddened and have <c>MinStars</c> to <c>MaxStars</c> stars (user; design tier 1),
+    ///     the tier's share of them are guaranteed 2-stars (<c>two_star_percent</c>, capped by MaxStars), and the map's
+    ///     Teeming affix makes the waves busier (more alive at once, shorter intervals).
     /// </summary>
     internal class RipWaves : MonoBehaviour
     {
@@ -56,7 +58,8 @@ namespace Corruption.Content
                     Jotunn.Logger.LogInfo($"Rip waves: this game now runs the waves of rip {m_nview.GetZDO().m_uid}" +
                                           (MapTiers.Loaded
                                               ? $": {MapTiers.Describe(MapTiers.TierOf(m_nview.GetZDO()), MapTiers.AffixIdsOf(m_nview.GetZDO()))}, " +
-                                                $"waves x{m_multiplier}, {m_twoStarPercent}% guaranteed 2-stars."
+                                                $"waves x{m_multiplier}, {m_twoStarPercent}% guaranteed 2-stars. " +
+                                                $"Affix values: {MapTiers.DescribeValues(MapTiers.AffixesOf(m_nview.GetZDO()))}."
                                               : $": no tiers loaded, waves x{m_multiplier}."));
                 }
                 if (!m_resolved)
@@ -144,10 +147,13 @@ namespace Corruption.Content
                     continue;
                 }
                 Maddened.Madden(character);   // claims ownership, so the stamp can be written
-                if (MapTiers.Loaded && character.m_nview && character.m_nview.IsValid())
+                // A creature already carrying a rip's stamp (a neighbouring rip's, or this one's after a handover) keeps it
+                // (multiplayer review, 2026-11-27: the last rip to start used to overwrite it).
+                if (MapTiers.Loaded && character.m_nview && character.m_nview.IsValid() && !MapTiers.IsStamped(character.m_nview.GetZDO()))
                 {
                     MapTiers.CopyStamp(m_nview.GetZDO(), character.m_nview.GetZDO());
                     character.m_nview.GetZDO().Set(Rips.KeyClose, m_nview.GetZDO().GetLong(Rips.KeyClose, 0L));
+                    MapAffixEffects.OnStamped(character);
                 }
                 character.GetBaseAI()?.SetHuntPlayer(true);
             }
