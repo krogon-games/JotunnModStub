@@ -58,4 +58,4 @@ None.
 
 ## Merge notes
 
-**Must merge after `claude/nifty-hypatia-afm8ez`** (this branch was started from it and carries its commits). Gameplay changed: version bump needed at merge (Corruption). Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`.
+**Must merge after `claude/nifty-hypatia-afm8ez`** (this branch was started from it and carries its commits). *Done:* that branch merged as PR #100 (Corruption 0.13.0), and `master` was merged into this branch on 2026-11-28 (conflicts in the shared docs kept both sides). Gameplay changed: version bump needed at merge (Corruption). Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`.
