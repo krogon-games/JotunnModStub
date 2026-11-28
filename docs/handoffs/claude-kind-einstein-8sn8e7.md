@@ -1,6 +1,6 @@
 # Handoff: `claude/kind-einstein-8sn8e7`
 
-**Written:** 2026-11-27 (start of the round). From `master` at `cce2ba7`; no PR.
+**Written:** 2026-11-28 (`/handoff`). From `master` at `cce2ba7`; 20 commits ahead, 0 behind; no PR yet.
 
 ## Stage
 
@@ -126,8 +126,18 @@ None.
 
 ## Checks
 
-Not run yet (`/handoff`). Tests and builds pass (2026-11-27).
+Run 2026-11-28 by `/handoff`:
+- **Build: PASS:** 766 tests; Corruption and Orlog build, 0 errors (stand-in game files).
+- **Version:** gameplay changed: version bump needed at merge (Corruption, Orlog). None changed on this branch.
+- **Multiplayer sync: PASS** (read in code, not tested; two Opus reviews of 2026-11-27): `DisabledMapAffixes` is admin-only (server-synced); affix values travel in the item, the rip request (the server checks them) and the creatures' ZDO stamp; Glorious reaches Orlog through the creature's ZDO; the Rip curse runs on each player's own game.
+- **Assets and names: PASS:** no new data files; the five new `$corruption_se_ripcurse*` texts are in `Texts.cs`; the Rip curse effect is registered in `OnVanillaPrefabsAvailable`.
+- **FEATURES.md: PASS.**
+- **In-game: PASS for 29 of 30** by Krogon's play-test of 2026-11-28 (phone page); **`ma-6b` (the `ma-6` fix) needs Krogon's re-test.**
 
 ## Merge notes
 
-Not ready to merge (no play-test). `PLAYTEST.md` → Session 2, 2m (step `mpe-2m-4`, "B burns when hit") describes the removed Smouldering: update it when this merges. Gameplay changed: version bump needed at merge (Corruption, Orlog): the rip request and the map's stored affixes changed format.
+**Ready to merge: no**, waiting for the re-test `ma-6b`. 0 behind `master`; no other remote branch has unmerged commits.
+- **Gameplay changed: version bump needed at merge (Corruption, Orlog):** the map's stored affixes and the rip request changed format (`id:value`); Orlog reads `corruption_rip_xp`.
+- **Shared files:** `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (`mpe-2m-4` updated to the new affixes), `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/Texts.cs`, `LootPatches.cs`.
+- **`docs/DECISIONS.md`:** decisions 1–18; 2 overwrites the rips round's 8b, 3 changes 6b (Divine rerolls map values), 10 and 16 change decision 15's layout (no names; rewards under "earn").
+- New issues opened this session: [#93](https://github.com/krogon-games/JotunnModStub/issues/93) (life steal after armour), [#94](https://github.com/krogon-games/JotunnModStub/issues/94) (the heart's distance and look).
