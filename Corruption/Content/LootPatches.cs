@@ -94,11 +94,18 @@ namespace Corruption.Content
                     }
                     // A rip creature's drop rates are its tier's (read from its own stamp); an unstamped maddened one
                     // (a corrupted boss's summon, a rip opened before tiers existed) counts as tier 1.
+                    // Its map's loot affixes (#96) come from the same stamp.
+                    var boost = MapLootBoost.None;
                     if (Maddened.IsMaddened(character))
                     {
                         var zdo = character.m_nview && character.m_nview.IsValid() ? character.m_nview.GetZDO() : null;
-                        var row = MapTiers.Loaded && MapTiers.IsStamped(zdo) ? MapTiers.RowOf(zdo) : null;
+                        bool stamped = MapTiers.Loaded && MapTiers.IsStamped(zdo);
+                        var row = stamped ? MapTiers.RowOf(zdo) : null;
                         sources.AddRange(row != null ? RipTierRules.DropSources(row) : new List<string> { "rip_tier_1" });
+                        if (stamped)
+                        {
+                            boost = MapLootRules.Of(MapTiers.AffixesOf(zdo));
+                        }
                     }
                     bool corruptedBoss = character.IsBoss() && CorruptedBosses.IsCorrupted(character);
                     if (corruptedBoss)
@@ -125,22 +132,22 @@ namespace Corruption.Content
                         }
                         else
                         {
-                            OrbDrops.Drop(OrbDrops.Roll(sources), position, owner);
+                            OrbDrops.Drop(OrbDrops.Roll(sources, boost.Orbs), position, owner);
                         }
                         // A map of the biome it died in (2026-11-23, decisions 19 and 31), once the conditions are met.
-                        var map = MapDrops.Roll(biome, sources);
+                        var map = MapDrops.Roll(biome, sources, boost.Items);
                         if (map)
                         {
                             OrbDrops.DropPersonal(map, position, owner);
                         }
-                        foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
+                        foreach (var rarity in Loot.Drops.Roll(sources, () => Random.value * 0.99999f, boost.Items))
                         {
                             // Uniques come with a later step.
                             if (rarity != "magic" && rarity != "rare")
                             {
                                 continue;
                             }
-                            var item = Loot.Create(rarity, biome);
+                            var item = Loot.Create(rarity, biome, null, boost);
                             if (item != null)
                             {
                                 PersonalLoot.Tag(Loot.Drop(item, position), owner, PersonalLoot.BeamRowFor(item));

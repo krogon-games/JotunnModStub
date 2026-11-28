@@ -185,11 +185,33 @@ namespace Corruption.Content
             return $"<color={ColorFor(loot.Rarity)}>{loot.DisplayName(baseName, Affixes)}</color>";
         }
 
+        /// <summary>The loot affixes' kind of each base (shield, armour, melee, ranged, or ""), by prefab, read once from the game's item.</summary>
+        private static readonly Dictionary<string, string> Kinds = new Dictionary<string, string>();
+
+        /// <summary>The loot affixes' kind of a base (<see cref="MapLootRules.KindOf" />): its classes and the game item's skill.</summary>
+        public static string KindOf(LootBases.Base b)
+        {
+            if (Kinds.TryGetValue(b.Prefab, out var kind))
+            {
+                return kind;
+            }
+            var prefab = ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(b.Prefab) : null;
+            var drop = prefab ? prefab.GetComponent<ItemDrop>() : null;
+            if (!drop)
+            {
+                return MapLootRules.KindOf(b.Classes, null);   // not cached: the game may not have loaded it yet
+            }
+            kind = MapLootRules.KindOf(b.Classes, drop.m_itemData.m_shared.m_skillType.ToString());
+            Kinds[b.Prefab] = kind;
+            return kind;
+        }
+
         /// <summary>
         ///     Makes a new Magic or Rare item: a random base item for the biome, then its affixes. Null when the biome has
-        ///     no loot (the Ocean) or nothing fits.
+        ///     no loot (the Ocean) or nothing fits. <paramref name="boost" /> is a rip's loot affixes: its shield, armour,
+        ///     melee and ranged factors tilt which base is picked (#96 decision 5); null for none.
         /// </summary>
-        public static ItemDrop.ItemData Create(string rarity, string biome, string prefabOverride = null)
+        public static ItemDrop.ItemData Create(string rarity, string biome, string prefabOverride = null, MapLootBoost boost = null)
         {
             if (!Loaded || !ObjectDB.instance)
             {
@@ -209,7 +231,13 @@ namespace Corruption.Content
             }
             else
             {
-                var pick = Bases.Pick(biome, Rules.PreviousBiomePercent, p => ObjectDB.instance.GetItemPrefab(p), () => Random.value * 0.99999f);
+                System.Func<LootBases.Base, double> weight = null;
+                if (boost != null && boost.TiltsPick)
+                {
+                    weight = b => boost.WeightOf(KindOf(b));
+                }
+                var pick = Bases.Pick(biome, Rules.PreviousBiomePercent, p => ObjectDB.instance.GetItemPrefab(p), () => Random.value * 0.99999f,
+                    weight);
                 if (pick == null)
                 {
                     return null;

@@ -176,7 +176,12 @@ namespace Corruption.Rules
         ///     Ocean) or has no items.
         /// </summary>
         /// <param name="random">Returns a value in [0, 1).</param>
-        public Base Pick(string biome, float previousBiomePercent, Func<string, bool> available, Func<double> random)
+        /// <param name="weight">
+        ///     Each item's weight in the pick (a rip's loot affixes tilt it, #96 decision 5); null = all equal. An item
+        ///     weighing 0 or less is never picked.
+        /// </param>
+        public Base Pick(string biome, float previousBiomePercent, Func<string, bool> available, Func<double> random,
+            Func<Base, double> weight = null)
         {
             // Case-insensitive: the game's biome enum spells the Ashlands "AshLands".
             int index = Array.FindIndex(Biomes, b => string.Equals(b, biome, StringComparison.OrdinalIgnoreCase));
@@ -193,7 +198,32 @@ namespace Corruption.Rules
             {
                 return null;
             }
-            return choices[Math.Min(choices.Count - 1, (int)(random() * choices.Count))];
+            if (weight == null)
+            {
+                return choices[Math.Min(choices.Count - 1, (int)(random() * choices.Count))];
+            }
+            var weights = choices.Select(b => Math.Max(0.0, weight(b))).ToList();
+            double total = weights.Sum();
+            if (total <= 0.0)
+            {
+                return null;
+            }
+            double roll = random() * total;
+            Base last = null;
+            for (int i = 0; i < choices.Count; i++)
+            {
+                if (weights[i] <= 0.0)
+                {
+                    continue;
+                }
+                last = choices[i];
+                if (roll < weights[i])
+                {
+                    return choices[i];
+                }
+                roll -= weights[i];
+            }
+            return last;
         }
     }
 }

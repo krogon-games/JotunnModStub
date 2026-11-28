@@ -4,7 +4,7 @@
 
 ## Stage
 
-Building.
+Waiting for Krogon's playtest.
 
 ## Purpose
 
@@ -16,7 +16,8 @@ Nothing yet.
 
 ## Half-done and known issues
 
-Nothing built yet.
+- **Built, not play-tested** (790 tests; Corruption and Orlog build): six loot affixes in `map_affixes.csv` (Bountiful, Glittering, Bulwarked, Mailed, Honed, Fletched; Runic `later`), rules in `Corruption/Rules/MapLootRules.cs`, hooked into the kill loot (`LootPatches`) and the heart's spill (`RipLoot`); `co_riploot` to check the rates. No new Harmony patch.
+- Claude's reading: Bountiful also raises the (not yet built) unique roll, since uniques are Corruption gear.
 
 ## Decisions
 
@@ -32,7 +33,7 @@ Nothing built yet.
 
 ## Playtest
 
-None yet.
+Solo checklist `docs/playtests/claude-nifty-hypatia-afm8ez.md` (`la-1` … `la-13`), also on the phone page.
 
 ## Open questions for Krogon
 
@@ -40,6 +41,6 @@ None.
 
 ## Next steps
 
-1. Krogon's remaining answers.
-2. Build the affixes (data rows, pure rules with tests, the drop hooks).
-3. Write the play-test checklist (here and on the phone page).
+1. Krogon's solo play-test (`la-1` … `la-13`).
+2. Fix what fails; final play-test.
+3. `/handoff`, then a PR into `master` (gameplay changed: Corruption version bump at merge).

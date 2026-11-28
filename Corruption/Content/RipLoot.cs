@@ -90,11 +90,18 @@ namespace Corruption.Content
                     return;
                 }
                 var sources = (row != null ? RipTierRules.DropSources(row) : new List<string> { "rip_tier_1" }).ToArray();
+                // The map's loot affixes raise the spill too (#96 decision 8).
+                var boost = heart != null && MapTiers.Loaded && MapTiers.IsStamped(heart) ? MapLootRules.Of(MapTiers.AffixesOf(heart)) : MapLootBoost.None;
+                if (boost.Items != 1.0 || boost.Orbs != 1.0 || boost.TiltsPick)
+                {
+                    Jotunn.Logger.LogInfo($"Rip loot: loot affixes, gear and maps x{boost.Items:0.##}, orbs x{boost.Orbs:0.##}, shields x{boost.Shield:0.##}, " +
+                                          $"armour x{boost.Armour:0.##}, melee x{boost.Melee:0.##}, ranged x{boost.Ranged:0.##}.");
+                }
                 int rolls = DeathLoot.RollsFor(nearby.Count);
                 for (int i = 0; i < rolls; i++)
                 {
                     var seat = seats[System.Math.Min(i, seats.Count - 1)];
-                    foreach (var orb in OrbDrops.Roll(sources))
+                    foreach (var orb in OrbDrops.Roll(sources, boost.Orbs))
                     {
                         var prefab = OrbDrops.Prefabs(new[] { orb }).FirstOrDefault();
                         if (prefab)
@@ -107,7 +114,7 @@ namespace Corruption.Content
                     // The same Magic/Rare roll as a kill, per player (Krogon, 2026-11-23); uniques come with ROADMAP L6.
                     // The best of the Magic/Rare rolls (Rare wins), lifted to the tier's floor; none when both are nothing.
                     string rolled = null;
-                    foreach (var r in Loot.Drops.Roll(sources, () => Random.value * 0.99999f))
+                    foreach (var r in Loot.Drops.Roll(sources, () => Random.value * 0.99999f, boost.Items))
                     {
                         if (r == "rare" || (r == "magic" && rolled == null))
                         {
@@ -121,7 +128,7 @@ namespace Corruption.Content
                         {
                             continue;
                         }
-                        var item = Loot.Create(rarity, biome);
+                        var item = Loot.Create(rarity, biome, null, boost);
                         if (item != null)
                         {
                             PersonalLoot.Tag(Loot.Drop(item, origin), seat.Owner, PersonalLoot.BeamRowFor(item));

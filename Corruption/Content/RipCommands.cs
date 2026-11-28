@@ -19,6 +19,105 @@ namespace Corruption.Content
         {
             CommandManager.Instance.AddConsoleCommand(new MapCommand());
             CommandManager.Instance.AddConsoleCommand(new RipCommand());
+            CommandManager.Instance.AddConsoleCommand(new RipLootCommand());
+        }
+
+        /// <summary>
+        ///     co_riploot: rolls many kills of a rip with a chosen tier and affixes in the biome you stand in and prints what
+        ///     they would drop, to check the loot affixes (#96) without killing thousands of creatures. Drops nothing.
+        /// </summary>
+        private sealed class RipLootCommand : ConsoleCommand
+        {
+            public override string Name => "co_riploot";
+
+            public override string Help =>
+                "Corruption: co_riploot [rolls] [tier] [affix ...] - roll a rip creature's kill loot many times (default 10000, tier 1) " +
+                "in the biome you stand in and print the gear, orbs, map chance and kinds of gear (e.g. co_riploot 10000 3 bountiful). Drops nothing.";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var print = Console.instance;
+                var player = Player.m_localPlayer;
+                if (!player || !Loot.Loaded || !MapTiers.Loaded)
+                {
+                    print.Print("co_riploot needs a loaded character and the loot and map tables (see the log).");
+                    return;
+                }
+                int index = 0;
+                int rolls = 10000;
+                int tier = 1;
+                if (args.Length > index && int.TryParse(args[index], out var n))
+                {
+                    rolls = Mathf.Clamp(n, 1, 1000000);
+                    index++;
+                }
+                if (args.Length > index && int.TryParse(args[index], out var t))
+                {
+                    tier = t;
+                    index++;
+                }
+                var tables = MapTiers.Tables;
+                var row = tables.Tiers.Row(tier);
+                if (row == null)
+                {
+                    print.Print($"No tier {tier} in map_tiers.csv.");
+                    return;
+                }
+                var entries = MapData.ParseEntries(string.Join(MapData.Separator.ToString(), args.Skip(index).Select(a => a.ToLowerInvariant()).ToArray()));
+                var unknown = entries.Where(e => tables.Affixes.Find(e.Id) == null).Select(e => e.Id).ToList();
+                if (unknown.Count > 0)
+                {
+                    print.Print($"Unknown affix id(s): {string.Join(", ", unknown.ToArray())}.");
+                    return;
+                }
+                var affixRolls = entries.Select(e =>
+                {
+                    var affix = tables.Affixes.Find(e.Id);
+                    return new MapAffixRoll { Affix = affix, Value = e.HasValue ? affix.Clamp(e.Value) : affix.Min };
+                }).ToList();
+                var boost = MapLootRules.Of(affixRolls);
+                var sources = RipTierRules.DropSources(row);
+                string biome = Loot.BiomeAt(player.transform.position);
+                System.Func<double> random = () => UnityEngine.Random.value * 0.99999f;
+                System.Func<LootBases.Base, double> weight = null;
+                if (boost.TiltsPick)
+                {
+                    weight = b => boost.WeightOf(Loot.KindOf(b));
+                }
+                float orbMultiplier = (float)(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources) * boost.Orbs);
+                int magic = 0, rare = 0, orbs = 0;
+                var kinds = new Dictionary<string, int>();
+                for (int i = 0; i < rolls; i++)
+                {
+                    orbs += Loot.Orbs.Roll(orbMultiplier, random).Count;
+                    foreach (var rarity in Loot.Drops.Roll(sources, random, boost.Items))
+                    {
+                        if (rarity != "magic" && rarity != "rare")
+                        {
+                            continue;
+                        }
+                        if (rarity == "magic") magic++; else rare++;
+                        var pick = Loot.Bases.Pick(biome, Loot.Rules.PreviousBiomePercent, p => ObjectDB.instance.GetItemPrefab(p), random, weight);
+                        string kind = pick == null ? "none" : Loot.KindOf(pick);
+                        if (kind.Length == 0) kind = "jewellery";
+                        kinds[kind] = kinds.TryGetValue(kind, out var c) ? c + 1 : 1;
+                    }
+                }
+                float mapChance = MapDropRules.Chance(Loot.Rules.MapDropOneIn, (float)(Loot.Drops.Multiplier(Corruption.Rules.DropTable.OrbColumn, sources) * boost.Items));
+                print.Print($"{rolls} kills in a tier {tier} {biome} rip" + (affixRolls.Count > 0 ? $" with {MapTiers.DescribeValues(affixRolls)}" : "") +
+                            $": gear x{boost.Items:0.##}, orbs x{boost.Orbs:0.##} on top of the tier.");
+                print.Print($"  Magic {magic} (expected {Loot.Drops.Chance("magic", sources, boost.Items) * rolls:0.#}), " +
+                            $"Rare {rare} (expected {Loot.Drops.Chance("rare", sources, boost.Items) * rolls:0.#}), orbs {orbs}.");
+                print.Print($"  Map chance per kill: {(mapChance > 0f ? $"1 in {1f / mapChance:0}" : "none")} (if maps can drop here).");
+                int gear = magic + rare;
+                if (gear > 0)
+                {
+                    print.Print("  Kinds of gear: " + string.Join(", ", kinds.OrderByDescending(k => k.Value)
+                        .Select(k => $"{k.Key} {k.Value} ({100.0 * k.Value / gear:0}%)").ToArray()) + ".");
+                }
+            }
         }
 
         private sealed class MapCommand : ConsoleCommand

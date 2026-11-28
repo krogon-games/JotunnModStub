@@ -57,6 +57,7 @@
     <Compile Include="..\Corruption\Rules\MapCorruptRules.cs" Link="Linked\MapCorruptRules.cs" />
     <Compile Include="..\Corruption\Rules\MapText.cs" Link="Linked\MapText.cs" />
     <Compile Include="..\Corruption\Rules\RipTierRules.cs" Link="Linked\RipTierRules.cs" />
+    <Compile Include="..\Corruption\Rules\MapLootRules.cs" Link="Linked\MapLootRules.cs" />
     <Compile Include="..\Corruption\Rules\AffixRenames.cs" Link="Linked\AffixRenames.cs" />
     <Compile Include="..\Corruption\Rules\MapDropRules.cs" Link="Linked\MapDropRules.cs" />
     <Compile Include="..\Corruption\Rules\AffixTotals.cs" Link="Linked\AffixTotals.cs" />

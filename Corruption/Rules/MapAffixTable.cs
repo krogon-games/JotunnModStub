@@ -38,11 +38,19 @@ namespace Corruption.Rules
             public const string PoisonShare = "poison_share";
             public const string FireShare = "fire_share";
             public const string LightningShare = "lightning_share";
+            // The loot affixes (#96): see MapLootRules.
+            public const string DropItems = "drop_items";
+            public const string DropOrbs = "drop_orbs";
+            public const string DropShields = "drop_shields";
+            public const string DropArmour = "drop_armour";
+            public const string DropMelee = "drop_melee";
+            public const string DropRanged = "drop_ranged";
 
             public static readonly string[] All =
             {
                 Experience, Density, Damage, AttackSpeed, DoubleDamage, Health, MoveSpeed, NoStagger, PhysicalTaken,
-                ElementalTaken, LifeDrain, StaminaDrain, Resistances, PoisonShare, FireShare, LightningShare
+                ElementalTaken, LifeDrain, StaminaDrain, Resistances, PoisonShare, FireShare, LightningShare, DropItems, DropOrbs,
+                DropShields, DropArmour, DropMelee, DropRanged
             };
         }
 
