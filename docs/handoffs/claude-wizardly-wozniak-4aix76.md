@@ -4,7 +4,7 @@
 
 ## Stage
 
-Deciding (one affix at a time).
+Built, waiting for Krogon's play-test.
 
 ## Purpose
 
@@ -16,7 +16,10 @@ Nothing yet.
 
 ## Half-done and known issues
 
-None yet.
+- **Built, not play-tested** (806 tests; Corruption builds against the stand-in game folder): **Rimeburst** (`rimeburst`, 50–100%) and **Guarded** (`guarded`) rows in `map_affixes.csv` (`pool` = corrupted); rules in `RipTierRules` (unit-tested, `IceBurstGuardianTests`); game code in `Corruption/Content/CorruptedMapAffixes.cs`. New patches: `Character.OnDeath` prefix (Rimeburst), `Game.Start` postfix (its message), `Destructible.RPC_Damage` prefix (the guarded heart). Game code decompiled (1.0.14 assemblies of the stand-in) for the star damage factor and the weapons' damage.
+- **Claude's choices** (changeable): names Rimeburst and Guarded (hidden on the UI, used in `co_map` and logs); the burst has no stagger and no push and can be blocked and rolled through; "its strongest hit" = its strongest weapon's fighting damage (no chop or pickaxe) × that attack's multiplier × the game's star factor × Brutal; every death of a stamped creature bursts, whoever killed it (the guardian too); the boss appears 6 m from the heart on the side away from the players; it leaves once the rip closes, like the leftovers; Kall starts at his first phase and his later phases keep guarding.
+- **Unknown until played:** the Queen, Kall and Fader outside their arenas; the boss's spawn on uneven ground.
+- With Thorns, each of the three corrupted-only affixes is 1 in 3 on a corrupted map (they all weigh 100); before this round Thorns was the only one (100%).
 
 ## Decisions
 
@@ -41,7 +44,7 @@ None yet.
 
 ## Playtest
 
-Not written yet.
+Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md` (`cg-1` … `cg-18`), also on the phone page after the `claude/nifty-hypatia-afm8ez` section. Not started.
 
 ## Open questions for Krogon
 
@@ -49,8 +52,9 @@ None.
 
 ## Next steps
 
-1. Finish the decisions; build; checklist on the phone page.
+1. Krogon's solo play-test (`cg-1` … `cg-18`; `la-1` … `la-20` of the base branch work on this build too).
+2. Fix what fails; final play-test; `/handoff`.
 
 ## Merge notes
 
-**Must merge after `claude/nifty-hypatia-afm8ez`** (this branch was started from it and carries its commits).
+**Must merge after `claude/nifty-hypatia-afm8ez`** (this branch was started from it and carries its commits). Gameplay changed: version bump needed at merge (Corruption). Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`.
