@@ -1,25 +1,30 @@
 # Handoff: `claude/wizardly-wozniak-4aix76`
 
-**Written:** 2026-11-28. Started from `claude/nifty-hypatia-afm8ez` at `608bac6` (not `master`), as Krogon asked.
+**Written:** 2026-11-28 (`/handoff`). Started from `claude/nifty-hypatia-afm8ez` (merged since as PR #100); `master` merged in; 21 commits ahead, 0 behind; no PR yet.
 
 ## Stage
 
-Built, waiting for Krogon's play-test.
+Ready to merge.
 
 ## Purpose
 
-More corrupted-only map affixes ([#97](https://github.com/krogon-games/JotunnModStub/issues/97), ROADMAP R1d): the Ice explosion on death and a corrupted boss guarding the heart, from Krogon's list in `docs/handoffs/claude-kind-einstein-8sn8e7.md`. Builds on Thorns and the "5th affix on a corrupted map" rule of `claude/nifty-hypatia-afm8ez`.
+More corrupted-only map affixes ([#97](https://github.com/krogon-games/JotunnModStub/issues/97), ROADMAP R1d): Rimeburst (ice burst on death) and Guarded (a corrupted boss guards the heart). Grew from the play-tests: corrupted creatures fight players only, the Forge tab redesign, and corrupting maps of any tier.
 
 ## Done
 
-Nothing yet.
+All tested alone by Krogon on Valheim 1.0.31, 2026-11-28 (`docs/playtests/claude-wizardly-wozniak-4aix76.md`):
+- **Rimeburst** and **Guarded** (`cg-1` … `cg-18`, all Pass). Each of the three corrupted-only affixes is 1 in 3.
+- **Corrupted creatures fight players and tames only** (decisions 20–22; "Playtesting done").
+- **Forge tab:** gear laid out like a map, no result text, toasts and top-left refusals (decisions 24–26; "All works").
+- **A shard corrupts a map of any tier**, one tier up, locked, red name (decisions 27–29; "Much better").
 
 ## Half-done and known issues
 
-- **Built, not play-tested** (806 tests; Corruption builds against the stand-in game folder): **Rimeburst** (`rimeburst`, 50–100%) and **Guarded** (`guarded`) rows in `map_affixes.csv` (`pool` = corrupted); rules in `RipTierRules` (unit-tested, `IceBurstGuardianTests`); game code in `Corruption/Content/CorruptedMapAffixes.cs`. New patches: `Character.OnDeath` prefix (Rimeburst), `Game.Start` postfix (its message), `Destructible.RPC_Damage` prefix (the guarded heart). Game code decompiled (1.0.14 assemblies of the stand-in) for the star damage factor and the weapons' damage.
-- **Claude's choices** (changeable): names Rimeburst and Guarded (hidden on the UI, used in `co_map` and logs); the burst has no stagger and no push and can be blocked and rolled through; "its strongest hit" = its strongest weapon's fighting damage (no chop or pickaxe) × that attack's multiplier × the game's star factor × Brutal; every death of a stamped creature bursts, whoever killed it (the guardian too); the boss appears 6 m from the heart on the side away from the players; it leaves once the rip closes, like the leftovers; Kall starts at his first phase and his later phases keep guarding.
-- **Unknown until played:** the Queen, Kall and Fader outside their arenas; the boss's spawn on uneven ground.
-- With Thorns, each of the three corrupted-only affixes is 1 in 3 on a corrupted map (they all weigh 100); before this round Thorns was the only one (100%).
+- **Freeze watch** (decision 19): built, never triggered. One freeze happened while idling earlier (no log explains it); not seen again.
+- Krogon's notes for later: Rimeburst's damage feels low, its slow too weak, its look to improve (`cg-5`). Thorns' returned hits are tiny after armour (loot round's `la-18b`).
+- **Claude's choices** (changeable): names Rimeburst and Guarded; the burst has no stagger or push and can be blocked or rolled; "strongest hit" = strongest weapon's fighting damage × its attack multiplier × the star factor × Brutal; every stamped death bursts; the boss appears 6 m from the heart away from the players and leaves when the rip closes; Kall starts at phase 1.
+- Two players untested: Rimeburst on another player's game, Guarded's boss and heart lock with several players, corrupted targeting with tames from two players.
+- Game code read in the stand-in's 1.0.14 assemblies (decompiled); 1.0.31 assumed the same where the play-test didn't show it.
 
 ## Decisions
 
@@ -55,7 +60,7 @@ Nothing yet.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`**: Krogon, 2026-11-28: "Playtesting done" (no marks on the phone page; taken as passed on his word). Then decisions 23–26 (the Forge tab: no result text, gear laid out like a map, toasts): steps `cg-24` … `cg-27`: Krogon, 2026-11-28: "Playtesting done. All works." (he found a tier 4 map couldn't be corrupted, by the old rule: decision 27). Then decisions 27–29 (corrupt maps of any tier): steps `cg-28` … `cg-30`: Krogon, 2026-11-28: "Much better. ready to finish off." (passed on his word).
+Solo checklist and feedback: `docs/playtests/claude-wizardly-wozniak-4aix76.md`. Passed: `cg-1` … `cg-18` (marked), `cg-20` … `cg-30` on Krogon's word ("Playtesting done", "All works", "Much better. ready to finish off."). The phone page's section came off. Group steps not written yet (Session 2).
 
 ## Open questions for Krogon
 
@@ -63,9 +68,19 @@ None.
 
 ## Next steps
 
-1. Krogon's solo play-test (`cg-1` … `cg-18`; `la-1` … `la-20` of the base branch work on this build too).
-2. Fix what fails; final play-test; `/handoff`.
+1. Krogon: ask for the pull request into `master`; the coordinator merges it and raises the versions.
+2. Coordinator: copy decisions 1–29 into `docs/DECISIONS.md`; #97 stays open for meteors, embers, burial stones and the Treasure Fallen (decision 2).
+3. Later: Rimeburst's numbers and look; a Thorns buff; group steps for Session 2.
+
+## Checks
+
+- Build: **PASS**. 812 tests pass; Corruption, Orlog and CraftingOverhaul build (stand-in game folder).
+- Version: **gameplay changed: version bump needed at merge: Corruption**; Orlog and CraftingOverhaul only gained the freeze watch's marker in `Safe.cs` (no gameplay; their shipped files changed, so the coordinator decides). No version changed on this branch.
+- Multiplayer sync (read in code, not tested): no new config. Rimeburst: the creature's owner sends a registered routed message (`Corruption_Rimeburst`) to every game; each game hits only its own player. Guarded: the heart's owner spawns the boss (ZDO marks `corruption_rip_guardian_of`, `corruption_rip_guardian_spawned`); the heart's owner refuses damage. Targeting: `BaseAI.IsEnemy` reads ZDO-backed flags on every game. Map corruption: the server's `MapData.Sanitize` accepts a corrupted map of any tier. Tables compiled in (sync through the version bump).
+- Assets and names: **PASS**. No new data file; `$corruption_rip_heart_guarded` is in `Texts.cs`; StaffIceShards, ArrowFrost and the boss prefabs are in the 1.0.31 dump.
+- FEATURES.md: **PASS**, updated with every change and the play-test results.
+- In-game: **PASS alone** (Krogon, quotes above); two players untested.
 
 ## Merge notes
 
-**Must merge after `claude/nifty-hypatia-afm8ez`** (this branch was started from it and carries its commits). *Done:* that branch merged as PR #100 (Corruption 0.13.0), and `master` was merged into this branch on 2026-11-28 (conflicts in the shared docs kept both sides). Gameplay changed: version bump needed at merge (Corruption). Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`.
+Ready to merge: **yes**. Krogon's final play-test passed, every check passes, `master` is merged in (0 behind), all pushed. **Gameplay changed: version bump needed at merge: Corruption** (see Checks for Orlog and CraftingOverhaul). No other remote branch has unmerged commits, so no file clashes. Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`, `Corruption/CorruptionPlugin.cs`, `Corruption/Content/Texts.cs`. Started from `claude/nifty-hypatia-afm8ez`, which is merged (PR #100).
