@@ -80,3 +80,4 @@
 - **2026-11-28, final play-test:** "Playtesting done." (no marks on the phone page for `cg-20` … `cg-23`; taken as passed on his word). With it a UI tweak, decision 23 (screenshot): a map's forge result moves to the empty left side; step `cg-24`.
 - **2026-11-28:** after trying decision 23: "i like that a lot better. I think we can remove the green text entirely" and a mockup for gear: decisions 24–26, steps `cg-24` … `cg-27` (the old `cg-24` replaced).
 - **2026-11-28:** "Playtesting done. All works." (`cg-24` … `cg-27`). Found: a map below tier 5 can't be corrupted (the old rule): decisions 27–29, steps `cg-28` … `cg-30`.
+- **2026-11-28, final:** "Much better. ready to finish off." (`cg-28` … `cg-30`, corrupting maps of any tier; taken as passed on his word, no step marks). The round's steps came off the phone page. `cg-19` (freeze) was never needed.
