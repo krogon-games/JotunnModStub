@@ -53,6 +53,19 @@
 | cg-18 | Look through the whole log. | No red errors and no `Failed to apply patch`. | | |
 | cg-19 | **Only if the game freezes again:** wait until Windows closes it (or close it), then send `BepInEx/LogOutput.log` and `BepInEx/corruption_freeze.txt`. | A `FREEZE WATCH:` line saying whether the game was inside our mods' code, and which part. | | |
 
+## Final play-test: corrupted creatures fight players only (2026-11-28)
+
+**Build:** this branch after the "corrupted creatures fight players and tames only" commit. Same setup (single player, Meadows, `devcommands`).
+**What changed** (decisions 20–22): red (corrupted) creatures, a corrupted boss and its summons never fight each other or normal creatures, and normal creatures leave them alone. They hunt you and your tamed creatures. Creatures near the heart still turn red when the waves start.
+
+| Step | What to do | What you should see | Pass / Fail | Note |
+|---|---|---|---|---|
+| cg-20 | `co_map meadows 6 glorious bountiful glittering bulwarked guarded`, open its rip, keep `god` on and watch the waves near the heart for a minute. | Red creatures never hit each other or the red Eikthyr; they all come for you. | | |
+| cg-21 | While they come, `spawn Boar 3` and `spawn Greyling 3` next to them (normal creatures). | The red ones ignore the normal ones and keep coming for you; the normal ones ignore the red ones and behave as usual (the greylings attack you, the boars only if you hit them). | | |
+| cg-22 | Tame a wolf or boar first (or `spawn Wolf 1 1` and feed it), bring it into a rip. | The red creatures attack your tame too, and its bites hurt them. | | |
+| cg-23 | At an altar, summon a corrupted boss as usual (corrupted trophy). | Its summons and the boss still come for you only (as before). | | |
+| cg-19 | **Only if the game freezes:** send `BepInEx/LogOutput.log` and `BepInEx/corruption_freeze.txt`. | A `FREEZE WATCH:` line. | | |
+
 ### Your feedback
 
 - **2026-11-28, during the play-test: the game crashed while idling in town** (Krogon: "the same type of crash as reported in the previous session when accessing the riftforge"). His `LogOutput.log` (build `claude/wizardly-wozniak-4aix76 a4f7de3`, Valheim 1.0.31) just stops at 21:34:13, with no error or exception before it: a crash inside the game engine, which BepInEx's log can't record. The last mod action was a tier 6 Meadows rip with Rimeburst opened at 21:31; he never went through it, no creature died and no Rimeburst or Guarded code ran. The "GetBiome error BlackForest -> Meadows" warning every second is the game's own (`Player.cs`, standing on a biome border) and harmless. Then (his `Player.log` and the Event Viewer): **a freeze, not a crash**. Windows logged "Application Hang … valheim.exe stopped interacting with Windows and was closed" at 21:36:28, so the game stopped drawing frames at about 21:34:10 and hung for two minutes. `Player.log` shows the round working before it: the Rimeburst rip ran (bursts logged, `caught in a burst of 20 frost`), the heart broke with its tier 6 loot, and he came home through the exit about 21:33:30; then 40 s of idling with nothing but the game's biome-border warning. Nothing names the cause. Krogon chose a freeze watch (decision 19) so the next freeze is named: step `cg-19`.

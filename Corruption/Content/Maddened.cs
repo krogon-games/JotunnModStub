@@ -9,8 +9,8 @@ namespace Corruption.Content
 {
     /// <summary>
     ///     Maddened creatures (rip waves, and creatures near a rip when it opens): tinted red, a status effect that
-    ///     raises damage and speed, no fleeing, and they treat every other creature and player as an enemy, so they
-    ///     fight each other too (design). Talismans don't repel them (user, 2026-10-28). The flag lives on the
+    ///     raises damage and speed, no fleeing, and they fight players and players' tamed creatures only, never each other
+    ///     or normal creatures (Krogon, 2026-11-28, decisions 20-22; it was "every other creature and player" in the design). Talismans don't repel them (user, 2026-10-28). The flag lives on the
     ///     creature's ZDO, so every player's game agrees and it survives reloads.
     /// </summary>
     internal static class Maddened
@@ -156,10 +156,13 @@ namespace Corruption.Content
         }
 
         /// <summary>
-        ///     Maddened creatures are everyone's enemy and everyone is theirs. Runs after the talisman patch, so a
-        ///     talisman can't make a maddened creature ignore its wearer. Except a corrupted boss's summons: they fight
-        ///     players only, never their boss, each other or other creatures (user, 2026-10-31). The game uses this
-        ///     check both for targeting and for who melee, area and projectile hits can damage.
+        ///     Corrupted creatures fight players and players' tamed creatures only (Krogon's decisions 20-22 of 2026-11-28,
+        ///     replacing "maddened creatures are everyone's enemy" and the summons' own rule of 2026-10-31, which it
+        ///     contains): never each other, a corrupted boss or normal creatures, and normal creatures leave them alone.
+        ///     Corrupted = maddened (rip waves, creatures near the heart when they start, a corrupted boss's summons) or a
+        ///     corrupted boss. Between two creatures that aren't corrupted the game's answer stands. Runs after the talisman
+        ///     patch, so a talisman can't make a corrupted creature ignore its wearer. The game uses this check both for
+        ///     targeting and for who melee, area and projectile hits can damage. Rule: <see cref="CorruptedTargeting" />.
         /// </summary>
         [HarmonyPatch(typeof(BaseAI), nameof(BaseAI.IsEnemy), typeof(Character), typeof(Character))]
         private static class Enemies
@@ -171,21 +174,25 @@ namespace Corruption.Content
                 {
                     return;
                 }
-                bool summonA = IsSummon(a);
-                bool summonB = IsSummon(b);
-                if (summonA || summonB)
+                try
                 {
-                    __result = summonA ? b.IsPlayer() && !summonB : a.IsPlayer();
-                    return;
+                    __result = CorruptedTargeting.IsEnemy(SideOf(a), SideOf(b), __result);
                 }
-                if (__result)
+                catch (System.Exception ex)
                 {
-                    return;
+                    Safe.Report("decide who corrupted creatures fight", ex);
                 }
-                if (IsMaddened(a) || IsMaddened(b))
+            }
+
+            private static CorruptedTargeting.Side SideOf(Character c)
+            {
+                bool player = c.IsPlayer();
+                return new CorruptedTargeting.Side
                 {
-                    __result = true;
-                }
+                    Player = player,
+                    Tamed = !player && c.IsTamed(),
+                    Corrupted = !player && (IsMaddened(c) || c.IsBoss() && CorruptedBosses.IsCorrupted(c))
+                };
             }
         }
 

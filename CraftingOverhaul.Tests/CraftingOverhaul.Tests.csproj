@@ -22,6 +22,7 @@
     <Compile Include="..\CraftingOverhaul\Classes\SkillsPanelLayout.cs" Link="Linked\SkillsPanelLayout.cs" />
     <Compile Include="..\CraftingOverhaul\Containers\ChestLeaseRules.cs" Link="Linked\ChestLeaseRules.cs" />
     <Compile Include="..\Corruption\Rules\ShardRules.cs" Link="Linked\ShardRules.cs" />
+    <Compile Include="..\Corruption\Rules\CorruptedTargeting.cs" Link="Linked\CorruptedTargeting.cs" />
     <Compile Include="..\Corruption\Rules\TalismanFamilies.cs" Link="Linked\TalismanFamilies.cs" />
     <Compile Include="..\Corruption\Rules\AffixTable.cs" Link="Linked\AffixTable.cs" />
     <Compile Include="..\Corruption\Rules\Csv.cs" Link="Linked\Csv.cs" />
