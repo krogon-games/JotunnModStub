@@ -445,7 +445,8 @@ namespace Corruption.Content
                 result.Message = option.Refusal;
                 return result;
             }
-            var next = MapCorruptRules.Apply(StateOf(item, out _), MapTiers.Tables, out string headline);
+            var next = MapCorruptRules.Apply(StateOf(item, out _), MapTiers.Tables, out string headline,
+                () => UnityEngine.Random.value * 0.99999f);
             if (next == null)
             {
                 result.Message = headline;

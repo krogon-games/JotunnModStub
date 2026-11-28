@@ -23,6 +23,9 @@ namespace Corruption.Content
         public float AttackSpeed = 1f;
         public bool NoStagger;
 
+        /// <summary>Thorns (#97): the share (0 to 1) of the damage a player's hit deals that comes back to them.</summary>
+        public float Thorns;
+
         /// <summary>Whether the creature's own hits are changed at all.</summary>
         public bool ChangesHits => Damage != 1f || DoubleChance > 0f || PoisonShare > 0f || FireShare > 0f || LightningShare > 0f;
     }
@@ -71,7 +74,8 @@ namespace Corruption.Content
                 Health = (float)RipTierRules.HealthFactor(rolls),
                 MoveBonus = (float)RipTierRules.MoveSpeedBonus(rolls),
                 AttackSpeed = (float)RipTierRules.AttackSpeedFactor(rolls),
-                NoStagger = RipTierRules.NoStagger(rolls)
+                NoStagger = RipTierRules.NoStagger(rolls),
+                Thorns = (float)RipTierRules.ThornsShare(rolls)
             };
             Cache.Remove(character);
             Cache.Add(character, affixes);
@@ -220,6 +224,102 @@ namespace Corruption.Content
                 catch (System.Exception ex)
                 {
                     Safe.Report("reduce a rip creature's damage taken", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Thorns (corrupted-only, #97; Krogon's decisions 12-15 of 2026-11-28): a share of the damage a player's hit
+        ///     really deals to a stamped creature comes back to that player. On the creature's owner, where the game applies
+        ///     the damage: the prefix notes the creature's health, the postfix measures what the hit took off (after armour,
+        ///     resistances, Ironskin and Warded; burning and poison are applied later as damage over time and don't count) and
+        ///     sends the share to the player as a blunt hit (decision 14: armour and blocking reduce it). Every hit counts
+        ///     (decision 13) except damage over time (<see cref="HitSources.IsDamageOverTime" />). The returned hit has no
+        ///     attacker, so the creature's own hit affixes (<see cref="RipCreatureHits" />) and the game's per-player enemy
+        ///     damage scaling leave it alone, and no stagger, so it can't stun-lock (Claude's choices). <c>Character.Damage</c>
+        ///     on the player sends it to the player's own game. Players and unstamped creatures are untouched.
+        ///     Game: Character.RPC_Damage, Character.cs:2242 (health set in ApplyDamage, Character.cs:2418, inside it).
+        ///     Prefix and postfix at Normal priority; neither skips.
+        /// </summary>
+        [HarmonyPatch(typeof(Character), nameof(Character.RPC_Damage))]
+        private static class Thorns
+        {
+            private sealed class Pending
+            {
+                public Player Attacker;
+                public float Share;
+                public float Health;
+            }
+
+            private static void Prefix(Character __instance, HitData hit, out Pending __state)
+            {
+                __state = null;
+                if (hit == null || __instance is Player || hit.m_attacker.IsNone() || HitSources.IsDamageOverTime(hit))
+                {
+                    return;
+                }
+                try
+                {
+                    if (!RipCreatures.IsOwner(__instance) || __instance.IsDead())
+                    {
+                        return;
+                    }
+                    var affixes = RipCreatures.Of(__instance);
+                    if (affixes == null || affixes.Thorns <= 0f)
+                    {
+                        return;
+                    }
+                    if (!(hit.GetAttacker() is Player player) || !player)
+                    {
+                        return;
+                    }
+                    __state = new Pending { Attacker = player, Share = affixes.Thorns, Health = __instance.GetHealth() };
+                }
+                catch (System.Exception ex)
+                {
+                    Safe.Report("note a hit on a Thorns creature", ex);
+                }
+            }
+
+            private static void Postfix(Character __instance, HitData hit, Pending __state)
+            {
+                if (__state == null)
+                {
+                    return;
+                }
+                try
+                {
+                    var player = __state.Attacker;
+                    if (!player || player.IsDead())
+                    {
+                        return;
+                    }
+                    // A killing blow: the game may already have removed the creature, and GetHealth would then read its full
+                    // health, so a dead or removed creature counts as 0 (the hit dealt all it had left).
+                    bool gone = !__instance || !__instance.m_nview || !__instance.m_nview.IsValid() || __instance.IsDead();
+                    float after = gone ? 0f : __instance.GetHealth();
+                    float damage = (float)RipTierRules.ThornsDamage(__state.Share, __state.Health, after);
+                    if (damage <= 0f)
+                    {
+                        return;
+                    }
+                    var back = new HitData();
+                    back.m_damage.m_blunt = damage;
+                    back.m_point = player.GetCenterPoint();
+                    Vector3 from = __instance ? __instance.transform.position + Vector3.up : back.m_point - player.transform.forward;
+                    Vector3 dir = back.m_point - from;
+                    dir.y = 0f;
+                    back.m_dir = dir.sqrMagnitude > 0.0001f ? dir.normalized : -player.transform.forward;
+                    back.m_pushForce = 0f;
+                    back.m_staggerMultiplier = 0f;
+                    back.m_blockable = true;
+                    back.m_dodgeable = true;
+                    back.m_hitType = HitData.HitType.EnemyHit;
+                    player.Damage(back);
+                }
+                catch (System.Exception ex)
+                {
+                    Safe.Report("return a Thorns hit", ex);
                 }
             }
         }

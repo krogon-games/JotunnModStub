@@ -17,6 +17,8 @@ Nothing yet.
 ## Half-done and known issues
 
 - **Built, not play-tested** (790 tests; Corruption and Orlog build): six loot affixes in `map_affixes.csv` (Bountiful, Glittering, Bulwarked, Mailed, Honed, Fletched; Runic `later`), rules in `Corruption/Rules/MapLootRules.cs`, hooked into the kill loot (`LootPatches`) and the heart's spill (`RipLoot`); `co_riploot` to check the rates. No new Harmony patch.
+- **Built, not play-tested** (798 tests): corrupted-only affixes (a `pool` column; the shard adds one as a corrupted map's 5th; the server keeps one on a corrupted full map) and **Thorns** (5–25%, `Character.RPC_Damage` prefix + postfix, `MapAffixEffects.Thorns`). Game code decompiled (Krogon allowed it) to check where health is applied.
+- Claude's choices on Thorns (changeable): the returned hit is blunt, has no attacker (so Brutal and the game's per-player enemy scaling don't raise it), no stagger and no push; a killing blow counts what the creature had left.
 - Claude's reading: Bountiful also raises the (not yet built) unique roll, since uniques are Corruption gear.
 
 ## Decisions
@@ -39,7 +41,7 @@ Nothing yet.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-nifty-hypatia-afm8ez.md` (`la-1` … `la-13`), also on the phone page.
+Solo checklist `docs/playtests/claude-nifty-hypatia-afm8ez.md` (`la-1` … `la-20`; D, Thorns, needs a build after the Thorns commit), also on the phone page.
 
 ## Open questions for Krogon
 
@@ -47,6 +49,6 @@ None.
 
 ## Next steps
 
-1. Krogon's solo play-test (`la-1` … `la-13`).
+1. Krogon's solo play-test (`la-1` … `la-20`).
 2. Fix what fails; final play-test.
-3. `/handoff`, then a PR into `master` (gameplay changed: Corruption version bump at merge).
+3. `/handoff`, then a PR into `master` (gameplay changed: Corruption version bump at merge; the map's stored affixes can now hold a 5th, so every game and the server need the new build).

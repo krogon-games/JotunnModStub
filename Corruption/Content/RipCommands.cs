@@ -134,7 +134,8 @@ namespace Corruption.Content
             private static string AffixIds()
             {
                 return MapTiers.Loaded
-                    ? " (" + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray()) + ")"
+                    ? " (" + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray()) +
+                      "; corrupted-only, for a tier 6 map: " + string.Join(", ", MapTiers.Tables.Affixes.Affixes.Where(a => a.Approved && a.CorruptedOnly).Select(a => a.Id).ToArray()) + ")"
                     : "";
             }
 
@@ -224,6 +225,10 @@ namespace Corruption.Content
                         var row = tables.Tiers.Row(tier);
                         MapOrbRules.AddRandom(state, tables, random.NextDouble, row.Affixes, new List<string>());
                         state.Corrupted = row.Corrupted;
+                        if (state.Corrupted)
+                        {
+                            MapCorruptRules.AddCorruptedAffix(state, tables, random.NextDouble);   // the 5th (#97)
+                        }
                     }
                 }
 

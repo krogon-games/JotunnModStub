@@ -160,7 +160,8 @@ namespace Corruption.Rules
             string color = LineColorOf(row);
             foreach (var roll in InTableOrder(rolls, affixes, null))
             {
-                text.Append('\n').Append("<color=").Append(color).Append('>').Append(Danger(roll.Affix, roll.Value)).Append("</color>");
+                text.Append('\n').Append("<color=").Append(roll.Affix.CorruptedOnly ? CorruptedColor : color).Append('>')
+                    .Append(Danger(roll.Affix, roll.Value)).Append("</color>");
             }
             return text.ToString();
         }
@@ -193,7 +194,8 @@ namespace Corruption.Rules
         {
             // The line alone, in the rarity colour the name had, so the map's own affixes still stand out from the tier's
             // lines (decision 10: no names).
-            string line = Bullet("<color=" + color + ">" + Danger(roll.Affix, roll.Value) + "</color>");
+            // A corrupted-only affix is in the corrupted red (#96 round, decision 15).
+            string line = Bullet("<color=" + (roll.Affix.CorruptedOnly ? CorruptedColor : color) + ">" + Danger(roll.Affix, roll.Value) + "</color>");
             return highlight != null && highlight.Contains(roll.Affix.Id) ? MarkOpen + line + MarkClose : line;
         }
 

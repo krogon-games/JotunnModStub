@@ -138,7 +138,7 @@ namespace CraftingOverhaul.Tests
             Assert.NotNull(MapOrbRules.Refusal("exalted", full, t));
             // Clearing the list brings them back.
             t.Affixes.SetDisabled("");
-            Assert.Equal(t.Affixes.Affixes.Count(a => a.Approved), t.Affixes.Rollable.Count());
+            Assert.Equal(t.Affixes.Affixes.Count(a => a.Approved && !a.CorruptedOnly), t.Affixes.Rollable.Count());
         }
 
         [Fact]
@@ -174,6 +174,12 @@ namespace CraftingOverhaul.Tests
                 new object[] { "fletched", "drop_ranged", 100.0, 100.0, "" }
             };
             Assert.Equal(expected.Select(e => (string)e[0]).ToArray(), a.Rollable.Select(x => x.Id).ToArray());
+            // Corrupted-only (#97): Thorns 5-25 (decision 12), never in the orbs' pool.
+            Assert.Equal(new[] { "thorns" }, a.RollableCorrupted.Select(x => x.Id).ToArray());
+            Assert.Equal(5.0, a.Find("thorns").Min);
+            Assert.Equal(25.0, a.Find("thorns").Max);
+            Assert.Equal("thorns", a.Find("thorns").Effect);
+            Assert.False(a.Find("thorns").Earns);
             Assert.All(a.Rollable, x => Assert.Equal(100.0, x.Weight));
             foreach (var e in expected)
             {
@@ -192,7 +198,7 @@ namespace CraftingOverhaul.Tests
                 Assert.False(later.Approved);
                 Assert.DoesNotContain(later, a.Rollable);
             }
-            Assert.Equal(27, a.Affixes.Count);
+            Assert.Equal(28, a.Affixes.Count);
             Assert.Equal("Enemies deal {value}% more damage.", a.Find("brutal").Danger);
         }
 
@@ -651,8 +657,14 @@ namespace CraftingOverhaul.Tests
             Assert.NotNull(done);
             Assert.True(done.Corrupted);
             Assert.Equal(6, done.Tier);
-            Assert.Equal(4, done.Affixes.Count); // never destroyed, nothing lost
-            Assert.Equal(full.Values, done.Values);
+            // Never destroyed, nothing lost; the 5th is the corrupted-only affix (#97), at its lowest without a random.
+            Assert.Equal(5, done.Affixes.Count);
+            Assert.Equal(Four.Concat(new[] { "thorns" }).ToArray(), done.Affixes.ToArray());
+            Assert.Equal(5.0, done.Values["thorns"]);
+            foreach (var id in Four)
+            {
+                Assert.Equal(full.Values[id], done.Values[id]);
+            }
             Assert.Equal("Corrupted: now tier 6", headline);
             Assert.False(full.Corrupted);
 

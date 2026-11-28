@@ -123,6 +123,23 @@ namespace Corruption.Rules
         }
 
         /// <summary>Whether a wave creature is a guaranteed 2-star. <paramref name="random01" /> is in [0, 1).</summary>
+        /// <summary>Thorns (#97): the share (0 to 1) of a player's dealt damage that comes back; several add, capped at 1.</summary>
+        public static double ThornsShare(IEnumerable<MapAffixRoll> rolls)
+        {
+            return Math.Min(1.0, Sum(rolls, MapAffixTable.Effects.Thorns) / 100.0);
+        }
+
+        /// <summary>
+        ///     The damage a Thorns hit returns: the share of what the player's hit really took off the creature (its health
+        ///     before minus after, never below 0). Below 0.1 the game ignores a hit anyway (<c>Character.ApplyDamage</c>), so 0.
+        /// </summary>
+        public static double ThornsDamage(double share, double healthBefore, double healthAfter)
+        {
+            double dealt = healthBefore - Math.Max(0.0, healthAfter);
+            double returned = dealt > 0.0 && share > 0.0 ? dealt * share : 0.0;
+            return returned >= 0.1 ? returned : 0.0;
+        }
+
         public static bool IsGuaranteedTwoStar(double percent, double random01)
         {
             return percent > 0 && random01 < percent / 100.0;

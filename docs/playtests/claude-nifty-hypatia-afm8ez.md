@@ -12,6 +12,8 @@
   - **Bulwarked, Mailed, Honed, Fletched:** when gear drops, it is twice as likely to be a shield, helmet or armour, melee weapon, or ranged weapon. The number of gear drops stays the same.
 - **Runic** (runes) is listed but never rolls until runes exist.
 - Every ×2 multiplies with the tier and the stars, and with the other loot affixes on the same map. They work on kills in the rip and on the heart's spill.
+- **Thorns, the first corrupted-only affix** (added to the round, #97): when a shard corrupts a full tier 5 map, it now also gets a 5th affix, "Enemies return N% of the damage you deal to them." (N from 5 to 25), shown last under "What you'll face" in red. Every hit you land on a rip creature sends that share of the damage it really did back to you, as a normal hit that armour and blocking reduce. Burning and poison ticks don't count. Orbs never roll it.
+- **The weather affixes** (Frostbitten, Drowned, Choking) stay listed but switched off, and are off the plan.
 - **New test command:** `co_riploot [kills] [tier] [affixes]` pretends to kill that many rip creatures in the biome you're standing in and prints what would have dropped. It drops nothing.
 
 Chance is random, so `co_riploot`'s numbers will be a little different each time. "About double" means within roughly 10–15% of twice the first number.
@@ -22,7 +24,7 @@ Chance is random, so `co_riploot`'s numbers will be a little different each time
 
 | Step | What to do | What you should see | Pass / Fail | Note |
 |---|---|---|---|---|
-| la-1 | Read the top of the log. | No red errors. The log has `Map tiers: 6 tiers, 27 affixes (…, stormcalled, bountiful, glittering, bulwarked, mailed, honed, fletched roll).` Runic isn't in the roll list. | | |
+| la-1 | Read the top of the log. | No red errors. The log has `Map tiers: 6 tiers, 28 affixes (…, stormcalled, bountiful, glittering, bulwarked, mailed, honed, fletched roll; corrupted-only: thorns).` Runic isn't in the roll list. | | |
 | la-2 | `co_map meadows 5 bountiful glittering bulwarked mailed`. Open the inventory, Maps tab, and hover the map. | Under "What you'll earn", after the tier's lines: `Enemies are 100% more likely to drop gear, orbs and maps.`, `Enemies are 100% more likely to drop orbs.`, `Gear drops are 100% more likely to be shields.`, `Gear drops are 100% more likely to be helmets and armour.` Nothing new under "What you'll face". | | |
 | la-3 | `co_map meadows 3 honed fletched`. Hover it. | Under "What you'll earn": `Gear drops are 100% more likely to be melee weapons.` and `Gear drops are 100% more likely to be ranged weapons.` | | |
 | la-4 | `co_map meadows 2 runic`. | Refused: `Not built yet, so a map can't carry: runic.` | | |
@@ -45,6 +47,20 @@ Chance is random, so `co_riploot`'s numbers will be a little different each time
 | la-11 | `co_map meadows 2 bountiful`, open its rip and fight the waves, then destroy the heart. | Creatures drop gear and orbs as usual (more than usual if you keep count). No red errors. When the heart breaks, the log has `Rip loot: tier 2.` and `Rip loot: loot affixes, gear and maps x2, orbs x2, shields x1, armour x1, melee x1, ranged x1.` | | |
 | la-12 | `co_map meadows 5 glittering bulwarked mailed honed`, open its rip and destroy the heart. | The heart's log line: `… gear and maps x1, orbs x2, shields x2, armour x2, melee x2, ranged x1.` Your heart gear is still Rare or better (tier 5). No red errors. | | |
 | la-13 | `co_map meadows 2 brutal`, open its rip and destroy the heart. | No `loot affixes` line in the log (a map without loot affixes changes nothing). | | |
+
+**D. Thorns (corrupted-only)**
+
+**Needs a build from this branch made after the Thorns commit** (if you built before it, rebuild first; A–C work on either). Get a shard first: `spawn CorruptionShard 2`, then stand at a Riftforge.
+
+| Step | What to do | What you should see | Pass / Fail | Note |
+|---|---|---|---|---|
+| la-14 | `co_map meadows 5 brutal fleet sturdy teeming`. Put it in the Forge tab's slot, pick up a shard in Currencies and click the slot. | "Corrupted: now tier 6". The map has **5 lines**: the four, then last under "What you'll face" **in red**: `Enemies return N% of the damage you deal to them.`, N from 5 to 25. | | |
+| la-15 | Pick up any orb except the Mirror and click the corrupted map. | Refused: the map is corrupted and locked. A second shard is refused too ("This map is already corrupted."). | | |
+| la-16 | `co_map meadows 6`, four times (random tier 6 maps). Hover each. | Every one has 5 lines; the last is the red Thorns line, with a number from 5 to 25. Thorns never appears on a map you make with orbs (la-5). | | |
+| la-17 | `co_map meadows 6 brutal fleet sturdy teeming thorns:25`. Open its rip, hover the heart. Read the log. | The hover shows "Tier 6" and five lines, Thorns in red. No `map affix 'thorns' dropped` line in the log. | | |
+| la-18 | In that rip, type `god` again to turn god mode **off** (wear good armour, eat). Hit a creature a few times with a melee weapon and watch your health. | Each hit that lands costs you about a quarter of the damage number shown on the creature, a bit less thanks to your armour. A killing blow costs you too. You don't stagger from it. | | |
+| la-19 | Shoot a creature with a bow (and, if you're an Amazon, use a skill on one). Then hit one with fire arrows (or another burning attack) and watch while it burns. | Arrows and skills cost you a share too. The burning ticks afterwards don't. | | |
+| la-20 | In the config (`[5 - Rips] DisabledMapAffixes`), set `thorns` and save. Make a new tier 5 map and corrupt it with a shard. | Still "Corrupted: now tier 6", but the map has only 4 lines (no Thorns). Set the setting back to blank afterwards. | | |
 
 ### Your feedback
 
