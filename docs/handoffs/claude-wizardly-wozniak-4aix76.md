@@ -2,9 +2,11 @@
 
 **Written:** 2026-11-28 (`/handoff`). Started from `claude/nifty-hypatia-afm8ez` (merged since as PR #100); `master` merged in; 21 commits ahead, 0 behind; no PR yet.
 
+**Merged into `master`** as PR #102 (2026-11-28, merge commit `06d47bf`, with the version bump on the branch before the PR: Corruption 0.14.0). Decisions 1–29 copied into `docs/DECISIONS.md`; #97 stays open; tuning of Rimeburst and Thorns is #103; group step `PLAYTEST.md` → Session 2, 2m step 10.
+
 ## Stage
 
-Ready to merge.
+Ready to merge (merged).
 
 ## Purpose
 
@@ -68,9 +70,9 @@ None.
 
 ## Next steps
 
-1. Krogon: ask for the pull request into `master`; the coordinator merges it and raises the versions.
-2. Coordinator: copy decisions 1–29 into `docs/DECISIONS.md`; #97 stays open for meteors, embers, burial stones and the Treasure Fallen (decision 2).
-3. Later: Rimeburst's numbers and look; a Thorns buff; group steps for Session 2.
+1. ~~The pull request into `master`, the version bump and decisions 1–29 into `docs/DECISIONS.md`~~ Done 2026-11-28 (PR #102).
+2. The group step (`PLAYTEST.md` → Session 2, 2m step 10).
+3. Later: Rimeburst's numbers and look and a Thorns buff ([#103](https://github.com/krogon-games/JotunnModStub/issues/103)); the rest of #97 (meteors, embers, burial stones, the Treasure Fallen).
 
 ## Checks
 
