@@ -62,7 +62,7 @@
 |---|---|---|---|---|
 | cg-20 | `co_map meadows 6 glorious bountiful glittering bulwarked guarded`, open its rip, keep `god` on and watch the waves near the heart for a minute. | Red creatures never hit each other or the red Eikthyr; they all come for you. | | |
 | cg-21 | While they come, `spawn Boar 3` and `spawn Greyling 3` next to them (normal creatures). | The red ones ignore the normal ones and keep coming for you; the normal ones ignore the red ones and behave as usual (the greylings attack you, the boars only if you hit them). | | |
-| cg-22 | Tame a wolf or boar first (or `spawn Wolf 1 1` and feed it), bring it into a rip. | The red creatures attack your tame too, and its bites hurt them. | | |
+| cg-22 | Tame a wolf or boar (or `spawn Wolf`, then type `tame` next to it), bring it into a rip. | The red creatures attack your tame too, and its bites hurt them. | | |
 | cg-23 | At an altar, summon a corrupted boss as usual (corrupted trophy). | Its summons and the boss still come for you only (as before). | | |
 | cg-19 | **Only if the game freezes:** send `BepInEx/LogOutput.log` and `BepInEx/corruption_freeze.txt`. | A `FREEZE WATCH:` line. | | |
 
