@@ -24,6 +24,7 @@ Nothing built yet.
 2. **2026-11-28: Gungnir's Throw takes one of the four skill slots** ("It takes a slot"): it shows in the skills panel and goes into a slot like any other skill, fired from right click with a spear in hand; over "right click with no spear skill chosen" (no slot used) and its own key. Still no skill points (decision of 2026-11-13).
 3. **2026-11-28: the ghost spear glows gold** ("Golden glow (Gungnir)"): see-through, warm gold, a soft glow and a faint trail; over a pale blue spirit glow and plain see-through. A preview picture comes before it is built.
 4. **2026-11-28: the Abyssal Harpoon's Gungnir's Throw doesn't pull** ("No pull"): damage only; the pull stays on the game's own throw. Over copying the game's throw exactly.
+5. **2026-11-28: this round builds Lightning Bolt and Plague Javelin with Gungnir's Throw** (both recommended options picked); Poison Javelin, Jab and Impale wait for a later round (#41 stays open for them).
 
 ## Playtest
 
@@ -31,7 +32,7 @@ Nothing to test yet. Checklist: `docs/playtests/claude-optimistic-ramanujan-acdy
 
 ## Open questions for Krogon
 
-1. Which of Jab, Impale, Poison Javelin, Lightning Bolt and Plague Javelin to build this round.
+1. Gungnir's Throw's last details, then Lightning Bolt's and Plague Javelin's numbers, behaviour and look.
 
 ## Next steps
 
