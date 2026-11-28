@@ -1,6 +1,6 @@
 # Handoff: `claude/nifty-hypatia-afm8ez`
 
-**Written:** 2026-11-28 (start of round). From `master` at `1612586`; no PR yet.
+**Written:** 2026-11-28 (`/handoff`). From `master` at `1612586`; 9 commits ahead, 0 behind; no PR yet.
 
 ## Stage
 
@@ -8,7 +8,7 @@ Waiting for Krogon's playtest.
 
 ## Purpose
 
-The loot map affixes ([#96](https://github.com/krogon-games/JotunnModStub/issues/96), ROADMAP R1c): the drop affixes from Krogon's list, each one doubling its drop chances (map affix overhaul, decision 7).
+The loot map affixes ([#96](https://github.com/krogon-games/JotunnModStub/issues/96), ROADMAP R1c): the drop affixes from Krogon's list, each one doubling its drop chances (map affix overhaul, decision 7). Also the first corrupted-only affix, Thorns, and the "5th affix on a corrupted map" rule ([#97](https://github.com/krogon-games/JotunnModStub/issues/97), decision 11).
 
 ## Done
 
@@ -16,7 +16,7 @@ Nothing yet.
 
 ## Half-done and known issues
 
-- **Built, not play-tested** (790 tests; Corruption and Orlog build): six loot affixes in `map_affixes.csv` (Bountiful, Glittering, Bulwarked, Mailed, Honed, Fletched; Runic `later`), rules in `Corruption/Rules/MapLootRules.cs`, hooked into the kill loot (`LootPatches`) and the heart's spill (`RipLoot`); `co_riploot` to check the rates. No new Harmony patch.
+- **Built, not play-tested** (Corruption and Orlog build): six loot affixes in `map_affixes.csv` (Bountiful, Glittering, Bulwarked, Mailed, Honed, Fletched; Runic `later`), rules in `Corruption/Rules/MapLootRules.cs`, hooked into the kill loot (`LootPatches`) and the heart's spill (`RipLoot`); `co_riploot` to check the rates. No new Harmony patch.
 - **Built, not play-tested** (798 tests): corrupted-only affixes (a `pool` column; the shard adds one as a corrupted map's 5th; the server keeps one on a corrupted full map) and **Thorns** (5–25%, `Character.RPC_Damage` prefix + postfix, `MapAffixEffects.Thorns`). Game code decompiled (Krogon allowed it) to check where health is applied.
 - Claude's choices on Thorns (changeable): the returned hit is blunt, has no attacker (so Brutal and the game's per-player enemy scaling don't raise it), no stagger and no push; a killing blow counts what the creature had left.
 - Claude's reading: Bountiful also raises the (not yet built) unique roll, since uniques are Corruption gear.
@@ -43,6 +43,8 @@ Nothing yet.
 
 Solo checklist `docs/playtests/claude-nifty-hypatia-afm8ez.md` (`la-1` … `la-20`; D, Thorns, needs a build after the Thorns commit), also on the phone page.
 
+Not started. Krogon wants a new session to work on more affixes first (2026-11-28); Claude gave him a prompt for it (more corrupted-only affixes from #97, on a new branch started from this one).
+
 ## Open questions for Krogon
 
 None.
@@ -50,5 +52,18 @@ None.
 ## Next steps
 
 1. Krogon's solo play-test (`la-1` … `la-20`).
-2. Fix what fails; final play-test.
-3. `/handoff`, then a PR into `master` (gameplay changed: Corruption version bump at merge; the map's stored affixes can now hold a 5th, so every game and the server need the new build).
+2. Fix what fails; final play-test; `/handoff`.
+3. A PR into `master`. If the follow-up affix session branched from this one, this branch merges first.
+
+## Checks
+
+- Build: **PASS**, 798 tests pass; Corruption builds (stand-in game folder). Orlog unchanged.
+- Version: gameplay changed: version bump needed at merge (Corruption). No version changed on this branch.
+- Multiplayer sync (read in code, not tested): no new config. The loot affixes and Thorns read the map's existing stamp on the creature and heart ZDOs. Thorns runs on the creature's owner and sends the hit to the player with `Character.Damage` (a game RPC). A map's stored affixes can now hold a 5th, and the server's request check (`MapData.Sanitize`) accepts it on a corrupted map only. Tables are compiled in, so they sync through the version bump.
+- Assets and names: **PASS**. No new data file (`map_affixes.csv` already embedded); no new `$` tokens; no vanilla prefab names added.
+- FEATURES.md: **PASS**, updated (Map tiers and affixes, its patch table, changelog).
+- In-game: **NEEDS KROGON'S PLAYTEST**.
+
+## Merge notes
+
+Ready to merge: **no**, Krogon hasn't play-tested it. Gameplay changed: **version bump needed at merge: Corruption**. Not behind `master`. No other remote branch has unmerged commits, so no file clashes. Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`. A later branch started from this one must merge after it.
