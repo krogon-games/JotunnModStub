@@ -1760,6 +1760,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-28
+- **Version bump for the map affix overhaul (coordinator):** **Corruption 0.11.0 → 0.12.0** (the map's stored affixes and the rip request are now `id:value`; the 17 new affixes) and **Orlog 0.9.0 → 0.10.0** (Glorious: Orlog reads `corruption_rip_xp` from rip creatures), in each `.csproj`, `PluginVersion` and `Package/manifest.json`. Jötunn compares major.minor, so a 0.11.0 Corruption or 0.9.0 Orlog game can't join a 0.12.0 / 0.10.0 server. CraftingOverhaul 0.6.0 unchanged. The build checks in `PLAYTEST.md` and `PLAYER_SETUP.md` follow.
 - **Map affix overhaul play-tested** (Krogon alone, single player, Valheim 1.0.31, branch `claude/kind-einstein-8sn8e7`, steps `ma-1` … `ma-31` on the phone page): **29 passed**, among them all 17 affixes acting in rips, rolled values and the Divine reroll, the groups rule, `DisabledMapAffixes`, the Rip curse, life steal on Ironskin, a tier 6 map, the rip hover, Glorious under "What you'll earn". **ma-6 failed:** an Ironskin + Warded map was kept ("the server answered tier 2 for a tier 3 map … the map is kept") instead of opening as tier 2. **Fixed:** the opener's game runs the same request check (`MapData.Sanitize`) on what it sent and keeps the map only when the server's tier is below that (the audit's fix for a server whose tables failed to load had caught it). 766 tests. Re-test `ma-6b` **passed** (Krogon: "mark as passed."): the round's solo play-test is complete; two players not yet.
 
 ### 2026-11-27
