@@ -48,7 +48,7 @@ Nothing yet.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md` (`cg-1` … `cg-18`), also on the phone page (its second section, after `claude/nifty-hypatia-afm8ez`'s, which stays). Not started.
+Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`** (and `cg-19` if a freeze happens) on the phone page, waiting for Krogon.
 
 ## Open questions for Krogon
 
