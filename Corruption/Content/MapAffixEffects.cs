@@ -316,6 +316,16 @@ namespace Corruption.Content
                     back.m_dodgeable = true;
                     back.m_hitType = HitData.HitType.EnemyHit;
                     player.Damage(back);
+                    // A readable check for testing (Krogon, la-18): only with devcommands on, and only for this game's player.
+                    if (Terminal.m_cheat && player == Player.m_localPlayer)
+                    {
+                        string line = $"Thorns: your hit took {__state.Health - after:0.#} health, {damage:0.#} comes back ({__state.Share * 100f:0}%, before your armour).";
+                        Jotunn.Logger.LogInfo(line);
+                        if (Console.instance)
+                        {
+                            Console.instance.Print(line);
+                        }
+                    }
                 }
                 catch (System.Exception ex)
                 {

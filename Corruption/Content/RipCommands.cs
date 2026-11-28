@@ -20,6 +20,103 @@ namespace Corruption.Content
             CommandManager.Instance.AddConsoleCommand(new MapCommand());
             CommandManager.Instance.AddConsoleCommand(new RipCommand());
             CommandManager.Instance.AddConsoleCommand(new RipLootCommand());
+            CommandManager.Instance.AddConsoleCommand(new StampCommand());
+        }
+
+        /// <summary>
+        ///     co_stamp: gives the creature you look at (or the nearest within 10 m) a rip's tier and any map affixes, as if a
+        ///     rip had spawned it, so each creature affix can be tried alone on a still target such as the game's training dummy
+        ///     (Krogon, 2026-11-28, la-18: "its really difficult to tell if i take damage from hitting another creature with
+        ///     thorns on"). Your game takes the creature over first. <c>co_stamp clear</c> takes the stamp off.
+        /// </summary>
+        private sealed class StampCommand : ConsoleCommand
+        {
+            public override string Name => "co_stamp";
+
+            public override string Help =>
+                "Corruption: co_stamp [tier] <affix[:value] ...> - give the creature you look at (or the nearest within 10 m) a rip's tier " +
+                "(default 1) and map affixes, e.g. spawn TrainingDummy, then co_stamp thorns:25. co_stamp clear removes it. Testing only.";
+
+            public override bool IsCheat => true;
+
+            public override void Run(string[] args)
+            {
+                var print = Console.instance;
+                var player = Player.m_localPlayer;
+                if (!player || !MapTiers.Loaded)
+                {
+                    print.Print("co_stamp needs a loaded character and the map tables (see the log).");
+                    return;
+                }
+                var target = player.GetHoverCreature();
+                if (!target || target is Player)
+                {
+                    target = null;
+                    float best = 10f;
+                    foreach (var c in Character.GetAllCharacters())
+                    {
+                        if (!c || c is Player || c.IsDead())
+                        {
+                            continue;
+                        }
+                        float d = Vector3.Distance(c.transform.position, player.transform.position);
+                        if (d <= best)
+                        {
+                            best = d;
+                            target = c;
+                        }
+                    }
+                }
+                if (!target || !target.m_nview || !target.m_nview.IsValid())
+                {
+                    print.Print("No creature under your crosshair or within 10 m. Try: spawn TrainingDummy");
+                    return;
+                }
+                var zdo = target.m_nview.GetZDO();
+                target.m_nview.ClaimOwnership();
+                if (args.Length > 0 && args[0].Equals("clear", StringComparison.OrdinalIgnoreCase))
+                {
+                    zdo.Set(MapTiers.KeyTier, 0);
+                    zdo.Set(MapTiers.KeyAffixes, "");
+                    zdo.RemoveFloat(MapTiers.KeyExperience);
+                    target.SetupMaxHealth();
+                    print.Print($"{target.m_name}: rip stamp removed.");
+                    return;
+                }
+                int index = 0;
+                int tier = 1;
+                if (args.Length > 0 && int.TryParse(args[0], out var t))
+                {
+                    tier = Mathf.Clamp(t, 1, 6);
+                    index = 1;
+                }
+                var tables = MapTiers.Tables;
+                var entries = MapData.ParseEntries(string.Join(MapData.Separator.ToString(), args.Skip(index).Select(a => a.ToLowerInvariant()).ToArray()));
+                var bad = entries.Where(e => tables.Affixes.Find(e.Id) == null || !tables.Affixes.Find(e.Id).Approved).Select(e => e.Id).ToList();
+                if (bad.Count > 0)
+                {
+                    print.Print($"Unknown or not built: {string.Join(", ", bad.ToArray())}. Built: {string.Join(", ", tables.Affixes.Affixes.Where(a => a.Approved).Select(a => a.Id).ToArray())}.");
+                    return;
+                }
+                var state = new MapState();
+                var random = new System.Random();
+                foreach (var e in entries)
+                {
+                    if (state.Affixes.Contains(e.Id))
+                    {
+                        continue;
+                    }
+                    var affix = tables.Affixes.Find(e.Id);
+                    state.Affixes.Add(e.Id);
+                    state.Values[e.Id] = e.HasValue ? affix.Clamp(e.Value) : affix.Roll(random.NextDouble);
+                }
+                MapTiers.Stamp(zdo, tier, MapData.JoinRolls(state));
+                MapAffixEffects.OnStamped(target);
+                print.Print($"{target.m_name}: stamped tier {tier}" +
+                            (state.Affixes.Count > 0 ? " with " + MapTiers.DescribeValues(state.Rolls(tables.Affixes)) : ", no affixes") +
+                            ". Your game runs it now; it stays stamped until co_stamp clear." +
+                            (state.Affixes.Contains("thorns") ? " Each Thorns return prints here while devcommands is on." : ""));
+            }
         }
 
         /// <summary>

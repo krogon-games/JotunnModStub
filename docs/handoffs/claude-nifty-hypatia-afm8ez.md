@@ -18,7 +18,7 @@ Nothing yet.
 
 - **Built, not play-tested** (Corruption and Orlog build): six loot affixes in `map_affixes.csv` (Bountiful, Glittering, Bulwarked, Mailed, Honed, Fletched; Runic `later`), rules in `Corruption/Rules/MapLootRules.cs`, hooked into the kill loot (`LootPatches`) and the heart's spill (`RipLoot`); `co_riploot` to check the rates. No new Harmony patch.
 - **Built, not play-tested** (798 tests): corrupted-only affixes (a `pool` column; the shard adds one as a corrupted map's 5th; the server keeps one on a corrupted full map) and **Thorns** (5–25%, `Character.RPC_Damage` prefix + postfix, `MapAffixEffects.Thorns`). Game code decompiled (Krogon allowed it) to check where health is applied.
-- **Open bug:** Krogon's game **froze** when he pressed E on the Riftforge with the inventory on the Maps tab and nothing in the forge (2026-11-28, this branch's build `608bac6`). His log ends at the game opening the crafting window, with no error. The cause isn't known; no loop in this branch's changes runs there, so it may be older. Next: try `master`'s build, Unity's `Player-prev.log`, and the Bag tab (details in the play-test file).
+- **Freeze, didn't come back (decision 17):** Krogon's game **froze** when he pressed E on the Riftforge with the inventory on the Maps tab and nothing in the forge (2026-11-28, this branch's build `608bac6`). His log ends at the game opening the crafting window, with no error. The cause isn't known; no loop in this branch's changes runs there, so it may be older. Next: try `master`'s build, Unity's `Player-prev.log`, and the Bag tab (details in the play-test file).
 - Claude's choices on Thorns (changeable): the returned hit is blunt, has no attacker (so Brutal and the game's per-player enemy scaling don't raise it), no stagger and no push; a killing blow counts what the creature had left.
 - Claude's reading: Bountiful also raises the (not yet built) unique roll, since uniques are Corruption gear.
 
@@ -39,6 +39,8 @@ Nothing yet.
 13. **Thorns punishes every hit** (2026-11-28): "Every hit". Melee, arrows, staffs and Orlog skills; damage over time (burning, poison ticks) doesn't count.
 14. **Armour reduces the returned damage** (2026-11-28): "Yes, like a normal hit". It arrives as a physical hit, so armour and blocking help.
 15. **The corrupted affix shows last under "What you'll face", in red** (2026-11-28): "Last under 'face', in red". For example: "Enemies return 15% of the damage you deal to them."
+16. **A test command for Thorns on this branch** (2026-11-28): "Yes, on this branch". After his la-18 note ("its really difficult to tell if i take damage from hitting another creature with thorns on. we could potentially add a buildable dummy to the game to test damage and affixes on."), Claude pointed to the game's own training dummy (T.W.I.G., or `spawn TrainingDummy`). The new piece is a console command that gives the creature you look at any map affixes, and prints each Thorns return. Krogon re-tests la-18 with it before the merge.
+17. **The Riftforge freeze didn't happen again** (2026-11-28): "It didn't happen again". It's left as a note, not a blocker; open a ticket if it comes back.
 
 ## Playtest
 
@@ -52,7 +54,7 @@ None.
 
 ## Next steps
 
-1. Investigate the Riftforge crash (Krogon's log and steps first), then Krogon's solo play-test (`la-1` … `la-20`).
+1. Build the affix test command; Krogon re-tests la-18 (Thorns) on a training dummy.
 2. Fix what fails; final play-test; `/handoff`.
 3. A PR into `master`. If the follow-up affix session branched from this one, this branch merges first.
 
@@ -67,4 +69,4 @@ None.
 
 ## Merge notes
 
-Ready to merge: **no**: an open crash at the Riftforge, and the play-test isn't done. Gameplay changed: **version bump needed at merge: Corruption**. Not behind `master`. No other remote branch has unmerged commits, so no file clashes. Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`. A later branch started from this one must merge after it.
+Ready to merge: **no**: la-18 (Thorns damage) is to be re-tested with the new test command. Gameplay changed: **version bump needed at merge: Corruption**. Not behind `master`. No other remote branch has unmerged commits, so no file clashes. Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`. A later branch started from this one must merge after it.

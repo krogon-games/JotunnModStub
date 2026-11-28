@@ -66,3 +66,16 @@ Chance is random, so `co_riploot`'s numbers will be a little different each time
 
 - 2026-11-28, Krogon: "did some testing, game crashed when accessing the riftforge. please take note, may need to investigate later". **Not investigated yet.** Still needed: which build (this branch or `master`, which commit), what was in the forge or the bag (a corrupted map? a map with Thorns?), which tab, and `BepInEx/LogOutput.log` from that run (copy it before the game starts again, which overwrites it). Steps marked on the phone page so far: not read yet.
 - 2026-11-28, Krogon, details: build from `claude/nifty-hypatia-afm8ez` (`608bac6` in the log); the inventory was open on the **Maps tab**; nothing in the forge slot; "i approached the riftforge, clicked E to use it and the game froze." So a **freeze** (the game stopped responding), not an error. His `LogOutput.log`: every plugin loaded with no errors (`Map tiers: 6 tiers, 28 affixes (… corrupted-only: thorns)`); before it, six `Drop item $item_corruptionmap_meadows` / `drop all 1 1` lines (20:43:59–20:44:02); the last line is `Setting selected recipe 0` at 20:46:12, the game opening the crafting window, then nothing: no exception, no Corruption line. **Claude's first look (code only):** no loop in the code this branch changed runs when the Riftforge opens with nothing in the forge, so the cause may be older. Next: check whether it also freezes on `master`'s build, read Unity's own log of that run (`Player-prev.log` in `AppData/LocalLow/IronGate/Valheim`, written before the next start replaced `Player.log`), and try opening the Riftforge with the Bag tab instead of Maps.
+- 2026-11-28, phone page: **all 20 steps marked Pass** (`la-1` … `la-20`). la-18's note: "its really difficult to tell if i take damage from hitting another creature with thorns on. we could potentially add a buildable dummy to the game to test damage and affixes on. an immobile target we can spawn or build". So Thorns' returned damage isn't really confirmed. The Riftforge freeze didn't happen again (decision 17).
+
+### What changed after the feedback
+
+- la-18: a test command gives the creature you look at any map affixes (for the game's training dummy), and each Thorns return prints its numbers. Re-test: `la-18b` below.
+
+### Re-test (2026-11-28)
+
+**Build:** this branch, rebuilt after the `co_stamp` commit. Single player, `devcommands`, **`god` off**, good armour and food. Stand somewhere flat.
+
+| Step | What to do | What you should see | Pass / Fail | Note |
+|---|---|---|---|---|
+| la-18b | `spawn TrainingDummy`, look at it, `co_stamp thorns:25`. Hit it several times with a melee weapon, then shoot it with a bow. | The console says the dummy is stamped with Thorns 25. After each hit that lands, the console prints `Thorns: your hit took N health, M comes back (25%, before your armour).`, with M a quarter of N, and your health bar drops a little (less than M, thanks to your armour). Arrows print the same. `co_stamp clear` then stops it: no more lines, no damage back. | | |
