@@ -54,4 +54,4 @@
 
 ### Your feedback
 
-(none yet)
+- **2026-11-28, during the play-test: the game crashed while idling in town** (Krogon: "the same type of crash as reported in the previous session when accessing the riftforge"). His `LogOutput.log` (build `claude/wizardly-wozniak-4aix76 a4f7de3`, Valheim 1.0.31) just stops at 21:34:13, with no error or exception before it: a crash inside the game engine, which BepInEx's log can't record. The last mod action was a tier 6 Meadows rip with Rimeburst opened at 21:31; he never went through it, no creature died and no Rimeburst or Guarded code ran. The "GetBiome error BlackForest -> Meadows" warning every second is the game's own (`Player.cs`, standing on a biome border) and harmless. Cause unknown; waiting for Unity's `Player-prev.log`, the crash folder and the Windows Event Viewer entry.
