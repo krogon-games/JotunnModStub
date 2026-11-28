@@ -26,3 +26,4 @@ LightningBolt,Lightning Bolt,2,2,3,v1,attack,spear,6,0.25,The javelin (a spectra
 PoisonJavelin,Poison Javelin,2,3,1,v1,attack,spear,4,0.25,The javelin (a spectral copy) leaves poison clouds along its path
 PlagueJavelin,Plague Javelin,2,3,2,v1,attack,spear,7,0.5,A spreading poison cloud where the javelin (a spectral copy) lands
 LightningFury,Lightning Fury,2,3,3,later,attack,spear,10,0.5,The javelin (a spectral copy) bursts into lightning bolts on impact
+GungnirsThrow,Gungnir's Throw,-1,1,1,basic,attack,spear,0,0,Throws a gold ghost copy of your spear where you aim; the spear never leaves your hand. Costs the throw's stamina and deals its damage

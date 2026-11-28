@@ -406,7 +406,7 @@ namespace CraftingOverhaul.Classes
                 }
             }
             var shown = SkillCardsLayout.Visible(Skills, _tab);
-            if (!ById.TryGetValue(_selected, out var current) || current.Tab != _tab)
+            if (!ById.TryGetValue(_selected, out var current) || (current.Tab != _tab && !current.Basic))
             {
                 // Start on the first skill a point can go into, else the first of the tab.
                 _selected = "";
@@ -446,6 +446,11 @@ namespace CraftingOverhaul.Classes
             foreach (var skill in shown)
             {
                 CardObjects.Add(BuildCard(skill));
+            }
+            var basics = SkillCardsLayout.Basics(Skills);
+            for (int i = 0; i < basics.Count; i++)
+            {
+                CardObjects.Add(BuildBasicCard(basics[i], i));
             }
             UpdateSelection();
         }
@@ -526,6 +531,53 @@ namespace CraftingOverhaul.Classes
             return root.gameObject;
         }
 
+        /// <summary>
+        ///     A basic skill (Gungnir's Throw; Krogon, 2026-11-28) as a small card above the tabs: the same wood and
+        ///     medallion as the tab's cards, always lit, "Basic · always learned" under its name. Drag it onto a slot.
+        /// </summary>
+        private static GameObject BuildBasicCard(SkillView skill, int index)
+        {
+            var root = UiKit.Rect("Basic_" + skill.Id, _root);
+            Place(root, SkillsPanelLayout.BasicCard(index));
+
+            var selected = UiKit.Image("Selected", root, SheetArt.GlowBox, Image.Type.Sliced);
+            selected.color = SelectedGlow;
+            UiKit.Stretch(selected.rectTransform, -SheetArt.GlowBoxInset);
+            selected.enabled = false;
+            SelectionGlows[skill.Id] = selected;
+
+            var card = UiKit.Image("Card", root, null, Image.Type.Simple, true);
+            SheetArt.StyleAsGamePanel(card);
+            card.color = new Color(card.color.r * CardLearned, card.color.g * CardLearned, card.color.b * CardLearned, card.color.a);
+            UiKit.Stretch(card.rectTransform);
+
+            var iconRect = SkillsPanelLayout.BasicIcon;
+            var glow = UiKit.Image("Glow", root, SheetArt.GlowRing);
+            Color c = GlowColour(CardState.Learned);
+            glow.color = new Color(c.r, c.g, c.b, 0.75f);
+            float glowSize = iconRect.Width * SheetArt.GlowRingScale;
+            Place(glow.rectTransform, new SheetRect(iconRect.X + iconRect.Width / 2f - glowSize / 2f, iconRect.Y + iconRect.Height / 2f - glowSize / 2f, glowSize, glowSize));
+            var medallion = UiKit.Image("Medallion", root, SheetArt.Medallion);
+            medallion.color = medallion.sprite ? Color.white : new Color(0.08f, 0.07f, 0.06f, 0.9f);
+            Place(medallion.rectTransform, iconRect);
+            var icon = UiKit.Image("Icon", medallion.rectTransform, ClassesSource.SkillIcon(skill.Id));
+            icon.preserveAspect = true;
+            icon.enabled = icon.sprite;
+            UiKit.Stretch(icon.rectTransform, iconRect.Width * IconInset);
+
+            var name = UiKit.Text("Name", root, 18, UiKit.Gold, TextAnchor.MiddleLeft);
+            FitText(name, 12, 18);
+            UiKit.SetText(name, skill.Name);
+            Place(name.rectTransform, SkillsPanelLayout.BasicName);
+            var label = UiKit.Text("Label", root, 13, UiKit.Light, TextAnchor.MiddleLeft);
+            UiKit.SetText(label, SkillCardsLayout.RankLabel(skill));
+            Place(label.rectTransform, SkillsPanelLayout.BasicLabel);
+
+            var view = card.gameObject.AddComponent<SkillTileView>();
+            view.SkillId = skill.Id;
+            return root.gameObject;
+        }
+
         private static void UpdateSelection()
         {
             foreach (var pair in SelectionGlows)
@@ -571,7 +623,7 @@ namespace CraftingOverhaul.Classes
             _detailsGlow.color = new Color(glow.r, glow.g, glow.b, 0.75f);
 
             UiKit.SetText(_detailsName, skill.Name);
-            string rank = skill.Later ? "Coming later" : "Rank " + skill.Points + " / " + skill.MaxPoints +
+            string rank = skill.Basic ? SkillCardsLayout.BasicLabel : skill.Later ? "Coming later" : "Rank " + skill.Points + " / " + skill.MaxPoints +
                                                          (skill.Level != skill.Points ? "  (level " + skill.Level + ")" : "");
             UiKit.SetText(_detailsRank, rank);
             var kind = new StringBuilder(KindLabel(skill.Kind));
@@ -586,7 +638,7 @@ namespace CraftingOverhaul.Classes
             {
                 text.Append(skill.Description).Append("\n\n");
             }
-            if (!skill.Later && !skill.Maxed && !string.IsNullOrEmpty(skill.NextDescription))
+            if (!skill.Later && !skill.Maxed && !skill.Basic && !string.IsNullOrEmpty(skill.NextDescription))
             {
                 text.Append("<color=#8FD97A>Next rank: ").Append(skill.NextDescription).Append("</color>\n\n");
             }
@@ -607,7 +659,7 @@ namespace CraftingOverhaul.Classes
             // The button says why a point can't go in (play-test 2026-10-31: the reason was cut off at the bottom of the text).
             _learn.gameObject.SetActive(true);
             _learn.interactable = skill.CanSpend;
-            string label = skill.CanSpend ? "Learn  (+1 rank)" : skill.Maxed ? "Mastered" : skill.Later ? "Coming later"
+            string label = skill.CanSpend ? "Learn  (+1 rank)" : skill.Basic ? "No points needed" : skill.Maxed ? "Mastered" : skill.Later ? "Coming later"
                 : !string.IsNullOrEmpty(skill.SpendBlocked) ? "<color=#FF9A80>" + skill.SpendBlocked + "</color>" : "Learn";
             UiKit.SetText(_learnLabel, label);
             if (_learnLabel)

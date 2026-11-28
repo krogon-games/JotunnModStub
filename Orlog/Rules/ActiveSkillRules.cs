@@ -127,11 +127,11 @@ namespace Orlog.Rules
             {
                 return "Passive skills don't take a slot";
             }
-            if (!skill.Built)
+            if (!skill.Works)
             {
                 return "Coming later";
             }
-            return points > 0 ? "" : "Not learned yet";
+            return points > 0 || skill.IsBasic ? "" : "Not learned yet";
         }
 
         /// <summary>The slots with <paramref name="id" /> in <paramref name="slot" /> ("" clears it); a skill in another slot moves.</summary>
@@ -282,6 +282,54 @@ namespace Orlog.Rules
             }
             float step = Math.Min(spacing, max / (count - 1));
             return (index - (count - 1) / 2f) * step;
+        }
+
+        // ------------------------------------------------------------ the ghost javelin (Krogon, 2026-11-28, C6)
+
+        public const string GungnirsThrowId = "GungnirsThrow";
+        public const string LightningBoltId = "LightningBolt";
+        public const string PlagueJavelinId = "PlagueJavelin";
+
+        /// <summary>How long a ghost spear stays where it stuck, fading out (decision 8: "Sticks, then fades", about a second).</summary>
+        public const float GhostFadeSeconds = 1f;
+
+        /// <summary>
+        ///     A skill thrown as a ghost copy of the spear from the spear's own throw (the game's secondary attack): Gungnir's
+        ///     Throw and the javelin skills built so far (Lightning Bolt, Plague Javelin). The spear stays in hand.
+        /// </summary>
+        public static bool Throws(string skillId)
+        {
+            return string.Equals(skillId, GungnirsThrowId, StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(skillId, LightningBoltId, StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(skillId, PlagueJavelinId, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        ///     Plague Javelin's cloud: its radius <paramref name="elapsed" /> seconds after the javelin landed, spreading
+        ///     evenly from nothing to <paramref name="maxRadius" /> over the cloud's <paramref name="duration" /> (decision 14:
+        ///     "Grows to 4 m", over D2's poison time). The full radius with no duration.
+        /// </summary>
+        public static float SpreadRadius(float maxRadius, float elapsed, float duration)
+        {
+            if (maxRadius <= 0f)
+            {
+                return 0f;
+            }
+            if (duration <= 0f)
+            {
+                return maxRadius;
+            }
+            return maxRadius * Math.Max(0f, Math.Min(1f, elapsed / duration));
+        }
+
+        /// <summary>How visible a stuck ghost spear is, <paramref name="sinceStuck" /> seconds after it stuck: 1 → 0 over <paramref name="fade" />.</summary>
+        public static float GhostAlpha(float sinceStuck, float fade = GhostFadeSeconds)
+        {
+            if (sinceStuck <= 0f)
+            {
+                return 1f;
+            }
+            return fade <= 0f ? 0f : Math.Max(0f, 1f - sinceStuck / fade);
         }
 
         // ------------------------------------------------------------ Wind Lance and Forked Lightning (user, 2026-11-16)
@@ -654,6 +702,15 @@ namespace Orlog.Rules
                 case "VenomStrike":
                     return $"Bursts into a poison cloud reaching {N(v.Get(id, "radius_m", level))} m around where it lands for {N(v.Get(id, "cloud_duration_s", level))} s: " +
                            $"everything in it is poisoned for {Share(v, id, "cloud_damage_pct", level, damageMultiplier)} of the shot's damage, again each second it stays";
+                case GungnirsThrowId:
+                    return "Throws a gold ghost copy of your spear where you aim, for the damage and stamina of the spear's own throw; the spear stays in your hand. No eitr, no skill points";
+                case LightningBoltId:
+                    return $"Throws a ghost spear wrapped in lightning at {N(v.Get(id, "speed_pct", level) / 100f)}× a thrown spear's speed: {N(v.Get(id, "weapon_damage_pct", level))}% of the throw's damage, " +
+                           "all of it lightning, to the first enemy it hits. Costs the throw's stamina too; the spear stays in your hand";
+                case PlagueJavelinId:
+                    return $"Throws a ghost spear for {N(v.Get(id, "weapon_damage_pct", level))}% of the throw's damage; where it lands a poison cloud spreads out to {N(v.Get(id, "radius_m", level))} m " +
+                           $"over {N(v.Get(id, "poison_duration_s", level))} s, poisoning everything in it for {Share(v, id, "cloud_damage_pct", level, damageMultiplier)} of the throw's damage each second. " +
+                           "Costs the throw's stamina too; the spear stays in your hand";
                 case "InnerSight":
                     return $"Enemies within {N(v.Get(id, "radius_yards", level) * MetresPerYard)} m glow and take {N(innerSightPercent)}% more damage for {N(v.Get(id, "duration_s", level))} s";
                 default:

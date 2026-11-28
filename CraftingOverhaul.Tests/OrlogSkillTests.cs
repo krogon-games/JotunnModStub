@@ -41,7 +41,9 @@ namespace CraftingOverhaul.Tests
         {
             // Krogon, 2026-11-15: every tab has exactly nine skills, on a three-by-three grid.
             var t = Amazon();
-            Assert.Equal(27, t.Skills.Count);
+            // 27 on the tabs, and Gungnir's Throw, the basic skill above them (Krogon, 2026-11-28).
+            Assert.Equal(28, t.Skills.Count);
+            Assert.Equal(27, t.Skills.Count(s => s.Tab >= 0));
             for (int tab = 0; tab < SkillTable.Tabs; tab++)
             {
                 var skills = t.Skills.Where(s => s.Tab == tab).ToList();
@@ -96,10 +98,54 @@ namespace CraftingOverhaul.Tests
         public void SkillsNotBuiltYetCannotTakePoints()
         {
             var t = Amazon();
-            foreach (var skill in t.Skills.Where(s => !s.Built))
+            foreach (var skill in t.Skills.Where(s => !s.Built && !s.IsBasic))
             {
                 Assert.Equal("Coming later", Blocked(t, skill.Id, 99, Points()));
             }
+        }
+
+        [Fact]
+        public void GungnirsThrowIsABasicSkillAlwaysLearned()
+        {
+            // Krogon, 2026-11-28 (decisions 2 and 6): a basic skill above the tabs, in a slot like any other, no points.
+            var t = Amazon();
+            var throwSkill = t.Find("GungnirsThrow");
+            Assert.NotNull(throwSkill);
+            Assert.Equal("Gungnir's Throw", throwSkill.Name);
+            Assert.True(throwSkill.IsBasic);
+            Assert.True(throwSkill.Works);
+            Assert.False(throwSkill.Built);
+            Assert.Equal(SkillTable.BasicTab, throwSkill.Tab);
+            Assert.Equal("attack", throwSkill.Kind);
+            Assert.Equal("spear", throwSkill.Needs);
+            Assert.Equal(0f, SkillRules.EitrCost(throwSkill, 1));
+            Assert.Equal(new[] { "GungnirsThrow" }, t.Skills.Where(s => s.IsBasic).Select(s => s.Id));
+            // Level 1 with no points; never takes one.
+            Assert.Equal(1, SkillRules.LevelIn(Points(), throwSkill));
+            Assert.Equal(0, SkillRules.LevelIn(Points(), t.Find("Jab")));
+            Assert.Equal(3, SkillRules.LevelIn(Points(("Jab", 3)), t.Find("Jab")));
+            Assert.Equal(0, SkillRules.LevelIn(Points(), null));
+            Assert.Equal(SkillRules.BasicNoPoints, Blocked(t, "GungnirsThrow", 1, Points()));
+            Assert.Equal(SkillRules.BasicNoPoints, Blocked(t, "GungnirsThrow", 99, Points()));
+            // It goes in a slot without points; a tab skill still needs one.
+            Assert.Equal("", ActiveSkillRules.SlotRefusal(throwSkill, 0));
+            Assert.Equal("Not learned yet", ActiveSkillRules.SlotRefusal(t.Find("LightningBolt"), 0));
+        }
+
+        [Fact]
+        public void BasicSkillsMustSitAboveTheTabs()
+        {
+            var errors = new List<string>();
+            string header = "id,name,tab,row,col,status,kind,needs,eitr,eitr_per_level,description\n";
+            SkillTable.Parse(header + "A,A,0,1,1,basic,attack,spear,0,0,x\n", "t.csv", errors);
+            Assert.Contains(errors, e => e.Contains("basic skill"));
+            errors.Clear();
+            SkillTable.Parse(header + "A,A,-1,1,1,v1,attack,spear,0,0,x\n", "t.csv", errors);
+            Assert.Contains(errors, e => e.Contains("outside the grid"));
+            errors.Clear();
+            var t = SkillTable.Parse(header + "A,A,-1,1,1,basic,attack,spear,0,0,x\n", "t.csv", errors);
+            Assert.DoesNotContain(errors, e => e.Contains("basic skill") || e.Contains("outside the grid"));
+            Assert.True(t.Find("A").IsBasic);
         }
 
         [Fact]

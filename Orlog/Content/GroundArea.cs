@@ -10,6 +10,8 @@ namespace Orlog.Content
     ///     at once). Lives on the shooter's own game only, which is where the arrow's impact is handled; it isn't
     ///     networked. The damage is a share of the shot's own damage worked out by the caller; no new art: a vanilla
     ///     impact effect at each hit, a light and a ring on the ground.
+    ///     Plague Javelin's cloud (Krogon, 2026-11-28) spreads: its reach grows evenly from nothing to the full radius over
+    ///     its time (<see cref="ActiveSkillRules.SpreadRadius" />), and its ring grows with it.
     /// </summary>
     internal sealed class GroundArea : MonoBehaviour
     {
@@ -36,9 +38,15 @@ namespace Orlog.Content
         private float m_start;
         private Light m_light;
         private float m_lightIntensity;
+        private bool m_spreads;
+        private Skills.SkillType m_skillType = Skills.SkillType.Bows;
+        private LineRenderer m_ring;
+        private float m_ringRadius = -1f;
+        private ParticleSystem m_cloud;
 
         public static void Begin(Character owner, string skillName, int level, Vector3 point, float radius, float duration,
-            float damagePerHit, bool poison, bool firstHitAtOnce, float shotDamage, float percent)
+            float damagePerHit, bool poison, bool firstHitAtOnce, float shotDamage, float percent, bool spreads = false,
+            Skills.SkillType skillType = Skills.SkillType.Bows)
         {
             if (!owner || duration <= 0f || radius <= 0f)
             {
@@ -60,6 +68,8 @@ namespace Orlog.Content
             area.m_percent = percent;
             area.m_hits = ActiveSkillRules.AreaTicks(duration, ActiveSkillRules.AreaInterval);
             area.m_start = Time.time;
+            area.m_spreads = spreads;
+            area.m_skillType = skillType;
             area.Dress();
         }
 
@@ -82,7 +92,8 @@ namespace Orlog.Content
                 light.type = LightType.Point;
                 light.color = AreaColour;
                 light.range = m_radius * 2f;
-                light.intensity = 2f;
+                // A spreading cloud (Plague Javelin) glows less: its ring stood out too much (Krogon, 2026-11-28).
+                light.intensity = m_spreads ? 1.2f : 2f;
                 m_light = light;
                 m_lightIntensity = light.intensity;
 
@@ -93,21 +104,102 @@ namespace Orlog.Content
                     line.sharedMaterial = material;
                     line.useWorldSpace = true;
                     line.loop = true;
-                    line.startWidth = 0.1f;
-                    line.endWidth = 0.1f;
-                    line.startColor = AreaColour;
-                    line.endColor = AreaColour;
+                    // A spreading cloud's ring is thinner and half see-through, to blend in (Krogon, 2026-11-28: "keep the
+                    // ring for now, maybe give it a slightly less intrusive and blended feel"); the cloud itself shows the spread.
+                    float width = m_spreads ? 0.05f : 0.1f;
+                    var colour = m_spreads ? new Color(AreaColour.r, AreaColour.g, AreaColour.b, 0.35f) : AreaColour;
+                    line.startWidth = width;
+                    line.endWidth = width;
+                    line.startColor = colour;
+                    line.endColor = colour;
                     line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                     line.receiveShadows = false;
-                    const int points = 32;
-                    line.positionCount = points;
-                    for (int i = 0; i < points; i++)
-                    {
-                        float angle = i * Mathf.PI * 2f / points;
-                        line.SetPosition(i, m_point + new Vector3(Mathf.Cos(angle) * m_radius, 0.1f, Mathf.Sin(angle) * m_radius));
-                    }
+                    m_ring = line;
+                    SetRing(CurrentRadius());
+                }
+                if (m_spreads)
+                {
+                    m_cloud = Cloud();
                 }
             });
+        }
+
+        /// <summary>
+        ///     A spreading cloud's body (Krogon, 2026-11-28: "it would be better if the poison cloud grew in size"): soft
+        ///     green puffs rolling low over the ground, born anywhere inside the cloud's reach, which grows with it.
+        /// </summary>
+        private ParticleSystem Cloud()
+        {
+            var material = GhostSpearLook.SoftMaterial();
+            if (!material)
+            {
+                return null;
+            }
+            var go = new GameObject("Orlog_PoisonCloud");
+            go.transform.position = m_point + Vector3.up * 0.4f;
+            go.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            var cloud = go.AddComponent<ParticleSystem>();
+            cloud.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = cloud.main;
+            main.loop = true;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.2f, 2f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.05f, 0.3f);
+            main.startSize = new ParticleSystem.MinMaxCurve(1.2f, 2.2f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            main.startColor = new Color(PoisonColour.r * 0.8f, PoisonColour.g * 0.8f, PoisonColour.b * 0.6f, 0.22f);
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.maxParticles = 300;
+            var emission = cloud.emission;
+            emission.rateOverTime = 20f;
+            var shape = cloud.shape;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = 0.3f;
+            var fade = cloud.colorOverLifetime;
+            fade.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.3f), new GradientAlphaKey(0f, 1f) });
+            fade.color = gradient;
+            var renderer = go.GetComponent<ParticleSystemRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            cloud.Play();
+            return cloud;
+        }
+
+        /// <summary>The cloud's puffs fill its reach as it spreads: more puffs the wider it is.</summary>
+        private void GrowCloud(float radius)
+        {
+            if (!m_cloud)
+            {
+                return;
+            }
+            var shape = m_cloud.shape;
+            shape.radius = Mathf.Max(0.3f, radius);
+            var emission = m_cloud.emission;
+            emission.rateOverTime = 20f + radius * radius * 6f;
+        }
+
+        /// <summary>The area's reach now: the full radius, or for a spreading cloud how far it has spread.</summary>
+        private float CurrentRadius()
+        {
+            return m_spreads ? ActiveSkillRules.SpreadRadius(m_radius, Time.time - m_start, m_duration) : m_radius;
+        }
+
+        private void SetRing(float radius)
+        {
+            if (!m_ring || Mathf.Abs(radius - m_ringRadius) < 0.02f)
+            {
+                return;
+            }
+            m_ringRadius = radius;
+            const int points = 32;
+            m_ring.positionCount = points;
+            for (int i = 0; i < points; i++)
+            {
+                float angle = i * Mathf.PI * 2f / points;
+                m_ring.SetPosition(i, m_point + new Vector3(Mathf.Cos(angle) * radius, 0.1f, Mathf.Sin(angle) * radius));
+            }
         }
 
         /// <summary>
@@ -150,6 +242,12 @@ namespace Orlog.Content
                 return;
             }
             float elapsed = Time.time - m_start;
+            if (m_spreads)
+            {
+                float now = CurrentRadius();
+                SetRing(now);
+                GrowCloud(now);
+            }
             while (m_hitsDone < m_hits && elapsed >= HitTime(m_hitsDone))
             {
                 m_hitsDone++;
@@ -172,7 +270,12 @@ namespace Orlog.Content
 
         private void Hit()
         {
-            BowSkills.CharactersInBlast(m_point, m_radius, null, s_inArea);
+            float radius = CurrentRadius();
+            if (radius <= 0f)
+            {
+                return;
+            }
+            BowSkills.CharactersInBlast(m_point, radius, null, s_inArea);
             foreach (var target in s_inArea)
             {
                 if (!target || target == m_owner || target.IsPlayer() || target.IsDead() || !BaseAI.IsEnemy(m_owner, target))
@@ -191,9 +294,9 @@ namespace Orlog.Content
                 hit.m_point = target.GetCenterPoint();
                 hit.m_dir = Vector3.up;
                 // Marked as an area hit, like the blast's (Explode).
-                hit.m_radius = m_radius;
+                hit.m_radius = radius;
                 hit.m_ranged = true;
-                hit.m_skill = Skills.SkillType.Bows;
+                hit.m_skill = m_skillType;
                 hit.m_skillRaiseAmount = 0f;
                 // Damage over time (Krogon, 2026-11-18, decision 19): typed as the game's own burning and poison, so
                 // Corruption's on-hit affixes (life steal, Skadi, Rallying, the procs) skip it. Penetrate still applies.
@@ -210,6 +313,12 @@ namespace Orlog.Content
             Jotunn.Logger.LogInfo($"Orlog: {m_skill} (level {m_level}): the shot's damage {m_shotDamage:0.#}, {m_percent:0.#}% = {m_damagePerHit:0.#} " +
                                   $"{(m_poison ? "poison" : "fire")} per hit; {m_hitsDone} hits over {m_duration:0.#} s on {m_enemyHits} enemy-hits within {m_radius:0.#} m" +
                                   $"{(why == "its time" ? "" : " (ended early: " + why + ")")}.");
+            if (m_cloud)
+            {
+                // The puffs already out drift and fade instead of vanishing with the area.
+                m_cloud.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                Destroy(m_cloud.gameObject, 2.2f);
+            }
             Destroy(gameObject);
         }
     }

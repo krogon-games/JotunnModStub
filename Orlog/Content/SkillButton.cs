@@ -22,6 +22,11 @@ namespace Orlog.Content
     ///         Strafe (Krogon, 2026-11-17) streams arrows from full draw while held and pays as it goes (<see cref="Strafe" />);
     ///         released before full draw it is a normal shot and costs nothing.
     ///     </para>
+    ///     <para>
+    ///         Gungnir's Throw and the javelin skills (Krogon, 2026-11-28, C6) hold the spear's own throw (the game's
+    ///         secondary attack) instead: one throw per click, or one after another while held, as the game's throw does.
+    ///         The throw becomes a ghost javelin (<see cref="Javelins" />); the spear stays in hand.
+    ///     </para>
     /// </summary>
     internal static class SkillButton
     {
@@ -81,7 +86,8 @@ namespace Orlog.Content
         [HarmonyPatch(typeof(Player), nameof(Player.SetControls))]
         private static class Controls
         {
-            private static void Prefix(Player __instance, ref bool attack, ref bool attackHold, ref bool block, ref bool blockHold, ref bool run)
+            private static void Prefix(Player __instance, ref bool attack, ref bool attackHold, ref bool secondaryAttack, ref bool secondaryAttackHold,
+                ref bool block, ref bool blockHold, ref bool run)
             {
                 if (__instance != Player.m_localPlayer || !Progress.Ready || Attributes.ClassOf(__instance) == null)
                 {
@@ -89,7 +95,7 @@ namespace Orlog.Content
                 }
                 try
                 {
-                    Apply(__instance, ref attack, ref attackHold, ref block, ref blockHold);
+                    Apply(__instance, ref attack, ref attackHold, ref secondaryAttack, ref secondaryAttackHold, ref block, ref blockHold);
                     // A crossbow's Strafe stream: no running, as with a drawn bow (Krogon, 2026-11-17).
                     if (Strafe.NoRunning)
                     {
@@ -102,7 +108,8 @@ namespace Orlog.Content
                 }
             }
 
-            private static void Apply(Player player, ref bool attack, ref bool attackHold, ref bool block, ref bool blockHold)
+            private static void Apply(Player player, ref bool attack, ref bool attackHold, ref bool secondaryAttack, ref bool secondaryAttackHold,
+                ref bool block, ref bool blockHold)
             {
                 if (!SkillBar.TakesInput(player))
                 {
@@ -150,7 +157,7 @@ namespace Orlog.Content
 
                 // A normal attack (the game's attack button) clears a skill that never fired; the shot we release
                 // ourselves (a crossbow's held-back charged shot) is the skill's own.
-                if (attack && !held && !firesHeldBack)
+                if ((attack || secondaryAttack) && !held && !firesHeldBack)
                 {
                     s_pending = null;
                 }
@@ -192,7 +199,7 @@ namespace Orlog.Content
                 if (!state.Usable)
                 {
                     // Eitr ran short during a skill draw: keep drawing; the release shoots a normal arrow ("Not enough eitr").
-                    if (!pressed && state.Blocked == "eitr" && s_pending != null)
+                    if (!pressed && state.Blocked == "eitr" && s_pending != null && !ActiveSkillRules.Throws(skill.Id))
                     {
                         s_pendingSince = Time.time;
                         attackHold = true;
@@ -230,6 +237,29 @@ namespace Orlog.Content
                 s_pendingSince = Time.time;
                 block = false;
                 blockHold = false;
+                if (ActiveSkillRules.Throws(skill.Id))
+                {
+                    // The spear's own throw, made a ghost javelin when it starts (StartAttack). Held: throw after throw.
+                    // Most spears throw with their secondary attack; the Abyssal Harpoon with its main one.
+                    bool? secondary = Javelins.ThrowIsSecondary(player.GetCurrentWeapon());
+                    if (secondary == true)
+                    {
+                        attack = false;
+                        attackHold = false;
+                        secondaryAttack |= pressed;
+                        secondaryAttackHold = true;
+                    }
+                    else if (secondary == false)
+                    {
+                        attack |= pressed;
+                        attackHold = true;
+                    }
+                    else if (pressed)
+                    {
+                        SkillBar.LogIgnored("Skill button", "the weapon in hand has no throw");
+                    }
+                    return;
+                }
                 if (ActiveSkillRules.Charges(skill.Id))
                 {
                     Charge(player, skill, pressed, ref attack, ref attackHold);
@@ -313,11 +343,23 @@ namespace Orlog.Content
         {
             private static void Postfix(Humanoid __instance, bool secondaryAttack, bool __result)
             {
-                if (!__result || secondaryAttack || __instance != Player.m_localPlayer)
+                if (!__result || __instance != Player.m_localPlayer)
                 {
                     return;
                 }
                 var skill = Pending;
+                // A throw skill rides the spear's throw (the secondary attack), every other skill the main attack. The
+                // game's own throw (middle mouse) and a plain swing stay the game's.
+                bool throws = skill != null && ActiveSkillRules.Throws(skill.Id);
+                bool wantsSecondary = throws && Javelins.ThrowIsSecondary(((Humanoid)__instance).GetCurrentWeapon()) == true;
+                if (secondaryAttack != wantsSecondary)
+                {
+                    if (secondaryAttack)
+                    {
+                        return;
+                    }
+                    skill = null;
+                }
                 s_pending = null;
                 Current = null;
                 if (skill == null)
@@ -357,9 +399,19 @@ namespace Orlog.Content
                     if (cost > 0f && !player.HaveEitr(cost))
                     {
                         player.Message(MessageHud.MessageType.Center, "Not enough eitr");
-                        return;
+                        if (!throws)
+                        {
+                            return;
+                        }
+                        // The throw has started: it still never drops the spear. It flies as Gungnir's Throw, which costs no eitr.
+                        skill = SkillPoints.TableOf(player)?.Find(ActiveSkillRules.GungnirsThrowId) ?? skill;
+                        cost = 0f;
                     }
                     player.UseEitr(cost);
+                    if (throws)
+                    {
+                        Javelins.Prepare(player.m_currentAttack, skill.Id, SkillBar.LevelOf(player, skill.Id));
+                    }
                     Current = new Shot
                     {
                         Attack = player.m_currentAttack,

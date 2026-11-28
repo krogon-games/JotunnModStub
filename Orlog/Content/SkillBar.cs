@@ -59,10 +59,11 @@ namespace Orlog.Content
             return Mathf.Max(0f, OrlogConfig.SkillDamageMultiplier.Value);
         }
 
-        /// <summary>The player's level in a skill (the hard points: no +skills yet).</summary>
+        /// <summary>The player's level in a skill (the hard points: no +skills yet); a basic skill is always level 1.</summary>
         public static int LevelOf(Player player, string skillId)
         {
-            return SkillRules.PointsIn(SkillPoints.Points(player), skillId);
+            var skill = SkillPoints.TableOf(player)?.Find(skillId);
+            return skill != null ? SkillRules.LevelIn(SkillPoints.Points(player), skill) : SkillRules.PointsIn(SkillPoints.Points(player), skillId);
         }
 
         public static float CostOf(Player player, SkillTable.Skill skill)
@@ -201,7 +202,7 @@ namespace Orlog.Content
                 {
                     return refused;
                 }
-                // Only skills that already act can go in a slot (the spear skills come with roadmap C6).
+                // Only skills that already act can go in a slot (Jab, Impale and Poison Javelin still don't; #41).
                 if (Describe(player, skill.Id, 1) == null)
                 {
                     return "Doesn't work yet";

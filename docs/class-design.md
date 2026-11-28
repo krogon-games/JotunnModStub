@@ -142,10 +142,12 @@ Chosen by the group (2026-10-30). She fits Valheim well: bows and spears are van
 | | Fend | Thrusts at several nearby enemies in turn | later |
 | | Charged Strike | The thrust releases small lightning bolts around the target | later |
 | | Lightning Strike | The thrust releases chain lightning to nearby enemies | later |
-| | Lightning Bolt | The javelin turns into lightning: all its damage becomes lightning | v1 |
+| | Lightning Bolt | The javelin turns into lightning: all its damage becomes lightning. **Agreed and built 2026-11-28 (`claude/optimistic-ramanujan-acdyf8`, decisions 9–12; untested):** the gold ghost spear wrapped in lightning, twice a thrown spear's speed, stops at the first hit; 75% → 200% of the throw's damage, all lightning; eitr D2's 6 + 0.25 plus the throw's stamina | v1 |
 | | Poison Javelin | The javelin leaves poison clouds along its path | v1 |
-| | Plague Javelin | A spreading poison cloud where the javelin lands | v1 |
+| | Plague Javelin | A spreading poison cloud where the javelin lands. **Agreed and built 2026-11-28 (decisions 9, 13–15; untested):** the ghost hits for 100% of the throw; a cloud spreads to 4 m over 3 s → 6.8 s (D2R's poison time), poisoning for 25% → 100% of the throw each second; eitr D2's 7 + 0.5 plus the throw's stamina | v1 |
 | | Lightning Fury | The javelin bursts into lightning bolts on impact | later |
+
+**Gungnir's Throw (basic, built 2026-11-28, decisions 2–8; untested):** a "Basic" card above the three tabs, always learned, no points, put in a slot like any other skill; right click with a spear throws a see-through gold ghost copy of it (soft glow, faint trail) where the camera points, with the throw's stamina and damage, raising Spears; it sticks, then fades in about a second; the spear stays in hand; the Abyssal Harpoon's ghost doesn't pull. The javelin skills throw the same ghost (`docs/images/javelins_preview.png`).
 
 27 skills: 20 `v1` or `reworked`, 7 `later` (Forked Lightning and Wind Lance moved to `v1` on 2026-11-16, Strafe, Immolation Arrow and Venom Strike the same day, Snipe and Shackle Shot on 2026-11-18; the bow tab's nine all work, #70). **Removed 2026-11-15:** Magic Arrow, Fire Arrow, Cold Arrow, Exploding Arrow, Ice Arrow, Guided Arrow (bow); Slow Missiles (passive and magic); Power Strike (spear: "adds lightning damage", the plain kind of skill). The spear tab's list can still change in its own round (roadmap C6, #41).
 

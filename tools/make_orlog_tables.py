@@ -119,6 +119,15 @@ AMAZON = [
         ("Lightning Fury", "later", "attack", "spear", "The javelin (a spectral copy) bursts into lightning bolts on impact"),
     ]),
 ]
+# Basic skills (user, 2026-11-28, docs/handoffs/claude-optimistic-ramanujan-acdyf8.md, decisions 2 and 6): outside the
+# three tabs, always learned, no skill points; shown as "Basic" cards above the tabs (tab -1, row 1, the column in
+# order) and put in a slot like any other skill. Gungnir's Throw (decided 2026-11-13: D2's Throw for every class): a
+# gold ghost copy of the spear flies where the camera points, the spear stays in hand; the game's throw's stamina and
+# damage, no eitr.
+BASIC = [
+    ("Gungnir's Throw", "attack", "spear", "Throws a gold ghost copy of your spear where you aim; the spear never leaves your hand. Costs the throw's stamina and deals its damage"),
+]
+
 # Our name for a Diablo 2 skill where it differs (user, 2026-11-15: "Change the name to Multishot"). The id, the mana and
 # the per-level values stay the D2 skill's, so saved characters keep their points and slots.
 D2_NAMES = {"Multishot": "Multiple Shot"}
@@ -225,6 +234,22 @@ WEAPON_SHARES = {
         ("blast_damage_pct", "%", ("line", 25, 100)),
         ("burn_damage_pct", "%", ("line", 10, 30)),
         ("radius_m", "m", ("flat", 3)),
+    ]),
+    # Lightning Bolt (user, 2026-11-28, docs/handoffs/claude-optimistic-ramanujan-acdyf8.md, decisions 10-11): the
+    # ghost javelin's damage, all of it lightning, "75% -> 200%" of the throw's (75% is D2R's weapon_damage_pct), instead
+    # of D2's added 1-40 to 1-380 points; it flies "Twice as fast" as a thrown spear (Wind Lance's speed_pct) and stops
+    # at the first hit. Eitr: D2's mana.
+    "Lightning Bolt": (["lightning_damage_min", "lightning_damage_max", "phys_to_elemental_pct", "weapon_damage_pct"], [
+        ("weapon_damage_pct", "%", ("line", 75, 200, "2026-11-28")),
+        ("speed_pct", "%", ("flat", 200, "2026-11-28")),
+    ]),
+    # Plague Javelin (decisions 13-14): the ghost javelin hits for 100% of the throw, then a cloud spreads from where it
+    # lands out to 4 m ("Grows to 4 m") over D2's poison_duration_s (3 s -> 6.8 s, kept), poisoning everything in it each
+    # second for "25% -> 100%" of the throw (Venom Strike's share), instead of D2's 28-42 to 1593-1625 points.
+    "Plague Javelin": (["poison_damage_min", "poison_damage_max", "attack_rating_pct", "casting_delay_s"], [
+        ("weapon_damage_pct", "%", ("flat", 100, "2026-11-28")),
+        ("cloud_damage_pct", "%", ("line", 25, 100, "2026-11-28")),
+        ("radius_m", "m", ("flat", 4, "2026-11-28")),
     ]),
 }
 
@@ -399,6 +424,8 @@ def main():
                             source["mana_base"] if costs else "0", source["mana_per_lvl"] if costs else "0", text])
                 if status in ("v1", "reworked") and kind != "passive":
                     built_active.append(d2_name)
+        for i, (name, kind, needs, text) in enumerate(BASIC):
+            w.writerow([name.replace(" ", "").replace("'", ""), name, -1, 1, i + 1, "basic", kind, needs, "0", "0", text])
     per_level = {(r["skill"], r["value"]): r for r in read_csv(os.path.join(ROOT, "data", "d2-reference", "amazon_levels.csv"))}
     with open(os.path.join(OUT, "amazon_passives.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
