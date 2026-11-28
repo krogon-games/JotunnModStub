@@ -44,7 +44,7 @@ Nothing yet.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md` (`cg-1` … `cg-18`), also on the phone page after the `claude/nifty-hypatia-afm8ez` section. Not started.
+Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md` (`cg-1` … `cg-18`), also on the phone page (its second section, after `claude/nifty-hypatia-afm8ez`'s, which stays). Not started.
 
 ## Open questions for Krogon
 
@@ -57,4 +57,4 @@ None.
 
 ## Merge notes
 
-**Must merge after `claude/nifty-hypatia-afm8ez`** (this branch was started from it and carries its commits). Gameplay changed: version bump needed at merge (Corruption). Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`.
+**Must merge after `claude/nifty-hypatia-afm8ez`** (this branch was started from it and carries its commits). Gameplay changed: version bump needed at merge (Corruption). Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`.
