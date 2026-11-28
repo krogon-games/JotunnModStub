@@ -30,6 +30,8 @@ Nothing yet.
 7. **Ranged = bows, crossbows and magic staffs** (2026-11-28): "Bows, crossbows, staffs". Every other weapon (pickaxes included) is melee.
 8. **The loot affixes act on kills and on the heart's spill** (2026-11-28): "Kills and the spill". The heart's per-player orbs and gear get the same ×2s.
 9. **Names and copy as Claude proposed** (2026-11-28): "Use these". Bountiful ("Enemies are {value}% more likely to drop gear, orbs and maps."), Glittering (orbs), Runic (runes, `later`), Bulwarked ("Gear drops are {value}% more likely to be shields."), Mailed (helmets and armour), Honed (melee weapons), Fletched (ranged weapons). Value 100 (decision 7 of the map affix overhaul), under "What you'll earn".
+10. **The weather affixes are off the priority list** (2026-11-28): "Frostbitten, Drowned, Choking can be removed from priority at this stage, i dont think we will build them. but do not delete them entirely, just disable." They stay in `map_affixes.csv` as `later` rows, which never roll (already the case), and nothing else is done for them. #86 (`co_dump` weather data) is no longer needed for map affixes.
+11. **One corrupted-only affix joins this round** (2026-11-28): "lets add one corrupted affix to this round now. pick the easiest." Claude picked **Thorns** ("Monsters have thorns.", #97): it needs no new creatures, models or chests.
 
 ## Playtest
 
