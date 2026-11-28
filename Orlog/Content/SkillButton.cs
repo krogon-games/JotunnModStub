@@ -240,10 +240,24 @@ namespace Orlog.Content
                 if (ActiveSkillRules.Throws(skill.Id))
                 {
                     // The spear's own throw, made a ghost javelin when it starts (StartAttack). Held: throw after throw.
-                    attack = false;
-                    attackHold = false;
-                    secondaryAttack |= pressed;
-                    secondaryAttackHold = true;
+                    // Most spears throw with their secondary attack; the Abyssal Harpoon with its main one.
+                    bool? secondary = Javelins.ThrowIsSecondary(player.GetCurrentWeapon());
+                    if (secondary == true)
+                    {
+                        attack = false;
+                        attackHold = false;
+                        secondaryAttack |= pressed;
+                        secondaryAttackHold = true;
+                    }
+                    else if (secondary == false)
+                    {
+                        attack |= pressed;
+                        attackHold = true;
+                    }
+                    else if (pressed)
+                    {
+                        SkillBar.LogIgnored("Skill button", "the weapon in hand has no throw");
+                    }
                     return;
                 }
                 if (ActiveSkillRules.Charges(skill.Id))
@@ -337,7 +351,8 @@ namespace Orlog.Content
                 // A throw skill rides the spear's throw (the secondary attack), every other skill the main attack. The
                 // game's own throw (middle mouse) and a plain swing stay the game's.
                 bool throws = skill != null && ActiveSkillRules.Throws(skill.Id);
-                if (secondaryAttack != throws)
+                bool wantsSecondary = throws && Javelins.ThrowIsSecondary(((Humanoid)__instance).GetCurrentWeapon()) == true;
+                if (secondaryAttack != wantsSecondary)
                 {
                     if (secondaryAttack)
                     {

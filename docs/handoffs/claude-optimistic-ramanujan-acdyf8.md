@@ -4,7 +4,7 @@
 
 ## Stage
 
-Waiting for Krogon's playtest.
+Fixing feedback: round 1's fixes built, waiting for Krogon's re-test.
 
 ## Purpose
 
@@ -40,10 +40,12 @@ Built 2026-11-28, **not play-tested** (821 tests pass; Orlog and CraftingOverhau
 14. **2026-11-28: the cloud spreads from where the javelin lands out to 4 m across its time, and lasts 3 s at skill level 1, 6.8 s at 20** (recommended; the time is Diablo 2 Resurrected's poison duration, `amazon_skill_values.csv`; the 4 m was Claude's proposal, a little over Venom Strike's 3 m because it spreads). Over Venom Strike's 3 m and 4 s, and 3 → 6 m with level.
 15. **2026-11-28: Plague Javelin looks like the gold ghost spear with green drips in flight, and Venom Strike's green cloud rolls outward where it lands** (recommended), over the plain gold spear. A preview picture comes first.
 16. **2026-11-28: the preview of the three looks is approved** ("Approved, build it"; `docs/images/javelins_preview.png`, drawn by `tools/preview_javelins.py`).
+17. **2026-11-28 (play-test): Plague Javelin's cloud grows in size, and its ring stays but blends in** (his note on `c6-2`: "it would be better if the poison cloud grew in size instead … keep the ring for now, maybe give it a slightly less intrusive and blended feel"). Built: soft green puffs fill the cloud's reach as it spreads; the ring is thinner and half see-through, the light dimmer. Venom Strike's and Immolation Arrow's rings are unchanged.
+18. **2026-11-28 (play-test): the glowing ground ring's design is to be revisited for every area skill later**, as its own ticket ("add it as a ticket to work on in the future"): [#105](https://github.com/krogon-games/JotunnModStub/issues/105).
 
 ## Playtest
 
-Round 1, 18 steps: `docs/playtests/claude-optimistic-ramanujan-acdyf8.md`, also on the phone page (`gt-1` … `gt-8`, `lb-1` … `lb-4`, `pj-1` … `pj-4`, `c6-1`, `c6-2`). Waiting for Krogon.
+`docs/playtests/claude-optimistic-ramanujan-acdyf8.md`. **Round 1 (2026-11-28):** 12 of 18 passed (the Basic card, slots, stamina and eitr, damage, holding, Spears skill, Lightning Bolt's and Plague Javelin's numbers, the eitr check). Failed: the ghost looked like the game's spear, with no gold, glow or trail (`gt-3`, `lb-2`, `pj-2`), and vanished on impact (`gt-4`), because the ghost copies were never made (the game's item list is empty when they were built); the Abyssal Harpoon throws with left click, so right click did nothing (`gt-8`); the verdict (`c6-2`) asked for a growing cloud and a softer ring. All fixed, not yet re-tested. **Round 2:** 7 re-test steps (`r2-1` … `r2-7`), on the phone page too.
 
 ## Open questions for Krogon
 
@@ -51,7 +53,7 @@ Round 1, 18 steps: `docs/playtests/claude-optimistic-ramanujan-acdyf8.md`, also 
 
 ## Next steps
 
-1. Krogon's play-test (phone page); fix what it finds; final play-test.
+1. Krogon's re-test (round 2, phone page); then the final play-test.
 2. `/handoff`, then a pull request into `master` (gameplay changed: Orlog and CraftingOverhaul).
 3. Later rounds for #41: Jab, Impale, Poison Javelin.
 

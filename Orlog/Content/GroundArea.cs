@@ -42,6 +42,7 @@ namespace Orlog.Content
         private Skills.SkillType m_skillType = Skills.SkillType.Bows;
         private LineRenderer m_ring;
         private float m_ringRadius = -1f;
+        private ParticleSystem m_cloud;
 
         public static void Begin(Character owner, string skillName, int level, Vector3 point, float radius, float duration,
             float damagePerHit, bool poison, bool firstHitAtOnce, float shotDamage, float percent, bool spreads = false,
@@ -91,7 +92,8 @@ namespace Orlog.Content
                 light.type = LightType.Point;
                 light.color = AreaColour;
                 light.range = m_radius * 2f;
-                light.intensity = 2f;
+                // A spreading cloud (Plague Javelin) glows less: its ring stood out too much (Krogon, 2026-11-28).
+                light.intensity = m_spreads ? 1.2f : 2f;
                 m_light = light;
                 m_lightIntensity = light.intensity;
 
@@ -102,16 +104,80 @@ namespace Orlog.Content
                     line.sharedMaterial = material;
                     line.useWorldSpace = true;
                     line.loop = true;
-                    line.startWidth = 0.1f;
-                    line.endWidth = 0.1f;
-                    line.startColor = AreaColour;
-                    line.endColor = AreaColour;
+                    // A spreading cloud's ring is thinner and half see-through, to blend in (Krogon, 2026-11-28: "keep the
+                    // ring for now, maybe give it a slightly less intrusive and blended feel"); the cloud itself shows the spread.
+                    float width = m_spreads ? 0.05f : 0.1f;
+                    var colour = m_spreads ? new Color(AreaColour.r, AreaColour.g, AreaColour.b, 0.35f) : AreaColour;
+                    line.startWidth = width;
+                    line.endWidth = width;
+                    line.startColor = colour;
+                    line.endColor = colour;
                     line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                     line.receiveShadows = false;
                     m_ring = line;
                     SetRing(CurrentRadius());
                 }
+                if (m_spreads)
+                {
+                    m_cloud = Cloud();
+                }
             });
+        }
+
+        /// <summary>
+        ///     A spreading cloud's body (Krogon, 2026-11-28: "it would be better if the poison cloud grew in size"): soft
+        ///     green puffs rolling low over the ground, born anywhere inside the cloud's reach, which grows with it.
+        /// </summary>
+        private ParticleSystem Cloud()
+        {
+            var material = GhostSpearLook.SoftMaterial();
+            if (!material)
+            {
+                return null;
+            }
+            var go = new GameObject("Orlog_PoisonCloud");
+            go.transform.position = m_point + Vector3.up * 0.4f;
+            go.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            var cloud = go.AddComponent<ParticleSystem>();
+            cloud.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = cloud.main;
+            main.loop = true;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.2f, 2f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.05f, 0.3f);
+            main.startSize = new ParticleSystem.MinMaxCurve(1.2f, 2.2f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            main.startColor = new Color(PoisonColour.r * 0.8f, PoisonColour.g * 0.8f, PoisonColour.b * 0.6f, 0.22f);
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.maxParticles = 300;
+            var emission = cloud.emission;
+            emission.rateOverTime = 20f;
+            var shape = cloud.shape;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = 0.3f;
+            var fade = cloud.colorOverLifetime;
+            fade.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.3f), new GradientAlphaKey(0f, 1f) });
+            fade.color = gradient;
+            var renderer = go.GetComponent<ParticleSystemRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            cloud.Play();
+            return cloud;
+        }
+
+        /// <summary>The cloud's puffs fill its reach as it spreads: more puffs the wider it is.</summary>
+        private void GrowCloud(float radius)
+        {
+            if (!m_cloud)
+            {
+                return;
+            }
+            var shape = m_cloud.shape;
+            shape.radius = Mathf.Max(0.3f, radius);
+            var emission = m_cloud.emission;
+            emission.rateOverTime = 20f + radius * radius * 6f;
         }
 
         /// <summary>The area's reach now: the full radius, or for a spreading cloud how far it has spread.</summary>
@@ -178,7 +244,9 @@ namespace Orlog.Content
             float elapsed = Time.time - m_start;
             if (m_spreads)
             {
-                SetRing(CurrentRadius());
+                float now = CurrentRadius();
+                SetRing(now);
+                GrowCloud(now);
             }
             while (m_hitsDone < m_hits && elapsed >= HitTime(m_hitsDone))
             {
@@ -245,6 +313,12 @@ namespace Orlog.Content
             Jotunn.Logger.LogInfo($"Orlog: {m_skill} (level {m_level}): the shot's damage {m_shotDamage:0.#}, {m_percent:0.#}% = {m_damagePerHit:0.#} " +
                                   $"{(m_poison ? "poison" : "fire")} per hit; {m_hitsDone} hits over {m_duration:0.#} s on {m_enemyHits} enemy-hits within {m_radius:0.#} m" +
                                   $"{(why == "its time" ? "" : " (ended early: " + why + ")")}.");
+            if (m_cloud)
+            {
+                // The puffs already out drift and fade instead of vanishing with the area.
+                m_cloud.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                Destroy(m_cloud.gameObject, 2.2f);
+            }
             Destroy(gameObject);
         }
     }

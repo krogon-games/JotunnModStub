@@ -21,6 +21,9 @@ namespace Orlog.Content
         private const int BoltPoints = 9;
         private static Material s_ghostMaterial;
         private static bool s_searched;
+        private static Material s_softMaterial;
+        private static bool s_softSearched;
+        private static bool s_logged;
 
         /// <summary><see cref="Javelins.Variant" /> as a number (serialised on the prefab).</summary>
         public int Kind;
@@ -47,10 +50,17 @@ namespace Orlog.Content
             m_born = Time.time;
             m_projectile = GetComponent<Projectile>();
             m_lastPosition = transform.position;
-            Safe.Run("dress a ghost javelin", Dress);
+            Safe.Run("tint a ghost javelin", Tint);
+            Safe.Run("light a ghost javelin", Dress);
+            if (!s_logged)
+            {
+                s_logged = true;
+                Jotunn.Logger.LogInfo($"Orlog: ghost javelin {name}: {m_renderers?.Length ?? 0} model part(s) tinted, light {(m_light ? "on" : "missing")}, trail {(m_trail ? "on" : "missing")}.");
+            }
         }
 
-        private void Dress()
+        /// <summary>The spear's model drawn see-through gold.</summary>
+        private void Tint()
         {
             var material = GhostMaterial();
             var bounds = new Bounds(transform.position, Vector3.zero);
@@ -82,9 +92,18 @@ namespace Orlog.Content
             {
                 m_length = Mathf.Clamp(bounds.size.magnitude, 0.8f, 3f);
             }
+        }
 
+        /// <summary>
+        ///     The light, the trail, Lightning Bolt's strands and Plague Javelin's drips, on a child object of their own (a
+        ///     spear's projectile may already carry a light or a trail, and an object holds only one of each).
+        /// </summary>
+        private void Dress()
+        {
+            var holder = new GameObject("Orlog_GhostGlow");
+            holder.transform.SetParent(transform, false);
             Color tint = Variant == Javelins.Variant.Bolt ? Color.Lerp(Gold, BoltColour, 0.5f) : Gold;
-            m_light = gameObject.AddComponent<Light>();
+            m_light = holder.AddComponent<Light>();
             m_light.type = LightType.Point;
             m_light.color = tint;
             m_light.range = Variant == Javelins.Variant.Bolt ? 4f : 3f;
@@ -96,7 +115,7 @@ namespace Orlog.Content
             {
                 return;
             }
-            m_trail = gameObject.AddComponent<TrailRenderer>();
+            m_trail = holder.AddComponent<TrailRenderer>();
             m_trail.sharedMaterial = lineMaterial;
             m_trail.time = 0.3f;
             m_trail.startWidth = 0.12f;
@@ -130,7 +149,7 @@ namespace Orlog.Content
             }
             else if (Variant == Javelins.Variant.Plague)
             {
-                m_drips = Drips(lineMaterial);
+                m_drips = Drips(SoftMaterial() ?? lineMaterial);
             }
         }
 
@@ -160,6 +179,41 @@ namespace Orlog.Content
             }
             Jotunn.Logger.LogInfo("Orlog: no see-through material found for the ghost javelin; it keeps the spear's look with its gold light and trail.");
             return null;
+        }
+
+        /// <summary>
+        ///     A soft round blob for particles (a white disc fading out to its edge, made here), so drips and clouds aren't
+        ///     square: the engine's plain shader shows a particle as a square without a texture. Shared by the ghost's
+        ///     drips and Plague Javelin's cloud (<see cref="GroundArea" />).
+        /// </summary>
+        internal static Material SoftMaterial()
+        {
+            if (s_softMaterial || s_softSearched)
+            {
+                return s_softMaterial;
+            }
+            s_softSearched = true;
+            var plain = BowSkills.ForkLine.Material();
+            if (!plain)
+            {
+                return null;
+            }
+            const int size = 64;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false) { name = "Orlog_SoftDisc", wrapMode = TextureWrapMode.Clamp };
+            var pixels = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = (x + 0.5f) / size * 2f - 1f, dy = (y + 0.5f) / size * 2f - 1f;
+                    float a = Mathf.Clamp01(1f - Mathf.Sqrt(dx * dx + dy * dy));
+                    pixels[y * size + x] = new Color32(255, 255, 255, (byte)(a * a * 255f));
+                }
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply();
+            s_softMaterial = new Material(plain) { name = "Orlog_Soft", mainTexture = texture };
+            return s_softMaterial;
         }
 
         /// <summary>Plague Javelin's green drips: small drops falling from the spear in flight (engine particles).</summary>

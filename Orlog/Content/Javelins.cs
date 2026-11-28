@@ -49,32 +49,49 @@ namespace Orlog.Content
 
         // ------------------------------------------------------------ the ghost projectiles
 
-        /// <summary>Registers the ghost copies of every spear's throw projectile (once the game's items exist).</summary>
+        /// <summary>
+        ///     Registers the ghost copies of every spear's throw projectile. Read from the game's loaded prefabs, not from
+        ///     <c>ObjectDB</c>: when the game's prefabs first become available <c>ObjectDB</c> holds no items yet, so the
+        ///     first build found no spears and every throw flew as the game's own spear (Krogon's play-test, 2026-11-28).
+        ///     Called again when the game's prefabs are registered; a spear done once isn't done again.
+        /// </summary>
         public static void Build()
         {
-            if (!ObjectDB.instance)
+            int added = 0;
+            foreach (var obj in PrefabManager.Cache.GetPrefabs(typeof(ItemDrop)).Values)
             {
-                return;
-            }
-            int spears = 0;
-            foreach (var item in ObjectDB.instance.m_items)
-            {
-                var drop = item ? item.GetComponent<ItemDrop>() : null;
+                var drop = obj as ItemDrop;
                 var shared = drop ? drop.m_itemData?.m_shared : null;
-                var source = shared != null && shared.m_skillType == Skills.SkillType.Spears ? shared.m_secondaryAttack?.m_attackProjectile : null;
-                if (!source || Ghosts.ContainsKey(source.name) || !source.GetComponent<Projectile>())
+                if (shared == null || shared.m_skillType != Skills.SkillType.Spears)
                 {
                     continue;
                 }
-                var copies = new GameObject[Prefixes.Length];
-                for (int i = 0; i < Prefixes.Length; i++)
+                // The throw is the secondary attack, or for the Abyssal Harpoon the main one (it has no other throw).
+                foreach (var attack in new[] { shared.m_secondaryAttack, shared.m_attack })
                 {
-                    copies[i] = MakeGhost(source, (Variant)i);
+                    if (attack != null && Ensure(attack.m_attackProjectile))
+                    {
+                        added++;
+                    }
                 }
-                Ghosts[source.name] = copies;
-                spears++;
             }
-            Jotunn.Logger.LogInfo($"Orlog: made the ghost javelins for {spears} spear throw{(spears == 1 ? "" : "s")}.");
+            Jotunn.Logger.LogInfo($"Orlog: made the ghost javelins for {added} more spear throw{(added == 1 ? "" : "s")} ({Ghosts.Count} in all).");
+        }
+
+        /// <summary>Makes the ghost copies of one throw projectile if it has none yet; true when it made them.</summary>
+        private static bool Ensure(GameObject source)
+        {
+            if (!source || Ghosts.ContainsKey(source.name) || !source.GetComponent<Projectile>())
+            {
+                return false;
+            }
+            var copies = new GameObject[Prefixes.Length];
+            for (int i = 0; i < Prefixes.Length; i++)
+            {
+                copies[i] = MakeGhost(source, (Variant)i);
+            }
+            Ghosts[source.name] = copies;
+            return true;
         }
 
         private static GameObject MakeGhost(GameObject source, Variant variant)
@@ -86,10 +103,12 @@ namespace Orlog.Content
             projectile.m_spawnItem = null;
             projectile.m_spawnOnHit = null;
             projectile.m_randomSpawnOnHit?.Clear();
-            // Sticks where it lands, in the ground or the enemy, then fades (decision 8).
+            // Sticks where it lands, in the ground or the enemy, then fades (decision 8). The game hides a thrown spear's
+            // model on impact (it is replaced by the spear to pick up); the ghost keeps its model to fade it.
             projectile.m_stayAfterHitStatic = true;
             projectile.m_stayAfterHitDynamic = true;
             projectile.m_stayTTL = ActiveSkillRules.GhostFadeSeconds;
+            projectile.m_hideOnHit = null;
             // The harpoon's rope back to the thrower (decision 4: no pull).
             foreach (var rope in prefab.GetComponentsInChildren<LineConnect>(true))
             {
@@ -111,7 +130,7 @@ namespace Orlog.Content
 
         private static void AddHitEffects(Projectile projectile, string item)
         {
-            var prefab = ObjectDB.instance.GetItemPrefab(item);
+            var prefab = PrefabManager.Cache.GetPrefab<GameObject>(item) ?? (ObjectDB.instance ? ObjectDB.instance.GetItemPrefab(item) : null);
             var other = prefab ? prefab.GetComponent<ItemDrop>()?.m_itemData.m_shared.m_attack.m_attackProjectile : null;
             var effects = other ? other.GetComponent<Projectile>()?.m_hitEffects : null;
             if (effects == null || !effects.HasEffects())
@@ -124,12 +143,16 @@ namespace Orlog.Content
             projectile.m_hitEffects = new EffectList { m_effectPrefabs = list.ToArray() };
         }
 
-        /// <summary>The ghost copy of a spear's throw projectile for a skill, or null if there is none.</summary>
+        /// <summary>The ghost copy of a spear's throw projectile for a skill (made now if it is missing), or null.</summary>
         private static GameObject GhostFor(GameObject projectile, Variant variant)
         {
             if (!projectile)
             {
                 return null;
+            }
+            if (!Ghosts.ContainsKey(projectile.name))
+            {
+                Safe.Run("make a ghost javelin when first thrown", () => Ensure(projectile));
             }
             if (Ghosts.TryGetValue(projectile.name, out var copies) && copies[(int)variant])
             {
@@ -138,6 +161,25 @@ namespace Orlog.Content
             if (s_loggedMissing.Add(projectile.name))
             {
                 Jotunn.Logger.LogWarning($"Orlog: no ghost javelin for {projectile.name}; this throw flies as the game's own projectile (no spear is dropped).");
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Which of a spear's attacks is its throw: the secondary attack when it fires a projectile (every spear but
+        ///     one), else the main attack when that does (the Abyssal Harpoon: its left click is the throw; Krogon's
+        ///     play-test, 2026-11-28). Null when the weapon has no throw.
+        /// </summary>
+        public static bool? ThrowIsSecondary(ItemDrop.ItemData weapon)
+        {
+            var shared = weapon?.m_shared;
+            if (shared?.m_secondaryAttack != null && shared.m_secondaryAttack.m_attackProjectile)
+            {
+                return true;
+            }
+            if (shared?.m_attack != null && shared.m_attack.m_attackProjectile)
+            {
+                return false;
             }
             return null;
         }
