@@ -1,6 +1,6 @@
 # Handoff: `claude/kind-einstein-8sn8e7`
 
-**Written:** 2026-11-28 (`/handoff`). From `master` at `cce2ba7`; 20 commits ahead, 0 behind; no PR yet.
+**Written:** 2026-11-28 (`/handoff`). From `master` at `cce2ba7`; 19 commits ahead, 0 behind; no PR yet.
 
 ## Stage
 
