@@ -52,7 +52,7 @@ Nothing yet.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`**: Krogon, 2026-11-28: "Playtesting done" (no marks on the phone page; taken as passed on his word). Then decision 23 (a map's forge result on the left): step `cg-24`, waiting for Krogon.
+Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`**: Krogon, 2026-11-28: "Playtesting done" (no marks on the phone page; taken as passed on his word). Then decisions 23–26 (the Forge tab: no result text, gear laid out like a map, toasts): steps `cg-24` … `cg-27`, waiting for Krogon (he tried decision 23 and liked it, then asked for 24–26).
 
 ## Open questions for Krogon
 

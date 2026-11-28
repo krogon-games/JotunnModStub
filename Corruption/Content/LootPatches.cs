@@ -276,6 +276,30 @@ namespace Corruption.Content
             return text.ToString();
         }
 
+        /// <summary>
+        ///     The Riftforge's gear layout (Krogon, 2026-11-28, decision 25): the affix block in parts, so the header (the
+        ///     rarity line, "Rare Black Metal Sword") and the marks go on the bench and the affix lines on the sheet. The
+        ///     lines are bulleted and highlighted as in <see cref="Section" />; empty when the item has no affixes.
+        /// </summary>
+        public static string ForgeLines(ItemDrop.ItemData item, int qualityLevel, float worldLevel, ICollection<int> highlight, out string header)
+        {
+            header = "";
+            var lines = Block(item, qualityLevel, worldLevel, out header);
+            var loot = Loot.Of(item);
+            if (loot == null)
+            {
+                return "";
+            }
+            var text = new StringBuilder();
+            for (int i = 0; i < lines.Count; i++)
+            {
+                bool resonant = i < loot.Lines.Count && loot.Lines[i].Resonant;
+                string line = ForgeRules.BulletLine(lines[i], resonant);
+                text.Append(text.Length > 0 ? "\n" : "").Append(highlight != null && highlight.Contains(i) ? "<mark=#E8C66A40><b>" + line + "</b></mark>" : line);
+            }
+            return text.ToString();
+        }
+
         /// <summary>The Riftforge marks of an item, as tooltip lines (empty when it has none).</summary>
         public static string LocksOf(ItemDrop.ItemData item)
         {

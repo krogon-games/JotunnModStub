@@ -54,14 +54,6 @@ namespace Corruption.Content
         private static InventoryElement _slot;
         private static TMP_Text _caption;
         private static TMP_Text _affixes;
-        /// <summary>
-        ///     A map's last result, on the bench under the map's tier line (Krogon, 2026-11-28, decision 23: the left side is
-        ///     empty for a map, so the result moves there; gear keeps it under the description).
-        /// </summary>
-        private static TMP_Text _benchResult;
-        private static float _benchTop;
-        private static string _resultText = "";
-        private static bool _resultGood = true;
         private static TMP_Text _result;
         private static Button _remove;
 
@@ -441,20 +433,6 @@ namespace Corruption.Content
             _affixes.enableAutoSizing = true;
             _affixes.fontSizeMax = _affixes.fontSize;
             _affixes.fontSizeMin = _affixes.fontSize * 0.8f;
-
-            _benchTop = 98f + slotSize;
-            _benchResult = Text("MapResult", 15f, Good, TextAlignmentOptions.TopLeft);
-            var m = _benchResult.rectTransform;
-            m.anchorMin = new Vector2(0f, 0f);
-            m.anchorMax = new Vector2(1f, 1f);
-            m.pivot = new Vector2(0.5f, 1f);
-            m.offsetMin = new Vector2(12f, buttonTop);
-            m.offsetMax = new Vector2(-10f, -_benchTop);
-            _benchResult.lineSpacing = 4f;
-            _benchResult.enableAutoSizing = true;
-            _benchResult.fontSizeMax = _benchResult.fontSize;
-            _benchResult.fontSizeMin = _benchResult.fontSize * 0.7f;
-            _benchResult.text = "";
         }
 
         /// <summary>One of the bag's own cells (bronze frame, icon, durability), larger, not part of any grid.</summary>
@@ -814,43 +792,18 @@ namespace Corruption.Content
             if (_affixes && _affixes.text != (affixes ?? ""))
             {
                 _affixes.text = affixes ?? "";
-                PlaceResult();
             }
         }
 
         /// <summary>The last use's result, across the description's width: a short headline, then the changed lines.</summary>
         public static void SetResult(string message, bool good)
         {
-            _resultText = message ?? "";
-            _resultGood = good;
-            PlaceResult();
-        }
-
-        /// <summary>
-        ///     Shows the last result where it belongs: on the bench under a map's tier line and marks (map mode), else under
-        ///     the description. The bench text starts 10 below whatever the affix block shows.
-        /// </summary>
-        private static void PlaceResult()
-        {
             if (_result)
             {
-                _result.text = _mapMode && _benchResult ? "" : _resultText;
-                _result.color = _resultGood ? Good : Bad;
+                _result.text = message ?? "";
+                _result.color = good ? Good : Bad;
+                ArrangeMap();
             }
-            if (_benchResult)
-            {
-                _benchResult.text = _mapMode ? _resultText : "";
-                _benchResult.color = _resultGood ? Good : Bad;
-                float used = 0f;
-                if (_mapMode && _affixes && !string.IsNullOrEmpty(_affixes.text))
-                {
-                    var a = _affixes.rectTransform;
-                    used = _affixes.GetPreferredValues(_affixes.text, Mathf.Max(1f, a.rect.width), 0f).y + 10f;
-                }
-                var m = _benchResult.rectTransform;
-                m.offsetMax = new Vector2(m.offsetMax.x, -(_benchTop + used));
-            }
-            ArrangeMap();
         }
 
         /// <summary>The description: the gear's name and the rest of its tooltip, or how the forge works while it's empty.</summary>
@@ -928,7 +881,7 @@ namespace Corruption.Content
                 _savedLayout = true;
             }
             _mapMode = true;
-            PlaceResult();
+            ArrangeMap();
             // (c) without a scroll area the text shrinks (down to 70%) instead of clipping.
             if (_sheetText && !inScroll)
             {
@@ -987,7 +940,6 @@ namespace Corruption.Content
         private static void RestoreLayout()
         {
             _mapMode = false;
-            PlaceResult();
             if (!_savedLayout)
             {
                 return;
@@ -1055,7 +1007,6 @@ namespace Corruption.Content
             _slot = null;
             _caption = null;
             _affixes = null;
-            _benchResult = null;
             _result = null;
             _remove = null;
             _sheetName = null;
