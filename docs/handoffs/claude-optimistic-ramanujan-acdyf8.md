@@ -4,7 +4,7 @@
 
 ## Stage
 
-Asking Krogon questions.
+Asking Krogon questions (numbers agreed; previews next).
 
 ## Purpose
 
@@ -32,6 +32,9 @@ Nothing built yet.
 10. **2026-11-28: Lightning Bolt deals 75% of the ghost throw's damage at skill level 1, 200% at 20, all as lightning, in even steps** ("75% → 200%"; 75% is Diablo 2 Resurrected's weapon damage share, `amazon_skill_values.csv` `weapon_damage_pct`). Over 100% → 200%, 100% → 233% and 100% at every level. Eitr: Diablo 2's 6, +0.25 per level (6 → 10.75), plus the throw's stamina (decision 9).
 11. **2026-11-28: Lightning Bolt flies twice as fast as a thrown spear and stops at the first enemy it hits** ("Twice as fast, stops at first hit"; Wind Lance's 200% speed). Over the throw's speed and passing through enemies.
 12. **2026-11-28: Lightning Bolt looks like the gold ghost spear wrapped in crackling blue-white lightning**, bursting with the game's lightning hit effect (recommended), over a pure lightning streak. A preview picture comes first.
+13. **2026-11-28: Plague Javelin's ghost spear hits for 100% of the throw's damage, then its cloud poisons for 25% → 100% of it** (recommended; Venom Strike's share, by the game's own poison), over a 50% → 150% cloud with or without the hit. Eitr: Diablo 2's 7, +0.5 per level (7 → 16.5), plus the throw's stamina (decision 9).
+14. **2026-11-28: the cloud spreads from where the javelin lands out to 4 m across its time, and lasts 3 s at skill level 1, 6.8 s at 20** (recommended; the time is Diablo 2 Resurrected's poison duration, `amazon_skill_values.csv`; the 4 m was Claude's proposal, a little over Venom Strike's 3 m because it spreads). Over Venom Strike's 3 m and 4 s, and 3 → 6 m with level.
+15. **2026-11-28: Plague Javelin looks like the gold ghost spear with green drips in flight, and Venom Strike's green cloud rolls outward where it lands** (recommended), over the plain gold spear. A preview picture comes first.
 
 ## Playtest
 
@@ -39,12 +42,12 @@ Nothing to test yet. Checklist: `docs/playtests/claude-optimistic-ramanujan-acdy
 
 ## Open questions for Krogon
 
-1. Gungnir's Throw's last details, then Lightning Bolt's and Plague Javelin's numbers, behaviour and look.
+1. Approve the preview pictures of the three looks.
 
 ## Next steps
 
-1. Krogon picks this round's spear skills; agree each one's numbers, behaviour, multiplayer and look.
-2. Preview picture of the gold ghost spear.
+1. Preview pictures of the three looks (gold ghost spear, Lightning Bolt, Plague Javelin).
+2. Read the throw code in the game and the bow skills; check docs/mod-compatibility.md.
 3. Build Gungnir's Throw, then the chosen skills; tests; docs.
 4. Play-test checklist (training dummy), on the phone page too.
 
