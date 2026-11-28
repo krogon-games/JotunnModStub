@@ -18,6 +18,7 @@ Nothing yet.
 
 - **Built, not play-tested** (Corruption and Orlog build): six loot affixes in `map_affixes.csv` (Bountiful, Glittering, Bulwarked, Mailed, Honed, Fletched; Runic `later`), rules in `Corruption/Rules/MapLootRules.cs`, hooked into the kill loot (`LootPatches`) and the heart's spill (`RipLoot`); `co_riploot` to check the rates. No new Harmony patch.
 - **Built, not play-tested** (798 tests): corrupted-only affixes (a `pool` column; the shard adds one as a corrupted map's 5th; the server keeps one on a corrupted full map) and **Thorns** (5–25%, `Character.RPC_Damage` prefix + postfix, `MapAffixEffects.Thorns`). Game code decompiled (Krogon allowed it) to check where health is applied.
+- **Open bug, not investigated:** Krogon's game crashed when he opened the Riftforge during his first testing (2026-11-28). The cause isn't known yet, and it may not come from this branch. Needed: the build, what was in the forge or bag, and `LogOutput.log` (details in the play-test file).
 - Claude's choices on Thorns (changeable): the returned hit is blunt, has no attacker (so Brutal and the game's per-player enemy scaling don't raise it), no stagger and no push; a killing blow counts what the creature had left.
 - Claude's reading: Bountiful also raises the (not yet built) unique roll, since uniques are Corruption gear.
 
@@ -51,7 +52,7 @@ None.
 
 ## Next steps
 
-1. Krogon's solo play-test (`la-1` … `la-20`).
+1. Investigate the Riftforge crash (Krogon's log and steps first), then Krogon's solo play-test (`la-1` … `la-20`).
 2. Fix what fails; final play-test; `/handoff`.
 3. A PR into `master`. If the follow-up affix session branched from this one, this branch merges first.
 
@@ -66,4 +67,4 @@ None.
 
 ## Merge notes
 
-Ready to merge: **no**, Krogon hasn't play-tested it. Gameplay changed: **version bump needed at merge: Corruption**. Not behind `master`. No other remote branch has unmerged commits, so no file clashes. Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`. A later branch started from this one must merge after it.
+Ready to merge: **no**: an open crash at the Riftforge, and the play-test isn't done. Gameplay changed: **version bump needed at merge: Corruption**. Not behind `master`. No other remote branch has unmerged commits, so no file clashes. Shared docs changed: `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (the phone-page line), `docs/GAME_DESIGN.md`, `docs/corruption-design.md`, `docs/mod-compatibility.md`, `Corruption/Data/README.md`. A later branch started from this one must merge after it.

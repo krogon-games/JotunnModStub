@@ -64,4 +64,4 @@ Chance is random, so `co_riploot`'s numbers will be a little different each time
 
 ### Your feedback
 
-(none yet)
+- 2026-11-28, Krogon: "did some testing, game crashed when accessing the riftforge. please take note, may need to investigate later". **Not investigated yet.** Still needed: which build (this branch or `master`, which commit), what was in the forge or the bag (a corrupted map? a map with Thorns?), which tab, and `BepInEx/LogOutput.log` from that run (copy it before the game starts again, which overwrites it). Steps marked on the phone page so far: not read yet.
