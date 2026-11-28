@@ -45,10 +45,11 @@ Nothing yet.
 20. **Corrupted creatures fight players only** (2026-11-28, after the play-test, changes the design's "maddened creatures treat every other creature and player as an enemy"): "The corrupted creatures should NOT attack each other or the corrupted boss. The normal creatures around should NOT attack the corrupted creatures and behave normally until agro'ed by a player. The corrupted creatures should not attack normal creatures, but instead target the player." So corrupted creatures (maddened wave creatures, a corrupted boss and its summons) are never enemies of each other or of normal creatures, and normal creatures behave as vanilla towards players.
 21. **Creatures near the heart still turn corrupted when the waves start** (2026-11-28): "Keep turning them red". They join the corrupted side and hunt players only.
 22. **Tamed creatures fight the corrupted ones** (2026-11-28): "Yes, tames fight them". Corrupted creatures attack players and players' tames, and tames can hurt them.
+23. **A map's forge result shows on the left** (2026-11-28, with a screenshot): "underneath the map icon in the forge, theres empty space now, unlike when gear is placed in forge … move that green text to be displayed on the left for maps only." In the Forge tab, a map's last result (e.g. "Orb of Alchemy: now tier 4" and the added lines) shows under the map's tier line on the left; gear keeps it under the description.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`** (and `cg-19` if a freeze happens) on the phone page, waiting for Krogon.
+Solo checklist `docs/playtests/claude-wizardly-wozniak-4aix76.md`. **2026-11-28: `cg-1` … `cg-18` passed** (Rimeburst and Guarded); one freeze while idling earlier (cause unknown, freeze watch added, not seen again). Note on `cg-5`: Rimeburst's damage feels low, its slow too weak, its look to improve later. Then decisions 20–22 (who corrupted creatures fight): **final play-test `cg-20` … `cg-23`**: Krogon, 2026-11-28: "Playtesting done" (no marks on the phone page; taken as passed on his word). Then decision 23 (a map's forge result on the left): step `cg-24`, waiting for Krogon.
 
 ## Open questions for Krogon
 
