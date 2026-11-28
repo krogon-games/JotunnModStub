@@ -1825,6 +1825,7 @@ Diablo 2-style classes in a separate plugin: the Amazon first (group vote, 2026-
 ## Changelog
 
 ### 2026-11-29
+- **Version bump for Gungnir's Throw, Lightning Bolt and Plague Javelin (`claude/optimistic-ramanujan-acdyf8`, coordinator):** **Orlog 0.10.0 → 0.11.0** (the ghost javelins, the basic skill, the growing cloud) and **CraftingOverhaul 0.6.0 → 0.7.0** (the Basic card, Gungnir's Throw's icon) in each `.csproj`, main `.cs` and `Package/manifest.json`; Corruption 0.14.0 unchanged. Everyone and the server need the new build.
 - **Tested in-game (Krogon alone, `claude/optimistic-ramanujan-acdyf8`): the ghost javelins' re-test**, all 8 steps passed (`r2-1` … `r2-8`): the gold ghost and its fade, Lightning Bolt, Plague Javelin's cloud, the harpoon.
 - **Found (freeze watch): the game's hangs were the BepInEx console window's text selection**, which holds up every log line; confirmed by Krogon (`Esc` in the console window resumes the game). Not a mod bug; no fix (his choice). `Freeze watch`.
 - **Fixed (CraftingOverhaul skill icons): Gungnir's Throw had no icon**; it now has a gold-spear placeholder like the other skills. `Gungnir's Throw and the javelin skills`.
