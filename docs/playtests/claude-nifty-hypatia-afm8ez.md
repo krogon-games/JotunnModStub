@@ -79,3 +79,8 @@ Chance is random, so `co_riploot`'s numbers will be a little different each time
 | Step | What to do | What you should see | Pass / Fail | Note |
 |---|---|---|---|---|
 | la-18b | `spawn TrainingDummy`, look at it, `co_stamp thorns:25`. Hit it several times with a melee weapon, then shoot it with a bow. | The console says the dummy is stamped with Thorns 25. After each hit that lands, the console prints `Thorns: your hit took N health, M comes back (25%, before your armour).`, with M a quarter of N, and your health bar drops a little (less than M, thanks to your armour). Arrows print the same. `co_stamp clear` then stops it: no more lines, no damage back. | | |
+
+### Final play-test (2026-11-28)
+
+- **la-18b: Pass.** Krogon pasted 19 log lines such as `Thorns: your hit took 34.4 health, 8.6 comes back (25%, before your armour).` (every one exactly 25%), and wrote: "i saw damage numbers all below 1, such as 0.3 0.7 0.4 etc. i was using an iron axe. may need to buff thorns". Thorns works as built; armour cuts the small returned hits to almost nothing, so its strength is an open balance question (handoff).
+- The round's solo play-test is complete: all 20 steps and the re-test passed. Two players: not tried.

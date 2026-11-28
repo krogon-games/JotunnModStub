@@ -55,6 +55,7 @@ Game reference data: `data/game-dump-1.0.31/` (from `co_dump`; development only,
   (needs Valheim's managed assemblies; without a real install, a folder with the reference assemblies works).
 - Cloud sessions: the "Valheim Mod" environment's setup script ([`tools/cloud-setup.sh`](tools/cloud-setup.sh)) installs the .NET 8 SDK and a stand-in Valheim folder at `/opt/valheim-standin`, and the environment sets `VALHEIM_INSTALL` to it, so the commands above work as they are. **Never commit Valheim game files or `.dll`s** (`.gitignore` blocks them).
 - Only the user can play-test. Never mark anything "Tested in-game" without their report.
+- **Test target (user, 2026-11-28):** for affixes and combat mechanics, use the game's training dummy as a still target (`spawn TrainingDummy`, 40,000 health, or the buildable T.W.I.G. at the workbench). `co_stamp [tier] <affix[:value] ...>` gives it any map affixes (`co_stamp clear` removes them). Write play-test steps around it where it makes a result easier to see.
 
 ## Hard constraints
 
