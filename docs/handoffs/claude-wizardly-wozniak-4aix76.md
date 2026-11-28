@@ -30,6 +30,10 @@ None yet.
 8. **The warning lasts 1.5 seconds** (2026-11-28): "1.5 seconds".
 9. **The burst hurts players only** (2026-11-28): "Players only". Other enemies are untouched, so bursts can't chain. Frost slows as the game's own frost does; armour and frost resistance reduce it.
 10. **Its red line is short, with no number** (2026-11-28): "Shorter". "Enemies explode in ice on death." The rolled share still applies; it just isn't shown.
+11. **The guardian is the biome's own boss, corrupted** (2026-11-28): "The biome's own boss". The boss whose essence makes the map (Meadows Eikthyr, Black Forest the Elder, Swamp Bonemass, Mountains Moder, Plains Yagluth, Mistlands the Queen, Ashlands Fader, Deep North Kall), corrupted as at the altars.
+12. **It spawns at the heart and charges the players** (2026-11-28): "It spawns at the heart and charges towards the players" (his own answer). Claude's reading: it appears when the waves start (a player within 96 m) and hunts the players at once.
+13. **The heart is invulnerable while the boss lives** (2026-11-28): "No, invulnerable".
+14. **It gives a corrupted boss's rewards** (2026-11-28): "Same as a corrupted boss". Its vanilla drops, 2–3 essences, 3–5 shards, and each player's boss shard and orb.
 
 ## Playtest
 
