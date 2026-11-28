@@ -85,4 +85,6 @@ All 8 passed, no notes on 1–7. On `r2-8` you pasted the log: the ghost is draw
 - The icon: Gungnir's Throw now has a placeholder icon like the other skills, a gold spear with gold streaks (`tools/make_skill_icons.py`).
 
 ### Final play-test
-1. [ ] (`fin-1`) Build from this branch again (CraftingOverhaul changed). Press `K`: the Basic card's medallion shows a **gold spear** icon, and so does its slot on the skill cross once it's in a slot.
+1. [x] (`fin-1`) Build from this branch again (CraftingOverhaul changed). Press `K`: the Basic card's medallion shows a **gold spear** icon, and so does its slot on the skill cross once it's in a slot.
+
+Passed (phone page, 2026-11-28, no note). The round is done.

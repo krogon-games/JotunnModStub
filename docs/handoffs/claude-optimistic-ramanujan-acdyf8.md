@@ -1,10 +1,10 @@
 # Handoff: `claude/optimistic-ramanujan-acdyf8`
 
-**Written:** 2026-11-28, at the start of the round. Started from `master` (`3d8a80b`); no pull request yet.
+**Written:** 2026-11-29 by `/handoff`. Started from `master` (`3d8a80b`); 12 commits ahead with this one, 0 behind. No pull request yet.
 
 ## Stage
 
-Waiting for Krogon's final play-test (one step: the Basic card's icon).
+Ready to merge.
 
 ## Purpose
 
@@ -12,15 +12,18 @@ C6 ([#41](https://github.com/krogon-games/JotunnModStub/issues/41)): Gungnir's T
 
 ## Done
 
-Nothing yet.
+Krogon's single-player play-tests (2026-11-28/29): round 1 (12 of 18), the fixes' re-test (8 of 8) and the final icon check (`fin-1`) all passed. Detail: `FEATURES.md` → Gungnir's Throw and the javelin skills.
+- **Gungnir's Throw:** a Basic card above the skill tabs (always learned, no points, its own gold-spear icon); right click with a spear throws a see-through gold ghost copy with the throw's stamina and damage, raising Spears; it sticks, then fades; the spear stays in hand. The Abyssal Harpoon uses its left-click throw, no rope or pull.
+- **Lightning Bolt:** twice as fast, stops at the first hit, 75% → 200% of the throw as lightning; crackling look.
+- **Plague Javelin:** 100% hit, then a soft green cloud spreading to 4 m over 3 → 6.8 s, poisoning 25% → 100% a second; thin, faint ring.
+- The freezes: the BepInEx console's text selection, documented (decision 19).
 
 ## Half-done and known issues
 
-Built 2026-11-28, **not play-tested** (821 tests pass; Orlog and CraftingOverhaul build). Detail: `FEATURES.md` → Gungnir's Throw and the javelin skills.
-- Gungnir's Throw (Basic card above the tabs, no points), Lightning Bolt and Plague Javelin, all from right click with a spear; the ghost is three networked copies of each spear's throw projectile.
-- New patches: `Projectile.Setup` and `Projectile.OnHit` postfixes; `Player.SetControls` prefix and `Humanoid.StartAttack` postfix extended to the spear's throw.
-- Claude's choices, open to change: holding right click keeps throwing (as the game's throw); the cloud poisons once a second from 1 s after landing; the Basic card's look; if eitr runs short as the throw starts, it flies as Gungnir's Throw.
-- Limits: the cloud and ring run on the thrower's game only (as Venom Strike's); untested with two players. Jab, Impale and Poison Javelin still do nothing (#41 stays open).
+- Two players untested (the ghost is a networked prefab; the cloud and ring run on the thrower's game only, like Venom Strike's). Add to `PLAYTEST.md` → Session 2 when the coordinator merges (not done on this branch).
+- Patches: new `Projectile.Setup` and `Projectile.OnHit` postfixes; `Player.SetControls` prefix and `Humanoid.StartAttack` postfix extended to the spear's throw.
+- Claude's choices that passed without notes: holding right click keeps throwing; the cloud poisons from 1 s after landing; the Basic card's look; short eitr makes the throw a plain Gungnir's Throw.
+- Jab, Impale and Poison Javelin still do nothing; #41 stays open. The ring's design for all area skills: #105.
 
 ## Decisions
 
@@ -46,7 +49,7 @@ Built 2026-11-28, **not play-tested** (821 tests pass; Orlog and CraftingOverhau
 
 ## Playtest
 
-`docs/playtests/claude-optimistic-ramanujan-acdyf8.md`. **Round 1 (2026-11-28):** 12 of 18 passed (the Basic card, slots, stamina and eitr, damage, holding, Spears skill, Lightning Bolt's and Plague Javelin's numbers, the eitr check). Failed: the ghost looked like the game's spear, with no gold, glow or trail (`gt-3`, `lb-2`, `pj-2`), and vanished on impact (`gt-4`), because the ghost copies were never made (the game's item list is empty when they were built); the Abyssal Harpoon throws with left click, so right click did nothing (`gt-8`); the verdict (`c6-2`) asked for a growing cloud and a softer ring. All fixed, not yet re-tested. **Round 2 (2026-11-28/29): all 8 passed** (`r2-1` … `r2-8`). **A freeze on 2026-11-29** during the re-test: the freeze watch caught the main thread inside "set a ghost javelin's damage" (whose only slow part is a log line); not reproduced after a restart. Cause confirmed by Krogon: the BepInEx console window's text selection, which holds up every log line (decision 19: documented, not fixed). He then noticed the Basic card had no icon (screenshot): fixed, one final step (`fin-1`).
+`docs/playtests/claude-optimistic-ramanujan-acdyf8.md`: round 1 (18 steps; 12 passed; the ghost was never made, the harpoon didn't throw, the cloud and ring changed), round 2 (8 of 8 passed, with the freeze found to be the BepInEx console), final check `fin-1` (the icon) passed 2026-11-28 on the phone page. All passed.
 
 ## Open questions for Krogon
 
@@ -54,14 +57,19 @@ Built 2026-11-28, **not play-tested** (821 tests pass; Orlog and CraftingOverhau
 
 ## Next steps
 
-1. Krogon's final step (`fin-1`, the Basic card's icon).
-2. `/handoff`, then a pull request into `master` (gameplay changed: Orlog and CraftingOverhaul).
+1. Pull request into `master`; Krogon merges.
+2. Coordinator: raise Orlog and CraftingOverhaul; copy decisions 1–19 into `DECISIONS.md`; add a two-player step to `PLAYTEST.md` → Session 2 (2j); take this round's section off the phone page.
 3. Later rounds for #41: Jab, Impale, Poison Javelin.
 
 ## Checks
 
-Not run yet (`/handoff` runs them).
+- Build: PASS (821 tests; CraftingOverhaul and Orlog build, 0 errors). Corruption not changed.
+- Version: gameplay changed: version bump needed at merge (Orlog, CraftingOverhaul). The branch changed no version.
+- Multiplayer sync: PASS, read in code, not tested. No new setting or message; the ghost prefabs are registered through Jötunn on every game (every player has Orlog); damage goes through the game's own hits; tables sync through the version bump; CraftingOverhaul without Orlog shows no classes UI, as before.
+- Assets and names: PASS (`GungnirsThrow.rgba` and the CSVs embedded by wildcard; `StaffLightning`, `SpearChitin` in the game dump; no new `$` tokens).
+- FEATURES.md: PASS (section, table row, changelog).
+- In-game: PASSED in Krogon's single-player play-tests (round 1, round 2, `fin-1`); two players untested.
 
 ## Merge notes
 
-Not ready: nothing built yet.
+**Ready to merge: yes** (final play-test passed, no check failed, level with `master`, pushed). **Gameplay changed: version bump needed at merge: Orlog, CraftingOverhaul.** No other remote branch has unmerged commits. Shared docs touched (add-only): `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md`, `docs/class-design.md`, `docs/mod-compatibility.md`.
