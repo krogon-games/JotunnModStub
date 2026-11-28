@@ -4,7 +4,7 @@
 
 ## Stage
 
-Building.
+Waiting for Krogon's playtest.
 
 ## Purpose
 
@@ -16,7 +16,11 @@ Nothing yet.
 
 ## Half-done and known issues
 
-Nothing built yet.
+Built 2026-11-28, **not play-tested** (821 tests pass; Orlog and CraftingOverhaul build). Detail: `FEATURES.md` → Gungnir's Throw and the javelin skills.
+- Gungnir's Throw (Basic card above the tabs, no points), Lightning Bolt and Plague Javelin, all from right click with a spear; the ghost is three networked copies of each spear's throw projectile.
+- New patches: `Projectile.Setup` and `Projectile.OnHit` postfixes; `Player.SetControls` prefix and `Humanoid.StartAttack` postfix extended to the spear's throw.
+- Claude's choices, open to change: holding right click keeps throwing (as the game's throw); the cloud poisons once a second from 1 s after landing; the Basic card's look; if eitr runs short as the throw starts, it flies as Gungnir's Throw.
+- Limits: the cloud and ring run on the thrower's game only (as Venom Strike's); untested with two players. Jab, Impale and Poison Javelin still do nothing (#41 stays open).
 
 ## Decisions
 
@@ -39,7 +43,7 @@ Nothing built yet.
 
 ## Playtest
 
-Nothing to test yet. Checklist: `docs/playtests/claude-optimistic-ramanujan-acdyf8.md` (to be written).
+Round 1, 18 steps: `docs/playtests/claude-optimistic-ramanujan-acdyf8.md`, also on the phone page (`gt-1` … `gt-8`, `lb-1` … `lb-4`, `pj-1` … `pj-4`, `c6-1`, `c6-2`). Waiting for Krogon.
 
 ## Open questions for Krogon
 
@@ -47,10 +51,9 @@ Nothing to test yet. Checklist: `docs/playtests/claude-optimistic-ramanujan-acdy
 
 ## Next steps
 
-1. Preview pictures of the three looks (gold ghost spear, Lightning Bolt, Plague Javelin).
-2. Read the throw code in the game and the bow skills; check docs/mod-compatibility.md.
-3. Build Gungnir's Throw, then the chosen skills; tests; docs.
-4. Play-test checklist (training dummy), on the phone page too.
+1. Krogon's play-test (phone page); fix what it finds; final play-test.
+2. `/handoff`, then a pull request into `master` (gameplay changed: Orlog and CraftingOverhaul).
+3. Later rounds for #41: Jab, Impale, Poison Javelin.
 
 ## Checks
 
