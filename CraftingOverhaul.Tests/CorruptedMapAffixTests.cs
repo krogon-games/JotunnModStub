@@ -35,6 +35,14 @@ namespace CraftingOverhaul.Tests
             return tables;
         }
 
+        /// <summary>The tables with only Thorns rollable among the corrupted-only affixes (the others came in a later round).</summary>
+        private static MapTables ThornsOnly()
+        {
+            var t = Tables();
+            t.Affixes.SetDisabled("rimeburst,guarded");
+            return t;
+        }
+
         private static MapState Full(MapTables t)
         {
             var s = new MapState();
@@ -50,7 +58,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void TheShardAddsThornsWithARolledValue()
         {
-            var t = Tables();
+            var t = ThornsOnly();
             var rng = new Random(3);
             var seen = new HashSet<double>();
             for (int i = 0; i < 200; i++)
@@ -72,7 +80,7 @@ namespace CraftingOverhaul.Tests
         public void WithThornsSwitchedOffTheShardStillCorrupts()
         {
             var t = Tables();
-            t.Affixes.SetDisabled("thorns");
+            t.Affixes.SetDisabled("thorns,rimeburst,guarded");
             var done = MapCorruptRules.Apply(Full(t), t, out _, () => 0.5);
             Assert.Equal(6, done.Tier);
             Assert.Equal(Four, done.Affixes.ToArray());
@@ -148,7 +156,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void ThornsIsTheLastDangerLineInRed()
         {
-            var t = Tables();
+            var t = ThornsOnly();
             var done = MapCorruptRules.Apply(Full(t), t, out _, () => 0.5);
             var row = t.Tiers.Row(done.Tier);
             var face = MapText.FaceLines(row, done.Rolls(t.Affixes), t.Affixes, MapGlyphs.Fancy);

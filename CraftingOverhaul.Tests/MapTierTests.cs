@@ -175,7 +175,7 @@ namespace CraftingOverhaul.Tests
             };
             Assert.Equal(expected.Select(e => (string)e[0]).ToArray(), a.Rollable.Select(x => x.Id).ToArray());
             // Corrupted-only (#97): Thorns 5-25 (decision 12), never in the orbs' pool.
-            Assert.Equal(new[] { "thorns" }, a.RollableCorrupted.Select(x => x.Id).ToArray());
+            Assert.Equal(new[] { "thorns", "rimeburst", "guarded" }, a.RollableCorrupted.Select(x => x.Id).ToArray());
             Assert.Equal(5.0, a.Find("thorns").Min);
             Assert.Equal(25.0, a.Find("thorns").Max);
             Assert.Equal("thorns", a.Find("thorns").Effect);
@@ -198,7 +198,7 @@ namespace CraftingOverhaul.Tests
                 Assert.False(later.Approved);
                 Assert.DoesNotContain(later, a.Rollable);
             }
-            Assert.Equal(28, a.Affixes.Count);
+            Assert.Equal(30, a.Affixes.Count);   // + Rimeburst and Guarded (#97, claude/wizardly-wozniak-4aix76)
             Assert.Equal("Enemies deal {value}% more damage.", a.Find("brutal").Danger);
         }
 

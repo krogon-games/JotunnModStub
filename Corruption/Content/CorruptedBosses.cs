@@ -58,6 +58,10 @@ namespace Corruption.Content
                     {
                         __instance.gameObject.AddComponent<CorruptedSummons>();
                     }
+                    if (__instance.IsBoss() && !__instance.GetComponent<GuardianLeaves>())
+                    {
+                        __instance.gameObject.AddComponent<GuardianLeaves>();   // a rip's guardian (#97) leaves when its rip closes
+                    }
                 });
             }
         }

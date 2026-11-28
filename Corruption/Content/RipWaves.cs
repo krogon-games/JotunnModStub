@@ -81,6 +81,7 @@ namespace Corruption.Content
                 {
                     zdo.Set(KeyStarted, true);
                     Begin();
+                    RipGuardian.OnWavesStart(m_nview, m_players);
                 }
                 foreach (var raid in m_raids)
                 {
