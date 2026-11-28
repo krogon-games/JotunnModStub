@@ -94,7 +94,7 @@ One row per map tier (Krogon's rips round decisions 6 and 6e, 2026-11-26). A map
 
 ## map_affixes.csv
 
-The affixes that orbs roll onto a map (Krogon's list, 2026-11-27, #90; built, not play-tested). Each map rolls a whole number inside an affix's range. Map affixes have no prefix or suffix.
+The affixes that orbs roll onto a map (Krogon's list, 2026-11-27, #90; tested alone 2026-11-28, merged in PR #95). Each map rolls a whole number inside an affix's range. Map affixes have no prefix or suffix.
 
 | Column | Meaning |
 |---|---|

@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Ready to merge** (this round: the creature and player affixes; decisions 1–18 below).
+**Merged into `master`** as PR #95 (2026-11-28, merge commit `150cdab`, through the coordinator's branch `claude/relaxed-babbage-8mygd4` with the version bump: Corruption 0.12.0, Orlog 0.10.0). Decisions 1–18 copied into `docs/DECISIONS.md`; #90 closed; the loot affixes are #96, the corrupted-only affixes #97. This round: the creature and player affixes; decisions 1–18 below.
 
 ## Purpose
 
@@ -120,9 +120,9 @@ None.
 
 ## Next steps
 
-1. A PR into `master` when Krogon asks; the coordinator merges, raises the versions and copies decisions 1–18.
+1. ~~A PR into `master` when Krogon asks; the coordinator merges, raises the versions and copies decisions 1–18.~~ Done 2026-11-28 (PR #95).
 2. The group steps (`PLAYTEST.md` → Session 2, 2m).
-3. Next rips rounds: the loot affixes (decision 7), then the corrupted-only affixes; the heart's distance and look ([#94](https://github.com/krogon-games/JotunnModStub/issues/94)); life steal after armour ([#93](https://github.com/krogon-games/JotunnModStub/issues/93)).
+3. Next rips rounds: the loot affixes (decision 7, [#96](https://github.com/krogon-games/JotunnModStub/issues/96)), then the corrupted-only affixes ([#97](https://github.com/krogon-games/JotunnModStub/issues/97)); the heart's distance and look ([#94](https://github.com/krogon-games/JotunnModStub/issues/94)); life steal after armour ([#93](https://github.com/krogon-games/JotunnModStub/issues/93)).
 
 ## Checks
 
