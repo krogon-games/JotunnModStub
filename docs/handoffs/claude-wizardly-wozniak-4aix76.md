@@ -34,6 +34,10 @@ None yet.
 12. **It spawns at the heart and charges the players** (2026-11-28): "It spawns at the heart and charges towards the players" (his own answer). Claude's reading: it appears when the waves start (a player within 96 m) and hunts the players at once.
 13. **The heart is invulnerable while the boss lives** (2026-11-28): "No, invulnerable".
 14. **It gives a corrupted boss's rewards** (2026-11-28): "Same as a corrupted boss". Its vanilla drops, 2–3 essences, 3–5 shards, and each player's boss shard and orb.
+15. **It appears when the waves start** (2026-11-28): "Yes, when waves start". At the heart, as soon as a player comes within 96 m, and hunts the players at once.
+16. **It keeps its summons** (2026-11-28): "Keep summons". 2–3 of its army every 30 s on top of the rip's waves, as a corrupted boss anywhere.
+17. **The map's other affixes apply to it** (2026-11-28): "Yes, like the waves". It carries the rip's stamp like every rip creature.
+18. **Its red line** (2026-11-28): "Guards the heart". "A corrupted boss guards the heart."
 
 ## Playtest
 
@@ -41,7 +45,7 @@ Not written yet.
 
 ## Open questions for Krogon
 
-The boss affix (which boss, when, the heart, rewards, red line).
+None.
 
 ## Next steps
 
