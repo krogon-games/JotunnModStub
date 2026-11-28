@@ -35,6 +35,14 @@ namespace CraftingOverhaul.Tests
             return tables;
         }
 
+        /// <summary>The tables with only Thorns rollable among the corrupted-only affixes (the others came in a later round).</summary>
+        private static MapTables ThornsOnly()
+        {
+            var t = Tables();
+            t.Affixes.SetDisabled("rimeburst,guarded");
+            return t;
+        }
+
         private static MapState Full(MapTables t)
         {
             var s = new MapState();
@@ -50,7 +58,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void TheShardAddsThornsWithARolledValue()
         {
-            var t = Tables();
+            var t = ThornsOnly();
             var rng = new Random(3);
             var seen = new HashSet<double>();
             for (int i = 0; i < 200; i++)
@@ -72,7 +80,7 @@ namespace CraftingOverhaul.Tests
         public void WithThornsSwitchedOffTheShardStillCorrupts()
         {
             var t = Tables();
-            t.Affixes.SetDisabled("thorns");
+            t.Affixes.SetDisabled("thorns,rimeburst,guarded");
             var done = MapCorruptRules.Apply(Full(t), t, out _, () => 0.5);
             Assert.Equal(6, done.Tier);
             Assert.Equal(Four, done.Affixes.ToArray());
@@ -102,7 +110,7 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void TheServerKeepsThornsOnlyOnACorruptedFullMap()
+        public void TheServerKeepsThornsOnlyOnACorruptedMap()
         {
             var t = Tables();
             var warnings = new List<string>();
@@ -120,10 +128,14 @@ namespace CraftingOverhaul.Tests
             Assert.Equal(Four, five.Affixes.ToArray());
             Assert.Contains(warnings, w => w.Contains("thorns") && w.Contains("isn't corrupted"));
 
-            // Only 3 normal affixes: no corruption, no Thorns.
-            var three = MapData.Sanitize("glorious;teeming;brutal;thorns", 6, t, null);
-            Assert.False(three.Corrupted);
-            Assert.DoesNotContain("thorns", three.Affixes);
+            // 3 normal affixes asking for tier 5 (decision 27): corrupted, Thorns kept. Asking for their own tier 4: no Thorns.
+            var three = MapData.Sanitize("glorious;teeming;brutal;thorns", 5, t, null);
+            Assert.True(three.Corrupted);
+            Assert.Equal(5, three.Tier);
+            Assert.Contains("thorns", three.Affixes);
+            var four = MapData.Sanitize("glorious;teeming;brutal;thorns", 4, t, null);
+            Assert.False(four.Corrupted);
+            Assert.DoesNotContain("thorns", four.Affixes);
 
             // Five normal affixes and Thorns: four normal kept, Thorns kept on top; its value clamped.
             var many = MapData.Sanitize("glorious;teeming;brutal;frenzied;ruthless;thorns:99", 6, t, null);
@@ -148,7 +160,7 @@ namespace CraftingOverhaul.Tests
         [Fact]
         public void ThornsIsTheLastDangerLineInRed()
         {
-            var t = Tables();
+            var t = ThornsOnly();
             var done = MapCorruptRules.Apply(Full(t), t, out _, () => 0.5);
             var row = t.Tiers.Row(done.Tier);
             var face = MapText.FaceLines(row, done.Rolls(t.Affixes), t.Affixes, MapGlyphs.Fancy);

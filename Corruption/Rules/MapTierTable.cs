@@ -70,15 +70,23 @@ namespace Corruption.Rules
         ///     The tier a map has: the corrupted tier when corrupted, otherwise the tier whose affix count matches
         ///     (more affixes than the table has count as the most).
         /// </summary>
+        /// <param name="affixCount">The map's normal affixes (corrupted-only ones don't count).</param>
+        /// <param name="corrupted">
+        ///     A corrupted map is one tier above its normal affixes' tier (Krogon, 2026-11-28, decision 27 on
+        ///     claude/wizardly-wozniak-4aix76: "Corrupting a map always adds a corruption affix, and always bumps up the tier
+        ///     of the map to the next tier"), so a corrupted full map is the corrupted tier (6) as before.
+        /// </param>
         public int TierFor(int affixCount, bool corrupted)
         {
-            if (corrupted)
-            {
-                return CorruptTier;
-            }
             int count = affixCount < 0 ? 0 : affixCount > MaxAffixes ? MaxAffixes : affixCount;
             var row = Rows.FirstOrDefault(r => !r.Corrupted && r.Affixes == count);
-            return row != null ? row.Tier : 1;
+            int tier = row != null ? row.Tier : 1;
+            if (!corrupted)
+            {
+                return tier;
+            }
+            int top = Rows.Count == 0 ? tier : Rows.Max(r => r.Tier);
+            return tier + 1 > top ? top : tier + 1;
         }
 
         public static MapTierTable Parse(string csv, List<string> errors)

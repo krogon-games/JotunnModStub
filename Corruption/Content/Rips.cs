@@ -536,7 +536,8 @@ namespace Corruption.Content
 
         public static string HeartHoverText(ZDO heart)
         {
-            return Localization.instance.Localize($"$corruption_rip_heart\n$corruption_rip_heart_hint\n{TierText(heart)}\n{ClosesText(heart)}");
+            string guarded = RipGuardian.IsGuarded(heart) ? "\n$corruption_rip_heart_guarded" : "";
+            return Localization.instance.Localize($"$corruption_rip_heart\n$corruption_rip_heart_hint{guarded}\n{TierText(heart)}\n{ClosesText(heart)}");
         }
 
         /// <summary>

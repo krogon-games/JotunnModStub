@@ -563,6 +563,7 @@ namespace Corruption.Content
                     {
                         return;
                     }
+                    RipGuardian.RememberForNextPhase(__instance);   // a rip's guardian (#97): its next phase guards on
                     string name = Utils.GetPrefabName(__instance.gameObject);
                     var match = Phase.Match(name);
                     string baseName = match.Success ? match.Groups[1].Value : name;
@@ -586,7 +587,15 @@ namespace Corruption.Content
             {
                 Safe.Run("corrupt a boss's next phase", () =>
                 {
-                    if (!__instance.IsBoss() || !__instance.m_nview || !__instance.m_nview.IsValid() || CorruptedBosses.IsCorrupted(__instance))
+                    if (!__instance.IsBoss() || !__instance.m_nview || !__instance.m_nview.IsValid())
+                    {
+                        return;
+                    }
+                    if (__instance.m_nview.IsOwner())
+                    {
+                        RipGuardian.CarryToNextPhase(__instance);   // a rip's guardian (#97): before it is corrupted below
+                    }
+                    if (CorruptedBosses.IsCorrupted(__instance))
                     {
                         return;
                     }

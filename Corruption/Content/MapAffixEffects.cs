@@ -26,6 +26,9 @@ namespace Corruption.Content
         /// <summary>Thorns (#97): the share (0 to 1) of the damage a player's hit deals that comes back to them.</summary>
         public float Thorns;
 
+        /// <summary>Rimeburst (#97): the share of its own strongest hit the creature's death burst deals as frost (0 = none).</summary>
+        public float IceBurst;
+
         /// <summary>Whether the creature's own hits are changed at all.</summary>
         public bool ChangesHits => Damage != 1f || DoubleChance > 0f || PoisonShare > 0f || FireShare > 0f || LightningShare > 0f;
     }
@@ -75,7 +78,8 @@ namespace Corruption.Content
                 MoveBonus = (float)RipTierRules.MoveSpeedBonus(rolls),
                 AttackSpeed = (float)RipTierRules.AttackSpeedFactor(rolls),
                 NoStagger = RipTierRules.NoStagger(rolls),
-                Thorns = (float)RipTierRules.ThornsShare(rolls)
+                Thorns = (float)RipTierRules.ThornsShare(rolls),
+                IceBurst = (float)RipTierRules.IceBurstShare(rolls)
             };
             Cache.Remove(character);
             Cache.Add(character, affixes);

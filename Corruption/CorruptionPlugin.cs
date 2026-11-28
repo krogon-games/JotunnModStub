@@ -18,7 +18,7 @@ namespace Corruption
     {
         public const string PluginGUID = "com.krogongames.corruption";
         public const string PluginName = "Corruption";
-        public const string PluginVersion = "0.13.0";
+        public const string PluginVersion = "0.14.0";
 
         private Harmony _harmony;
         private KrogonGames.Shared.ConfigWatcher _configWatcher;
@@ -32,6 +32,7 @@ namespace Corruption
 
             _harmony = new Harmony(PluginGUID);
             PatchAllSafely();
+            Safe.Run("start the freeze watch", FreezeWatch.Start);
             Safe.Run("add talisman slots", TalismanSlots.Register);
             Safe.Run("add the co_corrupt command", CorruptedBosses.Register);
             Safe.Run("read the loot tables", Loot.Load);
@@ -63,6 +64,7 @@ namespace Corruption
 
         private void Update()
         {
+            FreezeWatch.Beat(Player.m_localPlayer);
             _configWatcher?.Tick();
         }
 

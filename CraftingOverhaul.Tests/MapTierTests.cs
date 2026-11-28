@@ -175,7 +175,7 @@ namespace CraftingOverhaul.Tests
             };
             Assert.Equal(expected.Select(e => (string)e[0]).ToArray(), a.Rollable.Select(x => x.Id).ToArray());
             // Corrupted-only (#97): Thorns 5-25 (decision 12), never in the orbs' pool.
-            Assert.Equal(new[] { "thorns" }, a.RollableCorrupted.Select(x => x.Id).ToArray());
+            Assert.Equal(new[] { "thorns", "rimeburst", "guarded" }, a.RollableCorrupted.Select(x => x.Id).ToArray());
             Assert.Equal(5.0, a.Find("thorns").Min);
             Assert.Equal(25.0, a.Find("thorns").Max);
             Assert.Equal("thorns", a.Find("thorns").Effect);
@@ -198,7 +198,7 @@ namespace CraftingOverhaul.Tests
                 Assert.False(later.Approved);
                 Assert.DoesNotContain(later, a.Rollable);
             }
-            Assert.Equal(28, a.Affixes.Count);
+            Assert.Equal(30, a.Affixes.Count);   // + Rimeburst and Guarded (#97, claude/wizardly-wozniak-4aix76)
             Assert.Equal("Enemies deal {value}% more damage.", a.Find("brutal").Danger);
         }
 
@@ -296,7 +296,11 @@ namespace CraftingOverhaul.Tests
             }
             Assert.Equal(3, t.Row(4).Affixes);
             Assert.Equal(5, t.TierFor(9, false)); // more than the most counts as the most
-            Assert.Equal(6, t.TierFor(0, true));
+            // Corrupted: one tier above (decision 27), never above the top.
+            Assert.Equal(2, t.TierFor(0, true));
+            Assert.Equal(4, t.TierFor(2, true));
+            Assert.Equal(6, t.TierFor(4, true));
+            Assert.Equal(6, t.TierFor(9, true));
             Assert.Equal(1, t.Row(0).Tier);
             Assert.Equal(6, t.Row(99).Tier);
         }
@@ -324,7 +328,7 @@ namespace CraftingOverhaul.Tests
             var data = new Dictionary<string, string> { { MapData.TierKey, "6" }, { MapData.AffixesKey, "teeming;brutal:60" } };
             Assert.Equal(3, MapData.Read(data, t.Tiers, t.Affixes, null).Tier);
             data[MapData.CorruptedKey] = "1";
-            Assert.Equal(6, MapData.Read(data, t.Tiers, t.Affixes, null).Tier);
+            Assert.Equal(4, MapData.Read(data, t.Tiers, t.Affixes, null).Tier);   // corrupted: one tier above (decision 27)
         }
 
         [Fact]
@@ -390,10 +394,10 @@ namespace CraftingOverhaul.Tests
         {
             var t = Tables();
             var warnings = new List<string>();
-            var s = MapData.Sanitize("nosuch:5;frostbitten;brutal:60;brutal:90;ironskin;warded;sturdy;mighty", 9, t, warnings);
+            var s = MapData.Sanitize("nosuch:5;frostbitten;brutal:60;brutal:90;ironskin;warded;sturdy;mighty", 4, t, warnings);
             Assert.Equal(new[] { "brutal", "ironskin", "sturdy" }, s.Affixes.ToArray());
             Assert.Equal(60, s.Values["brutal"]);   // the repeat doesn't overwrite
-            Assert.Equal(4, s.Tier);                // three affixes; a requested corrupted tier on a partial map is ignored
+            Assert.Equal(4, s.Tier);                // three affixes kept; the tier the sent ones gave, so not corrupted
             Assert.False(s.Corrupted);
             Assert.Equal(4, warnings.Count);
             Assert.Contains(warnings, w => w.Contains("unknown map affix 'nosuch'"));
@@ -423,20 +427,27 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
-        public void SanitizeHonoursTheCorruptedTierOnlyOnAFullMap()
+        public void SanitizeHonoursTheCorruptedTier()
         {
             var t = Tables();
             var full = MapData.Sanitize(string.Join(";", Four), 6, t, null);
             Assert.True(full.Corrupted);
             Assert.Equal(6, full.Tier);
-            var partial = MapData.Sanitize("glorious;teeming", 6, t, null);
-            Assert.False(partial.Corrupted);
-            Assert.Equal(3, partial.Tier);
+            // Any tier can be corrupted (decision 27): a tier above what its affixes give asks for it.
+            var partial = MapData.Sanitize("glorious;teeming", 4, t, null);
+            Assert.True(partial.Corrupted);
+            Assert.Equal(4, partial.Tier);
+            var plain = MapData.Sanitize("glorious;teeming", 3, t, null);
+            Assert.False(plain.Corrupted);
+            Assert.Equal(3, plain.Tier);
             // A full map that doesn't ask for it isn't corrupted; none at all is tier 1.
             Assert.Equal(5, MapData.Sanitize(string.Join(";", Four), 5, t, null).Tier);
-            Assert.Equal(1, MapData.Sanitize("", 6, t, null).Tier);
-            // A full map whose fourth affix was dropped is not full.
-            Assert.False(MapData.Sanitize("glorious;teeming;brutal;frostbitten", 6, t, null).Corrupted);
+            Assert.Equal(1, MapData.Sanitize("", 1, t, null).Tier);
+            Assert.Equal(2, MapData.Sanitize("", 6, t, null).Tier);   // a corrupted white map (decision 27)
+            // A corrupted full map whose fourth affix was dropped stays corrupted, one tier lower.
+            var dropped = MapData.Sanitize("glorious;teeming;brutal;frostbitten", 6, t, null);
+            Assert.True(dropped.Corrupted);
+            Assert.Equal(5, dropped.Tier);
         }
 
         [Fact]
@@ -648,7 +659,7 @@ namespace CraftingOverhaul.Tests
         // ---- the shard ----
 
         [Fact]
-        public void TheShardCorruptsOnlyATierFiveMap()
+        public void TheShardCorruptsAMapOfAnyTier()
         {
             var t = Tables();
             var full = State(t, false, false, Four);
@@ -668,11 +679,18 @@ namespace CraftingOverhaul.Tests
             Assert.Equal("Corrupted: now tier 6", headline);
             Assert.False(full.Corrupted);
 
+            // Any tier (decision 27, 2026-11-28): one tier up, the corrupted-only affix added, locked.
             for (int n = 0; n < 4; n++)
             {
                 var low = State(t, false, false, Four.Take(n).ToArray());
-                Assert.Null(MapCorruptRules.Apply(low, t, out headline));
-                Assert.Equal("Only a tier 5 map (4 affixes) can be corrupted.", headline);
+                var corrupted = MapCorruptRules.Apply(low, t, out headline);
+                Assert.NotNull(corrupted);
+                Assert.True(corrupted.Corrupted);
+                Assert.Equal(low.Tier + 1, corrupted.Tier);
+                Assert.Equal(n + 1, corrupted.Affixes.Count);
+                Assert.Equal("thorns", corrupted.Affixes.Last());
+                Assert.Equal("Corrupted: now tier " + (low.Tier + 1), headline);
+                Assert.Equal("This map is already corrupted.", MapCorruptRules.Refusal(corrupted, t));
             }
             Assert.Equal("This map is already corrupted.", MapCorruptRules.Refusal(done, t));
             Assert.NotNull(MapCorruptRules.Refusal(State(t, false, true, Four), t));

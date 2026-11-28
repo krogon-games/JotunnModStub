@@ -50,12 +50,19 @@ namespace Corruption.Rules
             public const string DropRanged = "drop_ranged";
             // Corrupted-only (#97): a share of the damage a player's hit deals comes back to that player.
             public const string Thorns = "thorns";
+            // Corrupted-only (#97, claude/wizardly-wozniak-4aix76): a rip creature bursts into ice when it dies.
+            public const string IceBurst = "ice_burst";
+            // Corrupted-only (#97): a corrupted boss guards the heart. Has no value.
+            public const string Guardian = "guardian";
+
+            /// <summary>Effects that carry no number (min and max blank).</summary>
+            public static bool HasNoValue(string effect) => effect == NoStagger || effect == Guardian;
 
             public static readonly string[] All =
             {
                 Experience, Density, Damage, AttackSpeed, DoubleDamage, Health, MoveSpeed, NoStagger, PhysicalTaken,
                 ElementalTaken, LifeDrain, StaminaDrain, Resistances, PoisonShare, FireShare, LightningShare, DropItems, DropOrbs,
-                DropShields, DropArmour, DropMelee, DropRanged, Thorns
+                DropShields, DropArmour, DropMelee, DropRanged, Thorns, IceBurst, Guardian
             };
         }
 
@@ -291,11 +298,11 @@ namespace Corruption.Rules
                     {
                         errors.Add($"{where}: an approved affix needs an effect.");
                     }
-                    else if (a.Effect == Effects.NoStagger)
+                    else if (Effects.HasNoValue(a.Effect))
                     {
                         if (hasMin || hasMax)
                         {
-                            errors.Add($"{where}: no_stagger has no value, so min and max must be blank.");
+                            errors.Add($"{where}: {a.Effect} has no value, so min and max must be blank.");
                         }
                     }
                     else if (!hasMin || !hasMax || !minOk || !maxOk)

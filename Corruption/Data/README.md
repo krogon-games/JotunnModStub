@@ -108,7 +108,7 @@ The affixes that orbs roll onto a map (Krogon's list, 2026-11-27, #90; tested al
 | `group` | Two affixes of the same group never share a map (Ironskin with Warded: `immunity`; Sturdy with Mighty: `health`) |
 | `section` | Where the line shows on the map: `face` ("What you'll face", dangers) or `earn` ("What you'll earn", rewards such as Glorious and the loot affixes; decision 16) |
 | `notes` | The source of each number |
-| `pool` | Optional, last column. Blank = orbs roll it. `corrupted` = only the shard adds it, as a corrupted map's 5th affix (#97; Thorns). Effect `thorns` is the share of a player's dealt damage that comes back |
+| `pool` | Optional, last column. Blank = orbs roll it. `corrupted` = only the shard adds it, as a corrupted map's 5th affix (#97; Thorns, Rimeburst, Guarded). Effect `thorns` is the share of a player's dealt damage that comes back; `ice_burst` the share of a dying creature's strongest hit its ice burst deals as frost; `guardian` (no value) a corrupted boss guards the heart |
 
 The admin setting `[5 - Rips] DisabledMapAffixes` (comma-separated ids, blank by default) keeps listed affixes out of every roll; maps that already carry one keep it.
 

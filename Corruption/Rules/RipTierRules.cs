@@ -122,7 +122,6 @@ namespace Corruption.Rules
             return Sum(rolls, MapAffixTable.Effects.LightningShare) / 100.0;
         }
 
-        /// <summary>Whether a wave creature is a guaranteed 2-star. <paramref name="random01" /> is in [0, 1).</summary>
         /// <summary>Thorns (#97): the share (0 to 1) of a player's dealt damage that comes back; several add, capped at 1.</summary>
         public static double ThornsShare(IEnumerable<MapAffixRoll> rolls)
         {
@@ -140,6 +139,85 @@ namespace Corruption.Rules
             return returned >= 0.1 ? returned : 0.0;
         }
 
+        // ---- Rimeburst (#97, claude/wizardly-wozniak-4aix76, Krogon's decisions 4-10 of 2026-11-28) ----
+
+        /// <summary>Seconds between the death and the burst (decision 8: "1.5 seconds").</summary>
+        public const double IceBurstDelay = 1.5;
+
+        /// <summary>
+        ///     The burst's radius in metres (decision 6: "3 m, like Freezing Arrow"): Orlog's Freezing Arrow radius, 3.3 yards
+        ///     (Diablo 2's data, <c>Orlog/Data/amazon_skill_values.csv</c>) at 0.9144 m a yard.
+        /// </summary>
+        public const double IceBurstRadius = 3.3 * 0.9144;
+
+        /// <summary>Rimeburst: the share (0 upwards) of the dying creature's own hit the burst deals as frost; several add.</summary>
+        public static double IceBurstShare(IEnumerable<MapAffixRoll> rolls)
+        {
+            return Sum(rolls, MapAffixTable.Effects.IceBurst) / 100.0;
+        }
+
+        /// <summary>
+        ///     The game's damage factor for a creature's stars (<c>Attack.GetLevelDamageFactor</c>, 1.0 code: 1 + 0.5 per level
+        ///     above 1). Level 1 = no star.
+        /// </summary>
+        public static double LevelDamageFactor(int level)
+        {
+            return 1.0 + Math.Max(0, level - 1) * 0.5;
+        }
+
+        /// <summary>
+        ///     The dying creature's strongest hit (decision 4): its strongest weapon's total damage (each already times its
+        ///     attack's own multiplier), times the stars' factor, times the map's damage factor (Brutal). 0 without weapons.
+        /// </summary>
+        public static double StrongestHit(IEnumerable<double> weaponDamages, int level, double damageFactor)
+        {
+            double best = 0.0;
+            foreach (double d in weaponDamages ?? Enumerable.Empty<double>())
+            {
+                if (d > best)
+                {
+                    best = d;
+                }
+            }
+            return best * LevelDamageFactor(level) * Math.Max(0.0, damageFactor);
+        }
+
+        /// <summary>The burst's frost damage: the share of the strongest hit; below the game's 0.1 it is 0.</summary>
+        public static double IceBurstDamage(double share, double strongestHit)
+        {
+            double frost = share > 0.0 && strongestHit > 0.0 ? share * strongestHit : 0.0;
+            return frost >= 0.1 ? frost : 0.0;
+        }
+
+        // ---- Guarded (#97, decisions 11-18) ----
+
+        /// <summary>Whether a corrupted boss guards the heart.</summary>
+        public static bool HasGuardian(IEnumerable<MapAffixRoll> rolls)
+        {
+            return Of(rolls, MapAffixTable.Effects.Guardian).Any();
+        }
+
+        /// <summary>
+        ///     The boss to spawn for a biome's guardian (decision 11): the boss whose essence makes the map, at its first phase
+        ///     (Kall's essence comes from FrozenKing_p3; the fight starts with FrozenKing). Null for none.
+        /// </summary>
+        public static string GuardianPrefab(string essenceBoss)
+        {
+            if (string.IsNullOrEmpty(essenceBoss))
+            {
+                return null;
+            }
+            var match = System.Text.RegularExpressions.Regex.Match(essenceBoss, @"^(.+)_p\d+$");
+            return match.Success ? match.Groups[1].Value : essenceBoss;
+        }
+
+        /// <summary>Whether a player's hit may damage the heart: never while its guardian lives (decision 13).</summary>
+        public static bool HeartCanBeDamaged(bool hasGuardian, bool guardianAlive)
+        {
+            return !hasGuardian || !guardianAlive;
+        }
+
+        /// <summary>Whether a wave creature is a guaranteed 2-star. <paramref name="random01" /> is in [0, 1).</summary>
         public static bool IsGuaranteedTwoStar(double percent, double random01)
         {
             return percent > 0 && random01 < percent / 100.0;

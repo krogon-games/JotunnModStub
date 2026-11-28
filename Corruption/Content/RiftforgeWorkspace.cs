@@ -42,7 +42,7 @@ namespace Corruption.Content
             "<color=orange>2.</color> Right-click an orb or shard in Currencies, or a splinter in Splinters, to pick it up.\n" +
             "<color=orange>3.</color> Click the forge to use it once. Hold Shift to keep an orb for the next click.\n\n" +
             "Esc or a right-click puts it back. Materials that can't be used on the gear turn red.\n" +
-            "Shatter destroys Magic or Rare gear for Affix Splinters. Orbs change a map's affixes and tier; a shard corrupts a full tier 5 map.";
+            "Shatter destroys Magic or Rare gear for Affix Splinters. Orbs change a map's affixes and tier; a shard corrupts a map of any tier, one tier up.";
 
         private const string ShatterUnavailable = "Shattering isn't available (see the log).";
         private const string BagOnly = "Put in gear from your Bag, or a map from your Bag or Maps tab.";
@@ -256,10 +256,8 @@ namespace Corruption.Content
                 // Show at once what this pick would do, or why it can't.
                 var options = RiftforgeCrafting.Options(_target, item);
                 int chosen = ForgeRules.PickOperation(options.Select(o => o.Allowed).ToList());
-                if (chosen < 0)
-                {
-                    ShowResult(options.Count > 0 ? options[0].Refusal : NothingToDo, false);
-                }
+                // No message: an orb that can't be used here is already tinted red in the grid (Krogon, 2026-11-28,
+                // decision 24: no text in the Forge panel).
             }
         }
 
@@ -414,11 +412,12 @@ namespace Corruption.Content
             }
             else if (result.Item == null || !TargetStillHere())
             {
-                // Destroyed (shattered, or bricked by a shard): the slot empties; the rules' message says what happened.
+                // Destroyed (shattered, or bricked by a shard): the slot empties; a toast says which (decisions 24, 26).
                 _target = null;
                 _changed.Clear();
                 _changedMap.Clear();
-                ShowResult(result.Message, true);
+                bool shattered = operationId == ShatterRules.OperationId;
+                Toast(shattered ? "Your item was shattered" : "Your item was destroyed", shattered ? Orange : Red);
             }
             else if (result.Outcome == "map")
             {
@@ -428,106 +427,57 @@ namespace Corruption.Content
             {
                 // A shard that added nothing still changed the item: it is locked now. Never shown as "no change".
                 _changed.Clear();
-                ForgeView.SetResult(materialName + ": " + CorruptRules.UnchangedMessage, true);
+                Toast("Your item was corrupted", Red);   // decision 26: only its Corrupted mark shows the change
             }
             else if (result.Outcome == "affix" || result.Outcome == "splinter")
             {
-                ShowGained(materialName, result.Outcome == "affix", before, Loot.Of(target));
+                ShowChange(before, Loot.Of(target));
             }
             else if (result.Created.Count > 0)
             {
                 // The Mirror's copy: the gear itself is unchanged.
                 _changed.Clear();
-                ForgeView.SetResult(materialName + ": copied. The copy is in your bag and can never be changed.", true);
+                Toast("Your item was mirrored", Orange);   // decision 24
             }
             else
             {
-                ShowChange(materialName, before, Loot.Of(target));
+                ShowChange(before, Loot.Of(target));
             }
             _detailsDirty = true;
             _nextEligibility = 0f;
         }
 
         /// <summary>
-        ///     A map's result (the approved picture): the rule's headline in green ("Orb of Augmentation: now tier 3"),
-        ///     then "+ danger" in green for each added affix, "~ danger" in gold for each one a Divine Orb rerolled and "− danger" in red
-        ///     for each removed one; the added and rerolled ones are also highlighted on the bench for a few seconds. The Mirror's copy leaves the map unchanged.
+        ///     A map's result: the added and rerolled affixes are highlighted on the sheet for a few seconds; no text
+        ///     (decision 24). The Mirror's copy shows the "mirrored" toast.
         /// </summary>
         private static void ShowMapResult(RiftforgeResult result)
         {
-            var text = new System.Text.StringBuilder(result.Message);
             _changedMap = new List<string>();
             if (result.MapAdded != null)
             {
-                foreach (string id in result.MapAdded)
-                {
-                    text.Append("\n<color=#B8F08A>+ ").Append(MapForge.AffixText(id)).Append("</color>");
-                }
                 _changedMap.AddRange(MapData.ParseEntries(MapData.Join(result.MapAdded)).Select(e => e.Id));
             }
             if (result.MapRerolled != null)
             {
-                foreach (string id in result.MapRerolled)
-                {
-                    text.Append("\n<color=#E8C66A>~ ").Append(MapForge.AffixText(id)).Append("</color>");
-                }
                 _changedMap.AddRange(MapData.ParseEntries(MapData.Join(result.MapRerolled)).Select(e => e.Id));
             }
-            if (result.MapRemoved != null)
-            {
-                foreach (string id in result.MapRemoved)
-                {
-                    text.Append("\n<color=#FF8A70>− ").Append(MapForge.AffixText(id)).Append("</color>");
-                }
-            }
             _changed.Clear();
-            ForgeView.SetResult(text.ToString(), true);
+            if (result.Created != null && result.Created.Count > 0)
+            {
+                Toast("Your item was mirrored", Orange);
+            }
             _changedUntil = Time.time + HighlightSeconds;
         }
 
         /// <summary>
-        ///     A short result (Krogon, 2026-11-10): one headline ("Regal Orb: now Rare, 1 affix added"), then each changed
-        ///     line, + new in green, − gone in red; the new lines are also highlighted in the affix block for a few
-        ///     seconds. Nothing waits on it: the next click works at once.
+        ///     Gear's result: the new lines are highlighted in the affix list for a few seconds; no text (decision 24; it was
+        ///     a headline and "+ / −" lines, Krogon 2026-11-10). A removed line simply goes (decision 26). Also a shard's
+        ///     corrupted affix and a splinter's line. Nothing waits on it: the next click works at once.
         /// </summary>
-        private static void ShowChange(string materialName, LootItem before, LootItem after)
+        private static void ShowChange(LootItem before, LootItem after)
         {
-            var beforeKeys = Keys(before);
-            var afterKeys = Keys(after);
-            ForgeRules.Diff(beforeKeys, afterKeys, out var added, out var removed);
-            var text = new System.Text.StringBuilder(ForgeRules.Summary(materialName, before?.Rarity ?? "normal", after?.Rarity ?? "normal",
-                added.Count, removed.Count));
-            foreach (int i in added)
-            {
-                text.Append("\n<color=#B8F08A>+ ").Append(ShortLine(after.Lines[i])).Append("</color>");
-            }
-            foreach (int i in removed)
-            {
-                text.Append("\n<color=#FF8A70>− ").Append(ShortLine(before.Lines[i])).Append("</color>");
-            }
-            ForgeView.SetResult(text.ToString(), true);
-            _changed = added;
-            _changedUntil = Time.time + HighlightSeconds;
-        }
-
-        /// <summary>
-        ///     A shard's corrupted affix, or a splinter's line: the headline says what happened in words ("corrupted and
-        ///     locked", "twin completed"), then the line the item gained, which is highlighted in the affix block.
-        /// </summary>
-        private static void ShowGained(string materialName, bool corrupted, LootItem before, LootItem after)
-        {
-            ForgeRules.Diff(Keys(before), Keys(after), out var added, out var removed);
-            bool twin = added.Count == 1 && after.Lines[added[0]].Resonant && removed.Count == 1;
-            var text = new System.Text.StringBuilder(materialName).Append(": ");
-            text.Append(corrupted
-                ? "corrupted and locked; " + (twin ? "a twin completed" : "1 corrupted affix added")
-                : twin ? "twin completed" : ForgeRules.Summary("", before?.Rarity ?? "normal", after?.Rarity ?? "normal", added.Count, 0).TrimStart(':', ' '));
-            foreach (int i in added)
-            {
-                text.Append("\n<color=").Append(corrupted ? RiftforgeCrafting.CorruptedColor : "#B8F08A").Append(">+ ")
-                    .Append(ShortLine(after.Lines[i])).Append("</color>");
-            }
-            ForgeView.SetResult(text.ToString(), true);
+            ForgeRules.Diff(Keys(before), Keys(after), out var added, out _);
             _changed = added;
             _changedUntil = Time.time + HighlightSeconds;
         }
@@ -668,9 +618,35 @@ namespace Corruption.Content
             ForgeDialog.Close();
         }
 
+        private const string Orange = "#F8A33A";
+        private const string Red = "#E04030";
+
+        /// <summary>
+        ///     No text in the Forge panel (Krogon, 2026-11-28, decision 24: the highlight shows what was added). A refusal
+        ///     found out by clicking shows as the game's small top-left message (decision 26); anything else shows nothing.
+        /// </summary>
         private static void ShowResult(string message, bool good)
         {
-            ForgeView.SetResult(string.IsNullOrEmpty(message) ? "" : Localization.instance.Localize(message), good);
+            ForgeView.SetResult("", true);
+            if (good || string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+            var player = Player.m_localPlayer;
+            if (player)
+            {
+                player.Message(MessageHud.MessageType.TopLeft, Localization.instance.Localize(message));
+            }
+        }
+
+        /// <summary>The game's centre-screen message, in a colour (decisions 24 and 26).</summary>
+        private static void Toast(string text, string colour)
+        {
+            ForgeView.SetResult("", true);
+            if (MessageHud.instance)
+            {
+                MessageHud.instance.ShowMessage(MessageHud.MessageType.Center, "<color=" + colour + ">" + text + "</color>");
+            }
         }
 
         private static string TargetName()
@@ -801,21 +777,27 @@ namespace Corruption.Content
                 ForgeView.SetBench(Localization.instance.Localize(caption), Localization.instance.Localize(marks));
                 return;
             }
-            var text = new System.Text.StringBuilder();
-            Safe.Run("show the forge gear's affixes", () =>
+            // Gear like a map (decision 25): under the slot its name, the rarity line, its marks and its description; the
+            // affix list is on the sheet beside it (UpdateDetails).
+            var left = new System.Text.StringBuilder();
+            Safe.Run("show the forge gear's description", () =>
             {
-                // The same section the hover tooltips show, the lines the last use changed highlighted.
-                string section = LootTooltip.Section(_target, _target.m_quality, _target.m_worldLevel, highlight ? _changed : null);
-                if (section.Length == 0)
+                string header = "";
+                if (Loot.Of(_target) != null)
                 {
-                    text.Append("<color=#B0A898>No affixes yet</color>").Append(ForgeRules.CentredMarks(LootTooltip.LocksOf(_target)));
+                    LootTooltip.ForgeLines(_target, _target.m_quality, _target.m_worldLevel, null, out header);
                 }
-                else
+                left.Append(header);
+                // The marks come as "\nCorrupted…" lines; without a header the first newline goes.
+                string marks = LootTooltip.LocksOf(_target);
+                left.Append(left.Length > 0 ? marks : marks.TrimStart('\n'));
+                string description = _target.m_shared.m_description ?? "";
+                if (description.Length > 0)
                 {
-                    text.Append(section);
+                    left.Append(left.Length > 0 ? "\n\n" : "").Append("<size=85%><color=#D8CDB8>").Append(description).Append("</color></size>");
                 }
             });
-            ForgeView.SetBench(TargetName(), Localization.instance.Localize(text.ToString()));
+            ForgeView.SetBench(TargetName(), Localization.instance.Localize(left.ToString()));
         }
 
         private static void UpdateButtons()
@@ -872,21 +854,21 @@ namespace Corruption.Content
                 ForgeView.SetSheet(TargetName(), Localization.instance.Localize(sheet));
                 return;
             }
-            // The routine stats: the tooltip without the affix block, which the bench shows.
-            string tooltip = "";
-            Safe.Run("show the forge gear's tooltip", () =>
+            // Gear like a map (decision 25): the sheet is the affix list, the last use's new lines highlighted; the game's
+            // own stats are left out (Krogon: "vanilla stats can be easily seen when hovering over the item anyway").
+            string sheetText = "";
+            bool marked = Time.time < _changedUntil;
+            Safe.Run("show the forge gear's affixes", () =>
             {
-                LootTooltip.OmitAffixes = true;
-                try
+                sheetText = Loot.Of(_target) != null
+                    ? LootTooltip.ForgeLines(_target, _target.m_quality, _target.m_worldLevel, marked ? _changed : null, out _)
+                    : "";
+                if (sheetText.Length == 0)
                 {
-                    tooltip = _target.GetTooltip();
-                }
-                finally
-                {
-                    LootTooltip.OmitAffixes = false;
+                    sheetText = "<color=#B0A898>No affixes yet</color>";
                 }
             });
-            ForgeView.SetSheet(TargetName(), Localization.instance.Localize(tooltip));
+            ForgeView.SetSheet(TargetName(), Localization.instance.Localize(sheetText));
         }
 
         /// <summary>How many of a material the player has, in the bag and the tabs together.</summary>
