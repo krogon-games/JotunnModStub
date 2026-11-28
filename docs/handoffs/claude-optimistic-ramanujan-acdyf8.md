@@ -4,7 +4,9 @@
 
 ## Stage
 
-Ready to merge.
+**Merged** (PR #106, 2026-11-29).
+
+**Coordinator update (2026-11-29):** merged into `master` as **PR #106** on Krogon's word ("Merge this branch into master using a pull request"). The branch was level with `master` (no conflicts). The coordinator raised **Orlog to 0.11.0 and CraftingOverhaul to 0.7.0** (on this branch, before the PR), copied decisions 1–19 into `docs/DECISIONS.md` with Krogon's new call on Poison Javelin, added `PLAYTEST.md` → Session 2, 2j step 10 (`mpe-2j-10`, also on the phone page), and left #41 open for Jab, Impale and Poison Javelin's replacement.
 
 ## Purpose
 
@@ -57,9 +59,9 @@ Krogon's single-player play-tests (2026-11-28/29): round 1 (12 of 18), the fixes
 
 ## Next steps
 
-1. Pull request into `master`; Krogon merges.
-2. Coordinator: raise Orlog and CraftingOverhaul; copy decisions 1–19 into `DECISIONS.md`; add a two-player step to `PLAYTEST.md` → Session 2 (2j); take this round's section off the phone page.
-3. Later rounds for #41: Jab, Impale, Poison Javelin.
+1. ~~Pull request into `master`; Krogon merges.~~ Done (PR #106).
+2. ~~Coordinator: versions, `DECISIONS.md`, `PLAYTEST.md` 2j step 10, the phone page.~~ Done 2026-11-29.
+3. Next classes round (#41): Jab and Impale, and a new skill in Poison Javelin's place (Krogon, 2026-11-29: "too similar to plague javelin").
 
 ## Checks
 
