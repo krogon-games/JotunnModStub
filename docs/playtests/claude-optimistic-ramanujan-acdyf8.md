@@ -66,7 +66,7 @@ If something looks wrong, tell me what you saw and send `BepInEx/LogOutput.log`:
 
 **Build:** the three DLLs from this branch again (Orlog changed since round 1). **Setup:** as round 1 (bronze spear, the dummy, Gungnir's Throw on F1, Lightning Bolt on F2, Plague Javelin on F3).
 
-**Phone page:** the first section, "This round: re-test, the ghost javelin's look (#41)" (step ids `r2-1` … `r2-7`). Round 1's steps are off the page.
+**Phone page:** the first section, "This round: re-test, the ghost javelin's look (#41)" (step ids `r2-1` … `r2-8`). Round 1's steps are off the page.
 
 1. [ ] (`r2-1`) After loading a world, `BepInEx/LogOutput.log` has `Orlog: made the ghost javelins for N more spear throws`, with N about 20 (0 on the second line is fine). After your first Gungnir's Throw: `Orlog: ghost javelin …: X model part(s) tinted, light on, trail on.` Copy both lines into the note.
 2. [ ] (`r2-2`) Gungnir's Throw at the dummy → the spear in flight is **see-through gold** with a soft gold light and a faint trail; it doesn't look like the real spear.
@@ -75,3 +75,4 @@ If something looks wrong, tell me what you saw and send `BepInEx/LogOutput.log`:
 5. [ ] (`r2-5`) Plague Javelin → **green drips** fall in flight; where it lands, **a soft green cloud spreads out** to about 4 m, with a **thin, faint ring** at its edge (much less bright than before).
 6. [ ] (`r2-6`) Abyssal Harpoon (`spawn SpearChitin`, Gungnir's Throw on its slot): right click → a **gold ghost harpoon**, no rope and no pull. Left click is still the real harpoon throw, rope and pull included.
 7. [ ] (`r2-7`) Your verdict on the looks now. Anything to change?
+8. [ ] (`r2-8`) **The freeze test.** On 2026-11-29 the game froze during this re-test (`BepInEx/corruption_freeze.txt`: "the main thread is inside our mods' code: Orlog: \"set a ghost javelin's damage\""; you restarted, repeated the same thing and it didn't freeze). That code does nothing that can loop; its only slow part is writing a log line (one per skill throw). Claude's guess, not confirmed: on Windows, a click inside the BepInEx console window pauses it to select text, and the game then hangs at its next log line until a key is pressed there. You said this was "very possible but not sure". Test: with the console window open, click once inside it (its title starts with "Select"), go back to the game and throw Gungnir's Throw a few times. Does it freeze? If so, click the console and press `Esc`: does the game come back at once?
