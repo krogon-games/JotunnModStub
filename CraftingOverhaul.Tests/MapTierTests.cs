@@ -110,6 +110,17 @@ namespace CraftingOverhaul.Tests
         }
 
         [Fact]
+        public void AMapWithBothImmunitiesOpensOneTierLower()
+        {
+            // Krogon's play-test ma-6 (2026-11-28): co_map meadows 3 ironskin warded must open a tier 2 rip. The opener's game
+            // runs the same check, so the server's tier 2 is the expected one and the map is used, not kept.
+            var t = Tables();
+            var expected = MapData.Sanitize("ironskin:95;warded:95", 3, t, null);
+            Assert.Equal(2, expected.Tier);
+            Assert.Equal(new[] { "ironskin" }, expected.Affixes.ToArray());
+        }
+
+        [Fact]
         public void SwitchedOffAffixesNeverRoll()
         {
             // Krogon, 2026-11-27: "make the option to disable some affixes from being able to roll".

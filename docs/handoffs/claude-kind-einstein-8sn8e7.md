@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Waiting for Krogon's playtest** (this round: the creature and player affixes; decisions 1–18 below).
+**Fixing feedback** (one re-test, `ma-6b`) (this round: the creature and player affixes; decisions 1–18 below).
 
 ## Purpose
 
@@ -12,7 +12,7 @@ The map affix overhaul ([#90](https://github.com/krogon-games/JotunnModStub/issu
 
 ## Done
 
-Nothing confirmed in game yet.
+Confirmed by Krogon alone on Valheim 1.0.31 (2026-11-28, phone page, 29 of 30 steps): all 17 affixes act in rips, rolled values and the Divine reroll, the groups rule, `DisabledMapAffixes`, the Rip curse, life steal on Ironskin, a corrupted tier 6 map, the rip hover (decision 15), Glorious under "What you'll earn" (decision 16), `co_map`/`co_rip`. No LogOutput.log sent.
 
 ## Half-done and known issues
 
@@ -112,7 +112,7 @@ Monsters have thorns.
 
 ## Playtest
 
-Solo checklist: `docs/playtests/claude-kind-einstein-8sn8e7.md` (`ma-1` … `ma-31`, `ma-26` removed by decision 14) and the phone page (its new top section, "Map affix overhaul"). Not started.
+Solo checklist `docs/playtests/claude-kind-einstein-8sn8e7.md`. 2026-11-28: 29 passed; **`ma-6` failed** (an Ironskin + Warded map was kept, "the server answered tier 2 for a tier 3 map … the map is kept", instead of opening as tier 2): the audit's "keep the map" check also caught a tier the server lowers on purpose. Fixed (the opener's game runs the same check on what it sent); **re-test `ma-6b`** on the phone page. Group steps: `PLAYTEST.md` → Session 2, 2m (`mpe-2m-4` updated to the new affixes).
 
 ## Open questions for Krogon
 
@@ -120,9 +120,9 @@ None.
 
 ## Next steps
 
-1. Krogon's play-test (`ma-*`), then his LogOutput.log checked against his marks.
-2. Fix feedback; final play-test; `/handoff`.
-3. Next rounds: the loot affixes (decision 7: every drop affix ×2 on its chances), then the corrupted-only affixes.
+1. Krogon re-tests `ma-6b` (final play-test).
+2. `/handoff`, then a PR into `master` when Krogon asks.
+3. Next rips rounds: the loot affixes (decision 7), then the corrupted-only affixes; the heart's distance and look ([#94](https://github.com/krogon-games/JotunnModStub/issues/94)); life steal after armour ([#93](https://github.com/krogon-games/JotunnModStub/issues/93)).
 
 ## Checks
 

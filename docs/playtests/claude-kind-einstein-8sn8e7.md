@@ -82,3 +82,15 @@ After the play-test, send Claude your LogOutput.log (BepInEx folder).
 
 ### Your feedback (Krogon)
 
+Play-test of 2026-11-28 (solo, on the phone page; marks read by Claude the same day; no LogOutput.log sent):
+- **Passed (29):** ma-1 … ma-5, ma-7 … ma-25, ma-27 … ma-31. No notes.
+- **ma-26:** removed (decision 14).
+- **ma-6: failed.** Krogon's note (the log line he copied): "[Warning:Corruption.Content.Rips+<>c__DisplayClass28_0] Rip request: the server answered tier 2 for a tier 3 map (its map tables may not have loaded); the map is kept."
+
+### What changed after the feedback
+- **ma-6:** the audit's fix (keep a tiered map when the server answers a lower tier, meant for a server whose tables failed to load) also fired when the server lowers the tier on purpose, here for dropping Warded beside Ironskin. The opener's game now runs the same check (`MapData.Sanitize`) on what it sent and keeps the map only when the server's tier is below that. New test `AMapWithBothImmunitiesOpensOneTierLower`; 766 tests. Re-test: **ma-6b** below.
+
+### Re-test (2026-11-28)
+| Step | What to do | What you should see | Pass / Fail | Note |
+|---|---|---|---|---|
+| ma-6b | `co_map meadows 3 ironskin warded`, use it from the Maps tab. | The log has `Rip request: map affix 'warded' dropped (its group is already on the map).`, no "the map is kept" line; the map is used up and the rip opens as **Tier 2** (hover: one line, Ironskin's). | | |

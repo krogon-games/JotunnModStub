@@ -347,13 +347,20 @@ namespace Corruption.Content
                     return;
                 }
                 // A server on an older build answers without tiers, and a server whose map tables failed to load answers tier 1:
-                // a tiered map would open as a lower tier and be lost, so keep it (MP review, 2026-11-27). Same-version players
-                // with working tables can't hit this: the server only lowers a tier for affixes this game drops too.
+                // a tiered map would open as a lower tier and be lost, so keep it (MP review, 2026-11-27). The server also lowers
+                // a tier on purpose when it drops an affix (a second of one group, one not built yet); this game runs the same
+                // check on what it sent, so only a reply below that expected tier keeps the map (Krogon's play-test ma-6,
+                // 2026-11-28: an Ironskin + Warded map was kept instead of opening as tier 2).
                 bool tiered = usedState != null && (usedState.Tier > 1 || usedState.Affixes.Count > 0);
-                if (tiered && (!serverKnowsTiers || tier < usedState.Tier))
+                int expected = usedState != null ? usedState.Tier : 1;
+                if (tiered && MapTiers.Loaded)
+                {
+                    expected = MapData.Sanitize(MapData.JoinRolls(usedState), usedState.Tier, MapTiers.Tables, null).Tier;
+                }
+                if (tiered && (!serverKnowsTiers || tier < expected))
                 {
                     Jotunn.Logger.LogWarning(serverKnowsTiers
-                        ? $"Rip request: the server answered tier {tier} for a tier {usedState.Tier} map (its map tables may not have loaded); the map is kept."
+                        ? $"Rip request: the server answered tier {tier} for a map that should open as tier {expected} (its map tables may not have loaded); the map is kept."
                         : "Rip request: the server's Corruption has no map tiers (an older build); the tiered map is kept.");
                     player.Message(MessageHud.MessageType.Center, "$corruption_rip_old_server");
                     return;
