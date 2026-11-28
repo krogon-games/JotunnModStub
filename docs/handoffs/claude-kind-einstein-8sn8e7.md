@@ -4,7 +4,7 @@
 
 ## Stage
 
-**Fixing feedback** (one re-test, `ma-6b`) (this round: the creature and player affixes; decisions 1–18 below).
+**Ready to merge** (this round: the creature and player affixes; decisions 1–18 below).
 
 ## Purpose
 
@@ -12,7 +12,7 @@ The map affix overhaul ([#90](https://github.com/krogon-games/JotunnModStub/issu
 
 ## Done
 
-Confirmed by Krogon alone on Valheim 1.0.31 (2026-11-28, phone page, 29 of 30 steps): all 17 affixes act in rips, rolled values and the Divine reroll, the groups rule, `DisabledMapAffixes`, the Rip curse, life steal on Ironskin, a corrupted tier 6 map, the rip hover (decision 15), Glorious under "What you'll earn" (decision 16), `co_map`/`co_rip`. No LogOutput.log sent.
+Confirmed by Krogon alone on Valheim 1.0.31 (2026-11-28, phone page, all 30 steps; `ma-6` after its fix, re-test `ma-6b`: "mark as passed."): all 17 affixes act in rips, rolled values and the Divine reroll, the groups rule, `DisabledMapAffixes`, the Rip curse, life steal on Ironskin, a corrupted tier 6 map, the rip hover (decision 15), Glorious under "What you'll earn" (decision 16), `co_map`/`co_rip`. No LogOutput.log sent.
 
 ## Half-done and known issues
 
@@ -112,7 +112,7 @@ Monsters have thorns.
 
 ## Playtest
 
-Solo checklist `docs/playtests/claude-kind-einstein-8sn8e7.md`. 2026-11-28: 29 passed; **`ma-6` failed** (an Ironskin + Warded map was kept, "the server answered tier 2 for a tier 3 map … the map is kept", instead of opening as tier 2): the audit's "keep the map" check also caught a tier the server lowers on purpose. Fixed (the opener's game runs the same check on what it sent); **re-test `ma-6b`** on the phone page. Group steps: `PLAYTEST.md` → Session 2, 2m (`mpe-2m-4` updated to the new affixes).
+Solo checklist `docs/playtests/claude-kind-einstein-8sn8e7.md`. 2026-11-28: 29 passed; **`ma-6` failed** (an Ironskin + Warded map was kept, "the server answered tier 2 for a tier 3 map … the map is kept", instead of opening as tier 2): the audit's "keep the map" check also caught a tier the server lowers on purpose. Fixed (the opener's game runs the same check on what it sent); re-test `ma-6b` **passed** (Krogon: "mark as passed."). Group steps: `PLAYTEST.md` → Session 2, 2m (`mpe-2m-4` updated to the new affixes).
 
 ## Open questions for Krogon
 
@@ -120,8 +120,8 @@ None.
 
 ## Next steps
 
-1. Krogon re-tests `ma-6b` (final play-test).
-2. `/handoff`, then a PR into `master` when Krogon asks.
+1. A PR into `master` when Krogon asks; the coordinator merges, raises the versions and copies decisions 1–18.
+2. The group steps (`PLAYTEST.md` → Session 2, 2m).
 3. Next rips rounds: the loot affixes (decision 7), then the corrupted-only affixes; the heart's distance and look ([#94](https://github.com/krogon-games/JotunnModStub/issues/94)); life steal after armour ([#93](https://github.com/krogon-games/JotunnModStub/issues/93)).
 
 ## Checks
@@ -132,11 +132,11 @@ Run 2026-11-28 by `/handoff`:
 - **Multiplayer sync: PASS** (read in code, not tested; two Opus reviews of 2026-11-27): `DisabledMapAffixes` is admin-only (server-synced); affix values travel in the item, the rip request (the server checks them) and the creatures' ZDO stamp; Glorious reaches Orlog through the creature's ZDO; the Rip curse runs on each player's own game.
 - **Assets and names: PASS:** no new data files; the five new `$corruption_se_ripcurse*` texts are in `Texts.cs`; the Rip curse effect is registered in `OnVanillaPrefabsAvailable`.
 - **FEATURES.md: PASS.**
-- **In-game: PASS for 29 of 30** by Krogon's play-test of 2026-11-28 (phone page); **`ma-6b` (the `ma-6` fix) needs Krogon's re-test.**
+- **In-game: PASS** by Krogon's play-test of 2026-11-28 (all 30 steps; `ma-6b`: "mark as passed.").
 
 ## Merge notes
 
-**Ready to merge: no**, waiting for the re-test `ma-6b`. 0 behind `master`; no other remote branch has unmerged commits.
+**Ready to merge: yes.** Krogon's final play-test passed, no check failed, everything pushed. 0 behind `master`; no other remote branch has unmerged commits.
 - **Gameplay changed: version bump needed at merge (Corruption, Orlog):** the map's stored affixes and the rip request changed format (`id:value`); Orlog reads `corruption_rip_xp`.
 - **Shared files:** `FEATURES.md`, `docs/CURRENT_STATE.md`, `docs/PLAYTEST.md` (`mpe-2m-4` updated to the new affixes), `Corruption/CorruptionPlugin.cs`, `CorruptionConfig.cs`, `Content/Texts.cs`, `LootPatches.cs`.
 - **`docs/DECISIONS.md`:** decisions 1–18; 2 overwrites the rips round's 8b, 3 changes 6b (Divine rerolls map values), 10 and 16 change decision 15's layout (no names; rewards under "earn").

@@ -93,4 +93,7 @@ Play-test of 2026-11-28 (solo, on the phone page; marks read by Claude the same 
 ### Re-test (2026-11-28)
 | Step | What to do | What you should see | Pass / Fail | Note |
 |---|---|---|---|---|
-| ma-6b | `co_map meadows 3 ironskin warded`, use it from the Maps tab. | The log has `Rip request: map affix 'warded' dropped (its group is already on the map).`, no "the map is kept" line; the map is used up and the rip opens as **Tier 2** (hover: one line, Ironskin's). | | |
+| ma-6b | `co_map meadows 3 ironskin warded`, use it from the Maps tab. | The log has `Rip request: map affix 'warded' dropped (its group is already on the map).`, no "the map is kept" line; the map is used up and the rip opens as **Tier 2** (hover: one line, Ironskin's). | Pass | |
+
+### Final play-test (2026-11-28)
+- **Passed.** `ma-6b` marked Pass on the phone page; Krogon: "mark as passed." All 30 steps of the round have passed (`ma-26` removed by decision 14).
